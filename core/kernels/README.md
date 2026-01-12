@@ -1,17 +1,17 @@
 # Kernels Module
 
-Wrappers de kernels optimizados para TPU v4 con implementaciones de alto rendimiento y abstracciones de operaciones de bajo nivel.
+Optimized kernel wrappers for TPU v4 with high-performance implementations and low-level operation abstractions.
 
-## 📋 Descripción
+## 📋 Description
 
-Módulo que proporciona kernels optimizados específicamente para TPU v4, incluyendo wrappers para flash attention, operaciones matriciales de alto rendimiento y abstracciones de operaciones de bajo nivel para máximo rendimiento.
+Module that provides kernels specifically optimized for TPU v4, including wrappers for flash attention, high-performance matrix operations, and low-level operation abstractions for maximum performance.
 
-## 🏗️ Arquitectura
+## 🏗️ Architecture
 
 ```
 kernels/
-├── __init__.py           # Exports de kernel wrappers
-└── tpu_v4_wrappers.py    # Implementaciones específicas TPU v4
+├── __init__.py           # Kernel wrapper exports
+└── tpu_v4_wrappers.py    # TPU v4 specific implementations
 ```
 
 ## 🚀 TPU v4 Kernel Wrappers
@@ -19,7 +19,7 @@ kernels/
 ```python
 from capibara.core.kernels import TPUv4Kernels
 
-# Inicializar kernels TPU v4
+# Initialize TPU v4 kernels
 tpu_kernels = TPUv4Kernels(
     precision="bfloat16",
     optimization_level="aggressive",
@@ -27,10 +27,10 @@ tpu_kernels = TPUv4Kernels(
     memory_layout_optimization=True
 )
 
-# Flash Attention optimizada
+# Optimized Flash Attention
 flash_attention_result = tpu_kernels.flash_attention(
     query=q_tensor,
-    key=k_tensor, 
+    key=k_tensor,
     value=v_tensor,
     attention_mask=mask,
     dropout_rate=0.1,
@@ -43,10 +43,10 @@ print(f"Memory usage: {tpu_kernels.get_memory_usage():.1f}GB")
 print(f"TFLOPS achieved: {tpu_kernels.get_tflops():.1f}")
 ```
 
-## ⚡ Operaciones Matriciales Optimizadas
+## ⚡ Optimized Matrix Operations
 
 ```python
-# Matrix multiplication con optimizaciones TPU
+# Matrix multiplication with TPU optimizations
 matmul_result = tpu_kernels.optimized_matmul(
     a=matrix_a,
     b=matrix_b,
@@ -56,7 +56,7 @@ matmul_result = tpu_kernels.optimized_matmul(
     algorithm="tpu_optimized"
 )
 
-# Einsum operaciones complejas
+# Complex einsum operations
 einsum_result = tpu_kernels.einsum_optimize(
     equation="bhnd,bhkd->bhnk",
     operands=[tensor1, tensor2],
@@ -64,7 +64,7 @@ einsum_result = tpu_kernels.einsum_optimize(
     memory_efficient=True
 )
 
-# Batch operations vectorizadas
+# Vectorized batch operations
 batch_ops = tpu_kernels.batch_operations(
     operation_type="layer_norm",
     inputs=batch_tensors,
@@ -73,10 +73,10 @@ batch_ops = tpu_kernels.batch_operations(
 )
 ```
 
-## 🔧 Kernels de Alto Rendimiento
+## 🔧 High-Performance Kernels
 
 ```python
-# Kernel personalizado para MoE routing
+# Custom kernel for MoE routing
 moe_routing_result = tpu_kernels.moe_routing_kernel(
     tokens=input_tokens,
     num_experts=32,
@@ -103,13 +103,13 @@ fused_activation = tpu_kernels.fused_gelu_dropout(
 )
 ```
 
-## 📊 Métricas y Benchmarking
+## 📊 Metrics and Benchmarking
 
 ```python
-# Benchmark de kernels
+# Kernel benchmarking
 kernel_benchmark = tpu_kernels.benchmark_kernels([
     "flash_attention",
-    "optimized_matmul", 
+    "optimized_matmul",
     "einsum_optimize",
     "fused_gelu_dropout"
 ])
@@ -122,7 +122,7 @@ for kernel, metrics in kernel_benchmark.items():
     print(f"  Memory efficiency: {metrics['memory_efficiency']:.1%}")
 ```
 
-## 📚 Referencias
+## 📚 References
 
 - [TPU v4 Architecture](https://cloud.google.com/tpu/docs/system-architecture-tpu-vm)
 - [Flash Attention](https://arxiv.org/abs/2205.14135)

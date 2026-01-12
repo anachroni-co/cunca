@@ -1,26 +1,26 @@
 # Distributed Module
 
-Sistema de computación distribuida optimizado para TPU v4-32 con configuraciones de mesh, sharding y operaciones distribuidas.
+Distributed computing system optimized for TPU v4-32 with mesh configurations, sharding, and distributed operations.
 
-## 📋 Descripción
+## 📋 Description
 
-Este módulo gestiona la configuración y optimización de computación distribuida para el sistema CapibaraGPT, proporcionando configuraciones específicas para mesh TPU v4-32, especificaciones de sharding optimizadas, y mapas experimentales de JAX.
+This module manages the configuration and optimization of distributed computing for the CapibaraGPT system, providing specific configurations for TPU v4-32 mesh, optimized sharding specifications, and JAX experimental maps.
 
-## 🏗️ Arquitectura
+## 🏗️ Architecture
 
 ```
 distributed/
-└── distribution_config.py    # Configuración TPU mesh y sharding
+└── distribution_config.py    # TPU mesh and sharding configuration
 ```
 
-## 🚀 Configuración TPU v4-32 Mesh
+## 🚀 TPU v4-32 Mesh Configuration
 
-### Configuración Principal del Mesh
+### Main Mesh Configuration
 
 ```python
 from capibara.core.distributed import TPUDistributionConfig
 
-# Configurar mesh TPU v4-32 (32 chips, 8 cores por chip)
+# Configure TPU v4-32 mesh (32 chips, 8 cores per chip)
 tpu_config = TPUDistributionConfig(
     mesh_shape=(8, 4, 1),  # 32 total cores
     mesh_axis_names=("data", "model", "pipeline"),
@@ -28,7 +28,7 @@ tpu_config = TPUDistributionConfig(
     num_partitions=32
 )
 
-# Configuración de sharding optimizada
+# Optimized sharding configuration
 sharding_config = {
     "batch_sharding": {
         "axis": "data",
@@ -36,7 +36,7 @@ sharding_config = {
         "replication": 1
     },
     "model_sharding": {
-        "axis": "model", 
+        "axis": "model",
         "partitions": 4,
         "layer_wise": True
     },
@@ -52,48 +52,48 @@ sharding_config = {
     }
 }
 
-# Aplicar configuración
+# Apply configuration
 distributed_system = tpu_config.setup_distributed_training(sharding_config)
 print(f"Mesh Configuration: {distributed_system.mesh_shape}")
 print(f"Global Device Count: {distributed_system.global_device_count}")
 print(f"Local Device Count: {distributed_system.local_device_count}")
 ```
 
-### Especificaciones de Partición JAX
+### JAX Partition Specifications
 
 ```python
-# Configuración avanzada de particiones JAX
+# Advanced JAX partition configuration
 from jax.experimental import PartitionSpec as P
 import jax.numpy as jnp
 
-# Especificaciones de partición para diferentes tensores
+# Partition specifications for different tensors
 partition_specs = {
-    # Activaciones y embeddings
+    # Activations and embeddings
     "batch_sequence": P("data", None),
     "sequence_hidden": P(None, "model"),
     "batch_sequence_hidden": P("data", None, "model"),
-    
-    # Parámetros del modelo
+
+    # Model parameters
     "embedding_weights": P("model", None),
     "linear_weights": P("model", None),
     "attention_weights": P(None, "model"),
-    
-    # Parámetros específicos de atención
+
+    # Attention-specific parameters
     "query_weights": P("model", None),
-    "key_weights": P("model", None), 
+    "key_weights": P("model", None),
     "value_weights": P("model", None),
     "output_weights": P(None, "model"),
-    
+
     # Feed-forward network
     "ffn_intermediate": P(None, "model"),
     "ffn_output": P("model", None),
-    
-    # Capas de normalización
-    "layer_norm": P(None),  # Replicado
-    "bias_terms": P(None)   # Replicado
+
+    # Normalization layers
+    "layer_norm": P(None),  # Replicated
+    "bias_terms": P(None)   # Replicated
 }
 
-# Aplicar especificaciones de partición
+# Apply partition specifications
 def apply_partition_specs(model_params, specs):
     partitioned_params = {}
     for name, param in model_params.items():
@@ -108,12 +108,12 @@ def apply_partition_specs(model_params, specs):
 partitioned_model = apply_partition_specs(model_parameters, partition_specs)
 ```
 
-## ⚡ Optimizaciones de Rendimiento
+## ⚡ Performance Optimizations
 
-### Configuración de Precisión y Memoria
+### Precision and Memory Configuration
 
 ```python
-# Optimizaciones de tipo de datos para TPU v4
+# Data type optimizations for TPU v4
 dtype_config = {
     "computation_dtype": "bfloat16",  # Optimal for TPU v4
     "parameter_dtype": "float32",     # For stability
@@ -126,7 +126,7 @@ dtype_config = {
     }
 }
 
-# Configurar operaciones optimizadas
+# Configure optimized operations
 optimization_config = {
     "xla_optimization": {
         "enable": True,
@@ -148,17 +148,17 @@ optimization_config = {
     }
 }
 
-# Aplicar optimizaciones
+# Apply optimizations
 optimized_config = tpu_config.apply_optimizations(
     dtype_config=dtype_config,
     optimization_config=optimization_config
 )
 ```
 
-### Patrones de Sharding Especializados
+### Specialized Sharding Patterns
 
 ```python
-# Patrones de sharding para diferentes arquitecturas
+# Sharding patterns for different architectures
 sharding_patterns = {
     "transformer_encoder": {
         "attention_sharding": {
@@ -169,14 +169,14 @@ sharding_patterns = {
         "layer_wise_sharding": True,
         "gradient_accumulation": 4
     },
-    
+
     "mixture_of_experts": {
         "expert_sharding": P("model", None),
         "gating_sharding": P("data", None),
         "expert_parallelism": 8,
         "load_balancing": True
     },
-    
+
     "embedding_layers": {
         "token_embeddings": P("model", None),
         "position_embeddings": P(None, None),  # Replicated
@@ -184,7 +184,7 @@ sharding_patterns = {
     }
 }
 
-# Configurar sharding especializado
+# Configure specialized sharding
 specialized_sharding = tpu_config.configure_specialized_sharding(
     model_architecture="transformer_with_moe",
     sharding_patterns=sharding_patterns,
@@ -192,30 +192,30 @@ specialized_sharding = tpu_config.configure_specialized_sharding(
 )
 ```
 
-## 🔄 Mapas Experimentales JAX
+## 🔄 JAX Experimental Maps
 
-### Configuración de Mapas Paralelos
+### Parallel Maps Configuration
 
 ```python
-# Configurar mapas experimentales de JAX
+# Configure JAX experimental maps
 from jax.experimental.maps import xmap
 from jax.experimental import mesh_utils
 
-# Crear mesh de dispositivos
+# Create device mesh
 devices = mesh_utils.create_device_mesh((8, 4))
 mesh = jax.sharding.Mesh(devices, ("data", "model"))
 
-# Configurar xmap para operaciones distribuidas
+# Configure xmap for distributed operations
 @xmap(
     in_axes=["batch", "sequence", "hidden"],
     out_axes=["batch", "sequence", "hidden"],
     axis_resources={"batch": "data", "hidden": "model"}
 )
 def distributed_forward_pass(inputs, params):
-    # Forward pass distribuido
+    # Distributed forward pass
     return model_forward(inputs, params)
 
-# Configurar pmap para entrenamiento distribuido
+# Configure pmap for distributed training
 @jax.pmap(
     axis_name="batch",
     devices=devices.reshape(-1)
@@ -224,27 +224,27 @@ def distributed_train_step(state, batch):
     def loss_fn(params):
         logits = distributed_forward_pass(batch["inputs"], params)
         return compute_loss(logits, batch["targets"])
-    
+
     grad_fn = jax.value_and_grad(loss_fn)
     loss, grads = grad_fn(state.params)
-    
-    # Promediar gradientes entre dispositivos
+
+    # Average gradients across devices
     grads = jax.lax.pmean(grads, axis_name="batch")
-    
-    # Actualizar parámetros
+
+    # Update parameters
     new_state = state.apply_gradients(grads=grads)
     return new_state, loss
 ```
 
-### Comunicación Inter-Device Optimizada
+### Optimized Inter-Device Communication
 
 ```python
-# Configuración de comunicación optimizada
+# Optimized communication configuration
 communication_config = {
     "collective_operations": {
         "all_reduce": {
             "algorithm": "ring_all_reduce",
-            "compression": None,  # TPU maneja compresión internamente
+            "compression": None,  # TPU handles compression internally
             "fusion_threshold": 64_000_000  # 64MB
         },
         "all_gather": {
@@ -257,14 +257,14 @@ communication_config = {
             "bucket_size": "25MB"
         }
     },
-    
+
     "topology_awareness": {
         "enable": True,
         "mesh_topology": "torus_2d",
         "bandwidth_optimization": True,
         "latency_optimization": True
     },
-    
+
     "pipeline_parallelism": {
         "num_pipeline_stages": 4,
         "micro_batch_size": 8,
@@ -273,16 +273,16 @@ communication_config = {
     }
 }
 
-# Aplicar configuración de comunicación
+# Apply communication configuration
 comm_optimized_system = tpu_config.setup_communication(communication_config)
 ```
 
-## 📊 Monitoreo Distribuido
+## 📊 Distributed Monitoring
 
-### Métricas de Rendimiento Distribuido
+### Distributed Performance Metrics
 
 ```python
-# Sistema de monitoreo distribuido
+# Distributed monitoring system
 distributed_monitor = tpu_config.create_distributed_monitor(
     metrics=[
         "device_utilization",
@@ -295,10 +295,10 @@ distributed_monitor = tpu_config.create_distributed_monitor(
     aggregation_strategy="hierarchical"
 )
 
-# Métricas en tiempo real
+# Real-time metrics
 def get_distributed_metrics():
     metrics = distributed_monitor.collect_metrics()
-    
+
     performance_summary = {
         "total_tflops": sum(metrics["tflops_per_device"]),
         "average_utilization": jnp.mean(metrics["device_utilization"]),
@@ -307,10 +307,10 @@ def get_distributed_metrics():
         "load_balance_score": metrics["load_balancing"]["balance_score"],
         "gradient_sync_latency": metrics["synchronization"]["avg_latency_ms"]
     }
-    
+
     return performance_summary
 
-# Alertas de rendimiento distribuido
+# Distributed performance alerts
 performance_thresholds = {
     "min_utilization": 0.75,
     "max_communication_overhead": 0.15,
@@ -327,12 +327,12 @@ for metric, threshold in performance_thresholds.items():
         print(f"⚠️  {metric}: {current_value:.3f} above threshold {threshold}")
 ```
 
-## 🔧 Configuración Avanzada
+## 🔧 Advanced Configuration
 
-### Auto-tuning de Configuración Distribuida
+### Distributed Configuration Auto-tuning
 
 ```python
-# Sistema de auto-tuning para configuración óptima
+# Auto-tuning system for optimal configuration
 from capibara.core.distributed import DistributedAutoTuner
 
 auto_tuner = DistributedAutoTuner(
@@ -347,7 +347,7 @@ auto_tuner = DistributedAutoTuner(
     max_trials=30
 )
 
-# Ejecutar auto-tuning
+# Run auto-tuning
 optimal_config = auto_tuner.find_optimal_configuration(
     model=model,
     dataset=training_dataset,
@@ -362,10 +362,10 @@ print(f"Micro Batch Size: {optimal_config['micro_batch_size']}")
 print(f"Expected Throughput: {optimal_config['projected_throughput']:.1f} samples/sec")
 ```
 
-### Tolerancia a Fallos
+### Fault Tolerance
 
 ```python
-# Sistema de tolerancia a fallos
+# Fault tolerance system
 fault_tolerance_config = {
     "checkpointing": {
         "frequency": "every_500_steps",
@@ -373,75 +373,75 @@ fault_tolerance_config = {
         "checkpoint_sharding": True,
         "compression": "zstd"
     },
-    
+
     "device_failure_handling": {
         "automatic_recovery": True,
         "device_blacklisting": True,
         "dynamic_mesh_reconfiguration": True,
-        "state_replication": 2  # Factor de replicación
+        "state_replication": 2  # Replication factor
     },
-    
+
     "gradient_synchronization": {
         "timeout_detection": True,
-        "timeout_threshold": 30,  # segundos
+        "timeout_threshold": 30,  # seconds
         "fallback_strategy": "skip_slow_devices",
         "consistency_checks": True
     }
 }
 
-# Aplicar tolerancia a fallos
+# Apply fault tolerance
 fault_tolerant_system = tpu_config.enable_fault_tolerance(fault_tolerance_config)
 
-# Función de entrenamiento con recuperación automática
+# Training function with automatic recovery
 def resilient_training_loop(model, dataset, num_steps):
     try:
         for step in range(num_steps):
             batch = next(dataset)
             state, metrics = distributed_train_step(state, batch)
-            
-            # Verificar salud del sistema
+
+            # Check system health
             if step % 100 == 0:
                 system_health = fault_tolerant_system.check_system_health()
                 if not system_health.is_healthy:
                     print(f"🔄 Recovering from: {system_health.issues}")
                     fault_tolerant_system.recover_from_failure()
-                    
+
     except Exception as e:
         print(f"🚨 Training interrupted: {e}")
         fault_tolerant_system.emergency_checkpoint()
         raise
 ```
 
-## 🤝 Integración con Otros Módulos
+## 🤝 Integration with Other Modules
 
 ```python
-# Integración con MoE distribuido
+# Integration with distributed MoE
 from capibara.core.moe import DynamicMoE
 from capibara.core.monitoring import TPUMonitor
 
-# MoE distribuido en múltiples dispositivos
+# Distributed MoE across multiple devices
 distributed_moe = DynamicMoE(
     num_experts=32,
-    expert_parallel_size=8,  # 4 experts por device
+    expert_parallel_size=8,  # 4 experts per device
     distribution_config=tpu_config,
     load_balancing="distributed"
 )
 
-# Monitoreo de sistema distribuido
+# Distributed system monitoring
 with TPUMonitor().distributed_context("distributed_training"):
     distributed_results = distributed_moe.distributed_forward(
         inputs=distributed_inputs,
         training=True
     )
 
-# Métricas distribuidas
+# Distributed metrics
 distributed_metrics = TPUMonitor.get_distributed_metrics()
 print(f"Total System TFLOPS: {distributed_metrics['total_tflops']:.1f}")
 print(f"Communication Efficiency: {distributed_metrics['comm_efficiency']:.2%}")
 print(f"Load Balance Score: {distributed_metrics['load_balance']:.3f}")
 ```
 
-## 📚 Referencias
+## 📚 References
 
 - [JAX Distributed Programming](https://jax.readthedocs.io/en/latest/multi_process.html)
 - [TPU System Architecture](https://cloud.google.com/tpu/docs/system-architecture-tpu-vm)

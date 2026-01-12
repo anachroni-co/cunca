@@ -1,78 +1,78 @@
 # Observer Pattern for Dynamic Expert Activation
 
-Este módulo implementa el patrón Observer para activar dinámicamente expertos basado en patrones de peticiones y entradas. Permite un sistema de enrutamiento inteligente que puede adaptarse a diferentes tipos de consultas y activar los expertos más apropiados automáticamente.
+This module implements the Observer pattern to dynamically activate experts based on request patterns and inputs. It enables an intelligent routing system that can adapt to different query types and automatically activate the most appropriate experts.
 
-## 🎯 Características Principales
+## 🎯 Main Features
 
-### 🔍 Observadores Inteligentes
-- **RequestPatternObserver**: Detecta patrones específicos en el texto de las peticiones
-- **ComplexityObserver**: Analiza la complejidad de las consultas y activa expertos según sea necesario
-- **DomainSpecificObserver**: Especializado en detectar dominios específicos (matemáticas, programación, etc.)
-- **PerformanceObserver**: Monitorea el rendimiento del sistema y toma decisiones basadas en la carga
-- **AdaptiveObserver**: Aprende de patrones de activación y se adapta con el tiempo
+### 🔍 Intelligent Observers
+- **RequestPatternObserver**: Detects specific patterns in request text
+- **ComplexityObserver**: Analyzes query complexity and activates experts as needed
+- **DomainSpecificObserver**: Specialized in detecting specific domains (mathematics, programming, etc.)
+- **PerformanceObserver**: Monitors system performance and makes load-based decisions
+- **AdaptiveObserver**: Learns from activation patterns and adapts over time
 
-### 🚀 Gestión Dinámica de Expertos
-- **ExpertActivationManager**: Gestiona el ciclo de vida de los expertos
-- **ExpertPool**: Pool dinámico de expertos que pueden ser activados bajo demanda
-- **ActivationStrategy**: Diferentes estrategias para la activación de expertos
+### 🚀 Dynamic Expert Management
+- **ExpertActivationManager**: Manages expert lifecycle
+- **ExpertPool**: Dynamic expert pool that can be activated on demand
+- **ActivationStrategy**: Different strategies for expert activation
 
-### 🔄 Integración con Router
-- **ObserverAwareRouter**: Router que integra el patrón Observer con el sistema de enrutamiento tradicional
-- **RoutingMode**: Diferentes modos de enrutamiento (tradicional, observer-first, híbrido)
-- **DynamicRoutingDecision**: Decisiones de enrutamiento enriquecidas con información de observadores
+### 🔄 Router Integration
+- **ObserverAwareRouter**: Router that integrates the Observer pattern with traditional routing
+- **RoutingMode**: Different routing modes (traditional, observer-first, hybrid)
+- **DynamicRoutingDecision**: Routing decisions enriched with observer information
 
-## 📋 Casos de Uso
+## 📋 Use Cases
 
-### 1. Activación Automática por Patrones
+### 1. Automatic Pattern-Based Activation
 ```python
 from capibara.core.observers import create_observer_aware_router, RoutingMode
 
-# Crear router con patrón observer
+# Create router with observer pattern
 router = create_observer_aware_router(
     routing_mode=RoutingMode.OBSERVER_ENHANCED
 )
 
-# Procesar petición - los expertos se activan automáticamente
+# Process request - experts are activated automatically
 result = await router.route_request(
-    input_data="¿Qué pasaría si el servidor principal falla durante el pico de tráfico?"
+    input_data="What would happen if the main server fails during peak traffic?"
 )
 
-print(f"Expertos activados: {result.experts_activated}")
-# Output: ['CSA'] - Expert de análisis contrafactual activado automáticamente
+print(f"Activated experts: {result.experts_activated}")
+# Output: ['CSA'] - Counterfactual analysis expert automatically activated
 ```
 
-### 2. Detección de Complejidad
+### 2. Complexity Detection
 ```python
-# Petición compleja que activa múltiples expertos
+# Complex request that activates multiple experts
 complex_query = """
-Diseña un sistema de machine learning para predecir fallos del servidor.
-¿Qué pasaría si los datos de entrenamiento están sesgados?
-Incluye el código en Python y calcula la probabilidad de error.
+Design a machine learning system to predict server failures.
+What would happen if the training data is biased?
+Include the Python code and calculate the error probability.
 """
 
 result = await router.route_request(input_data=complex_query)
-print(f"Expertos activados: {result.experts_activated}")
-# Output: ['CSA', 'CodeExpert', 'MathExpert'] - Múltiples expertos para consulta compleja
+print(f"Activated experts: {result.experts_activated}")
+# Output: ['CSA', 'CodeExpert', 'MathExpert'] - Multiple experts for complex query
 ```
 
-### 3. Aprendizaje Adaptativo
+### 3. Adaptive Learning
 ```python
 from capibara.core.observers import ActivationStrategy
 
-# Router con aprendizaje adaptativo
+# Router with adaptive learning
 adaptive_router = create_observer_aware_router(
     routing_mode=RoutingMode.OBSERVER_ENHANCED,
     activation_strategy=ActivationStrategy.ADAPTIVE
 )
 
-# Procesar peticiones y proporcionar feedback
+# Process requests and provide feedback
 result = await adaptive_router.route_request(input_data="Calculate derivative of x²")
-adaptive_router.provide_feedback("req_001", {"MathExpert": True})  # Feedback positivo
+adaptive_router.provide_feedback("req_001", {"MathExpert": True})  # Positive feedback
 
-# El sistema aprende y mejora las activaciones futuras
+# The system learns and improves future activations
 ```
 
-### 4. Observadores Personalizados
+### 4. Custom Observers
 ```python
 from capibara.core.observers import RequestObserver, create_expert_activation_event
 
@@ -86,13 +86,13 @@ class CustomDomainObserver(RequestObserver):
             )]
         return []
 
-# Añadir observador personalizado
+# Add custom observer
 router.add_observer(CustomDomainObserver("BlockchainObserver"))
 ```
 
-## 🏗️ Arquitectura
+## 🏗️ Architecture
 
-### Componentes Principales
+### Main Components
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -103,31 +103,31 @@ router.add_observer(CustomDomainObserver("BlockchainObserver"))
 │              ExpertActivationManager                        │
 ├─────────────────────────────────────────────────────────────┤
 │    ObserverManager           │         ExpertPool           │
-│  ┌─────────────────────────┐ │ ┌─────────────────────────┐   │
-│  │ RequestPatternObserver  │ │ │    CSAExpert           │   │
-│  │ ComplexityObserver      │ │ │    MathExpert          │   │
-│  │ DomainSpecificObserver  │ │ │    CodeExpert          │   │
-│  │ PerformanceObserver     │ │ │    SpanishExpert       │   │
-│  │ AdaptiveObserver        │ │ │    CustomExperts       │   │
-│  └─────────────────────────┘ │ └─────────────────────────┘   │
+│  ┌─────────────────────────┐ │ ┌─────────────────────────┐  │
+│  │ RequestPatternObserver  │ │ │    CSAExpert           │  │
+│  │ ComplexityObserver      │ │ │    MathExpert          │  │
+│  │ DomainSpecificObserver  │ │ │    CodeExpert          │  │
+│  │ PerformanceObserver     │ │ │    SpanishExpert       │  │
+│  │ AdaptiveObserver        │ │ │    CustomExperts       │  │
+│  └─────────────────────────┘ │ └─────────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Flujo de Activación
+### Activation Flow
 
-1. **Recepción de Petición**: El router recibe una petición del usuario
-2. **Notificación a Observadores**: Se notifica a todos los observadores activos
-3. **Análisis de Patrones**: Cada observador analiza la petición según su especialidad
-4. **Generación de Eventos**: Los observadores generan eventos de activación de expertos
-5. **Aplicación de Estrategia**: Se aplica la estrategia de activación configurada
-6. **Activación de Expertos**: Se activan los expertos apropiados
-7. **Procesamiento**: Los expertos procesan la petición
-8. **Combinación de Resultados**: Se combinan los resultados de múltiples expertos
+1. **Request Reception**: Router receives a user request
+2. **Observer Notification**: All active observers are notified
+3. **Pattern Analysis**: Each observer analyzes the request according to its specialty
+4. **Event Generation**: Observers generate expert activation events
+5. **Strategy Application**: Configured activation strategy is applied
+6. **Expert Activation**: Appropriate experts are activated
+7. **Processing**: Experts process the request
+8. **Result Combination**: Results from multiple experts are combined
 
-## 📊 Estrategias de Activación
+## 📊 Activation Strategies
 
 ### ActivationStrategy.IMMEDIATE
-Activa expertos inmediatamente cuando los observadores lo sugieren.
+Activates experts immediately when observers suggest it.
 ```python
 router = create_observer_aware_router(
     activation_strategy=ActivationStrategy.IMMEDIATE
@@ -135,27 +135,27 @@ router = create_observer_aware_router(
 ```
 
 ### ActivationStrategy.THRESHOLD_BASED
-Requiere un nivel mínimo de confianza para activar expertos.
+Requires a minimum confidence level to activate experts.
 ```python
 router = create_observer_aware_router(
     activation_strategy=ActivationStrategy.THRESHOLD_BASED
 )
-# Configura el umbral
+# Configure threshold
 router.observer_integration.strategy_config["confidence_threshold"] = 0.7
 ```
 
 ### ActivationStrategy.CONSENSUS_REQUIRED
-Requiere que múltiples observadores estén de acuerdo antes de activar un experto.
+Requires multiple observers to agree before activating an expert.
 ```python
 router = create_observer_aware_router(
     activation_strategy=ActivationStrategy.CONSENSUS_REQUIRED
 )
-# Configura votos requeridos
+# Configure required votes
 router.observer_integration.strategy_config["consensus_required_votes"] = 2
 ```
 
 ### ActivationStrategy.LOAD_BALANCED
-Considera la carga actual del sistema al tomar decisiones de activación.
+Considers current system load when making activation decisions.
 ```python
 router = create_observer_aware_router(
     activation_strategy=ActivationStrategy.LOAD_BALANCED
@@ -163,55 +163,55 @@ router = create_observer_aware_router(
 ```
 
 ### ActivationStrategy.ADAPTIVE
-Aprende de activaciones pasadas y se adapta automáticamente.
+Learns from past activations and adapts automatically.
 ```python
 router = create_observer_aware_router(
     activation_strategy=ActivationStrategy.ADAPTIVE
 )
 ```
 
-## 🎛️ Modos de Enrutamiento
+## 🎛️ Routing Modes
 
 ### RoutingMode.TRADITIONAL
-Usa solo el enrutamiento tradicional, sin observadores.
+Uses only traditional routing, no observers.
 
 ### RoutingMode.OBSERVER_FIRST
-Los observadores tienen prioridad sobre el enrutamiento tradicional.
+Observers take priority over traditional routing.
 
 ### RoutingMode.OBSERVER_ENHANCED
-Combina enrutamiento tradicional con activación de observadores.
+Combines traditional routing with observer activation.
 
 ### RoutingMode.HYBRID
-Cambia dinámicamente entre modos según la complejidad de la petición.
+Dynamically switches between modes based on request complexity.
 
-## 📈 Monitoreo y Métricas
+## 📈 Monitoring and Metrics
 
-### Estadísticas del Router
+### Router Statistics
 ```python
 stats = router.get_statistics()
-print(f"Total peticiones: {stats['integration_metrics']['total_requests']}")
-print(f"Activaciones de observadores: {stats['integration_metrics']['observer_activations']}")
-print(f"Activaciones de expertos: {stats['integration_metrics']['expert_activations']}")
+print(f"Total requests: {stats['integration_metrics']['total_requests']}")
+print(f"Observer activations: {stats['integration_metrics']['observer_activations']}")
+print(f"Expert activations: {stats['integration_metrics']['expert_activations']}")
 ```
 
-### Rendimiento de Observadores
+### Observer Performance
 ```python
 observer_manager = router.observer_integration.activation_manager.observer_manager
 for observer in observer_manager.observers:
     performance = observer.get_performance_summary()
-    print(f"{observer.name}: {performance['success_rate']:.2%} éxito")
+    print(f"{observer.name}: {performance['success_rate']:.2%} success")
 ```
 
-### Métricas de Expertos
+### Expert Metrics
 ```python
 expert_pool = router.observer_integration.activation_manager.expert_pool
 pool_stats = expert_pool.get_pool_statistics()
-print(f"Utilización del pool: {pool_stats['current_utilization']:.2%}")
+print(f"Pool utilization: {pool_stats['current_utilization']:.2%}")
 ```
 
-## 🧪 Ejemplos y Demos
+## 🧪 Examples and Demos
 
-### Demo Comprensivo
+### Comprehensive Demo
 ```python
 from capibara.core.observers.examples import ObserverPatternDemo
 
@@ -219,7 +219,7 @@ demo = ObserverPatternDemo()
 await demo.run_comprehensive_demo()
 ```
 
-### Demo Interactivo
+### Interactive Demo
 ```python
 from capibara.core.observers.examples import InteractiveObserverDemo
 
@@ -227,25 +227,25 @@ interactive_demo = InteractiveObserverDemo()
 await interactive_demo.run_interactive_demo()
 ```
 
-### Test Rápido
+### Quick Test
 ```python
 from capibara.core.observers.examples import quick_test
 
 await quick_test()
 ```
 
-### Benchmark de Rendimiento
+### Performance Benchmark
 ```python
 from capibara.core.observers.examples import benchmark_observer_performance
 
 await benchmark_observer_performance()
 ```
 
-## 🔧 Configuración Avanzada
+## 🔧 Advanced Configuration
 
-### Configuración de Observadores
+### Observer Configuration
 ```python
-# Crear observador de patrones personalizado
+# Create custom pattern observer
 pattern_observer = RequestPatternObserver("CustomPatterns", priority=1)
 pattern_observer.expert_patterns["MyExpert"] = [
     r"(?i)\b(custom|pattern|detection)\b"
@@ -254,7 +254,7 @@ pattern_observer.expert_patterns["MyExpert"] = [
 router.add_observer(pattern_observer)
 ```
 
-### Registro de Expertos Personalizados
+### Custom Expert Registration
 ```python
 class MyCustomExpert:
     async def process(self, context):
@@ -263,9 +263,9 @@ class MyCustomExpert:
 router.register_expert("MyExpert", MyCustomExpert, max_concurrent=2)
 ```
 
-### Configuración de Estrategias
+### Strategy Configuration
 ```python
-# Configurar parámetros de estrategia
+# Configure strategy parameters
 router.observer_integration.strategy_config.update({
     "confidence_threshold": 0.8,
     "consensus_required_votes": 3,
@@ -274,47 +274,47 @@ router.observer_integration.strategy_config.update({
 })
 ```
 
-## 🐛 Debugging y Logs
+## 🐛 Debugging and Logs
 
-### Habilitar Logging Detallado
+### Enable Detailed Logging
 ```python
 import logging
 logging.getLogger("capibara.core.observers").setLevel(logging.DEBUG)
 ```
 
-### Inspeccionar Eventos de Activación
+### Inspect Activation Events
 ```python
-# Acceder al historial de activaciones
+# Access activation history
 activation_history = router.observer_integration.activation_manager.activation_history
-for activation in activation_history[-5:]:  # Últimas 5 activaciones
+for activation in activation_history[-5:]:  # Last 5 activations
     print(f"Request: {activation['request_id']}")
     print(f"Experts: {activation['approved_activations']}")
 ```
 
-## 🚀 Mejores Prácticas
+## 🚀 Best Practices
 
-1. **Configuración de Prioridades**: Asigna prioridades apropiadas a los observadores
-2. **Umbrales de Confianza**: Ajusta umbrales según tus necesidades de precisión
-3. **Monitoreo de Rendimiento**: Supervisa regularmente las métricas del sistema
-4. **Feedback de Aprendizaje**: Proporciona feedback para mejorar el aprendizaje adaptativo
-5. **Gestión de Recursos**: Configura límites de concurrencia apropiados para los expertos
+1. **Priority Configuration**: Assign appropriate priorities to observers
+2. **Confidence Thresholds**: Adjust thresholds according to your precision needs
+3. **Performance Monitoring**: Regularly monitor system metrics
+4. **Learning Feedback**: Provide feedback to improve adaptive learning
+5. **Resource Management**: Configure appropriate concurrency limits for experts
 
-## 📚 Referencias
+## 📚 References
 
-- [Patrón Observer](https://refactoring.guru/design-patterns/observer)
-- [Sistemas de Expertos](https://en.wikipedia.org/wiki/Expert_system)
-- [Enrutamiento Dinámico](https://en.wikipedia.org/wiki/Dynamic_routing)
+- [Observer Pattern](https://refactoring.guru/design-patterns/observer)
+- [Expert Systems](https://en.wikipedia.org/wiki/Expert_system)
+- [Dynamic Routing](https://en.wikipedia.org/wiki/Dynamic_routing)
 
-## 🤝 Contribución
+## 🤝 Contributing
 
-Para contribuir al desarrollo del patrón Observer:
+To contribute to Observer pattern development:
 
-1. Implementa nuevos observadores especializados
-2. Mejora las estrategias de activación existentes
-3. Añade métricas y monitoreo adicional
-4. Crea ejemplos y casos de uso
-5. Optimiza el rendimiento del sistema
+1. Implement new specialized observers
+2. Improve existing activation strategies
+3. Add additional metrics and monitoring
+4. Create examples and use cases
+5. Optimize system performance
 
-## 📄 Licencia
+## 📄 License
 
-Este módulo forma parte de CapibaraGPT y está sujeto a la misma licencia del proyecto principal.
+This module is part of CapibaraGPT and is subject to the same license as the main project.

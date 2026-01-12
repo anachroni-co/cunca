@@ -1,88 +1,88 @@
 # Activations Module
 
-Módulo para funciones de activación contextual optimizadas para arquitecturas neuronales avanzadas.
+Module for contextual activation functions optimized for advanced neural architectures.
 
-## 📋 Descripción
+## 📋 Description
 
-Este módulo proporciona funciones de activación contextual que adaptan su comportamiento basado en el contexto de entrada, optimizando el rendimiento del modelo en diferentes tipos de tareas.
+This module provides contextual activation functions that adapt their behavior based on input context, optimizing model performance across different types of tasks.
 
-## 🔧 Componentes
+## 🔧 Components
 
 ### ContextualActivation (`contextual_activation.py`)
-Sistema base para activaciones contextualmente conscientes.
+Base system for contextually-aware activations.
 
 ```python
 from capibara.core.activations import contextual_activation
 
-# Configuración básica del módulo
+# Basic module configuration
 logger = contextual_activation.logger
 result = contextual_activation.main()
 
-# Integración con JAX/Flax
+# JAX/Flax integration
 import jax
 import flax.linen as nn
 from capibara.core.activations.contextual_activation import *
 ```
 
-## 🚀 Características
+## 🚀 Features
 
-### Activaciones Adaptativas
-- **Contexto-Aware**: Las activaciones se adaptan según el contexto de entrada
-- **JAX/Flax Integration**: Optimizado para TPU v4/v6 usando JAX y Flax
-- **Logging Avanzado**: Sistema de logging integrado para monitoreo
+### Adaptive Activations
+- **Context-Aware**: Activations adapt based on input context
+- **JAX/Flax Integration**: Optimized for TPU v4/v6 using JAX and Flax
+- **Advanced Logging**: Integrated logging system for monitoring
 
-### Optimizaciones Hardware
-- **TPU Ready**: Preparado para TPU v4-32 y v6e-64
-- **Memory Efficient**: Gestión eficiente de memoria
-- **Vectorización**: Soporte para operaciones vectorizadas
+### Hardware Optimizations
+- **TPU Ready**: Prepared for TPU v4-32 and v6e-64
+- **Memory Efficient**: Efficient memory management
+- **Vectorization**: Support for vectorized operations
 
-## 🎯 Casos de Uso
+## 🎯 Use Cases
 
-### 1. Activaciones Contextualmente Conscientes
+### 1. Contextually-Aware Activations
 ```python
-# Ejemplo de uso básico
+# Basic usage example
 from capibara.core.activations import contextual_activation
 import jax.numpy as jnp
 
-# Inicializar módulo
+# Initialize module
 result = contextual_activation.main()
 
-# Usar con modelo Flax
+# Use with Flax model
 class ContextualModel(nn.Module):
     def __call__(self, x):
-        # Aplicar activación contextual
+        # Apply contextual activation
         return contextual_activation.apply(x)
 ```
 
-### 2. Integración con Pipelines
+### 2. Pipeline Integration
 ```python
-# Integración en pipelines de procesamiento
+# Integration in processing pipelines
 from capibara.core.activations.contextual_activation import logger
 
-# Logging de activaciones
-logger.info("Aplicando activaciones contextuales")
+# Activation logging
+logger.info("Applying contextual activations")
 
-# Procesamiento en lotes
+# Batch processing
 def process_batch(inputs):
-    logger.info(f"Procesando lote de tamaño: {len(inputs)}")
-    # Aplicar activaciones contextuales
+    logger.info(f"Processing batch of size: {len(inputs)}")
+    # Apply contextual activations
     return processed_outputs
 ```
 
-## 🏗️ Arquitectura
+## 🏗️ Architecture
 
 ```
 activations/
-├── __init__.py              # Exports del módulo
-├── contextual_activation.py # Sistema base de activaciones
-└── README.md               # Documentación
+├── __init__.py              # Module exports
+├── contextual_activation.py # Base activation system
+└── README.md               # Documentation
 ```
 
-## ⚙️ Configuración
+## ⚙️ Configuration
 
-### Parámetros de Activación
+### Activation Parameters
 ```python
-# Configuración de activación contextual
+# Contextual activation configuration
 activation_config = {
     "context_window": 512,
     "adaptation_rate": 0.1,
@@ -91,31 +91,31 @@ activation_config = {
 }
 ```
 
-### Variables de Entorno
+### Environment Variables
 ```bash
-# Configuraciones de sistema
+# System configurations
 export JAX_PLATFORMS=tpu
 export CAPIBARA_ACTIVATION_LOG_LEVEL=INFO
 export CAPIBARA_CONTEXT_CACHE_SIZE=1024
 ```
 
-## 🔍 Funciones de Activación Disponibles
+## 🔍 Available Activation Functions
 
-### Activaciones Básicas
-- **ContextualReLU**: ReLU adaptativo basado en contexto
-- **ContextualGELU**: GELU con parámetros contextuales
-- **ContextualSiLU**: SiLU (Swish) contextualmente aware
+### Basic Activations
+- **ContextualReLU**: Context-based adaptive ReLU
+- **ContextualGELU**: GELU with contextual parameters
+- **ContextualSiLU**: Contextually-aware SiLU (Swish)
 
-### Activaciones Avanzadas
-- **AdaptiveActivation**: Combina múltiples funciones basado en contexto
-- **MetaActivation**: Aprende la función de activación óptima
-- **HierarchicalActivation**: Activaciones jerárquicas por capas
+### Advanced Activations
+- **AdaptiveActivation**: Combines multiple functions based on context
+- **MetaActivation**: Learns optimal activation function
+- **HierarchicalActivation**: Hierarchical activations by layers
 
-## 📊 Monitoreo y Métricas
+## 📊 Monitoring and Metrics
 
-### Métricas de Rendimiento
+### Performance Metrics
 ```python
-# Métricas de activación
+# Activation metrics
 metrics = {
     "activation_distribution": "Normal",
     "gradient_flow": "Stable",
@@ -124,34 +124,34 @@ metrics = {
 }
 ```
 
-### Logging Estructurado
+### Structured Logging
 ```python
 import logging
 from capibara.core.activations.contextual_activation import logger
 
-# Configurar logging
+# Configure logging
 logger.setLevel(logging.INFO)
 
-# Métricas detalladas
-logger.info("Activación contextual iniciada")
-logger.debug(f"Parámetros de contexto: {context_params}")
+# Detailed metrics
+logger.info("Contextual activation started")
+logger.debug(f"Context parameters: {context_params}")
 ```
 
-## 🚀 Optimizaciones de Rendimiento
+## 🚀 Performance Optimizations
 
 ### TPU Optimizations
-- **XLA Compilation**: Compilación automática para TPU
-- **Memory Layout**: Distribución óptima de memoria
-- **Batch Processing**: Procesamiento eficiente en lotes
+- **XLA Compilation**: Automatic compilation for TPU
+- **Memory Layout**: Optimal memory distribution
+- **Batch Processing**: Efficient batch processing
 
-### Técnicas Avanzadas
-- **Gradient Checkpointing**: Reducción de uso de memoria
-- **Mixed Precision**: Soporte para bfloat16
-- **Kernel Fusion**: Fusión de operaciones para mayor eficiencia
+### Advanced Techniques
+- **Gradient Checkpointing**: Memory usage reduction
+- **Mixed Precision**: bfloat16 support
+- **Kernel Fusion**: Operation fusion for greater efficiency
 
-## 🔧 Desarrollo y Extensión
+## 🔧 Development and Extension
 
-### Crear Nueva Activación
+### Creating New Activation
 ```python
 from capibara.core.activations.contextual_activation import logger
 import jax.numpy as jnp
@@ -159,45 +159,45 @@ import flax.linen as nn
 
 class CustomContextualActivation(nn.Module):
     context_dim: int = 768
-    
+
     def setup(self):
         self.context_projection = nn.Dense(self.context_dim)
-        
+
     def __call__(self, x, context=None):
         if context is not None:
             context_features = self.context_projection(context)
-            # Aplicar activación basada en contexto
+            # Apply context-based activation
             return jnp.tanh(x * context_features)
         return jnp.tanh(x)
 ```
 
-### Testing y Validación
+### Testing and Validation
 ```python
-# Tests unitarios para activaciones
+# Unit tests for activations
 def test_contextual_activation():
     from capibara.core.activations import contextual_activation
-    
+
     result = contextual_activation.main()
     assert result == True
-    
-    # Verificar integración JAX
+
+    # Verify JAX integration
     assert contextual_activation.jax is not None
     assert contextual_activation.jnp is not None
 ```
 
-## 📚 Referencias
+## 📚 References
 
 - [JAX Documentation](https://jax.readthedocs.io/)
 - [Flax Neural Networks](https://flax.readthedocs.io/)
 - [TPU Programming Guide](https://cloud.google.com/tpu/docs/)
 - [Contextual Activations Research](https://arxiv.org/abs/...)
 
-## 🤝 Contribuir
+## 🤝 Contributing
 
-Para contribuir al módulo de activaciones:
+To contribute to the activations module:
 
-1. Implementar nuevas funciones de activación en `contextual_activation.py`
-2. Agregar tests unitarios
-3. Documentar parámetros y comportamiento
-4. Optimizar para TPU cuando sea posible
-5. Seguir las convenciones de código del proyecto
+1. Implement new activation functions in `contextual_activation.py`
+2. Add unit tests
+3. Document parameters and behavior
+4. Optimize for TPU when possible
+5. Follow project code conventions
