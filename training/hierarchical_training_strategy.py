@@ -29,6 +29,7 @@ Example:
     >>> results = trainer.train(model, data)
 
 Note:
+    TODO: Implement HierarchicalTrainer and TrainingHierarchy classes.
     This module is currently a placeholder for future hierarchical training
     strategy implementation. The main functionality will be added as the
     training system evolves.

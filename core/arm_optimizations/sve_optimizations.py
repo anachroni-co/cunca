@@ -24,6 +24,7 @@ class SVEOptimizedOperations:
     
     def optimize_vector_ops(self, data: np.ndarray) -> np.ndarray:
         """Optimize vector operations using SVE (stub implementation)."""
+        # TODO: Implement ARM SVE vectorized operations via intrinsics or assembly
         logger.debug("Stub: Using standard numpy for vector operations")
         return data
 

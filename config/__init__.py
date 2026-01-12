@@ -58,10 +58,12 @@ except Exception:
             self.errors = []
             self.warnings = []
         def validate(self, config: Dict[str, Any]) -> bool:
+            # TODO: Implement actual config validation logic
             return True
         def validate_full_config(self, config: Dict[str, Any]) -> Dict[str, Any]:
             return {"is_valid": True, "errors": [], "warnings": []}
     def validate_config_file(path: str) -> bool:
+        # TODO: Implement file-based config validation
         return True
 
 # Legacy aliases (maintain compatibility with outdated tests)

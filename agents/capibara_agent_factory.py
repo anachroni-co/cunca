@@ -66,7 +66,7 @@ class Ollama:
         self.model = model
     
     def invoke(self, prompt):
-        # implementation stub - reemplazar with LLM real
+        # TODO: Implement real LLM integration (OpenAI, Anthropic, local models, etc.)
         return f"Respuesta generada por {self.model}: {prompt[:50]}..."
 
 LLM_REGISTRY = {
@@ -89,7 +89,7 @@ def create_llm(llm_spec: dict) -> CapibaraLLM:
 
 def create_vector_db(vectordb_spec: dict) -> Optional[CapibaraVectorDB]:
     if vectordb_spec.get("type") == "qdrant":
-        # Stub retriever - replace with real retriever
+        # TODO: Implement real Qdrant vector database connection
         class StubRetriever:
             def invoke(self, query):
                 return [type('Doc', (), {'page_content': f"Contexto para: {query}"})()]

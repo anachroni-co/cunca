@@ -350,8 +350,7 @@ class AdvancedFilter:
         # Initialize perplexity model
         if self.config.use_perplexity_filter and TRANSFORMERS_AVAILABLE:
             try:
-                # This would need a proper perplexity model
-                # For now, we'll use a placeholder
+                # TODO: Initialize perplexity model (GPT-2 or similar for scoring)
                 logger.info("Perplexity filtering would be initialized here")
             except Exception as e:
                 logger.warning(f"Failed to initialize perplexity model: {e}")
@@ -373,10 +372,8 @@ class AdvancedFilter:
         if not self.config.use_perplexity_filter or not self.perplexity_model:
             return docs
         
-        # Placeholder for perplexity filtering
-        # This would calculate perplexity for each document
-        # and filter based on thresholds
-        
+        # TODO: Implement perplexity calculation and filtering
+        # Calculate perplexity for each document and filter based on thresholds
         logger.info("Perplexity filtering would be applied here")
         return docs
     

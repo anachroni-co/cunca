@@ -27,11 +27,13 @@ class ONNXRuntimeARMBackend:
     
     def load_model(self, model_path: str) -> bool:
         """Load ONNX model (stub implementation)."""
+        # TODO: Implement ONNX model loading with onnxruntime ARM execution provider
         logger.info(f"Stub: Would load ONNX model from {model_path}")
         return False
     
     def infer(self, inputs: Dict[str, np.ndarray]) -> Dict[str, np.ndarray]:
         """Run inference (stub implementation)."""
+        # TODO: Implement ONNX Runtime inference with ARM optimizations
         logger.debug("Stub: Running fallback inference")
         return {}
 
