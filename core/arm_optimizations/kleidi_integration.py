@@ -25,6 +25,7 @@ class KleidiOperations:
     
     def optimize_gemm(self, a: np.ndarray, b: np.ndarray) -> np.ndarray:
         """Perform optimized matrix multiplication."""
+        # TODO: Integrate ARM Kleidi AI GEMM optimizations when available
         logger.debug("Using fallback numpy implementation for GEMM")
         return np.matmul(a, b)
     
@@ -44,12 +45,13 @@ class KleidiOperations:
     
     def optimize_convolution(self, input_tensor: np.ndarray, kernel: np.ndarray) -> np.ndarray:
         """Perform optimized convolution."""
+        # TODO: Implement ARM-optimized convolution using Kleidi or im2col approach
         logger.debug("Using fallback implementation for convolution")
-        # Simple fallback - would need proper convolution implementation
         return input_tensor  # Placeholder
 
 def detect_kleidi_libraries() -> Dict[str, Any]:
     """Detect ARM Kleidi libraries availability."""
+    # TODO: Implement actual Kleidi library detection via ctypes or subprocess
     return {
         "status": "not_found",
         "libraries": {},

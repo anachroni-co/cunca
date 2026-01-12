@@ -23,11 +23,13 @@ class ARMAutoScaler:
     
     def scale_up(self) -> bool:
         """Scale up resources (stub implementation)."""
+        # TODO: Implement ARM resource scaling - integrate with cluster manager or cloud API
         logger.debug("Stub: Would scale up ARM resources")
         return False
     
     def scale_down(self) -> bool:
         """Scale down resources (stub implementation)."""
+        # TODO: Implement ARM resource scale-down with graceful shutdown
         logger.debug("Stub: Would scale down ARM resources")
         return False
 

@@ -23,11 +23,13 @@ class ARMMemoryManager:
     
     def allocate(self, size: int) -> Optional[Any]:
         """Allocate memory (stub implementation)."""
+        # TODO: Implement ARM-specific memory allocation using mmap or ARM memory APIs
         logger.debug(f"Stub: Would allocate {size} bytes")
         return None
     
     def deallocate(self, ptr: Any) -> None:
         """Deallocate memory (stub implementation)."""
+        # TODO: Implement ARM-specific memory deallocation
         logger.debug("Stub: Would deallocate memory")
         pass
 

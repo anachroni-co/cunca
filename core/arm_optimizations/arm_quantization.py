@@ -48,6 +48,7 @@ class ARMQuantizer:
     
     def _setup_optimized_functions(self):
         """Setup optimized functions (fallback in stub mode)."""
+        # TODO: Implement ARM NEON/SVE optimized quantization when ARM hardware detected
         self.quantize_weights_fn = self._quantize_weights_fallback
         logger.info("ℹ️ Using fallback quantization (no ARM optimizations)")
     
@@ -159,6 +160,7 @@ def create_arm_quantizer(bits: int = 8) -> ARMQuantizer:
 
 def detect_arm_quantization_capabilities() -> Dict[str, bool]:
     """Detect ARM quantization capabilities (stub mode)."""
+    # TODO: Implement actual ARM capability detection via cpuinfo or /proc/cpuinfo
     return {
         "neon": False,
         "sve": False,

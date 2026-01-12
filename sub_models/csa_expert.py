@@ -329,7 +329,7 @@ class EnhancedWorldModel:
         
         return WorldState(
             vars=state,
-            evidence=[],  # TODO: Connect to RAG/KB
+            evidence=[],  # TODO: Connect to RAG/Knowledge Base for evidence retrieval
             consequences=consequences,
             uncertainty=uncertainty,
             stability_score=state.get("stability", 0.8)

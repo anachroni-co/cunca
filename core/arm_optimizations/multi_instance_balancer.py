@@ -23,6 +23,7 @@ class ARMMultiInstanceBalancer:
     
     def balance_load(self, instances: List[Any]) -> Dict[str, Any]:
         """Balance load across instances (stub implementation)."""
+        # TODO: Implement load balancing algorithm (round-robin, least-connections, weighted)
         logger.debug("Stub: Would balance load across instances")
         return {"status": "stub_mode"}
 

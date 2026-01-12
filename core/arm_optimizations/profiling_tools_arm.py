@@ -23,10 +23,12 @@ class ARMProfiler:
     
     def start_profiling(self) -> None:
         """Start profiling (stub implementation)."""
+        # TODO: Implement ARM performance counter profiling (perf_event or simpleperf)
         logger.debug("Stub: Would start ARM profiling")
     
     def stop_profiling(self) -> Dict[str, Any]:
         """Stop profiling and return results (stub implementation)."""
+        # TODO: Implement profiling data collection and analysis
         logger.debug("Stub: Would stop ARM profiling")
         return {"status": "stub_mode"}
 
