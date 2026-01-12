@@ -174,7 +174,7 @@ else:
 TPU_V4_AVAILABLE = False
 try:
     TPU_V4_AVAILABLE = xla_bridge.get_backend('tpu_v4') is not None
-except:
+except Exception:
     pass
 
 class TpuV4AdaptiveOps:

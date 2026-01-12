@@ -130,5 +130,5 @@ class JtoxDtottoProcessor(DtottoProcessor):
                     for k in dtotto[0].keys()
                 }
             return True
-        except:
+        except Exception:
             return False

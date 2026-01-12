@@ -154,7 +154,7 @@ if FLAX_AVAILABLE:
                 self.param('kernel_q', lambda *args: None, None)
                 self.param('kernel_scales', lambda *args: None, None)
                 return True
-            except:
+            except Exception:
                 return False
         
         def _quantized_forward(self, inputs: jnp.ndarray) -> jnp.ndarray:
@@ -417,7 +417,7 @@ if FLAX_AVAILABLE:
                 self.param('embedding_q', lambda *args: None, None)
                 self.param('embedding_scales', lambda *args: None, None)
                 return True
-            except:
+            except Exception:
                 return False
         
         def _quantized_forward(self, inputs: jnp.ndarray) -> jnp.ndarray:

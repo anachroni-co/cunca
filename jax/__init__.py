@@ -259,7 +259,7 @@ except Exception as _e:  # pragma: no cover - environment without JAX
                                 if isinstance(x, list):
                                     return sum(v*v for v in x) ** 0.5
                                 return abs(x)
-                            except:
+                            except Exception:
                                 return 1.0
                     
                     @staticmethod
@@ -427,7 +427,7 @@ else:
                 try:
                     import numpy as np
                     return np.random.normal(0, 1, shape).astype(dtype or np.float32)
-                except:
+                except Exception:
                     return 0.0
         random = _FakeRandom()
 

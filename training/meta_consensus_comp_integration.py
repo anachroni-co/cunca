@@ -388,7 +388,7 @@ class MetaConsensusCompSystem:
                         max_experts=3
                     )
                     health_checks["router"] = len(routing_result.get("selected_models", [])) > 0
-                except:
+                except Exception:
                     health_checks["router"] = False
             
             # Overall health
@@ -533,7 +533,7 @@ class MetaConsensusCompSystem:
             process = psutil.Process()
             self.status.memory_usage_mb = process.memory_info().rss / (1024 * 1024)
             self.status.cpu_usage_percent = process.cpu_percent()
-        except:
+        except Exception:
             pass
         
         # Update cache metrics

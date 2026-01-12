@@ -240,7 +240,7 @@ class MambaModule(IModule):
             try:
                 _, outputs = jax.lax.associative_scan(ssm_step, initial_state, inputs, axis=1)
                 scan_complexity = "O(log n)"
-            except:
+            except Exception:
                 # Fallback a scan lineal
                 _, outputs = jax.lax.scan(ssm_step, initial_state, inputs)
                 scan_complexity = "O(n)"

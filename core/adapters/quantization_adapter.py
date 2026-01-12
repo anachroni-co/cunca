@@ -312,7 +312,7 @@ class VQbitQuantizationMethod(QuantizationMethod):
                 return len(data) * 4  # Estimation
             else:
                 return 0
-        except:
+        except Exception:
             return 0
     
     def _reconstruct_from_codes(self, codes: Any, codebooks: Any) -> Any:
@@ -748,7 +748,7 @@ class QuantizationAdapter(BaseAdapter):
                 compression_diff = abs(estimated_compression - target_compression) / target_compression
                 compression_score = max(0, 1.0 - compression_diff)
                 score += compression_score * 30  # 30% del score
-            except:
+            except Exception:
                 score += 15  # Score neutral si no se puede estimar
         else:
             score += 20  # Score por defecto
@@ -885,7 +885,7 @@ class QuantizationAdapter(BaseAdapter):
                 return len(data) * 4
             else:
                 return 1000  # Estimation por defecto
-        except:
+        except Exception:
             return 1000
     
     def _map_method_name_to_type(self, method_name: Optional[str]) -> Optional[QuantizationType]:

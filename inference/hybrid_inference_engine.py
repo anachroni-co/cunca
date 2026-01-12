@@ -384,7 +384,7 @@ class HybridInferenceEngine:
                 devices = jax.devices()
                 if devices and devices[0].platform == 'tpu':
                     backends.append(InferenceBackend.TPU_V6E)
-            except:
+            except Exception:
                 pass
         
         # GPU CUDA

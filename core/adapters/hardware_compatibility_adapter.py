@@ -306,7 +306,7 @@ class HardwareDetector:
             try:
                 freq_info = psutil.cpu_freq()
                 max_freq_ghz = freq_info.max / 1000 if freq_info else 3.0
-            except:
+            except Exception:
                 max_freq_ghz = 3.0
             
             # Estimar rendimiento
