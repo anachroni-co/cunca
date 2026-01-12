@@ -2,12 +2,12 @@
 Advanced Agent Behaviors - Extended Strategy Pattern - CapibaraGPT v2024
 ========================================================================
 
-Comportamientos avanzados adicionales para el patrón Strategy:
-- ResearchBehavior: Comportamiento de investigación avanzada
-- CodingBehavior: Comportamiento de programación especializada
-- CommunicationBehavior: Comportamiento de comunicación inter-agente
-- MonitoringBehavior: Comportamiento de monitoreo y métricas
-- LearningBehavior: Comportamiento de aprendizaje adaptativo
+Additional advanced behaviors for the Strategy pattern:
+- ResearchBehavior: Advanced research behavior
+- CodingBehavior: Specialized programming behavior
+- CommunicationBehavior: Inter-agent communication behavior
+- MonitoringBehavior: Monitoring and metrics behavior
+- LearningBehavior: Adaptive learning behavior
 """
 
 import time
@@ -76,7 +76,7 @@ logger = logging.getLogger(__name__)
 # ============================================================================
 
 class ResearchBehavior(BaseBehavior):
-    """Comportamiento especializado para investigación y recopilación de información."""
+    """Specialized behavior for research and information gathering."""
     
     @property
     def behavior_type(self) -> AgentBehaviorType:
@@ -488,7 +488,7 @@ class ResearchBehavior(BaseBehavior):
 # ============================================================================
 
 class CodingBehavior(BaseBehavior):
-    """Comportamiento especializado para programación y desarrollo de código."""
+    """Specialized behavior for programming and code development."""
     
     @property
     def behavior_type(self) -> AgentBehaviorType:

@@ -2,7 +2,7 @@
 Humor Analysis Tools for CapibaraGPT-v2
 =======================================
 
-Herramientas para analizar y categorizar humor en español.
+Tools for analyzing and categorizing humor in Spanish.
 """
 
 import re
@@ -15,7 +15,7 @@ import json
 logger = logging.getLogger(__name__)
 
 class HumorType(Enum):
-    """Tipos de humor identificables."""
+    """Identifiable humor types."""
     JUEGO_PALABRAS = "juego_palabras"
     HUMOR_NEGRO = "humor_negro"
     COMPARACION = "comparacion"
@@ -27,7 +27,7 @@ class HumorType(Enum):
 
 @dataclass
 class HumorAnalysis:
-    """Resultado del análisis de humor."""
+    """Humor analysis result."""
     text: str
     humor_type: HumorType
     confidence: float
@@ -35,14 +35,14 @@ class HumorAnalysis:
     explanation: Optional[str] = None
 
 class HumorAnalyzer:
-    """Analizador de tipos de humor en chistes españoles."""
+    """Humor type analyzer for Spanish jokes."""
     
     def __init__(self):
         self.patterns = self._load_humor_patterns()
         self.indicators = self._load_humor_indicators()
     
     def _load_humor_patterns(self) -> Dict[str, List[str]]:
-        """Loads patrones regex para detectar tipos de humor."""
+        """Load regex patterns to detect humor types."""
         return {
             'juego_palabras': [
                 r'\b(\w+)\b.*\b\1\w*\b',  # Repetición de palabras similares
@@ -89,7 +89,7 @@ class HumorAnalyzer:
         }
     
     def _load_humor_indicators(self) -> Dict[str, List[str]]:
-        """Loads indicadores léxicos de tipos de humor."""
+        """Load lexical indicators for humor types."""
         return {
             'juego_palabras': [
                 'calambur', 'trabalenguas', 'rima', 'sonido', 'pronuncia',
@@ -123,13 +123,13 @@ class HumorAnalyzer:
     
     def analyze_humor_type(self, text: str) -> HumorAnalysis:
         """
-        Analiza el tipo de humor en un texto.
-        
+        Analyze the humor type in a text.
+
         Args:
-            text: Texto del chiste a analizar
-            
+            text: Joke text to analyze
+
         Returns:
-            HumorAnalysis: Resultado del análisis
+            HumorAnalysis: Analysis result
         """
         text_lower = text.lower()
         scores = {}
@@ -180,25 +180,25 @@ class HumorAnalyzer:
     
     def batch_analyze(self, texts: List[str]) -> List[HumorAnalysis]:
         """
-        Analiza múltiples textos en lote.
-        
+        Analyze multiple texts in batch.
+
         Args:
-            texts: Lista de textos a analizar
-            
+            texts: List of texts to analyze
+
         Returns:
-            List[HumorAnalysis]: Lista de análisis
+            List[HumorAnalysis]: List of analyses
         """
         return [self.analyze_humor_type(text) for text in texts]
     
     def get_humor_distribution(self, analyses: List[HumorAnalysis]) -> Dict[str, float]:
         """
-        Calcula la distribución de tipos de humor.
-        
+        Calculate the distribution of humor types.
+
         Args:
-            analyses: Lista de análisis de humor
-            
+            analyses: List of humor analyses
+
         Returns:
-            Dict: Distribución porcentual de tipos de humor
+            Dict: Percentage distribution of humor types
         """
         if not analyses:
             return {}
@@ -214,33 +214,33 @@ class HumorAnalyzer:
             for humor_type, count in type_counts.items()
         }
     
-    def filter_by_confidence(self, analyses: List[HumorAnalysis], 
+    def filter_by_confidence(self, analyses: List[HumorAnalysis],
                            min_confidence: float = 0.6) -> List[HumorAnalysis]:
         """
-        Filtra análisis por nivel de confianza.
-        
+        Filter analyses by confidence level.
+
         Args:
-            analyses: Lista de análisis
-            min_confidence: Confianza mínima requerida
-            
+            analyses: List of analyses
+            min_confidence: Minimum required confidence
+
         Returns:
-            List[HumorAnalysis]: Análisis filtrados
+            List[HumorAnalysis]: Filtered analyses
         """
         return [a for a in analyses if a.confidence >= min_confidence]
 
 class HumorMetrics:
-    """Métricas para evaluar humor."""
+    """Metrics for evaluating humor."""
     
     @staticmethod
     def calculate_humor_diversity(analyses: List[HumorAnalysis]) -> float:
         """
-        Calcula la diversidad de humor (entropía de Shannon).
-        
+        Calculate humor diversity (Shannon entropy).
+
         Args:
-            analyses: Lista de análisis de humor
-            
+            analyses: List of humor analyses
+
         Returns:
-            float: Índice de diversidad (0-1)
+            float: Diversity index (0-1)
         """
         if not analyses:
             return 0.0

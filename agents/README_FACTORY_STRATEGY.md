@@ -1,64 +1,64 @@
 # Factory and Strategy Design Patterns Implementation
 
-## Resumen de la Implementación
+## Implementation Summary
 
-Se ha implementado exitosamente los patrones de diseño Factory y Strategy en la carpeta `agents/` de CapibaraGPT, utilizando la carpeta `interfaces/` para las abstracciones necesarias. Esta implementación permite crear agentes con diferentes comportamientos de forma flexible y intercambiable.
+Factory and Strategy design patterns have been successfully implemented in the `agents/` folder of CapibaraGPT, using the `interfaces/` folder for necessary abstractions. This implementation allows creating agents with different behaviors in a flexible and interchangeable way.
 
-## Estructura de Archivos Creados/Modificados
+## Created/Modified File Structure
 
 ### 📁 Interfaces (`/interfaces/`)
 
-#### `iagent.py` - Interfaces Base
-- **IAgent**: Interfaz base para todos los agentes
-- **IAgentBehavior**: Interfaz para comportamientos específicos (Strategy Pattern)
-- **IAgentFactory**: Interfaz para fábricas de agentes (Factory Pattern)
-- **IOrchestrationStrategy**: Interfaz para estrategias de orquestación
-- **IBehaviorFactory**: Interfaz para fábricas de comportamientos
-- **Interfaces Extendidas**: IAgentCommunication, IAgentLearning, IAgentMonitoring
+#### `iagent.py` - Base Interfaces
+- **IAgent**: Base interface for all agents
+- **IAgentBehavior**: Interface for specific behaviors (Strategy Pattern)
+- **IAgentFactory**: Interface for agent factories (Factory Pattern)
+- **IOrchestrationStrategy**: Interface for orchestration strategies
+- **IBehaviorFactory**: Interface for behavior factories
+- **Extended Interfaces**: IAgentCommunication, IAgentLearning, IAgentMonitoring
 
-#### `__init__.py` - Actualizado
-- Agregadas importaciones de las nuevas interfaces de agentes
-- Manejo de importaciones seguras con fallbacks
+#### `__init__.py` - Updated
+- Added imports for new agent interfaces
+- Safe import handling with fallbacks
 
 ### 📁 Agents (`/agents/`)
 
 #### `behaviors.py` - Strategy Pattern Core
-- **BaseBehavior**: Clase base para todos los comportamientos
-- **ReasoningBehavior**: Razonamiento lógico y análisis
-- **PlanningBehavior**: Planificación estratégica
-- **ExecutionBehavior**: Ejecución de acciones con monitoreo
+- **BaseBehavior**: Base class for all behaviors
+- **ReasoningBehavior**: Logical reasoning and analysis
+- **PlanningBehavior**: Strategic planning
+- **ExecutionBehavior**: Action execution with monitoring
 
 #### `advanced_behaviors.py` - Strategy Pattern Extended
-- **ResearchBehavior**: Investigación y recopilación de información
-- **CodingBehavior**: Generación de código y desarrollo
+- **ResearchBehavior**: Research and information gathering
+- **CodingBehavior**: Code generation and development
 
 #### `communication_behaviors.py` - Strategy Pattern Advanced
-- **CommunicationBehavior**: Comunicación inter-agente
-- **MonitoringBehavior**: Monitoreo y métricas de sistema
-- Estructuras de datos: Message, CommunicationEvent, PerformanceMetric
+- **CommunicationBehavior**: Inter-agent communication
+- **MonitoringBehavior**: System monitoring and metrics
+- Data structures: Message, CommunicationEvent, PerformanceMetric
 
 #### `factories.py` - Factory Pattern Implementation
-- **BehaviorFactory**: Fábrica para crear comportamientos específicos
-- **StrategyBasedAgentFactory**: Fábrica mejorada de agentes con Strategy
-- **StrategyBasedAgent**: Implementación de agente que usa Strategy Pattern
+- **BehaviorFactory**: Factory for creating specific behaviors
+- **StrategyBasedAgentFactory**: Enhanced agent factory with Strategy
+- **StrategyBasedAgent**: Agent implementation using Strategy Pattern
 
 #### `orchestration_strategies.py` - Strategy Pattern for Orchestration
-- **BaseOrchestrationStrategy**: Clase base para estrategias de orquestación
-- **IntelligentOrchestrationStrategy**: Coordinación inteligente basada en IA
-- Estructuras: TaskDecomposition, ExecutionPlan, CoordinationEvent
+- **BaseOrchestrationStrategy**: Base class for orchestration strategies
+- **IntelligentOrchestrationStrategy**: AI-based intelligent coordination
+- Structures: TaskDecomposition, ExecutionPlan, CoordinationEvent
 
 #### `capibara_agent_factory.py` - Enhanced Factory Pattern
-- **CapibaraAgentFactory**: Fábrica mejorada con compatibilidad hacia atrás
-- Integración de Factory y Strategy patterns con el sistema legacy
-- Soporte para creación por templates y especificaciones
+- **CapibaraAgentFactory**: Enhanced factory with backward compatibility
+- Factory and Strategy pattern integration with legacy system
+- Support for template and specification-based creation
 
 #### `examples.py` - Comprehensive Demonstrations
-- **demonstrate_factory_patterns()**: Ejemplos del patrón Factory
-- **demonstrate_strategy_patterns()**: Ejemplos del patrón Strategy
-- **demonstrate_advanced_patterns()**: Combinaciones avanzadas
-- **run_all_examples()**: Ejecución completa de demostraciones
+- **demonstrate_factory_patterns()**: Factory pattern examples
+- **demonstrate_strategy_patterns()**: Strategy pattern examples
+- **demonstrate_advanced_patterns()**: Advanced combinations
+- **run_all_examples()**: Complete demonstration execution
 
-## Patrones Implementados
+## Implemented Patterns
 
 ### 🏭 Factory Pattern
 
@@ -90,7 +90,7 @@ developer = factory.create_agent_from_template("coding_developer")
 ```python
 custom_spec = {
     "name": "custom_agent",
-    "type": "research", 
+    "type": "research",
     "behaviors": ["research", "reasoning", "communication"],
     "config": {"max_sources": 15}
 }
@@ -108,23 +108,23 @@ agent = StrategyBasedAgent(
     secondary_behaviors=[planning_behavior, execution_behavior]
 )
 
-# El agente cambia automáticamente de comportamiento según el contexto
+# Agent automatically switches behavior based on context
 result = agent.execute(context)
 ```
 
 #### 2. **Behavior Composition**
 ```python
-# Agregar comportamientos dinámicamente
+# Add behaviors dynamically
 agent.add_behavior(communication_behavior)
 agent.add_behavior(monitoring_behavior)
 
-# Remover comportamientos
+# Remove behaviors
 agent.remove_behavior(AgentBehaviorType.MONITORING)
 ```
 
 #### 3. **Context-Aware Selection**
 ```python
-# El agente selecciona el comportamiento apropiado automáticamente
+# Agent automatically selects appropriate behavior
 contexts = [
     "Debug this Python code",      # -> CodingBehavior
     "Research AI safety",          # -> ResearchBehavior
@@ -140,171 +140,171 @@ execution_plan = strategy.plan_execution(task, requirements, agents)
 result = strategy.coordinate_execution(execution_plan, agents)
 ```
 
-## Tipos de Agentes Disponibles
+## Available Agent Types
 
-### 🧠 Agentes Especializados
+### 🧠 Specialized Agents
 
-1. **ReasoningAgent**: Razonamiento lógico y análisis
-   - Capacidades: logical_reasoning, pattern_recognition, causal_analysis
-   - Configuración: reasoning_depth, use_formal_logic
+1. **ReasoningAgent**: Logical reasoning and analysis
+   - Capabilities: logical_reasoning, pattern_recognition, causal_analysis
+   - Configuration: reasoning_depth, use_formal_logic
 
-2. **PlanningAgent**: Planificación estratégica
-   - Capacidades: task_decomposition, strategy_formulation, resource_allocation
-   - Configuración: planning_horizon, use_contingency_planning
+2. **PlanningAgent**: Strategic planning
+   - Capabilities: task_decomposition, strategy_formulation, resource_allocation
+   - Configuration: planning_horizon, use_contingency_planning
 
-3. **ExecutionAgent**: Ejecución confiable
-   - Capacidades: action_execution, progress_monitoring, error_handling
-   - Configuración: max_retries, timeout_seconds, monitor_progress
+3. **ExecutionAgent**: Reliable execution
+   - Capabilities: action_execution, progress_monitoring, error_handling
+   - Configuration: max_retries, timeout_seconds, monitor_progress
 
-4. **ResearchAgent**: Investigación avanzada
-   - Capacidades: information_gathering, source_validation, data_analysis
-   - Configuración: max_sources, quality_threshold, use_data_integration
+4. **ResearchAgent**: Advanced research
+   - Capabilities: information_gathering, source_validation, data_analysis
+   - Configuration: max_sources, quality_threshold, use_data_integration
 
-5. **CodingAgent**: Desarrollo de software
-   - Capacidades: code_generation, code_debugging, testing_framework
-   - Configuración: languages, include_tests, include_docs
+5. **CodingAgent**: Software development
+   - Capabilities: code_generation, code_debugging, testing_framework
+   - Configuration: languages, include_tests, include_docs
 
-6. **CommunicationAgent**: Coordinación inter-agente
-   - Capacidades: inter_agent_communication, message_routing, conflict_resolution
-   - Configuración: enable_broadcasting, max_message_history
+6. **CommunicationAgent**: Inter-agent coordination
+   - Capabilities: inter_agent_communication, message_routing, conflict_resolution
+   - Configuration: enable_broadcasting, max_message_history
 
-7. **MonitoringAgent**: Monitoreo de sistema
-   - Capacidades: performance_monitoring, health_checking, anomaly_detection
-   - Configuración: monitoring_interval, alert_thresholds
+7. **MonitoringAgent**: System monitoring
+   - Capabilities: performance_monitoring, health_checking, anomaly_detection
+   - Configuration: monitoring_interval, alert_thresholds
 
-### 🎨 Templates Predefinidos
+### 🎨 Predefined Templates
 
-- **reasoning_specialist**: Especialista en razonamiento avanzado
-- **execution_expert**: Experto en ejecución confiable
-- **research_analyst**: Analista de investigación
-- **coding_developer**: Desarrollador full-stack
-- **communication_coordinator**: Coordinador de comunicación
-- **system_monitor**: Monitor de sistema
-- **general_assistant**: Asistente de propósito general
+- **reasoning_specialist**: Advanced reasoning specialist
+- **execution_expert**: Reliable execution expert
+- **research_analyst**: Research analyst
+- **coding_developer**: Full-stack developer
+- **communication_coordinator**: Communication coordinator
+- **system_monitor**: System monitor
+- **general_assistant**: General purpose assistant
 
-## Características Avanzadas
+## Advanced Features
 
-### 🔄 Comportamientos Dinámicos
-- Cambio automático de comportamiento basado en contexto
-- Composición de múltiples comportamientos
-- Adaptación en tiempo de ejecución
+### 🔄 Dynamic Behaviors
+- Automatic behavior switching based on context
+- Composition of multiple behaviors
+- Runtime adaptation
 
-### 🏗️ Creación Flexible
-- Múltiples métodos de creación (tipo, template, especificación)
-- Configuración granular por comportamiento
-- Compatibilidad hacia atrás con sistema legacy
+### 🏗️ Flexible Creation
+- Multiple creation methods (type, template, specification)
+- Granular configuration per behavior
+- Backward compatibility with legacy system
 
-### 🤝 Coordinación Inteligente
-- Estrategias de orquestación adaptables
-- Descomposición automática de tareas
-- Asignación inteligente de agentes
+### 🤝 Intelligent Coordination
+- Adaptable orchestration strategies
+- Automatic task decomposition
+- Intelligent agent assignment
 
-### 📊 Monitoreo y Métricas
-- Seguimiento de rendimiento en tiempo real
-- Métricas de comportamiento y ejecución
-- Detección de anomalías y alertas
+### 📊 Monitoring and Metrics
+- Real-time performance tracking
+- Behavior and execution metrics
+- Anomaly detection and alerts
 
-### 🔧 Extensibilidad
-- Registro dinámico de nuevos comportamientos
-- Interfaces extensibles para funcionalidades adicionales
-- Integración con sistemas existentes
+### 🔧 Extensibility
+- Dynamic registration of new behaviors
+- Extensible interfaces for additional functionality
+- Integration with existing systems
 
-## Ejemplos de Uso
+## Usage Examples
 
-### Ejemplo 1: Sistema Colaborativo
+### Example 1: Collaborative System
 ```python
-# Crear equipo especializado
+# Create specialized team
 team = {
     "manager": factory.create_agent_from_template("reasoning_specialist"),
-    "researcher": factory.create_agent_from_template("research_analyst"), 
+    "researcher": factory.create_agent_from_template("research_analyst"),
     "developer": factory.create_agent_from_template("coding_developer"),
     "coordinator": factory.create_agent(AgentBehaviorType.COMMUNICATION)
 }
 
-# Cada agente contribuye según su especialidad
+# Each agent contributes according to their specialty
 for role, agent in team.items():
     result = agent.execute(create_context_for_role(role, project_task))
 ```
 
-### Ejemplo 2: Pipeline Adaptativo
+### Example 2: Adaptive Pipeline
 ```python
-# Pipeline con diferentes estrategias por etapa
+# Pipeline with different strategies per stage
 pipeline_stages = [
     ("analysis", ReasoningBehavior()),
-    ("research", ResearchBehavior()), 
+    ("research", ResearchBehavior()),
     ("planning", PlanningBehavior()),
     ("implementation", ExecutionBehavior()),
     ("monitoring", MonitoringBehavior())
 ]
 
-# Procesar a través del pipeline
+# Process through the pipeline
 for stage_name, behavior in pipeline_stages:
     agent._current_behavior = behavior
     result = agent.execute(create_stage_context(stage_name))
 ```
 
-### Ejemplo 3: Sistema Auto-Optimizado
+### Example 3: Self-Optimized System
 ```python
-# Sistema que se adapta basándose en rendimiento
+# System that adapts based on performance
 monitor = factory.create_agent(AgentBehaviorType.MONITORING)
 worker = factory.create_agent_with_multiple_behaviors()
 
-# Monitorear y adaptar automáticamente
+# Monitor and adapt automatically
 for task in workload:
     result = worker.execute(task)
     performance = monitor.analyze_performance(result)
-    
+
     if performance.needs_optimization():
         worker.adapt_strategy(performance.get_recommendations())
 ```
 
-## Beneficios de la Implementación
+## Implementation Benefits
 
-### ✅ Flexibilidad
-- Creación dinámica de agentes con comportamientos específicos
-- Intercambio de estrategias en tiempo de ejecución
-- Adaptación basada en contexto y rendimiento
+### ✅ Flexibility
+- Dynamic agent creation with specific behaviors
+- Runtime strategy switching
+- Context and performance-based adaptation
 
-### ✅ Mantenibilidad
-- Separación clara de responsabilidades
-- Interfaces bien definidas
-- Código modular y testeable
+### ✅ Maintainability
+- Clear separation of responsibilities
+- Well-defined interfaces
+- Modular and testable code
 
-### ✅ Extensibilidad
-- Fácil adición de nuevos comportamientos
-- Registro dinámico de estrategias
-- Integración con sistemas existentes
+### ✅ Extensibility
+- Easy addition of new behaviors
+- Dynamic strategy registration
+- Integration with existing systems
 
-### ✅ Reutilización
-- Comportamientos reutilizables entre diferentes agentes
-- Templates predefinidos para casos comunes
-- Fábricas configurables para diferentes escenarios
+### ✅ Reusability
+- Reusable behaviors between different agents
+- Predefined templates for common cases
+- Configurable factories for different scenarios
 
-### ✅ Escalabilidad
-- Soporte para múltiples agentes colaborativos
-- Orquestación inteligente de recursos
-- Monitoreo y optimización automática
+### ✅ Scalability
+- Support for multiple collaborative agents
+- Intelligent resource orchestration
+- Automatic monitoring and optimization
 
-## Compatibilidad
+## Compatibility
 
 ### 🔄 Backward Compatibility
-- Integración completa con `CapibaraAgent` existente
-- Soporte para creación legacy y moderna
-- Migración gradual sin romper código existente
+- Complete integration with existing `CapibaraAgent`
+- Support for legacy and modern creation
+- Gradual migration without breaking existing code
 
 ### 🔧 Forward Compatibility
-- Interfaces extensibles para futuras funcionalidades
-- Arquitectura preparada para nuevos tipos de agentes
-- Sistema de configuración flexible
+- Extensible interfaces for future functionality
+- Architecture prepared for new agent types
+- Flexible configuration system
 
-## Conclusión
+## Conclusion
 
-La implementación de los patrones Factory y Strategy en el sistema de agentes de CapibaraGPT proporciona:
+The implementation of Factory and Strategy patterns in the CapibaraGPT agent system provides:
 
-1. **Flexibilidad de Creación**: Múltiples formas de crear agentes según necesidades específicas
-2. **Comportamientos Adaptativos**: Agentes que pueden cambiar su estrategia dinámicamente
-3. **Arquitectura Extensible**: Fácil adición de nuevos comportamientos y tipos de agentes
-4. **Compatibilidad Total**: Integración perfecta con el sistema existente
-5. **Ejemplos Comprehensivos**: Demostraciones completas de todos los patrones implementados
+1. **Creation Flexibility**: Multiple ways to create agents according to specific needs
+2. **Adaptive Behaviors**: Agents that can dynamically change their strategy
+3. **Extensible Architecture**: Easy addition of new behaviors and agent types
+4. **Full Compatibility**: Seamless integration with the existing system
+5. **Comprehensive Examples**: Complete demonstrations of all implemented patterns
 
-Esta implementación convierte el sistema de agentes en una plataforma altamente flexible y extensible, manteniendo la compatibilidad con el código existente mientras proporciona capacidades avanzadas para casos de uso complejos.
+This implementation transforms the agent system into a highly flexible and extensible platform, maintaining compatibility with existing code while providing advanced capabilities for complex use cases.

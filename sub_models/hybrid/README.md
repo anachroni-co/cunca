@@ -1,103 +1,103 @@
 # Hybrid Attention Module - Intelligent Routing
 
-## Descripción
+## Description
 
-Módulo híbrido inteligente que selecciona automáticamente entre Transformer (O(n²)) y Mamba (O(n)) basándose en las características de la entrada. Proporciona el mejor balance entre precisión y eficiencia.
+Intelligent hybrid module that automatically selects between Transformer (O(n²)) and Mamba (O(n)) based on input characteristics. Provides the best balance between precision and efficiency.
 
-## Características
+## Features
 
-- ✅ **Routing Inteligente** automático entre Mamba y Transformer
-- ✅ **Threshold Configurable** para decisiones de routing
-- ✅ **Métricas de Decisión** detalladas
-- ✅ **Caching Inteligente** de decisiones
-- ✅ **Logging de Razones** para debugging
-- ✅ **Compatible con IModule**
+- ✅ **Intelligent Routing** automatic between Mamba and Transformer
+- ✅ **Configurable Threshold** for routing decisions
+- ✅ **Detailed Decision Metrics**
+- ✅ **Intelligent Caching** of decisions
+- ✅ **Reason Logging** for debugging
+- ✅ **IModule Compatible**
 
-## Lógica de Decisión
+## Decision Logic
 
 ```python
 if sequence_length >= mamba_threshold:  # Default: 512
-    use_mamba = True  # O(n) para eficiencia
+    use_mamba = True  # O(n) for efficiency
     reason = "long_sequence_efficiency"
 else:
-    use_transformer = True  # O(n²) para precisión
+    use_transformer = True  # O(n²) for precision
     reason = "short_sequence_precision"
 ```
 
-## Instalación de Dependencias
+## Dependency Installation
 
 ```bash
-# Dependencias requeridas
+# Required dependencies
 pip install numpy>=1.24.4
 pip install jax jaxlib
 pip install flax>=0.8.0
 
-# Para TPU (recomendado)
+# For TPU (recommended)
 pip install jax[tpu]
 ```
 
-## Uso Básico
+## Basic Usage
 
 ```python
 from capibara.sub_models.hybrid import HybridAttentionModule, HybridConfig
 
-# Configuración
+# Configuration
 config = {
     'hidden_size': 768,
     'num_heads': 12,
-    'mamba_threshold': 512,  # Umbral para usar Mamba
+    'mamba_threshold': 512,  # Threshold to use Mamba
     'transformer_max_length': 2048,
     'collect_metrics': True,
     'log_decisions': True
 }
 
-# Crear módulo híbrido
+# Create hybrid module
 hybrid = HybridAttentionModule(config)
 
-# Procesar entradas de diferentes longitudes
+# Process inputs of different lengths
 import numpy as np
 
-# Secuencia corta (usará Transformer)
+# Short sequence (will use Transformer)
 short_input = np.random.randn(2, 256, 768)
 output_short = hybrid(short_input, training=False)
-print(f"Módulo usado: {output_short['metrics']['selected_module']}")  # 'transformer'
+print(f"Module used: {output_short['metrics']['selected_module']}")  # 'transformer'
 
-# Secuencia larga (usará Mamba)
+# Long sequence (will use Mamba)
 long_input = np.random.randn(2, 1024, 768)
 output_long = hybrid(long_input, training=False)
-print(f"Módulo usado: {output_long['metrics']['selected_module']}")  # 'mamba'
+print(f"Module used: {output_long['metrics']['selected_module']}")  # 'mamba'
 ```
 
-## Configuración Avanzada
+## Advanced Configuration
 
-### Parámetros de HybridConfig
+### HybridConfig Parameters
 
-#### Decisión Híbrida
-- `mamba_threshold` (int, default=512): Longitud mínima para usar Mamba
-- `transformer_max_length` (int, default=2048): Longitud máxima para Transformer
+#### Hybrid Decision
+- `mamba_threshold` (int, default=512): Minimum length to use Mamba
+- `transformer_max_length` (int, default=2048): Maximum length for Transformer
 
-#### Arquitectura
-- `hidden_size` (int, default=768): Dimensión del modelo
-- `num_heads` (int, default=12): Número de cabezas de atención
-- `intermediate_size` (int, default=3072): Tamaño intermedio FFN
+#### Architecture
+- `hidden_size` (int, default=768): Model dimension
+- `num_heads` (int, default=12): Number of attention heads
+- `intermediate_size` (int, default=3072): Intermediate FFN size
 
-#### Configuración Mamba
-- `mamba_config` (dict, optional): Configuración personalizada para MambaModule
+#### Mamba Configuration
+- `mamba_config` (dict, optional): Custom configuration for MambaModule
 
 #### Transformer
-- `dropout_rate` (float, default=0.1): Tasa de dropout
-- `layer_norm_eps` (float, default=1e-12): Epsilon para layer normalization
+- `dropout_rate` (float, default=0.1): Dropout rate
+- `layer_norm_eps` (float, default=1e-12): Epsilon for layer normalization
 
-#### Optimizaciones
-- `use_tpu_optimizations` (bool, default=True): Optimizaciones TPU
-- `use_mixed_precision` (bool, default=True): Precisión mixta
-- `enable_caching` (bool, default=True): Caché de decisiones
+#### Optimizations
+- `use_tpu_optimizations` (bool, default=True): TPU optimizations
+- `use_mixed_precision` (bool, default=True): Mixed precision
+- `enable_caching` (bool, default=True): Decision caching
 
-#### Métricas y Logging
-- `collect_metrics` (bool, default=True): Recolectar métricas
-- `log_decisions` (bool, default=False): Logging detallado
+#### Metrics and Logging
+- `collect_metrics` (bool, default=True): Collect metrics
+- `log_decisions` (bool, default=False): Detailed logging
 
-### Ejemplo Avanzado
+### Advanced Example
 
 ```python
 from capibara.sub_models.hybrid import HybridAttentionModule
@@ -105,17 +105,17 @@ from capibara.sub_models.hybrid import HybridAttentionModule
 config = {
     'hidden_size': 1024,
     'num_heads': 16,
-    'mamba_threshold': 1024,  # Threshold más alto
+    'mamba_threshold': 1024,  # Higher threshold
     'transformer_max_length': 4096,
 
-    # Configuración personalizada para Mamba
+    # Custom Mamba configuration
     'mamba_config': {
         'd_state': 128,
         'd_conv': 8,
         'expand_factor': 4
     },
 
-    # Métricas y debugging
+    # Metrics and debugging
     'collect_metrics': True,
     'log_decisions': True,
     'enable_caching': True
@@ -124,52 +124,52 @@ config = {
 hybrid = HybridAttentionModule(config)
 ```
 
-## Métricas y Monitoreo
+## Metrics and Monitoring
 
-### Métricas Disponibles
+### Available Metrics
 
 ```python
 outputs = hybrid(inputs, training=False)
 metrics = outputs['metrics']
 
-print(f"Módulo seleccionado: {metrics['selected_module']}")  # 'mamba' o 'transformer'
-print(f"Razón: {metrics['selection_reason']}")
-print(f"Complejidad: {metrics['complexity']}")  # 'O(n)' o 'O(n²)'
-print(f"Longitud secuencia: {metrics['sequence_length']}")
-print(f"Threshold usado: {metrics['mamba_threshold']}")
-print(f"Confianza decisión: {metrics['decision_confidence']}")
+print(f"Selected module: {metrics['selected_module']}")  # 'mamba' or 'transformer'
+print(f"Reason: {metrics['selection_reason']}")
+print(f"Complexity: {metrics['complexity']}")  # 'O(n)' or 'O(n²)'
+print(f"Sequence length: {metrics['sequence_length']}")
+print(f"Threshold used: {metrics['mamba_threshold']}")
+print(f"Decision confidence: {metrics['decision_confidence']}")
 
-# Estadísticas acumuladas
+# Accumulated statistics
 stats = metrics['routing_statistics']
-print(f"Total decisiones: {stats['total_decisions']}")
-print(f"Veces Mamba: {stats['mamba_count']}")
-print(f"Veces Transformer: {stats['transformer_count']}")
+print(f"Total decisions: {stats['total_decisions']}")
+print(f"Mamba count: {stats['mamba_count']}")
+print(f"Transformer count: {stats['transformer_count']}")
 ```
 
-### Caché de Decisiones
+### Decision Caching
 
 ```python
-# El módulo cachea decisiones para secuencias similares
+# The module caches decisions for similar sequences
 cache_stats = metrics['cache_statistics']
-print(f"Tamaño caché: {cache_stats['cache_size']}")
+print(f"Cache size: {cache_stats['cache_size']}")
 print(f"Cache hits: {cache_stats['cache_hits']}")
 print(f"Cache misses: {cache_stats['cache_misses']}")
 print(f"Hit rate: {cache_stats['hit_rate']:.2%}")
 ```
 
-## Integración con ModularCapibaraModel
+## Integration with ModularCapibaraModel
 
 ```python
-# En capibara/core/modular_model.py
+# In capibara/core/modular_model.py
 from capibara.sub_models.hybrid import HybridAttentionModule
 
 available_modules = {
     "hybrid_attention": HybridAttentionModule,
-    # ... otros módulos
+    # ... other modules
 }
 ```
 
-### Configuración TOML
+### TOML Configuration
 
 ```toml
 # capibara/config/configs_toml/mamba_hybrid.toml
@@ -177,7 +177,7 @@ available_modules = {
 active = [
     "core_transformer",
     "mamba",
-    "hybrid_attention",  # ← Routing inteligente
+    "hybrid_attention",  # ← Intelligent routing
     "embedding_module"
 ]
 
@@ -192,17 +192,17 @@ log_decisions = false
 enable_caching = true
 ```
 
-## Casos de Uso
+## Use Cases
 
-### 1. Procesamiento Mixto
+### 1. Mixed Processing
 
 ```python
-# Batch con secuencias de diferentes longitudes
-# El módulo automáticamente usa la estrategia óptima para cada una
+# Batch with sequences of different lengths
+# The module automatically uses the optimal strategy for each
 
 batch = {
     'short_docs': np.random.randn(4, 128, 768),   # Transformer
-    'medium_docs': np.random.randn(4, 512, 768),  # Híbrido/Mamba
+    'medium_docs': np.random.randn(4, 512, 768),  # Hybrid/Mamba
     'long_docs': np.random.randn(4, 2048, 768)    # Mamba
 }
 
@@ -211,18 +211,18 @@ for name, inputs in batch.items():
     print(f"{name}: {outputs['metrics']['selected_module']}")
 ```
 
-### 2. Optimización de Recursos
+### 2. Resource Optimization
 
 ```python
-# Configurar threshold dinámicamente según recursos disponibles
+# Configure threshold dynamically based on available resources
 import psutil
 
 available_memory_gb = psutil.virtual_memory().available / (1024**3)
 
 if available_memory_gb < 8:
-    threshold = 256  # Usar Mamba antes para ahorrar memoria
+    threshold = 256  # Use Mamba earlier to save memory
 else:
-    threshold = 1024  # Usar Transformer más tiempo
+    threshold = 1024  # Use Transformer longer
 
 config['mamba_threshold'] = threshold
 hybrid = HybridAttentionModule(config)
@@ -231,7 +231,7 @@ hybrid = HybridAttentionModule(config)
 ### 3. A/B Testing
 
 ```python
-# Comparar rendimiento de diferentes thresholds
+# Compare performance of different thresholds
 thresholds = [256, 512, 1024, 2048]
 results = {}
 
@@ -239,7 +239,7 @@ for threshold in thresholds:
     config['mamba_threshold'] = threshold
     hybrid = HybridAttentionModule(config)
 
-    # Procesar dataset de prueba
+    # Process test dataset
     outputs = hybrid(test_data, training=False)
 
     results[threshold] = {
@@ -249,75 +249,75 @@ for threshold in thresholds:
     }
 ```
 
-## Beneficios
+## Benefits
 
-### Rendimiento Adaptativo
+### Adaptive Performance
 
-| Longitud Secuencia | Módulo Usado | Complejidad | Memoria |
-|-------------------|--------------|-------------|---------|
-| < 512             | Transformer  | O(n²)       | Moderada |
-| 512-2048          | Mamba        | O(n)        | Baja     |
-| > 2048            | Mamba        | O(n)        | Muy Baja |
+| Sequence Length | Module Used | Complexity | Memory |
+|-----------------|-------------|------------|--------|
+| < 512           | Transformer | O(n²)      | Moderate |
+| 512-2048        | Mamba       | O(n)       | Low |
+| > 2048          | Mamba       | O(n)       | Very Low |
 
-### Ventajas
+### Advantages
 
-- ✅ **Mejor de ambos mundos**: Precisión de Transformer + Eficiencia de Mamba
-- ✅ **Automático**: Sin configuración manual por entrada
-- ✅ **Adaptativo**: Se ajusta a las características de los datos
-- ✅ **Eficiente**: Optimiza recursos automáticamente
-- ✅ **Transparente**: Métricas detalladas de decisiones
+- ✅ **Best of both worlds**: Transformer precision + Mamba efficiency
+- ✅ **Automatic**: No manual configuration per input
+- ✅ **Adaptive**: Adjusts to data characteristics
+- ✅ **Efficient**: Automatically optimizes resources
+- ✅ **Transparent**: Detailed decision metrics
 
 ## Troubleshooting
 
-### Problema: "Siempre usa Transformer"
+### Problem: "Always uses Transformer"
 
-**Solución**: Reducir `mamba_threshold`
+**Solution**: Reduce `mamba_threshold`
 
 ```python
-config['mamba_threshold'] = 256  # Valor más bajo
+config['mamba_threshold'] = 256  # Lower value
 ```
 
-### Problema: "Calidad degradada con Mamba"
+### Problem: "Quality degraded with Mamba"
 
-**Solución**: Aumentar threshold o ajustar configuración Mamba
+**Solution**: Increase threshold or adjust Mamba configuration
 
 ```python
-config['mamba_threshold'] = 1024  # Usar Transformer más tiempo
+config['mamba_threshold'] = 1024  # Use Transformer longer
 
-# O mejorar configuración Mamba
+# Or improve Mamba configuration
 config['mamba_config'] = {
-    'd_state': 128,  # Mayor capacidad
-    'expand_factor': 4  # Más expresividad
+    'd_state': 128,  # Higher capacity
+    'expand_factor': 4  # More expressiveness
 }
 ```
 
-### Problema: "Alto uso de memoria"
+### Problem: "High memory usage"
 
-**Solución**: Reducir threshold para usar Mamba antes
+**Solution**: Reduce threshold to use Mamba earlier
 
 ```python
 config['mamba_threshold'] = 128
 config['transformer_max_length'] = 512
 ```
 
-## Referencias
+## References
 
 - [Mamba Paper](https://arxiv.org/abs/2312.00752)
 - [Transformer Architecture](https://arxiv.org/abs/1706.03762)
 - [Hybrid Architectures for LLMs](https://arxiv.org/abs/2401.00000)
 
-## Estado de Implementación
+## Implementation Status
 
-- ✅ Routing inteligente básico
-- ✅ Métricas y monitoreo
-- ✅ Caché de decisiones
+- ✅ Basic intelligent routing
+- ✅ Metrics and monitoring
+- ✅ Decision caching
 - ✅ IModule compatibility
-- ⚠️ Routing basado en contenido (en progreso)
+- ⚠️ Content-based routing (in progress)
 - 🔄 Adaptive thresholds (roadmap)
 - 🔄 Multi-dimensional routing (roadmap)
 
 ---
 
-**Recuperado del commit**: 6377222 (2025-09-03)
-**Autor**: Cursor Agent, marco@anachroni.co
-**Última actualización**: 2025-11-16
+**Recovered from commit**: 6377222 (2025-09-03)
+**Author**: Cursor Agent, marco@anachroni.co
+**Last updated**: 2025-11-16

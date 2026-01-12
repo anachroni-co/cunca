@@ -1,8 +1,8 @@
 """
 Integration Examples for CapibaraGPT-v2 Adapter System
 
-Ejemplos prácticos de integración y uso del system de adapters,
-demostrando casos de uso reales y mejores prácticas.
+Practical integration and usage examples for the adapter system,
+demonstrating real use cases and best practices.
 """
 
 import logging
@@ -40,43 +40,43 @@ class AdapterSystemDemo:
     
     def initialize_system(self) -> bool:
         """Initializes the entire adapter system."""
-        print("🚀 Inicializando Sistema de Adapters de CapibaraGPT-v2...")
+        print("🚀 Initializing CapibaraGPT-v2 Adapter System...")
         
         try:
-            # 1. Inicializar adapters principales
+            # 1. Initialize main adapters
             self.adapters['kernel'] = KernelAbstractionAdapter()
             self.adapters['performance'] = PerformanceAdapter(OptimizationGoal.BALANCED)
             self.adapters['hardware'] = HardwareCompatibilityAdapter(OptimizationLevel.BALANCED)
             self.adapters['quantization'] = QuantizationAdapter()
             self.adapters['language'] = LanguageProcessingAdapter()
-            
-            # 2. Inicializar cada adapter
+
+            # 2. Initialize each adapter
             for name, adapter in self.adapters.items():
-                print(f"  📦 Inicializando {name} adapter...")
+                print(f"  📦 Initializing {name} adapter...")
                 success = adapter.initialize()
                 if success:
-                    print(f"    ✅ {name} adapter inicializado correctamente")
+                    print(f"    ✅ {name} adapter initialized successfully")
                 else:
-                    print(f"    ❌ Error inicializando {name} adapter")
+                    print(f"    ❌ Error initializing {name} adapter")
                     return False
-            
-            # 3. Iniciar system of metrics
-            print("  📊 Iniciando system of metrics...")
+
+            # 3. Start metrics system
+            print("  📊 Starting metrics system...")
             start_metrics_collection()
-            
-            # 4. Configurar monitoreo automático
+
+            # 4. Configure automatic monitoring
             self._setup_monitoring()
-            
+
             self.initialized = True
-            print("✅ Sistema de adapters inicializado completamente\n")
+            print("✅ Adapter system initialized completely\n")
             return True
-            
+
         except Exception as e:
-            print(f"❌ Error inicializando system: {e}")
+            print(f"❌ Error initializing system: {e}")
             return False
     
     def _setup_monitoring(self):
-        """Configura el monitoreo automático."""
+        """Configure automatic monitoring."""
         def alert_handler(alert):
             level_emoji = {"warning": "⚠️", "error": "❌", "critical": "🚨"}
             emoji = level_emoji.get(alert.alert_level.value, "❓")
@@ -85,18 +85,18 @@ class AdapterSystemDemo:
         metrics_collector.add_alert_callback(alert_handler)
     
     def demo_kernel_abstraction(self):
-        """Demuestra el uso del Kernel Abstraction Adapter."""
+        """Demonstrate the use of the Kernel Abstraction Adapter."""
         print("🔧 === DEMO: KERNEL ABSTRACTION ADAPTER ===")
-        
+
         if not self.initialized:
-            print("❌ Sistema no inicializado")
+            print("❌ System not initialized")
             return
-        
+
         kernel_adapter = self.adapters['kernel']
-        
-        # 1. Mostrar backends disponibles
+
+        # 1. Show available backends
         backends = kernel_adapter.get_available_backends()
-        print(f"📋 Backends disponibles: {list(backends.keys())}")
+        print(f"📋 Available backends: {list(backends.keys())}")
         
         # 2. Demo de Flash Attention
         print("\n🧠 Ejecutando Flash Attention...")

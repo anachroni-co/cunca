@@ -2,13 +2,13 @@
 Orchestration Strategies - Strategy Pattern for Agent Coordination - CapibaraGPT v2024
 =======================================================================================
 
-Implementation of pattern Strategy para diferentes enfoques de orquestación:
-- IntelligentOrchestrationStrategy: Coordinación inteligente basada en IA
-- HierarchicalOrchestrationStrategy: Gestión jerárquica top-down
-- CollaborativeOrchestrationStrategy: Cooperación peer-to-peer
-- SpecializedOrchestrationStrategy: Enrutamiento específico por tareas
-- AdaptiveOrchestrationStrategy: Adaptación dinámica
-- UltraHybridOrchestrationStrategy: Estrategia híbrida ultra-avanzada
+Implementation of Strategy pattern for different orchestration approaches:
+- IntelligentOrchestrationStrategy: AI-based intelligent coordination
+- HierarchicalOrchestrationStrategy: Top-down hierarchical management
+- CollaborativeOrchestrationStrategy: Peer-to-peer cooperation
+- SpecializedOrchestrationStrategy: Task-specific routing
+- AdaptiveOrchestrationStrategy: Dynamic adaptation
+- UltraHybridOrchestrationStrategy: Ultra-advanced hybrid strategy
 """
 
 import time
