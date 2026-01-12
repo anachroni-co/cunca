@@ -174,19 +174,19 @@ def _configure_safety_limits(safety_manager, config: Dict[str, Any]):
             "emotional_volatility_threshold": monitoring_config.get("emotional_volatility_threshold", 0.8)
         })
     
-    # Configurar filtrado de contenido
+    # Configure content filtering
     content_config = config.get("content_filtering", {})
     if content_config.get("enabled", True):
-        # Los filtros ya están configurados por defecto
+        # Filters are already configured by default
         pass
-    
-    # Configurar intervenciones
+
+    # Configure interventions
     intervention_config = config.get("interventions", {})
     if intervention_config.get("enabled", True):
         safety_manager.intervention_manager.max_interventions_per_session = intervention_config.get("max_interventions_per_session", 3)
 
 def _integrate_with_web_app(app, safety_manager, config: Dict[str, Any]):
-    """Integrar system de seguridad con aplicación web"""
+    """Integrate security system with web application"""
     
     try:
         from web_interface.safety_middleware import init_safety_middleware

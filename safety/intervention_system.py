@@ -180,19 +180,19 @@ class InterventionManager:
         try:
             with open(self.config_path, 'r') as f:
                 custom_configs = json.load(f)
-                # Actualizar con configuraciones personalizadas
+                # Update with custom configurations
                 for key, config in custom_configs.items():
                     if key in default_configs:
                         # Update existing configuration
                         for attr, value in config.items():
                             setattr(default_configs[key], attr, value)
         except FileNotFoundError:
-            logger.info("Usando configuraciones de intervención por defecto")
+            logger.info("Using default intervention configurations")
         
         return default_configs
     
     def trigger_intervention(self, user_id: str, intervention_key: str, trigger_reason: str, additional_data: Dict[str, Any] = None) -> bool:
-        """Activar una intervención específica"""
+        """Activate a specific intervention"""
         
         if intervention_key not in self.intervention_configs:
             logger.error(f"Configuración de intervención '{intervention_key}' no encontrada")

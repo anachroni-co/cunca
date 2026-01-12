@@ -1,60 +1,60 @@
 # capibara/jax - Custom JAX Implementation
 
-El módulo **capibara/jax** proporciona una implementación JAX personalizada con optimizaciones específicas para capibaraGPT-v2 y TPU v4/v5e/v6e.
+The **capibara/jax** module provides a custom JAX implementation with specific optimizations for capibaraGPT-v2 and TPU v4/v5e/v6e.
 
-## 📋 Tabla de Contenidos
+## 📋 Table of Contents
 
-1. [¿Por qué JAX Personalizado?](#por-qué-jax-personalizado)
-2. [Arquitectura](#arquitectura)
-3. [Componentes Principales](#componentes-principales)
+1. [Why Custom JAX?](#why-custom-jax)
+2. [Architecture](#architecture)
+3. [Main Components](#main-components)
 4. [TPU Optimizations](#tpu-optimizations)
 5. [Quick Start](#quick-start)
-6. [Migración desde JAX Estándar](#migración-desde-jax-estándar)
+6. [Migration from Standard JAX](#migration-from-standard-jax)
 7. [Advanced Usage](#advanced-usage)
 
 ---
 
-## 🎯 ¿Por qué JAX Personalizado?
+## 🎯 Why Custom JAX?
 
-capibaraGPT-v2 usa una **implementación JAX personalizada** por varias razones:
+capibaraGPT-v2 uses a **custom JAX implementation** for several reasons:
 
-### Motivaciones
+### Motivations
 
-1. **TPU v6e Optimizations**: Optimizaciones específicas para TPU v6e-64/256
-2. **Custom Kernels**: Kernels optimizados para Mamba, MoE, VQ
-3. **Fallback Support**: Funciona sin JAX instalado (numpy fallback)
-4. **Version Control**: Control preciso de versiones JAX/jaxlib
-5. **Extended APIs**: APIs adicionales no en JAX estándar
-6. **Debugging Tools**: Herramientas de debugging mejoradas
+1. **TPU v6e Optimizations**: Specific optimizations for TPU v6e-64/256
+2. **Custom Kernels**: Optimized kernels for Mamba, MoE, VQ
+3. **Fallback Support**: Works without JAX installed (numpy fallback)
+4. **Version Control**: Precise control of JAX/jaxlib versions
+5. **Extended APIs**: Additional APIs not in standard JAX
+6. **Debugging Tools**: Enhanced debugging tools
 
-### Cuando Usar capibara/jax vs JAX Estándar
+### When to Use capibara/jax vs Standard JAX
 
-| Caso | Usar | Razón |
-|------|------|-------|
-| Training TPU v6e | `capibara.jax` | Optimizaciones TPU v6e |
-| Development local | `capibara.jax` o `jax` | Fallback automático |
-| Mamba/MoE modules | `capibara.jax` | Kernels optimizados |
-| Código genérico JAX | `jax` estándar | Más simple |
+| Use Case | Use | Reason |
+|----------|-----|--------|
+| Training TPU v6e | `capibara.jax` | TPU v6e optimizations |
+| Local development | `capibara.jax` or `jax` | Automatic fallback |
+| Mamba/MoE modules | `capibara.jax` | Optimized kernels |
+| Generic JAX code | Standard `jax` | Simpler |
 
 ---
 
-## 🏗️ Arquitectura
+## 🏗️ Architecture
 
 ```
 capibara/jax/
-├── __init__.py              # Exports principales
+├── __init__.py              # Main exports
 ├── core.py                  # Core JAX primitives
 ├── version.py               # Version management
 │
-├── numpy/                   # jax.numpy personalizado
+├── numpy/                   # Custom jax.numpy
 │   ├── __init__.py
 │   └── linalg.py
 │
-├── lax/                     # jax.lax personalizado
+├── lax/                     # Custom jax.lax
 │   ├── __init__.py
 │   └── linalg.py
 │
-├── nn/                      # jax.nn personalizado
+├── nn/                      # Custom jax.nn
 │   ├── __init__.py
 │   └── activations.py
 │
@@ -65,38 +65,38 @@ capibara/jax/
 │   ├── sparsity_kernels.py
 │   └── neuromorphic_kernels.py
 │
-├── experimental/            # Features experimentales
-└── _src/                    # Implementaciones internas
+├── experimental/            # Experimental features
+└── _src/                    # Internal implementations
 ```
 
-### Jerarquía de Imports
+### Import Hierarchy
 
 ```python
-# capibara.jax re-exporta JAX estándar con extensiones
-import capibara.jax as jax  # Compatible con 'import jax'
+# capibara.jax re-exports standard JAX with extensions
+import capibara.jax as jax  # Compatible with 'import jax'
 
-# Pero con extras:
+# But with extras:
 from capibara.jax.tpu_v4 import tpu_optimization
 from capibara.jax import custom_activations
 ```
 
 ---
 
-## 🧩 Componentes Principales
+## 🧩 Main Components
 
 ### 1. Core Module
 
-Primitivas JAX core extendidas:
+Extended JAX core primitives:
 
 ```python
 from capibara.jax import core
 
-# Tracing y compilation
-@core.custom_jit  # JIT mejorado con debugging
+# Tracing and compilation
+@core.custom_jit  # Enhanced JIT with debugging
 def my_function(x):
     return x * 2
 
-# Primitivas customizadas
+# Custom primitives
 from capibara.jax.core import custom_prim
 ```
 
@@ -105,11 +105,11 @@ from capibara.jax.core import custom_prim
 ```python
 from capibara.jax import numpy as jnp
 
-# API compatible con jax.numpy
+# API compatible with jax.numpy
 x = jnp.ones((10, 10))
 y = jnp.dot(x, x)
 
-# Con extensiones:
+# With extensions:
 z = jnp.custom_op(x, optimization="tpu")
 ```
 
@@ -118,14 +118,14 @@ z = jnp.custom_op(x, optimization="tpu")
 ```python
 from capibara.jax import lax
 
-# Operaciones low-level
+# Low-level operations
 result = lax.conv_general_dilated(
     x, kernel,
     window_strides=(1, 1),
     padding="SAME"
 )
 
-# Custom scans para Mamba
+# Custom scans for Mamba
 mamba_out = lax.associative_scan(
     fn, xs,
     tpu_optimized=True
@@ -137,11 +137,11 @@ mamba_out = lax.associative_scan(
 ```python
 from capibara.jax import nn
 
-# Activations estándar
+# Standard activations
 x = nn.relu(x)
 x = nn.gelu(x)
 
-# Activations personalizadas
+# Custom activations
 x = nn.swiglu(x)  # Custom activation
 x = nn.contextual_relu(x, context)  # Context-aware activation
 ```
@@ -151,7 +151,7 @@ x = nn.contextual_relu(x, context)  # Context-aware activation
 ```python
 from capibara.jax import tree_util
 
-# Tree operations extendidas
+# Extended tree operations
 tree_map = tree_util.tree_map
 tree_reduce = tree_util.tree_reduce
 
@@ -164,11 +164,11 @@ tree_util.register_custom_pytree(MyClass)
 ```python
 from capibara.jax import random
 
-# Compatible con jax.random
+# Compatible with jax.random
 key = random.PRNGKey(0)
 x = random.normal(key, shape=(10,))
 
-# Extensiones
+# Extensions
 x = random.truncated_normal(key, shape=(10,), bounds=(-2, 2))
 ```
 
@@ -186,7 +186,7 @@ from capibara.jax.tpu_v4 import (
     sparsity_kernels
 )
 
-# Configurar optimizaciones TPU
+# Configure TPU optimizations
 tpu_optimization.configure_tpu(
     tpu_type="v6e-64",
     use_bf16=True,
@@ -194,14 +194,14 @@ tpu_optimization.configure_tpu(
     enable_collective_ops=True
 )
 
-# Kernel adaptativo
+# Adaptive kernel
 output = adaptive_kernels.adaptive_matmul(
     a, b,
     precision="highest",  # highest, high, default
     tpu_strategy="collective"
 )
 
-# VQ kernels optimizados
+# Optimized VQ kernels
 codes = vq_kernels.vq_encode(
     inputs,
     codebook,
@@ -221,7 +221,7 @@ sparse_out = sparsity_kernels.sparse_attention(
 ```python
 from capibara.jax.tpu_v4 import setup_tpu_v4
 
-# Setup completo de TPU v6e
+# Complete TPU v6e setup
 setup_tpu_v4(
     tpu_name="capibara-tpu-v6e",
     mesh_shape=(8, 8),  # 64 chips
@@ -229,7 +229,7 @@ setup_tpu_v4(
     enable_async_collective=True
 )
 
-# Variables de entorno automáticamente configuradas:
+# Environment variables automatically configured:
 # - JAX_PLATFORMS=tpu
 # - XLA_FLAGS=...
 # - LIBTPU_INIT_ARGS=...
@@ -247,7 +247,7 @@ spike_output = neuromorphic_kernels.spiking_neuron(
     leak_rate=0.1
 )
 
-# Kernel de Mamba optimizado para TPU
+# TPU-optimized Mamba kernel
 mamba_output = neuromorphic_kernels.mamba_ssm_kernel(
     inputs,
     A_matrix, B_matrix, C_matrix,
@@ -259,21 +259,21 @@ mamba_output = neuromorphic_kernels.mamba_ssm_kernel(
 
 ## 🚀 Quick Start
 
-### Instalación y Setup
+### Installation and Setup
 
 ```python
-# Importar capibara.jax (compatible con jax estándar)
+# Import capibara.jax (compatible with standard jax)
 import capibara.jax as jax
 import capibara.jax.numpy as jnp
 
-# Verificar backend
+# Verify backend
 print(f"Devices: {jax.devices()}")
 # TPU: [TpuDevice(id=0), TpuDevice(id=1), ...]
 # GPU: [GpuDevice(id=0), ...]
 # CPU: [CpuDevice(id=0)]
 ```
 
-### Uso Básico (Compatible con JAX Estándar)
+### Basic Usage (Compatible with Standard JAX)
 
 ```python
 import capibara.jax as jax
@@ -294,36 +294,36 @@ def loss_fn(params, x, y):
 batched_fn = jax.vmap(matrix_multiply)
 ```
 
-### Uso con TPU Optimizations
+### Usage with TPU Optimizations
 
 ```python
 from capibara.jax.tpu_v4 import tpu_optimization
 
-# Habilitar optimizaciones TPU
+# Enable TPU optimizations
 tpu_optimization.enable_all_optimizations()
 
-# Usar kernels optimizados automáticamente
+# Use automatically optimized kernels
 @jax.jit
 def optimized_function(x):
-    # Automáticamente usa kernels TPU-optimizados
+    # Automatically uses TPU-optimized kernels
     return jnp.dot(x, x.T)
 
-# Compilation con XLA optimizations
+# Compilation with XLA optimizations
 compiled = jax.jit(
     optimized_function,
     backend="tpu",
-    donate_argnums=(0,)  # Donate buffer para memory efficiency
+    donate_argnums=(0,)  # Donate buffer for memory efficiency
 )
 ```
 
 ---
 
-## 🔄 Migración desde JAX Estándar
+## 🔄 Migration from Standard JAX
 
-### Código Existente con JAX
+### Existing JAX Code
 
 ```python
-# Código existente con JAX estándar
+# Existing code with standard JAX
 import jax
 import jax.numpy as jnp
 
@@ -332,10 +332,10 @@ def my_function(x):
     return jnp.sum(x ** 2)
 ```
 
-### Migración a capibara.jax
+### Migration to capibara.jax
 
 ```python
-# Opción 1: Reemplazo directo (100% compatible)
+# Option 1: Direct replacement (100% compatible)
 import capibara.jax as jax
 import capibara.jax.numpy as jnp
 
@@ -343,24 +343,24 @@ import capibara.jax.numpy as jnp
 def my_function(x):
     return jnp.sum(x ** 2)
 
-# Opción 2: Usar ambos (código mixto)
+# Option 2: Use both (mixed code)
 import jax as standard_jax
 import capibara.jax as custom_jax
 
-# Usar JAX estándar para operaciones simples
+# Use standard JAX for simple operations
 x = standard_jax.numpy.ones((10, 10))
 
-# Usar capibara.jax para optimizaciones TPU
+# Use capibara.jax for TPU optimizations
 y = custom_jax.tpu_v4.adaptive_kernels.matmul(x, x)
 ```
 
-### Compatibilidad
+### Compatibility
 
 ```python
-# Verificar compatibilidad
+# Verify compatibility
 from capibara.jax import check_compatibility
 
-# Retorna True si 100% compatible con JAX estándar
+# Returns True if 100% compatible with standard JAX
 is_compatible = check_compatibility(version="0.4.20")
 print(f"Compatible: {is_compatible}")
 ```
@@ -374,20 +374,20 @@ print(f"Compatible: {is_compatible}")
 ```python
 from capibara.jax.core import Primitive
 
-# Definir primitive personalizado
+# Define custom primitive
 my_prim = Primitive("my_custom_op")
 
 @my_prim.def_impl
 def my_impl(x):
-    # Implementación Python/NumPy
+    # Python/NumPy implementation
     return x * 2
 
 @my_prim.def_abstract_eval
 def my_abstract_eval(x):
-    # Abstract evaluation para shape inference
+    # Abstract evaluation for shape inference
     return x
 
-# Usar primitive
+# Use primitive
 result = my_prim.bind(inputs)
 ```
 
@@ -396,13 +396,13 @@ result = my_prim.bind(inputs)
 ```python
 from capibara.jax import jit
 
-# JIT con debugging habilitado
+# JIT with debugging enabled
 @jit(debug=True, inline=False)
 def debug_function(x):
-    print(f"Input shape: {x.shape}")  # Funciona con debug=True
+    print(f"Input shape: {x.shape}")  # Works with debug=True
     return x * 2
 
-# JIT con static arguments
+# JIT with static arguments
 @jit(static_argnums=(1,))
 def static_function(x, mode):
     if mode == "train":
@@ -411,18 +411,18 @@ def static_function(x, mode):
         return x
 ```
 
-### Sharding y Partitioning
+### Sharding and Partitioning
 
 ```python
 from capibara.jax import sharding
 
-# Definir mesh
+# Define mesh
 mesh = sharding.Mesh(
     devices=jax.devices(),
     axis_names=('data', 'model')
 )
 
-# Particionar array
+# Partition array
 partitioned = sharding.partition(
     array,
     spec=sharding.PartitionSpec('data', 'model')
@@ -434,14 +434,14 @@ partitioned = sharding.partition(
 ```python
 from capibara.jax import profiling
 
-# Profiling de operaciones
+# Profiling operations
 with profiling.profile("my_operation"):
     result = expensive_computation(inputs)
 
-# Ver resultados
+# View results
 profiling.print_summary()
 
-# Export a TensorBoard
+# Export to TensorBoard
 profiling.export_tensorboard("logs/profile/")
 ```
 
@@ -449,9 +449,9 @@ profiling.export_tensorboard("logs/profile/")
 
 ## 📊 Performance Comparison
 
-### JAX Estándar vs capibara.jax
+### Standard JAX vs capibara.jax
 
-| Operación | JAX Estándar | capibara.jax | Speedup |
+| Operation | Standard JAX | capibara.jax | Speedup |
 |-----------|--------------|--------------|---------|
 | MatMul (TPU) | 10ms | 3ms | 3.3x |
 | Mamba SSM | 50ms | 15ms | 3.3x |
@@ -459,11 +459,11 @@ profiling.export_tensorboard("logs/profile/")
 | Sparse Attention | 80ms | 25ms | 3.2x |
 | MoE Routing | 20ms | 6ms | 3.3x |
 
-*Benchmarks en TPU v6e-64*
+*Benchmarks on TPU v6e-64*
 
 ### Memory Usage
 
-| Operación | JAX Estándar | capibara.jax | Savings |
+| Operation | Standard JAX | capibara.jax | Savings |
 |-----------|--------------|--------------|---------|
 | Attention (seq=2048) | 4GB | 2GB | 50% |
 | Mamba (seq=4096) | 2GB | 1GB | 50% |
@@ -478,15 +478,15 @@ profiling.export_tensorboard("logs/profile/")
 ```python
 from capibara.jax import config
 
-# Habilitar debug mode
+# Enable debug mode
 config.update("jax_debug_mode", True)
 config.update("jax_debug_nans", True)
 config.update("jax_debug_infs", True)
 
-# Ver compilaciones
+# View compilations
 config.update("jax_log_compiles", True)
 
-# Disable JIT temporalmente (para debugging)
+# Temporarily disable JIT (for debugging)
 config.update("jax_disable_jit", True)
 ```
 
@@ -522,8 +522,8 @@ except errors.JAXError as e:
 
 | Module | Description |
 |--------|-------------|
-| `tpu_v4.tpu_optimization` | TPU setup y configuration |
-| `tpu_v4.adaptive_kernels` | Kernels adaptativos |
+| `tpu_v4.tpu_optimization` | TPU setup and configuration |
+| `tpu_v4.adaptive_kernels` | Adaptive kernels |
 | `tpu_v4.vq_kernels` | Vector quantization |
 | `tpu_v4.sparsity_kernels` | Sparse operations |
 | `tpu_v4.neuromorphic_kernels` | Neuromorphic-inspired ops |
@@ -535,54 +535,54 @@ except errors.JAXError as e:
 ### Error: "Cannot import capibara.jax"
 
 ```bash
-# Verificar instalación JAX
+# Verify JAX installation
 python -c "import jax; print(jax.__version__)"
 
-# Si no está instalado
+# If not installed
 pip install jax>=0.4.20 jaxlib>=0.4.20
 ```
 
 ### Error: "TPU not found"
 
 ```python
-# Verificar devices
+# Verify devices
 import capibara.jax as jax
 print(jax.devices())
 
-# Configurar TPU
+# Configure TPU
 from capibara.jax.tpu_v4 import setup_tpu_v4
 setup_tpu_v4()
 ```
 
-### Performance Lento
+### Slow Performance
 
 ```python
-# Habilitar todas las optimizaciones
+# Enable all optimizations
 from capibara.jax.tpu_v4 import tpu_optimization
 
 tpu_optimization.enable_all_optimizations()
-tpu_optimization.verify_optimizations()  # Verifica que estén activas
+tpu_optimization.verify_optimizations()  # Verify they are active
 ```
 
 ---
 
-## 📖 Referencias
+## 📖 References
 
-- [JAX Documentation](https://jax.readthedocs.io/) - JAX estándar
-- [TPU Optimization](tpu_v4/tpu_optimization.py) - Optimizaciones TPU
-- [Custom Kernels](tpu_v4/adaptive_kernels.py) - Kernels personalizados
-- [Version Management](version.py) - Control de versiones
+- [JAX Documentation](https://jax.readthedocs.io/) - Standard JAX
+- [TPU Optimization](tpu_v4/tpu_optimization.py) - TPU optimizations
+- [Custom Kernels](tpu_v4/adaptive_kernels.py) - Custom kernels
+- [Version Management](version.py) - Version control
 
 ---
 
-## 🔗 Links Relacionados
+## 🔗 Related Links
 
 - [capibara/core](../core/README.md) - Core components
 - [capibara/training](../training/README.md) - Training system
-- [docs/TPU_TRAINING.md](../../docs/TPU_TRAINING.md) - Guía TPU training
+- [docs/TPU_TRAINING.md](../../docs/TPU_TRAINING.md) - TPU training guide
 
 ---
 
-**Última actualización**: 2025-11-16
-**Versión del sistema**: v2.0.0
+**Last updated**: 2025-11-16
+**System version**: v2.0.0
 **JAX Version**: 0.4.20+

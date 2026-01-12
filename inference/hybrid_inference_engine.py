@@ -519,12 +519,12 @@ class HybridInferenceEngine:
         self.selected_backend = backend
         self.active_engine = None
         
-        # Recargar modelo si está configurado
+        # Reload model if configured
         if self.config.model_path:
             self.load_model(self.config.model_path)
     
     def _update_performance_stats(self, result: InferenceResult):
-        """Updatesr statistics de rendimiento."""
+        """Update performance statistics."""
         backend = result.backend_used
         if backend not in self.performance_stats:
             self.performance_stats[backend] = {

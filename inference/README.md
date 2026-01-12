@@ -1,10 +1,10 @@
 # capibara/inference - Inference & Deployment
 
-El módulo **inference** proporciona motores optimizados para inferencia en producción, incluyendo cuantización, optimizaciones ARM, y deployment patterns.
+The **inference** module provides optimized engines for production inference, including quantization, ARM optimizations, and deployment patterns.
 
-## 📋 Tabla de Contenidos
+## 📋 Table of Contents
 
-1. [Visión General](#visión-general)
+1. [Overview](#overview)
 2. [Inference Engines](#inference-engines)
 3. [Quantization](#quantization)
 4. [ARM Optimizations](#arm-optimizations)
@@ -15,31 +15,31 @@ El módulo **inference** proporciona motores optimizados para inferencia en prod
 
 ---
 
-## 🎯 Visión General
+## 🎯 Overview
 
-El sistema de inferencia de capibaraGPT-v2 está optimizado para baja latencia y alta throughput en producción:
+The capibaraGPT-v2 inference system is optimized for low latency and high throughput in production:
 
-### Características Principales
+### Key Features
 
-- ⚡ **Low Latency**: < 50ms para secuencias de 512 tokens
+- ⚡ **Low Latency**: < 50ms for 512 token sequences
 - 🎯 **High Throughput**: > 1000 requests/second
-- 📦 **Quantization**: INT8/INT4 reduce tamaño del modelo 4-8x
+- 📦 **Quantization**: INT8/INT4 reduces model size 4-8x
 - 🔧 **ARM Optimized**: SVE, NEON, Kleidi optimizations
-- 🌐 **Hybrid Engine**: Mamba + Transformer routing automático
-- 💾 **KV-Cache**: Efficient caching para generación
-- 🔄 **Batching**: Dynamic batching para mejor utilización
+- 🌐 **Hybrid Engine**: Automatic Mamba + Transformer routing
+- 💾 **KV-Cache**: Efficient caching for generation
+- 🔄 **Batching**: Dynamic batching for better utilization
 
-### Componentes
+### Components
 
-| Componente | Ubicación | Propósito |
-|------------|-----------|-----------|
-| **Hybrid Inference Engine** | `hybrid_inference_engine.py` | Motor principal con routing Mamba/Transformer |
-| **ARM Optimized Inference** | `arm_optimized_inference.py` | Inferencia optimizada para ARM CPUs |
-| **Quantization** | `quantization.py` | Cuantización INT8/INT4/GPTQ |
-| **Quantized Engine** | `engines/quantized_engine.py` | Motor para modelos cuantizados |
-| **Advanced Quantized Engine** | `engines/advanced_quantized_engine.py` | Motor cuantizado avanzado |
-| **KV-Cache INT8** | `quantization/kv_cache_int8.py` | KV-cache cuantizado |
-| **Calibration** | `quantization/calibration.py` | Calibración para cuantización |
+| Component | Location | Purpose |
+|-----------|----------|---------|
+| **Hybrid Inference Engine** | `hybrid_inference_engine.py` | Main engine with Mamba/Transformer routing |
+| **ARM Optimized Inference** | `arm_optimized_inference.py` | Inference optimized for ARM CPUs |
+| **Quantization** | `quantization.py` | INT8/INT4/GPTQ quantization |
+| **Quantized Engine** | `engines/quantized_engine.py` | Engine for quantized models |
+| **Advanced Quantized Engine** | `engines/advanced_quantized_engine.py` | Advanced quantized engine |
+| **KV-Cache INT8** | `quantization/kv_cache_int8.py` | Quantized KV-cache |
+| **Calibration** | `quantization/calibration.py` | Calibration for quantization |
 
 ---
 
@@ -47,50 +47,50 @@ El sistema de inferencia de capibaraGPT-v2 está optimizado para baja latencia y
 
 ### Hybrid Inference Engine
 
-Motor de inferencia principal que usa routing inteligente:
+Main inference engine using intelligent routing:
 
 ```python
 from capibara.inference import HybridInferenceEngine, InferenceConfig
 
-# Configurar engine
+# Configure engine
 config = InferenceConfig(
     model_path="models/capibara-v2-base",
-    use_mamba_threshold=512,  # Usar Mamba para seq >= 512 tokens
+    use_mamba_threshold=512,  # Use Mamba for seq >= 512 tokens
     use_kv_cache=True,
     batch_size=8,
     max_length=2048
 )
 
-# Crear engine
+# Create engine
 engine = HybridInferenceEngine(config)
 
-# Inferencia single
+# Single inference
 output = engine.generate(
-    prompt="¿Cuál es la capital de Francia?",
+    prompt="What is the capital of France?",
     max_new_tokens=100,
     temperature=0.7
 )
 
-# Inferencia batch
+# Batch inference
 outputs = engine.generate_batch(
     prompts=[
-        "Explica la fotosíntesis",
-        "¿Qué es el aprendizaje automático?",
-        "Resume la segunda guerra mundial"
+        "Explain photosynthesis",
+        "What is machine learning?",
+        "Summarize World War II"
     ],
     max_new_tokens=150
 )
 ```
 
-### Características del Hybrid Engine
+### Hybrid Engine Features
 
-1. **Automatic Routing**: Decide Mamba vs Transformer según longitud
-2. **KV-Cache**: Caché eficiente de keys/values
-3. **Dynamic Batching**: Agrupa requests automáticamente
-4. **Memory Management**: Gestión optimizada de memoria
+1. **Automatic Routing**: Decides Mamba vs Transformer based on length
+2. **KV-Cache**: Efficient keys/values caching
+3. **Dynamic Batching**: Automatically groups requests
+4. **Memory Management**: Optimized memory handling
 
 ```python
-# Inspeccionar decisiones de routing
+# Inspect routing decisions
 metrics = engine.get_metrics()
 print(f"Mamba usage: {metrics['mamba_percentage']:.1f}%")
 print(f"Transformer usage: {metrics['transformer_percentage']:.1f}%")
@@ -101,33 +101,33 @@ print(f"Avg latency: {metrics['avg_latency_ms']:.2f}ms")
 
 ## 📦 Quantization
 
-La cuantización reduce el tamaño del modelo y acelera inferencia:
+Quantization reduces model size and accelerates inference:
 
 ### INT8 Quantization
 
 ```python
 from capibara.inference.quantization import INT8Quantizer
 
-# Crear quantizer
+# Create quantizer
 quantizer = INT8Quantizer(
     calibration_dataset="data/calibration/",
     num_calibration_samples=512
 )
 
-# Cuantizar modelo
+# Quantize model
 quantized_model = quantizer.quantize(
     model=model,
     quantize_weights=True,
     quantize_activations=True
 )
 
-# Guardar modelo cuantizado
+# Save quantized model
 quantizer.save(quantized_model, "models/capibara-v2-int8")
 
-# Beneficios:
-# - Tamaño: ~4x más pequeño
-# - Latencia: ~2-3x más rápido
-# - Precisión: ~1-2% pérdida
+# Benefits:
+# - Size: ~4x smaller
+# - Latency: ~2-3x faster
+# - Accuracy: ~1-2% loss
 ```
 
 ### Advanced Quantization (GPTQ/AWQ)
@@ -135,33 +135,33 @@ quantizer.save(quantized_model, "models/capibara-v2-int8")
 ```python
 from capibara.inference.quantization import AdvancedQuantizer
 
-# GPTQ quantization (mejor calidad)
+# GPTQ quantization (better quality)
 quantizer = AdvancedQuantizer(
     method="gptq",  # gptq, awq, smoothquant
     bits=4,         # 4-bit quantization
     group_size=128
 )
 
-# Cuantizar con calibración
+# Quantize with calibration
 quantized_model = quantizer.quantize(
     model=model,
     calibration_data=calibration_dataset
 )
 
-# Beneficios (4-bit):
-# - Tamaño: ~8x más pequeño
-# - Latencia: ~3-4x más rápido
-# - Precisión: ~2-3% pérdida (GPTQ mantiene mejor calidad)
+# Benefits (4-bit):
+# - Size: ~8x smaller
+# - Latency: ~3-4x faster
+# - Accuracy: ~2-3% loss (GPTQ maintains better quality)
 ```
 
 ### KV-Cache INT8
 
-Cuantiza KV-cache para ahorrar memoria:
+Quantize KV-cache to save memory:
 
 ```python
 from capibara.inference.quantization import KVCacheINT8
 
-# Habilitar KV-cache cuantizado
+# Enable quantized KV-cache
 kv_cache = KVCacheINT8(
     num_layers=24,
     num_heads=12,
@@ -169,15 +169,15 @@ kv_cache = KVCacheINT8(
     max_seq_length=2048
 )
 
-# Usar con engine
+# Use with engine
 engine = HybridInferenceEngine(
     config=config,
     kv_cache=kv_cache
 )
 
-# Ahorro de memoria:
-# - FP16 KV-cache: ~2GB para seq_len=2048
-# - INT8 KV-cache: ~1GB (50% reducción)
+# Memory savings:
+# - FP16 KV-cache: ~2GB for seq_len=2048
+# - INT8 KV-cache: ~1GB (50% reduction)
 ```
 
 ### Calibration
@@ -185,19 +185,19 @@ engine = HybridInferenceEngine(
 ```python
 from capibara.inference.quantization import Calibrator
 
-# Crear calibrator
+# Create calibrator
 calibrator = Calibrator(
     method="minmax",  # minmax, percentile, mse
     num_samples=512
 )
 
-# Calibrar para cuantización
+# Calibrate for quantization
 calibration_info = calibrator.calibrate(
     model=model,
     calibration_data=calibration_dataset
 )
 
-# Usar calibration info
+# Use calibration info
 quantizer = INT8Quantizer(calibration_info=calibration_info)
 quantized_model = quantizer.quantize(model)
 ```
@@ -206,34 +206,34 @@ quantized_model = quantizer.quantize(model)
 
 ## 💪 ARM Optimizations
 
-Optimizaciones para CPUs ARM (M1/M2/M3, Graviton, etc.):
+Optimizations for ARM CPUs (M1/M2/M3, Graviton, etc.):
 
 ```python
 from capibara.inference import ARMOptimizedInference
 
-# Crear engine optimizado para ARM
+# Create ARM-optimized engine
 engine = ARMOptimizedInference(
     model_path="models/capibara-v2-base",
     use_sve=True,      # Scalable Vector Extension
     use_neon=True,     # NEON SIMD
     use_kleidi=True,   # Kleidi kernel library
-    num_threads=8      # Threads para paralelización
+    num_threads=8      # Threads for parallelization
 )
 
-# Inferencia optimizada
+# Optimized inference
 output = engine.generate(
     prompt="Explain quantum computing",
     max_new_tokens=200
 )
 
-# Optimizaciones aplicadas:
-# - SVE: Vectorización avanzada
+# Optimizations applied:
+# - SVE: Advanced vectorization
 # - NEON: SIMD operations
-# - Kleidi: Kernels optimizados para ARM
-# - Multi-threading: Paralelización eficiente
+# - Kleidi: ARM-optimized kernels
+# - Multi-threading: Efficient parallelization
 ```
 
-### Performance en ARM
+### ARM Performance
 
 | CPU | Base Latency | Optimized Latency | Speedup |
 |-----|--------------|-------------------|---------|
@@ -246,50 +246,50 @@ output = engine.generate(
 
 ## 🚀 Quick Start
 
-### Inferencia Básica
+### Basic Inference
 
 ```python
 from capibara.inference import InferenceEngine
 
-# Setup simple
+# Simple setup
 engine = InferenceEngine.from_pretrained("capibara-v2-base")
 
-# Generar texto
+# Generate text
 response = engine.generate(
-    "¿Cuál es la capital de España?",
+    "What is the capital of Spain?",
     max_length=50
 )
 print(response)
-# "La capital de España es Madrid..."
+# "The capital of Spain is Madrid..."
 ```
 
-### Inferencia con Quantization
+### Inference with Quantization
 
 ```python
 from capibara.inference import QuantizedInferenceEngine
 
-# Cargar modelo cuantizado
+# Load quantized model
 engine = QuantizedInferenceEngine.from_pretrained(
     "capibara-v2-int8",
     device="cpu"
 )
 
-# Inferencia (4x más rápida, mismo resultado)
+# Inference (4x faster, same result)
 response = engine.generate(
-    "Explica la teoría de la relatividad",
+    "Explain the theory of relativity",
     max_length=200,
     temperature=0.7
 )
 ```
 
-### Inferencia Batch
+### Batch Inference
 
 ```python
-# Procesar múltiples requests en batch
+# Process multiple requests in batch
 prompts = [
-    "Traduce 'hello' al español",
-    "¿Qué es Python?",
-    "Explica el cambio climático"
+    "Translate 'hello' to Spanish",
+    "What is Python?",
+    "Explain climate change"
 ]
 
 responses = engine.generate_batch(
@@ -307,7 +307,7 @@ for prompt, response in zip(prompts, responses):
 
 ## 🏗️ Deployment Patterns
 
-### Pattern 1: REST API con FastAPI
+### Pattern 1: REST API with FastAPI
 
 ```python
 from fastapi import FastAPI
@@ -315,7 +315,7 @@ from capibara.inference import HybridInferenceEngine
 
 app = FastAPI()
 
-# Cargar modelo al inicio
+# Load model at startup
 engine = HybridInferenceEngine.from_pretrained("capibara-v2-int8")
 
 @app.post("/generate")
@@ -326,7 +326,7 @@ async def generate(prompt: str, max_length: int = 100):
     )
     return {"response": response}
 
-# Ejecutar: uvicorn api:app --host 0.0.0.0 --port 8000
+# Run: uvicorn api:app --host 0.0.0.0 --port 8000
 ```
 
 ### Pattern 2: gRPC Server
@@ -344,7 +344,7 @@ class InferenceServicer:
         response = self.engine.generate(request.prompt)
         return GenerateResponse(text=response)
 
-# Crear servidor
+# Create server
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 add_InferenceServicer_to_server(InferenceServicer(), server)
 server.add_insecure_port('[::]:50051')
@@ -358,7 +358,7 @@ server.start()
 from capibara.inference import QuantizedInferenceEngine
 import json
 
-# Cargar modelo (se cachea entre invocaciones)
+# Load model (cached between invocations)
 engine = QuantizedInferenceEngine.from_pretrained(
     "s3://models/capibara-v2-int8",
     device="cpu"
@@ -408,7 +408,7 @@ spec:
 
 ### 1. Dynamic Batching
 
-Agrupa requests automáticamente para mejor throughput:
+Automatically groups requests for better throughput:
 
 ```python
 from capibara.inference import BatchingEngine
@@ -416,24 +416,24 @@ from capibara.inference import BatchingEngine
 engine = BatchingEngine(
     model_path="capibara-v2-int8",
     max_batch_size=32,
-    max_wait_ms=50  # Esperar max 50ms para llenar batch
+    max_wait_ms=50  # Wait max 50ms to fill batch
 )
 
-# Requests se agrupan automáticamente
-# Throughput: ~10x mejor que sin batching
+# Requests are automatically grouped
+# Throughput: ~10x better than without batching
 ```
 
 ### 2. KV-Cache Optimization
 
 ```python
-# Habilitar KV-cache para generación rápida
+# Enable KV-cache for fast generation
 engine = HybridInferenceEngine(
     use_kv_cache=True,
-    kv_cache_dtype="int8"  # Usar INT8 para ahorrar memoria
+    kv_cache_dtype="int8"  # Use INT8 to save memory
 )
 
-# Primera generación: ~100ms
-# Generaciones subsecuentes: ~10ms (10x faster)
+# First generation: ~100ms
+# Subsequent generations: ~10ms (10x faster)
 ```
 
 ### 3. Compiled Models (TorchScript/ONNX)
@@ -441,14 +441,14 @@ engine = HybridInferenceEngine(
 ```python
 from capibara.inference import compile_model
 
-# Compilar a TorchScript
+# Compile to TorchScript
 compiled_model = compile_model(
     model=model,
     backend="torchscript",
     optimize=True
 )
 
-# O compilar a ONNX
+# Or compile to ONNX
 onnx_model = compile_model(
     model=model,
     backend="onnx",
@@ -463,14 +463,14 @@ onnx_model = compile_model(
 ```python
 from capibara.inference import MultiGPUEngine
 
-# Distribuir modelo en múltiples GPUs
+# Distribute model across multiple GPUs
 engine = MultiGPUEngine(
     model_path="capibara-v2-base",
     num_gpus=4,
     strategy="pipeline"  # pipeline or data_parallel
 )
 
-# Throughput: ~4x con 4 GPUs
+# Throughput: ~4x with 4 GPUs
 ```
 
 ---
@@ -496,10 +496,10 @@ monitor = InferenceMonitor(
     ]
 )
 
-# Exponer métricas
+# Expose metrics
 start_http_server(9090)
 
-# Métricas disponibles en http://localhost:9090/metrics
+# Metrics available at http://localhost:9090/metrics
 ```
 
 ### Logging
@@ -508,7 +508,7 @@ start_http_server(9090)
 import logging
 from capibara.inference import setup_inference_logging
 
-# Configurar logging
+# Configure logging
 setup_inference_logging(
     level=logging.INFO,
     log_file="logs/inference.log",
@@ -516,9 +516,9 @@ setup_inference_logging(
     log_latencies=True
 )
 
-# Logs incluyen:
+# Logs include:
 # - Request ID
-# - Prompt (truncado)
+# - Prompt (truncated)
 # - Latency
 # - Tokens generated
 # - Model routing decision
@@ -535,17 +535,17 @@ try:
     response = engine.generate(
         prompt=user_input,
         max_new_tokens=200,
-        timeout=30  # 30 segundos timeout
+        timeout=30  # 30 seconds timeout
     )
 except InferenceError as e:
     if e.code == "TIMEOUT":
-        # Manejar timeout
-        response = "La generación tardó demasiado, intenta con un prompt más corto"
+        # Handle timeout
+        response = "Generation took too long, try a shorter prompt"
     elif e.code == "OUT_OF_MEMORY":
-        # Manejar OOM
-        response = "Modelo sin memoria disponible, intenta más tarde"
+        # Handle OOM
+        response = "Model out of memory, try again later"
     else:
-        # Error genérico
+        # Generic error
         response = f"Error: {e.message}"
 ```
 
@@ -554,7 +554,7 @@ except InferenceError as e:
 ```python
 from capibara.inference import ABTestEngine
 
-# Setup A/B testing entre modelos
+# Setup A/B testing between models
 ab_engine = ABTestEngine(
     model_a="capibara-v2-base",
     model_b="capibara-v2-int8",
@@ -562,13 +562,13 @@ ab_engine = ABTestEngine(
     metric="user_satisfaction"
 )
 
-# Engine selecciona automáticamente modelo
+# Engine automatically selects model
 response, model_used = ab_engine.generate_with_tracking(
     prompt=prompt,
     user_id=user_id
 )
 
-# Analizar resultados
+# Analyze results
 results = ab_engine.get_experiment_results()
 print(f"Model A satisfaction: {results['model_a']['satisfaction']:.2f}")
 print(f"Model B satisfaction: {results['model_b']['satisfaction']:.2f}")
@@ -581,7 +581,7 @@ print(f"Model B satisfaction: {results['model_b']['satisfaction']:.2f}")
 ### Latency (512 tokens, T4 GPU)
 
 | Configuration | Latency | Throughput |
-|--------------|---------|------------|
+|---------------|---------|------------|
 | Base (FP16) | 120ms | 450 req/s |
 | INT8 | 45ms | 1200 req/s |
 | INT4 (GPTQ) | 30ms | 1800 req/s |
@@ -590,7 +590,7 @@ print(f"Model B satisfaction: {results['model_b']['satisfaction']:.2f}")
 ### Model Size
 
 | Configuration | Size | Memory |
-|--------------|------|--------|
+|---------------|------|--------|
 | Base (FP16) | 24GB | 26GB |
 | INT8 | 6GB | 8GB |
 | INT4 | 3GB | 5GB |
@@ -615,8 +615,8 @@ config = InferenceConfig(
 
     # Routing
     use_mamba_threshold=512,
-    force_mamba=False,  # Forzar siempre Mamba
-    force_transformer=False,  # Forzar siempre Transformer
+    force_mamba=False,  # Always force Mamba
+    force_transformer=False,  # Always force Transformer
 
     # Generation
     max_length=2048,
@@ -641,13 +641,13 @@ engine = HybridInferenceEngine(config)
 
 ---
 
-## 📚 Referencias
+## 📚 References
 
-- [Hybrid Inference Engine](hybrid_inference_engine.py) - Motor principal
-- [Quantization](quantization.py) - Cuantización
-- [ARM Optimizations](arm_optimized_inference.py) - Optimizaciones ARM
-- [Quantized Engine](engines/quantized_engine.py) - Motor cuantizado
-- [KV-Cache INT8](quantization/kv_cache_int8.py) - KV-cache cuantizado
+- [Hybrid Inference Engine](hybrid_inference_engine.py) - Main engine
+- [Quantization](quantization.py) - Quantization
+- [ARM Optimizations](arm_optimized_inference.py) - ARM optimizations
+- [Quantized Engine](engines/quantized_engine.py) - Quantized engine
+- [KV-Cache INT8](quantization/kv_cache_int8.py) - Quantized KV-cache
 
 ---
 
@@ -656,32 +656,32 @@ engine = HybridInferenceEngine(config)
 ### Error: "Out of Memory"
 
 ```python
-# Reducir batch size
+# Reduce batch size
 config.batch_size = 4
 
-# Usar cuantización
+# Use quantization
 model = quantizer.quantize(model, bits=8)
 
-# Habilitar gradient checkpointing
+# Enable gradient checkpointing
 config.use_gradient_checkpointing = True
 ```
 
-### Latencia Alta
+### High Latency
 
-- Verificar GPU está siendo usada
-- Habilitar KV-cache
-- Usar modelo cuantizado (INT8/INT4)
-- Habilitar batching dinámico
-- Compilar modelo con TorchScript
+- Verify GPU is being used
+- Enable KV-cache
+- Use quantized model (INT8/INT4)
+- Enable dynamic batching
+- Compile model with TorchScript
 
-### Calidad Degradada con Quantization
+### Quality Degraded with Quantization
 
-- Usar GPTQ en lugar de simple INT8
-- Aumentar calibration samples
-- Usar bits=8 en lugar de bits=4
-- Calibrar con datos representativos
+- Use GPTQ instead of simple INT8
+- Increase calibration samples
+- Use bits=8 instead of bits=4
+- Calibrate with representative data
 
 ---
 
-**Última actualización**: 2025-11-16
-**Versión del sistema**: v2.0.0
+**Last updated**: 2025-11-16
+**System version**: v2.0.0

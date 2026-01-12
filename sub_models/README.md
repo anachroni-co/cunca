@@ -1,22 +1,22 @@
 # capibara/sub_models - Sub-Models Architecture
 
-El directorio **sub_models** contiene todos los sub-modelos especializados que pueden ser combinados modularmente para construir arquitecturas personalizadas.
+The **sub_models** directory contains all specialized sub-models that can be combined modularly to build custom architectures.
 
-## 📋 Tabla de Contenidos
+## 📋 Table of Contents
 
-1. [Visión General](#visión-general)
-2. [Sub-Modelos Disponibles](#sub-modelos-disponibles)
-3. [Arquitectura Modular](#arquitectura-modular)
+1. [Overview](#overview)
+2. [Available Sub-Models](#available-sub-models)
+3. [Modular Architecture](#modular-architecture)
 4. [Quick Start](#quick-start)
-5. [Sub-Modelos Detallados](#sub-modelos-detallados)
-6. [Integración y Composición](#integración-y-composición)
+5. [Detailed Sub-Models](#detailed-sub-models)
+6. [Integration and Composition](#integration-and-composition)
 7. [Performance Comparison](#performance-comparison)
 
 ---
 
-## 🎯 Visión General
+## 🎯 Overview
 
-capibaraGPT-v2 usa una **arquitectura completamente modular** donde diferentes sub-modelos pueden ser combinados según las necesidades:
+capibaraGPT-v2 uses a **fully modular architecture** where different sub-models can be combined as needed:
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -40,37 +40,37 @@ capibaraGPT-v2 usa una **arquitectura completamente modular** donde diferentes s
 └──────────────────────────────────────────────────────────┘
 ```
 
-### Filosofía de Diseño
+### Design Philosophy
 
-- **Modular**: Cada sub-modelo puede usarse independientemente
-- **Composable**: Combinar múltiples sub-modelos fácilmente
-- **Optimized**: Cada sub-modelo optimizado para su tarea específica
-- **Flexible**: Intercambiar sub-modelos sin cambiar arquitectura general
+- **Modular**: Each sub-model can be used independently
+- **Composable**: Easily combine multiple sub-models
+- **Optimized**: Each sub-model optimized for its specific task
+- **Flexible**: Swap sub-models without changing overall architecture
 
 ---
 
-## 🧩 Sub-Modelos Disponibles
+## 🧩 Available Sub-Models
 
-| Sub-Modelo | Directorio | Propósito | Documentación |
-|------------|-----------|-----------|---------------|
-| **Mamba (SSM)** | `mamba/` | Atención O(n) para secuencias largas | [README](mamba/README.md) |
-| **Hybrid Attention** | `hybrid/` | Router Mamba/Transformer inteligente | [README](hybrid/README.md) |
-| **Vision** | `vision/` | Encoder de imágenes/video | - |
-| **Semiotic** | `semiotic/` | Grounding semiótico y simbólico | - |
-| **Deep Dialog** | `deep_dialog.py` | Diálogo multi-turno avanzado | - |
+| Sub-Model | Directory | Purpose | Documentation |
+|-----------|-----------|---------|---------------|
+| **Mamba (SSM)** | `mamba/` | O(n) attention for long sequences | [README](mamba/README.md) |
+| **Hybrid Attention** | `hybrid/` | Intelligent Mamba/Transformer router | [README](hybrid/README.md) |
+| **Vision** | `vision/` | Image/video encoder | - |
+| **Semiotic** | `semiotic/` | Semiotic and symbolic grounding | - |
+| **Deep Dialog** | `deep_dialog.py` | Advanced multi-turn dialog | - |
 | **CSA Expert** | `csa_expert.py` | Cross-Stream Attention expert | - |
-| **Reasoning Enhancement** | `reasoning_enhancement.py` | Mejoras de razonamiento | - |
-| **Byte-Level** | `Byte_TPU.py` | Procesamiento byte-level | - |
-| **Experimental** | `experimental/` | Sub-modelos experimentales | - |
-| **Capibaras** | `capibaras/` | Variantes del modelo Capibara | - |
+| **Reasoning Enhancement** | `reasoning_enhancement.py` | Reasoning improvements | - |
+| **Byte-Level** | `Byte_TPU.py` | Byte-level processing | - |
+| **Experimental** | `experimental/` | Experimental sub-models | - |
+| **Capibaras** | `capibaras/` | Capibara model variants | - |
 
 ---
 
-## 🏗️ Arquitectura Modular
+## 🏗️ Modular Architecture
 
 ### ModularCapibaraModel
 
-El modelo principal integra todos los sub-modelos:
+The main model integrates all sub-models:
 
 ```python
 from capibara.core import ModularCapibaraModel, ModularConfig
@@ -81,13 +81,13 @@ from capibara.sub_models import (
     SemioticGrounder
 )
 
-# Configurar módulos
+# Configure modules
 config = ModularConfig(
     # Base model
     hidden_size=768,
     num_layers=12,
 
-    # Sub-models activos
+    # Active sub-models
     use_mamba=True,
     use_hybrid_attention=True,
     use_vision_encoder=True,
@@ -98,19 +98,19 @@ config = ModularConfig(
     vision_config=VisionConfig(...)
 )
 
-# Crear modelo modular
+# Create modular model
 model = ModularCapibaraModel(config)
 
-# El modelo usa automáticamente los sub-modelos configurados
+# The model automatically uses configured sub-models
 output = model(inputs)
 ```
 
-### Orquestador de Sub-Modelos
+### Sub-Model Orchestrator
 
 ```python
 from capibara.sub_models import UltraSubmodelOrchestrator
 
-# Crear orquestador
+# Create orchestrator
 orchestrator = UltraSubmodelOrchestrator(
     enabled_submodels=[
         "mamba",
@@ -120,25 +120,25 @@ orchestrator = UltraSubmodelOrchestrator(
     ]
 )
 
-# Orquestar ejecución
+# Orchestrate execution
 result = orchestrator.process(
     inputs=inputs,
     task_type="reasoning"  # reasoning, dialog, vision, etc.
 )
 
-# El orquestrador selecciona automáticamente los sub-modelos apropiados
+# The orchestrator automatically selects appropriate sub-models
 ```
 
 ---
 
 ## 🚀 Quick Start
 
-### Uso Básico: Mamba
+### Basic Usage: Mamba
 
 ```python
 from capibara.sub_models.mamba import MambaModule, MambaConfig
 
-# Configurar Mamba
+# Configure Mamba
 config = MambaConfig(
     hidden_size=768,
     d_state=16,
@@ -146,7 +146,7 @@ config = MambaConfig(
     expand_factor=2
 )
 
-# Crear módulo
+# Create module
 mamba = MambaModule(config)
 
 # Forward pass
@@ -154,15 +154,15 @@ import jax.numpy as jnp
 inputs = jnp.ones((2, 512, 768))  # (batch, seq_len, hidden)
 outputs = mamba(inputs)
 
-# Complejidad: O(n) vs O(n²) de Transformer
+# Complexity: O(n) vs O(n²) for Transformer
 ```
 
-### Uso Básico: Hybrid Attention
+### Basic Usage: Hybrid Attention
 
 ```python
 from capibara.sub_models.hybrid import HybridAttentionModule
 
-# Configurar router híbrido
+# Configure hybrid router
 hybrid = HybridAttentionModule(
     config={
         "mamba_threshold": 512,
@@ -170,30 +170,30 @@ hybrid = HybridAttentionModule(
     }
 )
 
-# Routing automático
-outputs = hybrid(inputs)  # Usa Mamba si seq_len >= 512, sino Transformer
+# Automatic routing
+outputs = hybrid(inputs)  # Uses Mamba if seq_len >= 512, else Transformer
 
-# Inspeccionar decisión
-print(f"Used: {hybrid.last_decision}")  # "mamba" o "transformer"
+# Inspect decision
+print(f"Used: {hybrid.last_decision}")  # "mamba" or "transformer"
 ```
 
-### Uso Básico: Vision
+### Basic Usage: Vision
 
 ```python
 from capibara.sub_models.vision import VisionEncoder
 
-# Configurar vision encoder
+# Configure vision encoder
 vision = VisionEncoder(
     hidden_size=768,
     image_size=224,
     patch_size=16
 )
 
-# Encodear imagen
+# Encode image
 image = jnp.ones((1, 224, 224, 3))  # (batch, H, W, C)
 image_embeddings = vision(image)  # (batch, num_patches, hidden_size)
 
-# Combinar con texto
+# Combine with text
 combined = model.combine_modalities(
     text_emb=text_embeddings,
     vision_emb=image_embeddings
@@ -202,29 +202,29 @@ combined = model.combine_modalities(
 
 ---
 
-## 🔧 Sub-Modelos Detallados
+## 🔧 Detailed Sub-Models
 
 ### 1. Mamba (Selective State Space Model)
 
-**Propósito**: Atención eficiente O(n) para secuencias largas
+**Purpose**: Efficient O(n) attention for long sequences
 
 ```python
 from capibara.sub_models.mamba import MambaModule
 
 mamba = MambaModule(config)
 
-# Características:
-# - Complejidad: O(n) vs O(n²) Transformer
-# - Ideal para: Secuencias > 512 tokens
-# - TPU optimizado: Scan asociativo
-# - Memory efficient: ~50% menos memoria que Transformer
+# Features:
+# - Complexity: O(n) vs O(n²) Transformer
+# - Ideal for: Sequences > 512 tokens
+# - TPU optimized: Associative scan
+# - Memory efficient: ~50% less memory than Transformer
 ```
 
-Ver [mamba/README.md](mamba/README.md) para documentación completa.
+See [mamba/README.md](mamba/README.md) for complete documentation.
 
 ### 2. Hybrid Attention
 
-**Propósito**: Router inteligente entre Mamba y Transformer
+**Purpose**: Intelligent router between Mamba and Transformer
 
 ```python
 from capibara.sub_models.hybrid import HybridAttentionModule
@@ -235,23 +235,23 @@ hybrid = HybridAttentionModule(
     memory_threshold=0.8
 )
 
-# Decisión basada en:
-# - Longitud de secuencia
-# - Memoria disponible
-# - Requerimientos de latencia
-# - Calidad requerida
+# Decision based on:
+# - Sequence length
+# - Available memory
+# - Latency requirements
+# - Required quality
 ```
 
-Ver [hybrid/README.md](hybrid/README.md) para documentación completa.
+See [hybrid/README.md](hybrid/README.md) for complete documentation.
 
 ### 3. Vision Encoder
 
-**Propósito**: Procesar imágenes y video
+**Purpose**: Process images and video
 
 ```python
 from capibara.sub_models.vision import VisionEncoder, VideoEncoder
 
-# Imágenes
+# Images
 vision = VisionEncoder(
     architecture="vit",  # vit, resnet, convnext
     pretrained="imagenet"
@@ -271,7 +271,7 @@ fused = combiner(text=text_emb, vision=vision_emb)
 
 ### 4. Semiotic Grounding
 
-**Propósito**: Grounding semiótico y simbólico
+**Purpose**: Semiotic and symbolic grounding
 
 ```python
 from capibara.sub_models.semiotic import SemioticGrounder
@@ -281,13 +281,13 @@ semiotic = SemioticGrounder(
     grounding_layers=4
 )
 
-# Grounding de símbolos a conceptos
+# Ground symbols to concepts
 grounded = semiotic.ground(
     symbols=["apple", "red", "fruit"],
     context=text_context
 )
 
-# Reasoning simbólico
+# Symbolic reasoning
 reasoning_result = semiotic.reason(
     premises=["All apples are fruits", "This is an apple"],
     query="Is this a fruit?"
@@ -296,7 +296,7 @@ reasoning_result = semiotic.reason(
 
 ### 5. Deep Dialog
 
-**Propósito**: Diálogo multi-turno con memoria de contexto
+**Purpose**: Multi-turn dialog with context memory
 
 ```python
 from capibara.sub_models import DeepDialogModel
@@ -306,7 +306,7 @@ dialog = DeepDialogModel(
     use_episodic_memory=True
 )
 
-# Conversación multi-turno
+# Multi-turn conversation
 context = dialog.initialize_context()
 
 for user_input in conversation:
@@ -319,7 +319,7 @@ for user_input in conversation:
 
 ### 6. CSA Expert (Cross-Stream Attention)
 
-**Propósito**: Atención cruzada entre múltiples streams de información
+**Purpose**: Cross attention between multiple information streams
 
 ```python
 from capibara.sub_models import CSAExpert
@@ -329,19 +329,19 @@ csa = CSAExpert(
     cross_attention_heads=12
 )
 
-# Procesar múltiples streams
+# Process multiple streams
 outputs = csa.process_streams(
     text_stream=text,
     vision_stream=images,
     audio_stream=audio
 )
 
-# Cross-stream attention automática
+# Automatic cross-stream attention
 ```
 
 ### 7. Reasoning Enhancement
 
-**Propósito**: Mejoras específicas para razonamiento
+**Purpose**: Specific improvements for reasoning
 
 ```python
 from capibara.sub_models import ReasoningEnhancement
@@ -352,45 +352,45 @@ reasoning = ReasoningEnhancement(
     num_reasoning_paths=5
 )
 
-# Razonamiento mejorado
+# Enhanced reasoning
 result = reasoning.reason(
-    problem="Si Juan tiene 5 manzanas y le da 2 a María...",
+    problem="If John has 5 apples and gives 2 to Mary...",
     reasoning_type="mathematical"
 )
 
-# Incluye:
-# - Scratch pad para trabajo intermedio
+# Includes:
+# - Scratch pad for intermediate work
 # - Self-consistency voting
 # - Multiple reasoning paths
 ```
 
 ### 8. Byte-Level Processing (TPU Optimized)
 
-**Propósito**: Procesamiento a nivel de bytes
+**Purpose**: Byte-level processing
 
 ```python
 from capibara.sub_models import ByteTPU
 
 byte_model = ByteTPU(
-    vocab_size=256,  # 256 bytes posibles
+    vocab_size=256,  # 256 possible bytes
     use_tpu_optimizations=True
 )
 
-# Procesar bytes directamente (sin tokenización)
+# Process bytes directly (no tokenization)
 byte_inputs = jnp.array([72, 101, 108, 108, 111])  # "Hello"
 outputs = byte_model(byte_inputs)
 
-# Ventajas:
-# - No necesita tokenizer
-# - Maneja cualquier idioma/script
-# - Robusto a errores de ortografía
+# Advantages:
+# - No tokenizer needed
+# - Handles any language/script
+# - Robust to spelling errors
 ```
 
 ---
 
-## 🔗 Integración y Composición
+## 🔗 Integration and Composition
 
-### Composición Manual
+### Manual Composition
 
 ```python
 from capibara.sub_models import (
@@ -402,14 +402,14 @@ from capibara.sub_models import (
 
 class MyCustomModel:
     def __init__(self, config):
-        # Combinar sub-modelos manualmente
+        # Manually combine sub-models
         self.mamba = MambaModule(config.mamba_config)
         self.vision = VisionEncoder(config.vision_config)
         self.dialog = DeepDialogModel(config.dialog_config)
         self.reasoning = ReasoningEnhancement(config.reasoning_config)
 
     def __call__(self, inputs, images=None, context=None):
-        # 1. Vision encoding (si hay imágenes)
+        # 1. Vision encoding (if images present)
         if images is not None:
             vision_emb = self.vision(images)
             inputs = self.combine(inputs, vision_emb)
@@ -427,31 +427,31 @@ class MyCustomModel:
         return final_output
 ```
 
-### Composición con Orquestador
+### Composition with Orchestrator
 
 ```python
 from capibara.sub_models import UltraSubmodelOrchestrator
 
-# El orquestador maneja la composición automáticamente
+# The orchestrator handles composition automatically
 orchestrator = UltraSubmodelOrchestrator(
     enabled_submodels=["mamba", "vision", "dialog", "reasoning"]
 )
 
-# Detecta automáticamente qué sub-modelos usar según inputs
+# Automatically detects which sub-models to use based on inputs
 output = orchestrator.process(
     text=text_input,
-    images=images,  # Activa vision automáticamente
-    task="reasoning"  # Activa reasoning automáticamente
+    images=images,  # Automatically activates vision
+    task="reasoning"  # Automatically activates reasoning
 )
 ```
 
-### Integración con ModularCapibaraModel
+### Integration with ModularCapibaraModel
 
 ```python
 from capibara.core import ModularCapibaraModel, ModularConfig
 
 config = ModularConfig(
-    # Configurar todos los sub-modelos
+    # Configure all sub-models
     use_mamba=True,
     mamba_config=MambaConfig(...),
 
@@ -465,10 +465,10 @@ config = ModularConfig(
     reasoning_config=ReasoningConfig(...)
 )
 
-# Modelo integra automáticamente todos los sub-modelos
+# Model automatically integrates all sub-models
 model = ModularCapibaraModel(config)
 
-# Uso unificado
+# Unified usage
 output = model(
     text_inputs=text,
     image_inputs=images,
@@ -490,33 +490,33 @@ output = model(
 | Vision | 30ms | 1.5GB | 1500 req/s |
 | Deep Dialog | 60ms | 2.5GB | 800 req/s |
 
-### Complejidad Computacional
+### Computational Complexity
 
 | Sub-Model | Time Complexity | Space Complexity |
-|-----------|----------------|------------------|
+|-----------|-----------------|------------------|
 | Mamba | O(n) | O(n) |
 | Transformer | O(n²) | O(n²) |
 | Hybrid | O(n) - O(n²) | O(n) - O(n²) |
 | Vision (ViT) | O(n²) patches | O(n²) |
 | CSA Expert | O(n²) per stream | O(n²) |
 
-### Cuando Usar Cada Sub-Modelo
+### When to Use Each Sub-Model
 
-| Caso de Uso | Sub-Modelo Recomendado | Razón |
-|-------------|------------------------|-------|
-| Secuencias > 1024 tokens | Mamba | O(n) complexity |
-| Secuencias < 512 tokens | Transformer | Mejor calidad |
-| Secuencias variables | Hybrid Attention | Adaptativo |
-| Multimodal (texto + imagen) | Vision + Mamba | Eficiente multimodal |
-| Diálogo multi-turno | Deep Dialog | Memoria contextual |
-| Razonamiento complejo | Reasoning Enhancement | Multiple paths |
-| Múltiples fuentes de datos | CSA Expert | Cross-stream attention |
+| Use Case | Recommended Sub-Model | Reason |
+|----------|----------------------|--------|
+| Sequences > 1024 tokens | Mamba | O(n) complexity |
+| Sequences < 512 tokens | Transformer | Better quality |
+| Variable sequences | Hybrid Attention | Adaptive |
+| Multimodal (text + image) | Vision + Mamba | Efficient multimodal |
+| Multi-turn dialog | Deep Dialog | Contextual memory |
+| Complex reasoning | Reasoning Enhancement | Multiple paths |
+| Multiple data sources | CSA Expert | Cross-stream attention |
 
 ---
 
-## 🛠️ Desarrollo de Nuevos Sub-Modelos
+## 🛠️ Developing New Sub-Models
 
-### Template para Nuevo Sub-Modelo
+### Template for New Sub-Model
 
 ```python
 from flax import linen as nn
@@ -524,13 +524,13 @@ from capibara.core.interfaces import IModule
 from typing import Any, Dict
 
 class MyNewSubModel(nn.Module, IModule):
-    """Mi nuevo sub-modelo personalizado."""
+    """My custom new sub-model."""
 
     hidden_size: int
     custom_param: float = 1.0
 
     def setup(self):
-        """Inicializar componentes."""
+        """Initialize components."""
         self.layer1 = nn.Dense(self.hidden_size)
         self.layer2 = nn.Dense(self.hidden_size)
 
@@ -542,7 +542,7 @@ class MyNewSubModel(nn.Module, IModule):
         return x
 
     def get_metrics(self) -> Dict[str, Any]:
-        """Métricas del módulo."""
+        """Module metrics."""
         return {
             "module_type": "MyNewSubModel",
             "hidden_size": self.hidden_size,
@@ -550,24 +550,24 @@ class MyNewSubModel(nn.Module, IModule):
         }
 
     def get_config(self) -> Dict[str, Any]:
-        """Configuración del módulo."""
+        """Module configuration."""
         return {
             "hidden_size": self.hidden_size,
             "custom_param": self.custom_param
         }
 ```
 
-### Registrar en ModularCapibaraModel
+### Register in ModularCapibaraModel
 
 ```python
-# En capibara/core/modular_model.py
+# In capibara/core/modular_model.py
 from capibara.sub_models.my_new import MyNewSubModel
 
 class ModularCapibaraModel(nn.Module):
     def setup(self):
         # ...existing setup...
 
-        # Agregar nuevo sub-modelo
+        # Add new sub-model
         if self.config.use_my_new:
             self.my_new = MyNewSubModel(
                 hidden_size=self.config.hidden_size,
@@ -577,12 +577,12 @@ class ModularCapibaraModel(nn.Module):
 
 ---
 
-## 📚 Referencias
+## 📚 References
 
-- [Mamba Module](mamba/README.md) - Documentación completa Mamba
-- [Hybrid Attention](hybrid/README.md) - Documentación Hybrid Router
-- [Core Integration](../core/README.md) - Integración con core
-- [ModularCapibaraModel](../core/modular_model.py) - Modelo modular principal
+- [Mamba Module](mamba/README.md) - Complete Mamba documentation
+- [Hybrid Attention](hybrid/README.md) - Hybrid Router documentation
+- [Core Integration](../core/README.md) - Core integration
+- [ModularCapibaraModel](../core/modular_model.py) - Main modular model
 
 ---
 
@@ -591,7 +591,7 @@ class ModularCapibaraModel(nn.Module):
 ### Error: "Sub-model not found"
 
 ```python
-# Verificar sub-modelos disponibles
+# Verify available sub-models
 from capibara.sub_models import list_available_submodels
 
 available = list_available_submodels()
@@ -600,24 +600,24 @@ print(f"Available: {available}")
 
 ### Error: "Incompatible dimensions"
 
-Asegurar que todos los sub-modelos usan el mismo `hidden_size`:
+Ensure all sub-models use the same `hidden_size`:
 
 ```python
 config = ModularConfig(
-    hidden_size=768,  # Mismo para todos
+    hidden_size=768,  # Same for all
     mamba_config=MambaConfig(hidden_size=768),
     vision_config=VisionConfig(output_size=768)
 )
 ```
 
-### Performance Lento
+### Slow Performance
 
-- Usar Mamba para secuencias largas
-- Usar Hybrid Attention para adaptación automática
-- Habilitar TPU optimizations en configs
-- Usar cuantización para inferencia
+- Use Mamba for long sequences
+- Use Hybrid Attention for automatic adaptation
+- Enable TPU optimizations in configs
+- Use quantization for inference
 
 ---
 
-**Última actualización**: 2025-11-16
-**Versión del sistema**: v2.0.0
+**Last updated**: 2025-11-16
+**System version**: v2.0.0
