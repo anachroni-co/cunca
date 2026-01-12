@@ -749,9 +749,11 @@ class AdvancedConsensusEngine:
             for resp in all_responses:
                 if resp.semantic_embedding is not None:
                     # Calculate similarity (simplified)
-                    similarity = len(set(response.lower().split()) & 
-                                   set(resp.response_text.lower().split())) / len(set(response.lower().split()))
-                    response_similarities.append(similarity)
+                    response_words = set(response.lower().split())
+                    resp_words = set(resp.response_text.lower().split())
+                    if len(response_words) > 0:
+                        similarity = len(response_words & resp_words) / len(response_words)
+                        response_similarities.append(similarity)
             
             if response_similarities:
                 bias_indicators['confirmation_bias'] = np.mean(response_similarities)
