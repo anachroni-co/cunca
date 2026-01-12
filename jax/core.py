@@ -117,7 +117,7 @@ def _create_config_flag(name: str, default_value, help_text: str):
             return config.float_flag(name, default_value, help=help_text)
         else:
             return type('ConfigFlag', (), {'value': default_value})()
-    except:
+    except Exception:
         return type('ConfigFlag', (), {'value': default_value})()
 
 _TRACER_ERROR_NUM_TRACEBACK_FRAMES = _create_config_flag(
@@ -209,7 +209,7 @@ def concrete_or_error(force: Any, val: Any, context=""):
     """Try to concretize a value or raise an error."""
     try:
         return force(val)
-    except:
+    except Exception:
         raise ConcretizationTypeError(f"Cannot concretize value {val} in context: {context}")
 
 def concrete_dim_or_error(val: Any, context=""):
@@ -231,7 +231,7 @@ def definitely_equal(x, y):
     """Check if two values are definitely equal."""
     try:
         return x == y
-    except:
+    except Exception:
         return False
 
 def definitely_equal_shape(s1: Shape, s2: Shape) -> bool:

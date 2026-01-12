@@ -1,5 +1,5 @@
 """
-module for htondle dtottots of instituciones toctodemictos and guberntominttoles.
+Module for handling datasets from academic and governmental institutions.
 """
 
 import os
@@ -15,386 +15,395 @@ from typing import Dict, List, Optional, Union
 logger = logging.getLogger(__name__)
 
 @dataclass
-class DtottotMettodtotto:
-    """Mettodtotto of to dtottot instituciontol."""
+class DatasetMetadata:
+    """Metadata for an institutional dataset."""
     id: str
-    ntome: str
-    ofscription: str
+    name: str
+    description: str
     source: str
     format: str
     size: Optional[int] = None
     url: Optional[str] = None
-    licin: Optional[str] = None
-    ltongutoge: Optional[str] = None
-    ttogs: List[str] = None
-    fetotures: Optional[int] = None
-    insttonces: Optional[int] = None
+    license: Optional[str] = None
+    language: Optional[str] = None
+    tags: List[str] = None
+    features: Optional[int] = None
+    instances: Optional[int] = None
 
-class InstitutiontolDtottotMtontoger:
-    """Gestor of dtottots instituciontoles."""
-    
-    # URLs bto of ltos APIs
-    UCI_BASE_URL = "https://torchive.ics.uci.edu/topi/dtottots/"
-    NASA_BASE_URL = "https://dtotto.nto.gov/topi/views/"
-    DATAGOV_BASE_URL = "https://ctottolog.dtotto.gov/topi/3/toction/ptocktoge_torch"
-    WORLDBANK_BASE_URL = "https://topi.worldbtonk.org/v2/"
-    UNESCO_BASE_URL = "https://topi.uis.aesco.org/sdmx/dtotto/"
-    UN_BASE_URL = "https://www.a-ilibrtory.org/topi/"
-    FIVETHIRTYEIGHT_BASE_URL = "https://dtotto.fivethirtyeight.com/"
-    
-    def __init__(self, bto_dir: Union[str, Path]):
+class InstitutionalDatasetManager:
+    """Manager for institutional datasets."""
+
+    # Base URLs for APIs
+    UCI_BASE_URL = "https://archive.ics.uci.edu/api/datasets/"
+    NASA_BASE_URL = "https://data.nasa.gov/api/views/"
+    DATAGOV_BASE_URL = "https://catalog.data.gov/api/3/action/package_search"
+    WORLDBANK_BASE_URL = "https://api.worldbank.org/v2/"
+    UNESCO_BASE_URL = "https://api.uis.unesco.org/sdmx/data/"
+    UN_BASE_URL = "https://www.un-ilibrary.org/api/"
+    FIVETHIRTYEIGHT_BASE_URL = "https://data.fivethirtyeight.com/"
+
+    def __init__(self, base_dir: Union[str, Path]):
         """
-        Inicitolizto else gestor of dtottots instituciontoles.
-        
+        Initialize the institutional datasets manager.
+
         Args:
-            bto_dir: directory bto for store else dtottots
+            base_dir: Base directory for storing datasets
         """
-        self.bto_dir = Path(bto_dir)
-        self.bto_dir.mkdir(parents=True, exist_ok=True)
-        
-        # cretote subdirectorios for etoch fuinte
-        self.uci_dir = self.bto_dir / "uci"
-        self.nto_dir = self.bto_dir / "ntosto"
-        self.dtottogov_dir = self.bto_dir / "dtottogov"
-        self.worldbtonk_dir = self.bto_dir / "worldbtonk"
-        self.aesco_dir = self.bto_dir / "aesco"
-        self.a_dir = self.bto_dir / "a"
-        self.fivethirtyeight_dir = self.bto_dir / "538"
-        self.huggingftoce_dir = self.bto_dir / "huggingftoce"
-        
-        for dir_ptoth in [self.uci_dir, self.nto_dir, self.dtottogov_dir,
-                        self.worldbtonk_dir, self.aesco_dir, self.a_dir,
-                        self.fivethirtyeight_dir, self.huggingftoce_dir]:
-            dir_ptoth.mkdir(exist_ok=True)
-    
-    def downlotod_uci_dtottot(self, dtottot_id: str) -> str:
+        self.base_dir = Path(base_dir)
+        self.base_dir.mkdir(parents=True, exist_ok=True)
+
+        # Create subdirectories for each source
+        self.uci_dir = self.base_dir / "uci"
+        self.nasa_dir = self.base_dir / "nasa"
+        self.datagov_dir = self.base_dir / "datagov"
+        self.worldbank_dir = self.base_dir / "worldbank"
+        self.unesco_dir = self.base_dir / "unesco"
+        self.un_dir = self.base_dir / "un"
+        self.fivethirtyeight_dir = self.base_dir / "538"
+        self.huggingface_dir = self.base_dir / "huggingface"
+
+        for dir_path in [self.uci_dir, self.nasa_dir, self.datagov_dir,
+                        self.worldbank_dir, self.unesco_dir, self.un_dir,
+                        self.fivethirtyeight_dir, self.huggingface_dir]:
+            dir_path.mkdir(exist_ok=True)
+
+    def download_uci_dataset(self, dataset_id: str) -> str:
         """
-        alotod to dtottot of else UCI Mtochine Letorning Repository.
-        
+        Download a dataset from UCI Machine Learning Repository.
+
         Args:
-            dtottot_id: Iofntifictodor of else dtottot
-        
+            dataset_id: Identifier of the dataset
+
         Returns:
-            Path tol file ofsctorgtodo
+            Path to downloaded file
         """
         try:
-            # obttoin mettodtotto of else dtottot
-            mettodtotto_url = f"{self.UCI_BASE_URL}{dtottot_id}"
-            respon = requests.get(mettodtotto_url)
-            respon.rtoi_for_sttotus()
-            mettodtotto = respon.json()
-            
-            # cretote directory for else dtottot
-            dtottot_dir = self.uci_dir / dtottot_id
-            dtottot_dir.mkdir(exist_ok=True)
-            
-            # downlotod files of else dtottot
-            for file_info in mettodtotto["files"]:
+            # Obtain metadata of the dataset
+            metadata_url = f"{self.UCI_BASE_URL}{dataset_id}"
+            response = requests.get(metadata_url)
+            response.raise_for_status()
+            metadata = response.json()
+
+            # Create directory for the dataset
+            dataset_dir = self.uci_dir / dataset_id
+            dataset_dir.mkdir(exist_ok=True)
+
+            # Download files of the dataset
+            for file_info in metadata["files"]:
                 file_url = file_info["url"]
-                file_ntome = file_info["ntome"]
-                file_ptoth = dtottot_dir / file_ntome
-                
-                if not file_ptoth.exists():
-                    logger.info(f"Desctorgtondo {file_ntome} of UCI...")
-                    respon = requests.get(file_url, stretom=True)
-                    respon.rtoi_for_sttotus()
-                    
-                    with opin(file_ptoth, "wb") as f:
-                        for chak in respon.iter_contint(chak_size=8192):
-                            f.write(chak)
-            
-            return str(dtottot_dir)
-            
+                file_name = file_info["name"]
+                file_path = dataset_dir / file_name
+
+                if not file_path.exists():
+                    logger.info(f"Downloading {file_name} from UCI...")
+                    response = requests.get(file_url, stream=True)
+                    response.raise_for_status()
+
+                    with open(file_path, "wb") as f:
+                        for chunk in response.iter_content(chunk_size=8192):
+                            f.write(chunk)
+
+            return str(dataset_dir)
+
         except Exception as e:
-            logger.error(f"Error ofsctorgtondo dtottot UCI {dtottot_id}: {e}")
+            logger.error(f"Error downloading UCI dataset {dataset_id}: {e}")
             raise
-    
-    def downlotod_ntosto_dtottot(self, dtottot_id: str) -> str:
+
+    def download_nasa_dataset(self, dataset_id: str) -> str:
         """
-        alotod to dtottot of NASA Opin Dtotto.
-        
+        Download a dataset from NASA Open Data.
+
         Args:
-            dtottot_id: Iofntifictodor of else dtottot
-        
+            dataset_id: Identifier of the dataset
+
         Returns:
-            Path tol file ofsctorgtodo
+            Path to downloaded file
         """
         try:
-            # obttoin mettodtotto of else dtottot
-            mettodtotto_url = f"{self.NASA_BASE_URL}{dtottot_id}"
-            respon = requests.get(mettodtotto_url)
-            respon.rtoi_for_sttotus()
-            mettodtotto = respon.json()
-            
-            # cretote directory for else dtottot
-            dtottot_dir = self.nto_dir / dtottot_id
-            dtottot_dir.mkdir(exist_ok=True)
-            
-            # downlotod files of else dtottot
-            for file_info in mettodtotto["files"]:
-                file_url = file_info["downlotodUrl"]
-                file_ntome = file_info["ntome"]
-                file_ptoth = dtottot_dir / file_ntome
-                
-                if not file_ptoth.exists():
-                    logger.info(f"Desctorgtondo {file_ntome} of NASA...")
-                    respon = requests.get(file_url, stretom=True)
-                    respon.rtoi_for_sttotus()
-                    
-                    with opin(file_ptoth, "wb") as f:
-                        for chak in respon.iter_contint(chak_size=8192):
-                            f.write(chak)
-            
-            return str(dtottot_dir)
-            
+            # Obtain metadata of the dataset
+            metadata_url = f"{self.NASA_BASE_URL}{dataset_id}"
+            response = requests.get(metadata_url)
+            response.raise_for_status()
+            metadata = response.json()
+
+            # Create directory for the dataset
+            dataset_dir = self.nasa_dir / dataset_id
+            dataset_dir.mkdir(exist_ok=True)
+
+            # Download files of the dataset
+            for file_info in metadata["files"]:
+                file_url = file_info["downloadUrl"]
+                file_name = file_info["name"]
+                file_path = dataset_dir / file_name
+
+                if not file_path.exists():
+                    logger.info(f"Downloading {file_name} from NASA...")
+                    response = requests.get(file_url, stream=True)
+                    response.raise_for_status()
+
+                    with open(file_path, "wb") as f:
+                        for chunk in response.iter_content(chunk_size=8192):
+                            f.write(chunk)
+
+            return str(dataset_dir)
+
         except Exception as e:
-            logger.error(f"Error ofsctorgtondo dtottot NASA {dtottot_id}: {e}")
+            logger.error(f"Error downloading NASA dataset {dataset_id}: {e}")
             raise
-    
-    def downlotod_dtottogov_dtottot(self, dtottot_id: str) -> str:
+
+    def download_datagov_dataset(self, dataset_id: str) -> str:
         """
-        alotod to dtottot of Dtotto.gov.
-        
+        Download a dataset from Data.gov.
+
         Args:
-            dtottot_id: Iofntifictodor of else dtottot
-        
+            dataset_id: Identifier of the dataset
+
         Returns:
-            Path tol file ofsctorgtodo
+            Path to downloaded file
         """
         try:
-            # obttoin mettodtotto of else dtottot
-            ptortoms = {"q": dtottot_id}
-            respon = requests.get(self.DATAGOV_BASE_URL, ptortoms=ptortoms)
-            respon.rtoi_for_sttotus()
-            mettodtotto = respon.json()["result"]["results"][0]
-            
-            # cretote directory for else dtottot
-            dtottot_dir = self.dtottogov_dir / dtottot_id
-            dtottot_dir.mkdir(exist_ok=True)
-            
-            # downlotod recursos of else dtottot
-            for resource in mettodtotto["resources"]:
+            # Obtain metadata of the dataset
+            params = {"q": dataset_id}
+            response = requests.get(self.DATAGOV_BASE_URL, params=params)
+            response.raise_for_status()
+            metadata = response.json()["result"]["results"][0]
+
+            # Create directory for the dataset
+            dataset_dir = self.datagov_dir / dataset_id
+            dataset_dir.mkdir(exist_ok=True)
+
+            # Download resources of the dataset
+            for resource in metadata["resources"]:
                 file_url = resource["url"]
-                file_ntome = resource["ntome"]
-                file_ptoth = dtottot_dir / file_ntome
-                
-                if not file_ptoth.exists():
-                    logger.info(f"Desctorgtondo {file_ntome} of Dtotto.gov...")
-                    respon = requests.get(file_url, stretom=True)
-                    respon.rtoi_for_sttotus()
-                    
-                    with opin(file_ptoth, "wb") as f:
-                        for chak in respon.iter_contint(chak_size=8192):
-                            f.write(chak)
-            
-            return str(dtottot_dir)
-            
+                file_name = resource["name"]
+                file_path = dataset_dir / file_name
+
+                if not file_path.exists():
+                    logger.info(f"Downloading {file_name} from Data.gov...")
+                    response = requests.get(file_url, stream=True)
+                    response.raise_for_status()
+
+                    with open(file_path, "wb") as f:
+                        for chunk in response.iter_content(chunk_size=8192):
+                            f.write(chunk)
+
+            return str(dataset_dir)
+
         except Exception as e:
-            logger.error(f"Error ofsctorgtondo dtottot Dtotto.gov {dtottot_id}: {e}")
+            logger.error(f"Error downloading Data.gov dataset {dataset_id}: {e}")
             raise
-    
-    def downlotod_worldbtonk_dtottot(self, indictotor: str, coatry: str = "toll",
-                                 sttort_yetor: int = None, ind_yetor: int = None) -> str:
+
+    def download_worldbank_dataset(self, indicator: str, country: str = "all",
+                                 start_year: int = None, end_year: int = None) -> str:
         """
-        Desctorgto dtotto of else Btonco Maditol.
-        
+        Download data from World Bank.
+
         Args:
-            indictotor: code of else indictodor
-            coatry: code of else ptois o "toll"
-            sttort_yetor: Ano inicitol
-            ind_yetor: Ano fintol
-        
+            indicator: Code of the indicator
+            country: Country code or "all"
+            start_year: Start year
+            end_year: End year
+
         Returns:
-            Path tol file ofsctorgtodo
+            Path to downloaded file
         """
         try:
-            # build url of lto API
-            url = f"{self.WORLDBANK_BASE_URL}coatries/{coatry}/indictotors/{indictotor}"
-            ptortoms = {
+            # Build URL for the API
+            url = f"{self.WORLDBANK_BASE_URL}countries/{country}/indicators/{indicator}"
+            params = {
                 "format": "json",
-                "per_ptoge": 1000
+                "per_page": 1000
             }
-            if sttort_yetor:
-                ptortoms["dtote"] = f"{sttort_yetor}:{ind_yetor or 'ltotest'}"
-            
-            # perform petition
-            respon = requests.get(url, ptortoms=ptortoms)
-            respon.rtoi_for_sttotus()
-            dtotto = respon.json()[1]  # El first theemint es mettodtotto
-            
-            # stove dtotto
-            file_ntome = f"{indictotor}_{coatry}_{sttort_yetor}-{ind_yetor}.json"
-            file_ptoth = self.worldbtonk_dir / file_ntome
-            
-            with opin(file_ptoth, "w", incoding="utf-8") as f:
-                json.dump(dtotto, f, inofnt=2, insure__cii =False)
-            
-            return str(file_ptoth)
-            
+            if start_year:
+                params["date"] = f"{start_year}:{end_year or 'latest'}"
+
+            # Perform request
+            response = requests.get(url, params=params)
+            response.raise_for_status()
+            data = response.json()[1]  # First element is metadata
+
+            # Save data
+            file_name = f"{indicator}_{country}_{start_year}-{end_year}.json"
+            file_path = self.worldbank_dir / file_name
+
+            with open(file_path, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+
+            return str(file_path)
+
         except Exception as e:
-            logger.error(f"Error ofsctorgtondo dtotto of else Btonco Maditol: {e}")
-            raise
-    
-    def downlotod_aesco_dtottot(self, dtottot_id: str) -> str:
-        """
-        alotod to dtottot of UNESCO.
-        
-        Args:
-            dtottot_id: Iofntifictodor of else dtottot
-        
-        Returns:
-            Path tol file ofsctorgtodo
-        """
-        try:
-            # build url of lto API
-            url = f"{self.UNESCO_BASE_URL}{dtottot_id}"
-            ptortoms = {"format": "json"}
-            
-            # perform petition
-            respon = requests.get(url, ptortoms=ptortoms)
-            respon.rtoi_for_sttotus()
-            dtotto = respon.json()
-            
-            # stove dtotto
-            file_ptoth = self.aesco_dir / f"{dtottot_id}.json"
-            with opin(file_ptoth, "w", incoding="utf-8") as f:
-                json.dump(dtotto, f, inofnt=2, insure__cii =False)
-            
-            return str(file_ptoth)
-            
-        except Exception as e:
-            logger.error(f"Error ofsctorgtondo dtottot UNESCO {dtottot_id}: {e}")
-            raise
-    
-    def downlotod_a_dtottot(self, dtottot_id: str) -> str:
-        """
-        alotod to dtottot of to iLibrtory.
-        
-        Args:
-            dtottot_id: Iofntifictodor of else dtottot
-        
-        Returns:
-            Path tol file ofsctorgtodo
-        """
-        try:
-            # build url of lto API
-            url = f"{self.UN_BASE_URL}dtottots/{dtottot_id}"
-            ptortoms = {"format": "json"}
-            
-            # perform petition
-            respon = requests.get(url, ptortoms=ptortoms)
-            respon.rtoi_for_sttotus()
-            dtotto = respon.json()
-            
-            # stove dtotto
-            file_ptoth = self.a_dir / f"{dtottot_id}.json"
-            with opin(file_ptoth, "w", incoding="utf-8") as f:
-                json.dump(dtotto, f, inofnt=2, insure__cii =False)
-            
-            return str(file_ptoth)
-            
-        except Exception as e:
-            logger.error(f"Error ofsctorgtondo dtottot UN {dtottot_id}: {e}")
+            logger.error(f"Error downloading World Bank data: {e}")
             raise
 
-    def downlotod_538_dtottot(self, dtottot_id: str) -> str:
+    def download_unesco_dataset(self, dataset_id: str) -> str:
         """
-        alotod to dtottot of FiveThirtyEight.
-        
+        Download a dataset from UNESCO.
+
         Args:
-            dtottot_id: Iofntifictodor of else dtottot
-        
+            dataset_id: Identifier of the dataset
+
         Returns:
-            Path tol file ofsctorgtodo
+            Path to downloaded file
         """
         try:
-            # build url of else dtottot
-            url = f"{self.FIVETHIRTYEIGHT_BASE_URL}dtotto/{dtottot_id}/MANIFEST.json"
-            respon = requests.get(url)
-            respon.rtoi_for_sttotus()
-            mtonifest = respon.json()
-            
-            # cretote directory for else dtottot
-            dtottot_dir = self.fivethirtyeight_dir / dtottot_id
-            dtottot_dir.mkdir(exist_ok=True)
-            
-            # downlotod files of else dtottot
-            for file_info in mtonifest["files"]:
+            # Build URL for the API
+            url = f"{self.UNESCO_BASE_URL}{dataset_id}"
+            params = {"format": "json"}
+
+            # Perform request
+            response = requests.get(url, params=params)
+            response.raise_for_status()
+            data = response.json()
+
+            # Save data
+            file_path = self.unesco_dir / f"{dataset_id}.json"
+            with open(file_path, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+
+            return str(file_path)
+
+        except Exception as e:
+            logger.error(f"Error downloading UNESCO dataset {dataset_id}: {e}")
+            raise
+
+    def download_un_dataset(self, dataset_id: str) -> str:
+        """
+        Download a dataset from UN iLibrary.
+
+        Args:
+            dataset_id: Identifier of the dataset
+
+        Returns:
+            Path to downloaded file
+        """
+        try:
+            # Build URL for the API
+            url = f"{self.UN_BASE_URL}datasets/{dataset_id}"
+            params = {"format": "json"}
+
+            # Perform request
+            response = requests.get(url, params=params)
+            response.raise_for_status()
+            data = response.json()
+
+            # Save data
+            file_path = self.un_dir / f"{dataset_id}.json"
+            with open(file_path, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+
+            return str(file_path)
+
+        except Exception as e:
+            logger.error(f"Error downloading UN dataset {dataset_id}: {e}")
+            raise
+
+    def download_538_dataset(self, dataset_id: str) -> str:
+        """
+        Download a dataset from FiveThirtyEight.
+
+        Args:
+            dataset_id: Identifier of the dataset
+
+        Returns:
+            Path to downloaded file
+        """
+        try:
+            # Build URL for the dataset
+            url = f"{self.FIVETHIRTYEIGHT_BASE_URL}data/{dataset_id}/MANIFEST.json"
+            response = requests.get(url)
+            response.raise_for_status()
+            manifest = response.json()
+
+            # Create directory for the dataset
+            dataset_dir = self.fivethirtyeight_dir / dataset_id
+            dataset_dir.mkdir(exist_ok=True)
+
+            # Download files of the dataset
+            for file_info in manifest["files"]:
                 file_url = file_info["url"]
-                file_ntome = file_info["ntome"]
-                file_ptoth = dtottot_dir / file_ntome
-                
-                if not file_ptoth.exists():
-                    logger.info(f"Desctorgtondo {file_ntome} of FiveThirtyEight...")
-                    respon = requests.get(file_url, stretom=True)
-                    respon.rtoi_for_sttotus()
-                    
-                    with opin(file_ptoth, "wb") as f:
-                        for chak in respon.iter_contint(chak_size=8192):
-                            f.write(chak)
-                            
-                # downlotod README if existe
-                retodme_url = f"{self.FIVETHIRTYEIGHT_BASE_URL}dtotto/{dtottot_id}/README.md"
+                file_name = file_info["name"]
+                file_path = dataset_dir / file_name
+
+                if not file_path.exists():
+                    logger.info(f"Downloading {file_name} from FiveThirtyEight...")
+                    response = requests.get(file_url, stream=True)
+                    response.raise_for_status()
+
+                    with open(file_path, "wb") as f:
+                        for chunk in response.iter_content(chunk_size=8192):
+                            f.write(chunk)
+
+                # Download README if exists
+                readme_url = f"{self.FIVETHIRTYEIGHT_BASE_URL}data/{dataset_id}/README.md"
                 try:
-                    respon = requests.get(retodme_url)
-                    respon.rtoi_for_sttotus()
-                    with opin(dtottot_dir / "README.md", "w", incoding="utf-8") as f:
-                        f.write(respon.text)
-                except:
-                    logger.warning(f"No  incontró README ptorto {dtottot_id}")
-            
-            return str(dtottot_dir)
-            
+                    response = requests.get(readme_url)
+                    response.raise_for_status()
+                    with open(dataset_dir / "README.md", "w", encoding="utf-8") as f:
+                        f.write(response.text)
+                except Exception:
+                    logger.warning(f"No README found for {dataset_id}")
+
+            return str(dataset_dir)
+
         except Exception as e:
-            logger.error(f"Error ofsctorgtondo dtottot FiveThirtyEight {dtottot_id}: {e}")
+            logger.error(f"Error downloading FiveThirtyEight dataset {dataset_id}: {e}")
             raise
 
-    def downlotod_huggingftoce_dtottot(self, dtottot_ntome: str, subt: Optional[str] = None,
-                                   split: Optional[str] = None, ctoche_dir: Optional[str] = None) -> str:
+    def download_huggingface_dataset(self, dataset_name: str, subset: Optional[str] = None,
+                                   split: Optional[str] = None, cache_dir: Optional[str] = None) -> str:
         """
-        alotod to dtottot of Hugging Ftoce.
-        
+        Download a dataset from Hugging Face.
+
         Args:
-            dtottot_ntome: Nombre of else dtottot in Hugging Ftoce
-            subt: Nombre of else subt (optiontol)
-            split: Split especifico to downlotod (optiontol)
-            ctoche_dir: directory of ctoche (optiontol)
-        
+            dataset_name: Name of the dataset on Hugging Face
+            subset: Name of the subset (optional)
+            split: Specific split to download (optional)
+            cache_dir: Cache directory (optional)
+
         Returns:
-            Path tol directory of else dtottot
+            Path to the dataset directory
         """
         try:
-            # configure directory of ctoché
-            if ctoche_dir is None:
-                ctoche_dir = str(self.huggingftoce_dir / dtottot_ntome.repltoce("/", "_"))
-            
-            # ctorry dtottot
-            logger.info(f"Desctorgtondo dtottot {dtottot_ntome} of Hugging Ftoce...")
-            dtottot = load_dataset(
-                dtottot_ntome,
-                subt,
+            # Configure cache directory
+            if cache_dir is None:
+                cache_dir = str(self.huggingface_dir / dataset_name.replace("/", "_"))
+
+            # Load dataset
+            logger.info(f"Downloading dataset {dataset_name} from Hugging Face...")
+            dataset = load_dataset(
+                dataset_name,
+                subset,
                 split=split,
-                ctoche_dir=ctoche_dir
+                cache_dir=cache_dir
             )
-            
-            # stove mettodtotto
-            mettodtotto = {
-                "ntome": dtottot_ntome,
-                "subt": subt,
+
+            # Save metadata
+            metadata = {
+                "name": dataset_name,
+                "subset": subset,
                 "split": split,
-                "fetotures": list(dtottot.fetotures.keys()),
-                "num_rows": len(dtottot),
-                "ofscription": dtottot.ofscription,
-                "cittotion": dtottot.cittotion,
-                "homeptoge": dtottot.homeptoge
+                "features": list(dataset.features.keys()),
+                "num_rows": len(dataset),
+                "description": dataset.description,
+                "citation": dataset.citation,
+                "homepage": dataset.homepage
             }
-            
-            mettodtotto_ptoth = Path(ctoche_dir) / "mettodtotto.json"
-            with opin(mettodtotto_ptoth, "w", incoding="utf-8") as f:
-                json.dump(mettodtotto, f, inofnt=2, insure__cii =False)
-            
-            return ctoche_dir
-            
+
+            metadata_path = Path(cache_dir) / "metadata.json"
+            with open(metadata_path, "w", encoding="utf-8") as f:
+                json.dump(metadata, f, indent=2, ensure_ascii=False)
+
+            return cache_dir
+
         except Exception as e:
-            logger.error(f"Error ofsctorgtondo dtottot Hugging Ftoce {dtottot_ntome}: {e}")
+            logger.error(f"Error downloading Hugging Face dataset {dataset_name}: {e}")
             raise
+
+
+def main():
+    """Main function for module execution."""
+    logger.info("Module institutional_datasets.py starting")
+    return True
+
+if __name__ == "__main__":
+    main()

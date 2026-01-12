@@ -571,7 +571,7 @@ def create_agent(name: str = "assistant", **kwargs):
     """Create agent using legacy interface (legacy compatibility)."""
     try:
         return get_legacy_agent("basic", name=name, **kwargs)
-    except:
+    except Exception:
         return {"name": name, "status": "not_available", "use": "create_ultra_agent_ecosystem() instead"}
 
 def get_agent_factory(**kwargs):

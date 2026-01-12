@@ -285,7 +285,7 @@ class FederatedConsensusNode:
         if hasattr(self, 'endpoint'):
             try:
                 port = int(self.endpoint.split(':')[-1])
-            except:
+            except Exception:
                 pass
         
         self.websocket_server = await websockets.serve(

@@ -372,7 +372,7 @@ class MetaRoutingPolicy:
                 elif trend_coef > 0.001:
                     analysis['issues'].append('improving_performance')
                     analysis['recommendations'].append('continue_current_strategy')
-            except:
+            except Exception:
                 pass
 
             # Overall performance level

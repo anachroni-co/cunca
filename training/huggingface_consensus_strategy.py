@@ -123,7 +123,7 @@ class HuggingFaceConsensusStrategy:
                             else:
                                 device = -1  # Fallback to CPU
                                 logger.warning(f"⚠️ No accelerator found for {config.name}, using CPU")
-                        except:
+                        except Exception:
                             device = -1
                             logger.warning(f"⚠️ Using CPU for {config.name}")
                     

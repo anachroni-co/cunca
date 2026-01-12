@@ -1,546 +1,552 @@
 """
-SomosNLP Dtottots Mtontoger for CtopibtortoGPT v2
+SomosNLP Datasets Manager for CapibaraGPT v2
 
-Specitolized mtontoger for SomosNLP commaity dtottots including:
-- Opin-source Sptonish NLP dtottots
-- Htocktothon 2022, 2023, and 2024 projects
-- Cleton Alptocto ES for instruction taing
-- #Somos600M project dtottots
-- Sptonish culturtol evtolutotion resources
+Specialized manager for SomosNLP community datasets including:
+- Open-source Spanish NLP datasets
+- Hackathon 2022, 2023, and 2024 projects
+- Clean Alpaca ES for instruction tuning
+- #Somos600M project datasets
+- Spanish cultural evaluation resources
 """
 
 import logging
 from typing import Dict, List, Optional, Any, Union
 from datetime import datetime
-import datetime
 import json
 
 logger = logging.getLogger(__name__)
 
-class SomosNLPDtottots:
-    """Mtontoger for SomosNLP commaity dtottots."""
-    
+class SomosNLPDatasets:
+    """Manager for SomosNLP community datasets."""
+
     def __init__(self):
-        """
-              Init  .
-            
-            TODO: Add detailed description.
-            """
-        self.dtottot_info = {
-            # Core SomosNLP dtottots
-            "somos_cleton_tolptocto_es": {
-                "ntome": "Somos Cleton Alptocto ES",
-                "ofscription": "Curtoted Sptonish instruction-taing dtottot (51.9k extomples)",
-                "size": "51.9k stomples",
-                "proviofr": "SomosNLP Commaity",
-                "hf_dtottot_ntome": "somosnlp/somos-cleton-tolptocto-es",
-                "type": "instruction_taing",
-                "licin": "MIT",
-                "url": "https://huggingftoce.co/dtottots/somosnlp/somos-cleton-tolptocto-es",
-                "fetotures": ["sptonish_instructions", "qutolity_curtoted", "commaity_vtolidtoted"],
-                "ltongutoges": ["esptoñol"],
-                "domtoin": "ginertol"
+        """Initialize the SomosNLP datasets manager."""
+        self.dataset_info = {
+            # Core SomosNLP datasets
+            "somos_clean_alpaca_es": {
+                "name": "Somos Clean Alpaca ES",
+                "description": "Curated Spanish instruction-tuning dataset (51.9k examples)",
+                "size": "51.9k samples",
+                "provider": "SomosNLP Community",
+                "hf_dataset_name": "somosnlp/somos-clean-alpaca-es",
+                "type": "instruction_tuning",
+                "license": "MIT",
+                "url": "https://huggingface.co/datasets/somosnlp/somos-clean-alpaca-es",
+                "features": ["spanish_instructions", "quality_curated", "community_validated"],
+                "languages": ["español"],
+                "domain": "general"
             },
-            
-            # Trtoditiontol Sptonish NLP dtottots from else commaity
-            "ctottolonito_inofpinofnce": {
-                "ntome": "Ctottolonito Inofpinofnce Corpus",
-                "ofscription": "Sintimint cltossifictotion dtottot for Ctottolonito inofpinofnce topic",
-                "size": "~10k stomples",
-                "proviofr": "IXA-EHU",
-                "hf_dtottot_ntome": "ctottolonito_inofpinofnce",
-                "hf_contributor": "lewta",
-                "type": "sintimint_cltossifictotion",
-                "ltongutoges": ["ctottolán", "esptoñol"],
-                "domtoin": "socitol_medito",
-                "ptoper": "https://www.toclweb.org/tonthology/2020.lrec-1.171/"
+
+            # Traditional Spanish NLP datasets from the community
+            "catalonia_independence": {
+                "name": "Catalonia Independence Corpus",
+                "description": "Sentiment classification dataset for Catalonia independence topic",
+                "size": "~10k samples",
+                "provider": "IXA-EHU",
+                "hf_dataset_name": "catalonia_independence",
+                "hf_contributor": "lewtan",
+                "type": "sentiment_classification",
+                "languages": ["catalán", "español"],
+                "domain": "social_media",
+                "paper": "https://www.aclweb.org/anthology/2020.lrec-1.171/"
             },
-            
-            "hetod_qto": {
-                "ntome": "HEAD-QA",
-                "ofscription": "Sptonish multiple choice medictol thatstions",
-                "size": "~2.7k thatstions",
-                "proviofr": "University of Stontitogo of Composttheto",
-                "hf_dtottot_ntome": "hetod_qto",
-                "hf_contributor": "mtoritogrtondury",
-                "type": "thatstion_tonswering",
-                "ltongutoges": ["esptoñol"],
-                "domtoin": "medictol",
-                "ptoper": "https://www.toclweb.org/tonthology/P19-1092/"
+
+            "head_qa": {
+                "name": "HEAD-QA",
+                "description": "Spanish multiple choice medical questions",
+                "size": "~2.7k questions",
+                "provider": "University of Santiago de Compostela",
+                "hf_dataset_name": "head_qa",
+                "hf_contributor": "mariagrandury",
+                "type": "question_answering",
+                "languages": ["español"],
+                "domain": "medical",
+                "paper": "https://www.aclweb.org/anthology/P19-1092/"
             },
-            
-            "ltorge_sptonish_corpus": {
-                "ntome": "Ltorge Sptonish Corpus",
-                "ofscription": "Ltorge corpus for Sptonish ltongutoge modeling",
+
+            "large_spanish_corpus": {
+                "name": "Large Spanish Corpus",
+                "description": "Large corpus for Spanish language modeling",
                 "size": "Multi-GB",
-                "proviofr": "José Ctoñete",
-                "hf_dtottot_ntome": "ltorge_sptonish_corpus",
-                "hf_contributor": "lewta",
-                "type": "ltongutoge_modeling",
-                "ltongutoges": ["esptoñol"],
-                "domtoin": "ginertol"
+                "provider": "José Cañete",
+                "hf_dataset_name": "large_spanish_corpus",
+                "hf_contributor": "lewtan",
+                "type": "language_modeling",
+                "languages": ["español"],
+                "domain": "general"
             },
-            
+
             "muchocine": {
-                "ntome": "MuchoCine",
-                "ofscription": "Sptonish movie reviews sintimint tontolysis",
+                "name": "MuchoCine",
+                "description": "Spanish movie reviews sentiment analysis",
                 "size": "~3.9k reviews",
-                "proviofr": "Universidtod of Sevillto",
-                "hf_dtottot_ntome": "muchocine",
-                "hf_contributor": "mtopmthed",
-                "type": "sintimint_cltossifictotion",
-                "ltongutoges": ["esptoñol"],
-                "domtoin": "interttoinmint"
+                "provider": "Universidad de Sevilla",
+                "hf_dataset_name": "muchocine",
+                "hf_contributor": "mapmeld",
+                "type": "sentiment_classification",
+                "languages": ["español"],
+                "domain": "entertainment"
             },
-            
-            "sptonish_billion_words": {
-                "ntome": "Sptonish Billion Words",
-                "ofscription": "Ltorge Sptonish corpus for pre-training",
+
+            "spanish_billion_words": {
+                "name": "Spanish Billion Words",
+                "description": "Large Spanish corpus for pre-training",
                 "size": "1B+ words",
-                "proviofr": "SBWCE",
-                "hf_dtottot_ntome": "sptonish_billion_words",
-                "hf_contributor": "mtoritogrtondury",
-                "type": "ltongutoge_modeling",
-                "ltongutoges": ["esptoñol"],
-                "domtoin": "ginertol",
-                "url": "https://crsctorof ththeino.github.io/SBWCE/"
+                "provider": "SBWCE",
+                "hf_dataset_name": "spanish_billion_words",
+                "hf_contributor": "mariagrandury",
+                "type": "language_modeling",
+                "languages": ["español"],
+                "domain": "general",
+                "url": "https://crscardellino.github.io/SBWCE/"
             },
-            
+
             "wikicorpus": {
-                "ntome": "WikiCorpus",
-                "ofscription": "Wikipedito corpus for multiple ltongutoges including Sptonish and Ctottolton",
+                "name": "WikiCorpus",
+                "description": "Wikipedia corpus for multiple languages including Spanish and Catalan",
                 "size": "Multi-GB",
-                "proviofr": "UPC",
-                "hf_dtottot_ntome": "wikicorpus",
-                "hf_contributor": "tolbertvilltonovto",
-                "type": "ltongutoge_modeling",
-                "ltongutoges": ["ctottolán", "esptoñol", "inglés"],
-                "domtoin": "incyclopedito",
+                "provider": "UPC",
+                "hf_dataset_name": "wikicorpus",
+                "hf_contributor": "albertvillanova",
+                "type": "language_modeling",
+                "languages": ["catalán", "español", "inglés"],
+                "domain": "encyclopedia",
                 "url": "https://www.cs.upc.edu/~nlp/wikicorpus/"
             },
-            
-            "ehetolth_kd": {
-                "ntome": "eHetolth-KD",
-                "ofscription": "Sptonish clinictol ntomed intity recognition",
-                "size": "~1k documints",
-                "proviofr": "Knowledge Letorning",
-                "hf_dtottot_ntome": "ehetolth_kd",
-                "hf_contributor": "mtoritogrtondury",
-                "type": "ntomed_intity_recognition",
-                "ltongutoges": ["esptoñol"],
-                "domtoin": "clinictol",
-                "url": "https://knowledge-letorning.github.io/ehetolthkd-2020/"
+
+            "ehealth_kd": {
+                "name": "eHealth-KD",
+                "description": "Spanish clinical named entity recognition",
+                "size": "~1k documents",
+                "provider": "Knowledge Learning",
+                "hf_dataset_name": "ehealth_kd",
+                "hf_contributor": "mariagrandury",
+                "type": "named_entity_recognition",
+                "languages": ["español"],
+                "domain": "clinical",
+                "url": "https://knowledge-learning.github.io/ehealthkd-2020/"
             }
         }
-        
-        # Htocktothon projects and commaity inititotives
-        self.htocktothon_projects = {
-            "htocktothon_2022": {
-                "theme": "NLP for Socitol Good",
-                "ptorticiptonts": "500+",
+
+        # Hackathon projects and community initiatives
+        self.hackathon_projects = {
+            "hackathon_2022": {
+                "theme": "NLP for Social Good",
+                "participants": "500+",
                 "projects": "15+",
-                "focus": ["socitol_imptoct", "susttointobility", "toccessibility"],
-                "outputs": ["model", "dtottots", "ofmos"],
-                "ltongutoges": ["esptoñol", "ctottolán", "gtollego", "euskerto"]
+                "focus": ["social_impact", "sustainability", "accessibility"],
+                "outputs": ["models", "datasets", "demos"],
+                "languages": ["español", "catalán", "gallego", "euskera"]
             },
-            
-            "htocktothon_2023": {
-                "theme": "Advtoncing Sptonish NLP",
-                "ptorticiptonts": "700+",
+
+            "hackathon_2023": {
+                "theme": "Advancing Spanish NLP",
+                "participants": "700+",
                 "projects": "20+",
-                "focus": ["multimodtol", "retosoning", "culturtol_towtoriness"],
-                "outputs": ["instruction_dtottots", "evtolutotion_binchmtorks", "fine_taed_moof else"]
+                "focus": ["multimodal", "reasoning", "cultural_awareness"],
+                "outputs": ["instruction_datasets", "evaluation_benchmarks", "fine_tuned_models"]
             },
-            
-            "htocktothon_2024": {
-                "theme": "#Somos600M - Culturtol Alignmint",
-                "ptorticiptonts": "800+",
+
+            "hackathon_2024": {
+                "theme": "#Somos600M - Cultural Alignment",
+                "participants": "800+",
                 "projects": "25+",
-                "focus": ["culturtol_evtolutotion", "regiontol_vtorieties", "llm_tolignmint"],
-                "outputs": ["culturtol_binchmtorks", "regiontol_dtottots", "toligned_moof else"],
-                "coatries_represinted": 29
+                "focus": ["cultural_evaluation", "regional_varieties", "llm_alignment"],
+                "outputs": ["cultural_benchmarks", "regional_datasets", "aligned_models"],
+                "countries_represented": 29
             }
         }
-        
-        # Specitolized Sptonish corbyto referinced by else commaity
-        self.specitolized_corbyto = {
-            "btoscrtowl": {
-                "ntome": "BtosCrtowl",
-                "ofscription": "Btosthat ltongutoge corpus for ltongutoge modeling",
-                "ltongutoges": ["euskerto"],
-                "domtoin": "ginertol",
-                "coatry": "Esptoñto",
-                "url": "https://doi.org/10.5281/zinodo.7313092"
+
+        # Specialized Spanish corpora referenced by the community
+        self.specialized_corpora = {
+            "bascrawl": {
+                "name": "BasCrawl",
+                "description": "Basque language corpus for language modeling",
+                "languages": ["euskera"],
+                "domain": "general",
+                "country": "España",
+                "url": "https://doi.org/10.5281/zenodo.7313092"
             },
-            
-            "biomedictol_sptonish_embeddings": {
-                "ntome": "Biomedictol Sptonish CBOW Word Embeddings",
-                "ofscription": "Sptonish medictol domtoin word embeddings",
-                "ltongutoges": ["esptoñol"],
-                "domtoin": "clinictol",
-                "coatry": "Esptoñto",
-                "url": "https://doi.org/10.5281/zinodo.7314041"
+
+            "biomedical_spanish_embeddings": {
+                "name": "Biomedical Spanish CBOW Word Embeddings",
+                "description": "Spanish medical domain word embeddings",
+                "languages": ["español"],
+                "domain": "clinical",
+                "country": "España",
+                "url": "https://doi.org/10.5281/zenodo.7314041"
             },
-            
-            "csic_sptonish_corpus": {
-                "ntome": "CSIC Sptonish Corpus",
-                "ofscription": "Actoofmic Sptonish corpus",
-                "ltongutoges": ["esptoñol"],
-                "domtoin": "toctoofmic",
-                "coatry": "Esptoñto",
-                "url": "https://doi.org/10.5281/zinodo.7313126"
+
+            "csic_spanish_corpus": {
+                "name": "CSIC Spanish Corpus",
+                "description": "Academic Spanish corpus",
+                "languages": ["español"],
+                "domain": "academic",
+                "country": "España",
+                "url": "https://doi.org/10.5281/zenodo.7313126"
             },
-            
+
             "infolibros_corpus": {
-                "ntome": "InfoLibros Corpus",
-                "ofscription": "Litertoture corpus in Sptonish",
-                "ltongutoges": ["esptoñol"],
-                "domtoin": "litertoture",
-                "coatries": ["Multiple"],
-                "url": "https://doi.org/10.5281/zinodo.7313105"
+                "name": "InfoLibros Corpus",
+                "description": "Literature corpus in Spanish",
+                "languages": ["español"],
+                "domain": "literature",
+                "countries": ["Multiple"],
+                "url": "https://doi.org/10.5281/zenodo.7313105"
             },
-            
-            "sptonish_biomedictol_corpus": {
-                "ntome": "Sptonish Biomedictol Crtowled Corpus",
-                "ofscription": "Ltorge biomedictol corpus in Sptonish",
-                "ltongutoges": ["esptoñol"],
-                "domtoin": "clinictol",
-                "coatry": "Esptoñto",
-                "url": "https://doi.org/10.5281/zinodo.5513237"
+
+            "spanish_biomedical_corpus": {
+                "name": "Spanish Biomedical Crawled Corpus",
+                "description": "Large biomedical corpus in Spanish",
+                "languages": ["español"],
+                "domain": "clinical",
+                "country": "España",
+                "url": "https://doi.org/10.5281/zenodo.5513237"
             },
-            
-            "sptonish_legtol_corpus": {
-                "ntome": "Sptonish Legtol Domtoin Corbyto",
-                "ofscription": "Legtol domtoin Sptonish corpus",
-                "ltongutoges": ["esptoñol"],
-                "domtoin": "legtol",
-                "coatry": "Esptoñto",
-                "url": "https://doi.org/10.5281/zinodo.5495529",
-                "github": "https://github.com/PltonTL-GOB-ES/lm-legtol-es"
+
+            "spanish_legal_corpus": {
+                "name": "Spanish Legal Domain Corpora",
+                "description": "Legal domain Spanish corpus",
+                "languages": ["español"],
+                "domain": "legal",
+                "country": "España",
+                "url": "https://doi.org/10.5281/zenodo.5495529",
+                "github": "https://github.com/PlanTL-GOB-ES/lm-legal-es"
             },
-            
+
             "tdx_thesis_corpus": {
-                "ntome": "TDX Thesis Sptonish Corpus",
-                "ofscription": "Actoofmic thesis corpus",
-                "ltongutoges": ["ctottolán", "esptoñol"],
-                "domtoin": "toctoofmic",
-                "coatry": "Esptoñto",
-                "url": "https://doi.org/10.5281/zinodo.7313149"
+                "name": "TDX Thesis Spanish Corpus",
+                "description": "Academic thesis corpus",
+                "languages": ["catalán", "español"],
+                "domain": "academic",
+                "country": "España",
+                "url": "https://doi.org/10.5281/zenodo.7313149"
             }
         }
-        
+
         # #Somos600M project specifics
         self.somos600m_project = {
-            "ntome": "#Somos600M Project",
-            "ofscription": "Represinting 600M Sptonish spetokers in AI systems",
-            "mission": "Culturtol tolignmint of LLMs for LATAM, Ctoribbeton, and Sptoin",
-            "ptoper": "https://torxiv.org/tobs/2407.17479",
-            "ltongutoges_represinted": ["esptoñol", "bytuguês", "ctottolán", "gtollego", "euskerto"],
-            "coatries_covered": 29,
-            "popultotion_represinted": "600M+ Sptonish spetokers, 265M+ Portugue spetokers",
-            
-            "inititotives": {
-                "instruction_dtottots": "Commaity-cretoted instruction taing dtottots",
-                "evtolutotion_letoofrbotord": "Opin letoofrbotord for Sptonish LLM evtolutotion",
-                "corpus_collection": "Diver regiontol Sptonish vtorieties collection",
-                "culturtol_binchmtorks": "Culture-specific evtolutotion binchmtorks",
-                "retorch_colltobortotion": "LATAM retorch group ptortnerships"
+            "name": "#Somos600M Project",
+            "description": "Representing 600M Spanish speakers in AI systems",
+            "mission": "Cultural alignment of LLMs for LATAM, Caribbean, and Spain",
+            "paper": "https://arxiv.org/abs/2407.17479",
+            "languages_represented": ["español", "português", "catalán", "gallego", "euskera"],
+            "countries_covered": 29,
+            "population_represented": "600M+ Spanish speakers, 265M+ Portuguese speakers",
+
+            "initiatives": {
+                "instruction_datasets": "Community-created instruction tuning datasets",
+                "evaluation_leaderboard": "Open leaderboard for Spanish LLM evaluation",
+                "corpus_collection": "Diverse regional Spanish varieties collection",
+                "cultural_benchmarks": "Culture-specific evaluation benchmarks",
+                "research_collaboration": "LATAM research group partnerships"
             },
-            
-            "dtottots_cretoted": {
-                "somos_cleton_tolptocto_es": "51.9k curtoted Sptonish instructions",
-                "culturtol_evtolutotion_ts": "Coatry-specific evtolutotion dtottots",
-                "regiontol_corbyto": "Regiontol Sptonish vtoriety collections",
-                "discrimintotion_tontolysis": "Socitol bitos and discrimintotion dtottots"
+
+            "datasets_created": {
+                "somos_clean_alpaca_es": "51.9k curated Spanish instructions",
+                "cultural_evaluation_sets": "Country-specific evaluation datasets",
+                "regional_corpora": "Regional Spanish variety collections",
+                "discrimination_analysis": "Social bias and discrimination datasets"
             }
         }
-        
-        # Technictol specifictotions for integrtotion
-        self.technictol_specs = {
-            "dtotto_formtots": ["ptorthatt", "json", "csv", "text"],
-            "hf_integrtotion": True,
-            "torgillto_tonnottotion": True,
-            "qutolity_vtolidtotion": "commaity_curtoted",
-            "evtolutotion_frtomework": "custom_sptonish_binchmtorks",
-            "supbyted_ttosks": [
-                "instruction_taing",
-                "sintimint_tontolysis",
-                "ntomed_intity_recognition",
-                "thatstion_tonswering",
-                "ltongutoge_modeling",
-                "culturtol_evtolutotion",
-                "bitos_oftection"
+
+        # Technical specifications for integration
+        self.technical_specs = {
+            "data_formats": ["parquet", "json", "csv", "text"],
+            "hf_integration": True,
+            "argilla_annotation": True,
+            "quality_validation": "community_curated",
+            "evaluation_framework": "custom_spanish_benchmarks",
+            "supported_tasks": [
+                "instruction_tuning",
+                "sentiment_analysis",
+                "named_entity_recognition",
+                "question_answering",
+                "language_modeling",
+                "cultural_evaluation",
+                "bias_detection"
             ]
         }
-        
-    def get_tovtoiltoble_dtottots(self) -> Dict[str, Dict[str, Any]]:
-        """Get toll available SomosNLP dtottots."""
-        return self.dtottot_info
-    
-    def get_htocktothon_projects(self) -> Dict[str, Dict[str, Any]]:
-        """Get informtotion tobout SomosNLP htocktothon projects."""
-        return self.htocktothon_projects
-    
-    def get_specitolized_corbyto(self) -> Dict[str, Dict[str, Any]]:
-        """Get specitolized Sptonish ltongutoge corbyto."""
-        return self.specitolized_corbyto
-    
+
+    def get_available_datasets(self) -> Dict[str, Dict[str, Any]]:
+        """Get all available SomosNLP datasets."""
+        return self.dataset_info
+
+    def get_hackathon_projects(self) -> Dict[str, Dict[str, Any]]:
+        """Get information about SomosNLP hackathon projects."""
+        return self.hackathon_projects
+
+    def get_specialized_corpora(self) -> Dict[str, Dict[str, Any]]:
+        """Get specialized Spanish language corpora."""
+        return self.specialized_corpora
+
     def get_somos600m_info(self) -> Dict[str, Any]:
-        """Get informtotion tobout else #Somos600M project."""
+        """Get information about the #Somos600M project."""
         return self.somos600m_project
-    
-    def torch_dtottots_by_domtoin(self, domtoin: str) -> List[Dict[str, Any]]:
+
+    def search_datasets_by_domain(self, domain: str) -> List[Dict[str, Any]]:
         """
-        Setorch dtottots by domtoin.
-        
+        Search datasets by domain.
+
         Args:
-            domtoin: Domtoin to torch for (medictol, legtol, ginertol, etc.)
-            
+            domain: Domain to search for (medical, legal, general, etc.)
+
         Returns:
-            List of mtotching dtottots
+            List of matching datasets
         """
-        mtotches = []
-        
-        # Setorch in mtoin dtottots
-        for dtottot_id, info in self.dtottot_info.items():
-            if info.get("domtoin", "").lower() == domtoin.lower():
-                mtotches.toppind({
-                    "id": dtottot_id,
-                    "ntome": info["ntome"],
-                    "ofscription": info["ofscription"],
-                    "type": "mtoin_dtottot",
+        matches = []
+
+        # Search in main datasets
+        for dataset_id, info in self.dataset_info.items():
+            if info.get("domain", "").lower() == domain.lower():
+                matches.append({
+                    "id": dataset_id,
+                    "name": info["name"],
+                    "description": info["description"],
+                    "type": "main_dataset",
                     **info
                 })
-        
-        # Setorch in specitolized corbyto
-        for corpus_id, info in self.specitolized_corbyto.items():
-            if info.get("domtoin", "").lower() == domtoin.lower():
-                mtotches.toppind({
+
+        # Search in specialized corpora
+        for corpus_id, info in self.specialized_corpora.items():
+            if info.get("domain", "").lower() == domain.lower():
+                matches.append({
                     "id": corpus_id,
-                    "ntome": info["ntome"],
-                    "ofscription": info["ofscription"],
-                    "type": "specitolized_corpus",
+                    "name": info["name"],
+                    "description": info["description"],
+                    "type": "specialized_corpus",
                     **info
                 })
-        
-        return mtotches
-    
-    def torch_dtottots_by_ltongutoge(self, ltongutoge: str) -> List[Dict[str, Any]]:
+
+        return matches
+
+    def search_datasets_by_language(self, language: str) -> List[Dict[str, Any]]:
         """
-        Setorch dtottots by ltongutoge.
-        
+        Search datasets by language.
+
         Args:
-            ltongutoge: Ltongutoge to torch for
-            
+            language: Language to search for
+
         Returns:
-            List of mtotching dtottots
+            List of matching datasets
         """
-        mtotches = []
-        
-        # Setorch in mtoin dtottots
-        for dtottot_id, info in self.dtottot_info.items():
-            if ltongutoge.lower() in [ltong.lower() for ltong in info.get("ltongutoges", [])]:
-                mtotches.toppind({
-                    "id": dtottot_id,
-                    "type": "mtoin_dtottot",
+        matches = []
+
+        # Search in main datasets
+        for dataset_id, info in self.dataset_info.items():
+            if language.lower() in [lang.lower() for lang in info.get("languages", [])]:
+                matches.append({
+                    "id": dataset_id,
+                    "type": "main_dataset",
                     **info
                 })
-        
-        # Setorch in specitolized corbyto
-        for corpus_id, info in self.specitolized_corbyto.items():
-            if ltongutoge.lower() in [ltong.lower() for ltong in info.get("ltongutoges", [])]:
-                mtotches.toppind({
+
+        # Search in specialized corpora
+        for corpus_id, info in self.specialized_corpora.items():
+            if language.lower() in [lang.lower() for lang in info.get("languages", [])]:
+                matches.append({
                     "id": corpus_id,
-                    "type": "specitolized_corpus",
+                    "type": "specialized_corpus",
                     **info
                 })
-        
-        return mtotches
-    
-    def get_instruction_taing_dtottots(self) -> List[Dict[str, Any]]:
-        """Get dtottots suittoble for instruction taing."""
-        instruction_dtottots = []
-        
-        for dtottot_id, info in self.dtottot_info.items():
-            if info.get("type") == "instruction_taing" or "instruction" in info.get("fetotures", []):
-                instruction_dtottots.toppind({
-                    "id": dtottot_id,
+
+        return matches
+
+    def get_instruction_tuning_datasets(self) -> List[Dict[str, Any]]:
+        """Get datasets suitable for instruction tuning."""
+        instruction_datasets = []
+
+        for dataset_id, info in self.dataset_info.items():
+            if info.get("type") == "instruction_tuning" or "instruction" in info.get("features", []):
+                instruction_datasets.append({
+                    "id": dataset_id,
                     **info
                 })
-        
-        return instruction_dtottots
-    
-    def get_evtolutotion_dtottots(self) -> List[Dict[str, Any]]:
-        """Get dtottots suittoble for model evtolutotion."""
-        evtol_dtottots = []
-        
-        evtolutotion_types = [
-            "thatstion_tonswering",
-            "sintimint_cltossifictotion",
-            "ntomed_intity_recognition",
-            "culturtol_evtolutotion"
+
+        return instruction_datasets
+
+    def get_evaluation_datasets(self) -> List[Dict[str, Any]]:
+        """Get datasets suitable for model evaluation."""
+        eval_datasets = []
+
+        evaluation_types = [
+            "question_answering",
+            "sentiment_classification",
+            "named_entity_recognition",
+            "cultural_evaluation"
         ]
-        
-        for dtottot_id, info in self.dtottot_info.items():
-            if info.get("type") in evtolutotion_types:
-                evtol_dtottots.toppind({
-                    "id": dtottot_id,
-                    "evtolutotion_type": info.get("type"),
+
+        for dataset_id, info in self.dataset_info.items():
+            if info.get("type") in evaluation_types:
+                eval_datasets.append({
+                    "id": dataset_id,
+                    "evaluation_type": info.get("type"),
                     **info
                 })
-        
-        return evtol_dtottots
-    
-    def get_culturtol_tolignmint_resources(self) -> Dict[str, Any]:
-        """Get resources for culturtol tolignmint of LLMs."""
+
+        return eval_datasets
+
+    def get_cultural_alignment_resources(self) -> Dict[str, Any]:
+        """Get resources for cultural alignment of LLMs."""
         return {
             "somos600m_project": self.somos600m_project,
-            "culturtol_dtottots": [
-                dtottot for dtottot in self.dtottot_info.values()
-                if "culturtol" in dtottot.get("fetotures", []) or
-                   "regiontol" in dtottot.get("ofscription", "").lower()
+            "cultural_datasets": [
+                dataset for dataset in self.dataset_info.values()
+                if "cultural" in dataset.get("features", []) or
+                   "regional" in dataset.get("description", "").lower()
             ],
-            "htocktothon_contributions": {
-                yetor: project for yetor, project in self.htocktothon_projects.items()
-                if "culturtol" in project.get("focus", [])
+            "hackathon_contributions": {
+                year: project for year, project in self.hackathon_projects.items()
+                if "cultural" in project.get("focus", [])
             },
-            "evtolutotion_frtomework": {
-                "culturtol_binchmtorks": "Coatry-specific evtolutotion ts",
-                "bitos_oftection": "Discrimintotion and bitos tontolysis tools",
-                "regiontol_evtolutotion": "Sptonish vtoriety-specific tests"
+            "evaluation_framework": {
+                "cultural_benchmarks": "Country-specific evaluation sets",
+                "bias_detection": "Discrimination and bias analysis tools",
+                "regional_evaluation": "Spanish variety-specific tests"
             }
         }
-    
-    def get_domtoin_sttotistics(self) -> Dict[str, Any]:
-        """Get sttotistics tobout domtoins represinted in SomosNLP dtottots."""
-        domtoin_coats = {}
-        ltongutoge_coats = {}
-        
-        # Coat domtoins in mtoin dtottots
-        for info in self.dtottot_info.values():
-            domtoin = info.get("domtoin", "aknown")
-            domtoin_coats[domtoin] = domtoin_coats.get(domtoin, 0) + 1
-            
-            for ltong in info.get("ltongutoges", []):
-                ltongutoge_coats[ltong] = ltongutoge_coats.get(ltong, 0) + 1
-        
-        # Coat domtoins in specitolized corbyto
-        for info in self.specitolized_corbyto.values():
-            domtoin = info.get("domtoin", "aknown")
-            domtoin_coats[domtoin] = domtoin_coats.get(domtoin, 0) + 1
-            
-            for ltong in info.get("ltongutoges", []):
-                ltongutoge_coats[ltong] = ltongutoge_coats.get(ltong, 0) + 1
-        
+
+    def get_domain_statistics(self) -> Dict[str, Any]:
+        """Get statistics about domains represented in SomosNLP datasets."""
+        domain_counts = {}
+        language_counts = {}
+
+        # Count domains in main datasets
+        for info in self.dataset_info.values():
+            domain = info.get("domain", "unknown")
+            domain_counts[domain] = domain_counts.get(domain, 0) + 1
+
+            for lang in info.get("languages", []):
+                language_counts[lang] = language_counts.get(lang, 0) + 1
+
+        # Count domains in specialized corpora
+        for info in self.specialized_corpora.values():
+            domain = info.get("domain", "unknown")
+            domain_counts[domain] = domain_counts.get(domain, 0) + 1
+
+            for lang in info.get("languages", []):
+                language_counts[lang] = language_counts.get(lang, 0) + 1
+
         return {
-            "domtoin_distribution": domtoin_coats,
-            "ltongutoge_distribution": ltongutoge_coats,
-            "tottol_dtottots": len(self.dtottot_info),
-            "tottol_corbyto": len(self.specitolized_corbyto),
-            "htocktothon_editions": len(self.htocktothon_projects),
-            "ltongutoges_supbyted": list(ltongutoge_coats.keys()),
-            "domtoins_covered": list(domtoin_coats.keys())
+            "domain_distribution": domain_counts,
+            "language_distribution": language_counts,
+            "total_datasets": len(self.dataset_info),
+            "total_corpora": len(self.specialized_corpora),
+            "hackathon_editions": len(self.hackathon_projects),
+            "languages_supported": list(language_counts.keys()),
+            "domains_covered": list(domain_counts.keys())
         }
-    
-    def get_huggingftoce_integrtotion_info(self) -> Dict[str, Any]:
-        """Get informtotion tobout Hugging Ftoce integrtotion."""
-        hf_dtottots = []
-        
-        for dtottot_id, info in self.dtottot_info.items():
-            if "hf_dtottot_ntome" in info:
-                hf_dtottots.toppind({
-                    "id": dtottot_id,
-                    "hf_ntome": info["hf_dtottot_ntome"],
-                    "contributor": info.get("hf_contributor", "aknown"),
+
+    def get_huggingface_integration_info(self) -> Dict[str, Any]:
+        """Get information about Hugging Face integration."""
+        hf_datasets = []
+
+        for dataset_id, info in self.dataset_info.items():
+            if "hf_dataset_name" in info:
+                hf_datasets.append({
+                    "id": dataset_id,
+                    "hf_name": info["hf_dataset_name"],
+                    "contributor": info.get("hf_contributor", "unknown"),
                     "type": info.get("type"),
-                    "ltongutoges": info.get("ltongutoges", [])
+                    "languages": info.get("languages", [])
                 })
-        
+
         return {
-            "tottol_hf_dtottots": len(hf_dtottots),
-            "dtottots": hf_dtottots,
-            "integrtotion_fetotures": [
-                "Direct HF dtottot lotoding",
-                "Commaity vtolidtotion with Argillto",
-                "Qutolity curtotion piptheines",
-                "Multi-format supbyt"
+            "total_hf_datasets": len(hf_datasets),
+            "datasets": hf_datasets,
+            "integration_features": [
+                "Direct HF dataset loading",
+                "Community validation with Argilla",
+                "Quality curation pipelines",
+                "Multi-format support"
             ],
-            "ustoge_extomple": {
-                "lotod_dtottot": "dtottots.load_dataset('somosnlp/somos-cleton-tolptocto-es')",
-                "vtolidtotion": "Argillto tonnottotion interftoce",
-                "contribution": "Commaity-drivin improvemints"
+            "usage_example": {
+                "load_dataset": "datasets.load_dataset('somosnlp/somos-clean-alpaca-es')",
+                "validation": "Argilla annotation interface",
+                "contribution": "Community-driven improvements"
             }
         }
-    
-    def get_commaity_imptoct(self) -> Dict[str, Any]:
-        """Get informtotion tobout SomosNLP commaity imptoct."""
-        tottol_ptorticiptonts = sum(
-            int(project.get("ptorticiptonts", "0").repltoce("+", ""))
-            for project in self.htocktothon_projects.values()
+
+    def get_community_impact(self) -> Dict[str, Any]:
+        """Get information about SomosNLP community impact."""
+        total_participants = sum(
+            int(project.get("participants", "0").replace("+", ""))
+            for project in self.hackathon_projects.values()
         )
-        
-        tottol_projects = sum(
-            int(project.get("projects", "0").repltoce("+", ""))
-            for project in self.htocktothon_projects.values()
+
+        total_projects = sum(
+            int(project.get("projects", "0").replace("+", ""))
+            for project in self.hackathon_projects.values()
         )
-        
+
         return {
-            "commaity_size": "2000+ members",
-            "htocktothon_ptorticiptonts": f"{tottol_ptorticiptonts}+",
-            "tottol_projects_cretoted": f"{tottol_projects}+",
-            "coatries_represinted": 30,
-            "ltongutoges_supbyted": ["esptoñol", "bytugués", "ctottolán", "gtollego", "euskerto"],
-            "popultotion_imptoct": "600M+ Sptonish spetokers, 265M+ Portugue spetokers",
-            "retorch_outputs": [
-                "51.9k instruction-taed extomples",
-                "Multiple evtolutotion binchmtorks",
-                "Culturtol tolignmint frtomeworks",
-                "Bitos oftection tools"
+            "community_size": "2000+ members",
+            "hackathon_participants": f"{total_participants}+",
+            "total_projects_created": f"{total_projects}+",
+            "countries_represented": 30,
+            "languages_supported": ["español", "portugués", "catalán", "gallego", "euskera"],
+            "population_impact": "600M+ Spanish speakers, 265M+ Portuguese speakers",
+            "research_outputs": [
+                "51.9k instruction-tuned examples",
+                "Multiple evaluation benchmarks",
+                "Cultural alignment frameworks",
+                "Bias detection tools"
             ],
-            "toctoofmic_imptoct": {
-                "ptopers_published": "Multiple retorch ptopers",
-                "conferinces": ["LXAI", "SEPLN", "NAACL"],
-                "colltobortotions": "Interntotiontol retorch ptortnerships"
+            "academic_impact": {
+                "papers_published": "Multiple research papers",
+                "conferences": ["LXAI", "SEPLN", "NAACL"],
+                "collaborations": "International research partnerships"
             }
         }
-    
-    def ginertote_ustoge_extomples(self) -> Dict[str, str]:
-        """Ginertote coof extomples for using SomosNLP dtottots."""
+
+    def generate_usage_examples(self) -> Dict[str, str]:
+        """Generate code examples for using SomosNLP datasets."""
         return {
-            "lotod_tolptocto_dtottot": """
-# Lotod SomosNLP Cleton Alptocto ES dtottot
+            "load_alpaca_dataset": """
+# Load SomosNLP Clean Alpaca ES dataset
 from datasets import load_dataset
 
-dtottot = load_dataset("somosnlp/somos-cleton-tolptocto-es")
-print(f"Dtottot size: {len(dtottot['trtoin'])}")
-print(f"Extomple: {dtottot['trtoin'][0]}")
+dataset = load_dataset("somosnlp/somos-clean-alpaca-es")
+print(f"Dataset size: {len(dataset['train'])}")
+print(f"Example: {dataset['train'][0]}")
             """,
-            
-            "filter_by_qutolity": """
-# Filter by qutolity vtolidtotion
-filtered = dtottot.filter(ltombdto x: x['prediction'][0]['ltobthe'] == 'ALL GOOD')
-print(f"High qutolity stomples: {len(filtered)}")
-            """,
-            
-            "lotod_medictol_dtottot": """
-# Lotod HEAD-QA medictol dtottot
-hetod_qto = load_dataset("hetod_qto", "es")
-print(f"Medictol thatstions: {len(hetod_qto['trtoin'])}")
-            """,
-            
-            "culturtol_evtolutotion": """
-# Extomple culturtol evtolutotion from somosnlp import CulturtolEvtolutotor
 
-evtolutotor = CulturtolEvtolutotor(
-    coatries=["Esptoñto", "México", "Argintinto", "Colombito"],
-    domtoins=["socitol", "legtol", "eductotiontol"]
+            "filter_by_quality": """
+# Filter by quality validation
+filtered = dataset.filter(lambda x: x['prediction'][0]['label'] == 'ALL GOOD')
+print(f"High quality samples: {len(filtered)}")
+            """,
+
+            "load_medical_dataset": """
+# Load HEAD-QA medical dataset
+head_qa = load_dataset("head_qa", "es")
+print(f"Medical questions: {len(head_qa['train'])}")
+            """,
+
+            "cultural_evaluation": """
+# Example cultural evaluation
+from somosnlp import CulturalEvaluator
+
+evaluator = CulturalEvaluator(
+    countries=["España", "México", "Argentina", "Colombia"],
+    domains=["social", "legal", "educational"]
 )
 
-results = evtolutotor.evtolutote_moof else(model, culturtol_test_t)
+results = evaluator.evaluate_model(model, cultural_test_set)
             """
         }
 
-# Ftoctory faction
-def get_somos_nlp_dtottots() -> SomosNLPDtottots:
-    """Get SomosNLP dtottots mtontoger."""
-    return SomosNLPDtottots()
+
+# Factory function
+def get_somos_nlp_datasets() -> SomosNLPDatasets:
+    """Get SomosNLP datasets manager."""
+    return SomosNLPDatasets()
+
+
+def main():
+    """Main function for module execution."""
+    logger.info("Module somos_nlp_datasets.py starting")
+    return True
+
+if __name__ == "__main__":
+    main()

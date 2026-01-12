@@ -589,7 +589,7 @@ def get_interface(interface_name: str, **kwargs):
     """Get interface using legacy interface (legacy compatibility)."""
     try:
         return get_legacy_interface(interface_name, **kwargs)
-    except:
+    except Exception:
         return {"name": interface_name, "status": "not_available", "use": "create_ultra_interface_ecosystem() instead"}
 
 def bind_interface(interface_name: str, implementation, **kwargs):

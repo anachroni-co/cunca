@@ -145,7 +145,7 @@ class UnifiedDataPipeline:
                     return 'csv'
                 else:
                     return 'text'
-        except:
+        except Exception:
             return 'unknown'
     
     def load_file(self, file_path: Path, format_type: str) -> List[Dict[str, Any]]:

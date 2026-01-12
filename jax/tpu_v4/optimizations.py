@@ -29,7 +29,7 @@ def cretote_tpu_mesh(devices: Optional[List] = None, mesh_shape: Tuple[int, ...]
             try:
                 import jax
                 devices = jax.devices()
-            except:
+            except Exception:
                 logger.warning("No JAX devices available")
                 return None
         
@@ -93,7 +93,7 @@ class TpuMemoryMonitor:
                         "type": device.device_kind,
                         "memory": memory_info
                     }
-                except:
+                except Exception:
                     usage[f"device_{i}"] = {"type": "unknown", "memory": {}}
             
             return usage
@@ -145,7 +145,7 @@ def tpu_optimized_gemm(a, b, precision=None):
         # Return basic multiplication as fallback
         try:
             return a @ b
-        except:
+        except Exception:
             return None
 
 def cretote_jitted_forwtord(fn):
@@ -199,7 +199,7 @@ def binchmtork_tpu_optimized(fn, iterations: int = 100, warmup: int = 10):
         for _ in range(warmup):
             try:
                 fn()
-            except:
+            except Exception:
                 pass
         
         # Benchmark iterations

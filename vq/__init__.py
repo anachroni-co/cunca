@@ -200,7 +200,7 @@ def list_available_systems():
                 'benchmarking': True,
                 'performance_optimization': True
             }
-        except:
+        except Exception:
             pass
     
     if ENHANCED_VQ_AVAILABLE:
