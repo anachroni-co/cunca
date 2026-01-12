@@ -1,8 +1,8 @@
 """
-Adaptador Sapir-Whorf para modulación semántica y cognitiva basada en idioma.
+Sapir-Whorf Adapter for language-based semantic and cognitive modulation.
 
-This module implements la hipótesis de relatividad lingüística de Sapir-Whorf
-para adaptar las activaciones semánticas y cognitivas según el idioma detectado.
+This module implements the Sapir-Whorf linguistic relativity hypothesis
+to adapt semantic and cognitive activations based on the detected language.
 """
 
 from typing import Dict, Optional

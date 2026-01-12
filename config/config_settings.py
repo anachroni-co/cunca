@@ -1,6 +1,6 @@
-# Contenido de settings.py
+# Settings content
 """
-setup del system CapibaraGPT v2.
+CapibaraGPT v2 system setup.
 """
 
 import os

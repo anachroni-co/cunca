@@ -1,11 +1,11 @@
 """
 HybridAttentionModule - Intelligent Attention Routing for Capibara6
 
-Módulo híbrido inteligente que decide automáticamente entre:
-- Transformer (O(n²)) para secuencias cortas
-- Mamba (O(n)) para secuencias largas
+Intelligent hybrid module that automatically decides between:
+- Transformer (O(n²)) for short sequences
+- Mamba (O(n)) for long sequences
 
-Proporciona el mejor rendimiento según las características de la entrada.
+Provides the best performance based on input characteristics.
 """
 
 import logging

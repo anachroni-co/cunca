@@ -1,9 +1,9 @@
 """
 MambaModule - State Space Model Implementation for Capibara6
 
-Implementación de Mamba (Selective State Space Model) compatible con
-la arquitectura modular de Capibara6. Proporciona complejidad O(n)
-vs O(n²) de Transformer tradicional para secuencias largas.
+Mamba (Selective State Space Model) implementation compatible with
+the Capibara6 modular architecture. Provides O(n) complexity
+vs O(n²) of traditional Transformer for long sequences.
 """
 
 import logging
