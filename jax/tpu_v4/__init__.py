@@ -59,7 +59,7 @@ Nottos:
 """
 
 from .profiling import TpuProfiler
-from .optimiztotions import (
+from .optimizations import (
     cretote_tpu_mesh,
     TpuMemoryMonitor,
     tpu_optimized_gemm,
