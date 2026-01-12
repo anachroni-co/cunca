@@ -1,70 +1,70 @@
 # Mamba Module - Selective State Space Model
 
-## Descripción
+## Description
 
-Implementación de Mamba (Selective State Space Model) para CapibaraGPT-v2. Proporciona procesamiento con complejidad **O(n)** en lugar de O(n²) de Transformers tradicionales, ideal para secuencias largas.
+Mamba (Selective State Space Model) implementation for CapibaraGPT-v2. Provides processing with **O(n)** complexity instead of O(n²) from traditional Transformers, ideal for long sequences.
 
-## Características
+## Features
 
-- ✅ **Complejidad O(n)** para procesamiento de secuencias
-- ✅ **Selective State Space Model** con parámetros adaptativos
-- ✅ **Compatible con IModule** para integración modular
-- ✅ **Optimizaciones TPU** con scan asociativo
-- ✅ **Fallbacks robustos** cuando JAX no está disponible
-- ✅ **Métricas detalladas** de complejidad y rendimiento
+- ✅ **O(n) Complexity** for sequence processing
+- ✅ **Selective State Space Model** with adaptive parameters
+- ✅ **IModule Compatible** for modular integration
+- ✅ **TPU Optimizations** with associative scan
+- ✅ **Robust Fallbacks** when JAX is not available
+- ✅ **Detailed Metrics** for complexity and performance
 
-## Instalación de Dependencias
+## Dependency Installation
 
 ```bash
-# Instalar dependencias requeridas
+# Install required dependencies
 pip install numpy>=1.24.4
 pip install jax jaxlib
 pip install flax>=0.8.0
 
-# Para TPU (opcional pero recomendado)
+# For TPU (optional but recommended)
 pip install jax[tpu]
 ```
 
-## Uso Básico
+## Basic Usage
 
 ```python
 from capibara.sub_models.mamba import MambaModule, MambaConfig
 
-# Configuración
+# Configuration
 config = {
     'hidden_size': 768,
-    'd_state': 64,         # Dimensión del estado SSM
-    'd_conv': 4,           # Kernel convolución 1D
-    'expand_factor': 2,    # Factor de expansión
-    'scan_type': 'associative'  # Para paralelización TPU
+    'd_state': 64,         # SSM state dimension
+    'd_conv': 4,           # 1D convolution kernel
+    'expand_factor': 2,    # Expansion factor
+    'scan_type': 'associative'  # For TPU parallelization
 }
 
-# Crear módulo
+# Create module
 mamba = MambaModule(config)
 
-# Procesar entrada
+# Process input
 import numpy as np
 inputs = np.random.randn(2, 512, 768)  # [batch, seq_len, hidden_size]
 outputs = mamba(inputs, training=False)
 
-print(f"Complejidad: {outputs['metrics']['complexity']}")
+print(f"Complexity: {outputs['metrics']['complexity']}")
 print(f"Output shape: {outputs['output'].shape}")
 ```
 
-## Configuración Avanzada
+## Advanced Configuration
 
-### Parámetros de MambaConfig
+### MambaConfig Parameters
 
-- `hidden_size` (int, default=768): Dimensión del modelo
-- `d_state` (int, default=64): Dimensión del estado interno SSM
-- `d_conv` (int, default=4): Tamaño del kernel de convolución 1D
-- `expand_factor` (int, default=2): Factor de expansión para proyecciones
-- `dt_rank` (int, default=32): Rango para parámetro temporal Δ
-- `activation` (str, default='swish'): Función de activación (swish, gelu, relu)
-- `use_tpu_optimizations` (bool, default=True): Habilitar optimizaciones TPU
-- `scan_type` (str, default='associative'): Tipo de scan ('linear' o 'associative')
+- `hidden_size` (int, default=768): Model dimension
+- `d_state` (int, default=64): SSM internal state dimension
+- `d_conv` (int, default=4): 1D convolution kernel size
+- `expand_factor` (int, default=2): Expansion factor for projections
+- `dt_rank` (int, default=32): Rank for temporal parameter Δ
+- `activation` (str, default='swish'): Activation function (swish, gelu, relu)
+- `use_tpu_optimizations` (bool, default=True): Enable TPU optimizations
+- `scan_type` (str, default='associative'): Scan type ('linear' or 'associative')
 
-### Ejemplo con Configuración Personalizada
+### Example with Custom Configuration
 
 ```python
 from capibara.sub_models.mamba import MambaModule
@@ -82,29 +82,29 @@ config = {
 mamba = MambaModule(config)
 ```
 
-## Integración con ModularCapibaraModel
+## Integration with ModularCapibaraModel
 
-El módulo está diseñado para integrarse directamente con la arquitectura modular de Capibara:
+The module is designed to integrate directly with Capibara's modular architecture:
 
 ```python
-# En capibara/core/modular_model.py
+# In capibara/core/modular_model.py
 from capibara.sub_models.mamba import MambaModule
 
 available_modules = {
     "mamba": MambaModule,
-    # ... otros módulos
+    # ... other modules
 }
 ```
 
-### Configuración TOML
+### TOML Configuration
 
 ```toml
-# En capibara/config/configs_toml/mamba_hybrid.toml
+# In capibara/config/configs_toml/mamba_hybrid.toml
 [modules]
 active = [
     "mamba",
     "embedding_module",
-    # ... otros módulos
+    # ... other modules
 ]
 
 [modules.mamba]
@@ -116,95 +116,95 @@ expand_factor = 2
 scan_type = "associative"
 ```
 
-## Métricas y Monitoreo
+## Metrics and Monitoring
 
-El módulo proporciona métricas detalladas:
+The module provides detailed metrics:
 
 ```python
 outputs = mamba(inputs, training=False)
 metrics = outputs['metrics']
 
-print(f"Mamba activo: {metrics['mamba_active']}")
-print(f"Complejidad: {metrics['complexity']}")  # 'O(n)' o 'O(log n)'
-print(f"Longitud secuencia: {metrics['sequence_length']}")
-print(f"Dimensión estado: {metrics['d_state']}")
-print(f"Selective scan usado: {metrics['selective_scan_used']}")
-print(f"Optimizado TPU: {metrics['tpu_optimized']}")
+print(f"Mamba active: {metrics['mamba_active']}")
+print(f"Complexity: {metrics['complexity']}")  # 'O(n)' or 'O(log n)'
+print(f"Sequence length: {metrics['sequence_length']}")
+print(f"State dimension: {metrics['d_state']}")
+print(f"Selective scan used: {metrics['selective_scan_used']}")
+print(f"TPU optimized: {metrics['tpu_optimized']}")
 ```
 
 ## Performance
 
-### Comparación de Complejidad
+### Complexity Comparison
 
-| Longitud Secuencia | Transformer (O(n²)) | Mamba (O(n)) | Mejora |
-|-------------------|---------------------|--------------|--------|
-| 512               | 262,144 ops         | 512 ops      | 512x   |
-| 2048              | 4,194,304 ops       | 2048 ops     | 2048x  |
-| 4096              | 16,777,216 ops      | 4096 ops     | 4096x  |
+| Sequence Length | Transformer (O(n²)) | Mamba (O(n)) | Improvement |
+|-----------------|---------------------|--------------|-------------|
+| 512             | 262,144 ops         | 512 ops      | 512x        |
+| 2048            | 4,194,304 ops       | 2048 ops     | 2048x       |
+| 4096            | 16,777,216 ops      | 4096 ops     | 4096x       |
 
-### Benchmarks Esperados
+### Expected Benchmarks
 
 ```
-# Con TPU v4-32
-- Throughput: ~3000 tokens/sec para secuencias de 2048 tokens
-- Memoria: 4x menos que Transformer para secuencias > 1024
-- Latencia: Sub-linear scaling con longitud de secuencia
+# With TPU v4-32
+- Throughput: ~3000 tokens/sec for 2048 token sequences
+- Memory: 4x less than Transformer for sequences > 1024
+- Latency: Sub-linear scaling with sequence length
 ```
 
 ## Troubleshooting
 
-### Error: "JAX no disponible"
+### Error: "JAX not available"
 
 ```bash
-# Instalar JAX
+# Install JAX
 pip install jax jaxlib
 
-# Para TPU
+# For TPU
 pip install jax[tpu]
 ```
 
-### Error: "Flax no disponible"
+### Error: "Flax not available"
 
 ```bash
 pip install flax>=0.8.0
 ```
 
-### Modo Fallback
+### Fallback Mode
 
-Si JAX no está disponible, el módulo usará una implementación fallback con numpy:
+If JAX is not available, the module will use a fallback implementation with numpy:
 
 ```python
-# El módulo detecta automáticamente y usa fallback
-# Se registrará un warning: "Usando implementación fallback de Mamba"
+# The module automatically detects and uses fallback
+# A warning will be logged: "Using Mamba fallback implementation"
 ```
 
-## Referencias
+## References
 
 - [Mamba: Linear-Time Sequence Modeling](https://arxiv.org/abs/2312.00752)
 - [Structured State Space Models (S4)](https://arxiv.org/abs/2111.00396)
 - [Selective State Space Models](https://github.com/state-spaces/mamba)
 
-## Estado de Implementación
+## Implementation Status
 
 - ✅ Core SSM implementation
 - ✅ Selective scan mechanism
 - ✅ IModule interface compatibility
 - ✅ TPU optimizations (associative scan)
 - ✅ Fallback mode (numpy)
-- ⚠️ Optimización completa de convolución 1D (en progreso)
+- ⚠️ Complete 1D convolution optimization (in progress)
 - 🔄 Mamba-2 features (roadmap)
 
-## Contribución
+## Contribution
 
-Para contribuir a la mejora del módulo Mamba:
+To contribute to Mamba module improvements:
 
-1. Optimizaciones de conv1d para producción
-2. Implementación de Mamba-2 features
-3. Benchmarks adicionales en diferentes hardware
-4. Mejoras en el sistema de métricas
+1. Conv1d optimizations for production
+2. Mamba-2 feature implementation
+3. Additional benchmarks on different hardware
+4. Metrics system improvements
 
 ---
 
-**Recuperado del commit**: 6377222 (2025-09-03)
-**Autor**: Cursor Agent, marco@anachroni.co
-**Última actualización**: 2025-11-16
+**Recovered from commit**: 6377222 (2025-09-03)
+**Author**: Cursor Agent, marco@anachroni.co
+**Last updated**: 2025-11-16

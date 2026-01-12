@@ -1,8 +1,8 @@
 """
 JAX compat module (portable stubs).
 
-Proporciona utilidades mínimas requeridas por capibara.jax.nn
-sin depender de JAX real.
+Provides minimal utilities required by capibara.jax.nn
+without depending on real JAX.
 """
 
 from __future__ import annotations
@@ -10,7 +10,7 @@ from __future__ import annotations
 from types import SimpleNamespace
 from typing import Any
 
-# Intentar usar numpy real; si no está, usar el submódulo interno capibara.jax.numpy
+# Try to use real numpy; if not available, use the internal capibara.jax.numpy submodule
 try:
     import numpy as _np  # type: ignore
 except Exception:  # pragma: no cover - environment without numpy
@@ -37,7 +37,7 @@ except Exception:  # pragma: no cover - environment without numpy
 
 
 def get_jax() -> Any:
-    """Returns a jax stub with minimal API usada por nn (random.bernoulli)."""
+    """Returns a jax stub with minimal API used by nn (random.bernoulli)."""
     def _bernoulli(rng, p, shape):  # rng ignorado en stub
         try:
             import random as _random
@@ -49,5 +49,5 @@ def get_jax() -> Any:
 
 
 def get_numpy() -> Any:
-    """Returns real numpy or internal submodule capibara.jax.numpy como sustituto de jnp."""
+    """Returns real numpy or internal submodule capibara.jax.numpy as a substitute for jnp."""
     return _np

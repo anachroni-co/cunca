@@ -1,14 +1,14 @@
 """
-Submódulo semiótico de CapibaraGPT.
+CapibaraGPT Semiotic Submodule.
 
-Este submódulo agrupa los componentes principales para el análisis semiótico avanzado,
-la interacción semiótica y la configuración of metrics y cuantización asociadas.
+This submodule groups the main components for advanced semiotic analysis,
+semiotic interaction, and configuration of metrics and associated quantization.
 
-Componentes expuestos:
-- SemioModule: Módulo de análisis semiótico configurable.
-- SemioticInteraction: Módulo de interacción semiótica avanzada.
-- SapirWhorfAdapter: Adaptador para modulación semántica y cognitiva basada en idioma.
-- QuantizationConfig, ScalingConfig, InterpretationMetrics, TPUMetrics, SemioticMetrics: Configuraciones y métricas especializadas para el análisis semiótico.
+Exposed Components:
+- SemioModule: Configurable semiotic analysis module.
+- SemioticInteraction: Advanced semiotic interaction module.
+- SapirWhorfAdapter: Adapter for language-based semantic and cognitive modulation.
+- QuantizationConfig, ScalingConfig, InterpretationMetrics, TPUMetrics, SemioticMetrics: Specialized configurations and metrics for semiotic analysis.
 """
 from .sapir_whorf_adapter import SapirWhorfAdapter
 

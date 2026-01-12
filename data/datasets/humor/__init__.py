@@ -2,21 +2,21 @@
 CapibaraGPT-v2 Humor & Jokes Datasets
 ====================================
 
-Datasets especializados en humor, chistes y contenido cómico en español.
+Specialized datasets for humor, jokes, and comedic content in Spanish.
 
-Datasets Disponibles:
-- CHISTES_spanish_jokes: 2,419 chistes en español
-- Barcenas-HumorNegro: 500 chistes de humor negro con explicaciones
-- HumorQA: Chistes categorizados por tipo de humor
-- Twitter_Humor_ES: Tweets humorísticos anotados
+Available Datasets:
+- CHISTES_spanish_jokes: 2,419 jokes in Spanish
+- Barcenas-HumorNegro: 500 dark humor jokes with explanations
+- HumorQA: Jokes categorized by humor type
+- Twitter_Humor_ES: Annotated humorous tweets
 
-Categorías de Humor:
-- Chistes tradicionales
-- Humor negro
-- Juegos de palabras
-- Comparaciones/exageraciones
-- Regla de tres
-- Animar lo inanimado
+Humor Categories:
+- Traditional jokes
+- Dark humor
+- Wordplay
+- Comparisons/exaggerations
+- Rule of three
+- Animating the inanimate
 """
 
 from .spanish_jokes import *

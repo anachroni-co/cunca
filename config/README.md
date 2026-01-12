@@ -1,35 +1,35 @@
 # Configuration Module
 
-Este módulo gestiona todas las configuraciones del sistema CapibaraGPT, incluyendo configuraciones de modelo, entrenamiento, optimización y despliegue.
+This module manages all CapibaraGPT system configurations, including model, training, optimization, and deployment configurations.
 
-## 📋 Componentes Principales
+## 📋 Main Components
 
 ### ConfigManager (`config_manager.py`)
-Gestor central para cargar y manejar configuraciones TOML.
+Central manager for loading and handling TOML configurations.
 
 ```python
 from capibara.config import ConfigManager
 
-# Inicializar el gestor
+# Initialize manager
 config_manager = ConfigManager("config")
 
-# Cargar configuración
+# Load configuration
 config = config_manager.load_config("model")
 
-# Obtener valores específicos
+# Get specific values
 hidden_size = config_manager.get_value("model", "model.hidden_size", default=768)
 
-# Validar configuración
+# Validate configuration
 is_valid = config_manager.validate_config("model", schema)
 ```
 
 ### AdaptiveConfig (`adaptive_config.py`)
-Configuración para computación adaptativa y enrutamiento de expertos.
+Configuration for adaptive computation and expert routing.
 
 ```python
 from capibara.config import AdaptiveConfig
 
-# Crear configuración adaptativa
+# Create adaptive configuration
 config = AdaptiveConfig(
     hidden_size=1024,
     num_experts=16,
@@ -39,16 +39,16 @@ config = AdaptiveConfig(
     precision='bfloat16'
 )
 
-# Cargar desde JSON
+# Load from JSON
 config = AdaptiveConfig.from_json("adaptive_config.json")
 
-# Validación automática en __post_init__
+# Automatic validation in __post_init__
 ```
 
-### Configuraciones Específicas
+### Specific Configurations
 
 #### ModelConfig (`config_schema.py`)
-Define la arquitectura del modelo con validación Pydantic.
+Defines model architecture with Pydantic validation.
 
 ```python
 from capibara.config import ModelConfig
@@ -66,7 +66,7 @@ model_config = ModelConfig(
 ```
 
 #### TrainingConfig (`training_config.py`)
-Configuración de parámetros de entrenamiento.
+Training parameter configuration.
 
 ```python
 from capibara.config import TrainingConfig
@@ -82,7 +82,7 @@ training_config = TrainingConfig(
 ```
 
 #### MemoryConfig (`memory_config.py`)
-Gestión de configuraciones de memoria y optimización.
+Memory and optimization configuration management.
 
 ```python
 from capibara.config import MemoryConfig
@@ -95,10 +95,10 @@ memory_config = MemoryConfig(
 )
 ```
 
-## 🔧 Configuraciones Especializadas
+## 🔧 Specialized Configurations
 
 ### Chain of Thought (`cot_config.py`)
-Configuración para razonamiento paso a paso.
+Configuration for step-by-step reasoning.
 
 ```python
 from capibara.config import CoTConfig
@@ -112,7 +112,7 @@ cot_config = CoTConfig(
 ```
 
 ### Convexity (`convexity_config.py`)
-Configuración para optimización convexa.
+Configuration for convex optimization.
 
 ```python
 from capibara.config import ConvexityConfig
@@ -124,39 +124,39 @@ convexity_config = ConvexityConfig(
 )
 ```
 
-### Escalado (unificado)
-El escalado distribuido y paralelismo se gestionan desde `unified_model_config.py` (p. ej. `MemoryOptimizationConfig`, submeshes y `ModularModelConfig`).
+### Scaling (unified)
+Distributed scaling and parallelism are managed from `unified_model_config.py` (e.g., `MemoryOptimizationConfig`, submeshes, and `ModularModelConfig`).
 
-## 📁 Estructura de Directorios
+## 📁 Directory Structure
 
 ```
 config/
-├── configs_toml/          # Archivos TOML de configuración
-├── conversion/            # Utilidades de conversión
-├── __init__.py           # Exportaciones principales
-├── adaptive_config.py    # Configuración adaptativa
-├── config_manager.py     # Gestor central
-├── config_schema.py      # Esquemas Pydantic
-├── config_settings.py   # Configuraciones generales
-├── config_validator.py   # Validadores
-├── config_validators.py  # Validadores adicionales
-├── convexity_config.py   # Configuración convexa
+├── configs_toml/          # TOML configuration files
+├── conversion/            # Conversion utilities
+├── __init__.py           # Main exports
+├── adaptive_config.py    # Adaptive configuration
+├── config_manager.py     # Central manager
+├── config_schema.py      # Pydantic schemas
+├── config_settings.py   # General settings
+├── config_validator.py   # Validators
+├── config_validators.py  # Additional validators
+├── convexity_config.py   # Convex configuration
 ├── cot_config.py         # Chain of Thought
-├── memory_config.py      # Configuración de memoria
-├── model_config.py       # Wrapper de compatibilidad (reexporta unificado)
-├── config_types.py       # Wrapper de compatibilidad (reexporta tipos)
-├── config_semiotic.py    # Stub de compatibilidad
-├── training_config.py    # Configuración de entrenamiento
-└── unified_model_config.py # Configuración unificada
+├── memory_config.py      # Memory configuration
+├── model_config.py       # Compatibility wrapper (re-exports unified)
+├── config_types.py       # Compatibility wrapper (re-exports types)
+├── config_semiotic.py    # Compatibility stub
+├── training_config.py    # Training configuration
+└── unified_model_config.py # Unified configuration
 ```
 
-## 🚀 Uso Avanzado
+## 🚀 Advanced Usage
 
-### Configuración Completa
+### Complete Configuration
 ```python
 from capibara.config import CapibaraConfig
 
-# Crear configuración completa
+# Create complete configuration
 config = CapibaraConfig(
     model=ModelConfig(...),
     training=TrainingConfig(...),
@@ -166,20 +166,20 @@ config = CapibaraConfig(
     paths=PathsConfig(...)
 )
 
-# Cargar desde YAML
+# Load from YAML
 config = CapibaraConfig.from_yaml("config.yaml")
 
-# Validar configuración
+# Validate configuration
 warnings = config.validate()
 if warnings:
     for warning in warnings:
         print(f"Warning: {warning}")
 
-# Convertir a diccionario
+# Convert to dictionary
 config_dict = config.to_dict()
 ```
 
-### Validación Personalizada
+### Custom Validation
 ```python
 from capibara.config.config_validators import (
     estimate_model_memory,
@@ -187,35 +187,35 @@ from capibara.config.config_validators import (
     check_data_paths
 )
 
-# Estimar memoria del modelo
+# Estimate model memory
 memory_gb = estimate_model_memory(config_dict) / 1e9
-print(f"Memoria estimada: {memory_gb:.2f} GB")
+print(f"Estimated memory: {memory_gb:.2f} GB")
 
-# Validar compatibilidad de dispositivo
+# Validate device compatibility
 is_compatible = validate_device_compatibility(config.device)
 
-# Verificar rutas de datos
+# Verify data paths
 valid_paths = check_data_paths(config.training)
 ```
 
-## ⚙️ Características Clave
+## ⚙️ Key Features
 
-- **Validación automática**: Usando Pydantic para validación de tipos y valores
-- **Carga flexible**: Soporte para TOML, JSON y YAML
-- **Configuración jerárquica**: Acceso a valores anidados con notación de puntos
-- **Gestión de memoria**: Estimación automática de recursos requeridos
-- **Configuraciones especializadas**: Para diferentes componentes del sistema
-- **Validación cruzada**: Verificación de compatibilidad entre módulos
-- **Hot reload**: Recarga de configuraciones en tiempo de ejecución
+- **Automatic validation**: Using Pydantic for type and value validation
+- **Flexible loading**: Support for TOML, JSON, and YAML
+- **Hierarchical configuration**: Access to nested values with dot notation
+- **Memory management**: Automatic estimation of required resources
+- **Specialized configurations**: For different system components
+- **Cross-validation**: Compatibility verification between modules
+- **Hot reload**: Runtime configuration reloading
 
-## 🔍 Validadores Disponibles
+## 🔍 Available Validators
 
-- `ModelConfig`: Valida arquitectura del modelo y compatibilidad de dimensiones
-- `TrainingConfig`: Verifica rutas de datos y parámetros de entrenamiento
-- `MemoryConfig`: Estima uso de memoria y compatibilidad hardware
-- `AdaptiveConfig`: Valida configuraciones de enrutamiento adaptativo
-- `ConvexityConfig`: Verifica parámetros de optimización convexa
+- `ModelConfig`: Validates model architecture and dimension compatibility
+- `TrainingConfig`: Verifies data paths and training parameters
+- `MemoryConfig`: Estimates memory usage and hardware compatibility
+- `AdaptiveConfig`: Validates adaptive routing configurations
+- `ConvexityConfig`: Verifies convex optimization parameters
 
-## 📖 Ejemplos de Configuración
+## 📖 Configuration Examples
 
-Consulta el directorio `configs_toml/` para ejemplos completos de configuraciones en formato TOML.
+See the `configs_toml/` directory for complete configuration examples in TOML format.

@@ -1,26 +1,26 @@
 # Experts Module
 
-Sistema de control y entrenamiento para Mixture of Experts (MoE) con API de gestión de expertos y orquestación de entrenamiento distribuido.
+Control and training system for Mixture of Experts (MoE) with expert management API and distributed training orchestration.
 
-## 📋 Descripción
+## 📋 Description
 
-Este módulo gestiona el sistema de expertos especializados, proporcionando APIs de control, entrenamiento distribuido y gestión dinámica de expertos con especialización automática.
+This module manages the specialized expert system, providing control APIs, distributed training, and dynamic expert management with automatic specialization.
 
-## 🏗️ Arquitectura
+## 🏗️ Architecture
 
 ```
 experts/
-├── __init__.py          # Exports de componentes MoE
-├── moe_control_api.py   # API de control para expertos
-└── moe_training.py      # Sistema de entrenamiento MoE
+├── __init__.py          # MoE component exports
+├── moe_control_api.py   # Expert control API
+└── moe_training.py      # MoE training system
 ```
 
-## 🎯 API de Control MoE
+## 🎯 MoE Control API
 
 ```python
 from capibara.core.experts import MoEControlAPI
 
-# Inicializar API de control
+# Initialize control API
 control_api = MoEControlAPI(
     num_experts=32,
     expert_specializations=[
@@ -31,13 +31,13 @@ control_api = MoEControlAPI(
     load_balancing=True
 )
 
-# Gestión de expertos
+# Expert management
 expert_status = control_api.get_expert_status()
 print(f"Active experts: {expert_status['active_count']}")
 print(f"Specialized experts: {expert_status['specialized_count']}")
 print(f"Load distribution: {expert_status['load_distribution']}")
 
-# Crear nuevo experto especializado
+# Create new specialized expert
 new_expert = control_api.create_expert(
     specialization="quantum_physics",
     base_model="capibara_base",
@@ -49,7 +49,7 @@ new_expert = control_api.create_expert(
     }
 )
 
-# Gestión dinámica de expertos
+# Dynamic expert management
 control_api.optimize_expert_allocation(
     current_workload=workload_analysis,
     target_utilization=0.75,
@@ -57,12 +57,12 @@ control_api.optimize_expert_allocation(
 )
 ```
 
-## 🚀 Sistema de Entrenamiento MoE
+## 🚀 MoE Training System
 
 ```python
 from capibara.core.experts import MoETraining
 
-# Configurar entrenamiento distribuido
+# Configure distributed training
 training_system = MoETraining(
     distributed_config={
         "num_nodes": 4,
@@ -75,7 +75,7 @@ training_system = MoETraining(
     auxiliary_loss_weight=0.001
 )
 
-# Configuración de entrenamiento por experto
+# Per-expert training configuration
 expert_training_configs = {
     "mathematics_expert": {
         "datasets": ["math_problems", "proofs", "equations"],
@@ -97,7 +97,7 @@ expert_training_configs = {
     }
 }
 
-# Entrenamiento especializado
+# Specialized training
 training_results = training_system.train_experts(
     expert_configs=expert_training_configs,
     max_epochs=10,
@@ -114,10 +114,10 @@ for expert_name, results in training_results.items():
     print(f"  Validation Accuracy: {results['validation_accuracy']:.3f}")
 ```
 
-## 🔧 Gestión Dinámica de Expertos
+## 🔧 Dynamic Expert Management
 
 ```python
-# Sistema de gestión dinámica
+# Dynamic management system
 dynamic_management = control_api.enable_dynamic_management({
     "expert_lifecycle": {
         "automatic_creation": True,
@@ -138,18 +138,18 @@ dynamic_management = control_api.enable_dynamic_management({
     }
 })
 
-# Monitoreo continuo de expertos
+# Continuous expert monitoring
 expert_monitor = dynamic_management.create_monitor(
-    monitoring_frequency=60,  # segundos
+    monitoring_frequency=60,  # seconds
     metrics=[
         "utilization_rate",
-        "performance_score", 
+        "performance_score",
         "specialization_drift",
         "resource_efficiency"
     ]
 )
 
-# Análisis de rendimiento por experto
+# Per-expert performance analysis
 performance_analysis = expert_monitor.analyze_expert_performance(
     time_window="24h",
     include_trends=True,
@@ -161,15 +161,15 @@ for expert_id, analysis in performance_analysis.items():
     print(f"  Performance Trend: {analysis['trend']}")
     print(f"  Utilization: {analysis['utilization']:.2%}")
     print(f"  Efficiency Score: {analysis['efficiency']:.3f}")
-    
+
     if analysis['needs_attention']:
         print(f"  ⚠️  Recommended Action: {analysis['recommended_action']}")
 ```
 
-## 📊 Métricas y Evaluación
+## 📊 Metrics and Evaluation
 
 ```python
-# Sistema de métricas especializadas
+# Specialized metrics system
 from capibara.core.experts import ExpertMetricsCollector
 
 metrics_collector = ExpertMetricsCollector(
@@ -178,7 +178,7 @@ metrics_collector = ExpertMetricsCollector(
     specialized_metrics=True
 )
 
-# Métricas por dominio de especialización
+# Per-specialization domain metrics
 domain_metrics = metrics_collector.collect_domain_metrics()
 
 specialization_report = {
@@ -202,7 +202,7 @@ specialization_report = {
     }
 }
 
-# Benchmarking entre expertos
+# Cross-expert benchmarking
 benchmark_results = metrics_collector.cross_expert_benchmark(
     test_suite="comprehensive_evaluation",
     include_baseline_comparison=True,
@@ -217,10 +217,10 @@ for category, results in benchmark_results.items():
         print(f"  {rank}. {expert_name}: {score:.3f}")
 ```
 
-## 🔄 Entrenamiento Continuo
+## 🔄 Continuous Training
 
 ```python
-# Sistema de entrenamiento continuo
+# Continuous training system
 continuous_training = training_system.setup_continuous_learning(
     training_schedule="adaptive",
     data_streaming=True,
@@ -228,7 +228,7 @@ continuous_training = training_system.setup_continuous_learning(
     performance_based_scheduling=True
 )
 
-# Configurar pipelines de datos especializados
+# Configure specialized data pipelines
 data_pipelines = {
     "mathematics_expert": {
         "sources": ["arxiv_math", "math_stackexchange", "textbooks"],
@@ -250,7 +250,7 @@ data_pipelines = {
     }
 }
 
-# Iniciar entrenamiento continuo
+# Start continuous training
 for expert_type, pipeline_config in data_pipelines.items():
     continuous_training.start_expert_pipeline(
         expert_type=expert_type,
@@ -259,7 +259,7 @@ for expert_type, pipeline_config in data_pipelines.items():
         quality_monitoring=True
     )
 
-# Monitoreo de entrenamiento continuo
+# Continuous training monitoring
 training_monitor = continuous_training.create_monitor()
 training_stats = training_monitor.get_continuous_training_stats()
 
@@ -270,21 +270,21 @@ print(f"Average improvement rate: {training_stats['avg_improvement_rate']:.3%}")
 print(f"Expert specialization scores: {training_stats['specialization_scores']}")
 ```
 
-## 🧠 Transfer Learning y Knowledge Sharing
+## 🧠 Transfer Learning and Knowledge Sharing
 
 ```python
-# Sistema de transferencia de conocimiento entre expertos
+# Knowledge transfer system between experts
 knowledge_transfer = training_system.setup_knowledge_transfer(
     transfer_strategy="selective_distillation",
     cross_expert_learning=True,
     knowledge_consolidation=True
 )
 
-# Configurar transferencia entre expertos relacionados
+# Configure transfer between related experts
 transfer_pairs = [
     {
         "source": "mathematics_expert",
-        "target": "physics_expert", 
+        "target": "physics_expert",
         "knowledge_areas": ["calculus", "linear_algebra", "differential_equations"],
         "transfer_weight": 0.3
     },
@@ -302,7 +302,7 @@ transfer_pairs = [
     }
 ]
 
-# Ejecutar transferencia de conocimiento
+# Execute knowledge transfer
 transfer_results = knowledge_transfer.execute_transfer(
     transfer_pairs=transfer_pairs,
     validation_during_transfer=True,
@@ -317,15 +317,15 @@ for transfer in transfer_results:
     print(f"  Specialization retention: {transfer['specialization_retention']:.3f}")
 ```
 
-## 🤝 Integración y Coordinación
+## 🤝 Integration and Coordination
 
 ```python
-# Integración con otros módulos del sistema
+# Integration with other system modules
 from capibara.core.moe import DynamicMoE
 from capibara.core.routers import AdaptiveRouter
 from capibara.core.monitoring import TPUMonitor
 
-# Coordinación expert-router-monitor
+# Expert-router-monitor coordination
 expert_coordinator = control_api.create_coordinator(
     moe_system=DynamicMoE(num_experts=32),
     router=AdaptiveRouter(),
@@ -333,7 +333,7 @@ expert_coordinator = control_api.create_coordinator(
     coordination_strategy="holistic_optimization"
 )
 
-# Optimización coordinada del sistema completo
+# Coordinated full system optimization
 system_optimization = expert_coordinator.optimize_system_performance(
     objectives=["throughput", "quality", "efficiency", "specialization"],
     constraints=["memory_budget", "latency_requirements", "accuracy_threshold"],
@@ -346,15 +346,15 @@ print(f"Quality preservation: {system_optimization['quality_preservation']:.3f}"
 print(f"Resource efficiency gain: {system_optimization['efficiency_gain']:.1%}")
 print(f"Specialization enhancement: {system_optimization['specialization_boost']:.3f}")
 
-# Configurar coordinación automática
+# Configure automatic coordination
 expert_coordinator.enable_automatic_coordination(
-    coordination_frequency=300,  # 5 minutos
+    coordination_frequency=300,  # 5 minutes
     adaptive_thresholds=True,
     proactive_optimization=True
 )
 ```
 
-## 📚 Referencias
+## 📚 References
 
 - [Mixture of Experts](https://arxiv.org/abs/1701.06538)
 - [Switch Transformer](https://arxiv.org/abs/2101.03961)
