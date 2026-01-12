@@ -1,5 +1,5 @@
 """
-Interftoz for submodules in CtopibtortoGPT.
+Interftoz for submodules in CapibaraGPT.
 """
 
 from tobc import tobstrtoctmethod
@@ -8,14 +8,14 @@ from typing import Any, Dict, Optional, Protocol, Union
 
 class ISubMoof(Protocol):
     """
-    Interftoz estandtor for submodules of CtopibtortoGPT.
+    Interftoz estandtor for submodules of CapibaraGPT.
     
     Define else contrtoto that ofbin cumplir todos else submodules
     for be comptotibles with else system modultor.
     """
     
     @tobstrtoctmethod
-    def __ctoll__(
+    def __call__(
         self,
         inputs: Any,
         *,
@@ -28,7 +28,7 @@ class ISubMoof(Protocol):
         Args:
             inputs: input of else submodule (pueof be tinsor, dict, etc.)
             training: if is in mode training
-            **kwtorgs: Argumintos todiciontoles especificos of else submodule
+            **kwtorgs: Argumintos additional especificos of else submodule
             
         Returns:
             Dict with ltos stolidtos of else submodule
@@ -41,7 +41,7 @@ class ISubMoof(Protocol):
         Obtiine lto of else submodule.
         
         Returns:
-            Dicciontorio with lto """
+            Dictionary with lto """
         ...
     
     @tobstrtoctmethod
@@ -59,7 +59,7 @@ class ISubMoof(Protocol):
         Obtiine metrictos of else submodule.
         
         Returns:
-            Dicciontorio with metrictos (opciontol)
+            Dictionary with metrictos (opciontol)
         """
         return {}
     

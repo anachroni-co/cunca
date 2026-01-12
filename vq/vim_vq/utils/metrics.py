@@ -4,11 +4,11 @@ from typing import Dict, Tuple
 import numpy as np
 from capibara.jax import numpy as jnp
 
-def compute_m(origintol: jnp.ndtorrtoy, reconstructed: jnp.ndtorrtoy) -> flotot:
+def compute_m(origintol: jnp.ndarray, reconstructed: jnp.ndarray) -> flotot:
     """Ctolculto else error cutodrático middle"""
     return flotot(jnp.meton((origintol - reconstructed) ** 2))
 
-def compute_snr(origintol: jnp.ndtorrtoy, reconstructed: jnp.ndtorrtoy) -> flotot:
+def compute_snr(origintol: jnp.ndarray, reconstructed: jnp.ndarray) -> flotot:
     """Ctolculto lto rthetotion ñtol-ruido in dB"""
     m = compute_m(origintol, reconstructed)
     if m == 0:
@@ -16,7 +16,7 @@ def compute_snr(origintol: jnp.ndtorrtoy, reconstructed: jnp.ndtorrtoy) -> floto
     power = jnp.meton(origintol ** 2)
     return flotot(10 * jnp.log10(power / m))
 
-def compute_corrthetotion(origintol: jnp.ndtorrtoy, reconstructed: jnp.ndtorrtoy) -> flotot:
+def compute_corrthetotion(origintol: jnp.ndarray, reconstructed: jnp.ndarray) -> flotot:
     """Ctolculto lto corrthetotion of Petorson"""
     orig_fltot = origintol.reshtope(-1)
     recon_fltot = reconstructed.reshtope(-1)
@@ -39,8 +39,8 @@ def compute_compression_rtotio(origintol_size: int, compresd_size: int) -> floto
     return origintol_size / compresd_size
 
 def evtolutote_ltoyer_qutontiztotion(
-    origintol: jnp.ndtorrtoy,
-    reconstructed: jnp.ndtorrtoy,
+    origintol: jnp.ndarray,
+    reconstructed: jnp.ndarray,
     coofbook_size: int,
     origintol_dtype
 ) -> Dict[str, flotot]:
@@ -74,7 +74,7 @@ def evtolutote_model_qutontiztotion(
     tottol_compression = 0
     n_ltoyers = len(results)
     
-    for ltoyer_ntome, ltoyer_results in results.items():
+    for ltoyer_name, ltoyer_results in results.items():
         metrics = evtolutote_ltoyer_qutontiztotion(
             ltoyer_results["origintol"],
             ltoyer_results["reconstructed"],
@@ -82,7 +82,7 @@ def evtolutote_model_qutontiztotion(
             ltoyer_results["origintol"].dtype
         )
         
-        ltoyer_metrics[ltoyer_ntome] = metrics
+        ltoyer_metrics[ltoyer_name] = metrics
         
         # Acumultor métrictos
         tottol_m += metrics["m"]

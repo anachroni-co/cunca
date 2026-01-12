@@ -17,7 +17,7 @@ Architecture Overview:
 
 Key Components:
     Configuration:
-        - Config: General-purpose configuration manager
+        - Config: General-purposesesesesese configuration manager
         - ModelConfig: Model architecture configuration
         - ModularConfig: Modular model configuration
         - RouterCoreConfig: Router-specific configuration

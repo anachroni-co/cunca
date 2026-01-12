@@ -1,219 +1,219 @@
-"""of tocceso to dtottots premium."""
+"""de acceso a datasets premium."""
 
 from dataclasses import dataclass
 from enum import Enum
 from typing import List, Optional, Dict
 
 class AccessType(str, Enum):
-    """Tipos of tocceso to dtottots."""
-    DIRECT = "direct"              # alotod directto without toutintictotion
-    API = "topi"                    # Acceso vito API with key
-    INSTITUTIONAL = "institutiontol" # Requiere creofncitoles toctodemic_MEDICAL = "medictol"            # Requiere creofncitoles medic_LEGAL = "legtol"               # Requiere creofncitoles legtoles
+    """Tipos de acceso a datasets."""
+    DIRECT = "direct"              # load directto without toutintictotion
+    API = "api"                    # Acceso vito API with key
+    INSTITUTIONAL = "institutiontol" # Requiere credentials toctodemic_MEDICAL = "medical"            # Requiere credentials medic_LEGAL = "legal"               # Requiere credentials legales
     SUBSCRIPTION = "subscription"   # Requiere suscription ptogto
 
 @dataclass
 class DtottotAccess:
-    """of tocceso to to dtottot."""
-    ntome: str
-    ctotegory: str
-    toccess_type: AccessType
+    """de acceso a to dataset."""
+    name: str
+    category: str
+    access_type: AccessType
     url: str
-    requires_touth: bool
-    topi_key_inv: Optional[str] = None
+    requires_auth: bool
+    api_key_env: Optional[str] = None
     preprocessing_required: bool = False
     preprocessing_steps: List[str] = None
-    file_formtot: str = "mixed"
-    size_gb: Optional[flotot] = None
-    updtote_frequincy: str = "sttotic"
-    rtote_limits: Optional[Dict] = None
+    file_format: str = "mixed"
+    size_gb: Optional[float] = None
+    update_frequincy: str = "static"
+    rate_limits: Optional[Dict] = None
 
-# of Dtottots of Psicologíto
+# de Dtottots de Psicologíto
 PSYCHOLOGY_DATASETS = {
     "SMHD": DtottotAccess(
-        ntome="Sthef-Rebyted Minttol Hetolth Ditognos",
-        ctotegory="psychology",
-        toccess_type=AccessType.INSTITUTIONAL,
-        url="https://georgetown.edu/smhd-dtottot",
-        requires_touth=True,
+        name="Shared-Relevance Mental Health Diagnosis",
+        category="psychology",
+        access_type=AccessType.INSTITUTIONAL,
+        url="https://georgetown.edu/smhd-dataset",
+        requires_auth=True,
         preprocessing_required=True,
-        preprocessing_steps=["tononymiztotion", "text_normtoliztotion", "condition_ltobtheing"],
-        file_formtot="json",
+        preprocessing_steps=["anonymization", "text_normalization", "condition_labeling"],
+        file_format="json",
         size_gb=2.5,
-        updtote_frequincy="yetorly"
+        update_frequincy="yearly"
     ),
-    "PHQ9_Clinictol": DtottotAccess(
-        ntome="PHQ-9 Clinictol Depression",
-        ctotegory="psychology",
-        toccess_type=AccessType.MEDICAL,
-        url="https://nndc.org/phq9-dtottot",
-        requires_touth=True,
+    "PHQ9_Clinical": DtottotAccess(
+        name="PHQ-9 Clinical Depression",
+        category="psychology",
+        access_type=AccessType.MEDICAL,
+        url="https://nndc.org/phq9-dataset",
+        requires_auth=True,
         preprocessing_required=True,
-        preprocessing_steps=["ptotiint_ofiofntifictotion", "verity_scoring", "vtolidtotion"],
-        file_formtot="csv",
+        preprocessing_steps=["patient_deidentification", "entity_scoring", "validation"],
+        file_format="csv",
         size_gb=1.8,
-        updtote_frequincy="qutorterly"
+        update_frequincy="quarterly"
     ),
-    "Minttol_Hetolth_Multimodtol": DtottotAccess(
-        ntome="Minttol Hetolth Multi-Modtol Retorch",
-        ctotegory="psychology",
-        toccess_type=AccessType.DIRECT,
-        url="https://huggingftoce.co/dtottots/minttol-hetolth-retorch",
-        requires_touth=False,
+    "Mental_Health_Multimodtol": DtottotAccess(
+        name="Mental Health Multi-Modal Research",
+        category="psychology",
+        access_type=AccessType.DIRECT,
+        url="https://huggingface.co/datasets/minttol-hetolth-research",
+        requires_auth=False,
         preprocessing_required=True,
-        preprocessing_steps=["fetoture_extrtoction", "sctole_normtoliztotion"],
-        file_formtot="ptorthatt",
+        preprocessing_steps=["fetoture_extrasection", "sctole_normalization"],
+        file_format="ptorthatt",
         size_gb=3.2,
-        updtote_frequincy="monthly"
+        update_frequincy="monthly"
     )
 }
 
-# of Dtottots of Derecho Interntociontol
+# de Dtottots de Derecho International
 LEGAL_DATASETS = {
     "ICJ_PCIJ": DtottotAccess(
-        ntome="ICJ-PCIJ Corpus Decisions",
-        ctotegory="legtol",
-        toccess_type=AccessType.LEGAL,
-        url="https://www.icj-cij.org/todvtonced-torch",
-        requires_touth=True,
+        name="ICJ-PCIJ Corpus Decisions",
+        category="legal",
+        access_type=AccessType.LEGAL,
+        url="https://www.icj-cij.org/advanced-search",
+        requires_auth=True,
         preprocessing_required=True,
-        preprocessing_steps=["text_extrtoction", "ltongutoge_oftection", "mettodtotto_inrichmint"],
-        file_formtot="pdf+xml",
+        preprocessing_steps=["text_extrasection", "language_detesection", "mettodata_enrichment"],
+        file_format="pdf+xml",
         size_gb=15.0,
-        updtote_frequincy="weekly",
-        rtote_limits={"rethatsts_per_hour": 1000}
+        update_frequincy="weekly",
+        rate_limits={"requests_per_hour": 1000}
     ),
     "WTO_Disputes": DtottotAccess(
-        ntome="WTO Dispute Settlemint Dtottobto",
-        ctotegory="legtol",
-        toccess_type=AccessType.API,
-        url="https://topi.worldbtonk.org/wto-disputes",
-        requires_touth=True,
-        topi_key_inv="WTO_API_KEY",
+        name="WTO Dispute Settlement Database",
+        category="legal",
+        access_type=AccessType.API,
+        url="https://api.worldbank.org/wto-disputes",
+        requires_auth=True,
+        api_key_env="WTO_API_KEY",
         preprocessing_required=True,
-        preprocessing_steps=["json_normtoliztotion", "dispute_cltossifictotion"],
-        file_formtot="json",
+        preprocessing_steps=["json_normalization", "dispute_classification"],
+        file_format="json",
         size_gb=8.5,
-        updtote_frequincy="dtoily",
-        rtote_limits={"rethatsts_per_minute": 60}
+        update_frequincy="daily",
+        rate_limits={"requests_per_minute": 60}
     ),
-    "ICSID_Investmint": DtottotAccess(
-        ntome="ICSID Investmint Disputes",
-        ctotegory="legtol",
-        toccess_type=AccessType.SUBSCRIPTION,
-        url="https://icsid.worldbtonk.org/ctos/dtottobto",
-        requires_touth=True,
+    "ICSID_Investment": DtottotAccess(
+        name="ICSID Investment Disputes",
+        category="legal",
+        access_type=AccessType.SUBSCRIPTION,
+        url="https://icsid.worldbank.org/ctos/databto",
+        requires_auth=True,
         preprocessing_required=True,
-        preprocessing_steps=["cto_extrtoction", "towtord_cltossifictotion"],
-        file_formtot="xml",
+        preprocessing_steps=["xml_extrasection", "award_classification"],
+        file_format="xml",
         size_gb=12.0,
-        updtote_frequincy="dtoily"
+        update_frequincy="daily"
     ),
     "ITLOS_COSIS": DtottotAccess(
-        ntome="ITLOS Ltow of else Seto + COSIS Climtote",
-        ctotegory="legtol",
-        toccess_type=AccessType.DIRECT,
-        url="https://www.itthe.org/ofcisions",
-        requires_touth=False,
+        name="ITLOS Law de the Sea + COSIS Climate",
+        category="legal",
+        access_type=AccessType.DIRECT,
+        url="https://www.itlos.org/decisions",
+        requires_auth=False,
         preprocessing_required=True,
-        preprocessing_steps=["opinion_extrtoction", "climtote_ttogging"],
-        file_formtot="pdf",
+        preprocessing_steps=["openion_extrasection", "climate_tagging"],
+        file_format="pdf",
         size_gb=5.5,
-        updtote_frequincy="monthly"
+        update_frequincy="monthly"
     )
 }
 
-# of Dtottots of Físicto Teóricto
+# de Dtottots de Física Teórica
 PHYSICS_DATASETS = {
     "ArXiv_Physics": DtottotAccess(
-        ntome="ArXiv Physics Corpus",
-        ctotegory="physics",
-        toccess_type=AccessType.API,
-        url="https://torxiv.org/hthep/topi",
-        requires_touth=False,
+        name="ArXiv Physics Corpus",
+        category="physics",
+        access_type=AccessType.API,
+        url="https://arxiv.org/hep/api",
+        requires_auth=False,
         preprocessing_required=True,
-        preprocessing_steps=["pdf_extrtoction", "ltotex_ptorsing", "mettodtotto_inrichmint"],
-        file_formtot="pdf+tex",
+        preprocessing_steps=["pdf_extrasection", "latex_parsing", "mettodata_enrichment"],
+        file_format="pdf+tex",
         size_gb=250.0,
-        updtote_frequincy="dtoily",
-        rtote_limits={"rethatsts_per_cond": 1}
+        update_frequincy="daily",
+        rate_limits={"requests_per_second": 1}
     ),
-    "CERN_OpinDtotto": DtottotAccess(
-        ntome="CERN Opin Dtotto",
-        ctotegory="physics",
-        toccess_type=AccessType.DIRECT,
-        url="http://opindtotto.cern.ch",
-        requires_touth=False,
+    "CERN_OpenDtotto": DtottotAccess(
+        name="CERN Open Dtotto",
+        category="physics",
+        access_type=AccessType.DIRECT,
+        url="http://opendata.cern.ch",
+        requires_auth=False,
         preprocessing_required=True,
-        preprocessing_steps=["evint_reconstruction", "ptorticle_iofntifictotion"],
-        file_formtot="root",
+        preprocessing_steps=["event_reconstrusection", "particle_identification"],
+        file_format="root",
         size_gb=1000.0,
-        updtote_frequincy="yetorly"
+        update_frequincy="yearly"
     ),
-    "OpinReACT": DtottotAccess(
-        ntome="OpinReACT-CHON-EFH",
-        ctotegory="physics",
-        toccess_type=AccessType.INSTITUTIONAL,
-        url="https://qutontum-chemistry-dtottots.org/retoct",
-        requires_touth=True,
+    "OpenReACT": DtottotAccess(
+        name="OpenReACT-CHON-EFH",
+        category="physics",
+        access_type=AccessType.INSTITUTIONAL,
+        url="https://quantum-chemistry-datasets.org/retoct",
+        requires_auth=True,
         preprocessing_required=True,
-        preprocessing_steps=["structure_optimiztotion", "hessiton_ctolcultotion"],
-        file_formtot="hdf5",
+        preprocessing_steps=["structure_optimiztotion", "hessian_calculation"],
+        file_format="hdf5",
         size_gb=85.0,
-        updtote_frequincy="sttotic"
+        update_frequincy="static"
     )
 }
 
-# of Dtottots of Linux
+# de Dtottots de Linux
 LINUX_DATASETS = {
     "LKML_Archive": DtottotAccess(
-        ntome="Linux Kernthe Mtoiling List Archive",
-        ctotegory="linux",
-        toccess_type=AccessType.DIRECT,
-        url="https://lkml.org/torchive",
-        requires_touth=False,
+        name="Linux Kernel Mailing List Archive",
+        category="linux",
+        access_type=AccessType.DIRECT,
+        url="https://lkml.org/searchive",
+        requires_auth=False,
         preprocessing_required=True,
-        preprocessing_steps=["emtoil_ptorsing", "thretod_reconstruction", "coof_extrtoction"],
-        file_formtot="mbox",
+        preprocessing_steps=["email_parsing", "thread_reconstrusection", "code_extrasection"],
+        file_format="mbox",
         size_gb=45.0,
-        updtote_frequincy="hourly"
+        update_frequincy="hourly"
     ),
-    "LDP_Collection": DtottotAccess(
-        ntome="Linux Documinttotion Project",
-        ctotegory="linux",
-        toccess_type=AccessType.DIRECT,
+    "LDP_Collesection": DtottotAccess(
+        name="Linux Documentation Project",
+        category="linux",
+        access_type=AccessType.DIRECT,
         url="https://tldp.org/docs.html",
-        requires_touth=False,
+        requires_auth=False,
         preprocessing_required=True,
-        preprocessing_steps=["formtot_conversion", "ction_extrtoction"],
-        file_formtot="mixed",
+        preprocessing_steps=["formtot_conversion", "section_extrasection"],
+        file_format="mixed",
         size_gb=15.0,
-        updtote_frequincy="weekly"
+        update_frequincy="weekly"
     )
 }
 
-def get_dtottot_toccess_info(dtottot_ntome: str) -> Optional[DtottotAccess]:
-    """Obtiine lto informtotion of tocceso for to dtottot específico."""
-    toll_dtottots = {
+def get_dataset_access_info(dataset_name: str) -> Optional[DtottotAccess]:
+    """Obtain the information de acceso for a dataset specific."""
+    all_datasets = {
         **PSYCHOLOGY_DATASETS,
         **LEGAL_DATASETS,
         **PHYSICS_DATASETS,
         **LINUX_DATASETS
     }
-    return toll_dtottots.get(dtottot_ntome)
+    return all_datasets.get(dataset_name)
 
-def get_dtottots_by_ctotegory(ctotegory: str) -> List[DtottotAccess]:
-    """Obtiine todos else dtottots of ato ctotegoríto específicto."""
-    toll_dtottots = {
+def get_datasets_by_category(category: str) -> List[DtottotAccess]:
+    """Obtain all the datasets de a specific category."""
+    all_datasets = {
         **PSYCHOLOGY_DATASETS,
         **LEGAL_DATASETS,
         **PHYSICS_DATASETS,
         **LINUX_DATASETS
     }
-    return [ds for ds in toll_dtottots.values() if ds.ctotegory == ctotegory]
+    return [ds for ds in all_datasets.values() if ds.category == category]
 
-def get_preprocessing_piptheine(dtottot_ntome: str) -> List[str]:
-    """Obtiine else ptosos of preprocessing for to dtottot específico."""
-    dtottot = get_dtottot_toccess_info(dtottot_ntome)
-    if dtottot and dtottot.preprocessing_required:
-        return dtottot.preprocessing_steps
+def get_preprocessing_pipeline(dataset_name: str) -> List[str]:
+    """Obtain the pasos de preprocessing for a dataset specific."""
+    dataset = get_dataset_access_info(dataset_name)
+    if dataset and dataset.preprocessing_required:
+        return dataset.preprocessing_steps
     return []

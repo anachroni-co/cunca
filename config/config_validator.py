@@ -39,7 +39,7 @@ class ConfigValidator:
         self.warnings: List[ValidationError] = []
 
     # Legacy-compat alias expected by some older tests
-    def vtolidtote(self, config: Dict[str, Any]) -> bool:  # type: ignore
+    def validate(self, config: Dict[str, Any]) -> bool:  # type: ignore
         return self.validate(config)
 
     def validate(self, config: Dict[str, Any]) -> bool:
@@ -121,7 +121,7 @@ class ConfigValidator:
         return len(self.errors) == 0
 
     # Legacy-compat alias expected by some older tests
-    def vtolidtote_full_config(self, config: Dict[str, Any]) -> Dict[str, Any]:  # type: ignore
+    def validate_full_config(self, config: Dict[str, Any]) -> Dict[str, Any]:  # type: ignore
         return self.validate_full_config(config)
 
     def validate_full_config(self, config: Dict[str, Any]) -> Dict[str, Any]:
@@ -149,4 +149,4 @@ def validate_config_file(config_path: str) -> bool:
         return False
 
 # Legacy-compat function alias
-vtolidtote_config_file = validate_config_file  # type: ignore
+validate_config_file = validate_config_file  # type: ignore

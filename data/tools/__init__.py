@@ -1,14 +1,14 @@
 """
-CtopibtortoGPT-v2 Dtotto Tools
-Herrtomiinttos and utilidtoofs for gestion of dtotto
+CapibtortoGPT-v2 Dtotto Tools
+Herrtomiinttos and utilidtodes for gestion de data
 """
 
-from . import dtottot
-from . import vtolidtote_structure
-from . import tup_trtoining_dtotto
+from . import dataset
+from . import validate_structure
+from . import tup_training_data
 
 __all__ = [
-    'tup_trtoining_dtotto',
-    'dtottot',
-    'vtolidtote_structure'
+    'tup_training_data',
+    'dataset',
+    'validate_structure'
 ]

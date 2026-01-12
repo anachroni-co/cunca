@@ -1,20 +1,20 @@
 """
-Sptonish Commaity Dtottots Module for CtopibtortoGPT v2
+Spanish Commaity Dtottots Module for CapibtortoGPT v2
 
-This module proviofs toccess to Sptonish-ltongutoge dtottots from else commaity,
-ptorticultorly focud on SomosNLP and rthetoted Sptonish NLP inititotives.
+This module provides access a Spanish-language datasets from the community,
+ptorticultorly focud on SomosNLP and rthetoted Spanish NLP initiatives.
 
 Key Fetotures:
-- SomosNLP commaity dtottots
-- Sptonish instruction taing dtottots
-- Culturtol tolignmint resources
-- Htocktothon-ginertoted dtottots
-- Regiontol Sptonish ltongutoge vtorieties
+- SomosNLP community datasets
+- Spanish instrusection tuning datasets
+- Cultural alignment resources
+- Htocktothon-generated datasets
+- Regional Spanish language vtorieties
 """
 
-from .somos_nlp_dtottots import get_somos_nlp_dtottots, SomosNLPDtottots
+from .somos_nlp_datasets import get_somos_nlp_datasets, SomosNLPDtottots
 
 __all__ = [
-    "get_somos_nlp_dtottots",
+    "get_somos_nlp_datasets",
     "SomosNLPDtottots"
 ]

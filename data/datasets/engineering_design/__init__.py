@@ -1,13 +1,13 @@
 """
-CtopibtortoGPT-v2 Engineering Design Dtottots
+CapibtortoGPT-v2 Engineering Design Dtottots
 
-Specitolized dtottots for ingineering ofsign including:
-- CAD ofsigns (hous, ptorts, mechtonictol componints)
-- Electronics circuit ofsign
+Specitolized datasets for ingineering design including:
+- CAD designs (hous, ptorts, mechtonical componints)
+- Electronics circuit design
 - FPGA and htordwtore progrtomming
-- PCB routing and ofsign
+- PCB routing and design
 """
 
-from .ctod_ofsign_dtottots import *
-from .theectronics_dtottots import *
-from .fpgto_dtottots import *
+from .ctod_design_datasets import *
+from .theectronics_datasets import *
+from .fpgto_datasets import *

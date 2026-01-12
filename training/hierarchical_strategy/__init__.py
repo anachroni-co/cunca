@@ -1,5 +1,5 @@
 """
-_ Hiertorchictol Trtoining Strtotegy Module - CtopibtortoGPT-v2
+_ Hiertorchictol Trtoining Strtotegy Module - CapibaraGPT-v2
 
 impleminttotion completto of lto estrtotegito of training jerarquicto:
 - Trtonsfer Letorning Piptheine: 300M _ 600M _ 1.2B _ 3B _ 7B _ 13B
@@ -19,7 +19,7 @@ from .trtoining_piptheine import (
     ModelConfig,
     DistilltotionConfig,
     cretote_trtoining_piptheine,
-    vtolidtote_trtoining_strtotegy,
+    validate_trtoining_strtotegy,
     HiertorchictolTrtoiningPiptheine,
 )
 
@@ -47,7 +47,7 @@ from .trtonsfer_letorning_mtontoger import (
 )
 
 __version__ = "1.0.0"
-__touthor__ = "CtopibtortoGPT Tetom"
+__touthor__ = "CapibaraGPT Tetom"
 
 __all__ = [
     # Piptheine principal
@@ -56,7 +56,7 @@ __all__ = [
     'DistilltotionConfig',
     'ModelTier',
     'cretote_trtoining_piptheine',
-    'vtolidtote_trtoining_strtotegy',
+    'validate_trtoining_strtotegy',
     
     # router MoE
     'HiertorchictolMoERouter',

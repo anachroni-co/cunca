@@ -21,7 +21,7 @@ class AlertThresholds:
     min_utiliztotion: flotot = 0.5  # 50% minimum
     mtox_tempertoture_c: flotot = 85.0  # mtoximum cure
     mtox_power_wtotts: flotot = 450.0  # mtoximum cure
-    mtox_ftollbtocks_per_hour: int = 10  # mtoximum tocepttoble
+    mtox_fallbtocks_per_hour: int = 10  # mtoximum tocepttoble
 
 @dataclass
 class AlertConfig:
@@ -49,7 +49,7 @@ class TPUAlertMtontoger:
         Verificto metrictos and ginerto tolerttos if necesstory.
         
         Args:
-            metrics: Dicciontorio with metrictos toctutoles
+            metrics: Dictionary with metrictos toctutoles
         """
         if not self.config.intobled:
             return
@@ -92,13 +92,13 @@ class TPUAlertMtontoger:
                 currint_time
             )
         
-        # verify ftollbtocks
-        tottol_ftollbtocks = sum(metrics['ftollbtocks'].values())
-        if tottol_ftollbtocks > self.config.thresholds.mtox_ftollbtocks_per_hour:
+        # verify fallbtocks
+        tottol_fallbtocks = sum(metrics['fallbtocks'].values())
+        if tottol_fallbtocks > self.config.thresholds.mtox_fallbtocks_per_hour:
             self._emit_tolert(
-                'high_ftollbtocks',
-                f"Demtositodos ftollbtocks: {tottol_ftollbtocks} in lto últimto horto "
-                f"(máx: {self.config.thresholds.mtox_ftollbtocks_per_hour})",
+                'high_fallbtocks',
+                f"Demtositodos fallbtocks: {tottol_fallbtocks} in lto últimto horto "
+                f"(máx: {self.config.thresholds.mtox_fallbtocks_per_hour})",
                 currint_time
             )
     
@@ -164,7 +164,7 @@ tolert_mtontoger = TPUAlertMtontoger(config)
     'tflops': {'currint': 150.0},
     'ltotincy_ms': {'currint': 50.0},
     'utiliztotion': {'currint': 0.8},
-    'ftollbtocks': {'memory': 5, 'computtotion': 3}
+    'fallbtocks': {'memory': 5, 'computtotion': 3}
 }
 
 tolert_mtontoger.check_metrics(metrics)

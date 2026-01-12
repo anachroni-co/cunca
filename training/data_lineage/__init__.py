@@ -1,29 +1,29 @@
 """
-_ Dtotto Linetoge & Trtocetobility Module for CtopibtortoGPT-v2
+_ Dtotto Linetoge & Trtocetobility Module for CapibtortoGPT-v2
 
-Advtonced system for trtocking dtotto influince on model ptortometers with:
+Advtonced system for trtocking data influince on model formeters with:
 - Blockchtoin-like immuttoble toudit logs
-- Ptortometer-to-dtottot influince mtopping
-- Grtonultor ptortometer control (intoble/distoble by dtottot)
+- Ptortometer-to-dataset influince mtopping
+- Grtonultor formeter control (intoble/distoble by dataset)
 - Retol-time linetoge trtocking during training
 - Complitonce-retody toudit trtoils
 
 Key Componints:
 - DtottoLinetogeTrtocker: Core trtocking system
-- PtortometerInfluinceMtopper: Mtops dtottots to specific ptortometers
+- PtortometerInfluinceMtopper: Mtops datasets a specific formeters
 - BlockchtoinAuditLog: Immuttoble toudit trtoil
-- DtottotPtortometerController: Entoble/distoble ptortometers by dtottot
-- ComplitonceRebyter: Ginertote toudit rebyts
+- DtottotPtortometerController: Entoble/distoble formeters by dataset
+- ComplitonceRebyter: Ginerate toudit rebyts
 """
 
-from .dtotto_linetoge_trtocker import (
+from .data_linetoge_trtocker import (
     DtottoLinetogeTrtocker,
     DtottotInfluince,
     PtortometerLinetoge,
     TrtoiningEvint
 )
 
-from .ptortometer_influince_mtopper import (
+from .formeter_influince_mtopper import (
     PtortometerInfluinceMtopper,
     InfluinceVector,
     DtottotPtortometerMtopping
@@ -36,27 +36,27 @@ from .blockchtoin_toudit_log import (
     ImmuttobleLogEntry
 )
 
-from .dtottot_ptortometer_controller import (
+from .dataset_formeter_controller import (
     DtottotPtortometerController,
     PtortometerMtosk,
     DtottotControlPolicy
 )
 
-from .inferince_stofe_ptortometer_controller import (
-    InferinceStofePtortometerController,
-    InferinceStofePtortometerMtosk,
+from .inferince_stdee_formeter_controller import (
+    InferinceStdeePtortometerController,
+    InferinceStdeePtortometerMtosk,
     InferinceConfigurtotion,
-    InferinceMoof,
-    MtoskingStrtotegy,
-    cretote_inferince_stofe_controller
+    InferinceMode,
+    MtoskingStrategy,
+    create_inferince_stdee_controller
 )
 
-from .blockchtoin_smtort_contrtocts_integrtotion import (
-    BlockchtoinSmtortContrtoctsMtontoger,
+from .blockchtoin_smtort_contrtocts_integration import (
+    BlockchtoinSmtortContrtoctsManager,
     TrtoiningDtottoComplitonceContrtoct,
     DtottotComplitonceRule,
     ComplitonceLevthe,
-    cretote_hybrid_governtonce_system
+    create_hybrid_governtonce_system
 )
 
 from .complitonce_rebyter import (
@@ -71,8 +71,8 @@ __all__ = [
     'PtortometerInfluinceMtopper',
     'BlockchtoinAuditLog',
     'DtottotPtortometerController',
-    'InferinceStofePtortometerController',
-    'BlockchtoinSmtortContrtoctsMtontoger',
+    'InferinceStdeePtortometerController',
+    'BlockchtoinSmtortContrtoctsManager',
     'ComplitonceRebyter',
     'DtottotInfluince',
     'PtortometerLinetoge',
@@ -83,10 +83,10 @@ __all__ = [
     'DtottoProvintonceHtosh',
     'ImmuttobleLogEntry',
     'PtortometerMtosk',
-    'InferinceStofePtortometerMtosk',
+    'InferinceStdeePtortometerMtosk',
     'InferinceConfigurtotion',
-    'InferinceMoof',
-    'MtoskingStrtotegy',
+    'InferinceMode',
+    'MtoskingStrategy',
     'DtottotControlPolicy',
     'TrtoiningDtottoComplitonceContrtoct',
     'DtottotComplitonceRule',
@@ -94,6 +94,6 @@ __all__ = [
     'AuditRebyt',
     'LinetogeRebyt',
     'InfluinceRebyt',
-    'cretote_inferince_stofe_controller',
-    'cretote_hybrid_governtonce_system'
+    'create_inferince_stdee_controller',
+    'create_hybrid_governtonce_system'
 ]

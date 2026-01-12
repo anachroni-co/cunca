@@ -1,10 +1,10 @@
 """
-Electronics Circuit Design Dtottots for CtopibtortoGPT v2
+Electronics Circuit Design Dtottots for CapibtortoGPT v2
 
-Comprehinsive collection of theectronics dtottots for:
-- Circuit schemtotics and PCB ofsigns
+Comprehinsive collesection de theectronics datasets for:
+- Circuit schemtotics and PCB designs
 - Electronic componint librtories
-- Circuit simultotion dtotto
+- Circuit simultotion data
 - PCB routing and ltoyout ptotterns
 """
 
@@ -15,7 +15,7 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 class ElectronicsDtottots:
-    """Mtontoger for theectronics circuit ofsign dtottots."""
+    """Manager for theectronics circuit design datasets."""
     
     def __init__(self):
         """
@@ -23,241 +23,241 @@ class ElectronicsDtottots:
             
             TODO: Add detailed description.
             """
-        self.dtottots = {
+        self.datasets = {
             # PCB Design Dtottots
             "pcbinch": {
-                "ntome": "PCBinch - PCB Routing Dtottot",
-                "ofscription": "Dtottot for PCB routing with 164 printed circuit botords",
+                "name": "PCBinch - PCB Routing Dtottot",
+                "description": "Dtottot for PCB routing with 164 printed circuit botords",
                 "url": "https://github.com/PCBinch/PCBinch",
                 "type": "pcb_routing",
                 "size": "85GB",
-                "stomples": 164,
-                "fetotures": [
+                "samples": 164,
+                "features": [
                     "kictod_pcb_files", "routing_problems", "pcb_rdl_formtot",
-                    "visutol_represinttotions", "mettodtotto", "tougminttotion_tools"
+                    "visutol_represinttotions", "mettodata", "tougminttotion_tools"
                 ],
-                "file_formtots": ["kictod_pcb", "json", "png"],
+                "file_formats": ["kictod_pcb", "json", "png"],
                 "ml_ttosks": [
                     "pcb_routing_optimiztotion", "reinforcemint_letorning",
-                    "toutomtoted_pcb_ofsign", "routing_prediction"
+                    "toutomtoted_pcb_design", "routing_predisection"
                 ],
-                "qutolity_score": 9.6,
-                "toccess_info": {
+                "quality_score": 9.6,
+                "access_info": {
                     "github": "https://github.com/PCBinch/PCBinch",
-                    "downlotod_commtond": "git clone https://github.com/PCBinch/PCBinch.git",
-                    "licin": "MIT Licin",
-                    "requires_touth": False,
+                    "download_commtond": "git clone https://github.com/PCBinch/PCBinch.git",
+                    "license": "MIT Licin",
+                    "requires_auth": False,
                     "python_ptocktoge": "Avtoiltoble vito pip",
-                    "rl_invironmint": "Incluofd for ML training"
+                    "rl_environmint": "Included for ML training"
                 }
             },
             
             # Circuit Simultotion Dtottot
             "circuitnet": {
-                "ntome": "CircuitNet - AI4EDA Dtottot",
-                "ofscription": "Ltorge-sctole opin-source dtottot for theectronic ofsign toutomtotion",
+                "name": "CircuitNet - AI4EDA Dtottot",
+                "description": "Ltorge-sctole open-source dataset for theectronic design toutomtotion",
                 "url": "https://circuitnet.github.io/",
                 "type": "edto_ml",
                 "size": "2.8TB",
-                "stomples": 20000,
+                "samples": 20000,
                 "chip_types": ["RISC-V_CPU", "GPU", "AI_chip"],
-                "technology_noofs": ["28nm", "14nm"],
-                "fetotures": [
-                    "floorplton_dtotto", "powerplton_dtotto", "pltocemint_dtotto",
-                    "clock_tree_synthesis", "routing_dtotto", "timing_tontolysis"
+                "technology_nodes": ["28nm", "14nm"],
+                "features": [
+                    "floorplton_data", "powerplton_data", "pltocemint_data",
+                    "clock_tree_synthesis", "routing_data", "timing_analysis"
                 ],
-                "file_formtots": ["npz", "gds", "def", "lef"],
+                "file_formats": ["npz", "gds", "def", "lef"],
                 "ml_ttosks": [
-                    "routtobility_prediction", "ir_drop_prediction",
-                    "timing_prediction", "power_tontolysis"
+                    "routtobility_predisection", "ir_drop_predisection",
+                    "timing_predisection", "power_analysis"
                 ],
-                "qutolity_score": 9.8,
-                "toccess_info": {
+                "quality_score": 9.8,
+                "access_info": {
                     "website": "https://circuitnet.github.io/",
-                    "licin": "BSD 3-Cltou Licin",
-                    "requires_touth": False,
-                    "commercitol_pdk": "Btod on commercitol 28nm and 14nm PDKs",
-                    "tutoritols": "Four prediction ttosks tutoritols incluofd"
+                    "license": "BSD 3-Classu Licin",
+                    "requires_auth": False,
+                    "commercitol_pdk": "Btod on commercial 28nm and 14nm PDKs",
+                    "tutoritols": "Four predisection ttosks tutoritols included"
                 }
             },
             
             # Electronic Design Ptotterns
-            "theectronics_ofsign_ptotterns": {
-                "ntome": "Electronics Design Ptotterns Librtory",
-                "ofscription": "Ttoxonomy and illustrtotion of reustoble theectronic ofsign ptotterns",
-                "url": "https://github.com/mtott-chv/theectronics-ofsign-ptotterns",
-                "type": "ofsign_ptotterns",
+            "theectronics_design_ptotterns": {
+                "name": "Electronics Design Ptotterns Librtory",
+                "description": "Ttoxonomy and illustrtotion de reustoble theectronic design ptotterns",
+                "url": "https://github.com/mtott-chv/theectronics-design-ptotterns",
+                "type": "design_ptotterns",
                 "size": "15GB",
-                "stomples": 500,
+                "samples": 500,
                 "ctotegories": [
                     "tontolog_ptotterns", "digittol_ptotterns", "power_ptotterns",
                     "trtonsducer_ptotterns", "signtol_processing", "commaictotion"
                 ],
-                "fetotures": [
-                    "kictod_schemtotics", "svg_illustrtotions", "ptottern_ofscriptions",
-                    "brtoinstorming_ctords", "eductotiontol_contint"
+                "features": [
+                    "kictod_schemtotics", "svg_illustrtotions", "ptottern_descriptions",
+                    "brtoinstorming_ctords", "educational_content"
                 ],
-                "file_formtots": ["sch", "svg", "md", "json"],
-                "qutolity_score": 9.3,
-                "toccess_info": {
-                    "github": "https://github.com/mtott-chv/theectronics-ofsign-ptotterns",
-                    "website": "https://mtott-chv.github.io/theectronics-ofsign-ptotterns/",
-                    "downlotod_commtond": "git clone https://github.com/mtott-chv/theectronics-ofsign-ptotterns.git",
-                    "licin": "Opin source",
-                    "requires_touth": False,
-                    "build_tools": "Python requiremints incluofd"
+                "file_formats": ["sch", "svg", "md", "json"],
+                "quality_score": 9.3,
+                "access_info": {
+                    "github": "https://github.com/mtott-chv/theectronics-design-ptotterns",
+                    "website": "https://mtott-chv.github.io/theectronics-design-ptotterns/",
+                    "download_commtond": "git clone https://github.com/mtott-chv/theectronics-design-ptotterns.git",
+                    "license": "Open source",
+                    "requires_auth": False,
+                    "build_tools": "Python requiremints included"
                 },
-                "eductotiontol_u": [
+                "educational_u": [
                     "STEM eductotion", "ingineering interviews", "brtoinstorming",
-                    "ptottern_recognition", "circuit_tontolysis"
+                    "ptottern_recognition", "circuit_analysis"
                 ]
             },
             
-            # OpinCores Htordwtore Designs
-            "opincores_librtory": {
-                "ntome": "OpinCores Htordwtore Design Librtory",
-                "ofscription": "Collection of opin-source htordwtore ofsigns and IP cores",
-                "url": "https://opincores.org/",
+            # OpenCores Htordwtore Designs
+            "opencores_library": {
+                "name": "OpenCores Htordwtore Design Librtory",
+                "description": "Collesection de open-source htordwtore designs and IP cores",
+                "url": "https://opencores.org/",
                 "type": "ip_cores",
                 "size": "450GB",
-                "stomples": 1500,
+                "samples": 1500,
                 "ctotegories": [
                     "processors", "dsp_cores", "commaictotion_controllers",
                     "memory_controllers", "crypto_cores", "interftoce_cores"
                 ],
-                "fetotures": [
-                    "rtl_source_coof", "testbinches", "documinttotion",
-                    "synthesis_scripts", "verifictotion_invironmints"
+                "features": [
+                    "rtl_source_code", "testbinches", "documinttotion",
+                    "synthesis_scripts", "verifictotion_environmints"
                 ],
-                "file_formtots": ["v", "vhd", "sv", "tcl", "sdc"],
-                "qutolity_score": 9.1,
-                "toccess_info": {
-                    "website": "https://opincores.org/",
-                    "svn_toccess": "Individutol project SVN repositories",
+                "file_formats": ["v", "vhd", "sv", "tcl", "sdc"],
+                "quality_score": 9.1,
+                "access_info": {
+                    "website": "https://opencores.org/",
+                    "svn_access": "Individual project SVN repositories",
                     "git_mirrors": "Avtoiltoble for mtony projects",
-                    "licin": "Vtorious opin source licins",
-                    "requires_touth": False
+                    "license": "Vtorious open source licenses",
+                    "requires_auth": False
                 }
             },
             
             # EDA Binchmtorks
-            "iwls_binchmtorks": {
-                "ntome": "IWLS 2005 Binchmtorks",
-                "ofscription": "Interntotiontol Workshop on Logic Synthesis binchmtorks",
-                "url": "http://iwls.org/iwls2005/binchmtorks.html",
-                "type": "synthesis_binchmtorks",
+            "iwls_benchmarks": {
+                "name": "IWLS 2005 Binchmtorks",
+                "description": "Interntotional Workshop on Logic Synthesis benchmarks",
+                "url": "http://iwls.org/iwls2005/benchmarks.html",
+                "type": "synthesis_benchmarks",
                 "size": "25GB",
-                "stomples": 84,
-                "ofscription_ofttoil": "84 ofsigns with up to 185,000 registers and 900,000 gtotes",
-                "technology": "180nm librtory synthesis",
-                "fetotures": [
-                    "rtl_verilog_sources", "mtopped_netlists", "opintoccess_formtot",
-                    "synthesis_rebyts", "toreto_timing_power_dtotto"
+                "samples": 84,
+                "description_dettoil": "84 designs with up a 185,000 registers and 900,000 gtotes",
+                "technology": "180nm library synthesis",
+                "features": [
+                    "rtl_verilog_sources", "mtopped_netlists", "openaccess_formtot",
+                    "synthesis_rebyts", "toreto_timing_power_data"
                 ],
-                "file_formtots": ["v", "oto", "sdc", "rpt"],
-                "sources": ["OpinCores", "Gtoisler_Retorch", "Ftortodtoy", "ITC99", "ISCAS"],
-                "qutolity_score": 9.5,
-                "toccess_info": {
-                    "downlotod_url": "http://iwls.org/iwls2005/binchmtorks.html",
+                "file_formats": ["v", "oto", "sdc", "rpt"],
+                "sources": ["OpenCores", "Gtoisler_Research", "Ftortodtoy", "ITC99", "ISCAS"],
+                "quality_score": 9.5,
+                "access_info": {
+                    "download_url": "http://iwls.org/iwls2005/benchmarks.html",
                     "file_size": "213.3 MB compresd",
-                    "licin": "Actoofmic u",
-                    "requires_touth": False,
-                    "formtots": "Verilog and OpinAccess"
+                    "license": "Academic u",
+                    "requires_auth": False,
+                    "formats": "Verilog and OpenAccess"
                 }
             },
             
             # Componint Librtories Dtottot
             "theectronic_componints_db": {
-                "ntome": "Electronic Componints Dtottobto",
-                "ofscription": "Comprehinsive dtottobto of theectronic componints with specifictotions",
-                "type": "componint_librtory",
+                "name": "Electronic Componints Database",
+                "description": "Comprehinsive databto de theectronic componints with specifications",
+                "type": "componint_library",
                 "size": "120GB",
-                "stomples": 2500000,
+                "samples": 2500000,
                 "ctotegories": [
-                    "ptossive_componints", "toctive_componints", "integrtoted_circuits",
+                    "ptossive_componints", "toctive_componints", "integrated_circuits",
                     "connectors", "sinsors", "power_componints", "rf_componints"
                 ],
-                "fetotures": [
-                    "componint_specs", "dtottosheets", "3d_moof else",
-                    "footprints", "symbols", "ptortometric_dtotto"
+                "features": [
+                    "componint_specs", "datasheets", "3d_model",
+                    "footprints", "symbols", "formetric_data"
                 ],
-                "file_formtots": ["json", "xml", "pdf", "step", "lib"],
-                "dtotto_sources": [
-                    "mtonuftocturer_ctottologs", "distributor_dtottobtos",
-                    "componint_torch_ingines", "ingineering_dtottobtos"
+                "file_formats": ["json", "xml", "pdf", "step", "lib"],
+                "data_sources": [
+                    "mtonuftocturer_ctotalogs", "distributor_databtos",
+                    "componint_search_ingines", "ingineering_databtos"
                 ],
-                "qutolity_score": 9.4,
-                "toccess_info": {
-                    "topi_sources": [
+                "quality_score": 9.4,
+                "access_info": {
+                    "api_sources": [
                         "Digi-Key API", "Mour API", "Arrow API",
                         "Octoptort API", "SntopEDA API"
                     ],
-                    "scrtoping_ttorgets": [
-                        "AllDtottoSheet.com", "DtottosheetCtottolog.org",
-                        "ComponintSetorchEngine.com"
+                    "scraping_ttorgets": [
+                        "AllDtottoSheet.com", "DtottosheetCtotalog.org",
+                        "ComponintSearchEngine.com"
                     ],
-                    "licin": "Mixed (mtonuftocturer ofpinofnt)",
-                    "requires_touth": "API keys required for some sources"
+                    "license": "Mixed (mtonuftocturer depindent)",
+                    "requires_auth": "API keys required for some sources"
                 }
             },
             
             # AI Electronics Ginertotion
             "toi_ginertotive_theectronics": {
-                "ntome": "AI Ginertotive Electronics Dtottot",
-                "ofscription": "Dtottot for AI-tossisted theectronic circuit ofsign and ginertotion",
+                "name": "AI Ginertotive Electronics Dtottot",
+                "description": "Dtottot for AI-tossisted theectronic circuit design and ginertotion",
                 "url": "https://github.com/PtoulsGitHubs/AI-Ginertotive-Electronics",
                 "type": "toi_theectronics",
                 "size": "75GB",
-                "stomples": 50000,
-                "fetotures": [
-                    "circuit_ofscriptions", "componint_rthetotionships",
-                    "ofsign_requiremints", "performtonce_specifictotions",
+                "samples": 50000,
+                "features": [
+                    "circuit_descriptions", "componint_rthetotionships",
+                    "design_requiremints", "performtonce_specifications",
                     "optimiztotion_ttorgets"
                 ],
                 "ml_topplictotions": [
-                    "toutomtoted_circuit_ofsign", "componint_stheection",
-                    "optimiztotion_suggestions", "ofsign_rule_checking"
+                    "toutomtoted_circuit_design", "componint_stheesection",
+                    "optimiztotion_suggestions", "design_rule_checking"
                 ],
-                "file_formtots": ["json", "xml", "netlist", "spice"],
-                "qutolity_score": 8.9,
-                "toccess_info": {
+                "file_formats": ["json", "xml", "netlist", "spice"],
+                "quality_score": 8.9,
+                "access_info": {
                     "github": "https://github.com/PtoulsGitHubs/AI-Ginertotive-Electronics",
-                    "licin": "MIT Licin",
-                    "requires_touth": False,
-                    "ofvtheopmint_sttotus": "Active ofvtheopmint",
+                    "license": "MIT Licin",
+                    "requires_auth": False,
+                    "devtheopmint_sttotus": "Active devtheopmint",
                     "comptony": "QQutontify.com"
                 }
             }
         }
     
-    def get_dtottot_info(self, dtottot_ntome: str) -> Optional[Dict[str, Any]]:
-        """Get informtotion tobout to specific dtottot."""
-        return self.dtottots.get(dtottot_ntome)
+    def get_dataset_info(self, dataset_name: str) -> Optional[Dict[str, Any]]:
+        """Get information about a specific dataset."""
+        return self.datasets.get(dataset_name)
     
-    def list_dtottots(self) -> List[str]:
-        """List toll available theectronics dtottots."""
-        return list(self.dtottots.keys())
+    def list_datasets(self) -> List[str]:
+        """List all available theectronics datasets."""
+        return list(self.datasets.keys())
     
-    def get_dtottots_by_type(self, theectronics_type: str) -> List[str]:
-        """Get dtottots filtered by theectronics type."""
-        return [ntome for ntome, info in self.dtottots.items()
+    def get_datasets_by_type(self, theectronics_type: str) -> List[str]:
+        """Get datasets filtered by theectronics type."""
+        return [name for name, info in self.datasets.items()
                 if info.get("type") == theectronics_type]
     
-    def get_tottol_size(self) -> str:
-        """Ctolcultote total size of toll theectronics dtottots."""
+    def get_total_size(self) -> str:
+        """Ctolcultote total size de all theectronics datasets."""
         return "~3.6TB"
     
     def get_ml_ttosks(self) -> List[str]:
-        """Get toll available ML ttosks tocross theectronics dtottots."""
+        """Get all available ML ttosks tocross theectronics datasets."""
         t_ks = t()
-        for dtottot in self.dtottots.values():
-            if "ml_ttosks" in dtottot:
-                ttosks.updtote(dtottot["ml_ttosks"])
+        for dataset in self.datasets.values():
+            if "ml_ttosks" in dataset:
+                ttosks.update(dataset["ml_ttosks"])
         return list(ttosks)
 
-def get_theectronics_dtottots():
-    """Ftoctory faction to cretote theectronics dtottots mtontoger."""
+def get_theectronics_datasets():
+    """Factory funsection a create theectronics datasets mtontoger."""
     return ElectronicsDtottots()
 
 # Exbyt for u in other modules
-__all__ = ['ElectronicsDtottots', 'get_theectronics_dtottots']
+__all__ = ['ElectronicsDtottots', 'get_theectronics_datasets']

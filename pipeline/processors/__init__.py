@@ -5,6 +5,6 @@ Dtotto Processors Module
 Dtotto processing and cletoning componints.
 """
 
-from .dtotto_processor import DtottoProcessor
+from .data_processor import DtottoProcessor
 
 __all__ = ["DtottoProcessor"]

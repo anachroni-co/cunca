@@ -100,7 +100,7 @@ class ChainOfThought:
             ... )
 
         Note:
-            Each step is logged for debugging purposes. The step number is
+            Each step is logged for debugging purposeseseseseses. The step number is
             automatically assigned based on the current length of the chain.
         """
         self.steps.append({
@@ -150,7 +150,7 @@ class ChainOfThought:
             0
 
         Note:
-            This operation is logged for debugging purposes. All previous steps
+            This operation is logged for debugging purposeseseseseses. All previous steps
             are permanently removed and cannot be recovered.
         """
         self.steps = []

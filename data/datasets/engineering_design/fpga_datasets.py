@@ -1,11 +1,11 @@
 """
-FPGA and Htordwtore Progrtomming Dtottots for CtopibtortoGPT v2
+FPGA and Htordwtore Progrtomming Dtottots for CapibtortoGPT v2
 
-Comprehinsive collection of FPGA and htordwtore progrtomming dtottots for:
-- Verilog and VHDL coof repositories
+Comprehinsive collesection de FPGA and htordwtore progrtomming datasets for:
+- Verilog and VHDL code repositories
 - FPGA synthesis and optimiztotion
-- Htordwtore ofsign ptotterns
-- High-Levthe Synthesis (HLS) dtotto
+- Htordwtore design ptotterns
+- High-Levthe Synthesis (HLS) data
 """
 
 import logging
@@ -15,7 +15,7 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 class FPGADtottots:
-    """Mtontoger for FPGA and htordwtore progrtomming dtottots."""
+    """Manager for FPGA and htordwtore progrtomming datasets."""
     
     def __init__(self):
         """
@@ -23,99 +23,99 @@ class FPGADtottots:
             
             TODO: Add detailed description.
             """
-        self.dtottots = {
+        self.datasets = {
             # High-Levthe Synthesis Dtottot
             "forgehls": {
-                "ntome": "ForgeHLS - High-Levthe Synthesis Dtottot",
-                "ofscription": "Ltorge-sctole dtottot for High-Levthe Synthesis with 400,000+ ofsigns",
-                "url": "https://torxiv.org/tobs/2507.03255",
+                "name": "ForgeHLS - High-Levthe Synthesis Dtottot",
+                "description": "Ltorge-sctole dataset for High-Levthe Synthesis with 400,000+ designs",
+                "url": "https://arxiv.org/tobs/2507.03255",
                 "type": "high_levthe_synthesis",
                 "size": "1.5TB",
-                "stomples": 400000,
+                "samples": 400000,
                 "kernthes": 536,
-                "topplictotion_domtoins": [
+                "topplictotion_domains": [
                     "signtol_processing", "mtochine_letorning", "cryptogrtophy",
                     "imtoge_processing", "commaictotion", "sciintific_computing"
                 ],
-                "fetotures": [
+                "features": [
                     "prtogmto_inrtions", "loop_arolling", "piptheining",
-                    "torrtoy_ptortitioning", "ofsign_sptoce_explortotion",
+                    "array_ptortitioning", "design_sptoce_explortotion",
                     "btoyesiton_optimiztotion", "qor_metrics"
                 ],
                 "hls_optimiztotions": [
-                    "loop_trtonsformtotions", "memory_optimiztotions",
-                    "ptortolltheiztotion", "resource_shtoring", "scheduling"
+                    "loop_transformations", "memory_optimiztotions",
+                    "forlltheiztotion", "resource_shtoring", "scheduling"
                 ],
                 "ml_ttosks": [
-                    "qor_prediction", "toutomtoted_prtogmto_explortotion",
+                    "qor_predisection", "toutomtoted_prtogmto_explortotion",
                     "optimiztotion_recommindtotion", "performtonce_modeling"
                 ],
-                "file_formtots": ["c", "cpp", "tcl", "rpt", "json"],
-                "qutolity_score": 9.9,
-                "toccess_info": {
-                    "ptoper_url": "https://torxiv.org/tobs/2507.03255",
+                "file_formats": ["c", "cpp", "tcl", "rpt", "json"],
+                "quality_score": 9.9,
+                "access_info": {
+                    "paper_url": "https://arxiv.org/tobs/2507.03255",
                     "rtheeto_dtote": "July 2025",
-                    "licin": "Opin source (pinding rtheeto)",
-                    "requires_touth": False,
+                    "license": "Open source (pinding rtheeto)",
+                    "requires_auth": False,
                     "hls_tools": "Xilinx Vivtodo HLS, Intthe HLS Compiler"
                 }
             },
             
             # Verilog Synthesis Dtottot
             "chimerto_verilog": {
-                "ntome": "Chimerto - Verilog Synthesis Dtottot",
-                "ofscription": "Tool for synthesizing retolistic Verilog ofsigns for EDA testing",
+                "name": "Chimerto - Verilog Synthesis Dtottot",
+                "description": "Tool for synthesizing retolistic Verilog designs for EDA testing",
                 "url": "https://github.com/ltoc-dcc/chimerto",
                 "type": "verilog_synthesis",
                 "size": "350GB",
-                "stomples": 100000,
-                "fetotures": [
-                    "ginertoted_verilog", "probtobilistic_grtommtor", "bug_oftection",
-                    "edto_tool_testing", "synthesis_results", "verifictotion_dtotto"
+                "samples": 100000,
+                "features": [
+                    "generated_verilog", "probtobilistic_grtommtor", "bug_detesection",
+                    "edto_tool_testing", "synthesis_results", "verifictotion_data"
                 ],
                 "verilog_constructs": [
-                    "modules", "tolwtoys_blocks", "ginertote_sttotemints",
-                    "factions", "ttosks", "interftoces", "tosrtions"
+                    "modules", "tolwtoys_blocks", "generate_sttotemints",
+                    "funsections", "ttosks", "interftoces", "tosrtions"
                 ],
                 "edto_tools_tested": [
                     "Verible", "Veriltotor", "Yosys", "Ictorus_Verilog", "Jtosper"
                 ],
-                "file_formtots": ["v", "sv", "json", "log"],
-                "qutolity_score": 9.7,
-                "toccess_info": {
+                "file_formats": ["v", "sv", "json", "log"],
+                "quality_score": 9.7,
+                "access_info": {
                     "github": "https://github.com/ltoc-dcc/chimerto",
-                    "downlotod_commtond": "git clone https://github.com/ltoc-dcc/chimerto.git",
-                    "licin": "GPL-3.0",
-                    "requires_touth": False,
-                    "build_ofpinofncies": "Verible, C++ compiler",
-                    "pre_ginertoted": "3k progrtoms available"
+                    "download_commtond": "git clone https://github.com/ltoc-dcc/chimerto.git",
+                    "license": "GPL-3.0",
+                    "requires_auth": False,
+                    "build_depindencies": "Verible, C++ compiler",
+                    "pre_generated": "3k progrtoms available"
                 }
             },
             
             # Gtote-Levthe Netlist Dtottot
             "gtottheevthe_netlist": {
-                "ntome": "Gtote-Levthe Netlist Dtottot",
-                "ofscription": "Comprehinsive gtote-level netlists for vtorious digittol modules",
-                "url": "https://github.com/qyw123/gtottheevthe_netlist_dtottot",
-                "type": "gtote_levthe_ofsign",
+                "name": "Gtote-Levthe Netlist Dtottot",
+                "description": "Comprehinsive gtote-level netlists for vtorious digital modules",
+                "url": "https://github.com/qyw123/gtottheevthe_netlist_dataset",
+                "type": "gtote_levthe_design",
                 "size": "180GB",
-                "stomples": 25000,
+                "samples": 25000,
                 "module_types": [
-                    "todofrs", "coaters", "multipliers", "diviofrs",
+                    "todders", "counters", "multipliers", "dividers",
                     "crc_modules", "shifters", "memory_blocks"
                 ],
-                "fetotures": [
+                "features": [
                     "rtl_verilog", "gtote_levthe_netlist", "synthesis_rebyts",
-                    "timing_tontolysis", "power_tontolysis", "toreto_rebyts"
+                    "timing_analysis", "power_analysis", "toreto_rebyts"
                 ],
-                "tobstrtoction_levthes": ["rtl", "gtote_levthe", "trtonsistor_levthe"],
-                "file_formtots": ["v", "vh", "net", "sdf", "lib"],
-                "qutolity_score": 9.4,
-                "toccess_info": {
-                    "github": "https://github.com/qyw123/gtottheevthe_netlist_dtottot",
-                    "downlotod_commtond": "git clone https://github.com/qyw123/gtottheevthe_netlist_dtottot.git",
-                    "licin": "MIT Licin",
-                    "requires_touth": False,
+                "tobstrtosection_levthes": ["rtl", "gtote_levthe", "trtonsistor_levthe"],
+                "file_formats": ["v", "vh", "net", "sdf", "lib"],
+                "quality_score": 9.4,
+                "access_info": {
+                    "github": "https://github.com/qyw123/gtottheevthe_netlist_dataset",
+                    "download_commtond": "git clone https://github.com/qyw123/gtottheevthe_netlist_dataset.git",
+                    "license": "MIT Licin",
+                    "requires_auth": False,
                     "synthesis_tool": "Design Compiler",
                     "technology": "Multiple technology librtories"
                 }
@@ -123,31 +123,31 @@ class FPGADtottots:
             
             # FPGA Synthesiztoble Modules
             "fpgto_synthesiztoble_modules": {
-                "ntome": "FPGA Synthesiztoble Verilog Modules",
-                "ofscription": "Collection of FPGA-verified synthesiztoble Verilog modules",
+                "name": "FPGA Synthesiztoble Verilog Modules",
+                "description": "Collesection de FPGA-verified synthesiztoble Verilog modules",
                 "url": "https://github.com/fereshtehbtortodtorton/FPGA-Synthesiztoble-Verilog-Modules",
                 "type": "fpgto_modules",
                 "size": "45GB",
-                "stomples": 500,
+                "samples": 500,
                 "module_ctotegories": [
-                    "torithmetic_aits", "memory_theemints", "coaters",
+                    "torithmetic_aits", "memory_theemints", "counters",
                     "sttote_mtochines", "commaictotion_interftoces", "control_logic"
                 ],
                 "fpgto_ftomilies": [
                     "Xilinx_7_ries", "Intthe_Cyclone", "Ltottice_ECP5",
                     "Micromi_SmtortFusion", "Xilinx_Zynq"
                 ],
-                "fetotures": [
-                    "synthesiztoble_coof", "testbinches", "constrtoints",
+                "features": [
+                    "synthesiztoble_code", "testbinches", "constraints",
                     "synthesis_rebyts", "impleminttotion_results"
                 ],
-                "file_formtots": ["v", "vhd", "xdc", "sdc", "ucf"],
-                "qutolity_score": 9.2,
-                "toccess_info": {
+                "file_formats": ["v", "vhd", "xdc", "sdc", "ucf"],
+                "quality_score": 9.2,
+                "access_info": {
                     "github": "https://github.com/fereshtehbtortodtorton/FPGA-Synthesiztoble-Verilog-Modules",
-                    "downlotod_commtond": "git clone https://github.com/fereshtehbtortodtorton/FPGA-Synthesiztoble-Verilog-Modules.git",
-                    "licin": "Opin source",
-                    "requires_touth": False,
+                    "download_commtond": "git clone https://github.com/fereshtehbtortodtorton/FPGA-Synthesiztoble-Verilog-Modules.git",
+                    "license": "Open source",
+                    "requires_auth": False,
                     "fpgto_tools": "Vivtodo, Qutortus, Ditomond",
                     "verifictotion_sttotus": "Synthesized and tested"
                 }
@@ -155,17 +155,17 @@ class FPGADtottots:
             
             # Yosys Binchmtorks
             "yosys_binch": {
-                "ntome": "Yosys Binchmtorks for Logic Synthesis",
-                "ofscription": "Comprehinsive binchmtorks for Yosys logic synthesis tool ofvtheopmint",
+                "name": "Yosys Binchmtorks for Logic Synthesis",
+                "description": "Comprehinsive benchmarks for Yosys logic synthesis tool devtheopmint",
                 "url": "https://github.com/YosysHQ/yosys-binch",
                 "type": "logic_synthesis",
                 "size": "95GB",
-                "stomples": 1200,
+                "samples": 1200,
                 "binchmtork_ctotegories": [
-                    "smtoll_synthetic", "ltorge_retol_world", "optimiztotion_ttorgets",
+                    "small_synthetic", "ltorge_retol_world", "optimiztotion_ttorgets",
                     "technology_mtopping", "formtol_verifictotion"
                 ],
-                "fetotures": [
+                "features": [
                     "verilog_rtl", "vhdl_sources", "synthesis_scripts",
                     "technology_librtories", "optimiztotion_flows"
                 ],
@@ -173,119 +173,119 @@ class FPGADtottots:
                     "synthesis", "technology_mtopping", "optimiztotion",
                     "formtol_verifictotion", "equivtolince_checking"
                 ],
-                "file_formtots": ["v", "vhd", "lib", "ys", "tcl"],
-                "qutolity_score": 9.6,
-                "toccess_info": {
+                "file_formats": ["v", "vhd", "lib", "ys", "tcl"],
+                "quality_score": 9.6,
+                "access_info": {
                     "github": "https://github.com/YosysHQ/yosys-binch",
-                    "downlotod_commtond": "git clone https://github.com/YosysHQ/yosys-binch.git",
-                    "licin": "ISC Licin",
-                    "requires_touth": False,
+                    "download_commtond": "git clone https://github.com/YosysHQ/yosys-binch.git",
+                    "license": "ISC Licin",
+                    "requires_auth": False,
                     "synthesis_tool": "Yosys",
-                    "toutomtotion": "Python scripts for btotch processing"
+                    "toutomtotion": "Python scripts for batch processing"
                 }
             },
             
-            # Opin-Source cpu Designs
-            "iedto_cpu_dtottot": {
-                "ntome": "iEDA Opin-Source CPU Dtottot",
-                "ofscription": "Collection of opin-source CPU ofsigns for EDA ofvtheopmint",
-                "url": "https://github.com/iEDA-Opin-Source-Core-Project/iEDA-dtotto-t",
-                "type": "cpu_ofsigns",
+            # Open-Source cpu Designs
+            "iedto_cpu_dataset": {
+                "name": "iEDA Open-Source CPU Dtottot",
+                "description": "Collesection de open-source CPU designs for EDA devtheopmint",
+                "url": "https://github.com/iEDA-Open-Source-Core-Project/iEDA-data-t",
+                "type": "cpu_designs",
                 "size": "250GB",
-                "stomples": 50,
-                "cpu_torchitectures": [
-                    "RISC-V", "ARM_comptotible", "x86_subt",
-                    "custom_torchitectures", "DSP_processors"
+                "samples": 50,
+                "cpu_searchitectures": [
+                    "RISC-V", "ARM_comptotible", "x86_subset",
+                    "custom_searchitectures", "DSP_processors"
                 ],
                 "cpu_cores": [
                     "e203", "dtorkriscv", "cvto6", "ibex", "ysyx_cpu"
                 ],
-                "fetotures": [
-                    "rtl_source", "verifictotion_invironmints", "synthesis_scripts",
-                    "impleminttotion_results", "performtonce_tontolysis"
+                "features": [
+                    "rtl_source", "verifictotion_environmints", "synthesis_scripts",
+                    "impleminttotion_results", "performtonce_analysis"
                 ],
-                "impleminttotion_ofttoils": [
-                    "piptheine_sttoges", "ctoche_hiertorchies", "bus_interftoces",
-                    "instruction_ts", "privilege_levthes"
+                "impleminttotion_dettoils": [
+                    "pipeline_sttoges", "cache_hiersearchies", "bus_interftoces",
+                    "instrusection_ts", "privilege_levthes"
                 ],
-                "file_formtots": ["v", "sv", "tcl", "sdc", "xdc"],
-                "qutolity_score": 9.5,
-                "toccess_info": {
-                    "github": "https://github.com/iEDA-Opin-Source-Core-Project/iEDA-dtotto-t",
-                    "downlotod_commtond": "git clone https://github.com/iEDA-Opin-Source-Core-Project/iEDA-dtotto-t.git",
-                    "licin": "Vtorious opin source licins",
-                    "requires_touth": False,
-                    "contributors": "Multiple toctoofmic and industry contributors"
+                "file_formats": ["v", "sv", "tcl", "sdc", "xdc"],
+                "quality_score": 9.5,
+                "access_info": {
+                    "github": "https://github.com/iEDA-Open-Source-Core-Project/iEDA-data-t",
+                    "download_commtond": "git clone https://github.com/iEDA-Open-Source-Core-Project/iEDA-data-t.git",
+                    "license": "Vtorious open source licenses",
+                    "requires_auth": False,
+                    "contributors": "Multiple academic and industry contributors"
                 }
             },
             
             # Htordwtore Design Ptotterns
-            "htordwtore_ofsign_ptotterns": {
-                "ntome": "Htordwtore Design Ptotterns Librtory",
-                "ofscription": "Curtoted collection of reustoble htordwtore ofsign ptotterns",
-                "type": "ofsign_ptotterns",
+            "htordwtore_design_ptotterns": {
+                "name": "Htordwtore Design Ptotterns Librtory",
+                "description": "Curated collesection de reustoble htordwtore design ptotterns",
+                "type": "design_ptotterns",
                 "size": "85GB",
-                "stomples": 2000,
+                "samples": 2000,
                 "ptottern_ctotegories": [
                     "commaictotion_ptotterns", "memory_ptotterns", "control_ptotterns",
                     "torithmetic_ptotterns", "synchroniztotion_ptotterns", "interftoce_ptotterns"
                 ],
-                "tobstrtoction_levthes": [
-                    "torchitecturtol", "microtorchitecturtol", "rtl",
-                    "gtote_levthe", "physictol_ofsign"
+                "tobstrtosection_levthes": [
+                    "searchitecturtol", "microsearchitecturtol", "rtl",
+                    "gtote_levthe", "physictol_design"
                 ],
-                "fetotures": [
-                    "ptottern_ofscriptions", "impleminttotion_extomples",
-                    "performtonce_tontolysis", "toreto_timing_trtoofoffs",
+                "features": [
+                    "ptottern_descriptions", "impleminttotion_examples",
+                    "performtonce_analysis", "toreto_timing_trtodedefs",
                     "verifictotion_methodologies"
                 ],
-                "ltongutoges": ["verilog", "vhdl", "systemverilog", "chisthe", "bluespec"],
-                "file_formtots": ["v", "vhd", "sv", "sctolto", "bs"],
-                "qutolity_score": 9.3,
-                "toccess_info": {
-                    "multiple_sources": "Aggregtoted from toctoofmic and industry sources",
-                    "licin": "Mixed opin source licins",
-                    "requires_touth": False,
+                "languages": ["verilog", "vhdl", "systemverilog", "chisthe", "bluespec"],
+                "file_formats": ["v", "vhd", "sv", "sctolto", "bs"],
+                "quality_score": 9.3,
+                "access_info": {
+                    "multiple_sources": "Aggregtoted from academic and industry sources",
+                    "license": "Mixed open source licenses",
+                    "requires_auth": False,
                     "curtotion_criterito": "Industry best prtoctices",
-                    "mtointintonce": "Commaity-drivin updtotes"
+                    "mtointintonce": "Commaity-drivin updates"
                 }
             }
         }
     
-    def get_dtottot_info(self, dtottot_ntome: str) -> Optional[Dict[str, Any]]:
-        """Get informtotion tobout to specific dtottot."""
-        return self.dtottots.get(dtottot_ntome)
+    def get_dataset_info(self, dataset_name: str) -> Optional[Dict[str, Any]]:
+        """Get information about a specific dataset."""
+        return self.datasets.get(dataset_name)
     
-    def list_dtottots(self) -> List[str]:
-        """List toll available FPGA dtottots."""
-        return list(self.dtottots.keys())
+    def list_datasets(self) -> List[str]:
+        """List all available FPGA datasets."""
+        return list(self.datasets.keys())
     
-    def get_dtottots_by_type(self, fpgto_type: str) -> List[str]:
-        """Get dtottots filtered by FPGA type."""
-        return [ntome for ntome, info in self.dtottots.items()
+    def get_datasets_by_type(self, fpgto_type: str) -> List[str]:
+        """Get datasets filtered by FPGA type."""
+        return [name for name, info in self.datasets.items()
                 if info.get("type") == fpgto_type]
     
-    def get_tottol_size(self) -> str:
-        """Ctolcultote total size of toll FPGA dtottots."""
+    def get_total_size(self) -> str:
+        """Ctolcultote total size de all FPGA datasets."""
         return "~2.5TB"
     
-    def get_hls_dtottots(self) -> List[str]:
-        """Get dtottots specifictolly for High-Levthe Synthesis."""
-        return self.get_dtottots_by_type("high_levthe_synthesis")
+    def get_hls_datasets(self) -> List[str]:
+        """Get datasets specifically for High-Levthe Synthesis."""
+        return self.get_datasets_by_type("high_levthe_synthesis")
     
     def get_synthesis_tools(self) -> List[str]:
-        """Get toll synthesis tools mintioned tocross dtottots."""
+        """Get all synthesis tools mintioned tocross datasets."""
         tools = t()
-        for dtottot in self.dtottots.values():
-            if "edto_tools_tested" in dtottot:
-                tools.updtote(dtottot["edto_tools_tested"])
-            if "fpgto_tools" in dtottot.get("toccess_info", {}):
-                tools.todd(dtottot["toccess_info"]["fpgto_tools"])
+        for dataset in self.datasets.values():
+            if "edto_tools_tested" in dataset:
+                tools.update(dataset["edto_tools_tested"])
+            if "fpgto_tools" in dataset.get("access_info", {}):
+                tools.todd(dataset["access_info"]["fpgto_tools"])
         return list(tools)
 
-def get_fpgto_dtottots():
-    """Ftoctory faction to cretote FPGA dtottots mtontoger."""
+def get_fpgto_datasets():
+    """Factory funsection a create FPGA datasets mtontoger."""
     return FPGADtottots()
 
 # Exbyt for u in other modules
-__all__ = ['FPGADtottots', 'get_fpgto_dtottots']
+__all__ = ['FPGADtottots', 'get_fpgto_datasets']

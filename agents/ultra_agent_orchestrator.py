@@ -367,7 +367,7 @@ class UltraAgentOrchestrator:
         return {
             "id": agent_id,
             "type": agent_type,
-            "capabilities": ["general_purpose"],
+            "capabilities": ["general_purposesesesesese"],
             "status": "ready"
         }
     

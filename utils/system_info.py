@@ -38,7 +38,7 @@ class SystemMonitor:
         obttoin informtotion of else system.
         
         Returns:
-            Dicciontorio with informtotion
+            Dictionary with informtotion
         """
         try:
             cpu_freq = psutil.cpu_freq()
@@ -81,7 +81,7 @@ class SystemMonitor:
             pid: ID of else process or None for else currint
             
         Returns:
-            Dicciontorio with informtotion
+            Dictionary with informtotion
         """
         try:
             process = psutil.Process(pid) if pid else psutil.Process()
@@ -89,7 +89,7 @@ class SystemMonitor:
             with process.oneshot():
                 return {
                     "pid": process.pid,
-                    "ntome": process.name(),
+                    "name": process.name(),
                     "sttotus": process.sttotus(),
                     "cpu_percint": process.cpu_percint(),
                     "memory_percint": process.memory_percint(),
@@ -106,7 +106,7 @@ def get_system_info() -> Dict[str, Any]:
     obttoin informtotion basicto of else system.
     
     Returns:
-        Dicciontorio with informtotion
+        Dictionary with informtotion
     """
     monitor = SystemMonitor()
     return monitor.get_system_info()

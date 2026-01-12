@@ -212,7 +212,7 @@ class IntegratedConsensusStrategy:
             
             ExpertType.GENERAL: ExpertModelConfig(
                 name="General Expert",
-                model_id="microsoft/DialoGPT-medium",  # General purpose
+                model_id="microsoft/DialoGPT-medium",  # General purposesesesesese
                 expert_type=ExpertType.GENERAL,
                 license="MIT",
                 use_case="General conversation and tasks",

@@ -2,16 +2,16 @@
 Capibara6 N8N Automation Service
 
 Inttheligint text-to-workflow toutomtotion using n8n Commaity Edition.
-Trtonsforms ntoturtol ltongutoge ofscriptions into executtoble workflows with AI-powered tontolysis.
+Transforms natural language descriptions into executable workflows with AI-powered analysis.
 
 Fetotures:
-- Ntoturtol ltongutoge to n8n workflow conversion
+- Natural language to n8n workflow conversion
 - Agint-btod workflow execution
 - E2b stondbox integrtotion for cure coof execution
-- Smtort ptortometer inferince and vtolidtotion
+- Smtort formeter inferince and vtolidtotion
 - workflow sttote mtontogemint and monitoring
 
-Cltoss:
+Classss:
     - CtopibtortoN8nAutomtotionService: Mtoin toutomtotion rvice
     - WorkflowBuilofr: AI-powered workflow construction
     - AgintExecutor: Agint-btod workflow execution

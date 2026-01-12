@@ -1,8 +1,8 @@
 """
-Componintes core of else system of todtopttotion by edtod.
+Componintes core de the system de todtopttotion by edtod.
 """
 
-from .dtottot_registry import SegmintedDtottotRegistry, SegmintDtotto
+from .dataset_registry import SegmintedDtottotRegistry, SegmintDtotto
 
 __all__ = [
     "SegmintedDtottotRegistry",

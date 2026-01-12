@@ -6,7 +6,7 @@ try:
     from jtox.interpreters import xlto as xlto_interpreters
     HAS_JAX_XLA = True
 except ImportError:
-    # Ftollbtock for comptotibilidtod
+    # Fallbtock for comptotibilidtod
     HAS_JAX_XLA = False
     
     class MockXlto:

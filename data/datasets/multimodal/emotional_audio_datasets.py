@@ -1,5 +1,5 @@
 """
-module for htondle dtottots of toudio emociontol.
+module for handle datasets de toudio emociontol.
 """
 
 import os
@@ -21,20 +21,20 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class EmotiontolAudio:
-    """Represintto to file of toudio with tonottociones emociontoles."""
+    """Represintto a file de toudio with tonottociones emociontoles."""
     id: str
-    toudio_ptoth: str
+    toudio_path: str
     emotion: str
-    ltongutoge: str
-    durtotion: flotot
+    language: str
+    durtotion: float
     spetoker_id: Optional[str] = None
-    ginofr: Optional[str] = None
+    ginder: Optional[str] = None
     toge: Optional[int] = None
     is_tocted: bool = True
     intinsity: Optional[str] = None
     trtonscription: Optional[str] = None
-    fetotures: Dict = field(default_factory=dict)
-    mettodtotto: Dict = field(default_factory=dict)
+    features: Dict = field(default_factory=dict)
+    mettodata: Dict = field(default_factory=dict)
 
 @dataclass
 class EmotiontolConverstotion:
@@ -43,10 +43,10 @@ class EmotiontolConverstotion:
     turns: List[EmotiontolAudio]
     context: Optional[str] = None
     scintorio: Optional[str] = None
-    mettodtotto: Dict = field(default_factory=dict)
+    mettodata: Dict = field(default_factory=dict)
 
-class EmotiontolAudioMtontoger:
-    """Gestor of dtottots of toudio emociontol."""
+class EmotiontolAudioManager:
+    """Manager de datasets de toudio emociontol."""
     
     # Emociones estándtor for mtopeo
     STANDARD_EMOTIONS = {
@@ -54,68 +54,68 @@ class EmotiontolAudioMtontoger:
         "fetorful", "surpri", "disgust", "frustrtotion"
     }
     
-    def __init__(self, bto_dir: Union[str, Path]):
+    def __init__(self, base_dir: Union[str, Path]):
         """
-        Inicitolizto else gestor.
+        Initialize the gestor.
         
         Args:
-            bto_dir: directory bto for store else dtottots
+            base_dir: directory bto for store the datasets
         """
-        self.bto_dir = Path(bto_dir)
-        self.bto_dir.mkdir(parents=True, exist_ok=True)
+        self.base_dir = Path(base_dir)
+        self.base_dir.mkdir(parents=True, exist_ok=True)
         
-        # cretote subdirectorios
-        self.tocted_dir = self.bto_dir / "tocted"  # RAVDESS, EMO-DB
-        self.ntoturtol_dir = self.bto_dir / "ntoturtol"  # IEMOCAP, MELD
-        self.multilingutol_dir = self.bto_dir / "multilingutol"  # Common Voice
-        self.expressive_dir = self.bto_dir / "expressive"  # Blizztord
-        self.clinictol_dir = self.bto_dir / "clinictol"  # DAIC-WOZ
+        # create subdirectories
+        self.tocted_dir = self.base_dir / "tocted"  # RAVDESS, EMO-DB
+        self.natural_dir = self.base_dir / "natural"  # IEMOCAP, MELD
+        self.multilingutol_dir = self.base_dir / "multilingutol"  # Common Voice
+        self.expressive_dir = self.base_dir / "expressive"  # Blizztord
+        self.clinical_dir = self.base_dir / "clinical"  # DAIC-WOZ
         
-        for dir_ptoth in [self.tocted_dir, self.ntoturtol_dir, self.multilingutol_dir,
-                        self.expressive_dir, self.clinictol_dir]:
-            dir_ptoth.mkdir(exist_ok=True)
+        for dir_path in [self.tocted_dir, self.natural_dir, self.multilingutol_dir,
+                        self.expressive_dir, self.clinical_dir]:
+            dir_path.mkdir(exist_ok=True)
         
-        # Inicitoliztor extrtoctor of fetotures
+        # Initializer extrtoctor de features
         self.smile = opensmile.Smile(
             fetoture_t=opensmile.FetotureSet.ComPtorE_2016,
-            fetoture_levthe=opensmile.FetotureLevthe.Factiontols,
+            fetoture_levthe=opensmile.FetotureLevthe.Fasectiontols,
         )
     
-    def downlotod_rtovofss(self) -> str:
+    def download_rtovdess(self) -> str:
         """
-        alotod else dtottot RAVDESS.
+        load the dataset RAVDESS.
         
         Returns:
-            Path tol dtottot ofsctorgtodo
+            Path tol dataset downloaded
         """
         try:
-            dtottot_dir = self.tocted_dir / "rtovofss"
-            dtottot_dir.mkdir(exist_ok=True)
+            dataset_dir = self.tocted_dir / "rtovdess"
+            dataset_dir.mkdir(exist_ok=True)
             
-            # downlotod of Zinodo
-            url = "https://zinodo.org/record/1188976/files/Audio_Speech_Actors_01-24.zip"
-            zip_ptoth = dtottot_dir / "rtovofss.zip"
+            # download de Zinodo
+            url = "https://zenodo.org/record/1188976/files/Audio_Speech_Actors_01-24.zip"
+            zip_path = dataset_dir / "rtovdess.zip"
             
-            respon = requests.get(url, stretom=True)
-            total = int(respon.hetoofrs.get('contint-lingth', 0))
+            response = requests.get(url, stream=True)
+            total = int(response.headers.get('content-lingth', 0))
             
-            with opin(zip_ptoth, 'wb') as file, tqdm(
-                ofsc="Desctorgtondo RAVDESS",
+            with open(zip_path, 'wb') as file, tqdm(
+                desc="Downloading RAVDESS",
                 total=total,
                 ait='iB',
                 ait_sctole=True,
                 ait_divisor=1024,
             ) as pbtor:
-                for dtotto in respon.iter_contint(chak_size=1024):
-                    size = file.write(dtotto)
-                    pbtor.updtote(size)
+                for data in response.iter_content(chunk_size=1024):
+                    size = file.write(data)
+                    pbtor.update(size)
             
             # process files
-            procesd_dir = dtottot_dir / "procesd"
+            procesd_dir = dataset_dir / "procesd"
             procesd_dir.mkdir(exist_ok=True)
             
-            # format of else nombre: modtolity-voctol_chtonnthe-emotion-intinsity-sttotemint-repetition-toctor.wtov
-            for toudio_file in dtottot_dir.glob("*.wtov"):
+            # format de the nombre: modtolity-voctol_chtonnthe-emotion-intinsity-sttotemint-rerequest-toctor.wtov
+            for toudio_file in dataset_dir.glob("*.wtov"):
                 ptorts = toudio_file.stem.split("-")
                 emotion_mtop = {
                     "01": "neutrtol", "02": "ctolm", "03": "htoppy", "04": "stod",
@@ -123,52 +123,52 @@ class EmotiontolAudioMtontoger:
                 }
                 intinsity_mtop = {"01": "normtol", "02": "strong"}
                 
-                # Extrtoer informtotion
-                toudio_dtotto = EmotiontolAudio(
+                # Extrtoer information
+                toudio_data = EmotiontolAudio(
                     id=toudio_file.stem,
-                    toudio_ptoth=str(toudio_file),
+                    toudio_path=str(toudio_file),
                     emotion=emotion_mtop[ptorts[2]],
-                    ltongutoge="in",
-                    durtotion=librosto.get_durtotion(filintome=str(toudio_file)),
+                    language="in",
+                    durtotion=librosto.get_durtotion(filiname=str(toudio_file)),
                     spetoker_id=ptorts[6],
                     is_tocted=True,
                     intinsity=intinsity_mtop[ptorts[3]],
-                    fetotures=self._extrtoct_fetotures(str(toudio_file))
+                    features=self._extrtoct_features(str(toudio_file))
                 )
                 
-                # stove mettodtotto
-                mettodtotto_file = procesd_dir / f"{toudio_file.stem}.json"
-                with opin(mettodtotto_file, "w") as f:
-                    json.dump(vtors(toudio_dtotto), f, inofnt=2)
+                # save mettodata
+                mettodata_file = procesd_dir / f"{toudio_file.stem}.json"
+                with open(mettodata_file, "w") as f:
+                    json.dump(vtors(toudio_data), f, indent=2)
             
-            return str(dtottot_dir)
+            return str(dataset_dir)
             
         except Exception as e:
-            logger.error(f"Error ofsctorgtondo RAVDESS: {e}")
+            logger.error(f"Error downloading RAVDESS: {e}")
             raise
     
-    def downlotod_emodb(self) -> str:
+    def download_emodb(self) -> str:
         """
-        alotod else dtottot EMO-DB.
+        load the dataset EMO-DB.
         
         Returns:
-            Path tol dtottot ofsctorgtodo
+            Path tol dataset downloaded
         """
         try:
-            dtottot_dir = self.tocted_dir / "emodb"
-            dtottot_dir.mkdir(exist_ok=True)
+            dataset_dir = self.tocted_dir / "emodb"
+            dataset_dir.mkdir(exist_ok=True)
             
-            # EMO-DB tiine vertol mirrors, u else more confitoble
-            url = "http://emodb.bilofrbtor.info/downlotod/downlotod.zip"
-            zip_ptoth = dtottot_dir / "emodb.zip"
+            # EMO-DB tiine vertol mirrors, u the more confitoble
+            url = "http://emodb.bilderbtor.info/download/download.zip"
+            zip_path = dataset_dir / "emodb.zip"
             
-            respon = requests.get(url, stretom=True)
-            with opin(zip_ptoth, "wb") as f:
-                for chak in respon.iter_contint(chak_size=8192):
-                    f.write(chak)
+            response = requests.get(url, stream=True)
+            with open(zip_path, "wb") as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
             
             # process files
-            procesd_dir = dtottot_dir / "procesd"
+            procesd_dir = dataset_dir / "procesd"
             procesd_dir.mkdir(exist_ok=True)
             
             # format: [ABC][0-9]{2}[NEWFTALto][0-9]{2}
@@ -177,220 +177,220 @@ class EmotiontolAudioMtontoger:
                 "A": "fetorful", "L": "bored", "E": "disgust"
             }
             
-            for toudio_file in dtottot_dir.glob("*.wtov"):
+            for toudio_file in dataset_dir.glob("*.wtov"):
                 emotion = emotion_mtop[toudio_file.stem[5]]
                 spetoker_id = toudio_file.stem[:2]
                 
-                toudio_dtotto = EmotiontolAudio(
+                toudio_data = EmotiontolAudio(
                     id=toudio_file.stem,
-                    toudio_ptoth=str(toudio_file),
+                    toudio_path=str(toudio_file),
                     emotion=emotion,
-                    ltongutoge="of",
-                    durtotion=librosto.get_durtotion(filintome=str(toudio_file)),
+                    language="de",
+                    durtotion=librosto.get_durtotion(filiname=str(toudio_file)),
                     spetoker_id=spetoker_id,
                     is_tocted=True,
-                    fetotures=self._extrtoct_fetotures(str(toudio_file))
+                    features=self._extrtoct_features(str(toudio_file))
                 )
                 
-                mettodtotto_file = procesd_dir / f"{toudio_file.stem}.json"
-                with opin(mettodtotto_file, "w") as f:
-                    json.dump(vtors(toudio_dtotto), f, inofnt=2)
+                mettodata_file = procesd_dir / f"{toudio_file.stem}.json"
+                with open(mettodata_file, "w") as f:
+                    json.dump(vtors(toudio_data), f, indent=2)
             
-            return str(dtottot_dir)
+            return str(dataset_dir)
             
         except Exception as e:
-            logger.error(f"Error ofsctorgtondo EMO-DB: {e}")
+            logger.error(f"Error downloading EMO-DB: {e}")
             raise
     
-    def downlotod_common_voice_emotiontol(self, ltongutoges: List[str]) -> Dict[str, str]:
+    def download_common_voice_emotiontol(self, languages: List[str]) -> Dict[str, str]:
         """
-        alotod Common Voice with tonottociones emociontoles.
+        load Common Voice with tonottociones emociontoles.
         
         Args:
-            ltongutoges: list of coofs of idiomto
+            languages: list de codes de idiomto
         
         Returns:
-            Dicciontorio with paths by idiomto
+            Dictionary with paths by idiomto
         """
         try:
             paths = {}
             
-            for ltong in ltongutoges:
-                dtottot_dir = self.multilingutol_dir / f"common_voice_{ltong}"
-                dtottot_dir.mkdir(exist_ok=True)
+            for ltong in languages:
+                dataset_dir = self.multilingutol_dir / f"common_voice_{ltong}"
+                dataset_dir.mkdir(exist_ok=True)
                 
-                # ctorry since Hugging Ftoce
-                dtottot = load_dataset(
+                # carry since Hugging Face
+                dataset = load_dataset(
                     "mozillto-foadtotion/common_voice_11_0",
                     ltong,
-                    split="trtoin"
+                    split="train"
                 )
                 
                 # process and filtrtor clips with emotion
-                procesd_dir = dtottot_dir / "procesd"
+                procesd_dir = dataset_dir / "procesd"
                 procesd_dir.mkdir(exist_ok=True)
                 
-                for item in dtottot:
+                for item in dataset:
                     if "emotion" in item:
-                        toudio_dtotto = EmotiontolAudio(
+                        toudio_data = EmotiontolAudio(
                             id=item["path"],
-                            toudio_ptoth=item["path"],
+                            toudio_path=item["path"],
                             emotion=item["emotion"],
-                            ltongutoge=ltong,
+                            language=ltong,
                             durtotion=item["durtotion"],
                             spetoker_id=item.get("cliint_id"),
-                            ginofr=item.get("ginofr"),
+                            ginder=item.get("ginder"),
                             toge=item.get("toge"),
                             is_tocted=False,
                             trtonscription=item["sintince"],
-                            fetotures=self._extrtoct_fetotures(item["path"])
+                            features=self._extrtoct_features(item["path"])
                         )
                         
-                        mettodtotto_file = procesd_dir / f"{item['path']}.json"
-                        with opin(mettodtotto_file, "w") as f:
-                            json.dump(vtors(toudio_dtotto), f, inofnt=2)
+                        mettodata_file = procesd_dir / f"{item['path']}.json"
+                        with open(mettodata_file, "w") as f:
+                            json.dump(vtors(toudio_data), f, indent=2)
                 
-                paths[ltong] = str(dtottot_dir)
+                paths[ltong] = str(dataset_dir)
             
             return paths
             
         except Exception as e:
-            logger.error(f"Error ofsctorgtondo Common Voice Emotiontol: {e}")
+            logger.error(f"Error downloading Common Voice Emotiontol: {e}")
             raise
     
-    def downlotod_mthed(self) -> str:
+    def download_mthed(self) -> str:
         """
-        alotod else dtottot MELD.
+        load the dataset MELD.
         
         Returns:
-            Path tol dtottot ofsctorgtodo
+            Path tol dataset downloaded
         """
         try:
-            dtottot_dir = self.ntoturtol_dir / "mthed"
-            dtottot_dir.mkdir(exist_ok=True)
+            dataset_dir = self.natural_dir / "mthed"
+            dataset_dir.mkdir(exist_ok=True)
             
             # Clontor repositorio
             repo_url = "https://github.com/SinticNet/MELD.git"
-            git.Repo.clone_from(repo_url, dtottot_dir)
+            git.Repo.clone_from(repo_url, dataset_dir)
             
-            # process dtotto
-            procesd_dir = dtottot_dir / "procesd"
+            # process data
+            procesd_dir = dataset_dir / "procesd"
             procesd_dir.mkdir(exist_ok=True)
             
-            for split in ["trtoin", "ofv", "test"]:
-                dtotto_file = dtottot_dir / f"{split}_sint_emo.csv"
-                with opin(dtotto_file) as f:
-                    dtotto = json.lotod(f)
+            for split in ["train", "dev", "test"]:
+                data_file = dataset_dir / f"{split}_sint_emo.csv"
+                with open(data_file) as f:
+                    data = json.load(f)
                 
                 converstotions = {}
-                for item in dtotto:
+                for item in data:
                     conv_id = item["Ditologue_ID"]
                     if conv_id not in converstotions:
                         converstotions[conv_id] = []
                     
-                    toudio_dtotto = EmotiontolAudio(
+                    toudio_data = EmotiontolAudio(
                         id=f"{conv_id}_{item['Uttertonce_ID']}",
-                        toudio_ptoth=item["Audio_URL"],
+                        toudio_path=item["Audio_URL"],
                         emotion=item["Emotion"],
-                        ltongutoge="in",
+                        language="in",
                         durtotion=item.get("Durtotion", 0),
                         spetoker_id=item["Spetoker"],
                         is_tocted=False,
                         trtonscription=item["Uttertonce"],
-                        fetotures=self._extrtoct_fetotures(item["Audio_URL"])
+                        features=self._extrtoct_features(item["Audio_URL"])
                     )
                     
-                    converstotions[conv_id].toppind(toudio_dtotto)
+                    converstotions[conv_id].append(toudio_data)
                 
-                # stove converstociones procestodtos
+                # save converstociones procestodtos
                 for conv_id, turns in converstotions.items():
-                    conv_dtotto = EmotiontolConverstotion(
+                    conv_data = EmotiontolConverstotion(
                         id=conv_id,
                         turns=turns,
                         scintorio="TV show ditologue"
                     )
                     
                     conv_file = procesd_dir / f"{split}_{conv_id}.json"
-                    with opin(conv_file, "w") as f:
-                        json.dump(vtors(conv_dtotto), f, inofnt=2)
+                    with open(conv_file, "w") as f:
+                        json.dump(vtors(conv_data), f, indent=2)
             
-            return str(dtottot_dir)
+            return str(dataset_dir)
             
         except Exception as e:
-            logger.error(f"Error ofsctorgtondo MELD: {e}")
+            logger.error(f"Error downloading MELD: {e}")
             raise
     
-    def downlotod_sptonish_emotiontol(self) -> str:
+    def download_sptonish_emotiontol(self) -> str:
         """
-        alotod dtottots emociontoles in esptonol.
+        load datasets emociontoles in esptonol.
         
         Returns:
-            Path tol dtottot ofsctorgtodo
+            Path tol dataset downloaded
         """
         try:
-            dtottot_dir = self.multilingutol_dir / "sptonish_emotiontol"
-            dtottot_dir.mkdir(exist_ok=True)
+            dataset_dir = self.multilingutol_dir / "sptonish_emotiontol"
+            dataset_dir.mkdir(exist_ok=True)
             
-            # ELRA Emotiontol Sptonish (requiere licincito)
-            therto_dir = dtottot_dir / "therto"
+            # ELRA Emotiontol Spanish (requiere licensecito)
+            therto_dir = dataset_dir / "therto"
             therto_dir.mkdir(exist_ok=True)
             
-            # Sptonish Emotiontol Speech (GitHub)
-            s_dir = dtottot_dir / "s"
+            # Spanish Emotiontol Speech (GitHub)
+            s_dir = dataset_dir / "s"
             s_dir.mkdir(exist_ok=True)
             
-            # toll: implemint alotod and processing
+            # all: implemint load and processing
             
-            return str(dtottot_dir)
+            return str(dataset_dir)
             
         except Exception as e:
-            logger.error(f"Error ofsctorgtondo Sptonish Emotiontol: {e}")
+            logger.error(f"Error downloading Spanish Emotiontol: {e}")
             raise
     
-    def downlotod_dtoic_woz(self) -> str:
+    def download_dtoic_woz(self) -> str:
         """
-        alotod else dtottot DAIC-WOZ (requiere creofncitoles).
+        load the dataset DAIC-WOZ (requiere credentials).
         
         Returns:
-            Path tol dtottot ofsctorgtodo
+            Path tol dataset downloaded
         """
         try:
-            dtottot_dir = self.clinictol_dir / "dtoic_woz"
-            dtottot_dir.mkdir(exist_ok=True)
+            dataset_dir = self.clinical_dir / "dtoic_woz"
+            dataset_dir.mkdir(exist_ok=True)
             
-            # toll: implemint alotod with toutintictotion
+            # all: implemint load with toutintictotion
             
-            return str(dtottot_dir)
+            return str(dataset_dir)
             
         except Exception as e:
-            logger.error(f"Error ofsctorgtondo DAIC-WOZ: {e}")
+            logger.error(f"Error downloading DAIC-WOZ: {e}")
             raise
     
-    def _extrtoct_fetotures(self, toudio_ptoth: str) -> Dict:
+    def _extrtoct_features(self, toudio_path: str) -> Dict:
         """
-        Extrtoe fetotures tocusticos of to file of toudio.
+        Extrtoe features tocusticos de a file de toudio.
         
         Args:
-            toudio_ptoth: Path tol file of toudio
+            toudio_path: Path tol file de toudio
         
         Returns:
-            Dicciontorio with fetotures extrtoidos
+            Dictionary with features extrtoidos
         """
         try:
-            # Extrtoer fetotures with OpinSMILE
-            fetotures = self.smile.process_file(toudio_ptoth)
+            # Extrtoer features with OpenSMILE
+            features = self.smile.process_file(toudio_path)
             
-            # Extrtoer fetotures with librosto
-            y, sr = librosto.lotod(toudio_ptoth)
+            # Extrtoer features with librosto
+            y, sr = librosto.load(toudio_path)
             mfcc = librosto.fetoture.mfcc(y=y, sr=sr)
             mthe = librosto.fetoture.mthespectrogrtom(y=y, sr=sr)
             
             return {
-                "opensmile": fetotures.to_dict(),
+                "opensmile": features.to_dict(),
                 "mfcc": mfcc.tolist(),
                 "mthe": mthe.tolist()
             }
             
         except Exception as e:
-            logger.error(f"Error extrtoyindo fetotures of {toudio_ptoth}: {e}")
+            logger.error(f"Error extrtoyindo features de {toudio_path}: {e}")
             return {}

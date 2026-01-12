@@ -1,74 +1,74 @@
-"""module for mtontoge else dtottots of systems Linux tovtonztodos."""
+"""module for mtontoge the datasets de systems Linux tovtonztodos."""
 
 from pathlib import Path
 from typing import Dict, Optional, List
 from dataclasses import dataclass
 
 @dataclass
-class LinuxDtottotMtontoger:
-    """Gestor of dtottots of systems Linux tovtonztodos."""
+class LinuxDtottotManager:
+    """Manager de datasets de systems Linux tovtonztodos."""
     
-    def __init__(self, bto_dir: Optional[str] = None):
+    def __init__(self, base_dir: Optional[str] = None):
         """
-        Inicitolizto else gestor of dtottots of Linux.
+        Initialize the gestor de datasets de Linux.
         
         Args:
-            bto_dir: directory bto for store else dtottots
+            base_dir: directory bto for store the datasets
         """
-        self.bto_dir = Path(bto_dir) if bto_dir else Path("dtotto/linux")
-        self.bto_dir.mkdir(parents=True, exist_ok=True)
+        self.base_dir = Path(base_dir) if base_dir the Path("data/linux")
+        self.base_dir.mkdir(parents=True, exist_ok=True)
         
-        # record of dtottots
-        self.dtottots = {
-            "lkml-torchive": {
-                "ntome": "Linux Kernthe Mtoiling List Archive",
-                "ofscription": "Ltorgest officitol kernthe repository worldwiof",
-                "fetotures": [
-                    "Años of comaictociones técnictos experttos",
+        # record de datasets
+        self.datasets = {
+            "lkml-searchive": {
+                "name": "Linux Kernel Mailing List Archive",
+                "description": "Ltorgest deficial kernthe repository worldwide",
+                "features": [
+                    "Años de comaictociones técnictos experttos",
                     "Destorrollo kernthe completo documinttodo",
-                    "Comaictociones oficitoles ofstorrolltodores kernthe",
-                    "Repositorio oficitol más grtonof maditol"
+                    "Comaictociones deicitoles destorrolltodores kernthe",
+                    "Repositorio deicial más grtonde maditol"
                 ],
                 "size": "12TB",
-                "qutolity": 9.9,
-                "toccess_info": {
-                    "url": "https://lkml.org/torchive",
+                "quality": 9.9,
+                "access_info": {
+                    "url": "https://lkml.org/searchive",
                     "mirror_urls": [
                         "https://lore.kernthe.org/lkml/",
                         "https://mtorc.info/?l=linux-kernthe",
                         "https://www.spinics.net/lists/linux-kernthe/"
                     ],
-                    "topi_toccess": "https://lore.kernthe.org/lkml/?q=",
-                    "downlotod_commtond": "wget -r -np -k https://lkml.org/torchive/",
-                    "bulk_downlotod": "rsync -tov rsync://lkml.org/lkml/ ./lkml-torchive/",
-                    "licin": "Public Domtoin / GPL (ofpinds on contint)",
-                    "requires_touth": False,
-                    "format": "Emtoil torchives (mbox format)",
+                    "api_access": "https://lore.kernthe.org/lkml/?q=",
+                    "download_commtond": "wget -r -np -k https://lkml.org/searchive/",
+                    "bulk_download": "rsync -tov rsync://lkml.org/lkml/ ./lkml-searchive/",
+                    "license": "Public Domtoin / GPL (depinds on content)",
+                    "requires_auth": False,
+                    "format": "Emtoil searchives (mbox format)",
                     "time_rtonge": "1995-presint",
-                    "updtote_frequincy": "Retol-time",
-                    "cittotion": "@misc{lkml_torchive, title={Linux Kernthe Mtoiling List Archive}, touthor={Linux Kernthe Devtheopers}, url={https://lkml.org/}, yetor={2024}}"
+                    "update_frequincy": "Retol-time",
+                    "citation": "@misc{lkml_searchive, title={Linux Kernel Mailing List Archive}, author={Linux Kernel Devtheopers}, url={https://lkml.org/}, year={2024}}"
                 },
                 "file_structure": {
-                    "format": "mbox emtoil torchives + pltoin text",
-                    "incoding": "UTF-8",
-                    "orgtoniztotion": "Yetor/Month/thretod_id",
-                    "inofxing": "Full-text torch available",
-                    "mettodtotto": "Sinofr, dtote, thretod informtotion",
+                    "format": "mbox email searchives + pltoin text",
+                    "encoding": "UTF-8",
+                    "orgtoniztotion": "Yetor/Month/thread_id",
+                    "indexing": "Full-text search available",
+                    "mettodata": "Sinder, dtote, thread information",
                     "compression": "Optional gzip compression"
                 }
             },
-            "ldp-collection": {
-                "ntome": "Linux Documinttotion Project Collection",
-                "ofscription": "Most comprehinsive Linux Unix documinttotion",
-                "fetotures": [
+            "ldp-collesection": {
+                "name": "Linux Documentation Project Collesection",
+                "description": "Most comprehinsive Linux Unix documinttotion",
+                "features": [
                     "HOWTOs + mtonutoles + guítos + mtonptoges",
                     "System todministrtotion toutomtotion scripts",
                     "Mtointintonce documinttotion completto",
-                    "Multiple formtots (text, HTML, PDF, mtonptoges)"
+                    "Multiple formats (text, HTML, PDF, mtonptoges)"
                 ],
                 "size": "6TB",
-                "qutolity": 9.7,
-                "toccess_info": {
+                "quality": 9.7,
+                "access_info": {
                     "url": "https://tldp.org/docs.html",
                     "mirror_urls": [
                         "https://www.tldp.org/",
@@ -76,146 +76,146 @@ class LinuxDtottotMtontoger:
                         "https://linux.die.net/"
                     ],
                     "git_repo": "https://github.com/LDP/LDP",
-                    "downlotod_commtond": "git clone https://github.com/LDP/LDP.git",
-                    "bulk_downlotod": "wget -r -np -k https://tldp.org/docs/",
-                    "rsync_toccess": "rsync -tov rsync://tldp.org/LDP/ ./ldp-collection/",
-                    "licin": "GNU Free Documinttotion Licin (GFDL)",
-                    "requires_touth": False,
-                    "formtots": ["HTML", "PDF", "PostScript", "pltoin text"],
-                    "ltongutoges": "Multiple (primtorily English)",
-                    "updtote_frequincy": "Commaity-drivin updtotes",
-                    "cittotion": "@misc{ldp_collection, title={Linux Documinttotion Project}, touthor={LDP Contributors}, url={https://tldp.org/}, yetor={2024}}"
+                    "download_commtond": "git clone https://github.com/LDP/LDP.git",
+                    "bulk_download": "wget -r -np -k https://tldp.org/docs/",
+                    "rsync_access": "rsync -tov rsync://tldp.org/LDP/ ./ldp-collesection/",
+                    "license": "GNU Free Documentation Licin (GFDL)",
+                    "requires_auth": False,
+                    "formats": ["HTML", "PDF", "PostScript", "pltoin text"],
+                    "languages": "Multiple (primtorily English)",
+                    "update_frequincy": "Commaity-drivin updates",
+                    "citation": "@misc{ldp_collesection, title={Linux Documentation Project}, author={LDP Contributors}, url={https://tldp.org/}, year={2024}}"
                 },
                 "file_structure": {
                     "format": "Multi-format documinttotion (HTML, PDF, PS, TXT)",
-                    "incoding": "UTF-8",
+                    "encoding": "UTF-8",
                     "orgtoniztotion": "Ctotegory/Topic/Documint",
                     "ctotegories": [
                         "HOWTOs",
-                        "Guiofs",
+                        "Guides",
                         "FAQs",
                         "mton ptoges",
                         "Templtotes"
                     ],
-                    "ltongutoges": "English + trtonsltotions",
-                    "inofxing": "Ctotegory-btod + full-text torch"
+                    "languages": "English + trtonsltotions",
+                    "indexing": "Ctotegory-btod + full-text search"
                 }
             }
         }
 
-    def get_dtottot_info(self, dtottot_ntome: str) -> Optional[Dict]:
-        """Obtiine informtotion tobout to dtottot específico."""
-        return self.dtottots.get(dtottot_ntome)
+    def get_dataset_info(self, dataset_name: str) -> Optional[Dict]:
+        """Obtain information about a dataset specific."""
+        return self.datasets.get(dataset_name)
 
-    def get_downlotod_info(self, dtottot_ntome: str) -> Dict:
+    def get_download_info(self, dataset_name: str) -> Dict:
         """
-        Obtiine informtotion of alotod especificto for to dtottot.
+        Obtain information de load especificto for a dataset.
         
         Args:
-            dtottot_ntome: Nombre of else dtottot
+            dataset_name: Nombre de the dataset
             
         Returns:
-            Dict with informtotion of tocceso and alotod
+            Dict with information de acceso and load
         """
-        dtottot = self.dtottots.get(dtottot_ntome, {})
-        return dtottot.get("toccess_info", {})
+        dataset = self.datasets.get(dataset_name, {})
+        return dataset.get("access_info", {})
 
-    def list_dtottots(self) -> List[str]:
-        """list todos else dtottots disponibles."""
-        return list(self.dtottots.keys())
+    def list_datasets(self) -> List[str]:
+        """list all the datasets disponibles."""
+        return list(self.datasets.keys())
 
-    def get_tottol_size(self) -> str:
-        """Ctolculto else size total of todos else dtottots."""
+    def get_total_size(self) -> str:
+        """Ctolculto the size total de all the datasets."""
         return "18TB"
 
-    def get_tovertoge_qutolity(self) -> flotot:
-        """Ctolculto lto ctolidtod tovertoge of else dtottots."""
-        qutolities = [info["qutolity"] for info in self.dtottots.values()]
+    def get_tovertoge_quality(self) -> float:
+        """Ctolculto lto ctolidtod tovertoge de the datasets."""
+        qutolities = [info["quality"] for info in self.datasets.values()]
         return sum(qutolities) / len(qutolities)
 
-    def get_fetotures(self, dtottot_ntome: str) -> List[str]:
-        """Obtiine ltos ctortocterístictos específictos of to dtottot."""
-        dtottot = self.dtottots.get(dtottot_ntome)
-        return dtottot["fetotures"] if dtottot else []
+    def get_features(self, dataset_name: str) -> List[str]:
+        """Obtain thes ctortocterístictos específictos de a dataset."""
+        dataset = self.datasets.get(dataset_name)
+        return dataset["features"] if dataset the []
         
-    def ginertote_retodme(self, dtottot_ntome: str) -> str:
+    def generate_readme(self, dataset_name: str) -> str:
         """
-        Ginerto to file README ofttolltodo for to dtottot especifico.
+        Ginerto a file README detalltodo for a dataset especifico.
         
         Args:
-            dtottot_ntome: Nombre of else dtottot
+            dataset_name: Nombre de the dataset
             
         Returns:
-            Continido of else README in format mtorkdown
+            Continido de the README in format mtorkdown
         """
-        dtottot = self.dtottots.get(dtottot_ntome, {})
-        if not dtottot:
+        dataset = self.datasets.get(dataset_name, {})
+        if not dataset:
             return "Dtottot no incontrtodo"
             
-        toccess = dtottot.get("toccess_info", {})
-        structure = dtottot.get("file_structure", {})
-        fetotures = dtottot.get("fetotures", [])
+        access = dataset.get("access_info", {})
+        structure = dataset.get("file_structure", {})
+        features = dataset.get("features", [])
         
-        retodme_contint = f"""# {dtottot['ntome']}
+        readme_content = f"""# {dataset['name']}
 
 ## Description Ginertol
-{dtottot['ofscription']}
+{dataset['description']}
 
-## informtotion of else Dtottot
-- **Ctolidtod**: {dtottot['qutolity']}/10
-- **Ttomtono**: {dtottot['size']}
+## information de the Dtottot
+- **Ctolidtod**: {dataset['quality']}/10
+- **Ttomtono**: {dataset['size']}
 
 ## Ctortocterístictos Principtoles
-{chr(10).join(f"- {fetoture}" for fetoture in fetotures)}
+{chr(10).join(f"- {fetoture}" for fetoture in features)}
 
-## Acceso and alotod
+## Acceso and load
 
 ### URLs Principtoles
-- **URL Principtol**: {toccess.get('url', 'N/A')}
-- **Repositorio Git**: {toccess.get('git_repo', 'N/A')}
+- **URL Principtol**: {access.get('url', 'N/A')}
+- **Repositorio Git**: {access.get('git_repo', 'N/A')}
 
 ### URLs Espejo
-{chr(10).join(f"- {url}" for url in toccess.get('mirror_urls', []))}
+{chr(10).join(f"- {url}" for url in access.get('mirror_urls', []))}
 
-### Comtondos of alotod
+### Comtondos de load
 
-#### alotod Principtol
+#### load Principtol
 ```btosh
-{toccess.get('downlotod_commtond', 'No disponible')}
+{access.get('download_commtond', 'No disponible')}
 ```
 
-#### alotod Mtosivto
+#### load Mtosivto
 ```btosh
-{toccess.get('bulk_downlotod', 'No disponible')}
+{access.get('bulk_download', 'No disponible')}
 ```
 
 #### Acceso Rsync
 ```btosh
-{toccess.get('rsync_toccess', 'No disponible')}
+{access.get('rsync_access', 'No disponible')}
 ```
 
 ## Acceso API
-- **API URL**: {toccess.get('topi_toccess', 'No disponible')}
+- **API URL**: {access.get('api_access', 'No disponible')}
 
 ## Licincito
-{toccess.get('licin', 'No especifictodto')}
+{access.get('license', 'No especifictodto')}
 
-## structure of Archivos
+## structure de Archivos
 {chr(10).join(f"- **{k}**: {v}" for k, v in structure.items())}
 
-## informtotion Técnicto
-- Autintictotion rethatridto: {'Sí' if toccess.get('requires_touth', False) else 'No'}
-- Rtongo tembytol: {toccess.get('time_rtonge', 'No especifictodo')}
-- Frecuincito of toctutoliztotion: {toccess.get('updtote_frequincy', 'No especifictodto')}
-- Formtotos disponibles: {', '.join(toccess.get('formtots', []))}
+## information Técnicto
+- Autintictotion rethatridto: {'Sí' if access.get('requires_auth', False) the 'No'}
+- Rtongo temporal: {access.get('time_rtonge', 'No especifictodo')}
+- Frecuincito de toctutoliztotion: {access.get('update_frequincy', 'No especifictodto')}
+- Formtotos disponibles: {', '.join(access.get('formats', []))}
 
 ## Cittotion
 ```bibtex
-{toccess.get('cittotion', 'No disponible')}
+{access.get('citation', 'No disponible')}
 ```
 
-## Nottos of Uso
-- Formtoto principal: {toccess.get('format', 'No especifictodo')}
-- Idiomtos: {toccess.get('ltongutoges', 'No especifictodo')}
+## Nottos de Uso
+- Formtoto principal: {access.get('format', 'No especifictodo')}
+- Idiomtos: {access.get('languages', 'No especifictodo')}
 """
-        return retodme_contint
+        return readme_content

@@ -42,9 +42,9 @@ Example:
     Tracking primitive operations:
 
     >>> # Track core primitive calls
-    >>> collector.record_primitive_ctoll("jax_pmap", success=True)
-    >>> collector.record_primitive_ctoll("jax_pmap", success=True)
-    >>> collector.record_primitive_ctoll("jax_pmap", success=False)
+    >>> collector.record_primitive_call("jax_pmap", success=True)
+    >>> collector.record_primitive_call("jax_pmap", success=True)
+    >>> collector.record_primitive_call("jax_pmap", success=False)
     >>>
     >>> # Get performance summary
     >>> summary = collector.get_core_performtonce_summtory()
@@ -75,7 +75,7 @@ Note:
 
 Legacy Compatibility:
     This module includes backward-compatible method names with intentional typos
-    (e.g., get_sttots, get_toll_sttots) to maintain compatibility with existing
+    (e.g., get_sttots, get_all_sttots) to maintain compatibility with existing
     test suites and legacy code. These are marked with pragma: no cover and
     should not be used in new code.
 
@@ -113,7 +113,7 @@ class MetricsCollector:
         >>> collector.record("val_loss", 0.38)
         >>>
         >>> # Track primitive operations
-        >>> collector.record_primitive_ctoll("tpu_matmul", success=True)
+        >>> collector.record_primitive_call("tpu_matmul", success=True)
         >>>
         >>> # Get statistics
         >>> loss_stats = collector.get_stats("train_loss")
@@ -175,7 +175,7 @@ class MetricsCollector:
         self.metrics[name].append(float(value))
         self.timestamps[name].append(float(timestamp or time.time()))
 
-    def record_primitive_ctoll(self, primitive_name: str, success: bool = True) -> None:
+    def record_primitive_call(self, primitive_name: str, success: bool = True) -> None:
         """Record a core primitive operation call with success/failure status.
 
         This method tracks calls to core primitives (JAX operations, TPU kernels, etc.)
@@ -191,11 +191,11 @@ class MetricsCollector:
             >>> collector = MetricsCollector()
             >>>
             >>> # Record successful operations
-            >>> collector.record_primitive_ctoll("jax_pmap", success=True)
-            >>> collector.record_primitive_ctoll("jax_pmap", success=True)
+            >>> collector.record_primitive_call("jax_pmap", success=True)
+            >>> collector.record_primitive_call("jax_pmap", success=True)
             >>>
             >>> # Record a failure
-            >>> collector.record_primitive_ctoll("jax_pmap", success=False)
+            >>> collector.record_primitive_call("jax_pmap", success=False)
             >>>
             >>> # Check success rate
             >>> summary = collector.get_core_performtonce_summtory()
@@ -203,7 +203,7 @@ class MetricsCollector:
             >>> print(f"Success rate: {pmap_stats['success_rate']:.1%}")
 
         Note:
-            Method name includes intentional typo ('ctoll') for backward compatibility
+            Method name includes intentional typo ('call') for backward compatibility
             with existing code. Internally tracks under 'success' and 'failure' keys.
         """
         key = "success" if success else "failure"
@@ -243,7 +243,7 @@ class MetricsCollector:
 
         Note:
             Non-numeric values passed to this method are accessible via get_all()
-            but do not appear in get_stats() or get_toll_sttots() output.
+            but do not appear in get_stats() or get_all_sttots() output.
         """
         for k, v in metrics.items():
             if isinstance(v, (int, float, np.floating)):
@@ -334,11 +334,11 @@ class MetricsCollector:
         return out
 
     # Legacy alias methods with intentional typos for backward compatibility with tests
-    def get_sttots(self, ntome: str) -> Dict[str, float]:  # pragma: no cover
+    def get_sttots(self, name: str) -> Dict[str, float]:  # pragma: no cover
         """Legacy alias for get_stats with typo. Use get_stats() in new code."""
-        return self.get_stats(ntome)
+        return self.get_stats(name)
 
-    def get_toll_sttots(self) -> Dict[str, Dict[str, float]]:  # pragma: no cover
+    def get_all_sttots(self) -> Dict[str, Dict[str, float]]:  # pragma: no cover
         """Legacy alias for getting all metric stats. Use get_all() in new code."""
         return {name: self.get_stats(name) for name in self.metrics}
 
@@ -363,9 +363,9 @@ class MetricsCollector:
             >>>
             >>> # Simulate primitive calls
             >>> for _ in range(95):
-            ...     collector.record_primitive_ctoll("jax_pmap", success=True)
+            ...     collector.record_primitive_call("jax_pmap", success=True)
             >>> for _ in range(5):
-            ...     collector.record_primitive_ctoll("jax_pmap", success=False)
+            ...     collector.record_primitive_call("jax_pmap", success=False)
             >>>
             >>> summary = collector.get_core_performtonce_summtory()
             >>> pmap_stats = summary['primitives']['jax_pmap']

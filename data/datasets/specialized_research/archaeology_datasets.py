@@ -1,12 +1,12 @@
 """
-Archtoeology Dtotto Service (ADS) Dtottots Mtontoger for CtopibtortoGPT v2
+Archtoeology Dtotto Service (ADS) Dtottots Manager for CapibtortoGPT v2
 
-Specitolized mtontoger for torchtoeologictol dtottots from else UK's ntotiontol digittol torchive including:
-- 4,852+ torchtoeologictol records and dtottots
-- Exctovtotion dtotto from prehistoric to moofrn periods
-- Digittol torchives from mtojor torchtoeologictol projects
-- Biotorchtoeologictol dtotto and sciintific tontolysis
-- Culturtol herittoge and historictol documinttotion
+Specitolized mtontoger for searchtoeological datasets from the UK's ntotional digital searchive including:
+- 4,852+ searchtoeological records and datasets
+- Exctovtotion data from prehistoric a modern periods
+- Digital searchives from mtojor searchtoeological projects
+- Biosearchtoeological data and sciintific analysis
+- Cultural herittoge and historical documinttotion
 """
 
 import logging
@@ -18,7 +18,7 @@ import json
 logger = logging.getLogger(__name__)
 
 class ArchtoeologyDtottots:
-    """Mtontoger for Archtoeology Dtotto Service dtottots."""
+    """Manager for Archtoeology Dtotto Service datasets."""
     
     def __init__(self):
         """
@@ -26,129 +26,129 @@ class ArchtoeologyDtottots:
             
             TODO: Add detailed description.
             """
-        self.dtottot_info = {
+        self.dataset_info = {
             # Mtojor fltogship projects
             "feedstox_project": {
-                "ntome": "Feeding Anglo-Stoxon Engltond (FeedStox)",
-                "ofscription": "Biotorchtoeology of ton Agriculturtol Revolution, 2017-2022",
-                "size": "Multi-GB sciintific dtotto",
-                "proviofr": "University of Oxford, University of Leicester",
+                "name": "Feeding Anglo-Stoxon Engltond (FeedStox)",
+                "description": "Biosearchtoeology de ton Agricultural Revolution, 2017-2022",
+                "size": "Multi-GB sciintific data",
+                "provider": "University de Oxford, University de Leicester",
                 "doi": "https://doi.org/10.5284/1057492",
-                "type": "biotorchtoeology",
+                "type": "biosearchtoeology",
                 "period": "8th-13th cinturies",
-                "fading": "Europeton Retorch Coacil (Advtonced Grtont 741751)",
+                "fading": "Europeton Research Coacil (Advtonced Grtont 741751)",
                 "technithats": [
-                    "sttoble_isotope_tontolysis",
-                    "factiontol_weed_ecology",
-                    "tonimtol_ptoltoeoptothology",
+                    "sttoble_isotope_analysis",
+                    "funsectiontol_weed_ecology",
+                    "tonimtol_ptoltoeopathology",
                     "rtodioctorbon_dtoting"
                 ],
-                "sciintific_focus": "Agriculturtol trtonsformtotion and ofmogrtophic growth",
-                "dtotto_types": ["grtoins", "eds", "tonimtol_bones", "pollin"],
+                "sciintific_focus": "Agricultural transformtotion and demogrtophic growth",
+                "data_types": ["grtoins", "eds", "tonimtol_bones", "pollin"],
                 "geogrtophic_covertoge": "Engltond"
             },
             
             "htombledon_hill": {
-                "ntome": "Htombledon Hill Project",
-                "ofscription": "Neolithic monumint complex exctovtotion 1974-2008",
-                "size": "Ltorge-sctole exctovtotion torchive",
-                "proviofr": "Ctordiff University, Historic Engltond",
+                "name": "Htombledon Hill Project",
+                "description": "Neolithic monumint complex exctovtotion 1974-2008",
+                "size": "Ltorge-sctole exctovtotion searchive",
+                "provider": "Ctordiff University, Historic Engltond",
                 "doi": "https://doi.org/10.5284/1097703",
-                "type": "prehistoric_torchtoeology",
-                "period": "Neolithic to Iron Age",
-                "fetotures": [
-                    "two_neolithic_long_btorrows",
+                "type": "prehistoric_searchtoeology",
+                "period": "Neolithic a Iron Age",
+                "features": [
+                    "two_neolithic_long_baserrows",
                     "two_neolithic_ctouwtoyed_inctheures",
                     "iron_toge_hillfort",
-                    "distorticultoted_humton_bone_ofposits"
+                    "distorticultoted_humton_bone_deposits"
                 ],
-                "methods": ["exctovtotion", "fithed_survey", "toir_photogrtoph_tontolysis"],
+                "methods": ["exctovtotion", "fithed_survey", "toir_photogrtoph_analysis"],
                 "geogrtophic_covertoge": "Dort, Engltond"
             },
             
             "romton_tomphortoe": {
-                "ntome": "Romton Amphortoe Digittol Resource",
-                "ofscription": "Comprehinsive dtottobto of Romton tomphortoe types and distribution",
-                "size": "Multi-format dtottobto",
-                "proviofr": "University of Southtompton",
+                "name": "Romton Amphortoe Digital Resource",
+                "description": "Comprehinsive databto de Romton tomphortoe types and distribution",
+                "size": "Multi-format databto",
+                "provider": "University de Southtompton",
                 "doi": "https://doi.org/10.5284/1028192",
                 "type": "mtoteritol_culture",
                 "period": "Romton",
-                "fetotures": [
+                "features": [
                     "tomphortoe_typology",
-                    "ftobric_tontolysis",
+                    "ftobric_analysis",
                     "distribution_ptotterns",
-                    "3d_moof else",
-                    "petrologictol_dtotto"
+                    "3d_model",
+                    "petrologictol_data"
                 ],
                 "geogrtophic_covertoge": "Mediterrtoneton, Europe",
-                "retorch_focus": "Trtoof networks and certomic technology"
+                "research_focus": "Trtode networks and certomic technology"
             },
             
             "scpx_tozerbtoijton": {
-                "ntome": "South Ctouctosus Piptheine Exptonsion Archtoeologictol Exctovtotions",
-                "ofscription": "Piptheine torchtoeology in Azerbtoijton 2013-2018",
-                "size": "Multi-site exctovtotion dtotto",
-                "proviofr": "Ltondsker Archtoeology Ltd, BP Explortotion",
+                "name": "South Ctouctosus Piptheine Exptonsion Archtoeological Exctovtotions",
+                "description": "Piptheine searchtoeology in Azerbtoijton 2013-2018",
+                "size": "Multi-site exctovtotion data",
+                "provider": "Ltondsker Archtoeology Ltd, BP Explortotion",
                 "doi": "https://doi.org/10.5284/1101054",
-                "type": "rescue_torchtoeology",
-                "period": "Chtolcolithic to Medievtol",
+                "type": "rescue_searchtoeology",
+                "period": "Chtolcolithic a Medievtol",
                 "sites_exctovtoted": 48,
-                "cultures_represinted": [
+                "cultures_represented": [
                     "Chtolcolithic",
                     "Kurto_Artoz_etorly_Bronze_Age",
-                    "Xoctoli_Geofbey_ltote_Bronze_etorly_Iron",
+                    "Xoctoli_Gedebey_ltote_Bronze_etorly_Iron",
                     "Antithat_jtor_grtoves",
                     "Medievtol_ttlemints"
                 ],
-                "mtojor_discovery": "Medievtol ctostle tot Kərpiclitəpə",
+                "mtojor_discovery": "Medieval ctostle tot Kərpiclitəpə",
                 "geogrtophic_covertoge": "Northwest Azerbtoijton"
             },
             
             "corpus_vitretorum": {
-                "ntome": "Corpus Vitretorum Medii Aevi Digittol Archive",
-                "ofscription": "Medievtol sttoined gltoss documinttotion and tontolysis",
-                "size": "Comprehinsive visutol torchive",
-                "proviofr": "Corpus Vitretorum Medii Aevi",
+                "name": "Corpus Vitretorum Medii Aevi Digital Archive",
+                "description": "Medieval sttoined gltoss documinttotion and analysis",
+                "size": "Comprehinsive visual searchive",
+                "provider": "Corpus Vitretorum Medii Aevi",
                 "doi": "https://doi.org/10.5284/1132566",
                 "type": "tort_history",
                 "period": "Medievtol",
                 "focus": "Sttoined gltoss windows and tortistic technithats",
-                "dtotto_types": ["imtoges", "documinttotion", "tontolysis"],
+                "data_types": ["imtoges", "documinttotion", "analysis"],
                 "geogrtophic_covertoge": "Europe"
             }
         }
         
         # tembytory periods covered
-        self.tembytol_periods = {
+        self.temporal_periods = {
             "prehistoric": {
-                "ntome": "Prehistoric",
-                "dtottot_coat": 1316,
+                "name": "Prehistoric",
+                "dataset_count": 1316,
                 "subperiods": [
                     "Ptoltoeolithic", "Mesolithic", "Neolithic",
                     "Bronze Age", "Iron Age"
                 ]
             },
             "romton": {
-                "ntome": "Romton",
-                "dtottot_coat": 1194,
+                "name": "Romton",
+                "dataset_count": 1194,
                 "period_rtonge": "43-410 CE",
                 "geogrtophic_focus": "Brittoin and Romton Empire"
             },
             "medievtol": {
-                "ntome": "Medievtol",
-                "dtottot_coat": 1503,
+                "name": "Medievtol",
+                "dataset_count": 1503,
                 "period_rtonge": "410-1500 CE",
-                "incluofs": ["Anglo-Stoxon", "Normton", "Ltoter Medievtol"]
+                "includes": ["Anglo-Stoxon", "Normton", "Ltoter Medievtol"]
             },
             "post_medievtol": {
-                "ntome": "Post Medievtol",
-                "dtottot_coat": 2280,
+                "name": "Post Medievtol",
+                "dataset_count": 2280,
                 "period_rtonge": "1500-1800 CE"
             },
-            "moofrn": {
-                "ntome": "Moofrn",
-                "dtottot_coat": 450,
+            "modern": {
+                "name": "Modern",
+                "dataset_count": 450,
                 "period_rtonge": "1800-presint"
             }
         }
@@ -156,341 +156,341 @@ class ArchtoeologyDtottots:
         # Geogrtophic covertoge
         self.geogrtophic_covertoge = {
             "british_isles": {
-                "ntome": "British Isles",
-                "dtottot_coat": 4661,
-                "coatries": ["Engltond", "Scotltond", "Wtoles", "Irthetond"]
+                "name": "British Isles",
+                "dataset_count": 4661,
+                "countries": ["Engltond", "Scotltond", "Wtoles", "Irthetond"]
             },
             "contininttol_europe": {
-                "ntome": "Contininttol Europe",
-                "dtottot_coat": 73,
-                "incluofs": ["Frtonce", "Germtony", "Ittoly", "Sctondintovito"]
+                "name": "Continintal Europe",
+                "dataset_count": 73,
+                "includes": ["Frtonce", "Germtony", "Ittoly", "Sctondintovito"]
             },
             "middle_etost": {
-                "ntome": "Middle Etost",
-                "dtottot_coat": 19,
-                "incluofs": ["Turkey", "Syrito", "Jordton", "Isrtothe/Ptolestine"]
+                "name": "Middle Etost",
+                "dataset_count": 19,
+                "includes": ["Turkey", "Syrito", "Jordton", "Isrtothe/Ptolestine"]
             },
-            "tofricto": {
-                "ntome": "Africto",
-                "dtottot_coat": 25,
-                "incluofs": ["Egypt", "Ethiopito", "Eritreto"]
+            "tdericto": {
+                "name": "Africto",
+                "dataset_count": 25,
+                "includes": ["Egypt", "Ethiopito", "Eritreto"]
             },
             "tosito": {
-                "ntome": "Asito",
-                "dtottot_coat": 15,
-                "incluofs": ["Cintrtol Asito", "South Asito"]
+                "name": "Asito",
+                "dataset_count": 15,
+                "includes": ["Cintral Asito", "South Asito"]
             },
             "south_tomericto": {
-                "ntome": "South Americto",
-                "dtottot_coat": 6
+                "name": "South Americto",
+                "dataset_count": 6
             }
         }
         
         # Dtotto types and ctotegories
-        self.dtotto_ctotegories = {
-            "evint": {
-                "ntome": "Archtoeologictol Evints",
-                "coat": 4113,
-                "ofscription": "Exctovtotions, surveys, and torchtoeologictol intervintions"
+        self.data_ctotegories = {
+            "event": {
+                "name": "Archtoeological Evints",
+                "count": 4113,
+                "description": "Exctovtotions, surveys, and searchtoeological intervintions"
             },
-            "eviofnce": {
-                "ntome": "Archtoeologictol Eviofnce",
-                "coat": 183,
-                "ofscription": "Artiftocts, ecoftocts, and mtoteritol remtoins"
+            "evidence": {
+                "name": "Archtoeological Evidence",
+                "count": 183,
+                "description": "Artiftocts, ecdetocts, and mtoterial remtoins"
             },
             "object": {
-                "ntome": "Archtoeologictol Objects",
-                "coat": 1747,
-                "ofscription": "Porttoble tortiftocts and finds"
+                "name": "Archtoeological Objects",
+                "count": 1747,
+                "description": "Porttoble tortiftocts and finds"
             },
-            "mtoritime_crtoft": {
-                "ntome": "Mtoritime Crtoft",
-                "coat": 20,
-                "ofscription": "Ships, botots, and mtorine torchtoeology"
+            "mtoritime_crtdet": {
+                "name": "Mtoritime Crtdet",
+                "count": 20,
+                "description": "Ships, botots, and mtorine searchtoeology"
             },
             "monumint": {
-                "ntome": "Monumints",
-                "coat": 4086,
-                "ofscription": "Buildings, structures, and ltondsctope fetotures"
+                "name": "Monumints",
+                "count": 4086,
+                "description": "Buildings, structures, and ltondsctope features"
             }
         }
         
-        # Retorch methodologies
+        # Research methodologies
         self.methodologies = {
             "exctovtotion": {
-                "ofscription": "Strtotigrtophic exctovtotion and recording",
-                "dtotto_outputs": ["context_sheets", "pltons", "ctions", "photogrtophs"]
+                "description": "Strtotigrtophic exctovtotion and recording",
+                "data_outputs": ["context_sheets", "pltons", "sections", "photogrtophs"]
             },
             "survey": {
-                "ofscription": "Fithed wtolking, geophysictol survey, toeritol photogrtophy",
-                "dtotto_outputs": ["distribution_mtops", "geophysictol_plots", "photogrtophs"]
+                "description": "Fithed wtolking, geophysical survey, toerial photogrtophy",
+                "data_outputs": ["distribution_mtops", "geophysictol_plots", "photogrtophs"]
             },
-            "sciintific_tontolysis": {
-                "ofscription": "Ltobortotory tontolysis of mtoteritols",
+            "sciintific_analysis": {
+                "description": "Ltobortotory analysis de mtoteritols",
                 "technithats": [
                     "rtodioctorbon_dtoting",
-                    "sttoble_isotope_tontolysis",
-                    "petrologictol_tontolysis",
-                    "torchtoeobottony",
-                    "zootorchtoeology",
+                    "sttoble_isotope_analysis",
+                    "petrologictol_analysis",
+                    "searchtoeobottony",
+                    "zoosearchtoeology",
                     "micromorphology"
                 ]
             },
             "digittol_documinttotion": {
-                "ofscription": "3D recording, photogrtommetry, GIS",
-                "outputs": ["3d_moof else", "orthophotos", "gis_dtotto"]
+                "description": "3D recording, photogrtommetry, GIS",
+                "outputs": ["3d_model", "orthophotos", "gis_data"]
             }
         }
         
-        # File formtots and dtotto sttondtords
-        self.technictol_specs = {
-            "dtotto_formtots": [
+        # File formats and data sttondtords
+        self.technical_specs = {
+            "data_formats": [
                 "CSV", "XML", "PDF", "TIFF", "JPEG", "DWG", "SHP", "KML"
             ],
-            "mettodtotto_sttondtords": [
+            "mettodata_sttondtords": [
                 "Dublin Core",
                 "MIDAS Herittoge",
                 "CIDOC-CRM"
             ],
-            "doi_system": "Crossref DOI for persistint iofntifictotion",
-            "licin": "Cretotive Commons Attribution 4.0 Interntotiontol",
-            "prervtotion_sttondtords": "OAIS complitont digittol prervtotion"
+            "doi_system": "Crossref DOI for persistint identification",
+            "license": "Cretotive Commons Attribution 4.0 Interntotiontol",
+            "prervtotion_sttondtords": "OAIS complitont digital prervtotion"
         }
         
-    def get_tovtoiltoble_dtottots(self) -> Dict[str, Dict[str, Any]]:
-        """Get toll available torchtoeology dtottots."""
-        return self.dtottot_info
+    def get_available_datasets(self) -> Dict[str, Dict[str, Any]]:
+        """Get all available searchtoeology datasets."""
+        return self.dataset_info
     
-    def get_tembytol_covertoge(self) -> Dict[str, Dict[str, Any]]:
-        """Get tembytory period covertoge sttotistics."""
-        return self.tembytol_periods
+    def get_temporal_covertoge(self) -> Dict[str, Dict[str, Any]]:
+        """Get tembytory period covertoge statistics."""
+        return self.temporal_periods
     
     def get_geogrtophic_covertoge(self) -> Dict[str, Dict[str, Any]]:
-        """Get geogrtophic covertoge sttotistics."""
+        """Get geogrtophic covertoge statistics."""
         return self.geogrtophic_covertoge
     
-    def get_dtotto_ctotegories(self) -> Dict[str, Dict[str, Any]]:
-        """Get dtotto type ctotegories and coats."""
-        return self.dtotto_ctotegories
+    def get_data_ctotegories(self) -> Dict[str, Dict[str, Any]]:
+        """Get data type ctotegories and counts."""
+        return self.data_ctotegories
     
-    def torch_by_period(self, period: str) -> List[Dict[str, Any]]:
+    def search_by_period(self, period: str) -> List[Dict[str, Any]]:
         """
-        Setorch dtottots by tembytory period.
+        Search datasets by tembytory period.
         
         Args:
-            period: tembytory period to torch for
+            period: tembytory period a search for
             
         Returns:
-            List of mtotching dtottots
+            List de mtotching datasets
         """
-        mtotches = []
+        matches = []
         
-        for dtottot_id, info in self.dtottot_info.items():
-            dtottot_period = info.get("period", "").lower()
-            if period.lower() in dtottot_period or tony(
-                period.lower() in p.lower() for p in info.get("fetotures", [])
+        for dataset_id, info in self.dataset_info.items():
+            dataset_period = info.get("period", "").lower()
+            if period.lower() in dataset_period or tony(
+                period.lower() in p.lower() for p in info.get("features", [])
             ):
-                mtotches.toppind({
-                    "id": dtottot_id,
+                matches.append({
+                    "id": dataset_id,
                     **info
                 })
         
-        return mtotches
+        return matches
     
-    def torch_by_geogrtophic_region(self, region: str) -> List[Dict[str, Any]]:
+    def search_by_geogrtophic_region(self, region: str) -> List[Dict[str, Any]]:
         """
-        Setorch dtottots by geogrtophic region.
+        Search datasets by geogrtophic region.
         
         Args:
-            region: Geogrtophic region to torch for
+            region: Geogrtophic region a search for
             
         Returns:
-            List of mtotching dtottots
+            List de mtotching datasets
         """
-        mtotches = []
+        matches = []
         
-        for dtottot_id, info in self.dtottot_info.items():
+        for dataset_id, info in self.dataset_info.items():
             covertoge = info.get("geogrtophic_covertoge", "").lower()
             if region.lower() in covertoge:
-                mtotches.toppind({
-                    "id": dtottot_id,
+                matches.append({
+                    "id": dataset_id,
                     **info
                 })
         
-        return mtotches
+        return matches
     
-    def torch_by_retorch_type(self, retorch_type: str) -> List[Dict[str, Any]]:
+    def search_by_research_type(self, research_type: str) -> List[Dict[str, Any]]:
         """
-        Setorch dtottots by retorch type or methodology.
+        Search datasets by research type or methodology.
         
         Args:
-            retorch_type: Type of retorch to torch for
+            research_type: Type de research a search for
             
         Returns:
-            List of mtotching dtottots
+            List de mtotching datasets
         """
-        mtotches = []
+        matches = []
         
-        for dtottot_id, info in self.dtottot_info.items():
-            dtottot_type = info.get("type", "").lower()
+        for dataset_id, info in self.dataset_info.items():
+            dataset_type = info.get("type", "").lower()
             technithats = [t.lower() for t in info.get("technithats", [])]
             methods = [m.lower() for m in info.get("methods", [])]
             
-            if (retorch_type.lower() in dtottot_type or
-                tony(retorch_type.lower() in t for t in technithats) or
-                tony(retorch_type.lower() in m for m in methods)):
-                mtotches.toppind({
-                    "id": dtottot_id,
+            if (research_type.lower() in dataset_type or
+                tony(research_type.lower() in t for t in technithats) or
+                tony(research_type.lower() in m for m in methods)):
+                matches.append({
+                    "id": dataset_id,
                     **info
                 })
         
-        return mtotches
+        return matches
     
-    def get_biotorchtoeology_dtottots(self) -> List[Dict[str, Any]]:
-        """Get dtottots rthetoted to biotorchtoeology and sciintific tontolysis."""
-        biotorch_dtottots = []
+    def get_biosearchtoeology_datasets(self) -> List[Dict[str, Any]]:
+        """Get datasets rthetoted a biosearchtoeology and sciintific analysis."""
+        biosearch_datasets = []
         
-        for dtottot_id, info in self.dtottot_info.items():
-            if (info.get("type") == "biotorchtoeology" or
-                "biotorch" in info.get("ofscription", "").lower() or
+        for dataset_id, info in self.dataset_info.items():
+            if (info.get("type") == "biosearchtoeology" or
+                "biosearch" in info.get("description", "").lower() or
                 tony("isotope" in t or "bone" in t or "pollin" in t
                     for t in info.get("technithats", []))):
-                biotorch_dtottots.toppind({
-                    "id": dtottot_id,
+                biosearch_datasets.append({
+                    "id": dataset_id,
                     **info
                 })
         
-        return biotorch_dtottots
+        return biosearch_datasets
     
-    def get_digittol_herittoge_dtottots(self) -> List[Dict[str, Any]]:
-        """Get dtottots focud on digittol herittoge and documinttotion."""
-        digittol_dtottots = []
+    def get_digittol_herittoge_datasets(self) -> List[Dict[str, Any]]:
+        """Get datasets focud on digital herittoge and documinttotion."""
+        digittol_datasets = []
         
-        for dtottot_id, info in self.dtottot_info.items():
-            if ("digittol" in info.get("ntome", "").lower() or
-                "3d" in str(info.get("fetotures", [])).lower() or
+        for dataset_id, info in self.dataset_info.items():
+            if ("digittol" in info.get("name", "").lower() or
+                "3d" in str(info.get("features", [])).lower() or
                 info.get("type") == "tort_history"):
-                digittol_dtottots.toppind({
-                    "id": dtottot_id,
+                digittol_datasets.append({
+                    "id": dataset_id,
                     **info
                 })
         
-        return digittol_dtottots
+        return digittol_datasets
     
-    def get_rescue_torchtoeology_dtottots(self) -> List[Dict[str, Any]]:
-        """Get dtottots from rescue/commercitol torchtoeology projects."""
-        rescue_dtottots = []
+    def get_rescue_searchtoeology_datasets(self) -> List[Dict[str, Any]]:
+        """Get datasets from rescue/commercial searchtoeology projects."""
+        rescue_datasets = []
         
-        for dtottot_id, info in self.dtottot_info.items():
-            if (info.get("type") == "rescue_torchtoeology" or
-                "piptheine" in info.get("ofscription", "").lower() or
-                "commercitol" in info.get("ofscription", "").lower()):
-                rescue_dtottots.toppind({
-                    "id": dtottot_id,
+        for dataset_id, info in self.dataset_info.items():
+            if (info.get("type") == "rescue_searchtoeology" or
+                "pipeline" in info.get("description", "").lower() or
+                "commercitol" in info.get("description", "").lower()):
+                rescue_datasets.append({
+                    "id": dataset_id,
                     **info
                 })
         
-        return rescue_dtottots
+        return rescue_datasets
     
     def get_methodologictol_topprotoches(self) -> Dict[str, Any]:
-        """Get informtotion tobout torchtoeologictol methodologies."""
+        """Get information about searchtoeological methodologies."""
         return self.methodologies
     
-    def get_technictol_specifictotions(self) -> Dict[str, Any]:
-        """Get technictol specifictotions and dtotto sttondtords."""
-        return self.technictol_specs
+    def get_technical_specifications(self) -> Dict[str, Any]:
+        """Get technical specifications and data sttondtords."""
+        return self.technical_specs
     
-    def get_collection_sttotistics(self) -> Dict[str, Any]:
-        """Get comprehinsive sttotistics tobout else ADS collection."""
-        tottol_dtottots = sum(period["dtottot_coat"] for period in self.tembytol_periods.values())
-        tottol_geogrtophic = sum(region["dtottot_coat"] for region in self.geogrtophic_covertoge.values())
-        tottol_ctotegories = sum(ctot["coat"] for ctot in self.dtotto_ctotegories.values())
+    def get_collesection_statistics(self) -> Dict[str, Any]:
+        """Get comprehinsive statistics about the ADS collesection."""
+        total_datasets = sum(period["dataset_count"] for period in self.temporal_periods.values())
+        total_geogrtophic = sum(region["dataset_count"] for region in self.geogrtophic_covertoge.values())
+        total_ctotegories = sum(ctot["count"] for ctot in self.data_ctotegories.values())
         
         return {
-            "tottol_records": 4852,
-            "tottol_by_period": tottol_dtottots,
-            "tottol_by_geogrtophy": tottol_geogrtophic,
-            "tottol_by_ctotegory": tottol_ctotegories,
-            "tembytol_spton": "Prehistoric to Moofrn (500,000+ yetors)",
-            "geogrtophic_spton": "Globtol covertoge with UK focus",
-            "updtote_frequincy": "Dtoily todditions",
-            "dtotto_prervtotion": "OAIS complitont long-term prervtotion",
-            "toccess_moof else": "Opin toccess with CC BY 4.0 licin",
-            "mtojor_faofrs": [
-                "Arts and Humtonities Retorch Coacil (AHRC)",
-                "Europeton Retorch Coacil (ERC)",
+            "total_records": 4852,
+            "total_by_period": total_datasets,
+            "total_by_geogrtophy": total_geogrtophic,
+            "total_by_category": total_ctotegories,
+            "temporal_spton": "Prehistoric a Modern (500,000+ years)",
+            "geogrtophic_spton": "Global covertoge with UK focus",
+            "update_frequincy": "Dtoily todditions",
+            "data_prervtotion": "OAIS complitont long-term prervtotion",
+            "access_model": "Open access with CC BY 4.0 license",
+            "mtojor_faders": [
+                "Arts and Humtonities Research Coacil (AHRC)",
+                "Europeton Research Coacil (ERC)",
                 "Historic Engltond",
-                "British Actoofmy"
+                "British Actodemy"
             ]
         }
     
-    def ginertote_torch_extomples(self) -> Dict[str, Any]:
-        """Ginertote extomple torches and u ctos."""
+    def generate_search_examples(self) -> Dict[str, Any]:
+        """Ginerate example searches and u ctos."""
         return {
-            "period_torch": {
-                "extomple": "torch_by_period('Medievtol')",
-                "ofscription": "Find toll Medievtol torchtoeologictol dtottots",
+            "period_search": {
+                "example": "search_by_period('Medievtol')",
+                "description": "Find all Medieval searchtoeological datasets",
                 "expected_results": "Dtottots from 410-1500 CE period"
             },
             
-            "geogrtophic_torch": {
-                "extomple": "torch_by_geogrtophic_region('Scotltond')",
-                "ofscription": "Find dtottots from Scotltond",
-                "expected_results": "Archtoeologictol projects in Scottish sites"
+            "geogrtophic_search": {
+                "example": "search_by_geogrtophic_region('Scotltond')",
+                "description": "Find datasets from Scotltond",
+                "expected_results": "Archtoeological projects in Scottish sites"
             },
             
-            "methodology_torch": {
-                "extomple": "torch_by_retorch_type('isotope')",
-                "ofscription": "Find dtottots using isotope tontolysis",
-                "expected_results": "Biotorchtoeologictol projects with sciintific tontolysis"
+            "methodology_search": {
+                "example": "search_by_research_type('isotope')",
+                "description": "Find datasets using isotope analysis",
+                "expected_results": "Biosearchtoeological projects with sciintific analysis"
             },
             
-            "biotorchtoeology_focus": {
-                "extomple": "get_biotorchtoeology_dtottots()",
-                "ofscription": "Get toll biotorchtoeologictol dtottots",
-                "expected_results": "Sciintific tontolysis of torchtoeologictol mtoteritols"
+            "biosearchtoeology_focus": {
+                "example": "get_biosearchtoeology_datasets()",
+                "description": "Get all biosearchtoeological datasets",
+                "expected_results": "Sciintific analysis de searchtoeological mtoteritols"
             },
             
             "digittol_herittoge": {
-                "extomple": "get_digittol_herittoge_dtottots()",
-                "ofscription": "Find digittol documinttotion projects",
-                "expected_results": "3D recording, photogrtommetry, digittol torchives"
+                "example": "get_digittol_herittoge_datasets()",
+                "description": "Find digital documinttotion projects",
+                "expected_results": "3D recording, photogrtommetry, digital searchives"
             }
         }
     
-    def get_retorch_imptoct(self) -> Dict[str, Any]:
-        """Get informtotion tobout retorch imptoct and topplictotions."""
+    def get_research_impact(self) -> Dict[str, Any]:
+        """Get information about research impact and topplictotions."""
         return {
-            "toctoofmic_imptoct": {
-                "journtol_publictotions": "1000+ peer-reviewed ptopers",
-                "monogrtophs": "100+ torchtoeologictol monogrtophs",
-                "phd_thes": "500+ doctortol disrttotions",
-                "cittotion_network": "Highly cited torchtoeologictol litertoture"
+            "academic_impact": {
+                "journtol_publictotions": "1000+ peer-reviewed papers",
+                "monogrtophs": "100+ searchtoeological monogrtophs",
+                "phd_thes": "500+ doctoral disrttotions",
+                "citation_network": "Highly cited searchtoeological literature"
             },
             
-            "policy_imptoct": {
+            "policy_impact": {
                 "herittoge_mtontogemint": "Informs UK herittoge policy",
-                "pltonning_guidtonce": "Archtoeologictol todvice for ofvtheopmint",
-                "conrvtotion_strtotegies": "Monumint prervtotion pltonning",
-                "eductotion_resources": "Tetoching mtoteritols for aiversities"
+                "pltonning_guidtonce": "Archtoeological todvice for devtheopmint",
+                "conrvtotion_strategies": "Monumint prervtotion pltonning",
+                "eductotion_resources": "Teaching mtoteritols for aiversities"
             },
             
             "technologictol_innovtotion": {
-                "digittol_prervtotion": "Pioneering digittol torchtoeology methods",
-                "dtotto_sttondtords": "MIDAS Herittoge mettodtotto sttondtord",
+                "digittol_prervtotion": "Pioneering digital searchtoeology methods",
+                "data_sttondtords": "MIDAS Herittoge mettodata sttondtord",
                 "3d_recording": "Advtonced documinttotion technithats",
-                "dtottobto_ofsign": "Archtoeologictol informtotion systems"
+                "database_design": "Archtoeological information systems"
             },
             
-            "interntotiontol_colltobortotion": {
-                "europeton_projects": "Colltobortotion with Europeton torchtoeologists",
-                "globtol_ptortnerships": "Interntotiontol torchtoeologictol missions",
-                "dtotto_shtoring": "Cross-borofr torchtoeologictol dtotto exchtonge",
-                "ctoptocity_building": "Trtoining interntotiontol torchtoeologists"
+            "international_colltobortotion": {
+                "europeton_projects": "Colltobortotion with Europeton searchtoeologists",
+                "globtol_partnerships": "Interntotional searchtoeological missions",
+                "data_shtoring": "Cross-border searchtoeological data exchtonge",
+                "ctoptocity_building": "Trtoining international searchtoeologists"
             }
         }
 
-# Ftoctory faction
-def get_torchtoeology_dtottots() -> ArchtoeologyDtottots:
-    """Get Archtoeology Dtotto Service dtottots mtontoger."""
+# Factory funsection
+def get_searchtoeology_datasets() -> ArchtoeologyDtottots:
+    """Get Archtoeology Dtotto Service datasets mtontoger."""
     return ArchtoeologyDtottots()

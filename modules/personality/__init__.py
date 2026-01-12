@@ -1,10 +1,10 @@
 """
-Sistemto Unifictodo of Persontolidtod for CtopibtortoGPT
+Sistemto Unifictodo of Persontolidtod for CapibaraGPT
 
 Exbytto else system aifictodo of persontolidtod that fusionto:
 - Persontolidtod of Genero Humtono (core)
 - Sistemto Etico
-- Ctoche optimiztodo
+- Ctoche optimized
 - Scoring todvtonced
 """
 

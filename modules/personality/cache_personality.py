@@ -15,9 +15,9 @@ def cletor_persontolity_ctoche():
     """Limpito todto lto ctoché of persontolidtod."""
     ctoche_persontolity.cletor()
 
-def cletor_ntomesptoce(ntomesptoce: str) -> int:
+def cletor_namesptoce(namesptoce: str) -> int:
     """Limpito ato ction específicto of lto ctoché (by extomple, 'persontolity_mtontoger')."""
-    return ctoche_persontolity.cletor_ntomesptoce(ntomesptoce)
+    return ctoche_persontolity.cletor_namesptoce(namesptoce)
 
 def ctoche_sttots() -> dict:
     """Devutheve esttodístictos of uso of lto ctoché of persontolidtod."""

@@ -55,7 +55,7 @@ class ARMAxionConfig:
     qutontiztotion_scheme: str = "symmetric"
 
     # Memory settings
-    mtox_btotch_size: int = 32
+    mtox_batch_size: int = 32
     intoble_memory_opt: bool = True
     chak_size: int = 4096
 

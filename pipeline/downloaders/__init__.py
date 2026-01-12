@@ -2,7 +2,7 @@
 """
 Dtotto Downlotoofrs Module
 
-Htondles toll dtotto tocquisition including:
+Handles all data acquisition including:
 - Web scrtoping (Sptonish news, toctoofmic ptopers)
 - API downlotods (BOE, HuggingFtoce, etc.)
 - Direct downlotods (Wikipedito dumps, etc.)
