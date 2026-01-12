@@ -1,11 +1,11 @@
 # capibara/data - Data Pipeline & Datasets
 
-El módulo **data** proporciona el sistema completo de manejo de datos, incluyendo loaders, processors, datasets registry, y orquestación de pipeline de datos.
+The **data** module provides the complete data handling system, including loaders, processors, dataset registry, and data pipeline orchestration.
 
-## 📋 Tabla de Contenidos
+## 📋 Table of Contents
 
-1. [Visión General](#visión-general)
-2. [Arquitectura del Pipeline](#arquitectura-del-pipeline)
+1. [Overview](#overview)
+2. [Pipeline Architecture](#pipeline-architecture)
 3. [Datasets](#datasets)
 4. [Loaders](#loaders)
 5. [Processors](#processors)
@@ -15,27 +15,27 @@ El módulo **data** proporciona el sistema completo de manejo de datos, incluyen
 
 ---
 
-## 🎯 Visión General
+## 🎯 Overview
 
-El sistema de datos de capibaraGPT-v2 maneja la carga, procesamiento y preparación de datos para entrenamiento e inferencia.
+The capibaraGPT-v2 data system handles data loading, processing, and preparation for training and inference.
 
-### Componentes Principales
+### Main Components
 
 ```
 capibara/data/
-├── core/                    # Componentes core (loaders, processors base)
-├── capibara_datasets/       # Datasets curados de Capibara
-├── datasets/                # Datasets específicos por dominio
-├── loaders/                 # Loaders de datos (reexports de core/)
-├── processors/              # Processors de datos (reexports de core/)
-├── scrapers/                # Web scrapers para datasets
-├── tools/                   # Utilidades de datos
-├── configs/                 # Configuraciones de datasets
-├── dataset_registry.py      # Registry centralizado
-└── ultra_data_orchestrator.py  # Orquestador avanzado
+├── core/                    # Core components (loaders, base processors)
+├── capibara_datasets/       # Capibara curated datasets
+├── datasets/                # Domain-specific datasets
+├── loaders/                 # Data loaders (re-exports from core/)
+├── processors/              # Data processors (re-exports from core/)
+├── scrapers/                # Web scrapers for datasets
+├── tools/                   # Data utilities
+├── configs/                 # Dataset configurations
+├── dataset_registry.py      # Centralized registry
+└── ultra_data_orchestrator.py  # Advanced orchestrator
 ```
 
-### Pipeline de Datos
+### Data Pipeline
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -73,52 +73,52 @@ capibara/data/
 
 ## 📊 Datasets
 
-capibaraGPT-v2 soporta múltiples categorías de datasets:
+capibaraGPT-v2 supports multiple dataset categories:
 
-### capibara_datasets/ (Datasets Curados)
+### capibara_datasets/ (Curated Datasets)
 
-Datasets específicamente curados para Capibara:
+Datasets specifically curated for Capibara:
 
 ```python
 from capibara.data.capibara_datasets import load_dataset
 
-# Cargar dataset curado
+# Load curated dataset
 dataset = load_dataset("capibara/spanish-literature")
 
-# Datasets disponibles:
+# Available datasets:
 # - capibara/spanish-literature
 # - capibara/academic-papers
 # - capibara/minority-languages
-# - ... (ver capibara_datasets/README.md)
+# - ... (see capibara_datasets/README.md)
 ```
 
-Ver [capibara_datasets/README.md](capibara_datasets/README.md) para lista completa.
+See [capibara_datasets/README.md](capibara_datasets/README.md) for complete list.
 
-### datasets/ (Datasets por Dominio)
+### datasets/ (Domain Datasets)
 
-Datasets organizados por dominio:
+Datasets organized by domain:
 
-| Dominio | Directorio | Descripción |
-|---------|------------|-------------|
-| Academic | `datasets/academic/` | Papers científicos |
-| Economics | `datasets/economics/` | Datos económicos |
-| Engineering | `datasets/engineering_design/` | Diseño de ingeniería |
-| Genomic | `datasets/genomic/` | Datos genómicos |
-| Historical | `datasets/historical/` | Documentos históricos |
-| Humor | `datasets/humor/` | Contenido humorístico |
-| Legal | `datasets/legal/` | Textos legales |
-| Mathematics | `datasets/mathematics/` | Problemas matemáticos |
-| Physics | `datasets/physics/` | Textos de física |
-| Robotics | `datasets/robotics/` | Datos de robótica |
-| Spanish Community | `datasets/spanish_community/` | Comunidades hispanohablantes |
-| Spanish Government | `datasets/spanish_government/` | Documentos gubernamentales |
-| Vision | `datasets/vision/` | Datasets de visión |
-| Multimodal | `datasets/multimodal/` | Datos multimodales |
+| Domain | Directory | Description |
+|--------|-----------|-------------|
+| Academic | `datasets/academic/` | Scientific papers |
+| Economics | `datasets/economics/` | Economic data |
+| Engineering | `datasets/engineering_design/` | Engineering design |
+| Genomic | `datasets/genomic/` | Genomic data |
+| Historical | `datasets/historical/` | Historical documents |
+| Humor | `datasets/humor/` | Humorous content |
+| Legal | `datasets/legal/` | Legal texts |
+| Mathematics | `datasets/mathematics/` | Mathematical problems |
+| Physics | `datasets/physics/` | Physics texts |
+| Robotics | `datasets/robotics/` | Robotics data |
+| Spanish Community | `datasets/spanish_community/` | Spanish-speaking communities |
+| Spanish Government | `datasets/spanish_government/` | Government documents |
+| Vision | `datasets/vision/` | Vision datasets |
+| Multimodal | `datasets/multimodal/` | Multimodal data |
 
 ```python
 from capibara.data.datasets import academic
 
-# Cargar dataset específico
+# Load specific dataset
 dataset = academic.load_arxiv_papers(
     categories=["cs.AI", "cs.LG"],
     years=[2023, 2024]
@@ -129,7 +129,7 @@ dataset = academic.load_arxiv_papers(
 
 ## 📥 Loaders
 
-Los loaders cargan datos desde diferentes fuentes:
+Loaders load data from different sources:
 
 ### Core Loaders
 
@@ -143,21 +143,21 @@ from capibara.data.loaders import (
     GCSLoader
 )
 
-# Cargar texto
+# Load text
 text_loader = TextLoader(
     file_path="data/text/document.txt",
     encoding="utf-8"
 )
 texts = text_loader.load()
 
-# Cargar desde HuggingFace
+# Load from HuggingFace
 hf_loader = HuggingFaceLoader(
     dataset_name="wikitext",
     split="train"
 )
 dataset = hf_loader.load()
 
-# Cargar desde GCS
+# Load from GCS
 gcs_loader = GCSLoader(
     bucket="capibara-data",
     prefix="training/",
@@ -166,12 +166,12 @@ gcs_loader = GCSLoader(
 data = gcs_loader.load()
 ```
 
-### Loader Avanzado
+### Advanced Loader
 
 ```python
 from capibara.data.loaders import DataLoader
 
-# Loader con cache y preprocessing
+# Loader with cache and preprocessing
 loader = DataLoader(
     data_source="gs://capibara-data/training/",
     cache_dir=".cache/data/",
@@ -179,9 +179,9 @@ loader = DataLoader(
     prefetch_factor=4
 )
 
-# Iterar sobre datos
+# Iterate over data
 for batch in loader:
-    # batch ya está preprocesado y batcheado
+    # batch is already preprocessed and batched
     train_step(batch)
 ```
 
@@ -189,7 +189,7 @@ for batch in loader:
 
 ## ⚙️ Processors
 
-Los processors transforman datos raw en formato de training:
+Processors transform raw data into training format:
 
 ### Core Processors
 
@@ -209,7 +209,7 @@ tokenizer = TokenizationProcessor(
 )
 tokens = tokenizer.process(texts)
 
-# Chunking (para documentos largos)
+# Chunking (for long documents)
 chunker = ChunkingProcessor(
     chunk_size=512,
     overlap=50,
@@ -217,7 +217,7 @@ chunker = ChunkingProcessor(
 )
 chunks = chunker.process(long_document)
 
-# Normalización
+# Normalization
 normalizer = NormalizationProcessor(
     lowercase=True,
     remove_accents=False,
@@ -225,7 +225,7 @@ normalizer = NormalizationProcessor(
 )
 normalized = normalizer.process(texts)
 
-# Augmentation (para más datos)
+# Augmentation (for more data)
 augmenter = AugmentationProcessor(
     methods=["synonym_replacement", "back_translation"],
     augmentation_factor=2
@@ -233,12 +233,12 @@ augmenter = AugmentationProcessor(
 augmented = augmenter.process(texts)
 ```
 
-### Pipeline de Procesamiento
+### Processing Pipeline
 
 ```python
 from capibara.data.processors import ProcessingPipeline
 
-# Crear pipeline
+# Create pipeline
 pipeline = ProcessingPipeline([
     NormalizationProcessor(),
     ChunkingProcessor(chunk_size=512),
@@ -246,10 +246,10 @@ pipeline = ProcessingPipeline([
     AugmentationProcessor(augmentation_factor=1.5)
 ])
 
-# Procesar datos
+# Process data
 processed_data = pipeline.process(raw_data)
 
-# Pipeline se puede guardar y cargar
+# Pipeline can be saved and loaded
 pipeline.save("pipelines/my_pipeline.json")
 ```
 
@@ -257,25 +257,25 @@ pipeline.save("pipelines/my_pipeline.json")
 
 ## 🚀 Quick Start
 
-### Cargar y Procesar Dataset
+### Load and Process Dataset
 
 ```python
 from capibara.data import load_dataset, DataProcessor
 
-# 1. Cargar dataset
+# 1. Load dataset
 dataset = load_dataset("capibara/spanish-literature")
 
-# 2. Crear processor
+# 2. Create processor
 processor = DataProcessor(
     tokenizer="gpt2",
     max_length=2048,
     chunk_strategy="sliding_window"
 )
 
-# 3. Procesar dataset
+# 3. Process dataset
 processed = processor.process(dataset)
 
-# 4. Crear DataLoader para training
+# 4. Create DataLoader for training
 from torch.utils.data import DataLoader as TorchDataLoader
 
 dataloader = TorchDataLoader(
@@ -290,12 +290,12 @@ for batch in dataloader:
     train_step(batch)
 ```
 
-### Pipeline Completo End-to-End
+### Complete End-to-End Pipeline
 
 ```python
 from capibara.data import UltraDataOrchestrator
 
-# Crear orquestador
+# Create orchestrator
 orchestrator = UltraDataOrchestrator(
     datasets=[
         "capibara/spanish-literature",
@@ -307,17 +307,17 @@ orchestrator = UltraDataOrchestrator(
     batch_size=32
 )
 
-# Preparar pipeline
+# Prepare pipeline
 orchestrator.prepare_pipeline(
     cache_dir=".cache/",
     num_workers=8
 )
 
-# Iterar sobre datos mixtos
+# Iterate over mixed data
 for batch in orchestrator:
     train_step(batch)
 
-# Métricas del pipeline
+# Pipeline metrics
 metrics = orchestrator.get_metrics()
 print(f"Total samples: {metrics['total_samples']}")
 print(f"Datasets used: {metrics['datasets_used']}")
@@ -327,29 +327,29 @@ print(f"Datasets used: {metrics['datasets_used']}")
 
 ## 📋 Dataset Registry
 
-El registry centraliza todos los datasets disponibles:
+The registry centralizes all available datasets:
 
 ```python
 from capibara.data import DatasetRegistry
 
-# Obtener registry
+# Get registry
 registry = DatasetRegistry()
 
-# Listar todos los datasets
+# List all datasets
 all_datasets = registry.list_all()
-print(f"Datasets disponibles: {len(all_datasets)}")
+print(f"Available datasets: {len(all_datasets)}")
 
-# Buscar por dominio
+# Search by domain
 academic_datasets = registry.find_by_domain("academic")
 legal_datasets = registry.find_by_domain("legal")
 
-# Buscar por idioma
+# Search by language
 spanish_datasets = registry.find_by_language("es")
 
-# Buscar por tags
+# Search by tags
 multilingual = registry.find_by_tags(["multilingual", "minority_languages"])
 
-# Registrar nuevo dataset
+# Register new dataset
 registry.register(
     name="my-custom-dataset",
     path="data/custom/",
@@ -358,14 +358,14 @@ registry.register(
     tags=["specialized", "small"]
 )
 
-# Cargar desde registry
+# Load from registry
 dataset = registry.load("my-custom-dataset")
 ```
 
-### Metadata de Datasets
+### Dataset Metadata
 
 ```python
-# Obtener metadata
+# Get metadata
 metadata = registry.get_metadata("capibara/spanish-literature")
 
 print(f"Name: {metadata['name']}")
@@ -380,14 +380,14 @@ print(f"Description: {metadata['description']}")
 
 ## 🎼 Data Orchestrator
 
-El Ultra Data Orchestrator maneja pipelines complejos:
+The Ultra Data Orchestrator handles complex pipelines:
 
 ```python
 from capibara.data import UltraDataOrchestrator
 
-# Configurar orquestador avanzado
+# Configure advanced orchestrator
 orchestrator = UltraDataOrchestrator(
-    # Datasets múltiples
+    # Multiple datasets
     datasets=[
         {"name": "capibara/spanish-literature", "weight": 0.4},
         {"name": "datasets/academic/arxiv", "weight": 0.3},
@@ -406,8 +406,8 @@ orchestrator = UltraDataOrchestrator(
 
     # Batching strategy
     batch_size=32,
-    dynamic_batching=True,  # Ajusta batch size dinámicamente
-    max_batch_tokens=4096,  # Límite de tokens por batch
+    dynamic_batching=True,  # Dynamically adjust batch size
+    max_batch_tokens=4096,  # Token limit per batch
 
     # Augmentation
     use_augmentation=True,
@@ -423,27 +423,27 @@ orchestrator = UltraDataOrchestrator(
     pin_memory=True
 )
 
-# Preparar y validar pipeline
+# Prepare and validate pipeline
 orchestrator.prepare()
-orchestrator.validate()  # Verifica que todo esté correcto
+orchestrator.validate()  # Verify everything is correct
 
-# Iterar
+# Iterate
 for epoch in range(num_epochs):
     for batch in orchestrator:
         loss = train_step(batch)
 
-    # Métricas por epoch
+    # Metrics per epoch
     epoch_metrics = orchestrator.get_epoch_metrics()
     print(f"Epoch {epoch}: {epoch_metrics}")
 
-# Estadísticas finales
+# Final statistics
 stats = orchestrator.get_statistics()
 print(f"Total batches: {stats['total_batches']}")
 print(f"Total tokens: {stats['total_tokens']}")
 print(f"Avg batch size: {stats['avg_batch_size']:.1f}")
 ```
 
-### Features Avanzados del Orchestrator
+### Advanced Orchestrator Features
 
 ```python
 # Curriculum learning
@@ -453,13 +453,13 @@ orchestrator.enable_curriculum_learning(
     num_steps=10000
 )
 
-# Data mixing estratégico
+# Strategic data mixing
 orchestrator.set_mixing_strategy(
     strategy="temperature_based",  # uniform, weighted, temperature_based
     temperature=0.5
 )
 
-# Deduplicación automática
+# Automatic deduplication
 orchestrator.enable_deduplication(
     method="minhash",  # minhash, exact, semantic
     threshold=0.85
@@ -478,7 +478,7 @@ orchestrator.enable_quality_filter(
 
 ## 🔧 Scrapers
 
-Scrapers para obtener datos de la web:
+Scrapers for obtaining data from the web:
 
 ```python
 from capibara.data.scrapers import (
@@ -490,8 +490,8 @@ from capibara.data.scrapers import (
 
 # Wikipedia scraper
 wiki_scraper = WikipediaScraper(
-    languages=["es", "ca", "gl", "eu"],  # Español, Catalán, Gallego, Euskera
-    categories=["Literatura", "Historia", "Ciencia"]
+    languages=["es", "ca", "gl", "eu"],  # Spanish, Catalan, Galician, Basque
+    categories=["Literature", "History", "Science"]
 )
 wiki_data = wiki_scraper.scrape(max_articles=10000)
 
@@ -516,7 +516,7 @@ reddit_data = reddit_scraper.scrape()
 
 ## 🛠️ Tools
 
-Utilidades para manejo de datos:
+Utilities for data handling:
 
 ```python
 from capibara.data.tools import (
@@ -526,19 +526,19 @@ from capibara.data.tools import (
     data_splitter
 )
 
-# Estadísticas
+# Statistics
 stats = data_statistics.compute(dataset)
 print(f"Total samples: {stats['num_samples']}")
 print(f"Avg length: {stats['avg_length']:.1f}")
 print(f"Vocab size: {stats['vocab_size']}")
 
-# Validación
+# Validation
 is_valid, errors = data_validator.validate(
     dataset,
     checks=["format", "encoding", "duplicates", "quality"]
 )
 
-# Limpieza
+# Cleaning
 cleaned = data_cleaner.clean(
     dataset,
     remove_duplicates=True,
@@ -557,24 +557,24 @@ train, val, test = data_splitter.split(
 
 ---
 
-## 📚 Configuración
+## 📚 Configuration
 
 ### Config Files
 
 ```python
 from capibara.data.configs import load_config
 
-# Cargar configuración de dataset
+# Load dataset configuration
 config = load_config("configs/academic_dataset.yaml")
 
-# Config incluye:
+# Config includes:
 # - Source paths
 # - Preprocessing parameters
 # - Tokenizer settings
 # - Batching configuration
 ```
 
-### Ejemplo de Config
+### Config Example
 
 ```yaml
 # configs/my_dataset.yaml
@@ -608,19 +608,19 @@ quality:
 
 ---
 
-## 🔗 Compatibilidad
+## 🔗 Compatibility
 
-El módulo mantiene compatibilidad backwards:
+The module maintains backwards compatibility:
 
 ```python
-# Imports legacy funcionan
-from capibara.data.datasets import load_dataset  # ✅ Funciona
-from capibara.data.loaders import DataLoader     # ✅ Funciona
-from capibara.data.processors import Tokenizer   # ✅ Funciona
+# Legacy imports work
+from capibara.data.datasets import load_dataset  # ✅ Works
+from capibara.data.loaders import DataLoader     # ✅ Works
+from capibara.data.processors import Tokenizer   # ✅ Works
 
-# Imports nuevos recomendados
-from capibara.data.core import DataLoader        # ✅ Recomendado
-from capibara.data.capibara_datasets import load_dataset  # ✅ Recomendado
+# New recommended imports
+from capibara.data.core import DataLoader        # ✅ Recommended
+from capibara.data.capibara_datasets import load_dataset  # ✅ Recommended
 ```
 
 ---
@@ -641,8 +641,8 @@ from capibara.data.capibara_datasets import load_dataset  # ✅ Recomendado
 1. **Use caching**: `cache_preprocessed=True`
 2. **Increase workers**: `num_workers=8`
 3. **Enable prefetching**: `prefetch_factor=4`
-4. **Use parquet**: Más rápido que JSON/CSV
-5. **GCS parallel loading**: Múltiples archivos en paralelo
+4. **Use parquet**: Faster than JSON/CSV
+5. **GCS parallel loading**: Multiple files in parallel
 
 ---
 
@@ -651,7 +651,7 @@ from capibara.data.capibara_datasets import load_dataset  # ✅ Recomendado
 ### Error: "Dataset not found"
 
 ```python
-# Verificar registry
+# Verify registry
 from capibara.data import DatasetRegistry
 registry = DatasetRegistry()
 available = registry.list_all()
@@ -660,19 +660,19 @@ print(f"Available datasets: {available}")
 
 ### Slow Loading
 
-- Aumentar `num_workers`
-- Usar formato Parquet en lugar de JSON
-- Habilitar cache
-- Usar GCS en lugar de local para datasets grandes
+- Increase `num_workers`
+- Use Parquet format instead of JSON
+- Enable cache
+- Use GCS instead of local for large datasets
 
 ### Out of Memory
 
-- Reducir `batch_size`
-- Reducir `prefetch_factor`
-- Usar streaming mode (no cargar todo en memoria)
-- Procesar en chunks más pequeños
+- Reduce `batch_size`
+- Reduce `prefetch_factor`
+- Use streaming mode (don't load everything in memory)
+- Process in smaller chunks
 
 ---
 
-**Última actualización**: 2025-11-16
-**Versión del sistema**: v2.0.0
+**Last updated**: 2025-11-16
+**System version**: v2.0.0

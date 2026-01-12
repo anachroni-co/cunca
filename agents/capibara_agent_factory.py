@@ -76,26 +76,26 @@ LLM_REGISTRY = {
 def create_llm(llm_spec: dict) -> CapibaraLLM:
     llm_type = llm_spec["type"]
     if llm_type not in LLM_REGISTRY:
-        raise ValueError(f"LLM type {llm_type} no soportado. Opciones: {list(LLM_REGISTRY.keys())}")
+        raise ValueError(f"LLM type {llm_type} not supported. Options: {list(LLM_REGISTRY.keys())}")
     try:
         llm = LLM_REGISTRY[llm_type](llm_spec)
-        # configure optimizaciones tpu v4-32
+        # configure tpu v4-32 optimizations
         llm.mesh = create_tpu_mesh(TPU_MESH_SHAPE)
         llm.memory_monitor = TpuMemoryMonitor(limit_gb=TPU_MEMORY_LIMIT_GB)
         llm.profiler = TpuProfiler()
         return llm
     except KeyError as e:
-        raise ValueError(f"Falta parameter requerido {e} en spec para LLM tipo {llm_type}")
+        raise ValueError(f"Missing required parameter {e} in spec for LLM type {llm_type}")
 
 def create_vector_db(vectordb_spec: dict) -> Optional[CapibaraVectorDB]:
     if vectordb_spec.get("type") == "qdrant":
-        # Stub retriever - reemplazar with retriever real
+        # Stub retriever - replace with real retriever
         class StubRetriever:
             def invoke(self, query):
                 return [type('Doc', (), {'page_content': f"Contexto para: {query}"})()]
         
         vectordb = CapibaraVectorDB(StubRetriever())
-        # configure optimizaciones tpu v4-32
+        # configure tpu v4-32 optimizations
         vectordb.mesh = create_tpu_mesh(TPU_MESH_SHAPE)
         vectordb.memory_monitor = TpuMemoryMonitor(limit_gb=TPU_MEMORY_LIMIT_GB)
         return vectordb
@@ -103,19 +103,19 @@ def create_vector_db(vectordb_spec: dict) -> Optional[CapibaraVectorDB]:
 
 def create_tools(tool_names: List[str]):
     tools = [get_tool_by_name(name) for name in tool_names]
-    # configure optimizaciones tpu v4-32 for each herramienta
+    # configure tpu v4-32 optimizations for each herramienta
     for tool in tools:
         tool.mesh = create_tpu_mesh(TPU_MESH_SHAPE)
         tool.memory_monitor = TpuMemoryMonitor(limit_gb=TPU_MEMORY_LIMIT_GB)
     return tools
 
 def create_agent_from_spec(spec: dict, base_model=None):
-    # Agente estándar
+    # Standard agent
     llm = create_llm(spec["llm"])
     vectordb = create_vector_db(spec.get("vectordb", {}))
     tools = create_tools(spec.get("tools", []))
     agent = CapibaraAgent(name=spec["name"], llm=llm, vectordb=vectordb, tools=tools)
-    # configure optimizaciones tpu v4-32
+    # configure tpu v4-32 optimizations
     agent.mesh = create_tpu_mesh(TPU_MESH_SHAPE)
     agent.memory_monitor = TpuMemoryMonitor(limit_gb=TPU_MEMORY_LIMIT_GB)
     agent.profiler = TpuProfiler()
