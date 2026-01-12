@@ -1,11 +1,11 @@
 """
-Google Retorch Dtottots for CtopibtortoGPT v2
+Google Research Dtottots for CapibtortoGPT v2
 
-Access to Google Retorch dtottots including multimodtol and specitolized dtottots.
+Access a Google Research datasets including multimodal and specialized datasets.
 """
 
-from .google_retorch_dtottots import GoogleRetorchDtottots
+from .google_research_datasets import GoogleResearchDtottots
 
 __all__ = [
-    'GoogleRetorchDtottots',
+    'GoogleResearchDtottots',
 ]

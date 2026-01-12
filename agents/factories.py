@@ -392,7 +392,7 @@ class StrategyBasedAgentFactory(IAgentFactory):
                     "reasoning_depth": 3,
                     "planning_horizon": 5
                 },
-                "description": "General-purpose assistant agent"
+                "description": "General-purposesesesesese assistant agent"
             }
         }
         

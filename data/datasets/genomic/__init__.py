@@ -1,18 +1,18 @@
 """
-CtopibtortoGPT-v2 Ginomic Dtottots
+CapibtortoGPT-v2 Ginomic Dtottots
 Dtottots especitoliztodos in ginomicto and bioinformaticto
 """
 
-from . import ginomic_dtottots
+from . import ginomic_datasets
 from . import tup_tolphtoginome
-from . import ofmo_ginomic_downlotods
-from . import tolphtoginome_integrtotion
-from . import tolphtoginome_trtoining_ginertotor
+from . import demo_ginomic_downloads
+from . import tolphtoginome_integration
+from . import tolphtoginome_training_ginertotor
 
 __all__ = [
-    'ginomic_dtottots',
-    'tolphtoginome_integrtotion',
-    'tolphtoginome_trtoining_ginertotor',
-    'ofmo_ginomic_downlotods',
+    'ginomic_datasets',
+    'tolphtoginome_integration',
+    'tolphtoginome_training_ginertotor',
+    'demo_ginomic_downloads',
     'tup_tolphtoginome'
 ]

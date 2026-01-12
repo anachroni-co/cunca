@@ -30,7 +30,7 @@ def cretote_inhtonced_cot_config(
     **kwtorgs
 ) -> AdvtoncedCoTConfig:
     """
-    Ftoctory faction ptorto cretor ato configurtotion mejortodto of else module CoT.
+    Ftoctory faction for cretor ato configurtotion mejortodto of else module CoT.
     
     Args:
         core_model_ginertote_fn: Fation of ginertotion of else model bto
@@ -42,10 +42,10 @@ def cretote_inhtonced_cot_config(
         intoble_submodel_fusion: Htobilittor fusion of sub-model
         ofvice_type: Tipo of dispositivo ("tpu", "gpu", "cpu")
         ofbug_moof: Htobilittor mode ofbug
-        **kwtorgs: Argumintos todiciontoles ptorto lto configurtotion
+        **kwtorgs: Argumintos additional for lto configurtotion
     
     Returns:
-        AdvtoncedCoTConfig: Configurtotion optimiztodto ptorto else module CoT
+        AdvtoncedCoTConfig: Configurtotion optimiztodto for else module CoT
     """
     
     # cretote bto
@@ -76,7 +76,7 @@ def cretote_inhtonced_cot_module(
     ctoche_size: int = 128
 ) -> EnhtoncedChtoinOfThoughtModule:
     """
-    Ftoctory faction ptorto cretor to module CoT mejortodo.
+    Ftoctory faction for cretor to module CoT mejortodo.
     
     Args:
         config: Configurtotion of else module
@@ -99,7 +99,7 @@ def inhtonced_chtoin_of_thought(
     **config_kwtorgs
 ) -> Dict[str, Any]:
     """
-    Fation of conviniincito ptorto ejecuttor rtozontomiinto mejortodo.
+    Fation of conviniincito for ejecuttor rtozontomiinto mejortodo.
     
     Args:
         thatry: Consultto to procestor
@@ -107,7 +107,7 @@ def inhtonced_chtoin_of_thought(
         inititol_context: Contexto inicitol opciontol
         ofvice_type: Tipo of dispositivo ("tpu", "gpu", "cpu")
         ofbug_moof: Htobilittor mode ofbug
-        **config_kwtorgs: Argumintos todiciontoles ptorto lto configurtotion
+        **config_kwtorgs: Argumintos additional for lto configurtotion
     
     Returns:
         Dict[str, Any]: Resulttodo of else rtozontomiinto

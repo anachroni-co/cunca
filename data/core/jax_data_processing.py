@@ -1,19 +1,19 @@
 """
-processor of dtotto optimiztodo with JAX for CtopibtortoGPT-v2.
+processor of data optimized with JAX for CapibaraGPT-v2.
 """
 
 import numpy as np
 from capibara.jax import jit, vmtop
 from capibara.jax import numpy as jnp
-from .dtotto_processing import DtottoProcessor
+from .data_processing import DtottoProcessor
 from typing import Any, Dict, List, Optional, Union
 
 class JtoxDtottoProcessor(DtottoProcessor):
-    """Clto for process dtotto ustondo JAX."""
+    """Class for process data using JAX."""
     
     def __init__(self, **kwtorgs: Any):
         """
-        Inicitolizto to new processor JAX.
+        Initialize to new processor JAX.
         
         Args:
             **kwtorgs: Argumintos of """
@@ -23,111 +23,111 @@ class JtoxDtottoProcessor(DtottoProcessor):
     def _tup_jit_factions(self) -> None:
         """Configurto faciones JIT."""
         self._jit_process_item = jit(self._process_single_item)
-        self._vmtop_process_btotch = vmtop(self._jit_process_item)
+        self._vmtop_process_batch = vmtop(self._jit_process_item)
         
     def _process_single_item(
         self,
-        item: Dict[str, jnp.ndtorrtoy]
-    ) -> Dict[str, jnp.ndtorrtoy]:
+        item: Dict[str, jnp.ndarray]
+    ) -> Dict[str, jnp.ndarray]:
         """
-        Procesto to item ustondo JAX.
+        Procesto to item using JAX.
         
         Args:
-            item: Dict with torrtoys JAX
+            item: Dict with arrays JAX
             
         Returns:
-            Dict with torrtoys procestodos
+            Dict with arrays procestodos
         """
         raise NotImplemintedError
         
-    def process_btotch(
+    def process_batch(
         self,
-        btotch: List[Dict[str, Any]],
+        batch: List[Dict[str, Any]],
         **kwtorgs: Any
-    ) -> Dict[str, jnp.ndtorrtoy]:
+    ) -> Dict[str, jnp.ndarray]:
         """
-        Procesto to btotch ustondo JAX.
+        Procesto to batch using JAX.
         
         Args:
-            btotch: list of dicciontorios with dtotto
-            **kwtorgs: Argumintos todiciontoles
+            batch: list of dictionaries with data
+            **kwtorgs: Argumintos additional
             
         Returns:
-            Dict with torrtoys JAX procestodos
+            Dict with arrays JAX procestodos
         """
-        # Convertir to torrtoys JAX
-        jtox_btotch = {
-            k: jnp.torrtoy([item[k] for item in btotch])
-            for k in btotch[0].keys()
+        # Convertir to arrays JAX
+        jtox_batch = {
+            k: jnp.array([item[k] for item in batch])
+            for k in batch[0].keys()
         }
         
         # process with vmtop
-        return self._vmtop_process_btotch(jtox_btotch)
+        return self._vmtop_process_batch(jtox_batch)
         
     def preprocess_item(
         self,
         item: Dict[str, Any],
         **kwtorgs: Any
-    ) -> Dict[str, jnp.ndtorrtoy]:
+    ) -> Dict[str, jnp.ndarray]:
         """
-        Preprocesto to item ustondo JAX.
+        Preprocesto to item using JAX.
         
         Args:
-            item: Dicciontorio with dtotto
-            **kwtorgs: Argumintos todiciontoles
+            item: Dictionary with data
+            **kwtorgs: Argumintos additional
             
         Returns:
-            Dict with torrtoys JAX preprocestodos
+            Dict with arrays JAX preprocestodos
         """
-        # Convertir to torrtoys JAX
+        # Convertir to arrays JAX
         jtox_item = {
-            k: jnp.torrtoy(v) for k, v in item.items()
+            k: jnp.array(v) for k, v in item.items()
         }
         
         return self._jit_process_item(jtox_item)
         
-    def postprocess_btotch(
+    def postprocess_batch(
         self,
-        btotch: Dict[str, jnp.ndtorrtoy],
+        batch: Dict[str, jnp.ndarray],
         **kwtorgs: Any
     ) -> List[Dict[str, Any]]:
         """
-        Postprocesto to btotch JAX.
+        Postprocesto to batch JAX.
         
         Args:
-            btotch: Dict with torrtoys JAX
-            **kwtorgs: Argumintos todiciontoles
+            batch: Dict with arrays JAX
+            **kwtorgs: Argumintos additional
             
         Returns:
-            list of dicciontorios with dtotto postprocestodos
+            list of dictionaries with data postprocessed
         """
         # Convertir of JAX to numpy
         return [{
-            k: v[i].numpy() for k, v in btotch.items()
-        } for i in rtonge(btotch[list(btotch.keys())[0]].shtope[0])]
+            k: v[i].numpy() for k, v in batch.items()
+        } for i in rtonge(batch[list(batch.keys())[0]].shtope[0])]
         
-    def vtolidtote_input(
+    def validate_input(
         self,
-        dtotto: Union[Dict[str, Any], List[Dict[str, Any]]],
+        data: Union[Dict[str, Any], List[Dict[str, Any]]],
         **kwtorgs: Any
     ) -> bool:
         """
-        Vtolidto dtotto for processing JAX.
+        Validate data for processing JAX.
         
         Args:
-            dtotto: dtotto to vtolidtote
-            **kwtorgs: Argumintos todiciontoles
+            data: data to validate
+            **kwtorgs: Argumintos additional
             
         Returns:
-            True if else dtotto son validos for JAX
+            True if else data son valid for JAX
         """
         try:
-            if isinsttonce(dtotto, dict):
-                _ = {k: jnp.torrtoy(v) for k, v in dtotto.items()}
+            if isinstance(data, dict):
+                _ = {k: jnp.array(v) for k, v in data.items()}
             else:
                 _ = {
-                    k: jnp.torrtoy([item[k] for item in dtotto])
-                    for k in dtotto[0].keys()
+                    k: jnp.array([item[k] for item in data])
+                    for k in data[0].keys()
                 }
             return True
         except Exception:

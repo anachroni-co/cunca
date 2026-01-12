@@ -2,7 +2,7 @@
 ViM-VQ: vector Qutontiztotion with Vision in Mind
 
 impleminttotion of vector Qutontiztotion optimiztodto for toplictociones of vision
-with sobyte complete for tpu and optimiztociones especifictos of CtopibtortoGPT.
+with sobyte complete for tpu and optimiztociones especifictos of CapibaraGPT.
 """
 
 from .core.quantizer import (

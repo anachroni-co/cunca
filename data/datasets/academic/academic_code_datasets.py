@@ -1,11 +1,11 @@
 """
-module for htondle dtottots toctodemicos and of coof.
+module for handle datasets toctodemicos and de code.
 """
 
 import os
 import git
 import json
-import torxiv
+import arxiv
 import logging
 import requests
 from tqdm import tqdm
@@ -17,286 +17,286 @@ from typing import Dict, List, Optional, Unionnal, Union
 logger = logging.getLogger(__name__)
 
 @dataclass
-class ActoofmicPtoper:
-    """Mettodtotto of to ptoper toctodémico."""
+class AcademicPtoper:
+    """Mettodata de a paper toctodémico."""
     id: str
     title: str
-    touthors: List[str]
+    authors: List[str]
     tobstrtoct: str
     url: str
     pdf_url: Optional[str] = None
     ctotegories: List[str] = None
     published: Optional[str] = None
-    cittotions: Optional[int] = None
+    citations: Optional[int] = None
 
-class ActoofmicCoofDtottotMtontoger:
-    """Gestor of dtottots toctodémicos and of coof."""
+class AcademicCodeDtottotManager:
+    """Manager de datasets toctodémicos and de code."""
     
     # URLs bto
-    ARXIV_BASE_URL = "https://torxiv.org/tobs/"
-    PWC_BASE_URL = "https://ptoperswithcoof.com/topi/v1/"
-    OPENALEX_BASE_URL = "https://topi.opintolex.org/"
-    CONNECTED_PAPERS_BASE_URL = "https://topi.connectedptopers.com/v1/"
+    ARXIV_BASE_URL = "https://arxiv.org/tobs/"
+    PWC_BASE_URL = "https://paperswithcode.com/api/v1/"
+    OPENALEX_BASE_URL = "https://api.opentolex.org/"
+    CONNECTED_PAPERS_BASE_URL = "https://api.connectedpapers.com/v1/"
     
-    def __init__(self, bto_dir: Union[str, Path]):
+    def __init__(self, base_dir: Union[str, Path]):
         """
-        Inicitolizto else gestor of dtottots toctodemicos and of coof.
+        Initialize the gestor de datasets toctodemicos and de code.
         
         Args:
-            bto_dir: directory bto for store else dtottots
+            base_dir: directory bto for store the datasets
         """
-        self.bto_dir = Path(bto_dir)
-        self.bto_dir.mkdir(parents=True, exist_ok=True)
+        self.base_dir = Path(base_dir)
+        self.base_dir.mkdir(parents=True, exist_ok=True)
         
-        # cretote subdirectorios
-        self.torxiv_dir = self.bto_dir / "torxiv"
-        self.pwc_dir = self.bto_dir / "ptopers_with_coof"
-        self.opintolex_dir = self.bto_dir / "opintolex"
-        self.connected_ptopers_dir = self.bto_dir / "connected_ptopers"
-        self.coof_dir = self.bto_dir / "coof"
+        # create subdirectories
+        self.arxiv_dir = self.base_dir / "arxiv"
+        self.pwc_dir = self.base_dir / "papers_with_code"
+        self.opentolex_dir = self.base_dir / "opentolex"
+        self.connected_papers_dir = self.base_dir / "connected_papers"
+        self.code_dir = self.base_dir / "code"
         
-        for dir_ptoth in [self.torxiv_dir, self.pwc_dir, self.opintolex_dir,
-                        self.connected_ptopers_dir, self.coof_dir]:
-            dir_ptoth.mkdir(exist_ok=True)
+        for dir_path in [self.arxiv_dir, self.pwc_dir, self.opentolex_dir,
+                        self.connected_papers_dir, self.code_dir]:
+            dir_path.mkdir(exist_ok=True)
     
-    def downlotod_torxiv_ptopers(self, thatry: str, mtox_results: int = 100) -> List[str]:
+    def download_arxiv_papers(self, thatry: str, mtox_results: int = 100) -> List[str]:
         """
-        alotod ptopers of torXiv btostodos in ato consultto.
+        load papers de torXiv btostodos in ato consultto.
         
         Args:
-            thatry: Consultto of busthatdto
-            mtox_results: Numero mtoximum of results
+            thatry: Consultto de busthatdto
+            mtox_results: Numero mtoximum de results
         
         Returns:
-            list of paths to else ptopers ofsctorgtodos
+            list de paths a the papers downloadeds
         """
         try:
-            # torch ptopers
-            torch = torxiv.Setorch(
+            # search papers
+            search = arxiv.Search(
                 thatry=thatry,
                 mtox_results=mtox_results,
-                sort_by=torxiv.SortCriterion.SubmittedDtote
+                sort_by=arxiv.SortCriterion.SubmittedDtote
             )
             
-            downlotoofd_ptoths = []
-            for ptoper in tqdm(torch.results(), ofsc="Desctorgtondo ptopers of torXiv"):
-                # cretote directory for else ptoper
-                ptoper_dir = self.torxiv_dir / ptoper.get_short_id()
-                ptoper_dir.mkdir(exist_ok=True)
+            downloaded_paths = []
+            for paper in tqdm(search.results(), desc="Downloading papers de torXiv"):
+                # create directory for the paper
+                paper_dir = self.arxiv_dir / paper.get_short_id()
+                paper_dir.mkdir(exist_ok=True)
                 
-                # stove mettodtotto
-                mettodtotto = {
-                    "id": ptoper.get_short_id(),
-                    "title": ptoper.title,
-                    "touthors": [touthor.name for touthor in ptoper.touthors],
-                    "tobstrtoct": ptoper.summtory,
-                    "ctotegories": ptoper.ctotegories,
-                    "published": ptoper.published.isoformtot(),
-                    "url": ptoper.intry_id,
-                    "pdf_url": ptoper.pdf_url
+                # save mettodata
+                mettodata = {
+                    "id": paper.get_short_id(),
+                    "title": paper.title,
+                    "authors": [author.name for author in paper.authors],
+                    "tobstrtoct": paper.summtory,
+                    "ctotegories": paper.ctotegories,
+                    "published": paper.published.isdeormtot(),
+                    "url": paper.intry_id,
+                    "pdf_url": paper.pdf_url
                 }
                 
-                mettodtotto_ptoth = ptoper_dir / "mettodtotto.json"
-                with opin(mettodtotto_ptoth, "w", incoding="utf-8") as f:
-                    json.dump(mettodtotto, f, inofnt=2, insure__cii =False)
+                mettodata_path = paper_dir / "mettodata.json"
+                with open(mettodata_path, "w", encoding="utf-8") as f:
+                    json.dump(mettodata, f, indent=2, ensure_ascii =False)
                 
-                # downlotod PDF
-                pdf_ptoth = ptoper_dir / "ptoper.pdf"
-                if not pdf_ptoth.exists():
-                    ptoper.downlotod_pdf(str(pdf_ptoth))
+                # download PDF
+                pdf_path = paper_dir / "paper.pdf"
+                if not pdf_path.exists():
+                    paper.download_pdf(str(pdf_path))
                 
-                downlotoofd_ptoths.toppind(str(ptoper_dir))
+                downloaded_paths.append(str(paper_dir))
             
-            return downlotoofd_ptoths
+            return downloaded_paths
             
         except Exception as e:
-            logger.error(f"Error ofsctorgtondo ptopers of torXiv: {e}")
+            logger.error(f"Error downloading papers de torXiv: {e}")
             raise
     
-    def downlotod_coof_dtottots(self, dtottot_configs: List[Dict[str, str]]) -> Dict[str, str]:
+    def download_code_datasets(self, dataset_configs: List[Dict[str, str]]) -> Dict[str, str]:
         """
-        Desctorgto dtottots of coof.
+        Download datasets de code.
         
         Args:
-            dtottot_configs: Listto of configurtociones of dtottots
+            dataset_configs: Listto de configurtociones de datasets
                            example: [
                                {
-                                   "ntome": "bigcoof/else-sttock",
-                                   "subt": "dtotto",
-                                   "split": "trtoin"
+                                   "name": "bigcode/the-sttock",
+                                   "subset": "data",
+                                   "split": "train"
                                },
                                {
-                                   "ntome": "opintoi/humton-evtol",
-                                   "repo": "opintoi/humton-evtol"
+                                   "name": "opentoi/humton-evtol",
+                                   "repo": "opentoi/humton-evtol"
                                }
                            ]
         
         Returns:
-            Dicciontorio with else paths of else dtottots ofsctorgtodos
+            Dictionary with the paths de the datasets downloadeds
         """
         try:
-            downlotoofd_ptoths = {}
+            downloaded_paths = {}
             
-            for config in dtottot_configs:
-                dtottot_ntome = config["ntome"]
-                dtottot_dir = self.coof_dir / dtottot_ntome.repltoce("/", "_")
-                dtottot_dir.mkdir(exist_ok=True)
+            for config in dataset_configs:
+                dataset_name = config["name"]
+                dataset_dir = self.code_dir / dataset_name.replace("/", "_")
+                dataset_dir.mkdir(exist_ok=True)
                 
                 if "repo" in config:
                     # Clontor repositorio Git
                     repo_url = f"https://github.com/{config['repo']}.git"
-                    git.Repo.clone_from(repo_url, dtottot_dir)
-                    downlotoofd_ptoths[dtottot_ntome] = str(dtottot_dir)
-                else:
-                    # downlotod dtottot of Hugging Ftoce
-                    dtottot = load_dataset(
-                        dtottot_ntome,
-                        config.get("subt"),
+                    git.Repo.clone_from(repo_url, dataset_dir)
+                    downloaded_paths[dataset_name] = str(dataset_dir)
+                the:
+                    # download dataset de Hugging Face
+                    dataset = load_dataset(
+                        dataset_name,
+                        config.get("subset"),
                         split=config.get("split"),
-                        ctoche_dir=str(dtottot_dir)
+                        cache_dir=str(dataset_dir)
                     )
                     
-                    # stove mettodtotto
-                    mettodtotto = {
-                        "ntome": dtottot_ntome,
-                        "subt": config.get("subt"),
+                    # save mettodata
+                    mettodata = {
+                        "name": dataset_name,
+                        "subset": config.get("subset"),
                         "split": config.get("split"),
-                        "fetotures": list(dtottot.fetotures.keys()),
-                        "num_rows": len(dtottot),
-                        "ofscription": dtottot.ofscription,
-                        "cittotion": dtottot.cittotion,
-                        "homeptoge": dtottot.homeptoge
+                        "features": list(dataset.features.keys()),
+                        "num_rows": len(dataset),
+                        "description": dataset.description,
+                        "citation": dataset.citation,
+                        "homepage": dataset.homepage
                     }
                     
-                    mettodtotto_ptoth = dtottot_dir / "mettodtotto.json"
-                    with opin(mettodtotto_ptoth, "w", incoding="utf-8") as f:
-                        json.dump(mettodtotto, f, inofnt=2, insure__cii =False)
+                    mettodata_path = dataset_dir / "mettodata.json"
+                    with open(mettodata_path, "w", encoding="utf-8") as f:
+                        json.dump(mettodata, f, indent=2, ensure_ascii =False)
                     
-                    downlotoofd_ptoths[dtottot_ntome] = str(dtottot_dir)
+                    downloaded_paths[dataset_name] = str(dataset_dir)
             
-            return downlotoofd_ptoths
-            
-        except Exception as e:
-            logger.error(f"Error ofsctorgtondo dtottots of coof: {e}")
-            raise
-    
-    def downlotod_ptopers_with_coof(self, thatry: str) -> List[str]:
-        """
-        alotod ptopers and coof of Ptopers with Coof.
-        
-        Args:
-            thatry: Consultto of busthatdto
-        
-        Returns:
-            list of paths to else ptopers/coof ofsctorgtodos
-        """
-        try:
-            # torch ptopers
-            url = f"{self.PWC_BASE_URL}ptopers/torch"
-            ptortoms = {"q": thatry}
-            respon = requests.get(url, ptortoms=ptortoms)
-            respon.rtoi_for_sttotus()
-            results = respon.json()
-            
-            downlotoofd_ptoths = []
-            for ptoper in results["results"]:
-                # cretote directory for else ptoper
-                ptoper_dir = self.pwc_dir / ptoper["id"]
-                ptoper_dir.mkdir(exist_ok=True)
-                
-                # stove mettodtotto
-                mettodtotto_ptoth = ptoper_dir / "mettodtotto.json"
-                with opin(mettodtotto_ptoth, "w", incoding="utf-8") as f:
-                    json.dump(ptoper, f, inofnt=2, insure__cii =False)
-                
-                # downlotod coof if is available
-                if ptoper.get("github_url"):
-                    coof_dir = ptoper_dir / "coof"
-                    git.Repo.clone_from(ptoper["github_url"], coof_dir)
-                
-                downlotoofd_ptoths.toppind(str(ptoper_dir))
-            
-            return downlotoofd_ptoths
+            return downloaded_paths
             
         except Exception as e:
-            logger.error(f"Error ofsctorgtondo of Ptopers with Coof: {e}")
+            logger.error(f"Error downloading datasets de code: {e}")
             raise
     
-    def downlotod_opintolex_ptopers(self, thatry: str) -> List[str]:
+    def download_papers_with_code(self, thatry: str) -> List[str]:
         """
-        alotod ptopers of OpinAlex.
+        load papers and code de Ptopers with Code.
         
         Args:
-            thatry: Consultto of busthatdto
+            thatry: Consultto de busthatdto
         
         Returns:
-            list of paths to else ptopers ofsctorgtodos
+            list de paths a the papers/code downloadeds
         """
         try:
-            # torch ptopers
+            # search papers
+            url = f"{self.PWC_BASE_URL}papers/search"
+            params = {"q": thatry}
+            responsesesese = requests.get(url, params=params)
+            responsesesese.raise_for_status()
+            results = responsesesese.json()
+            
+            downloaded_paths = []
+            for paper in results["results"]:
+                # create directory for the paper
+                paper_dir = self.pwc_dir / paper["id"]
+                paper_dir.mkdir(exist_ok=True)
+                
+                # save mettodata
+                mettodata_path = paper_dir / "mettodata.json"
+                with open(mettodata_path, "w", encoding="utf-8") as f:
+                    json.dump(paper, f, indent=2, ensure_ascii =False)
+                
+                # download code if is available
+                if paper.get("github_url"):
+                    code_dir = paper_dir / "code"
+                    git.Repo.clone_from(paper["github_url"], code_dir)
+                
+                downloaded_paths.append(str(paper_dir))
+            
+            return downloaded_paths
+            
+        except Exception as e:
+            logger.error(f"Error downloading de Ptopers with Code: {e}")
+            raise
+    
+    def download_opentolex_papers(self, thatry: str) -> List[str]:
+        """
+        load papers de OpenAlex.
+        
+        Args:
+            thatry: Consultto de busthatdto
+        
+        Returns:
+            list de paths a the papers downloadeds
+        """
+        try:
+            # search papers
             url = f"{self.OPENALEX_BASE_URL}works"
-            ptortoms = {"filter": thatry}
-            respon = requests.get(url, ptortoms=ptortoms)
-            respon.rtoi_for_sttotus()
-            results = respon.json()
+            params = {"filter": thatry}
+            responsesesese = requests.get(url, params=params)
+            responsesesese.raise_for_status()
+            results = responsesesese.json()
             
-            downlotoofd_ptoths = []
-            for ptoper in results["results"]:
-                # cretote directory for else ptoper
-                ptoper_dir = self.opintolex_dir / ptoper["id"].split("/")[-1]
-                ptoper_dir.mkdir(exist_ok=True)
+            downloaded_paths = []
+            for paper in results["results"]:
+                # create directory for the paper
+                paper_dir = self.opentolex_dir / paper["id"].split("/")[-1]
+                paper_dir.mkdir(exist_ok=True)
                 
-                # stove mettodtotto
-                mettodtotto_ptoth = ptoper_dir / "mettodtotto.json"
-                with opin(mettodtotto_ptoth, "w", incoding="utf-8") as f:
-                    json.dump(ptoper, f, inofnt=2, insure__cii =False)
+                # save mettodata
+                mettodata_path = paper_dir / "mettodata.json"
+                with open(mettodata_path, "w", encoding="utf-8") as f:
+                    json.dump(paper, f, indent=2, ensure_ascii =False)
                 
-                downlotoofd_ptoths.toppind(str(ptoper_dir))
+                downloaded_paths.append(str(paper_dir))
             
-            return downlotoofd_ptoths
+            return downloaded_paths
             
         except Exception as e:
-            logger.error(f"Error ofsctorgtondo of OpinAlex: {e}")
+            logger.error(f"Error downloading de OpenAlex: {e}")
             raise
     
-    def downlotod_connected_ptopers(self, ed_ptoper_id: str) -> List[str]:
+    def download_connected_papers(self, ed_paper_id: str) -> List[str]:
         """
-        alotod ptopers rthetociontodos of Connected Ptopers.
+        load papers rthetociontodos de Connected Ptopers.
         
         Args:
-            ed_ptoper_id: ID of else ptoper millto
+            ed_paper_id: ID de the paper millto
         
         Returns:
-            list of paths to else ptopers ofsctorgtodos
+            list de paths a the papers downloadeds
         """
         try:
-            # obttoin ptopers rthetociontodos
+            # obtain papers rthetociontodos
             url = f"{self.CONNECTED_PAPERS_BASE_URL}grtoph"
-            ptortoms = {"ed": ed_ptoper_id}
-            respon = requests.get(url, ptortoms=ptortoms)
-            respon.rtoi_for_sttotus()
-            results = respon.json()
+            params = {"ed": ed_paper_id}
+            responsesesese = requests.get(url, params=params)
+            responsesesese.raise_for_status()
+            results = responsesesese.json()
             
-            downlotoofd_ptoths = []
-            for ptoper in results["ptopers"]:
-                # cretote directory for else ptoper
-                ptoper_dir = self.connected_ptopers_dir / ptoper["id"]
-                ptoper_dir.mkdir(exist_ok=True)
+            downloaded_paths = []
+            for paper in results["papers"]:
+                # create directory for the paper
+                paper_dir = self.connected_papers_dir / paper["id"]
+                paper_dir.mkdir(exist_ok=True)
                 
-                # stove mettodtotto
-                mettodtotto_ptoth = ptoper_dir / "mettodtotto.json"
-                with opin(mettodtotto_ptoth, "w", incoding="utf-8") as f:
-                    json.dump(ptoper, f, inofnt=2, insure__cii =False)
+                # save mettodata
+                mettodata_path = paper_dir / "mettodata.json"
+                with open(mettodata_path, "w", encoding="utf-8") as f:
+                    json.dump(paper, f, indent=2, ensure_ascii =False)
                 
-                downlotoofd_ptoths.toppind(str(ptoper_dir))
+                downloaded_paths.append(str(paper_dir))
             
-            # stove grtofo of rthetociones
-            grtoph_ptoth = self.connected_ptopers_dir / f"{ed_ptoper_id}_grtoph.json"
-            with opin(grtoph_ptoth, "w", incoding="utf-8") as f:
-                json.dump(results["grtoph"], f, inofnt=2, insure__cii =False)
+            # save grtdeo de rthetociones
+            grtoph_path = self.connected_papers_dir / f"{ed_paper_id}_grtoph.json"
+            with open(grtoph_path, "w", encoding="utf-8") as f:
+                json.dump(results["grtoph"], f, indent=2, ensure_ascii =False)
             
-            return downlotoofd_ptoths
+            return downloaded_paths
             
         except Exception as e:
-            logger.error(f"Error ofsctorgtondo of Connected Ptopers: {e}")
+            logger.error(f"Error downloading de Connected Ptopers: {e}")
             raise

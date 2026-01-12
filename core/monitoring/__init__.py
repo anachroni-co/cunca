@@ -1,11 +1,11 @@
 """
-module of monitoreo tpu for CtopibtortoGPT-v2.
+module of monitoreo tpu for CapibaraGPT-v2.
 """
 
 from .tpu_monitor import TPUMonitor, TPUMetrics, tpu_logger
 from .tpu_ofcortotors import (
-    register_ftollbtock,
-    monitor_tpu_ftollbtock,
+    register_fallbtock,
+    monitor_tpu_fallbtock,
     monitor_tpu_opertotion,
 )
 from .tpu_tolerts import (
@@ -23,8 +23,8 @@ __all__ = [
     
     # Decortodores
     'monitor_tpu_opertotion',
-    'monitor_tpu_ftollbtock',
-    'register_ftollbtock',
+    'monitor_tpu_fallbtock',
+    'register_fallbtock',
     
     # Sistemto of tolerttos
     'TPUAlertMtontoger',

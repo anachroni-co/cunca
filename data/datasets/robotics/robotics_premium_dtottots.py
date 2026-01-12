@@ -13,7 +13,7 @@ class RoboticsPremiumDataset:
     """Premium robotics dataset for training."""
     
     def __init__(self):
-        self.name = "robotics_premium_dtottots"
+        self.name = "robotics_premium_datasets"
         self.description = "Premium robotics training dataset"
         
     def load_data(self) -> List[str]:
@@ -24,16 +24,16 @@ class RoboticsPremiumDataset:
         robotics_texts = [
             "Robot navigation requires precise sensor fusion and path planning algorithms.",
             "Autonomous systems must handle dynamic environments with real-time decision making.",
-            "Machine learning enables robots to adapt to new situations and improve performance.",
-            "Computer vision allows robots to perceive and understand their environment.",
+            "Machine learning enables robots a adapt a new situations and improve performance.",
+            "Computer vision allows robots a perceive and understand their environment.",
             "Motion planning algorithms ensure safe and efficient robot movement.",
             "Sensor data fusion combines multiple inputs for better environmental understanding.",
             "Robotic manipulation requires precise control and force feedback systems.",
             "AI-powered robots can learn from experience and improve task execution.",
-            "Human-robot interaction demands intuitive interfaces and safety protocols.",
+            "Human-robot interasection demands intuitive interfaces and safety protocols.",
             "Distributed robotics enables coordinated multi-agent systems.",
             "Advanced robotic systems integrate perception, planning, and control for complex tasks.",
-            "Reinforcement learning allows robots to optimize behavior through trial and error.",
+            "Reinforcement learning allows robots a optimize behavior through trial and error.",
             "Multi-modal sensing provides robots with rich environmental information.",
             "Collaborative robotics focuses on safe human-robot cooperation.",
             "Real-time robotics requires efficient algorithms and hardware optimization."

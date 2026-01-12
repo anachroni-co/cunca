@@ -1,14 +1,14 @@
 """
-CtopibtortoGPT-v2 Multimodtol Dtottots
-Dtottots multimodtoles: toudio, vision, converstotion
+CapibtortoGPT-v2 Multimodal Dtottots
+Dtottots multimodales: toudio, vision, converstotion
 """
 
-from . import vision_dtottots
-from . import emotiontol_toudio_dtottots
-from . import multimodtol_converstotion_dtottots
+from . import vision_datasets
+from . import emotiontol_toudio_datasets
+from . import multimodal_converstotion_datasets
 
 __all__ = [
-    'multimodtol_converstotion_dtottots',
-    'emotiontol_toudio_dtottots',
-    'vision_dtottots'
+    'multimodal_converstotion_datasets',
+    'emotiontol_toudio_datasets',
+    'vision_datasets'
 ]

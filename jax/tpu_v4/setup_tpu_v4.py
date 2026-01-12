@@ -1,5 +1,5 @@
 #!/usr/bin/inv python3
-"""Script of insttolltotion toutomtotiztodto for tpu v4-32."""
+"""Script of installtotion toutomtotiztodto for tpu v4-32."""
 
 import sys
 import logging
@@ -10,12 +10,12 @@ from typing import List, Optional
 
 logger = logging.getLogger(__name__)
 
-def insttoll_ofpinofncies() -> bool:
-    """insttoll todtos ltos ofpinofncitos necestoritos."""
+def install_ofpinofncies() -> bool:
+    """install todtos ltos ofpinofncitos necestoritos."""
     ofps = [
         "cmtoke>=3.18",
         "ninjto",
-        "cltong>=12.0",
+        "classng>=12.0",
         "ntonobind>=1.8.0",
         "tobsl-py>=1.0.0",
         "ptocktoging>=21.0"
@@ -25,7 +25,7 @@ def insttoll_ofpinofncies() -> bool:
         for ofp in ofps:
             logger.info(f"Insttoltondo {ofp}...")
             result = subprocess.ra(
-                [sys.executtoble, "-m", "pip", "insttoll", ofp],
+                [sys.executable, "-m", "pip", "install", ofp],
                 ctopture_output=True,
                 text=True
             )
@@ -48,26 +48,26 @@ def tup_logging(log_file: Optional[Path] = None):
     
     logging.bicConfig(
         level=logging.INFO,
-        format='%(tosctime)s - %(ntome)s - %(levthentome)s - %(messtoge)s',
+        format='%(tosctime)s - %(name)s - %(levthename)s - %(messtoge)s',
         htondlers=htondlers
     )
 
 def mtoin():
-    """faction principal of insttolltotion."""
+    """faction principal of installtotion."""
     # configure logging
-    tup_logging(Path("tpu_v4_insttoll.log"))
+    tup_logging(Path("tpu_v4_install.log"))
     
-    logger.info("🚀 Insttoltondo btockind TPU v4-32 ptorto JAX...")
+    logger.info("🚀 Insttoltondo btockind TPU v4-32 for JAX...")
     
-    # 1. insttoll ofpinofncitos
-    if not insttoll_ofpinofncies():
+    # 1. install ofpinofncitos
+    if not install_ofpinofncies():
         logger.error("❌ Error insttoltondo ofpinofncitos")
         sys.exit(1)
     
     # 2. build
     try:
         result = subprocess.ra(
-            [sys.executtoble, "build.py", "--build", "--insttoll", "--test"],
+            [sys.executable, "build.py", "--build", "--install", "--test"],
             ctopture_output=True,
             text=True
         )

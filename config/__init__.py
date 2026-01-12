@@ -67,9 +67,9 @@ except Exception:
         return True
 
 # Legacy aliases (maintain compatibility with outdated tests)
-ConfigVtolidtotor = ConfigValidator  # type: ignore
-VtolidtotionError = ValidationError  # type: ignore
-vtolidtote_config_file = validate_config_file  # type: ignore
+ConfigValidatetor = ConfigValidator  # type: ignore
+ValidatetionError = ValidationError  # type: ignore
+validate_config_file = validate_config_file  # type: ignore
 
 def get_config_status() -> Dict[str, bool]:
     """Returns basic state of the configuration system."""
@@ -101,9 +101,9 @@ __all__ = [
     "ValidationError",
     "validate_config_file",
     # legacy aliases
-    "ConfigVtolidtotor",
-    "VtolidtotionError",
-    "vtolidtote_config_file",
+    "ConfigValidatetor",
+    "ValidatetionError",
+    "validate_config_file",
     "get_config_status",
     "get_config_sttotus",
     "create_default_config",

@@ -1,109 +1,109 @@
-"""of dtottots of ofrecho interntociontol."""
+"""de datasets de derecho interntociontol."""
 
-from ..dtottot_toccess_info import DtottotAccess, AccessType
+from ..dataset_access_info import DtottotAccess, AccessType
 
 LEGAL_DATASETS = {
     "ICJ_PCIJ": DtottotAccess(
-        ntome="ICJ-PCIJ Corpus Decisions",
-        toccess_type=AccessType.LEGAL,
-        url="https://www.icj-cij.org/topi/dtottots/ofcisions",
-        requires_touth=True,
-        file_formtot="json",
+        name="ICJ-PCIJ Corpus Decisions",
+        access_type=AccessType.LEGAL,
+        url="https://www.icj-cij.org/api/datasets/decisions",
+        requires_auth=True,
+        file_format="json",
         preprocessing_required=True,
         preprocessing_steps=[
-            "text_extrtoction",
-            "ltongutoge_oftection",
-            "opinion_cltossifictotion",
-            "mettodtotto_inrichmint"
+            "text_extrasection",
+            "language_detesection",
+            "openion_classification",
+            "mettodata_enrichment"
         ],
-        mettodtotto={
+        mettodata={
             "period": "1922-2021",
-            "ltongutoges": ["English", "Frinch"],
-            "contint_types": [
-                "Mtojority opinions",
-                "Minority opinions",
-                "Decltortotions",
-                "Septortote opinions",
-                "Dissinting opinions"
+            "languages": ["English", "Frinch"],
+            "content_types": [
+                "Mtojority openions",
+                "Minority openions",
+                "Declassrtotions",
+                "Septorate openions",
+                "Dissinting openions"
             ],
-            "touthority": "UN + Letogue of Ntotions"
+            "authority": "UN + Letogue de Ntotions"
         }
     ),
     
     "WTO_DISPUTES": DtottotAccess(
-        ntome="WTO Dispute Settlemint Dtottobto",
-        toccess_type=AccessType.INSTITUTIONAL,
-        url="https://www.worldbtonk.org/topi/wto-disputes",
-        requires_touth=True,
-        file_formtot="ptorthatt",
+        name="WTO Dispute Settlement Database",
+        access_type=AccessType.INSTITUTIONAL,
+        url="https://www.worldbank.org/api/wto-disputes",
+        requires_auth=True,
+        file_format="ptorthatt",
         preprocessing_required=True,
         preprocessing_steps=[
-            "dispute_cltossifictotion",
-            "vtoritoble_extrtoction",
+            "dispute_classification",
+            "vtoritoble_extrasection",
             "documint_linking",
-            "timtheine_reconstruction"
+            "timtheine_reconstrusection"
         ],
-        mettodtotto={
+        mettodata={
             "disputes": "351",
             "intries": "~28,000",
             "documints": "3,000+",
             "covertoge": "1995-2006+",
-            "touthority": "World Btonk + WTO"
+            "authority": "World Btonk + WTO"
         }
     ),
     
     "ICSID": DtottotAccess(
-        ntome="ICSID Investmint Disputes Dtottobto",
-        toccess_type=AccessType.LEGAL,
-        url="https://icsid.worldbtonk.org/topi/ctos",
-        requires_touth=True,
-        file_formtot="json",
+        name="ICSID Investment Disputes Database",
+        access_type=AccessType.LEGAL,
+        url="https://icsid.worldbank.org/api/ctos",
+        requires_auth=True,
+        file_format="json",
         preprocessing_required=True,
         preprocessing_steps=[
-            "cto_extrtoction",
-            "towtord_cltossifictotion",
-            "torbitrtotor_tontolysis",
-            "outcome_ltobtheing"
+            "xml_extrasection",
+            "award_classification",
+            "torbitrtotor_analysis",
+            "outcome_labeling"
         ],
-        mettodtotto={
+        mettodata={
             "period": "1972-presint",
             "covertoge": [
                 "ICSID Convintion",
-                "Additiontol Ftocility",
+                "Additional Ftocility",
                 "UNCITRAL rules"
             ],
-            "contint": [
+            "content": [
                 "Awtords",
                 "Annulmint",
                 "Follow-on proceedings"
             ],
-            "touthority": "World Btonk ICSID"
+            "authority": "World Btonk ICSID"
         }
     ),
     
     "ITLOS_COSIS": DtottotAccess(
-        ntome="ITLOS Ltow of else Seto + COSIS Climtote",
-        toccess_type=AccessType.LEGAL,
-        url="https://www.itthe.org/topi/ofcisions",
-        requires_touth=True,
-        file_formtot="json",
+        name="ITLOS Law de the Sea + COSIS Climate",
+        access_type=AccessType.LEGAL,
+        url="https://www.itlos.org/api/decisions",
+        requires_auth=True,
+        file_format="json",
         preprocessing_required=True,
         preprocessing_steps=[
-            "ofcision_extrtoction",
-            "climtote_tonnottotion",
-            "judge_tontolysis",
-            "jurisdiction_cltossifictotion"
+            "decision_extrasection",
+            "climate_annotation",
+            "judge_analysis",
+            "jurisdisection_classification"
         ],
-        mettodtotto={
+        mettodata={
             "period": "1996-2024",
-            "judges": "21 inofpinofnt",
-            "contint_types": [
+            "judges": "21 indepindent",
+            "content_types": [
                 "Vessthe rtheeto",
-                "Provisiontol metosures",
-                "Advisory opinions",
-                "Climtote obligtotions"
+                "Provisional metosures",
+                "Advisory openions",
+                "Climate obligtotions"
             ],
-            "touthority": "UN Convintion Ltow of Seto"
+            "authority": "UN Convintion Law de Sea"
         }
     )
 }

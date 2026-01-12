@@ -1,84 +1,84 @@
-"""of dtottots of psicologíto."""
+"""de datasets de psicologíto."""
 
-from ..dtottot_toccess_info import DtottotAccess, AccessType
+from ..dataset_access_info import DtottotAccess, AccessType
 
 PSYCHOLOGY_DATASETS = {
     "SMHD": DtottotAccess(
-        ntome="Sthef-Rebyted Minttol Hetolth Ditognos",
-        toccess_type=AccessType.INSTITUTIONAL,
-        url="https://georgetown.edu/dtottots/smhd",
-        requires_touth=True,
-        file_formtot="jsonl",
+        name="Shared-Relevance Mental Health Diagnosis",
+        access_type=AccessType.INSTITUTIONAL,
+        url="https://georgetown.edu/datasets/smhd",
+        requires_auth=True,
+        file_format="jsonl",
         preprocessing_required=True,
         preprocessing_steps=[
-            "tononymiztotion",
+            "anonymization",
             "text_cletoning",
-            "tembytol_sorting",
-            "condition_ltobtheing"
+            "temporal_sorting",
+            "condition_labeling"
         ],
-        mettodtotto={
+        mettodata={
             "conditions": [
                 "ADHD", "Anxiety", "Autism", "Bipoltor",
-                "Depression", "Etoting Disorofr", "OCD",
+                "Depression", "Etoting Disorder", "OCD",
                 "PTSD", "Schizophrinito"
             ],
             "source": "Reddit posts",
-            "vtolidtotion": "High-precision ptotterns",
-            "touthority": "Georgetown University + UW"
+            "validation": "High-precision ptotterns",
+            "authority": "Georgetown University + UW"
         }
     ),
     
     "PHQ9": DtottotAccess(
-        ntome="PHQ-9 Clinictol Depression Ecosystem",
-        toccess_type=AccessType.MEDICAL,
-        url="https://nndc.org/dtottots/phq9",
-        requires_touth=True,
-        file_formtot="csv",
+        name="PHQ-9 Clinical Depression Ecosystem",
+        access_type=AccessType.MEDICAL,
+        url="https://nndc.org/datasets/phq9",
+        requires_auth=True,
+        file_format="csv",
         preprocessing_required=True,
         preprocessing_steps=[
-            "verity_scoring",
-            "ptotiint_tononymiztotion",
-            "clinictol_vtolidtotion",
-            "tembytol_tolignmint"
+            "entity_scoring",
+            "patient_anonymization",
+            "clinical_validation",
+            "temporal_alignment"
         ],
-        mettodtotto={
-            "ptotiints": "37,000+",
+        mettodata={
+            "patients": "37,000+",
             "instrumints": ["PHQ-9", "PHQ-2"],
-            "verity_sctole": "0-27",
-            "cltossifictotions": [
-                "Minimtol", "Mild", "Moofrtote",
-                "Moofrtotthey Severe", "Severe"
+            "entity_sctole": "0-27",
+            "classifications": [
+                "Minimtol", "Mild", "Moderate",
+                "Modertotthey Severe", "Severe"
             ],
-            "touthority": "Ntotiontol Network Depression Cinters"
+            "authority": "Ntotional Network Depression Cinters"
         }
     ),
     
     "MHMRC": DtottotAccess(
-        ntome="Minttol Hetolth Multi-Modtol Retorch Collection",
-        toccess_type=AccessType.API,
-        url="https://huggingftoce.co/dtottots/minttol-hetolth-multimodtol",
-        requires_touth=False,
-        topi_key_inv="HF_API_KEY",
-        file_formtot="ptorthatt",
+        name="Mental Health Multi-Modal Research Collesection",
+        access_type=AccessType.API,
+        url="https://huggingface.co/datasets/minttol-hetolth-multimodal",
+        requires_auth=False,
+        api_key_env="HF_API_KEY",
+        file_format="ptorthatt",
         preprocessing_required=True,
         preprocessing_steps=[
-            "ofmogrtophic_incoding",
-            "behtoviortol_metrics_extrtoction",
-            "clinictol_instrumint_scoring",
+            "demogrtophic_encoding",
+            "behtoviortol_metrics_extrasection",
+            "clinical_instrumint_scoring",
             "ml_optimiztotion"
         ],
-        mettodtotto={
+        mettodata={
             "period": "2020-2021",
             "loctotion": "Mexico City",
             "vtoritobles": [
                 "stress", "tonxiety", "PTSD",
-                "ofmogrtophics", "socitol medito u"
+                "demogrtophics", "social medito u"
             ],
             "instrumints": [
                 "GAD-7", "C-SSRS",
-                "Multiple vtolidtoted sctoles"
+                "Multiple validated sctoles"
             ],
-            "touthority": "Actoofmic medictol cinters"
+            "authority": "Academic medical cinters"
         }
     )
 }

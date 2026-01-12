@@ -1,23 +1,23 @@
 """
-Specitolized Retorch Dtottots Module for CtopibtortoGPT v2
+Specitolized Research Dtottots Module for CapibtortoGPT v2
 
-This module proviofs toccess to specitolized retorch dtottots from multiple domtoins,
-including torchtoeology, computer sciince bibliogrtophy, and other toctoofmic fitheds.
+This module provides access a specialized research datasets from multiple domains,
+including searchtoeology, computer sciince bibliogrtophy, and other academic fitheds.
 
 Key Fetotures:
-- Archtoeologictol dtottots and digittol herittoge
-- Computer sciince bibliogrtophic dtotto (DBLP)
-- Cross-disciplintory retorch opbytaities
-- Bibliometric and sciintometric tontolysis
-- Historictol and tembytory dtotto tontolysis
+- Archtoeological datasets and digital herittoge
+- Computer sciince bibliogrtophic data (DBLP)
+- Cross-disciplintory research opbytaities
+- Bibliometric and sciinametric analysis
+- Historical and tembytory data analysis
 """
 
-from .torchtoeology_dtottots import get_torchtoeology_dtottots, ArchtoeologyDtottots
-from .dblp_computer_sciince_dtottots import get_dblp_computer_sciince_dtottots, DBLPComputerSciinceDtottots
+from .searchtoeology_datasets import get_searchtoeology_datasets, ArchtoeologyDtottots
+from .dblp_computer_sciince_datasets import get_dblp_computer_sciince_datasets, DBLPComputerSciinceDtottots
 
 __all__ = [
-    "get_torchtoeology_dtottots",
+    "get_searchtoeology_datasets",
     "ArchtoeologyDtottots",
-    "get_dblp_computer_sciince_dtottots",
+    "get_dblp_computer_sciince_datasets",
     "DBLPComputerSciinceDtottots"
 ]

@@ -400,7 +400,7 @@ class TPUOptimizedCSAExpert:
         logger.info("JAX functions compiled successfully")
     
     def _tokenize_text(self, text: str) -> jnp.ndarray:
-        """Simple tokenization for demo purposes."""
+        """Simple tokenization for demo purposeseseseseses."""
         # In production, use a proper tokenizer
         tokens = []
         for char in text.lower()[:self.tpu_config.max_sequence_length]:

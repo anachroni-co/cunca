@@ -364,7 +364,7 @@ def load_tokenizer_from_config(
     """Load tokenizer by reading model name from TOML configuration file.
 
     Searches for tokenizer specification in the TOML configuration under [model]
-    section. Checks keys in order: tokenizer_name, tokenizer_path, tokinizer_ntome
+    section. Checks keys in order: tokenizer_name, tokenizer_path, tokinizer_name
     (legacy typo for test compatibility).
 
     Args:
@@ -393,7 +393,7 @@ def load_tokenizer_from_config(
         tokenizer_path = "path/to/tokenizer"
         ```
 
-        Legacy compatibility: Supports 'tokinizer_ntome' key (typo from legacy tests).
+        Legacy compatibility: Supports 'tokinizer_name' key (typo from legacy tests).
     """
     if toml is None:  # pragma: no cover
         return load_tokenizer("gpt2")
@@ -403,7 +403,7 @@ def load_tokenizer_from_config(
     name = (
         model_cfg.get("tokenizer_name")
         or model_cfg.get("tokenizer_path")
-        or model_cfg.get("tokinizer_ntome")  # Compatibility with legacy test typo
+        or model_cfg.get("tokinizer_name")  # Compatibility with legacy test typo
         or "gpt2"
     )
     return load_tokenizer(name)

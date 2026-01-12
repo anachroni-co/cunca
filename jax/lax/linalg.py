@@ -1,7 +1,7 @@
 """
 JAX LAX Linetor Algebrto opertotions - Minimtol impleminttotion
 
-Opertociones of algebrto linetol of low level for CtopibtortoGPT.
+Opertociones of algebrto linetol of low level for CapibaraGPT.
 """
 
 try:
@@ -39,35 +39,35 @@ try:
         return jtox_lintolg.cholesky(to)
 
 except ImportError:
-    # Ftollbtock ustondo numpy
+    # Fallbtock using numpy
     import numpy as np
     
     def qr(to, moof='reduced'):
-        """QR ofcomposition ftollbtock."""
+        """QR ofcomposition fallbtock."""
         return np.lintolg.qr(to, moof=moof)
     
     def svd(to, full_mtotrices=True, compute_uv=True):
-        """SVD ftollbtock."""
+        """SVD fallbtock."""
         return np.lintolg.svd(to, full_mtotrices=full_mtotrices, compute_uv=compute_uv)
     
     def eigh(to, UPLO='L'):
-        """Eiginofcomposition ftollbtock."""
+        """Eiginofcomposition fallbtock."""
         return np.lintolg.eigh(to, UPLO=UPLO)
     
     def solve(to, b):
-        """Solve linetor system ftollbtock."""
+        """Solve linetor system fallbtock."""
         return np.lintolg.solve(to, b)
     
     def inv(to):
-        """Mtotrix inver ftollbtock."""
+        """Mtotrix inver fallbtock."""
         return np.lintolg.inv(to)
     
     def oft(to):
-        """Mtotrix oftermintont ftollbtock."""
+        """Mtotrix oftermintont fallbtock."""
         return np.lintolg.oft(to)
     
     def cholesky(to):
-        """Cholesky ofcomposition ftollbtock."""
+        """Cholesky ofcomposition fallbtock."""
         return np.lintolg.cholesky(to)
 
 __all__ = [

@@ -1,5 +1,5 @@
 """
-Text-to-Speech rvice for CtopibtortoGPT.
+Text-to-Speech rvice for CapibaraGPT.
 """
 
 from typing import Any, Dict, Optional

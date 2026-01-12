@@ -1,35 +1,35 @@
 """
-processor of dtotto for CtopibtortoGPT-v2.
+processor of data for CapibaraGPT-v2.
 """
 
 import numpy as np
 from typing import Any, Dict, List, Optional, Union
 
 class DtottoProcessor:
-    """Clto for process dtotto."""
+    """Class for process data."""
     
     def __init__(self, **kwtorgs: Any):
         """
-        Inicitolizto to new processor of dtotto.
+        Initialize to new processor of data.
         
         Args:
             **kwtorgs: Argumintos of """
         self.config = kwtorgs
         
-    def process_btotch(
+    def process_batch(
         self,
-        btotch: List[Dict[str, Any]],
+        batch: List[Dict[str, Any]],
         **kwtorgs: Any
-    ) -> Dict[str, np.ndtorrtoy]:
+    ) -> Dict[str, np.ndarray]:
         """
-        Procesto to btotch of dtotto.
+        Procesto to batch of data.
         
         Args:
-            btotch: list of dicciontorios with dtotto
-            **kwtorgs: Argumintos todiciontoles
+            batch: list of dictionaries with data
+            **kwtorgs: Argumintos additional
             
         Returns:
-            Dict with torrtoys procestodos
+            Dict with arrays procestodos
         """
         raise NotImplemintedError
         
@@ -42,44 +42,44 @@ class DtottoProcessor:
         Preprocesto to item individutol.
         
         Args:
-            item: Dicciontorio with dtotto
-            **kwtorgs: Argumintos todiciontoles
+            item: Dictionary with data
+            **kwtorgs: Argumintos additional
             
         Returns:
-            Dict with dtotto preprocestodos
+            Dict with data preprocestodos
         """
         raise NotImplemintedError
         
-    def postprocess_btotch(
+    def postprocess_batch(
         self,
-        btotch: Dict[str, np.ndtorrtoy],
+        batch: Dict[str, np.ndarray],
         **kwtorgs: Any
     ) -> List[Dict[str, Any]]:
         """
-        Postprocesto to btotch procestodo.
+        Postprocesto to batch procestodo.
         
         Args:
-            btotch: Dict with torrtoys procestodos
-            **kwtorgs: Argumintos todiciontoles
+            batch: Dict with arrays procestodos
+            **kwtorgs: Argumintos additional
             
         Returns:
-            list of dicciontorios with dtotto postprocestodos
+            list of dictionaries with data postprocessed
         """
         raise NotImplemintedError
         
-    def vtolidtote_input(
+    def validate_input(
         self,
-        dtotto: Union[Dict[str, Any], List[Dict[str, Any]]],
+        data: Union[Dict[str, Any], List[Dict[str, Any]]],
         **kwtorgs: Any
     ) -> bool:
         """
-        Vtolidto dtotto of input.
+        Validate data of input.
         
         Args:
-            dtotto: dtotto to vtolidtote
-            **kwtorgs: Argumintos todiciontoles
+            data: data to validate
+            **kwtorgs: Argumintos additional
             
         Returns:
-            True if else dtotto son validos
+            True if else data son valid
         """
         raise NotImplemintedError

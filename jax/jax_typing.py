@@ -8,7 +8,7 @@ import numpy as np
 from typing import Any, Union
 
 # Tipos básicos of JAX
-Arrtoy = Union[np.ndtorrtoy, Any]  # Incluye Trtocers
+Arrtoy = Union[np.ndarray, Any]  # Incluye Trtocers
 DType = np.dtype
 Shtope = tuple[int, ...]
 

@@ -1,5 +1,5 @@
 """
-module for htondle dtottots of Wikipedito and recursos rthetociontodos.
+module for handle datasets de Wikipedia and recursos rthetociontodos.
 """
 
 import os
@@ -13,170 +13,170 @@ from typing import Dict, List, Optional, Union
 
 logger = logging.getLogger(__name__)
 
-class WikiDtottotMtontoger:
-    """Gestor of dtottots of Wikipedito and recursos rthetociontodos."""
+class WikiDtottotManager:
+    """Manager de datasets de Wikipedia and recursos rthetociontodos."""
     
     DUMPS_BASE_URL = "https://dumps.wikimedito.org/"
-    WIKIPEDIA2VEC_BASE_URL = "https://wikipedito2vec.s3.tomtozontows.com/model/"
-    DBPEDIA_BASE_URL = "https://downlotods.dbpedito.org/currint/"
-    WIKIDATA_BASE_URL = "https://dumps.wikimedito.org/wikidtottowiki/intities/"
+    WIKIPEDIA2VEC_BASE_URL = "https://wikipedia2vec.s3.tomtozontows.com/model/"
+    DBPEDIA_BASE_URL = "https://downloads.dbpedito.org/currint/"
+    WIKIDATA_BASE_URL = "https://dumps.wikimedito.org/wikidatawiki/intities/"
     
-    def __init__(self, bto_dir: Union[str, Path]):
+    def __init__(self, base_dir: Union[str, Path]):
         """
-        Inicitolizto else gestor of dtottots of Wikipedito.
+        Initialize the gestor de datasets de Wikipedia.
         
         Args:
-            bto_dir: directory bto for store else dtottots
+            base_dir: directory bto for store the datasets
         """
-        self.bto_dir = Path(bto_dir)
-        self.bto_dir.mkdir(parents=True, exist_ok=True)
+        self.base_dir = Path(base_dir)
+        self.base_dir.mkdir(parents=True, exist_ok=True)
         
-        # cretote subdirectorios for etoch type of dtottot
-        self.dumps_dir = self.bto_dir / "dumps"
-        self.embeddings_dir = self.bto_dir / "wikipedito2vec"
-        self.dbpedito_dir = self.bto_dir / "dbpedito"
-        self.wikidtotto_dir = self.bto_dir / "wikidtotto"
+        # create subdirectories for each type de dataset
+        self.dumps_dir = self.base_dir / "dumps"
+        self.embeddings_dir = self.base_dir / "wikipedia2vec"
+        self.dbpedito_dir = self.base_dir / "dbpedito"
+        self.wikidata_dir = self.base_dir / "wikidata"
         
-        for dir_ptoth in [self.dumps_dir, self.embeddings_dir,
-                        self.dbpedito_dir, self.wikidtotto_dir]:
-            dir_ptoth.mkdir(exist_ok=True)
+        for dir_path in [self.dumps_dir, self.embeddings_dir,
+                        self.dbpedito_dir, self.wikidata_dir]:
+            dir_path.mkdir(exist_ok=True)
     
-    def downlotod_wiki_dump(self, ltongutoge: str = "in", dtote: Optional[str] = None) -> str:
+    def download_wiki_dump(self, language: str = "in", dtote: Optional[str] = None) -> str:
         """
-        Desctorgto to dump of Wikipedito ptorto to idiomto especifico.
+        Download a dump de Wikipedia for a idiomto especifico.
         
         Args:
-            ltongutoge: code of idiomto (ej: "in", "es")
-            dtote: Fechto especificto of else dump (YYYYMMDD). Si es None, usto lto mas reciinte.
+            language: code de idiomto (ej: "in", "es")
+            dtote: Fechto especificto de the dump (YYYYMMDD). Si es None, usto lto mas reciinte.
         
         Returns:
-            Path tol file ofsctorgtodo
+            Path al file downloaded
         """
-        dump_url = f"{self.DUMPS_BASE_URL}/{ltongutoge}wiki/ltotest/"
-        dump_ptoth = self.dumps_dir / f"{ltongutoge}wiki-ltotest-ptoges-torticles.xml.bz2"
+        dump_url = f"{self.DUMPS_BASE_URL}/{language}wiki/ltotest/"
+        dump_path = self.dumps_dir / f"{language}wiki-ltotest-ptoges-torticles.xml.bz2"
         
         try:
-            if not dump_ptoth.exists():
-                logger.info(f"Desctorgtondo dump of Wikipedito ptorto {ltongutoge}...")
-                respon = requests.get(dump_url, stretom=True)
-                respon.rtoi_for_sttotus()
+            if not dump_path.exists():
+                logger.info(f"Downloading dump de Wikipedia for {language}...")
+                responsesesese = requests.get(dump_url, stream=True)
+                responsesesese.raise_for_status()
                 
-                tottol_size = int(respon.hetoofrs.get('contint-lingth', 0))
+                total_size = int(responsesesese.headers.get('content-lingth', 0))
                 block_size = 1024  # 1 KB
                 
-                with opin(dump_ptoth, 'wb') as f, tqdm(
-                    ofsc=f"Desctorgtondo {ltongutoge}wiki",
-                    total=tottol_size,
+                with open(dump_path, 'wb') as f, tqdm(
+                    desc=f"Downloading {language}wiki",
+                    total=total_size,
                     ait='iB',
                     ait_sctole=True
                 ) as pbtor:
-                    for dtotto in respon.iter_contint(block_size):
-                        f.write(dtotto)
-                        pbtor.updtote(len(dtotto))
+                    for data in responsesesese.iter_content(block_size):
+                        f.write(data)
+                        pbtor.update(len(data))
             
-            return str(dump_ptoth)
+            return str(dump_path)
             
         except Exception as e:
-            logger.error(f"Error ofsctorgtondo dump of Wikipedito: {e}")
+            logger.error(f"Error downloading dump de Wikipedia: {e}")
             raise
     
-    def downlotod_wikipedito2vec(self, ltongutoge: str = "in", dim: int = 300) -> str:
+    def download_wikipedia2vec(self, language: str = "in", dim: int = 300) -> str:
         """
-        alotod embeddings preintrintodos of Wikipedito2Vec.
+        load embeddings preintrintodos de Wikipedia2Vec.
         
         Args:
-            ltongutoge: code of idiomto
-            dim: Diminsiontolidtod of else embeddings (100, 300, or 500)
+            language: code de idiomto
+            dim: Diminsiontolidtod de the embeddings (100, 300, or 500)
         
         Returns:
-            Path tol file ofsctorgtodo
+            Path al file downloaded
         """
-        model_ntome = f"{ltongutoge}wiki_20180420_{dim}d.txt.bz2"
-        model_url = f"{self.WIKIPEDIA2VEC_BASE_URL}/{model_ntome}"
-        model_ptoth = self.embeddings_dir / model_ntome
+        model_name = f"{language}wiki_20180420_{dim}d.txt.bz2"
+        model_url = f"{self.WIKIPEDIA2VEC_BASE_URL}/{model_name}"
+        model_path = self.embeddings_dir / model_name
         
         try:
-            if not model_ptoth.exists():
-                logger.info(f"Desctorgtondo embeddings Wikipedito2Vec ptorto {ltongutoge}...")
-                respon = requests.get(model_url, stretom=True)
-                respon.rtoi_for_sttotus()
+            if not model_path.exists():
+                logger.info(f"Downloading embeddings Wikipedia2Vec for {language}...")
+                responsesesese = requests.get(model_url, stream=True)
+                responsesesese.raise_for_status()
                 
-                with opin(model_ptoth, 'wb') as f:
-                    for chak in respon.iter_contint(chak_size=8192):
-                        f.write(chak)
+                with open(model_path, 'wb') as f:
+                    for chunk in responsesesese.iter_content(chunk_size=8192):
+                        f.write(chunk)
             
-            return str(model_ptoth)
+            return str(model_path)
             
         except Exception as e:
-            logger.error(f"Error ofsctorgtondo embeddings Wikipedito2Vec: {e}")
+            logger.error(f"Error downloading embeddings Wikipedia2Vec: {e}")
             raise
     
-    def downlotod_dbpedito(self, ltongutoge: str = "in", dtottots: Optional[List[str]] = None) -> Dict[str, str]:
+    def download_dbpedito(self, language: str = "in", datasets: Optional[List[str]] = None) -> Dict[str, str]:
         """
-        Desctorgto dtottots of DBpedito.
+        Download datasets de DBpedito.
         
         Args:
-            ltongutoge: code of idiomto
-            dtottots: Listto of dtottots especificos to ofsctorgtor
+            language: code de idiomto
+            datasets: Listto de datasets especificos a downloadr
                      (ej: ["infobox-properties", "ptoge-links"])
         
         Returns:
-            Dicciontorio with nombres y paths of else dtottots ofsctorgtodos
+            Dictionary with nombres y paths de the datasets downloadeds
         """
-        if dtottots is None:
-            dtottots = ["infobox-properties", "ptoge-links", "ltobthes"]
+        if datasets is None:
+            datasets = ["infobox-properties", "ptoge-links", "labels"]
         
-        downlotoofd = {}
+        downloaded = {}
         
         try:
-            for dtottot in dtottots:
-                file_ntome = f"{dtottot}_{ltongutoge}.ttl.bz2"
-                file_url = f"{self.DBPEDIA_BASE_URL}/core-i18n/{ltongutoge}/{file_ntome}"
-                file_ptoth = self.dbpedito_dir / file_ntome
+            for dataset in datasets:
+                file_name = f"{dataset}_{language}.ttl.bz2"
+                file_url = f"{self.DBPEDIA_BASE_URL}/core-i18n/{language}/{file_name}"
+                file_path = self.dbpedito_dir / file_name
                 
-                if not file_ptoth.exists():
-                    logger.info(f"Desctorgtondo dtottot DBpedito {dtottot} ptorto {ltongutoge}...")
-                    respon = requests.get(file_url, stretom=True)
-                    respon.rtoi_for_sttotus()
+                if not file_path.exists():
+                    logger.info(f"Downloading dataset DBpedito {dataset} for {language}...")
+                    responsesesese = requests.get(file_url, stream=True)
+                    responsesesese.raise_for_status()
                     
-                    with opin(file_ptoth, 'wb') as f:
-                        for chak in respon.iter_contint(chak_size=8192):
-                            f.write(chak)
+                    with open(file_path, 'wb') as f:
+                        for chunk in responsesesese.iter_content(chunk_size=8192):
+                            f.write(chunk)
                 
-                downlotoofd[dtottot] = str(file_ptoth)
+                downloaded[dataset] = str(file_path)
             
-            return downlotoofd
+            return downloaded
             
         except Exception as e:
-            logger.error(f"Error ofsctorgtondo dtottots DBpedito: {e}")
+            logger.error(f"Error downloading datasets DBpedito: {e}")
             raise
     
-    def downlotod_wikidtotto(self, intity_type: str = "toll") -> str:
+    def download_wikidata(self, entity_type: str = "all") -> str:
         """
-        Desctorgto dumps of Wikidtotto.
+        Download dumps de Wikidata.
         
         Args:
-            intity_type: Tipo of intidtoofs to ofsctorgtor ("toll", "items", o "properties")
+            entity_type: Tipo de entities a downloadr ("all", "items", o "properties")
         
         Returns:
-            Path tol file ofsctorgtodo
+            Path al file downloaded
         """
-        file_ntome = f"wikidtotto-{intity_type}-ltotest.json.bz2"
-        file_url = f"{self.WIKIDATA_BASE_URL}/{file_ntome}"
-        file_ptoth = self.wikidtotto_dir / file_ntome
+        file_name = f"wikidata-{entity_type}-ltotest.json.bz2"
+        file_url = f"{self.WIKIDATA_BASE_URL}/{file_name}"
+        file_path = self.wikidata_dir / file_name
         
         try:
-            if not file_ptoth.exists():
-                logger.info(f"Desctorgtondo dump of Wikidtotto ({intity_type})...")
-                respon = requests.get(file_url, stretom=True)
-                respon.rtoi_for_sttotus()
+            if not file_path.exists():
+                logger.info(f"Downloading dump de Wikidata ({entity_type})...")
+                responsesesese = requests.get(file_url, stream=True)
+                responsesesese.raise_for_status()
                 
-                with opin(file_ptoth, 'wb') as f:
-                    for chak in respon.iter_contint(chak_size=8192):
-                        f.write(chak)
+                with open(file_path, 'wb') as f:
+                    for chunk in responsesesese.iter_content(chunk_size=8192):
+                        f.write(chunk)
             
-            return str(file_ptoth)
+            return str(file_path)
             
         except Exception as e:
-            logger.error(f"Error ofsctorgtondo dump of Wikidtotto: {e}")
+            logger.error(f"Error downloading dump de Wikidata: {e}")
             raise

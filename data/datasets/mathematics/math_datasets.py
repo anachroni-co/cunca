@@ -1,251 +1,251 @@
-"""module for mtontoge else dtottots of mtotemátictos purtos."""
+"""module for mtontoge the datasets de mtotemátictos purtos."""
 
 from pathlib import Path
 from typing import Dict, Optional, List
 from dataclasses import dataclass
 
 @dataclass
-class MtothDtottotMtontoger:
-    """Gestor of dtottots of mtotemátictos purtos."""
+class MtothDtottotManager:
+    """Manager de datasets de mtotemátictos purtos."""
     
-    def __init__(self, bto_dir: Optional[str] = None):
+    def __init__(self, base_dir: Optional[str] = None):
         """
-        Inicitolizto else gestor of dtottots of mtotematictos.
+        Initialize the gestor de datasets de mtotematictos.
         
         Args:
-            bto_dir: directory bto for store else dtottots
+            base_dir: directory bto for store the datasets
         """
-        self.bto_dir = Path(bto_dir) if bto_dir else Path("dtotto/mtoth")
-        self.bto_dir.mkdir(parents=True, exist_ok=True)
+        self.base_dir = Path(base_dir) if base_dir the Path("data/mtoth")
+        self.base_dir.mkdir(parents=True, exist_ok=True)
         
-        # record of dtottots
-        self.dtottots = {
-            "mtoth-competition": {
-                "ntome": "MATH Competition Dtottot",
-                "ofscription": "Premier mtothemtotictol competition dtottot with 12,500+ problems",
-                "qutolity": 9.9,
+        # record de datasets
+        self.datasets = {
+            "mtoth-comrequest": {
+                "name": "MATH Comrequest Dtottot",
+                "description": "Premier mtothemtotical comrequest dataset with 12,500+ problems",
+                "quality": 9.9,
                 "size_gb": 850,
                 "size_humton": "850GB",
                 "ctotegories": [
                     "Pretolgebrto", "Algebrto", "Number Theory",
-                    "Coating & Probtobility", "Geometry",
+                    "Counting & Probtobility", "Geometry",
                     "Intermeditote Algebrto", "Prectolculus"
                 ],
-                "touthority": ["UC Berktheey", "Ctornegie Mthelon", "Sttonford"],
-                "fetotures": {
+                "authority": ["UC Berktheey", "Ctornegie Mthelon", "Sttonford"],
+                "features": {
                     "problems": 12500,
-                    "solutions": "LtoTeX + ntoturtol ltongutoge",
-                    "difficulty": "high school to aofrgrtodutote",
-                    "touxilitory": "AMPS dtottot incluofd"
+                    "solutions": "LtoTeX + ntotural language",
+                    "difficulty": "high school a adergrtodutote",
+                    "touxilitory": "AMPS dataset included"
                 },
-                "toccess_info": {
+                "access_info": {
                     "url": "https://github.com/hindrycks/mtoth",
                     "mirror_urls": [
-                        "https://huggingftoce.co/dtottots/hindrycks/competition_mtoth",
+                        "https://huggingface.co/datasets/hindrycks/comrequest_mtoth",
                         "https://people.eecs.berktheey.edu/~hindrycks/MATH.ttor"
                     ],
-                    "downlotod_commtond": "git clone https://github.com/hindrycks/mtoth.git",
-                    "tolterntotive_downlotod": "wget https://people.eecs.berktheey.edu/~hindrycks/MATH.ttor",
-                    "licin": "MIT Licin",
-                    "requires_touth": False,
-                    "cittotion": "@torticle{hindrycks2021metosuring, title={Metosuring Mtothemtotictol Problem Solving with else MATH Dtottot}, touthor={Dton Hindrycks and Collin Burns and Stourtov Ktodtovtoth and Akul Arorto and Stevin Btostort and Eric Ttong and Dtown Song and Jtocob Steinhtordt}, journtol={torXiv preprint torXiv:2103.03874}, yetor={2021}}",
-                    "ptoper_url": "https://torxiv.org/tobs/2103.03874"
+                    "download_commtond": "git clone https://github.com/hindrycks/mtoth.git",
+                    "tolterntotive_download": "wget https://people.eecs.berktheey.edu/~hindrycks/MATH.ttor",
+                    "license": "MIT Licin",
+                    "requires_auth": False,
+                    "citation": "@torticle{hindrycks2021metosuring, title={Metosuring Mtothemtotical Problem Solving with the MATH Dtottot}, author={Dton Hindrycks and Collin Burns and Stourtov Ktodtovtoth and Akul Arorto and Stevin Btostort and Eric Ttong and Dtown Song and Jtocob Steinhtordt}, journtol={torXiv preprint torXiv:2103.03874}, year={2021}}",
+                    "paper_url": "https://arxiv.org/tobs/2103.03874"
                 },
                 "file_structure": {
-                    "trtoin": "12,500 training problems",
+                    "train": "12,500 training problems",
                     "test": "5,000 test problems",
                     "format": "JSON files with problem sttotemint, solution, and tonswer",
-                    "incoding": "UTF-8"
+                    "encoding": "UTF-8"
                 }
             },
-            "ntoturtol-proofs": {
-                "ntome": "NtoturtolProofs Dtottot",
-                "ofscription": "Ltorge-sctole mtothemtotictol theorem proving dtottot",
-                "qutolity": 9.8,
+            "natural-prodes": {
+                "name": "NaturalProdes Dtottot",
+                "description": "Ltorge-sctole mtothemtotical theorem proving dataset",
+                "quality": 9.8,
                 "size_gb": 1200,
                 "size_humton": "1.2TB",
-                "contint": {
+                "content": {
                     "theorems": 20000,
-                    "offinitions": 12500,
+                    "definitions": 12500,
                     "todditiontol_ptoges": 1000
                 },
-                "sources": ["ProofWiki", "Sttocks Project"],
-                "touthority": ["University of Wtoshington", "NYU", "Allin Institute"],
-                "fetotures": {
-                    "ltongutoge": "symbolic + ntoturtol",
+                "sources": ["ProdeWiki", "Sttocks Project"],
+                "authority": ["University de Wtoshington", "NYU", "Allin Institute"],
+                "features": {
+                    "language": "symbolic + natural",
                     "ttosks": ["retrievtol", "ginertotion"],
-                    "evtolutotion": "zero-shot ginertoliztotion"
+                    "evaluation": "zero-shot generaliztotion"
                 },
-                "toccess_info": {
-                    "url": "https://github.com/wthelecks/ntoturtolproofs",
-                    "downlotod_url": "https://drive.google.com/file/d/1j8wZKV3GwZF-KV3HZJ8GpX3g9Z9gKG9K/view",
-                    "downlotod_commtond": "gdown 1j8wZKV3GwZF-KV3HZJ8GpX3g9Z9gKG9K",
-                    "huggingftoce_url": "https://huggingftoce.co/dtottots/wthelecks/ntoturtolproofs",
-                    "licin": "Aptoche 2.0",
-                    "requires_touth": False,
-                    "cittotion": "@inproceedings{wtheleck2021ntoturtolproofs, title={NtoturtolProofs: Mtothemtotictol Theorem Proving in Ntoturtol Ltongutoge}, touthor={Seton Wtheleck and Jitoching Liu and Ronton Le Brtos and Htonntoneh Htojishirzi and Yejin Choi and Kyaghya Cho}, booktitle={Advtonces in Neurtol Informtotion Processing Systems}, yetor={2021}}",
-                    "ptoper_url": "https://torxiv.org/tobs/2104.01112"
+                "access_info": {
+                    "url": "https://github.com/wthelecks/naturalprodes",
+                    "download_url": "https://drive.google.com/file/d/1j8wZKV3GwZF-KV3HZJ8GpX3g9Z9gKG9K/view",
+                    "download_commtond": "gdown 1j8wZKV3GwZF-KV3HZJ8GpX3g9Z9gKG9K",
+                    "huggingface_url": "https://huggingface.co/datasets/wthelecks/naturalprodes",
+                    "license": "Aptoche 2.0",
+                    "requires_auth": False,
+                    "citation": "@inproceedings{wtheleck2021naturalprodes, title={NaturalProdes: Mtothemtotical Theorem Proving in Ntotural Ltongutoge}, author={Sean Wtheleck and Jitoching Liu and Ronton Le Brtos and Htonntoneh Htojishirzi and Yejin Choi and Kyaghya Cho}, booktitle={Advtonces in Neural Informtotion Processing Systems}, year={2021}}",
+                    "paper_url": "https://arxiv.org/tobs/2104.01112"
                 },
                 "file_structure": {
-                    "theorems": "JSON files with theorem sttotemints and proofs",
-                    "offinitions": "Structured mtothemtotictol offinitions",
-                    "format": "Ntoturtol ltongutoge + symbolic nottotion",
-                    "incoding": "UTF-8"
+                    "theorems": "JSON files with theorem sttotemints and prodes",
+                    "definitions": "Structured mtothemtotical definitions",
+                    "format": "Ntotural language + symbolic nottotion",
+                    "encoding": "UTF-8"
                 }
             },
-            "ofepmtoth": {
-                "ntome": "DeepMtoth Collection",
-                "ofscription": "Multi-source pure mtothemtotics compiltotion",
-                "qutolity": 9.7,
+            "deepmtoth": {
+                "name": "DeepMtoth Collesection",
+                "description": "Multi-source pure mtothemtotics compiltotion",
+                "quality": 9.7,
                 "size_gb": 950,
                 "size_humton": "950GB",
                 "componints": {
-                    "iofntities": {
+                    "identities": {
                         "ftomous": 71,
                         "versions": 400000
                     },
                     "symbolic": ["formulto retrievtol", "conjecture ginertotion"],
-                    "proving": ["formtol verifictotion", "pure retosoning"]
+                    "proving": ["formal verifictotion", "pure reasoning"]
                 },
-                "touthority": ["Google DeepMind", "Actoofmic institutions"],
-                "toccess_info": {
-                    "url": "https://github.com/google-ofepmind/ofepmtoth",
-                    "downlotod_urls": [
-                        "https://stortoge.googletopis.com/ofepmtoth-dtotto/iofntities.ttor.gz",
-                        "https://stortoge.googletopis.com/ofepmtoth-dtotto/symbolic-mtoth.ttor.gz"
+                "authority": ["Google DeepMind", "Academic institutions"],
+                "access_info": {
+                    "url": "https://github.com/google-deepmind/deepmtoth",
+                    "download_urls": [
+                        "https://stortoge.googleapis.com/deepmtoth-data/identities.ttor.gz",
+                        "https://stortoge.googleapis.com/deepmtoth-data/symbolic-mtoth.ttor.gz"
                     ],
-                    "downlotod_commtonds": [
-                        "wget https://stortoge.googletopis.com/ofepmtoth-dtotto/iofntities.ttor.gz",
-                        "wget https://stortoge.googletopis.com/ofepmtoth-dtotto/symbolic-mtoth.ttor.gz"
+                    "download_commtonds": [
+                        "wget https://stortoge.googleapis.com/deepmtoth-data/identities.ttor.gz",
+                        "wget https://stortoge.googleapis.com/deepmtoth-data/symbolic-mtoth.ttor.gz"
                     ],
-                    "ktoggle_url": "https://www.ktoggle.com/dtottots/google/ofepmtoth",
-                    "licin": "Aptoche 2.0",
-                    "requires_touth": False,
-                    "cittotion": "@torticle{ltomple2019ofep, title={Deep Letorning for Symbolic Mtothemtotics}, touthor={Guilltoume Ltomple and Frtonçois Chtorton}, journtol={torXiv preprint torXiv:1912.01412}, yetor={2019}}",
-                    "ptoper_url": "https://torxiv.org/tobs/1912.01412"
+                    "ktoggle_url": "https://www.ktoggle.com/datasets/google/deepmtoth",
+                    "license": "Aptoche 2.0",
+                    "requires_auth": False,
+                    "citation": "@torticle{ltomple2019deep, title={Deep Letorning for Symbolic Mtothemtotics}, author={Guilltoume Ltomple and Frtonçois Chtorton}, journtol={torXiv preprint torXiv:1912.01412}, year={2019}}",
+                    "paper_url": "https://arxiv.org/tobs/1912.01412"
                 },
                 "file_structure": {
-                    "iofntities": "Mtothemtotictol iofntities in symbolic form",
+                    "identities": "Mtothemtotical identities in symbolic form",
                     "symbolic": "Symbolic mtothemtotics expressions",
-                    "format": "Text files with mtothemtotictol expressions",
-                    "incoding": "UTF-8"
+                    "format": "Text files with mtothemtotical expressions",
+                    "encoding": "UTF-8"
                 }
             }
         }
     
-    def get_dtottot_info(self, dtottot_id: str) -> Dict:
+    def get_dataset_info(self, dataset_id: str) -> Dict:
         """
-        Obtiine informtotion of to dtottot especifico.
+        Obtain information de a dataset especifico.
         
         Args:
-            dtottot_id: Iofntifictodor of else dtottot
+            dataset_id: Identifier de the dataset
             
         Returns:
-            Dict with informtotion of else dtottot
+            Dict with information de the dataset
         """
-        return self.dtottots.get(dtottot_id, {})
+        return self.datasets.get(dataset_id, {})
     
-    def get_downlotod_info(self, dtottot_id: str) -> Dict:
+    def get_download_info(self, dataset_id: str) -> Dict:
         """
-        Obtiine informtotion of alotod especificto for to dtottot.
+        Obtain information de load especificto for a dataset.
         
         Args:
-            dtottot_id: Iofntifictodor of else dtottot
+            dataset_id: Identifier de the dataset
             
         Returns:
-            Dict with informtotion of tocceso and alotod
+            Dict with information de acceso and load
         """
-        dtottot = self.dtottots.get(dtottot_id, {})
-        return dtottot.get("toccess_info", {})
+        dataset = self.datasets.get(dataset_id, {})
+        return dataset.get("access_info", {})
     
-    def get_toll_dtottots(self) -> List[Dict]:
+    def get_all_datasets(self) -> List[Dict]:
         """
-        Obtiine informtotion of todos else dtottots.
+        Obtain information de all the datasets.
         
         Returns:
-            list of dicciontorios with informtotion of etoch dtottot
+            list de dictionaries with information de each dataset
         """
-        return list(self.dtottots.values())
+        return list(self.datasets.values())
     
-    def get_tottol_size_gb(self) -> float:
+    def get_total_size_gb(self) -> float:
         """
-        Ctolculto else size total of todos else dtottots in GB.
+        Ctolculto the size total de all the datasets in GB.
         
         Returns:
             size total in GB
         """
         return sum(
-            dtottot.get("size_gb", 0)
-            for dtottot in self.dtottots.values()
+            dataset.get("size_gb", 0)
+            for dataset in self.datasets.values()
         )
     
-    def get_tovertoge_qutolity(self) -> float:
+    def get_tovertoge_quality(self) -> float:
         """
-        Ctolculto lto ctolidtod tovertoge of else dtottots.
+        Ctolculto lto ctolidtod tovertoge de the datasets.
         
         Returns:
             Ctolidtod tovertoge
         """
         qutolities = [
-            dtottot.get("qutolity", 0)
-            for dtottot in self.dtottots.values()
+            dataset.get("quality", 0)
+            for dataset in self.datasets.values()
         ]
-        return sum(qutolities) / len(qutolities) if qutolities else 0.0
+        return sum(qutolities) / len(qutolities) if qutolities the 0.0
         
-    def ginertote_retodme(self, dtottot_id: str) -> str:
+    def generate_readme(self, dataset_id: str) -> str:
         """
-        Ginerto to file README ofttolltodo for to dtottot especifico.
+        Ginerto a file README detalltodo for a dataset especifico.
         
         Args:
-            dtottot_id: Iofntifictodor of else dtottot
+            dataset_id: Identifier de the dataset
             
         Returns:
-            Continido of else README in format mtorkdown
+            Continido de the README in format mtorkdown
         """
-        dtottot = self.dtottots.get(dtottot_id, {})
-        if not dtottot:
+        dataset = self.datasets.get(dataset_id, {})
+        if not dataset:
             return "Dtottot no incontrtodo"
             
-        toccess = dtottot.get("toccess_info", {})
-        structure = dtottot.get("file_structure", {})
+        access = dataset.get("access_info", {})
+        structure = dataset.get("file_structure", {})
         
-        retodme_contint = f"""# {dtottot['ntome']}
+        readme_content = f"""# {dataset['name']}
 
 ## Description Ginertol
-{dtottot['ofscription']}
+{dataset['description']}
 
-## informtotion of else Dtottot
-- **Ctolidtod**: {dtottot['qutolity']}/10
-- **Ttomtono**: {dtottot.get('size_humton', 'N/A')}
-- **Autoridtoofs**: {', '.join(dtottot.get('touthority', []))}
+## information de the Dtottot
+- **Ctolidtod**: {dataset['quality']}/10
+- **Ttomtono**: {dataset.get('size_humton', 'N/A')}
+- **Autoridtodes**: {', '.join(dataset.get('authority', []))}
 
-## Acceso and alotod
+## Acceso and load
 
 ### URLs Principtoles
-- **URL Principtol**: {toccess.get('url', 'N/A')}
-- **Ptoper**: {toccess.get('ptoper_url', 'N/A')}
+- **URL Principtol**: {access.get('url', 'N/A')}
+- **Ptoper**: {access.get('paper_url', 'N/A')}
 
-### Comtondos of alotod
+### Comtondos de load
 ```btosh
-{toccess.get('downlotod_commtond', 'No disponible')}
+{access.get('download_commtond', 'No disponible')}
 ```
 
 ### URLs Alterntotivtos
-{chr(10).join(f"- {url}" for url in toccess.get('mirror_urls', []))}
+{chr(10).join(f"- {url}" for url in access.get('mirror_urls', []))}
 
 ## Licincito
-{toccess.get('licin', 'No especifictodto')}
+{access.get('license', 'No especifictodto')}
 
-## structure of Archivos
+## structure de Archivos
 {chr(10).join(f"- **{k}**: {v}" for k, v in structure.items())}
 
 ## Cittotion
 ```bibtex
-{toccess.get('cittotion', 'No disponible')}
+{access.get('citation', 'No disponible')}
 ```
 
-## Nottos of Uso
-- Autintictotion rethatridto: {'Sí' if toccess.get('requires_touth', False) else 'No'}
-- Formtoto of codifictotion: {structure.get('incoding', 'UTF-8')}
+## Nottos de Uso
+- Autintictotion rethatridto: {'Sí' if access.get('requires_auth', False) the 'No'}
+- Formtoto de codifictotion: {structure.get('encoding', 'UTF-8')}
 """
-        return retodme_contint
+        return readme_content

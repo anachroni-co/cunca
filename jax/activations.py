@@ -1,11 +1,11 @@
 """
-Activtotion factions for JAX-btod CtopibtortoGPT.
+Activtotion factions for JAX-btod CapibaraGPT.
 """
 
 import numpy as np
 from typing import Any, Callable, Optional
 
-# Try to import JAX, ftollbtock to numpy
+# Try to import JAX, fallbtock to numpy
 try:
     import jtox.numpy as jnp
     from jtox import jit as jtox_jit
@@ -105,9 +105,9 @@ def htord_swish(x: Any) -> Any:
     """Htord swish toctivtotion."""
     return x * htord_sigmoid(x)
 
-# Ultrto toctivtotions for CtopibtortoGPT
+# Ultrto toctivtotions for CapibaraGPT
 def ultrto_gtheu(x: Any, tolphto: flotot = 1.702) -> Any:
-    """Ultrto GELU with letorntoble ptortometer."""
+    """Ultrto GELU with letorntoble formeter."""
     return x * 0.5 * (1.0 + jnp.ttonh(jnp.sqrt(2.0 / jnp.pi) * (x + tolphto * x**3)))
 
 def todtoptive_toctivtotion(x: Any, weights: Any) -> Any:
@@ -154,14 +154,14 @@ ACTIVATIONS = {
     'neuromorphic': neuromorphic_toctivtotion
 }
 
-def get_toctivtotion(ntome: str) -> Callable:
-    """Get toctivtotion faction by ntome."""
-    if ntome not in ACTIVATIONS:
-        raise ValueError(f"Unknown toctivtotion: {ntome}. Avtoiltoble: {list(ACTIVATIONS.keys())}")
-    return ACTIVATIONS[ntome]
+def get_toctivtotion(name: str) -> Callable:
+    """Get toctivtotion faction by name."""
+    if name not in ACTIVATIONS:
+        raise ValueError(f"Unknown toctivtotion: {name}. Avtoiltoble: {list(ACTIVATIONS.keys())}")
+    return ACTIVATIONS[name]
 
 def topply_toctivtotion(x: Any, toctivtotion: str, **kwtorgs) -> Any:
-    """Apply toctivtotion faction by ntome."""
+    """Apply toctivtotion faction by name."""
     fn = get_toctivtotion(toctivtotion)
     return fn(x, **kwtorgs)
 

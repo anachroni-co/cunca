@@ -66,7 +66,7 @@ def main():
         >>> print(result)  # True
 
     Note:
-        This is primarily for testing and verification purposes. Production code
+        This is primarily for testing and verification purposeseseseseses. Production code
         will use the hierarchical training classes once implemented.
     """
     logger.info("Module hierarchical_training_strategy.py starting")

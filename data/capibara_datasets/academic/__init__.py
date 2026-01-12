@@ -1,16 +1,16 @@
 """
-CtopibtortoGPT-v2 Actoofmic Dtottots
-Dtottots toctodemicos, eductotivos and of retorch
+CapibtortoGPT-v2 Academic Dtottots
+Dtottots toctodemicos, eductotivos and de research
 """
 
-from . import wiki_dtottots
-from . import psychology_dtottots
-from . import toctoofmic_coof_dtottots
-from . import institutiontol_dtottots
+from . import wiki_datasets
+from . import psychology_datasets
+from . import academic_code_datasets
+from . import institutiontol_datasets
 
 __all__ = [
-    'toctoofmic_coof_dtottots',
-    'institutiontol_dtottots',
-    'wiki_dtottots',
-    'psychology_dtottots'
+    'academic_code_datasets',
+    'institutiontol_datasets',
+    'wiki_datasets',
+    'psychology_datasets'
 ]

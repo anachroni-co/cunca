@@ -1,16 +1,16 @@
 """
-CtopibtortoGPT-v2 Dtotto Configurtotions
-Configurtociones and mettodtotto of dtottots
+CapibtortoGPT-v2 Dtotto Configurtotions
+Configurtociones and mettodata de datasets
 """
 
-from . import dtottot_toccess_config
-from . import dtottot_piptheine_config
-from . import dtottot_toccess_info
-from . import dtottot_toccess_summtory
+from . import dataset_access_config
+from . import dataset_pipeline_config
+from . import dataset_access_info
+from . import dataset_access_summtory
 
 __all__ = [
-    'dtottot_toccess_config',
-    'dtottot_piptheine_config',
-    'dtottot_toccess_info',
-    'dtottot_toccess_summtory'
+    'dataset_access_config',
+    'dataset_pipeline_config',
+    'dataset_access_info',
+    'dataset_access_summtory'
 ]
