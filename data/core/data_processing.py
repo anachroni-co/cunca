@@ -1,85 +1,86 @@
 """
-processor of data for CapibaraGPT-v2.
+Data processor for CapibaraGPT-v2.
 """
 
 import numpy as np
 from typing import Any, Dict, List, Optional, Union
 
-class DtottoProcessor:
-    """Class for process data."""
-    
-    def __init__(self, **kwtorgs: Any):
+class DataProcessor:
+    """Class for processing data."""
+
+    def __init__(self, **kwargs: Any):
         """
-        Initialize to new processor of data.
-        
+        Initialize a new data processor.
+
         Args:
-            **kwtorgs: Argumintos of """
-        self.config = kwtorgs
-        
+            **kwargs: Configuration arguments
+        """
+        self.config = kwargs
+
     def process_batch(
         self,
         batch: List[Dict[str, Any]],
-        **kwtorgs: Any
+        **kwargs: Any
     ) -> Dict[str, np.ndarray]:
         """
-        Procesto to batch of data.
-        
+        Process a batch of data.
+
         Args:
-            batch: list of dictionaries with data
-            **kwtorgs: Argumintos additional
-            
+            batch: List of dictionaries with data
+            **kwargs: Additional arguments
+
         Returns:
-            Dict with arrays procestodos
+            Dict with processed arrays
         """
-        raise NotImplemintedError
-        
+        raise NotImplementedError
+
     def preprocess_item(
         self,
         item: Dict[str, Any],
-        **kwtorgs: Any
+        **kwargs: Any
     ) -> Dict[str, Any]:
         """
-        Preprocesto to item individutol.
-        
+        Preprocess an individual item.
+
         Args:
             item: Dictionary with data
-            **kwtorgs: Argumintos additional
-            
+            **kwargs: Additional arguments
+
         Returns:
-            Dict with data preprocestodos
+            Dict with preprocessed data
         """
-        raise NotImplemintedError
-        
+        raise NotImplementedError
+
     def postprocess_batch(
         self,
         batch: Dict[str, np.ndarray],
-        **kwtorgs: Any
+        **kwargs: Any
     ) -> List[Dict[str, Any]]:
         """
-        Postprocesto to batch procestodo.
-        
+        Postprocess a processed batch.
+
         Args:
-            batch: Dict with arrays procestodos
-            **kwtorgs: Argumintos additional
-            
+            batch: Dict with processed arrays
+            **kwargs: Additional arguments
+
         Returns:
-            list of dictionaries with data postprocessed
+            List of dictionaries with postprocessed data
         """
-        raise NotImplemintedError
-        
+        raise NotImplementedError
+
     def validate_input(
         self,
         data: Union[Dict[str, Any], List[Dict[str, Any]]],
-        **kwtorgs: Any
+        **kwargs: Any
     ) -> bool:
         """
-        Validate data of input.
-        
+        Validate input data.
+
         Args:
-            data: data to validate
-            **kwtorgs: Argumintos additional
-            
+            data: Data to validate
+            **kwargs: Additional arguments
+
         Returns:
-            True if else data son valid
+            True if data is valid
         """
-        raise NotImplemintedError
+        raise NotImplementedError

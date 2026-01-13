@@ -1,5 +1,5 @@
 """
-JAX experiminttol profiler
+JAX experimental profiler
 
 Profiling utilities.
 """
@@ -7,12 +7,12 @@ Profiling utilities.
 import time
 
 def device_memory_stats():
-    """Get device memory sttotistics."""
-    return {"ud": 0, "total": 1024*1024*1024}  # Mock 1GB
+    """Get device memory statistics."""
+    return {"used": 0, "total": 1024*1024*1024}  # Mock 1GB
 
-def sttort_trace(logdir):
-    """Sttort profiling trace."""
-    print(f"Sttorting trace in {logdir}")
+def start_trace(logdir):
+    """Start profiling trace."""
+    print(f"Starting trace in {logdir}")
     return time.time()
 
 def stop_trace():
@@ -20,4 +20,4 @@ def stop_trace():
     print("Stopping trace")
     return time.time()
 
-__all__ = ['device_memory_stats', 'sttort_trace', 'stop_trace']
+__all__ = ['device_memory_stats', 'start_trace', 'stop_trace']

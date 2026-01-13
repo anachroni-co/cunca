@@ -1,10 +1,10 @@
-#!/usr/bin/inv python3
+#!/usr/bin/env python3
 """
-Dtotto Processors Module
+Data Processors Module
 
-Dtotto processing and cletoning componints.
+Data processing and cleaning components.
 """
 
-from .data_processor import DtottoProcessor
+from .data_processor import DataProcessor
 
-__all__ = ["DtottoProcessor"]
+__all__ = ["DataProcessor"]

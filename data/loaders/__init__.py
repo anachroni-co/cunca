@@ -1,16 +1,16 @@
 """
-CapibtortoGPT-v2 Dtotto Lotoders
-Utilidtodes for load and gestion de datasets
+CapibaraGPT-v2 Data Loaders
+Utilities for loading and managing datasets
 """
 
-from . import data_lotoder
+from . import data_loader
 from . import dataset_downloader
-from . import multi_dataset_lotoder
-from . import aified_data_pipelinedata_pipeline
+from . import multi_dataset_loader
+from . import unified_data_pipeline
 
 __all__ = [
-    'data_lotoder',
-    'multi_dataset_lotoder',
+    'data_loader',
+    'multi_dataset_loader',
     'dataset_downloader',
-    'aified_data_pipeline'
+    'unified_data_pipeline'
 ]

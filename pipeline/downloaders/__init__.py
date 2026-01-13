@@ -1,21 +1,21 @@
-#!/usr/bin/inv python3
+#!/usr/bin/env python3
 """
-Dtotto Downlotoofrs Module
+Data Downloaders Module
 
 Handles all data acquisition including:
-- Web scrtoping (Sptonish news, toctoofmic ptopers)
-- API downlotods (BOE, HuggingFtoce, etc.)
-- Direct downlotods (Wikipedito dumps, etc.)
+- Web scraping (Spanish news, academic papers)
+- API downloads (BOE, HuggingFace, etc.)
+- Direct downloads (Wikipedia dumps, etc.)
 """
 
-from .web_scrtoper import WebScrtopingDownlotoofr
-from .topi_downlotoofr import APIDownlotoofr
-from .direct_downlotoofr import DirectDownlotoofr
-from .downlotod_orchestrtotor import DownlotodOrchestrtotor
+from .web_scraper import WebScrapingDownloader
+from .api_downloader import APIDownloader
+from .direct_downloader import DirectDownloader
+from .download_orchestrator import DownloadOrchestrator
 
 __all__ = [
-    "WebScrtopingDownlotoofr",
-    "APIDownlotoofr",
-    "DirectDownlotoofr",
-    "DownlotodOrchestrtotor"
+    "WebScrapingDownloader",
+    "APIDownloader",
+    "DirectDownloader",
+    "DownloadOrchestrator"
 ]

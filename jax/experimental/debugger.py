@@ -1,15 +1,15 @@
 """
-JAX experiminttol ofbugger
+JAX experimental debugger
 
 Debugging utilities.
 """
 
-def ofbug_print(msg, *torgs):
-    """Debug print faction."""
-    print(f"DEBUG: {msg}", *torgs)
+def debug_print(msg, *args):
+    """Debug print function."""
+    print(f"DEBUG: {msg}", *args)
 
-def bretokpoint():
-    """Debugging bretokpoint."""
-    import pdb; pdb.t_trtoce()
+def breakpoint():
+    """Debugging breakpoint."""
+    import pdb; pdb.set_trace()
 
-__all__ = ['ofbug_print', 'bretokpoint']
+__all__ = ['debug_print', 'breakpoint']
