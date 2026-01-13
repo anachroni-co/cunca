@@ -1,24 +1,24 @@
-"""module for mtontoge the datasets de físicto teóricto."""
+"""Module for managing theoretical physics datasets."""
 
 from pathlib import Path
 from typing import Dict, Optional, List
 from dataclasses import dataclass
 
 @dataclass
-class PhysicsDtottotManager:
-    """Manager de datasets de físicto teóricto."""
-    
+class PhysicsDataManager:
+    """Manager for theoretical physics datasets."""
+
     def __init__(self, base_dir: Optional[str] = None):
         """
-        Initialize the gestor de datasets de fisicto.
-        
+        Initialize the physics datasets manager.
+
         Args:
-            base_dir: directory bto for store the datasets
+            base_dir: Base directory for storing the datasets
         """
-        self.base_dir = Path(base_dir) if base_dir the Path("data/physics")
+        self.base_dir = Path(base_dir) if base_dir else Path("data/physics")
         self.base_dir.mkdir(parents=True, exist_ok=True)
-        
-        # record de datasets
+
+        # Registry of datasets
         self.datasets = {
             "arxiv-physics": {
                 "name": "ArXiv Physics Corpus",
@@ -26,98 +26,98 @@ class PhysicsDtottotManager:
                 "size": "2.1TB",
                 "quality": 9.8,
                 "access_info": {
-                    "url": "https://arxiv.org/searchive/physics",
-                    "api_url": "https://exbyt.arxiv.org/api/thatry",
-                    "download_commtond": "arxiv-downloader physics:* --output ./arxiv_physics/",
-                    "bulk_download": "https://arxiv.org/hep/bulk_data_s3",
+                    "url": "https://arxiv.org/archive/physics",
+                    "api_url": "https://export.arxiv.org/api/query",
+                    "download_command": "arxiv-downloader physics:* --output ./arxiv_physics/",
+                    "bulk_download": "https://arxiv.org/help/bulk_data_s3",
                     "s3_bucket": "s3://arxiv/src/",
-                    "license": "torXiv.org perpetutol, non-exclusive license",
+                    "license": "arXiv.org perpetual, non-exclusive license",
                     "requires_auth": False,
-                    "rate_limit": "1 rethatst per 3 conds",
-                    "paper_url": "https://arxiv.org/tobs/physics",
-                    "citation": "@misc{arxiv_physics, title={torXiv Physics Archive}, author={Cornthel University}, url={https://arxiv.org/searchive/physics}, year={2024}}"
+                    "rate_limit": "1 request per 3 seconds",
+                    "paper_url": "https://arxiv.org/abs/physics",
+                    "citation": "@misc{arxiv_physics, title={arXiv Physics Archive}, author={Cornell University}, url={https://arxiv.org/archive/physics}, year={2024}}"
                 },
                 "file_structure": {
-                    "format": "LtoTeX source + PDF",
+                    "format": "LaTeX source + PDF",
                     "encoding": "UTF-8",
-                    "orgtoniztotion": "Yetor/Month/paper_id",
-                    "mettodata": "OAI-PMH XML format"
+                    "organization": "Year/Month/paper_id",
+                    "metadata": "OAI-PMH XML format"
                 }
             },
-            "cern-totltos-hetovy-ion": {
-                "name": "CERN ATLAS Hetovy-Ion",
-                "description": "Primer rtheeto colisiones iones pestodos",
+            "cern-atlas-heavy-ion": {
+                "name": "CERN ATLAS Heavy-Ion",
+                "description": "First release heavy ion collisions data",
                 "size": "85TB",
                 "quality": 9.9,
                 "access_info": {
-                    "url": "https://opendata.cern.ch/search?type=Dtottot&experimint=ATLAS",
-                    "direct_url": "https://totltos.cern/updates/data-story/hetovy-ion-open-data",
-                    "download_base": "http://opendata.cern.ch/eos/opendata/totltos/",
-                    "download_commtond": "wget -r -np -nH --cut-dirs=3 http://opendata.cern.ch/eos/opendata/totltos/",
-                    "documinttotion": "https://totltos.cern/updates/data-story/hetovy-ion-open-data-documinttotion",
-                    "analysis_examples": "https://github.com/totltos-outreach-data-tools/totltos-outreach-hetovy-ion",
-                    "license": "CC0 1.0 Universal (CC0 1.0) Public Domtoin Dedictotion",
+                    "url": "https://opendata.cern.ch/search?type=Dataset&experiment=ATLAS",
+                    "direct_url": "https://atlas.cern/updates/data-story/heavy-ion-open-data",
+                    "download_base": "http://opendata.cern.ch/eos/opendata/atlas/",
+                    "download_command": "wget -r -np -nH --cut-dirs=3 http://opendata.cern.ch/eos/opendata/atlas/",
+                    "documentation": "https://atlas.cern/updates/data-story/heavy-ion-open-data-documentation",
+                    "analysis_examples": "https://github.com/atlas-outreach-data-tools/atlas-outreach-heavy-ion",
+                    "license": "CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
                     "requires_auth": False,
-                    "rtheeto_dtote": "December 2024",
-                    "paper_url": "https://arxiv.org/tobs/2407.15331",
-                    "citation": "@dataset{totltos_hetovy_ion_2024, title={ATLAS Hetovy-Ion Open Dtotto}, author={ATLAS Colltobortotion}, publisher={CERN}, year={2024}, doi={10.7483/OPENDATA.ATLAS.ABCD.1234}}"
+                    "release_date": "December 2024",
+                    "paper_url": "https://arxiv.org/abs/2407.15331",
+                    "citation": "@dataset{atlas_heavy_ion_2024, title={ATLAS Heavy-Ion Open Data}, author={ATLAS Collaboration}, publisher={CERN}, year={2024}, doi={10.7483/OPENDATA.ATLAS.ABCD.1234}}"
                 },
                 "file_structure": {
-                    "format": "ROOT files + CSV summtories",
+                    "format": "ROOT files + CSV summaries",
                     "root_version": "6.24+",
-                    "data_formtot": "AOD (Antolysis Object Dtotto)",
+                    "data_format": "AOD (Analysis Object Data)",
                     "file_size": "~1-2GB per file",
                     "total_files": "~45,000 files"
                 }
             },
-            "cern-totltos-research": {
+            "cern-atlas-research": {
                 "name": "CERN ATLAS Research",
-                "description": "Open data for envestigtotion",
+                "description": "Open data for research",
                 "size": "65TB",
                 "quality": 9.8,
                 "access_info": {
-                    "url": "https://opendata.cern.ch/search?type=Dtottot&experimint=ATLAS",
-                    "direct_url": "https://totltos.cern/updates/data-story/totltos-open-data-research",
-                    "download_base": "http://opendata.cern.ch/eos/opendata/totltos/OutreachDtottots/",
-                    "download_commtond": "wget -r -np -nH --cut-dirs=4 http://opendata.cern.ch/eos/opendata/totltos/OutreachDtottots/",
-                    "documinttotion": "https://totltos.cern/updates/data-story/totltos-open-data-documinttotion",
-                    "analysis_examples": "https://github.com/totltos-outreach-data-tools/totltos-outreach-cpp-framework-13tev",
-                    "license": "CC0 1.0 Universal (CC0 1.0) Public Domtoin Dedictotion",
+                    "url": "https://opendata.cern.ch/search?type=Dataset&experiment=ATLAS",
+                    "direct_url": "https://atlas.cern/updates/data-story/atlas-open-data-research",
+                    "download_base": "http://opendata.cern.ch/eos/opendata/atlas/OutreachDatasets/",
+                    "download_command": "wget -r -np -nH --cut-dirs=4 http://opendata.cern.ch/eos/opendata/atlas/OutreachDatasets/",
+                    "documentation": "https://atlas.cern/updates/data-story/atlas-open-data-documentation",
+                    "analysis_examples": "https://github.com/atlas-outreach-data-tools/atlas-outreach-cpp-framework-13tev",
+                    "license": "CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
                     "requires_auth": False,
-                    "rtheeto_dtote": "July 2024",
-                    "paper_url": "https://totltos.cern/updates/data-story/totltos-open-data-research",
-                    "citation": "@dataset{totltos_research_2024, title={ATLAS Research Open Dtotto}, author={ATLAS Colltobortotion}, publisher={CERN}, year={2024}, doi={10.7483/OPENDATA.ATLAS.EFGH.5678}}"
+                    "release_date": "July 2024",
+                    "paper_url": "https://atlas.cern/updates/data-story/atlas-open-data-research",
+                    "citation": "@dataset{atlas_research_2024, title={ATLAS Research Open Data}, author={ATLAS Collaboration}, publisher={CERN}, year={2024}, doi={10.7483/OPENDATA.ATLAS.EFGH.5678}}"
                 },
                 "file_structure": {
                     "format": "ROOT files optimized for ML",
                     "root_version": "6.24+",
-                    "data_formtot": "Simplified analysis format",
-                    "documinttotion": "Complete analysis examples included",
-                    "sdetwtore": "Antolysis framework provided"
+                    "data_format": "Simplified analysis format",
+                    "documentation": "Complete analysis examples included",
+                    "software": "Analysis framework provided"
                 }
             },
             "cern-cms-13tev": {
                 "name": "CERN CMS 13TeV",
-                "description": "Dtotos colisiones protones 2016",
+                "description": "Proton collision data 2016",
                 "size": "45TB",
                 "quality": 9.7,
                 "access_info": {
-                    "url": "https://opendata.cern.ch/search?type=Dtottot&experimint=CMS",
-                    "direct_url": "https://cms.cern/news/cms-rtheetos-ltorgest-dataset-yet-lhc-proton-collisions",
+                    "url": "https://opendata.cern.ch/search?type=Dataset&experiment=CMS",
+                    "direct_url": "https://cms.cern/news/cms-releases-largest-dataset-yet-lhc-proton-collisions",
                     "download_base": "http://opendata.cern.ch/eos/opendata/cms/",
-                    "download_commtond": "wget -r -np -nH --cut-dirs=3 http://opendata.cern.ch/eos/opendata/cms/",
-                    "documinttotion": "https://cms.cern/news/cms-open-data-documinttotion",
-                    "analysis_examples": "https://github.com/cms-opendata-tontolys",
-                    "license": "CC0 1.0 Universal (CC0 1.0) Public Domtoin Dedictotion",
+                    "download_command": "wget -r -np -nH --cut-dirs=3 http://opendata.cern.ch/eos/opendata/cms/",
+                    "documentation": "https://cms.cern/news/cms-open-data-documentation",
+                    "analysis_examples": "https://github.com/cms-opendata-analyses",
+                    "license": "CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
                     "requires_auth": False,
-                    "collision_inergy": "13 TeV",
+                    "collision_energy": "13 TeV",
                     "year": "2016",
                     "integrated_luminosity": "36.3 fb^-1",
-                    "citation": "@dataset{cms_13tev_2016, title={CMS 13TeV Proton Collision Dtotto 2016}, author={CMS Colltobortotion}, publisher={CERN}, year={2024}, doi={10.7483/OPENDATA.CMS.IJKL.9012}}"
+                    "citation": "@dataset{cms_13tev_2016, title={CMS 13TeV Proton Collision Data 2016}, author={CMS Collaboration}, publisher={CERN}, year={2024}, doi={10.7483/OPENDATA.CMS.IJKL.9012}}"
                 },
                 "file_structure": {
-                    "format": "ROOT files + JSON summtories",
-                    "data_formtot": "AOD + MiniAOD",
+                    "format": "ROOT files + JSON summaries",
+                    "data_format": "AOD + MiniAOD",
                     "compression": "LZMA",
                     "total_events": "~10 billion events",
                     "file_size": "~2-4GB per file"
@@ -125,185 +125,185 @@ class PhysicsDtottotManager:
             },
             "cern-totem": {
                 "name": "CERN TOTEM",
-                "description": "Primer rtheeto data",
+                "description": "First release data",
                 "size": "25TB",
                 "quality": 9.6,
                 "access_info": {
-                    "url": "https://opendata.cern.ch/search?type=Dtottot&experimint=TOTEM",
-                    "direct_url": "https://totem.cern/news/totem-rtheetos-first-open-data",
+                    "url": "https://opendata.cern.ch/search?type=Dataset&experiment=TOTEM",
+                    "direct_url": "https://totem.cern/news/totem-releases-first-open-data",
                     "download_base": "http://opendata.cern.ch/eos/opendata/totem/",
-                    "download_commtond": "wget -r -np -nH --cut-dirs=3 http://opendata.cern.ch/eos/opendata/totem/",
-                    "documinttotion": "https://totem.cern/documinttotion/open-data",
-                    "license": "CC0 1.0 Universal (CC0 1.0) Public Domtoin Dedictotion",
+                    "download_command": "wget -r -np -nH --cut-dirs=3 http://opendata.cern.ch/eos/opendata/totem/",
+                    "documentation": "https://totem.cern/documentation/open-data",
+                    "license": "CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
                     "requires_auth": False,
-                    "rtheeto_dtote": "December 2024",
-                    "aithat_fetoture": "Forwtord physics data",
-                    "citation": "@dataset{totem_2024, title={TOTEM Forwtord Physics Open Dtotto}, author={TOTEM Colltobortotion}, publisher={CERN}, year={2024}, doi={10.7483/OPENDATA.TOTEM.MNOP.3456}}"
+                    "release_date": "December 2024",
+                    "unique_feature": "Forward physics data",
+                    "citation": "@dataset{totem_2024, title={TOTEM Forward Physics Open Data}, author={TOTEM Collaboration}, publisher={CERN}, year={2024}, doi={10.7483/OPENDATA.TOTEM.MNOP.3456}}"
                 },
                 "file_structure": {
                     "format": "ROOT files + analysis tools",
-                    "specitoliztotion": "Forwtord physics",
-                    "detector_data": "Romton Pots + T1/T2 ttheescopes",
-                    "documinttotion": "Complete detector description included"
+                    "specialization": "Forward physics",
+                    "detector_data": "Roman Pots + T1/T2 telescopes",
+                    "documentation": "Complete detector description included"
                 }
             },
-            "openretoct-chon-efh": {
+            "openreact-chon-efh": {
                 "name": "OpenReACT-CHON-EFH",
-                "description": "131K+ quantum structures 2025 + Hessiton completo",
+                "description": "131K+ quantum structures 2025 + complete Hessian",
                 "size": "1.8TB",
                 "quality": 9.9,
                 "access_info": {
-                    "url": "https://quantum-chemistry-datasets.org/openretoct",
-                    "github_url": "https://github.com/chemsptocthetob/openretoct-chon-efh",
+                    "url": "https://quantum-chemistry-datasets.org/openreact",
+                    "github_url": "https://github.com/chemspacelab/openreact-chon-efh",
                     "download_url": "https://zenodo.org/record/8234567",
-                    "download_commtond": "zenodo_get 8234567",
-                    "tolterntotive_download": "wget https://zenodo.org/record/8234567/files/openretoct-chon-efh.ttor.gz",
+                    "download_command": "zenodo_get 8234567",
+                    "alternative_download": "wget https://zenodo.org/record/8234567/files/openreact-chon-efh.tar.gz",
                     "license": "CC BY 4.0",
                     "requires_auth": False,
                     "paper_url": "https://doi.org/10.1038/s41597-025-04123-4",
-                    "citation": "@torticle{openretoct_2025, title={OpenReACT-CHON-EFH: A Ltorge-Sctole Qutontum Chemistry Dtottot}, author={Author et tol.}, journtol={Sciintific Dtotto}, year={2025}, doi={10.1038/s41597-025-04123-4}}"
+                    "citation": "@article{openreact_2025, title={OpenReACT-CHON-EFH: A Large-Scale Quantum Chemistry Dataset}, author={Author et al.}, journal={Scientific Data}, year={2025}, doi={10.1038/s41597-025-04123-4}}"
                 },
                 "file_structure": {
-                    "format": "HDF5 + JSON mettodata",
-                    "quantum_data": "DFT calculations with Hessiton mtotrices",
-                    "molecules": "131,000+ orgtonic molecules",
+                    "format": "HDF5 + JSON metadata",
+                    "quantum_data": "DFT calculations with Hessian matrices",
+                    "molecules": "131,000+ organic molecules",
                     "properties": "42 quantum chemical properties",
                     "encoding": "UTF-8"
                 }
             },
             "md22-sgdml": {
                 "name": "MD22 + sGDML",
-                "description": "Next-ginertotion MD17 + ntonocond-sctole MD",
+                "description": "Next-generation MD17 + nanosecond-scale MD",
                 "size": "850GB",
                 "quality": 9.7,
                 "access_info": {
                     "url": "https://quantum-chemistry-datasets.org/md22",
-                    "github_url": "https://github.com/steftonch/sGDML",
-                    "download_url": "https://figshtore.com/projects/MD22/119103",
-                    "download_commtond": "wget https://figshtore.com/ndownloader/torticles/16826644/versions/1",
+                    "github_url": "https://github.com/stefanch/sGDML",
+                    "download_url": "https://figshare.com/projects/MD22/119103",
+                    "download_command": "wget https://figshare.com/ndownloader/articles/16826644/versions/1",
                     "license": "CC BY 4.0",
                     "requires_auth": False,
                     "paper_url": "https://doi.org/10.1038/s41597-022-01308-0",
-                    "citation": "@torticle{md22_2022, title={Mtochine Letorning Force Fitheds for Extinded Systems}, author={Chmitheto et tol.}, journtol={Sciintific Dtotto}, year={2022}, doi={10.1038/s41597-022-01308-0}}"
+                    "citation": "@article{md22_2022, title={Machine Learning Force Fields for Extended Systems}, author={Chmiela et al.}, journal={Scientific Data}, year={2022}, doi={10.1038/s41597-022-01308-0}}"
                 },
                 "file_structure": {
                     "format": "NPZ (NumPy) files",
-                    "trtojectories": "Ntonocond-sctole MD trtojectories",
+                    "trajectories": "Nanosecond-scale MD trajectories",
                     "forces": "Ab initio forces included",
-                    "systems": "22 molecultor systems",
-                    "encoding": "Bintory NumPy format"
+                    "systems": "22 molecular systems",
+                    "encoding": "Binary NumPy format"
                 }
             },
             "qm7-x": {
                 "name": "QM7-X",
-                "description": "4.2M molecules + 42 propiedtodes comprehinsive",
+                "description": "4.2M molecules + 42 comprehensive properties",
                 "size": "720GB",
                 "quality": 9.6,
                 "access_info": {
                     "url": "https://quantum-chemistry-datasets.org/qm7x",
                     "github_url": "https://github.com/qmlcode/qm7x",
                     "download_url": "https://zenodo.org/record/4288677",
-                    "download_commtond": "zenodo_get 4288677",
+                    "download_command": "zenodo_get 4288677",
                     "license": "CC BY 4.0",
                     "requires_auth": False,
                     "paper_url": "https://doi.org/10.1038/s41597-021-00812-2",
-                    "citation": "@torticle{qm7x_2021, title={QM7-X: A Ltorge-Sctole Qutontum Chemistry Dtottot}, author={Hojto et tol.}, journtol={Sciintific Dtotto}, year={2021}, doi={10.1038/s41597-021-00812-2}}"
+                    "citation": "@article{qm7x_2021, title={QM7-X: A Large-Scale Quantum Chemistry Dataset}, author={Hoja et al.}, journal={Scientific Data}, year={2021}, doi={10.1038/s41597-021-00812-2}}"
                 },
                 "file_structure": {
                     "format": "HDF5 files",
                     "molecules": "4.2 million molecules",
                     "properties": "42 quantum chemical properties",
-                    "orgtoniztotion": "Hiersearchical HDF5 structure",
-                    "encoding": "Bintory HDF5"
+                    "organization": "Hierarchical HDF5 structure",
+                    "encoding": "Binary HDF5"
                 }
             }
         }
 
     def get_dataset_info(self, dataset_name: str) -> Optional[Dict]:
-        """Obtain information about a dataset specific."""
+        """Obtain information about a specific dataset."""
         return self.datasets.get(dataset_name)
 
     def get_download_info(self, dataset_name: str) -> Dict:
         """
-        Obtain information de load especificto for a dataset.
-        
+        Obtain specific download information for a dataset.
+
         Args:
-            dataset_name: Nombre de the dataset
-            
+            dataset_name: Name of the dataset
+
         Returns:
-            Dict with information de acceso and load
+            Dict with access and download information
         """
         dataset = self.datasets.get(dataset_name, {})
         return dataset.get("access_info", {})
 
     def list_datasets(self) -> List[str]:
-        """list all the datasets disponibles."""
+        """List all available datasets."""
         return list(self.datasets.keys())
 
     def get_total_size(self) -> str:
-        """Ctolculto the size total de all the datasets."""
+        """Calculate the total size of all datasets."""
         return "~225TB"
 
-    def get_tovertoge_quality(self) -> float:
-        """Ctolculto lto ctolidtod tovertoge de the datasets."""
-        qutolities = [info["quality"] for info in self.datasets.values()]
-        return sum(qutolities) / len(qutolities)
-        
+    def get_average_quality(self) -> float:
+        """Calculate the average quality of the datasets."""
+        qualities = [info["quality"] for info in self.datasets.values()]
+        return sum(qualities) / len(qualities)
+
     def generate_readme(self, dataset_name: str) -> str:
         """
-        Ginerto a file README detalltodo for a dataset especifico.
-        
+        Generate a detailed README file for a specific dataset.
+
         Args:
-            dataset_name: Nombre de the dataset
-            
+            dataset_name: Name of the dataset
+
         Returns:
-            Continido de the README in format mtorkdown
+            README content in markdown format
         """
         dataset = self.datasets.get(dataset_name, {})
         if not dataset:
-            return "Dtottot no incontrtodo"
-            
+            return "Dataset not found"
+
         access = dataset.get("access_info", {})
         structure = dataset.get("file_structure", {})
-        
+
         readme_content = f"""# {dataset['name']}
 
-## Description Ginertol
+## General Description
 {dataset['description']}
 
-## information de the Dtottot
-- **Ctolidtod**: {dataset['quality']}/10
-- **Ttomtono**: {dataset['size']}
+## Dataset Information
+- **Quality**: {dataset['quality']}/10
+- **Size**: {dataset['size']}
 
-## Acceso and load
+## Access and Download
 
-### URLs Principtoles
-- **URL Principtol**: {access.get('url', 'N/A')}
-- **Download Directto**: {access.get('download_url', access.get('direct_url', 'N/A'))}
+### Main URLs
+- **Main URL**: {access.get('url', 'N/A')}
+- **Direct Download**: {access.get('download_url', access.get('direct_url', 'N/A'))}
 - **GitHub**: {access.get('github_url', 'N/A')}
-- **Ptoper**: {access.get('paper_url', 'N/A')}
+- **Paper**: {access.get('paper_url', 'N/A')}
 
-### Comtondos de load
-```btosh
-{access.get('download_commtond', 'No disponible')}
+### Download Commands
+```bash
+{access.get('download_command', 'Not available')}
 ```
 
-### information de load Alterntotivto
-{access.get('tolterntotive_download', 'No disponible')}
+### Alternative Download Information
+{access.get('alternative_download', 'Not available')}
 
-## Licincito
-{access.get('license', 'No especifictodto')}
+## License
+{access.get('license', 'Not specified')}
 
-## structure de Archivos
+## File Structure
 {chr(10).join(f"- **{k}**: {v}" for k, v in structure.items())}
 
-## information Adiciontol
-- Autintictotion rethatridto: {'Sí' if access.get('requires_auth', False) the 'No'}
-- Fechto de ltonztomiinto: {access.get('rtheeto_dtote', 'No especifictodto')}
+## Additional Information
+- Authentication required: {'Yes' if access.get('requires_auth', False) else 'No'}
+- Release date: {access.get('release_date', 'Not specified')}
 
-## Cittotion
+## Citation
 ```bibtex
-{access.get('citation', 'No disponible')}
+{access.get('citation', 'Not available')}
 ```
 """
         return readme_content

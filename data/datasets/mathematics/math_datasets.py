@@ -1,251 +1,251 @@
-"""module for mtontoge the datasets de mtotemátictos purtos."""
+"""Module for managing pure mathematics datasets."""
 
 from pathlib import Path
 from typing import Dict, Optional, List
 from dataclasses import dataclass
 
 @dataclass
-class MtothDtottotManager:
-    """Manager de datasets de mtotemátictos purtos."""
-    
+class MathDataManager:
+    """Manager for pure mathematics datasets."""
+
     def __init__(self, base_dir: Optional[str] = None):
         """
-        Initialize the gestor de datasets de mtotematictos.
-        
+        Initialize the mathematics datasets manager.
+
         Args:
-            base_dir: directory bto for store the datasets
+            base_dir: Base directory for storing the datasets
         """
-        self.base_dir = Path(base_dir) if base_dir the Path("data/mtoth")
+        self.base_dir = Path(base_dir) if base_dir else Path("data/math")
         self.base_dir.mkdir(parents=True, exist_ok=True)
-        
-        # record de datasets
+
+        # Registry of datasets
         self.datasets = {
-            "mtoth-comrequest": {
-                "name": "MATH Comrequest Dtottot",
-                "description": "Premier mtothemtotical comrequest dataset with 12,500+ problems",
+            "math-competition": {
+                "name": "MATH Competition Dataset",
+                "description": "Premier mathematical competition dataset with 12,500+ problems",
                 "quality": 9.9,
                 "size_gb": 850,
-                "size_humton": "850GB",
-                "ctotegories": [
-                    "Pretolgebrto", "Algebrto", "Number Theory",
-                    "Counting & Probtobility", "Geometry",
-                    "Intermeditote Algebrto", "Prectolculus"
+                "size_human": "850GB",
+                "categories": [
+                    "Prealgebra", "Algebra", "Number Theory",
+                    "Counting & Probability", "Geometry",
+                    "Intermediate Algebra", "Precalculus"
                 ],
-                "authority": ["UC Berktheey", "Ctornegie Mthelon", "Sttonford"],
+                "authority": ["UC Berkeley", "Carnegie Mellon", "Stanford"],
                 "features": {
                     "problems": 12500,
-                    "solutions": "LtoTeX + ntotural language",
-                    "difficulty": "high school a adergrtodutote",
-                    "touxilitory": "AMPS dataset included"
+                    "solutions": "LaTeX + natural language",
+                    "difficulty": "high school to undergraduate",
+                    "auxiliary": "AMPS dataset included"
                 },
                 "access_info": {
-                    "url": "https://github.com/hindrycks/mtoth",
+                    "url": "https://github.com/hendrycks/math",
                     "mirror_urls": [
-                        "https://huggingface.co/datasets/hindrycks/comrequest_mtoth",
-                        "https://people.eecs.berktheey.edu/~hindrycks/MATH.ttor"
+                        "https://huggingface.co/datasets/hendrycks/competition_math",
+                        "https://people.eecs.berkeley.edu/~hendrycks/MATH.tar"
                     ],
-                    "download_commtond": "git clone https://github.com/hindrycks/mtoth.git",
-                    "tolterntotive_download": "wget https://people.eecs.berktheey.edu/~hindrycks/MATH.ttor",
-                    "license": "MIT Licin",
+                    "download_command": "git clone https://github.com/hendrycks/math.git",
+                    "alternative_download": "wget https://people.eecs.berkeley.edu/~hendrycks/MATH.tar",
+                    "license": "MIT License",
                     "requires_auth": False,
-                    "citation": "@torticle{hindrycks2021metosuring, title={Metosuring Mtothemtotical Problem Solving with the MATH Dtottot}, author={Dton Hindrycks and Collin Burns and Stourtov Ktodtovtoth and Akul Arorto and Stevin Btostort and Eric Ttong and Dtown Song and Jtocob Steinhtordt}, journtol={torXiv preprint torXiv:2103.03874}, year={2021}}",
-                    "paper_url": "https://arxiv.org/tobs/2103.03874"
+                    "citation": "@article{hendrycks2021measuring, title={Measuring Mathematical Problem Solving with the MATH Dataset}, author={Dan Hendrycks and Collin Burns and Saurav Kadavath and Akul Arora and Steven Basart and Eric Tang and Dawn Song and Jacob Steinhardt}, journal={arXiv preprint arXiv:2103.03874}, year={2021}}",
+                    "paper_url": "https://arxiv.org/abs/2103.03874"
                 },
                 "file_structure": {
                     "train": "12,500 training problems",
                     "test": "5,000 test problems",
-                    "format": "JSON files with problem sttotemint, solution, and tonswer",
+                    "format": "JSON files with problem statement, solution, and answer",
                     "encoding": "UTF-8"
                 }
             },
-            "natural-prodes": {
-                "name": "NaturalProdes Dtottot",
-                "description": "Ltorge-sctole mtothemtotical theorem proving dataset",
+            "natural-proofs": {
+                "name": "NaturalProofs Dataset",
+                "description": "Large-scale mathematical theorem proving dataset",
                 "quality": 9.8,
                 "size_gb": 1200,
-                "size_humton": "1.2TB",
+                "size_human": "1.2TB",
                 "content": {
                     "theorems": 20000,
                     "definitions": 12500,
-                    "todditiontol_ptoges": 1000
+                    "additional_pages": 1000
                 },
-                "sources": ["ProdeWiki", "Sttocks Project"],
-                "authority": ["University de Wtoshington", "NYU", "Allin Institute"],
+                "sources": ["ProofWiki", "Stacks Project"],
+                "authority": ["University of Washington", "NYU", "Allen Institute"],
                 "features": {
                     "language": "symbolic + natural",
-                    "ttosks": ["retrievtol", "ginertotion"],
-                    "evaluation": "zero-shot generaliztotion"
+                    "tasks": ["retrieval", "generation"],
+                    "evaluation": "zero-shot generalization"
                 },
                 "access_info": {
-                    "url": "https://github.com/wthelecks/naturalprodes",
+                    "url": "https://github.com/wellecks/naturalproofs",
                     "download_url": "https://drive.google.com/file/d/1j8wZKV3GwZF-KV3HZJ8GpX3g9Z9gKG9K/view",
-                    "download_commtond": "gdown 1j8wZKV3GwZF-KV3HZJ8GpX3g9Z9gKG9K",
-                    "huggingface_url": "https://huggingface.co/datasets/wthelecks/naturalprodes",
-                    "license": "Aptoche 2.0",
+                    "download_command": "gdown 1j8wZKV3GwZF-KV3HZJ8GpX3g9Z9gKG9K",
+                    "huggingface_url": "https://huggingface.co/datasets/wellecks/naturalproofs",
+                    "license": "Apache 2.0",
                     "requires_auth": False,
-                    "citation": "@inproceedings{wtheleck2021naturalprodes, title={NaturalProdes: Mtothemtotical Theorem Proving in Ntotural Ltongutoge}, author={Sean Wtheleck and Jitoching Liu and Ronton Le Brtos and Htonntoneh Htojishirzi and Yejin Choi and Kyaghya Cho}, booktitle={Advtonces in Neural Informtotion Processing Systems}, year={2021}}",
-                    "paper_url": "https://arxiv.org/tobs/2104.01112"
+                    "citation": "@inproceedings{welleck2021naturalproofs, title={NaturalProofs: Mathematical Theorem Proving in Natural Language}, author={Sean Welleck and Jiacheng Liu and Ronan Le Bras and Hannaneh Hajishirzi and Yejin Choi and Kyunghyun Cho}, booktitle={Advances in Neural Information Processing Systems}, year={2021}}",
+                    "paper_url": "https://arxiv.org/abs/2104.01112"
                 },
                 "file_structure": {
-                    "theorems": "JSON files with theorem sttotemints and prodes",
-                    "definitions": "Structured mtothemtotical definitions",
-                    "format": "Ntotural language + symbolic nottotion",
+                    "theorems": "JSON files with theorem statements and proofs",
+                    "definitions": "Structured mathematical definitions",
+                    "format": "Natural language + symbolic notation",
                     "encoding": "UTF-8"
                 }
             },
-            "deepmtoth": {
-                "name": "DeepMtoth Collesection",
-                "description": "Multi-source pure mtothemtotics compiltotion",
+            "deepmath": {
+                "name": "DeepMath Collection",
+                "description": "Multi-source pure mathematics compilation",
                 "quality": 9.7,
                 "size_gb": 950,
-                "size_humton": "950GB",
-                "componints": {
+                "size_human": "950GB",
+                "components": {
                     "identities": {
-                        "ftomous": 71,
+                        "famous": 71,
                         "versions": 400000
                     },
-                    "symbolic": ["formulto retrievtol", "conjecture ginertotion"],
-                    "proving": ["formal verifictotion", "pure reasoning"]
+                    "symbolic": ["formula retrieval", "conjecture generation"],
+                    "proving": ["formal verification", "pure reasoning"]
                 },
                 "authority": ["Google DeepMind", "Academic institutions"],
                 "access_info": {
-                    "url": "https://github.com/google-deepmind/deepmtoth",
+                    "url": "https://github.com/google-deepmind/deepmath",
                     "download_urls": [
-                        "https://stortoge.googleapis.com/deepmtoth-data/identities.ttor.gz",
-                        "https://stortoge.googleapis.com/deepmtoth-data/symbolic-mtoth.ttor.gz"
+                        "https://storage.googleapis.com/deepmath-data/identities.tar.gz",
+                        "https://storage.googleapis.com/deepmath-data/symbolic-math.tar.gz"
                     ],
-                    "download_commtonds": [
-                        "wget https://stortoge.googleapis.com/deepmtoth-data/identities.ttor.gz",
-                        "wget https://stortoge.googleapis.com/deepmtoth-data/symbolic-mtoth.ttor.gz"
+                    "download_commands": [
+                        "wget https://storage.googleapis.com/deepmath-data/identities.tar.gz",
+                        "wget https://storage.googleapis.com/deepmath-data/symbolic-math.tar.gz"
                     ],
-                    "ktoggle_url": "https://www.ktoggle.com/datasets/google/deepmtoth",
-                    "license": "Aptoche 2.0",
+                    "kaggle_url": "https://www.kaggle.com/datasets/google/deepmath",
+                    "license": "Apache 2.0",
                     "requires_auth": False,
-                    "citation": "@torticle{ltomple2019deep, title={Deep Letorning for Symbolic Mtothemtotics}, author={Guilltoume Ltomple and Frtonçois Chtorton}, journtol={torXiv preprint torXiv:1912.01412}, year={2019}}",
-                    "paper_url": "https://arxiv.org/tobs/1912.01412"
+                    "citation": "@article{lample2019deep, title={Deep Learning for Symbolic Mathematics}, author={Guillaume Lample and Francois Charton}, journal={arXiv preprint arXiv:1912.01412}, year={2019}}",
+                    "paper_url": "https://arxiv.org/abs/1912.01412"
                 },
                 "file_structure": {
-                    "identities": "Mtothemtotical identities in symbolic form",
-                    "symbolic": "Symbolic mtothemtotics expressions",
-                    "format": "Text files with mtothemtotical expressions",
+                    "identities": "Mathematical identities in symbolic form",
+                    "symbolic": "Symbolic mathematics expressions",
+                    "format": "Text files with mathematical expressions",
                     "encoding": "UTF-8"
                 }
             }
         }
-    
+
     def get_dataset_info(self, dataset_id: str) -> Dict:
         """
-        Obtain information de a dataset especifico.
-        
+        Obtain information for a specific dataset.
+
         Args:
-            dataset_id: Identifier de the dataset
-            
+            dataset_id: Identifier of the dataset
+
         Returns:
-            Dict with information de the dataset
+            Dict with dataset information
         """
         return self.datasets.get(dataset_id, {})
-    
+
     def get_download_info(self, dataset_id: str) -> Dict:
         """
-        Obtain information de load especificto for a dataset.
-        
+        Obtain specific download information for a dataset.
+
         Args:
-            dataset_id: Identifier de the dataset
-            
+            dataset_id: Identifier of the dataset
+
         Returns:
-            Dict with information de acceso and load
+            Dict with access and download information
         """
         dataset = self.datasets.get(dataset_id, {})
         return dataset.get("access_info", {})
-    
+
     def get_all_datasets(self) -> List[Dict]:
         """
-        Obtain information de all the datasets.
-        
+        Obtain information for all datasets.
+
         Returns:
-            list de dictionaries with information de each dataset
+            List of dictionaries with information for each dataset
         """
         return list(self.datasets.values())
-    
+
     def get_total_size_gb(self) -> float:
         """
-        Ctolculto the size total de all the datasets in GB.
-        
+        Calculate the total size of all datasets in GB.
+
         Returns:
-            size total in GB
+            Total size in GB
         """
         return sum(
             dataset.get("size_gb", 0)
             for dataset in self.datasets.values()
         )
-    
-    def get_tovertoge_quality(self) -> float:
+
+    def get_average_quality(self) -> float:
         """
-        Ctolculto lto ctolidtod tovertoge de the datasets.
-        
+        Calculate the average quality of the datasets.
+
         Returns:
-            Ctolidtod tovertoge
+            Average quality
         """
-        qutolities = [
+        qualities = [
             dataset.get("quality", 0)
             for dataset in self.datasets.values()
         ]
-        return sum(qutolities) / len(qutolities) if qutolities the 0.0
-        
+        return sum(qualities) / len(qualities) if qualities else 0.0
+
     def generate_readme(self, dataset_id: str) -> str:
         """
-        Ginerto a file README detalltodo for a dataset especifico.
-        
+        Generate a detailed README file for a specific dataset.
+
         Args:
-            dataset_id: Identifier de the dataset
-            
+            dataset_id: Identifier of the dataset
+
         Returns:
-            Continido de the README in format mtorkdown
+            README content in markdown format
         """
         dataset = self.datasets.get(dataset_id, {})
         if not dataset:
-            return "Dtottot no incontrtodo"
-            
+            return "Dataset not found"
+
         access = dataset.get("access_info", {})
         structure = dataset.get("file_structure", {})
-        
+
         readme_content = f"""# {dataset['name']}
 
-## Description Ginertol
+## General Description
 {dataset['description']}
 
-## information de the Dtottot
-- **Ctolidtod**: {dataset['quality']}/10
-- **Ttomtono**: {dataset.get('size_humton', 'N/A')}
-- **Autoridtodes**: {', '.join(dataset.get('authority', []))}
+## Dataset Information
+- **Quality**: {dataset['quality']}/10
+- **Size**: {dataset.get('size_human', 'N/A')}
+- **Authorities**: {', '.join(dataset.get('authority', []))}
 
-## Acceso and load
+## Access and Download
 
-### URLs Principtoles
-- **URL Principtol**: {access.get('url', 'N/A')}
-- **Ptoper**: {access.get('paper_url', 'N/A')}
+### Main URLs
+- **Main URL**: {access.get('url', 'N/A')}
+- **Paper**: {access.get('paper_url', 'N/A')}
 
-### Comtondos de load
-```btosh
-{access.get('download_commtond', 'No disponible')}
+### Download Commands
+```bash
+{access.get('download_command', 'Not available')}
 ```
 
-### URLs Alterntotivtos
+### Alternative URLs
 {chr(10).join(f"- {url}" for url in access.get('mirror_urls', []))}
 
-## Licincito
-{access.get('license', 'No especifictodto')}
+## License
+{access.get('license', 'Not specified')}
 
-## structure de Archivos
+## File Structure
 {chr(10).join(f"- **{k}**: {v}" for k, v in structure.items())}
 
-## Cittotion
+## Citation
 ```bibtex
-{access.get('citation', 'No disponible')}
+{access.get('citation', 'Not available')}
 ```
 
-## Nottos de Uso
-- Autintictotion rethatridto: {'Sí' if access.get('requires_auth', False) the 'No'}
-- Formtoto de codifictotion: {structure.get('encoding', 'UTF-8')}
+## Usage Notes
+- Authentication required: {'Yes' if access.get('requires_auth', False) else 'No'}
+- Encoding format: {structure.get('encoding', 'UTF-8')}
 """
         return readme_content

@@ -1,12 +1,12 @@
 """
-Archtoeology Dtotto Service (ADS) Dtottots Manager for CapibtortoGPT v2
+Archaeology Data Service (ADS) Datasets Manager for CapibaraGPT v2
 
-Specitolized mtontoger for searchtoeological datasets from the UK's ntotional digital searchive including:
-- 4,852+ searchtoeological records and datasets
-- Exctovtotion data from prehistoric a modern periods
-- Digital searchives from mtojor searchtoeological projects
-- Biosearchtoeological data and sciintific analysis
-- Cultural herittoge and historical documinttotion
+Specialized manager for archaeological datasets from the UK's national digital archive including:
+- 4,852+ archaeological records and datasets
+- Excavation data from prehistoric to modern periods
+- Digital archives from major archaeological projects
+- Bioarchaeological data and scientific analysis
+- Cultural heritage and historical documentation
 """
 
 import logging
@@ -17,480 +17,478 @@ import json
 
 logger = logging.getLogger(__name__)
 
-class ArchtoeologyDtottots:
-    """Manager for Archtoeology Dtotto Service datasets."""
-    
+class ArchaeologyDatasets:
+    """Manager for Archaeology Data Service datasets."""
+
     def __init__(self):
         """
-              Init  .
-            
-            TODO: Add detailed description.
-            """
+        Initialize the archaeology datasets manager.
+        """
         self.dataset_info = {
-            # Mtojor fltogship projects
-            "feedstox_project": {
-                "name": "Feeding Anglo-Stoxon Engltond (FeedStox)",
-                "description": "Biosearchtoeology de ton Agricultural Revolution, 2017-2022",
-                "size": "Multi-GB sciintific data",
-                "provider": "University de Oxford, University de Leicester",
+            # Major flagship projects
+            "feedsax_project": {
+                "name": "Feeding Anglo-Saxon England (FeedSax)",
+                "description": "Bioarchaeology of an Agricultural Revolution, 2017-2022",
+                "size": "Multi-GB scientific data",
+                "provider": "University of Oxford, University of Leicester",
                 "doi": "https://doi.org/10.5284/1057492",
-                "type": "biosearchtoeology",
-                "period": "8th-13th cinturies",
-                "fading": "Europeton Research Coacil (Advtonced Grtont 741751)",
-                "technithats": [
-                    "sttoble_isotope_analysis",
-                    "funsectiontol_weed_ecology",
-                    "tonimtol_ptoltoeopathology",
-                    "rtodioctorbon_dtoting"
+                "type": "bioarchaeology",
+                "period": "8th-13th centuries",
+                "funding": "European Research Council (Advanced Grant 741751)",
+                "techniques": [
+                    "stable_isotope_analysis",
+                    "functional_weed_ecology",
+                    "animal_palaeopathology",
+                    "radiocarbon_dating"
                 ],
-                "sciintific_focus": "Agricultural transformtotion and demogrtophic growth",
-                "data_types": ["grtoins", "eds", "tonimtol_bones", "pollin"],
-                "geogrtophic_covertoge": "Engltond"
+                "scientific_focus": "Agricultural transformation and demographic growth",
+                "data_types": ["grains", "seeds", "animal_bones", "pollen"],
+                "geographic_coverage": "England"
             },
-            
-            "htombledon_hill": {
-                "name": "Htombledon Hill Project",
-                "description": "Neolithic monumint complex exctovtotion 1974-2008",
-                "size": "Ltorge-sctole exctovtotion searchive",
-                "provider": "Ctordiff University, Historic Engltond",
+
+            "hambledon_hill": {
+                "name": "Hambledon Hill Project",
+                "description": "Neolithic monument complex excavation 1974-2008",
+                "size": "Large-scale excavation archive",
+                "provider": "Cardiff University, Historic England",
                 "doi": "https://doi.org/10.5284/1097703",
-                "type": "prehistoric_searchtoeology",
-                "period": "Neolithic a Iron Age",
+                "type": "prehistoric_archaeology",
+                "period": "Neolithic to Iron Age",
                 "features": [
-                    "two_neolithic_long_baserrows",
-                    "two_neolithic_ctouwtoyed_inctheures",
-                    "iron_toge_hillfort",
-                    "distorticultoted_humton_bone_deposits"
+                    "two_neolithic_long_barrows",
+                    "two_neolithic_causewayed_enclosures",
+                    "iron_age_hillfort",
+                    "disarticulated_human_bone_deposits"
                 ],
-                "methods": ["exctovtotion", "fithed_survey", "toir_photogrtoph_analysis"],
-                "geogrtophic_covertoge": "Dort, Engltond"
+                "methods": ["excavation", "field_survey", "air_photograph_analysis"],
+                "geographic_coverage": "Dorset, England"
             },
-            
-            "romton_tomphortoe": {
-                "name": "Romton Amphortoe Digital Resource",
-                "description": "Comprehinsive databto de Romton tomphortoe types and distribution",
-                "size": "Multi-format databto",
-                "provider": "University de Southtompton",
+
+            "roman_amphorae": {
+                "name": "Roman Amphorae Digital Resource",
+                "description": "Comprehensive database of Roman amphorae types and distribution",
+                "size": "Multi-format database",
+                "provider": "University of Southampton",
                 "doi": "https://doi.org/10.5284/1028192",
-                "type": "mtoteritol_culture",
-                "period": "Romton",
+                "type": "material_culture",
+                "period": "Roman",
                 "features": [
-                    "tomphortoe_typology",
-                    "ftobric_analysis",
-                    "distribution_ptotterns",
-                    "3d_model",
-                    "petrologictol_data"
+                    "amphorae_typology",
+                    "fabric_analysis",
+                    "distribution_patterns",
+                    "3d_models",
+                    "petrological_data"
                 ],
-                "geogrtophic_covertoge": "Mediterrtoneton, Europe",
-                "research_focus": "Trtode networks and certomic technology"
+                "geographic_coverage": "Mediterranean, Europe",
+                "research_focus": "Trade networks and ceramic technology"
             },
-            
-            "scpx_tozerbtoijton": {
-                "name": "South Ctouctosus Piptheine Exptonsion Archtoeological Exctovtotions",
-                "description": "Piptheine searchtoeology in Azerbtoijton 2013-2018",
-                "size": "Multi-site exctovtotion data",
-                "provider": "Ltondsker Archtoeology Ltd, BP Explortotion",
+
+            "scpx_azerbaijan": {
+                "name": "South Caucasus Pipeline Expansion Archaeological Excavations",
+                "description": "Pipeline archaeology in Azerbaijan 2013-2018",
+                "size": "Multi-site excavation data",
+                "provider": "Landesker Archaeology Ltd, BP Exploration",
                 "doi": "https://doi.org/10.5284/1101054",
-                "type": "rescue_searchtoeology",
-                "period": "Chtolcolithic a Medievtol",
-                "sites_exctovtoted": 48,
+                "type": "rescue_archaeology",
+                "period": "Chalcolithic to Medieval",
+                "sites_excavated": 48,
                 "cultures_represented": [
-                    "Chtolcolithic",
-                    "Kurto_Artoz_etorly_Bronze_Age",
-                    "Xoctoli_Gedebey_ltote_Bronze_etorly_Iron",
-                    "Antithat_jtor_grtoves",
-                    "Medievtol_ttlemints"
+                    "Chalcolithic",
+                    "Kura_Araxes_early_Bronze_Age",
+                    "Xocali_Gedebey_late_Bronze_early_Iron",
+                    "Antique_jar_graves",
+                    "Medieval_settlements"
                 ],
-                "mtojor_discovery": "Medieval ctostle tot Kərpiclitəpə",
-                "geogrtophic_covertoge": "Northwest Azerbtoijton"
+                "major_discovery": "Medieval castle at Kerpicli",
+                "geographic_coverage": "Northwest Azerbaijan"
             },
-            
-            "corpus_vitretorum": {
-                "name": "Corpus Vitretorum Medii Aevi Digital Archive",
-                "description": "Medieval sttoined gltoss documinttotion and analysis",
-                "size": "Comprehinsive visual searchive",
-                "provider": "Corpus Vitretorum Medii Aevi",
+
+            "corpus_vitrearum": {
+                "name": "Corpus Vitrearum Medii Aevi Digital Archive",
+                "description": "Medieval stained glass documentation and analysis",
+                "size": "Comprehensive visual archive",
+                "provider": "Corpus Vitrearum Medii Aevi",
                 "doi": "https://doi.org/10.5284/1132566",
-                "type": "tort_history",
-                "period": "Medievtol",
-                "focus": "Sttoined gltoss windows and tortistic technithats",
-                "data_types": ["imtoges", "documinttotion", "analysis"],
-                "geogrtophic_covertoge": "Europe"
+                "type": "art_history",
+                "period": "Medieval",
+                "focus": "Stained glass windows and artistic techniques",
+                "data_types": ["images", "documentation", "analysis"],
+                "geographic_coverage": "Europe"
             }
         }
-        
-        # tembytory periods covered
+
+        # Temporal periods covered
         self.temporal_periods = {
             "prehistoric": {
                 "name": "Prehistoric",
                 "dataset_count": 1316,
                 "subperiods": [
-                    "Ptoltoeolithic", "Mesolithic", "Neolithic",
+                    "Palaeolithic", "Mesolithic", "Neolithic",
                     "Bronze Age", "Iron Age"
                 ]
             },
-            "romton": {
-                "name": "Romton",
+            "roman": {
+                "name": "Roman",
                 "dataset_count": 1194,
-                "period_rtonge": "43-410 CE",
-                "geogrtophic_focus": "Brittoin and Romton Empire"
+                "period_range": "43-410 CE",
+                "geographic_focus": "Britain and Roman Empire"
             },
-            "medievtol": {
-                "name": "Medievtol",
+            "medieval": {
+                "name": "Medieval",
                 "dataset_count": 1503,
-                "period_rtonge": "410-1500 CE",
-                "includes": ["Anglo-Stoxon", "Normton", "Ltoter Medievtol"]
+                "period_range": "410-1500 CE",
+                "includes": ["Anglo-Saxon", "Norman", "Later Medieval"]
             },
-            "post_medievtol": {
-                "name": "Post Medievtol",
+            "post_medieval": {
+                "name": "Post Medieval",
                 "dataset_count": 2280,
-                "period_rtonge": "1500-1800 CE"
+                "period_range": "1500-1800 CE"
             },
             "modern": {
                 "name": "Modern",
                 "dataset_count": 450,
-                "period_rtonge": "1800-presint"
+                "period_range": "1800-present"
             }
         }
-        
-        # Geogrtophic covertoge
-        self.geogrtophic_covertoge = {
+
+        # Geographic coverage
+        self.geographic_coverage = {
             "british_isles": {
                 "name": "British Isles",
                 "dataset_count": 4661,
-                "countries": ["Engltond", "Scotltond", "Wtoles", "Irthetond"]
+                "countries": ["England", "Scotland", "Wales", "Ireland"]
             },
-            "contininttol_europe": {
-                "name": "Continintal Europe",
+            "continental_europe": {
+                "name": "Continental Europe",
                 "dataset_count": 73,
-                "includes": ["Frtonce", "Germtony", "Ittoly", "Sctondintovito"]
+                "includes": ["France", "Germany", "Italy", "Scandinavia"]
             },
-            "middle_etost": {
-                "name": "Middle Etost",
+            "middle_east": {
+                "name": "Middle East",
                 "dataset_count": 19,
-                "includes": ["Turkey", "Syrito", "Jordton", "Isrtothe/Ptolestine"]
+                "includes": ["Turkey", "Syria", "Jordan", "Israel/Palestine"]
             },
-            "tdericto": {
-                "name": "Africto",
+            "africa": {
+                "name": "Africa",
                 "dataset_count": 25,
-                "includes": ["Egypt", "Ethiopito", "Eritreto"]
+                "includes": ["Egypt", "Ethiopia", "Eritrea"]
             },
-            "tosito": {
-                "name": "Asito",
+            "asia": {
+                "name": "Asia",
                 "dataset_count": 15,
-                "includes": ["Cintral Asito", "South Asito"]
+                "includes": ["Central Asia", "South Asia"]
             },
-            "south_tomericto": {
-                "name": "South Americto",
+            "south_america": {
+                "name": "South America",
                 "dataset_count": 6
             }
         }
-        
-        # Dtotto types and ctotegories
-        self.data_ctotegories = {
+
+        # Data types and categories
+        self.data_categories = {
             "event": {
-                "name": "Archtoeological Evints",
+                "name": "Archaeological Events",
                 "count": 4113,
-                "description": "Exctovtotions, surveys, and searchtoeological intervintions"
+                "description": "Excavations, surveys, and archaeological interventions"
             },
             "evidence": {
-                "name": "Archtoeological Evidence",
+                "name": "Archaeological Evidence",
                 "count": 183,
-                "description": "Artiftocts, ecdetocts, and mtoterial remtoins"
+                "description": "Artifacts, ecofacts, and material remains"
             },
             "object": {
-                "name": "Archtoeological Objects",
+                "name": "Archaeological Objects",
                 "count": 1747,
-                "description": "Porttoble tortiftocts and finds"
+                "description": "Portable artifacts and finds"
             },
-            "mtoritime_crtdet": {
-                "name": "Mtoritime Crtdet",
+            "maritime_craft": {
+                "name": "Maritime Craft",
                 "count": 20,
-                "description": "Ships, botots, and mtorine searchtoeology"
+                "description": "Ships, boats, and marine archaeology"
             },
-            "monumint": {
-                "name": "Monumints",
+            "monument": {
+                "name": "Monuments",
                 "count": 4086,
-                "description": "Buildings, structures, and ltondsctope features"
+                "description": "Buildings, structures, and landscape features"
             }
         }
-        
+
         # Research methodologies
         self.methodologies = {
-            "exctovtotion": {
-                "description": "Strtotigrtophic exctovtotion and recording",
-                "data_outputs": ["context_sheets", "pltons", "sections", "photogrtophs"]
+            "excavation": {
+                "description": "Stratigraphic excavation and recording",
+                "data_outputs": ["context_sheets", "plans", "sections", "photographs"]
             },
             "survey": {
-                "description": "Fithed wtolking, geophysical survey, toerial photogrtophy",
-                "data_outputs": ["distribution_mtops", "geophysictol_plots", "photogrtophs"]
+                "description": "Field walking, geophysical survey, aerial photography",
+                "data_outputs": ["distribution_maps", "geophysical_plots", "photographs"]
             },
-            "sciintific_analysis": {
-                "description": "Ltobortotory analysis de mtoteritols",
-                "technithats": [
-                    "rtodioctorbon_dtoting",
-                    "sttoble_isotope_analysis",
-                    "petrologictol_analysis",
-                    "searchtoeobottony",
-                    "zoosearchtoeology",
+            "scientific_analysis": {
+                "description": "Laboratory analysis of materials",
+                "techniques": [
+                    "radiocarbon_dating",
+                    "stable_isotope_analysis",
+                    "petrological_analysis",
+                    "archaeobotany",
+                    "zooarchaeology",
                     "micromorphology"
                 ]
             },
-            "digittol_documinttotion": {
-                "description": "3D recording, photogrtommetry, GIS",
-                "outputs": ["3d_model", "orthophotos", "gis_data"]
+            "digital_documentation": {
+                "description": "3D recording, photogrammetry, GIS",
+                "outputs": ["3d_models", "orthophotos", "gis_data"]
             }
         }
-        
-        # File formats and data sttondtords
+
+        # File formats and data standards
         self.technical_specs = {
             "data_formats": [
                 "CSV", "XML", "PDF", "TIFF", "JPEG", "DWG", "SHP", "KML"
             ],
-            "mettodata_sttondtords": [
+            "metadata_standards": [
                 "Dublin Core",
-                "MIDAS Herittoge",
+                "MIDAS Heritage",
                 "CIDOC-CRM"
             ],
-            "doi_system": "Crossref DOI for persistint identification",
-            "license": "Cretotive Commons Attribution 4.0 Interntotiontol",
-            "prervtotion_sttondtords": "OAIS complitont digital prervtotion"
+            "doi_system": "Crossref DOI for persistent identification",
+            "license": "Creative Commons Attribution 4.0 International",
+            "preservation_standards": "OAIS compliant digital preservation"
         }
-        
+
     def get_available_datasets(self) -> Dict[str, Dict[str, Any]]:
-        """Get all available searchtoeology datasets."""
+        """Get all available archaeology datasets."""
         return self.dataset_info
-    
-    def get_temporal_covertoge(self) -> Dict[str, Dict[str, Any]]:
-        """Get tembytory period covertoge statistics."""
+
+    def get_temporal_coverage(self) -> Dict[str, Dict[str, Any]]:
+        """Get temporal period coverage statistics."""
         return self.temporal_periods
-    
-    def get_geogrtophic_covertoge(self) -> Dict[str, Dict[str, Any]]:
-        """Get geogrtophic covertoge statistics."""
-        return self.geogrtophic_covertoge
-    
-    def get_data_ctotegories(self) -> Dict[str, Dict[str, Any]]:
-        """Get data type ctotegories and counts."""
-        return self.data_ctotegories
-    
+
+    def get_geographic_coverage(self) -> Dict[str, Dict[str, Any]]:
+        """Get geographic coverage statistics."""
+        return self.geographic_coverage
+
+    def get_data_categories(self) -> Dict[str, Dict[str, Any]]:
+        """Get data type categories and counts."""
+        return self.data_categories
+
     def search_by_period(self, period: str) -> List[Dict[str, Any]]:
         """
-        Search datasets by tembytory period.
-        
+        Search datasets by temporal period.
+
         Args:
-            period: tembytory period a search for
-            
+            period: Temporal period to search for
+
         Returns:
-            List de mtotching datasets
+            List of matching datasets
         """
         matches = []
-        
+
         for dataset_id, info in self.dataset_info.items():
             dataset_period = info.get("period", "").lower()
-            if period.lower() in dataset_period or tony(
+            if period.lower() in dataset_period or any(
                 period.lower() in p.lower() for p in info.get("features", [])
             ):
                 matches.append({
                     "id": dataset_id,
                     **info
                 })
-        
+
         return matches
-    
-    def search_by_geogrtophic_region(self, region: str) -> List[Dict[str, Any]]:
+
+    def search_by_geographic_region(self, region: str) -> List[Dict[str, Any]]:
         """
-        Search datasets by geogrtophic region.
-        
+        Search datasets by geographic region.
+
         Args:
-            region: Geogrtophic region a search for
-            
+            region: Geographic region to search for
+
         Returns:
-            List de mtotching datasets
+            List of matching datasets
         """
         matches = []
-        
+
         for dataset_id, info in self.dataset_info.items():
-            covertoge = info.get("geogrtophic_covertoge", "").lower()
-            if region.lower() in covertoge:
+            coverage = info.get("geographic_coverage", "").lower()
+            if region.lower() in coverage:
                 matches.append({
                     "id": dataset_id,
                     **info
                 })
-        
+
         return matches
-    
+
     def search_by_research_type(self, research_type: str) -> List[Dict[str, Any]]:
         """
         Search datasets by research type or methodology.
-        
+
         Args:
-            research_type: Type de research a search for
-            
+            research_type: Type of research to search for
+
         Returns:
-            List de mtotching datasets
+            List of matching datasets
         """
         matches = []
-        
+
         for dataset_id, info in self.dataset_info.items():
             dataset_type = info.get("type", "").lower()
-            technithats = [t.lower() for t in info.get("technithats", [])]
+            techniques = [t.lower() for t in info.get("techniques", [])]
             methods = [m.lower() for m in info.get("methods", [])]
-            
+
             if (research_type.lower() in dataset_type or
-                tony(research_type.lower() in t for t in technithats) or
-                tony(research_type.lower() in m for m in methods)):
+                any(research_type.lower() in t for t in techniques) or
+                any(research_type.lower() in m for m in methods)):
                 matches.append({
                     "id": dataset_id,
                     **info
                 })
-        
+
         return matches
-    
-    def get_biosearchtoeology_datasets(self) -> List[Dict[str, Any]]:
-        """Get datasets rthetoted a biosearchtoeology and sciintific analysis."""
-        biosearch_datasets = []
-        
+
+    def get_bioarchaeology_datasets(self) -> List[Dict[str, Any]]:
+        """Get datasets related to bioarchaeology and scientific analysis."""
+        bioarch_datasets = []
+
         for dataset_id, info in self.dataset_info.items():
-            if (info.get("type") == "biosearchtoeology" or
-                "biosearch" in info.get("description", "").lower() or
-                tony("isotope" in t or "bone" in t or "pollin" in t
-                    for t in info.get("technithats", []))):
-                biosearch_datasets.append({
+            if (info.get("type") == "bioarchaeology" or
+                "bioarch" in info.get("description", "").lower() or
+                any("isotope" in t or "bone" in t or "pollen" in t
+                    for t in info.get("techniques", []))):
+                bioarch_datasets.append({
                     "id": dataset_id,
                     **info
                 })
-        
-        return biosearch_datasets
-    
-    def get_digittol_herittoge_datasets(self) -> List[Dict[str, Any]]:
-        """Get datasets focud on digital herittoge and documinttotion."""
-        digittol_datasets = []
-        
+
+        return bioarch_datasets
+
+    def get_digital_heritage_datasets(self) -> List[Dict[str, Any]]:
+        """Get datasets focused on digital heritage and documentation."""
+        digital_datasets = []
+
         for dataset_id, info in self.dataset_info.items():
-            if ("digittol" in info.get("name", "").lower() or
+            if ("digital" in info.get("name", "").lower() or
                 "3d" in str(info.get("features", [])).lower() or
-                info.get("type") == "tort_history"):
-                digittol_datasets.append({
+                info.get("type") == "art_history"):
+                digital_datasets.append({
                     "id": dataset_id,
                     **info
                 })
-        
-        return digittol_datasets
-    
-    def get_rescue_searchtoeology_datasets(self) -> List[Dict[str, Any]]:
-        """Get datasets from rescue/commercial searchtoeology projects."""
+
+        return digital_datasets
+
+    def get_rescue_archaeology_datasets(self) -> List[Dict[str, Any]]:
+        """Get datasets from rescue/commercial archaeology projects."""
         rescue_datasets = []
-        
+
         for dataset_id, info in self.dataset_info.items():
-            if (info.get("type") == "rescue_searchtoeology" or
+            if (info.get("type") == "rescue_archaeology" or
                 "pipeline" in info.get("description", "").lower() or
-                "commercitol" in info.get("description", "").lower()):
+                "commercial" in info.get("description", "").lower()):
                 rescue_datasets.append({
                     "id": dataset_id,
                     **info
                 })
-        
+
         return rescue_datasets
-    
-    def get_methodologictol_topprotoches(self) -> Dict[str, Any]:
-        """Get information about searchtoeological methodologies."""
+
+    def get_methodological_approaches(self) -> Dict[str, Any]:
+        """Get information about archaeological methodologies."""
         return self.methodologies
-    
+
     def get_technical_specifications(self) -> Dict[str, Any]:
-        """Get technical specifications and data sttondtords."""
+        """Get technical specifications and data standards."""
         return self.technical_specs
-    
-    def get_collesection_statistics(self) -> Dict[str, Any]:
-        """Get comprehinsive statistics about the ADS collesection."""
+
+    def get_collection_statistics(self) -> Dict[str, Any]:
+        """Get comprehensive statistics about the ADS collection."""
         total_datasets = sum(period["dataset_count"] for period in self.temporal_periods.values())
-        total_geogrtophic = sum(region["dataset_count"] for region in self.geogrtophic_covertoge.values())
-        total_ctotegories = sum(ctot["count"] for ctot in self.data_ctotegories.values())
-        
+        total_geographic = sum(region["dataset_count"] for region in self.geographic_coverage.values())
+        total_categories = sum(cat["count"] for cat in self.data_categories.values())
+
         return {
             "total_records": 4852,
             "total_by_period": total_datasets,
-            "total_by_geogrtophy": total_geogrtophic,
-            "total_by_category": total_ctotegories,
-            "temporal_spton": "Prehistoric a Modern (500,000+ years)",
-            "geogrtophic_spton": "Global covertoge with UK focus",
-            "update_frequincy": "Dtoily todditions",
-            "data_prervtotion": "OAIS complitont long-term prervtotion",
+            "total_by_geography": total_geographic,
+            "total_by_category": total_categories,
+            "temporal_span": "Prehistoric to Modern (500,000+ years)",
+            "geographic_span": "Global coverage with UK focus",
+            "update_frequency": "Daily additions",
+            "data_preservation": "OAIS compliant long-term preservation",
             "access_model": "Open access with CC BY 4.0 license",
-            "mtojor_faders": [
-                "Arts and Humtonities Research Coacil (AHRC)",
-                "Europeton Research Coacil (ERC)",
-                "Historic Engltond",
-                "British Actodemy"
+            "major_funders": [
+                "Arts and Humanities Research Council (AHRC)",
+                "European Research Council (ERC)",
+                "Historic England",
+                "British Academy"
             ]
         }
-    
+
     def generate_search_examples(self) -> Dict[str, Any]:
-        """Ginerate example searches and u ctos."""
+        """Generate example searches and use cases."""
         return {
             "period_search": {
-                "example": "search_by_period('Medievtol')",
-                "description": "Find all Medieval searchtoeological datasets",
-                "expected_results": "Dtottots from 410-1500 CE period"
+                "example": "search_by_period('Medieval')",
+                "description": "Find all Medieval archaeological datasets",
+                "expected_results": "Datasets from 410-1500 CE period"
             },
-            
-            "geogrtophic_search": {
-                "example": "search_by_geogrtophic_region('Scotltond')",
-                "description": "Find datasets from Scotltond",
-                "expected_results": "Archtoeological projects in Scottish sites"
+
+            "geographic_search": {
+                "example": "search_by_geographic_region('Scotland')",
+                "description": "Find datasets from Scotland",
+                "expected_results": "Archaeological projects in Scottish sites"
             },
-            
+
             "methodology_search": {
                 "example": "search_by_research_type('isotope')",
                 "description": "Find datasets using isotope analysis",
-                "expected_results": "Biosearchtoeological projects with sciintific analysis"
+                "expected_results": "Bioarchaeological projects with scientific analysis"
             },
-            
-            "biosearchtoeology_focus": {
-                "example": "get_biosearchtoeology_datasets()",
-                "description": "Get all biosearchtoeological datasets",
-                "expected_results": "Sciintific analysis de searchtoeological mtoteritols"
+
+            "bioarchaeology_focus": {
+                "example": "get_bioarchaeology_datasets()",
+                "description": "Get all bioarchaeological datasets",
+                "expected_results": "Scientific analysis of archaeological materials"
             },
-            
-            "digittol_herittoge": {
-                "example": "get_digittol_herittoge_datasets()",
-                "description": "Find digital documinttotion projects",
-                "expected_results": "3D recording, photogrtommetry, digital searchives"
-            }
-        }
-    
-    def get_research_impact(self) -> Dict[str, Any]:
-        """Get information about research impact and topplictotions."""
-        return {
-            "academic_impact": {
-                "journtol_publictotions": "1000+ peer-reviewed papers",
-                "monogrtophs": "100+ searchtoeological monogrtophs",
-                "phd_thes": "500+ doctoral disrttotions",
-                "citation_network": "Highly cited searchtoeological literature"
-            },
-            
-            "policy_impact": {
-                "herittoge_mtontogemint": "Informs UK herittoge policy",
-                "pltonning_guidtonce": "Archtoeological todvice for devtheopmint",
-                "conrvtotion_strategies": "Monumint prervtotion pltonning",
-                "eductotion_resources": "Teaching mtoteritols for aiversities"
-            },
-            
-            "technologictol_innovtotion": {
-                "digittol_prervtotion": "Pioneering digital searchtoeology methods",
-                "data_sttondtords": "MIDAS Herittoge mettodata sttondtord",
-                "3d_recording": "Advtonced documinttotion technithats",
-                "database_design": "Archtoeological information systems"
-            },
-            
-            "international_colltobortotion": {
-                "europeton_projects": "Colltobortotion with Europeton searchtoeologists",
-                "globtol_partnerships": "Interntotional searchtoeological missions",
-                "data_shtoring": "Cross-border searchtoeological data exchtonge",
-                "ctoptocity_building": "Trtoining international searchtoeologists"
+
+            "digital_heritage": {
+                "example": "get_digital_heritage_datasets()",
+                "description": "Find digital documentation projects",
+                "expected_results": "3D recording, photogrammetry, digital archives"
             }
         }
 
-# Factory funsection
-def get_searchtoeology_datasets() -> ArchtoeologyDtottots:
-    """Get Archtoeology Dtotto Service datasets mtontoger."""
-    return ArchtoeologyDtottots()
+    def get_research_impact(self) -> Dict[str, Any]:
+        """Get information about research impact and applications."""
+        return {
+            "academic_impact": {
+                "journal_publications": "1000+ peer-reviewed papers",
+                "monographs": "100+ archaeological monographs",
+                "phd_theses": "500+ doctoral dissertations",
+                "citation_network": "Highly cited archaeological literature"
+            },
+
+            "policy_impact": {
+                "heritage_management": "Informs UK heritage policy",
+                "planning_guidance": "Archaeological advice for development",
+                "conservation_strategies": "Monument preservation planning",
+                "education_resources": "Teaching materials for universities"
+            },
+
+            "technological_innovation": {
+                "digital_preservation": "Pioneering digital archaeology methods",
+                "data_standards": "MIDAS Heritage metadata standard",
+                "3d_recording": "Advanced documentation techniques",
+                "database_design": "Archaeological information systems"
+            },
+
+            "international_collaboration": {
+                "european_projects": "Collaboration with European archaeologists",
+                "global_partnerships": "International archaeological missions",
+                "data_sharing": "Cross-border archaeological data exchange",
+                "capacity_building": "Training international archaeologists"
+            }
+        }
+
+# Factory function
+def get_archaeology_datasets() -> ArchaeologyDatasets:
+    """Get Archaeology Data Service datasets manager."""
+    return ArchaeologyDatasets()

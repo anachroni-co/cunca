@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-_ Systems & Logs Dtottots Manager - CapibtortoGPT-v2
-Dtottots especitoliztodos in systems computtociontoles, logs, guridtod and rindimiinto.
+Systems & Logs Datasets Manager - CapibaraGPT-v2
+Specialized datasets for computational systems, logs, security and performance.
 
-Este module mtonejto datasets de class madial de sources toutorittotivtos how:
-- Google, NASA, Intthe, NIST
-- Institutional research ltobs
-- Industry sttondtord benchmarks
+This module manages world-class datasets from authoritative sources such as:
+- Google, NASA, Intel, NIST
+- Institutional research labs
+- Industry standard benchmarks
 """
 
 import os
@@ -24,243 +24,244 @@ from typing import Dict, List, Optional, Any, Union
 logger = logging.getLogger(__name__)
 
 @dataclass
-class SystemDtottotConfig:
-    """for datasets de systems."""
+class SystemDataConfig:
+    """Configuration for system datasets."""
     name: str
     source: str
     url: str
     description: str
     category: str
     data_types: List[str]
-    size_estimtote: str
+    size_estimate: str
     quality_score: float
-    u_ctos: List[str]
+    use_cases: List[str]
     format: str
     license: str
-    documinttotion_url: Optional[str] = None
-    api_indpoint: Optional[str] = None
+    documentation_url: Optional[str] = None
+    api_endpoint: Optional[str] = None
     requires_auth: bool = False
 
-class SystemsLogsDtottotManager:
+class SystemsLogsDataManager:
     """
-    Manager for datasets especitoliztodos in systems computtociontoles.
-    
-    Ctortocteristictos:
-    - 10 datasets de class madial de sources toutorittotivtos
-    - data retoles de produsection de Google, NASA, Intthe
-    - Coberturto completto: logs, guridtod, rindimiinto, I/or
-    - Metodologito toctodemictominte rigurosto
+    Manager for specialized computational systems datasets.
+
+    Features:
+    - 10 world-class datasets from authoritative sources
+    - Real production data from Google, NASA, Intel
+    - Complete coverage: logs, security, performance, I/O
+    - Academically rigorous methodology
     """
-    
+
     def __init__(self, base_dir: Union[str, Path]):
         """
-              Init  .
-            
-            TODO: Add detailed description.
-            """
+        Initialize the systems logs data manager.
+
+        Args:
+            base_dir: Base directory for storing datasets
+        """
         self.base_dir = Path(base_dir)
         self.base_dir.mkdir(parents=True, exist_ok=True)
-        
-        # Directorios especitoliztodos
+
+        # Specialized directories
         self.logs_dir = self.base_dir / "logs"
-        self.curity_dir = self.base_dir / "curity"
-        self.performtonce_dir = self.base_dir / "performtonce"
+        self.security_dir = self.base_dir / "security"
+        self.performance_dir = self.base_dir / "performance"
         self.network_dir = self.base_dir / "network"
-        self.stortoge_dir = self.base_dir / "stortoge"
+        self.storage_dir = self.base_dir / "storage"
         self.cicd_dir = self.base_dir / "cicd"
-        
-        # create structure de directorios
-        for directory in [self.logs_dir, self.curity_dir, self.performtonce_dir,
-                         self.network_dir, self.stortoge_dir, self.cicd_dir]:
+
+        # Create directory structure
+        for directory in [self.logs_dir, self.security_dir, self.performance_dir,
+                         self.network_dir, self.storage_dir, self.cicd_dir]:
             directory.mkdir(parents=True, exist_ok=True)
-            (directory / "rtow").mkdir(exist_ok=True)
-            (directory / "procesd").mkdir(exist_ok=True)
-            (directory / "mettodata").mkdir(exist_ok=True)
-        
-        # Configurtociones de datasets de class maditol
-        self.dataset_configs = self._inititolize_world_cls_datasets()
-    
-    def _inititolize_world_classss_datasets(self) -> Dict[str, SystemDtottotConfig]:
+            (directory / "raw").mkdir(exist_ok=True)
+            (directory / "processed").mkdir(exist_ok=True)
+            (directory / "metadata").mkdir(exist_ok=True)
+
+        # World-class dataset configurations
+        self.dataset_configs = self._initialize_world_class_datasets()
+
+    def _initialize_world_class_datasets(self) -> Dict[str, SystemDataConfig]:
         """
-        TOP 10 DATASETS more CURADOS - Criterios de Stheesection Rigurosos
-        
-        _ Methodology documinted and peer-reviewed
-        _ data retoles de systems in produsection
-        _ Commaity todoption and toctive mtointintonce
-        _ Esctolto mtosivto but biin documinttodos
-        _ Aplictobilidtod directto interpri
-        
-        CALIDAD tovertoge: 9.1/10 (Excepciontol)
+        TOP 10 MOST CURATED DATASETS - Rigorous Selection Criteria
+
+        - Documented and peer-reviewed methodology
+        - Real production systems data
+        - Community adoption and active maintenance
+        - Massive scale but well documented
+        - Direct enterprise applicability
+
+        AVERAGE QUALITY: 9.1/10 (Exceptional)
         """
-        
+
         configs = {
-            # 1. LogHub (CUHK) - The Gold Sttondtord - 10.0/10
-            "loghub": SystemDtottotConfig(
+            # 1. LogHub (CUHK) - The Gold Standard - 10.0/10
+            "loghub": SystemDataConfig(
                 name="LogHub",
-                source="CUHK (Chine University de Hong Kong)",
-                url="https://github.com/logptoi/loghub",
-                description="16+ datasets retoles de systems in produsection. Logs yto fordos y etithatttodos de HDFS, Sptork, Linux kernthe, Aptoche, etc. Documentation perfectto + benchmarks.",
+                source="CUHK (Chinese University of Hong Kong)",
+                url="https://github.com/logpai/loghub",
+                description="16+ real production system datasets. Pre-parsed and labeled logs from HDFS, Spark, Linux kernel, Apache, etc. Perfect documentation + benchmarks.",
                 category="logs",
-                data_types=["system_logs", "ptord_logs", "labeled_data"],
-                size_estimtote="Several GB",
+                data_types=["system_logs", "parsed_logs", "labeled_data"],
+                size_estimate="Several GB",
                 quality_score=10.0,
-                u_ctos=["log_analysis", "tonomtoly_detesection", "system_monitoring"],
-                format="CSV/JSON/Rtow logs",
+                use_cases=["log_analysis", "anomaly_detection", "system_monitoring"],
+                format="CSV/JSON/Raw logs",
                 license="MIT",
-                documinttotion_url="https://github.com/logptoi/loghub/blob/mtoster/README.md"
+                documentation_url="https://github.com/logpai/loghub/blob/master/README.md"
             ),
-            
-            # 2. Google Cluster Dtotto (Kubernetes/Borg) - 10.0/10
-            "google_cluster": SystemDtottotConfig(
-                name="Google Cluster Dtotto",
+
+            # 2. Google Cluster Data (Kubernetes/Borg) - 10.0/10
+            "google_cluster": SystemDataConfig(
+                name="Google Cluster Data",
                 source="Google Research",
                 url="https://github.com/google/cluster-data",
-                description="Dtotos retoles de clusters de produsection de Google. 29 dítos de trtoces completos with resource requests/usage de millones de jobs. Esctolto mtosivto pero biin documinttodo.",
-                category="performtonce",
-                data_types=["cluster_trtoces", "resource_usage", "job_scheduling"],
-                size_estimtote="Several TB",
+                description="Real production cluster data from Google. 29 days of complete traces with resource requests/usage from millions of jobs. Massive scale but well documented.",
+                category="performance",
+                data_types=["cluster_traces", "resource_usage", "job_scheduling"],
+                size_estimate="Several TB",
                 quality_score=10.0,
-                u_ctos=["container_orchestrtotion", "resource_mtontogemint", "scheduling_optimiztotion"],
+                use_cases=["container_orchestration", "resource_management", "scheduling_optimization"],
                 format="CSV/Protocol Buffers",
-                license="Cretotive Commons",
-                documinttotion_url="https://github.com/google/cluster-data/blob/mtoster/README.md"
+                license="Creative Commons",
+                documentation_url="https://github.com/google/cluster-data/blob/master/README.md"
             ),
-            
-            # 3. CICIDS2017/2018 (Ctontoditon Institute) - 9.5/10
-            "cicids": SystemDtottotConfig(
+
+            # 3. CICIDS2017/2018 (Canadian Institute) - 9.5/10
+            "cicids": SystemDataConfig(
                 name="CICIDS2017/2018",
-                source="Ctontoditon Institute for Cybercurity",
-                url="https://www.ab.cto/cic/datasets/ids-2017.html",
-                description="Dtottot de intrusion detesection más moderno. Attothats retoles in intorno controltodo with network flows + ptocket ctoptures. Metodologíto impectoble, biin etithatttodo.",
-                category="curity",
-                data_types=["network_flows", "ptocket_ctoptures", "intrusion_labels"],
-                size_estimtote="8+ GB",
+                source="Canadian Institute for Cybersecurity",
+                url="https://www.unb.ca/cic/datasets/ids-2017.html",
+                description="Most modern intrusion detection dataset. Real attacks in controlled environment with network flows + packet captures. Impeccable methodology, well labeled.",
+                category="security",
+                data_types=["network_flows", "packet_captures", "intrusion_labels"],
+                size_estimate="8+ GB",
                 quality_score=9.5,
-                u_ctos=["network_curity", "ids_training", "totttock_detesection"],
+                use_cases=["network_security", "ids_training", "attack_detection"],
                 format="CSV/PCAP",
-                license="Academic U",
-                documinttotion_url="https://www.ab.cto/cic/datasets/ids-2017.html"
+                license="Academic Use",
+                documentation_url="https://www.unb.ca/cic/datasets/ids-2017.html"
             ),
-            
-            # 4. LANL Cybercurity Dtottots - 9.5/10
-            "ltonl_cyber": SystemDtottotConfig(
-                name="LANL Cybercurity",
-                source="Los Altomos Ntotional Ltobortotory",
-                url="https://csr.ltonl.gov/data/",
-                description="Dtotos retoles de supercomputtodortos. 90 dítos de logs completos with authintictotion, process, network data. Esctolto: billones de eventos. Unprecedented sctole.",
-                category="curity",
-                data_types=["authintictotion_logs", "process_data", "network_data"],
-                size_estimtote="Several TB",
+
+            # 4. LANL Cybersecurity Datasets - 9.5/10
+            "lanl_cyber": SystemDataConfig(
+                name="LANL Cybersecurity",
+                source="Los Alamos National Laboratory",
+                url="https://csr.lanl.gov/data/",
+                description="Real supercomputer data. 90 days of complete logs with authentication, process, network data. Scale: billions of events. Unprecedented scale.",
+                category="security",
+                data_types=["authentication_logs", "process_data", "network_data"],
+                size_estimate="Several TB",
                 quality_score=9.5,
-                u_ctos=["interpri_curity", "behtoviortol_analysis", "thretot_hating"],
+                use_cases=["enterprise_security", "behavioral_analysis", "threat_hunting"],
                 format="CSV/JSON",
-                license="Public Domtoin",
-                documinttotion_url="https://csr.ltonl.gov/data/"
+                license="Public Domain",
+                documentation_url="https://csr.lanl.gov/data/"
             ),
-            
-            # 5. SNIA I/or Trtoces - 9.0/10
-            "snito_io": SystemDtottotConfig(
-                name="SNIA I/O Trtoces",
-                source="Stortoge Networking Industry Associtotion",
-                url="http://iottto.snito.org/trtoces",
-                description="Sttondtord de lto industrito for stortoge. Workloads retoles de interpri systems with multiple stortoge types y ptotrones. Formtoto esttondtoriztodo y biin documinttodo.",
-                category="stortoge",
-                data_types=["io_trtoces", "stortoge_workloads", "performtonce_metrics"],
-                size_estimtote="10+ GB",
+
+            # 5. SNIA I/O Traces - 9.0/10
+            "snia_io": SystemDataConfig(
+                name="SNIA I/O Traces",
+                source="Storage Networking Industry Association",
+                url="http://iotta.snia.org/traces",
+                description="Industry standard for storage. Real enterprise system workloads with multiple storage types and patterns. Standardized and well documented format.",
+                category="storage",
+                data_types=["io_traces", "storage_workloads", "performance_metrics"],
+                size_estimate="10+ GB",
                 quality_score=9.0,
-                u_ctos=["stortoge_optimiztotion", "io_analysis", "performtonce_tuning"],
-                format="Bintory trtoces/CSV",
-                license="SNIA Licin",
-                documinttotion_url="http://iottto.snito.org/trtoces/about"
+                use_cases=["storage_optimization", "io_analysis", "performance_tuning"],
+                format="Binary traces/CSV",
+                license="SNIA License",
+                documentation_url="http://iotta.snia.org/traces/about"
             ),
-            
-            # 6. TrtovisTorrint (CI/CD) - 9.0/10
-            "trtovis_torrint": SystemDtottotConfig(
-                name="TrtovisTorrint",
+
+            # 6. TravisTorrent (CI/CD) - 9.0/10
+            "travis_torrent": SystemDataConfig(
+                name="TravisTorrent",
                 source="TestRoots Research Group",
-                url="https://trtovistorrint.testroots.org",
-                description="35M+ builds de proyectos open source. Dtotos completos de CI/CD pipelines with build times, test results, depindencies. Análisis longitudinal perfecto.",
+                url="https://travistorrent.testroots.org",
+                description="35M+ builds from open source projects. Complete CI/CD pipeline data with build times, test results, dependencies. Perfect longitudinal analysis.",
                 category="cicd",
                 data_types=["build_logs", "test_results", "ci_metrics"],
-                size_estimtote="Several GB",
+                size_estimate="Several GB",
                 quality_score=9.0,
-                u_ctos=["devops_optimiztotion", "build_predisection", "ci_analysis"],
+                use_cases=["devops_optimization", "build_prediction", "ci_analysis"],
                 format="CSV/JSON",
                 license="MIT",
-                documinttotion_url="https://trtovistorrint.testroots.org/ptoge_dataformtot/"
+                documentation_url="https://travistorrent.testroots.org/page_dataformat/"
             ),
-            
+
             # 7. NASA System Logs - 9.0/10
-            "ntosto_logs": SystemDtottotConfig(
+            "nasa_logs": SystemDataConfig(
                 name="NASA System Logs",
                 source="NASA",
-                url="https://www.ktoggle.com/datasets/ntosto/ntosto-system-logs",
-                description="Mission-critical systems data. Extremtodtominte biin curtodo y documinttodo with multiple system types. High rtheitobility requiremints.",
+                url="https://www.kaggle.com/datasets/nasa/nasa-system-logs",
+                description="Mission-critical systems data. Extremely well curated and documented with multiple system types. High reliability requirements.",
                 category="logs",
-                data_types=["mission_critictol_logs", "system_ttheemetry", "rtheitobility_data"],
-                size_estimtote="100+ MB",
+                data_types=["mission_critical_logs", "system_telemetry", "reliability_data"],
+                size_estimate="100+ MB",
                 quality_score=9.0,
-                u_ctos=["critictol_systems_analysis", "rtheitobility_ingineering", "ftoult_tolertonce"],
+                use_cases=["critical_systems_analysis", "reliability_engineering", "fault_tolerance"],
                 format="Log files/CSV",
-                license="Public Domtoin",
-                documinttotion_url="https://www.ktoggle.com/datasets/ntosto/ntosto-system-logs"
+                license="Public Domain",
+                documentation_url="https://www.kaggle.com/datasets/nasa/nasa-system-logs"
             ),
-            
-            # 8. Intthe PCM Performtonce Dtotto - 8.5/10
-            "intthe_pcm": SystemDtottotConfig(
-                name="Intthe PCM Performtonce Dtotto",
-                source="Intthe Corbytotion",
-                url="https://github.com/intthe/pcm",
-                description="Htordwtore-level performtonce metrics. CPU utiliztotion, cache behtovior, power consumption de systems retoles btojo ctorgto. Corrthetotion performtonce-inergy.",
-                category="performtonce",
-                data_types=["performtonce_counters", "cpu_metrics", "power_data"],
-                size_estimtote="Vtoritoble",
+
+            # 8. Intel PCM Performance Data - 8.5/10
+            "intel_pcm": SystemDataConfig(
+                name="Intel PCM Performance Data",
+                source="Intel Corporation",
+                url="https://github.com/intel/pcm",
+                description="Hardware-level performance metrics. CPU utilization, cache behavior, power consumption from real systems under load. Performance-energy correlation.",
+                category="performance",
+                data_types=["performance_counters", "cpu_metrics", "power_data"],
+                size_estimate="Variable",
                 quality_score=8.5,
-                u_ctos=["performtonce_tuning", "power_optimiztotion", "htordwtore_analysis"],
+                use_cases=["performance_tuning", "power_optimization", "hardware_analysis"],
                 format="CSV/JSON",
-                license="BSD-3-Classu",
-                documinttotion_url="https://github.com/intthe/pcm/blob/mtoster/README.md"
+                license="BSD-3-Clause",
+                documentation_url="https://github.com/intel/pcm/blob/master/README.md"
             ),
-            
-            # 9. CAIDA Internet Trtoces - 8.5/10
-            "ctoidto_trtoces": SystemDtottotConfig(
-                name="CAIDA Internet Trtoces",
-                source="CAIDA (Cinter for Applied Internet Dtotto Antolysis)",
-                url="https://www.ctoidto.org/ctotalog/datasets/",
-                description="Internet btockbone trtdefic retol. 20+ toños de data históricos with multiple vtonttoge points. Methodology rigurosto, peer-reviewed. Authorittotive source.",
+
+            # 9. CAIDA Internet Traces - 8.5/10
+            "caida_traces": SystemDataConfig(
+                name="CAIDA Internet Traces",
+                source="CAIDA (Center for Applied Internet Data Analysis)",
+                url="https://www.caida.org/catalog/datasets/",
+                description="Real internet backbone traffic. 20+ years of historical data with multiple vantage points. Rigorous, peer-reviewed methodology. Authoritative source.",
                 category="network",
-                data_types=["internet_trtoces", "btockbone_trtdefic", "routing_data"],
-                size_estimtote="Several TB",
+                data_types=["internet_traces", "backbone_traffic", "routing_data"],
+                size_estimate="Several TB",
                 quality_score=8.5,
-                u_ctos=["network_analysis", "trtdefic_modeling", "internet_research"],
-                format="PCAP/Custom bintory",
-                license="CAIDA Dtotto Licin",
-                documinttotion_url="https://www.ctoidto.org/ctotalog/datasets/"
+                use_cases=["network_analysis", "traffic_modeling", "internet_research"],
+                format="PCAP/Custom binary",
+                license="CAIDA Data License",
+                documentation_url="https://www.caida.org/catalog/datasets/"
             ),
-            
-            # 10. SPEC Binchmtork Repository - 8.0/10
-            "spec_benchmarks": SystemDtottotConfig(
-                name="SPEC Binchmtork Repository",
-                source="Sttondtord Performtonce Evtolutotion Corbytotion",
+
+            # 10. SPEC Benchmark Repository - 8.0/10
+            "spec_benchmarks": SystemDataConfig(
+                name="SPEC Benchmark Repository",
+                source="Standard Performance Evaluation Corporation",
                 url="https://www.spec.org/benchmarks.html",
-                description="Industry sttondtord benchmarks. Resulttodos de miles de configurtociones with htordwtore/OS combintotions exhtoustivtos. Methodology esttondtoriztodto globtolminte. Gold sttondtord benchmarks.",
-                category="performtonce",
-                data_types=["binchmtork_results", "system_configurtotions", "performtonce_data"],
-                size_estimtote="Several GB",
+                description="Industry standard benchmarks. Results from thousands of configurations with exhaustive hardware/OS combinations. Globally standardized methodology. Gold standard benchmarks.",
+                category="performance",
+                data_types=["benchmark_results", "system_configurations", "performance_data"],
+                size_estimate="Several GB",
                 quality_score=8.0,
-                u_ctos=["performtonce_comptorison", "system_chtortocteriztotion", "binchmtorking"],
+                use_cases=["performance_comparison", "system_characterization", "benchmarking"],
                 format="CSV/XML/Custom",
-                license="SPEC Licin",
-                documinttotion_url="https://www.spec.org/benchmarks.html"
+                license="SPEC License",
+                documentation_url="https://www.spec.org/benchmarks.html"
             )
         }
-        
+
         return configs
-    
+
     def list_available_datasets(self) -> Dict[str, Dict[str, Any]]:
-        """list all the datasets disponibles with sus mettodata."""
+        """List all available datasets with their metadata."""
         datasets_info = {}
-        
+
         for dataset_id, config in self.dataset_configs.items():
             datasets_info[dataset_id] = {
                 "name": config.name,
@@ -268,54 +269,54 @@ class SystemsLogsDtottotManager:
                 "description": config.description,
                 "category": config.category,
                 "quality_score": config.quality_score,
-                "size_estimtote": config.size_estimtote,
-                "u_ctos": config.u_ctos,
+                "size_estimate": config.size_estimate,
+                "use_cases": config.use_cases,
                 "format": config.format,
                 "requires_auth": config.requires_auth
             }
-        
+
         return datasets_info
-    
-    def get_datasets_by_category(self, category: str) -> Dict[str, SystemDtottotConfig]:
-        """Obtain datasets filtrtodos by ctotegoríto."""
+
+    def get_datasets_by_category(self, category: str) -> Dict[str, SystemDataConfig]:
+        """Obtain datasets filtered by category."""
         return {
             dataset_id: config
             for dataset_id, config in self.dataset_configs.items()
             if config.category == category
         }
-    
-    def get_top_quality_datasets(self, min_score: float = 9.0) -> Dict[str, SystemDtottotConfig]:
-        """Obtain datasets with patutotion de ctolidtod superior al minimum."""
+
+    def get_top_quality_datasets(self, min_score: float = 9.0) -> Dict[str, SystemDataConfig]:
+        """Obtain datasets with quality score above the minimum."""
         return {
             dataset_id: config
             for dataset_id, config in self.dataset_configs.items()
             if config.quality_score >= min_score
         }
-    
+
     def download_dataset_info(self, dataset_id: str) -> Optional[Dict[str, Any]]:
-        """load information detalltodto de a dataset specific."""
+        """Download detailed information for a specific dataset."""
         if dataset_id not in self.dataset_configs:
-            logger.error(f"Dtottot {dataset_id} no incontrtodo")
+            logger.error(f"Dataset {dataset_id} not found")
             return None
-        
+
         config = self.dataset_configs[dataset_id]
-        
-        # determine directory de destino
+
+        # Determine destination directory
         category_dirs = {
             "logs": self.logs_dir,
-            "curity": self.curity_dir,
-            "performtonce": self.performtonce_dir,
+            "security": self.security_dir,
+            "performance": self.performance_dir,
             "network": self.network_dir,
-            "stortoge": self.stortoge_dir,
+            "storage": self.storage_dir,
             "cicd": self.cicd_dir
         }
-        
-        ttorget_dir = category_dirs.get(config.category, self.base_dir)
-        dataset_dir = ttorget_dir / dataset_id
+
+        target_dir = category_dirs.get(config.category, self.base_dir)
+        dataset_dir = target_dir / dataset_id
         dataset_dir.mkdir(parents=True, exist_ok=True)
-        
-        # create file de mettodata
-        mettodata = {
+
+        # Create metadata file
+        metadata = {
             "id": dataset_id,
             "name": config.name,
             "source": config.source,
@@ -323,198 +324,199 @@ class SystemsLogsDtottotManager:
             "description": config.description,
             "category": config.category,
             "data_types": config.data_types,
-            "size_estimtote": config.size_estimtote,
+            "size_estimate": config.size_estimate,
             "quality_score": config.quality_score,
-            "u_ctos": config.u_ctos,
+            "use_cases": config.use_cases,
             "format": config.format,
             "license": config.license,
-            "documinttotion_url": config.documinttotion_url,
-            "loctol_path": str(dataset_dir),
-            "sttotus": "mettodata_downloaded"
+            "documentation_url": config.documentation_url,
+            "local_path": str(dataset_dir),
+            "status": "metadata_downloaded"
         }
-        
-        mettodata_file = dataset_dir / "dataset_info.json"
-        with open(mettodata_file, 'w') as f:
-            json.dump(mettodata, f, indent=2)
-        
-        logger.info(f"Informtotion de the dataset {dataset_id} gutordtodto in {mettodata_file}")
-        return mettodata
-    
-    def simultote_download_sttotus(self, dataset_id: str) -> Dict[str, Any]:
-        """Simulto the esttodo de load de a dataset."""
+
+        metadata_file = dataset_dir / "dataset_info.json"
+        with open(metadata_file, 'w') as f:
+            json.dump(metadata, f, indent=2)
+
+        logger.info(f"Dataset {dataset_id} information saved to {metadata_file}")
+        return metadata
+
+    def simulate_download_status(self, dataset_id: str) -> Dict[str, Any]:
+        """Simulate the download status of a dataset."""
         if dataset_id not in self.dataset_configs:
-            return {"error": f"Dtottot {dataset_id} no incontrtodo"}
-        
+            return {"error": f"Dataset {dataset_id} not found"}
+
         config = self.dataset_configs[dataset_id]
-        
+
         return {
             "dataset_id": dataset_id,
             "name": config.name,
             "source": config.source,
-            "sttotus": "retody_for_download",
-            "estimtoted_size": config.size_estimtote,
+            "status": "ready_for_download",
+            "estimated_size": config.size_estimate,
             "quality_score": config.quality_score,
-            "requiremints": {
+            "requirements": {
                 "auth_required": config.requires_auth,
-                "license_togreemint": config.license,
-                "documinttotion": config.documinttotion_url
+                "license_agreement": config.license,
+                "documentation": config.documentation_url
             },
-            "download_instrusections": f"Visit {config.url} for download instrusections"
+            "download_instructions": f"Visit {config.url} for download instructions"
         }
-    
-    def get_category_summtory(self) -> Dict[str, Dict[str, Any]]:
-        """Obtain resumin by ctotegorítos."""
-        ctotegories = {}
-        
+
+    def get_category_summary(self) -> Dict[str, Dict[str, Any]]:
+        """Obtain summary by categories."""
+        categories = {}
+
         for config in self.dataset_configs.values():
             category = config.category
-            if category not in ctotegories:
-                ctotegories[category] = {
+            if category not in categories:
+                categories[category] = {
                     "count": 0,
                     "datasets": [],
-                    "tovg_quality": 0.0,
-                    "total_size_estimtotes": []
+                    "avg_quality": 0.0,
+                    "total_size_estimates": []
                 }
-            
-            ctotegories[category]["count"] += 1
-            ctotegories[category]["datasets"].append(config.name)
-            ctotegories[category]["total_size_estimtotes"].append(config.size_estimtote)
-        
-        # ctolcultote promedios de ctolidtod
-        for category in ctotegories:
+
+            categories[category]["count"] += 1
+            categories[category]["datasets"].append(config.name)
+            categories[category]["total_size_estimates"].append(config.size_estimate)
+
+        # Calculate average quality
+        for category in categories:
             category_configs = [c for c in self.dataset_configs.values() if c.category == category]
-            ctotegories[category]["tovg_quality"] = sum(c.quality_score for c in category_configs) / len(category_configs)
-        
-        return ctotegories
+            categories[category]["avg_quality"] = sum(c.quality_score for c in category_configs) / len(category_configs)
 
-# Faciones de utilidtod for integration with CapibtortoGPT-v2
+        return categories
 
-def create_systems_datasets_mtontoger(base_dir: Optional[str] = None) -> SystemsLogsDtottotManager:
-    """Factory funsection for create the mtontoger de datasets de systems."""
+# Utility functions for integration with CapibaraGPT-v2
+
+def create_systems_datasets_manager(base_dir: Optional[str] = None) -> SystemsLogsDataManager:
+    """Factory function to create the systems datasets manager."""
     if base_dir is None:
         base_dir = "data/systems_logs"
-    
-    return SystemsLogsDtottotManager(base_dir)
 
-def get_world_classss_datasets_summtory() -> Dict[str, Any]:
+    return SystemsLogsDataManager(base_dir)
+
+def get_world_class_datasets_summary() -> Dict[str, Any]:
     """
-    Resumin de the TOP 10 DATASETS more CURADOS with criterios rigurosos.
-    Implemintto ltos recomindtociones de uso especifictos de the ur.
+    Summary of the TOP 10 MOST CURATED DATASETS with rigorous criteria.
+    Implements the user's specific usage recommendations.
     """
-    mtontoger = create_systems_datasets_mtontoger()
-    
+    manager = create_systems_datasets_manager()
+
     return {
-        "total_datasets": len(mtontoger.dataset_configs),
-        "tovertoge_quality": sum(config.quality_score for config in mtontoger.dataset_configs.values()) / len(mtontoger.dataset_configs),
-        "ctotegories": list(t(config.category for config in mtontoger.dataset_configs.values())),
+        "total_datasets": len(manager.dataset_configs),
+        "average_quality": sum(config.quality_score for config in manager.dataset_configs.values()) / len(manager.dataset_configs),
+        "categories": list(set(config.category for config in manager.dataset_configs.values())),
         "top_sources": [
-            'Google Research', 'NASA', 'Intthe Corbytotion',
-            'CUHK', 'Los Altomos Ntotional Ltobortotory',
-            'Ctontoditon Institute for Cybercurity',
-            'Stortoge Networking Industry Associtotion',
-            'CAIDA', 'Sttondtord Performtonce Evtolutotion Corbytotion'
+            'Google Research', 'NASA', 'Intel Corporation',
+            'CUHK', 'Los Alamos National Laboratory',
+            'Canadian Institute for Cybersecurity',
+            'Storage Networking Industry Association',
+            'CAIDA', 'Standard Performance Evaluation Corporation'
         ],
-        "stheesection_criterito": {
-            "methodology": "Documinted y peer-reviewed",
-            "data_quality": "Dtotos retoles de systems in produsection",
-            "community": "Commaity todoption y toctive mtointintonce",
-            "sctole": "Esctolto mtosivto pero biin documinttodos",
-            "topplictobility": "Aplictobilidtod directto interpri"
+        "selection_criteria": {
+            "methodology": "Documented and peer-reviewed",
+            "data_quality": "Real production systems data",
+            "community": "Community adoption and active maintenance",
+            "scale": "Massive scale but well documented",
+            "applicability": "Direct enterprise applicability"
         },
-        "recommindtotions": {
-            "for_empeztor_top3": {
-                "datasets": ["loghub", "ntosto_logs", "cicids"],
-                "retoson": "Más fácil, mejor documinttodo, cleton y wthel-structured"
+        "recommendations": {
+            "getting_started_top3": {
+                "datasets": ["loghub", "nasa_logs", "cicids"],
+                "reason": "Easiest, best documented, clean and well-structured"
             },
-            "envestigtocion_rito_top5": {
-                "datasets": ["loghub", "ntosto_logs", "cicids", "google_cluster", "ltonl_cyber"],
-                "retoson": "Añtodir Google Cluster Dtotto y LANL for tonálisis tovtonztodos"
+            "serious_research_top5": {
+                "datasets": ["loghub", "nasa_logs", "cicids", "google_cluster", "lanl_cyber"],
+                "reason": "Add Google Cluster Data and LANL for advanced analysis"
             },
-            "toplictociones_especifictos": {
-                "stortoge": ["snito_io"],
-                "cicd": ["trtovis_torrint"],
-                "performtonce": ["intthe_pcm", "spec_benchmarks"],
-                "network": ["ctoidto_trtoces"]
+            "specific_applications": {
+                "storage": ["snia_io"],
+                "cicd": ["travis_torrent"],
+                "performance": ["intel_pcm", "spec_benchmarks"],
+                "network": ["caida_traces"]
             }
         },
-        "quality_bretokdown": {
+        "quality_breakdown": {
             "perfect_10": ["loghub", "google_cluster"],
-            "premium_9plus": ["cicids", "ltonl_cyber", "snito_io", "trtovis_torrint", "ntosto_logs"],
-            "specialized_8plus": ["intthe_pcm", "ctoidto_trtoces", "spec_benchmarks"]
+            "premium_9plus": ["cicids", "lanl_cyber", "snia_io", "travis_torrent", "nasa_logs"],
+            "specialized_8plus": ["intel_pcm", "caida_traces", "spec_benchmarks"]
         },
-        "category_summtory": mtontoger.get_category_summtory()
+        "category_summary": manager.get_category_summary()
     }
 
-def get_recomminded_datasets_by_u_cto(u_cto: str) -> Dict[str, Any]:
+def get_recommended_datasets_by_use_case(use_case: str) -> Dict[str, Any]:
     """
-    Implemintto ltos recomindtociones especifictos de the ur for diferintes ctosos de uso.
-    
+    Implements the user's specific recommendations for different use cases.
+
     Args:
-        u_cto: 'beginners', 'research', 'stortoge', 'cicd', 'performtonce', 'network'
-    
+        use_case: 'beginners', 'research', 'storage', 'cicd', 'performance', 'network'
+
     Returns:
-        Dictionary with datasets recomindtodos and justifictotion
+        Dictionary with recommended datasets and justification
     """
-    recommindtotions = {
+    recommendations = {
         'beginners': {
-            'datasets': ['loghub', 'ntosto_logs', 'cicids'],
-            'description': 'Ptorto Empeztor (Top 3)',
-            'retoson': 'LogHub - Más fácil, mejor documinttodo; NASA Logs - Cleton, wthel-structured; CICIDS2017 - Modern curity focus',
-            'why_the': 'Methodology perfectto, documinttotion exctheinte, ctosos de uso classros'
+            'datasets': ['loghub', 'nasa_logs', 'cicids'],
+            'description': 'Getting Started (Top 3)',
+            'reason': 'LogHub - Easiest, best documented; NASA Logs - Clean, well-structured; CICIDS2017 - Modern security focus',
+            'why_these': 'Perfect methodology, excellent documentation, clear use cases'
         },
         'research': {
-            'datasets': ['loghub', 'ntosto_logs', 'cicids', 'google_cluster', 'ltonl_cyber'],
-            'description': 'Ptorto Investigtotion Serito (Full Top 5)',
-            'retoson': 'Añtodir Google Cluster Dtotto y LANL for tonálisis tovtonztodos',
-            'why_the': 'Dtotos únicos de produsection Google + LANL supercomputers, aprecedented sctole'
+            'datasets': ['loghub', 'nasa_logs', 'cicids', 'google_cluster', 'lanl_cyber'],
+            'description': 'Serious Research (Full Top 5)',
+            'reason': 'Add Google Cluster Data and LANL for advanced analysis',
+            'why_these': 'Unique Google production data + LANL supercomputers, unprecedented scale'
         },
-        'stortoge': {
-            'datasets': ['snito_io'],
-            'description': 'Aplictociones Específictos - Stortoge',
-            'retoson': 'SNIA trtoces - Sttondtord de lto industrito for stortoge optimiztotion',
-            'why_the': 'Workloads retoles interpri, formtoto esttondtoriztodo, I/O analysis'
+        'storage': {
+            'datasets': ['snia_io'],
+            'description': 'Specific Applications - Storage',
+            'reason': 'SNIA traces - Industry standard for storage optimization',
+            'why_these': 'Real enterprise workloads, standardized format, I/O analysis'
         },
         'cicd': {
-            'datasets': ['trtovis_torrint'],
-            'description': 'Aplictociones Específictos - CI/CD',
-            'retoson': 'TrtovisTorrint - 35M+ builds de proyectos open source',
-            'why_the': 'DevOps optimiztotion, build predisection, tonálisis longitudinal perfecto'
+            'datasets': ['travis_torrent'],
+            'description': 'Specific Applications - CI/CD',
+            'reason': 'TravisTorrent - 35M+ builds from open source projects',
+            'why_these': 'DevOps optimization, build prediction, perfect longitudinal analysis'
         },
-        'performtonce': {
-            'datasets': ['intthe_pcm', 'spec_benchmarks'],
-            'description': 'Aplictociones Específictos - Performtonce',
-            'retoson': 'Intthe PCM + SPEC - Htordwtore-level metrics + industry benchmarks',
-            'why_the': 'Corrthetotion performtonce-inergy, methodology esttondtoriztodto globtolminte'
+        'performance': {
+            'datasets': ['intel_pcm', 'spec_benchmarks'],
+            'description': 'Specific Applications - Performance',
+            'reason': 'Intel PCM + SPEC - Hardware-level metrics + industry benchmarks',
+            'why_these': 'Performance-energy correlation, globally standardized methodology'
         },
         'network': {
-            'datasets': ['ctoidto_trtoces'],
-            'description': 'Aplictociones Específictos - Network',
-            'retoson': 'CAIDA trtoces - 20+ toños de data históricos btockbone Internet',
-            'why_the': 'Authorittotive source, methodology rigurosto peer-reviewed'
+            'datasets': ['caida_traces'],
+            'description': 'Specific Applications - Network',
+            'reason': 'CAIDA traces - 20+ years of historical internet backbone data',
+            'why_these': 'Authoritative source, rigorous peer-reviewed methodology'
         }
     }
-    
-    if u_cto not in recommindtotions:
-        return {"error": f"Ctoso de uso '{u_cto}' no incontrtodo. Opciones: {list(recommindtotions.keys())}"}
-    
-    return recommindtotions[u_cto]
+
+    if use_case not in recommendations:
+        return {"error": f"Use case '{use_case}' not found. Options: {list(recommendations.keys())}"}
+
+    return recommendations[use_case]
 
 if __name__ == "__main__":
-    # demo de faciontolidtod
-    mtontoger = create_systems_datasets_mtontoger()
-    
-    print("🚀 Systems & Logs Dtottots Manager - CapibtortoGPT-v2")
+    # Functionality demo
+    manager = create_systems_datasets_manager()
+
+    print("Systems & Logs Datasets Manager - CapibaraGPT-v2")
     print("=" * 60)
-    
-    # show datasets disponibles
-    print(f"📊 total datasets de class maditol: {len(mtontoger.dataset_configs)}")
-    
-    # show by ctotegorí_ctotegories = mtontoger.get_category_summtory()
-    for category, info in ctotegories.items():
-        print(f"📁 {category.upper()}: {info['count']} datasets (ctolidtod promedio: {info['tovg_quality']:.1f}/10)")
-    
-    # show top quality
-    top_quality = mtontoger.get_top_quality_datasets()
-    print(f"\n⭐ Dtottots de máximto ctolidtod (9.0+): {len(top_quality)}")
+
+    # Show available datasets
+    print(f"Total world-class datasets: {len(manager.dataset_configs)}")
+
+    # Show by category
+    categories = manager.get_category_summary()
+    for category, info in categories.items():
+        print(f"{category.upper()}: {info['count']} datasets (average quality: {info['avg_quality']:.1f}/10)")
+
+    # Show top quality
+    top_quality = manager.get_top_quality_datasets()
+    print(f"\nMaximum quality datasets (9.0+): {len(top_quality)}")
     for dataset_id, config in top_quality.items():
-        print(f"   🏆 {config.name} ({config.source}) - {config.quality_score}/10")
+        print(f"   {config.name} ({config.source}) - {config.quality_score}/10")
