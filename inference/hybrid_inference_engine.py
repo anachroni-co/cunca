@@ -4,7 +4,6 @@ Hybrid Inference Engine for CapibaraGPT-v2
 
 Sistema de inferencia híbrido que soporta múltiples backends:
 - TPU v6e: Para modelos grandes entrenados en TPU
-- ARM Axion: Para despliegue eficiente y bajo costo
 - GPU: Para desarrollo y testing local
 - CPU: Fallback universal
 
@@ -43,7 +42,7 @@ try:
 except ImportError:
     JAX_AVAILABLE = False
 
-# PyTorch/ARM support
+# PyTorch support
 try:
     import torch
     import torch.nn.functional as F
@@ -52,19 +51,11 @@ try:
 except ImportError:
     TORCH_AVAILABLE = False
 
-# Import existing ARM inference
-try:
-    from .arm_optimized_inference import ARMInferenceEngine
-    ARM_ENGINE_AVAILABLE = True
-except ImportError:
-    ARM_ENGINE_AVAILABLE = False
-
 logger = logging.getLogger(__name__)
 
 class InferenceBackend(Enum):
     """Tipos de backend de inferencia disponibles."""
     TPU_V6E = "tpu_v6e"
-    ARM_AXION = "arm_axion"
     GPU_CUDA = "gpu_cuda"
     CPU = "cpu"
     AUTO = "auto"
@@ -83,7 +74,6 @@ class InferenceConfig:
     
     # Backend específicos
     tpu_mesh_shape: Tuple[int, int] = (1, 1)  # Para TPU v6e
-    arm_num_threads: int = 8  # Para ARM Axion
     gpu_device_id: int = 0    # Para GPU
     
     # Performance
@@ -390,11 +380,7 @@ class HybridInferenceEngine:
         # GPU CUDA
         if TORCH_AVAILABLE and torch.cuda.is_available():
             backends.append(InferenceBackend.GPU_CUDA)
-        
-        # ARM Axion
-        if ARM_ENGINE_AVAILABLE:
-            backends.append(InferenceBackend.ARM_AXION)
-        
+
         # CPU (siempre disponible)
         backends.append(InferenceBackend.CPU)
         
@@ -402,13 +388,11 @@ class HybridInferenceEngine:
     
     def _select_optimal_backend(self) -> InferenceBackend:
         """Seleccionar backend óptimo based en hardware disponible."""
-        # Prioridad: TPU v6e > GPU > ARM Axion > CPU
+        # Prioridad: TPU v6e > GPU > CPU
         if InferenceBackend.TPU_V6E in self.available_backends:
             return InferenceBackend.TPU_V6E
         elif InferenceBackend.GPU_CUDA in self.available_backends:
             return InferenceBackend.GPU_CUDA
-        elif InferenceBackend.ARM_AXION in self.available_backends:
-            return InferenceBackend.ARM_AXION
         else:
             return InferenceBackend.CPU
     
@@ -424,8 +408,6 @@ class HybridInferenceEngine:
         # Crear engine según backend
         if self.selected_backend == InferenceBackend.TPU_V6E:
             engine = TPUv6eInferenceEngine(model_path, self.config)
-        elif self.selected_backend == InferenceBackend.ARM_AXION and ARM_ENGINE_AVAILABLE:
-            engine = ARMInferenceEngine(model_path)
         else:  # GPU o CPU
             engine = GPUInferenceEngine(model_path, self.config)
         
@@ -450,18 +432,6 @@ class HybridInferenceEngine:
             # Usar engine específico
             if hasattr(self.active_engine, 'generate') and asyncio.iscoroutinefunction(self.active_engine.generate):
                 result = await self.active_engine.generate(prompt, **kwargs)
-            elif isinstance(self.active_engine, ARMInferenceEngine):
-                # ARM engine usa method sync
-                generated_text = self.active_engine.generate(prompt, **kwargs)
-                result = InferenceResult(
-                    text=generated_text,
-                    tokens_generated=len(generated_text.split()),
-                    time_taken=time.time() - start_time,
-                    tokens_per_second=len(generated_text.split()) / (time.time() - start_time),
-                    backend_used="arm_axion",
-                    model_name=self.config.model_path,
-                    prompt_tokens=len(prompt.split())
-                )
             else:
                 result = await self.active_engine.generate(prompt, **kwargs)
             
@@ -578,7 +548,7 @@ async def benchmark_backends(prompt: str, model_path: str, rounds: int = 3) -> D
     """Benchmark de rendimiento entre backends."""
     results = {}
     
-    for backend in [InferenceBackend.TPU_V6E, InferenceBackend.GPU_CUDA, InferenceBackend.ARM_AXION, InferenceBackend.CPU]:
+    for backend in [InferenceBackend.TPU_V6E, InferenceBackend.GPU_CUDA, InferenceBackend.CPU]:
         try:
             config = InferenceConfig(backend=backend, model_path=model_path)
             engine = create_inference_engine(config)

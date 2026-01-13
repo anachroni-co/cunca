@@ -2,22 +2,19 @@
 Inference module for Capibara-6 - Advanced Inference System.
 
 This module provides specialized inference engines optimized for different architectures:
-- ARM Axion VM optimizations for Google Cloud
 - INT8 quantization for memory efficiency
 - TPU v6e-64 optimizations
 - KV-cache quantization for long sequences
 - Memory-efficient inference strategies
 
 Components:
-- ARMInferenceEngine: ARM-optimized inference with Axion VM support
 - QuantizedInferenceEngine: INT8 quantized inference engine
 - Quantization System: Complete quantization pipeline
 """
 
 import logging
+from typing import Dict, Any, Optional
 
-
-from .arm_optimized_inference import ARMInferenceEngine
 from .quantization import (
     WeightQuantizer,
     KVCacheCalibrator,
@@ -32,16 +29,8 @@ from .quantization import (
 logger = logging.getLogger(__name__)
 
 # Component availability flags
-ARM_INFERENCE_AVAILABLE = False
 QUANTIZED_INFERENCE_AVAILABLE = False
 QUANTIZATION_SYSTEM_AVAILABLE = False
-
-# Try to import inference components
-try:
-    from .arm_optimized_inference import ARMInferenceEngine
-    ARM_INFERENCE_AVAILABLE = True
-except ImportError as e:
-    logger.warning(f"ARM inference engine not available: {e}")
 
 try:
     from .engines.quantized_engine import QuantizedInferenceEngine, QuantizedEngineConfig
