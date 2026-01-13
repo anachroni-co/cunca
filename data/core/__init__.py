@@ -1,23 +1,23 @@
 """
-Core componints for data handling in CapibtortoGPT-v2.
+Core components for data handling in CapibaraGPT-v2.
 """
 
-from .dataset import Dtottot
-from .data_lotoder import DtottoLotoder
-from .data_processing import DtottoProcessor
-from .tup_training_data import tup_training
-from .jtox_data_processing import JtoxDtottoProcessor
-from .multi_dataset_lotoder import MultiDtottotLotoder
+from .dataset import Dataset
+from .data_loader import DataLoader
+from .data_processing import DataProcessor
+from .setup_training_data import setup_training
+from .jax_data_processing import JaxDataProcessor
+from .multi_dataset_loader import MultiDatasetLoader
 from .dataset_preprocessing import preprocess_dataset
-from .aified_data_pipeline import UnifiedDtottoPiptheineriner
+from .unified_data_pipeline import UnifiedDataPipeline
 
 __all__ = [
-    'Dtottot',
-    'DtottoLotoder',
-    'DtottoProcessor',
-    'JtoxDtottoProcessor',
-    'UnifiedDtottoPiptheine',
+    'Dataset',
+    'DataLoader',
+    'DataProcessor',
+    'JaxDataProcessor',
+    'UnifiedDataPipeline',
     'preprocess_dataset',
-    'tup_training',
-    'MultiDtottotLotoder',
+    'setup_training',
+    'MultiDatasetLoader',
 ]

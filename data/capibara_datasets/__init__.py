@@ -1,27 +1,28 @@
-""""
-CapibaraGPT-v2 Datasets Management - Sistema completo con Entrenamiento en Cascada =================================================================================
+"""
+CapibaraGPT-v2 Datasets Management - Complete System with Cascade Training
+=================================================================================
 
-Datasets premium organizados por categorías especializadas + nuevo Pipeline en Cascada.
+Premium datasets organized by specialized categories + new Cascade Pipeline.
 
-_ nuevo: training JERARQUICO en CASCADA
-Pipeline: 300M → 600M → 1.5B → 3B → 7B → 15B
-cada etapa: modelo Base + Model Soups → Destilado → Conocimiento combinado
+NEW: HIERARCHICAL CASCADE TRAINING
+Pipeline: 300M -> 600M -> 1.5B -> 3B -> 7B -> 15B
+Each stage: Base model + Model Soups -> Distilled -> Combined Knowledge
 
-Categorías Disponibles:
-- genomic/: Datasets genómicos premium (gnomAD, TCGA, 1000 Genomes)
-- academic/: Datasets académicos e investigación
-- systems/: Datasets systems and logs (Linux Kernel, Documentation)
-- multimodal/: Datasets multimodales and vision (Google Open Images V7)
-- legal/: Datasets jurídicos internacionales (CaseLaw, ECtHR)
-- economics/: Datasets económicos (NBER, World Bank, Government Docs)
-- physics/: Datasets física teórica (ArXiv, CERN, ondas gravitacionales)
-- mathematics/: Datasets matemáticos especializados
-- historical/: Datasets históricos and patrimonio
-- vision/: Datasets vision computacional
-- robotics/: _ Datasets robótica premium (RoboTurk, CALVIN, Open X-Embodiment)
-- engineering_design/: _ Datasets design ingenieril (CAD, Electrónica, FPGA)
+Available Categories:
+- genomic/: Premium genomic datasets (gnomAD, TCGA, 1000 Genomes)
+- academic/: Academic and research datasets
+- systems/: Systems and logs datasets (Linux Kernel, Documentation)
+- multimodal/: Multimodal and vision datasets (Google Open Images V7)
+- legal/: International legal datasets (CaseLaw, ECtHR)
+- economics/: Economic datasets (NBER, World Bank, Government Docs)
+- physics/: Theoretical physics datasets (ArXiv, CERN, gravitational waves)
+- mathematics/: Specialized mathematical datasets
+- historical/: Historical and heritage datasets
+- vision/: Computer vision datasets
+- robotics/: Premium robotics datasets (RoboTurk, CALVIN, Open X-Embodiment)
+- engineering_design/: Engineering design datasets (CAD, Electronics, FPGA)
 
-_ CASCADE SPECIALIZATION:
+CASCADE SPECIALIZATION:
 - Stage 1 (300M): Linux Core Systems
 - Stage 2 (600M): General Productivity Assistant
 - Stage 3 (1.5B): Robotics & Physics Specialist
@@ -29,10 +30,10 @@ _ CASCADE SPECIALIZATION:
 - Stage 5 (7B): Policy & Legal Expert
 - Stage 6 (15B): Omni-Genomic Multi-modal
 
-total: 2,074GB de datasets curados para pipeline más avanzado del mundo.
-+ nuevo: 114GB adicionales en engineering design (CAD 7.2TB + Electronics 3.6TB + FPGA 2.5TB)
-+ nuevo: 35.1TB adicionales en advanced robotics (Unitree Official, AgiBot World, Humanoid-X)
-."""
+Total: 2,074GB of curated datasets for the most advanced pipeline in the world.
++ NEW: 114GB additional in engineering design (CAD 7.2TB + Electronics 3.6TB + FPGA 2.5TB)
++ NEW: 35.1TB additional in advanced robotics (Unitree Official, AgiBot World, Humanoid-X)
+"""
 
 # Temporarily disabled due to corruption - need to fix individual modules
 # from .legal import *
@@ -49,7 +50,7 @@ from .robotics import *
 from .engineering_design import *
 from .humor import *
 
-# 🚀 NEW: Cascade Training System
+# NEW: Cascade Training System
 from .cascade_dataset_manager import (
     CascadeDatasetManager,
     DatasetConfig,
@@ -66,44 +67,44 @@ __all__ = [
     'alphagenome_training_generator',
     'setup_alphagenome',
     'run_alphagenome',
-    
+
     # Academic datasets
     'academic_code_datasets',
     'institutional_datasets',
     'wiki_datasets',
     'psychology_datasets',
-    
+
     # Systems datasets
     'systems_logs_datasets',
     'linux_datasets',
-    
+
     # Multimodal datasets
     'multimodal_conversation_datasets',
     'emotional_audio_datasets',
     'vision_datasets',
-    
+
     # Legal datasets
     'legal_datasets',
-    
+
     # Economics datasets
     'european_economic_datasets',
     'political_media_datasets',
-    
+
     # Physics datasets
     'physics_datasets',
-    
+
     # Mathematics datasets
     'math_datasets',
-    
+
     # Historical datasets
     'historical_cultural_datasets',
-    
+
     # Robotics datasets
     'robotics_datasets',
-    
+
     # Engineering design datasets
     'engineering_design_datasets',
-    
+
     # Humor datasets
     'spanish_jokes_datasets',
     'humor_analysis_datasets',
@@ -112,10 +113,10 @@ __all__ = [
     'load_humor_qa',
     'get_humor_categories',
     'analyze_humor_type',
-    
+
     # Cascade training system
     'CascadeDatasetManager',
-    'DatasetConfig', 
+    'DatasetConfig',
     'StageConfig',
     'create_cascade_dataset_manager',
     'download_stage_datasets',
@@ -144,10 +145,10 @@ def get_cascade_training_summary():
     return {
         "stages": 6,
         "total_target_gb": 85.0,
-        "pipeline": "300M → 600M → 1.5B → 3B → 7B → 15B",
+        "pipeline": "300M -> 600M -> 1.5B -> 3B -> 7B -> 15B",
         "specializations": [
             "Linux Core Systems",
-            "General Productivity Assistant", 
+            "General Productivity Assistant",
             "Robotics & Physics Specialist",
             "Programming & Mathematics Expert",
             "Policy & Legal Expert",
