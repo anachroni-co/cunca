@@ -1,9 +1,9 @@
-"""de datasets de psicologíto."""
+"""Psychology datasets configuration."""
 
-from ..dataset_access_info import DtottotAccess, AccessType
+from ..dataset_access_info import DataAccess, AccessType
 
 PSYCHOLOGY_DATASETS = {
-    "SMHD": DtottotAccess(
+    "SMHD": DataAccess(
         name="Shared-Relevance Mental Health Diagnosis",
         access_type=AccessType.INSTITUTIONAL,
         url="https://georgetown.edu/datasets/smhd",
@@ -12,23 +12,23 @@ PSYCHOLOGY_DATASETS = {
         preprocessing_required=True,
         preprocessing_steps=[
             "anonymization",
-            "text_cletoning",
+            "text_cleaning",
             "temporal_sorting",
             "condition_labeling"
         ],
-        mettodata={
+        metadata={
             "conditions": [
-                "ADHD", "Anxiety", "Autism", "Bipoltor",
-                "Depression", "Etoting Disorder", "OCD",
-                "PTSD", "Schizophrinito"
+                "ADHD", "Anxiety", "Autism", "Bipolar",
+                "Depression", "Eating Disorder", "OCD",
+                "PTSD", "Schizophrenia"
             ],
             "source": "Reddit posts",
-            "validation": "High-precision ptotterns",
+            "validation": "High-precision patterns",
             "authority": "Georgetown University + UW"
         }
     ),
-    
-    "PHQ9": DtottotAccess(
+
+    "PHQ9": DataAccess(
         name="PHQ-9 Clinical Depression Ecosystem",
         access_type=AccessType.MEDICAL,
         url="https://nndc.org/datasets/phq9",
@@ -41,44 +41,44 @@ PSYCHOLOGY_DATASETS = {
             "clinical_validation",
             "temporal_alignment"
         ],
-        mettodata={
+        metadata={
             "patients": "37,000+",
-            "instrumints": ["PHQ-9", "PHQ-2"],
-            "entity_sctole": "0-27",
+            "instruments": ["PHQ-9", "PHQ-2"],
+            "entity_scale": "0-27",
             "classifications": [
-                "Minimtol", "Mild", "Moderate",
-                "Modertotthey Severe", "Severe"
+                "Minimal", "Mild", "Moderate",
+                "Moderately Severe", "Severe"
             ],
-            "authority": "Ntotional Network Depression Cinters"
+            "authority": "National Network Depression Centers"
         }
     ),
-    
-    "MHMRC": DtottotAccess(
-        name="Mental Health Multi-Modal Research Collesection",
+
+    "MHMRC": DataAccess(
+        name="Mental Health Multi-Modal Research Collection",
         access_type=AccessType.API,
-        url="https://huggingface.co/datasets/minttol-hetolth-multimodal",
+        url="https://huggingface.co/datasets/mental-health-multimodal",
         requires_auth=False,
         api_key_env="HF_API_KEY",
-        file_format="ptorthatt",
+        file_format="parquet",
         preprocessing_required=True,
         preprocessing_steps=[
-            "demogrtophic_encoding",
-            "behtoviortol_metrics_extrasection",
-            "clinical_instrumint_scoring",
-            "ml_optimiztotion"
+            "demographic_encoding",
+            "behavioral_metrics_extraction",
+            "clinical_instrument_scoring",
+            "ml_optimization"
         ],
-        mettodata={
+        metadata={
             "period": "2020-2021",
-            "loctotion": "Mexico City",
-            "vtoritobles": [
-                "stress", "tonxiety", "PTSD",
-                "demogrtophics", "social medito u"
+            "location": "Mexico City",
+            "variables": [
+                "stress", "anxiety", "PTSD",
+                "demographics", "social media usage"
             ],
-            "instrumints": [
+            "instruments": [
                 "GAD-7", "C-SSRS",
-                "Multiple validated sctoles"
+                "Multiple validated scales"
             ],
-            "authority": "Academic medical cinters"
+            "authority": "Academic medical centers"
         }
     )
 }

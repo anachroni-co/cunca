@@ -110,7 +110,7 @@ class MentalHealthMonitor:
             )
         ''')
         
-        # Tabla de sesiones de usuario
+        # User sessions table
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS user_sessions (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,

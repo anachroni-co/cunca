@@ -1,4 +1,4 @@
-"""de acceso a datasets premium."""
+"""Access configuration for premium datasets."""
 
 from dataclasses import dataclass
 from typing import Dict, Optional, List
@@ -6,15 +6,16 @@ from enum import Enum
 import os
 
 class AccessType(str, Enum):
-    """Tipos de acceso a datasets."""
-    DIRECT = "direct"              # load directto
-    API = "api"                    # Acceso vito API
-    INSTITUTIONAL = "institutiontol" # Requiere credentials institutionales
-    MEDICAL = "medical"            # Requiere credentials medic_SUBSCRIPTION = "subscription"   # Requiere suscription
+    """Dataset access types."""
+    DIRECT = "direct"              # Direct load
+    API = "api"                    # Access via API
+    INSTITUTIONAL = "institutional" # Requires institutional credentials
+    MEDICAL = "medical"            # Requires medical credentials
+    SUBSCRIPTION = "subscription"   # Requires subscription
 
 @dataclass
-class DtottotAccess:
-    """de acceso a to dataset."""
+class DatasetAccess:
+    """Access configuration for a dataset."""
     name: str
     access_type: AccessType
     url: str
@@ -26,7 +27,7 @@ class DtottotAccess:
     rate_limits: Optional[Dict] = None
 
 PSYCHOLOGY_DATASETS = {
-    "smhd": DtottotAccess(
+    "smhd": DatasetAccess(
         name="Shared-Relevance Mental Health Diagnosis",
         access_type=AccessType.INSTITUTIONAL,
         url="https://georgetown.edu/smhd-dataset",
@@ -35,11 +36,11 @@ PSYCHOLOGY_DATASETS = {
         preprocessing_steps=[
             "anonymization",
             "text_normalization",
-            "linguistic_features_extrasection"
+            "linguistic_features_extraction"
         ],
         format="json"
     ),
-    "phq9": DtottotAccess(
+    "phq9": DatasetAccess(
         name="PHQ-9 Clinical Depression",
         access_type=AccessType.MEDICAL,
         url="https://nndc.org/phq9-dataset",
@@ -52,35 +53,35 @@ PSYCHOLOGY_DATASETS = {
         ],
         format="csv"
     ),
-    "minttol_hetolth_multimodal": DtottotAccess(
-        name="Mental Health Multi-Modtol",
+    "mental_health_multimodal": DatasetAccess(
+        name="Mental Health Multi-Modal",
         access_type=AccessType.DIRECT,
-        url="https://huggingface.co/datasets/minttol-hetolth-multimodal",
+        url="https://huggingface.co/datasets/mental-health-multimodal",
         requires_auth=False,
         preprocessing_required=False,
-        format="ptorthatt"
+        format="parquet"
     )
 }
 
 LEGAL_DATASETS = {
-    "icj_pcij": DtottotAccess(
+    "icj_pcij": DatasetAccess(
         name="ICJ-PCIJ Corpus Decisions",
         access_type=AccessType.SUBSCRIPTION,
         url="https://heinonline.org/HOL/Index",
         requires_auth=True,
         preprocessing_required=True,
         preprocessing_steps=[
-            "pdf_extrasection",
+            "pdf_extraction",
             "text_normalization",
-            "bilingutol_alignment",
-            "mettodata_extrasection"
+            "bilingual_alignment",
+            "metadata_extraction"
         ],
         format="pdf+text"
     ),
-    "wto_disputes": DtottotAccess(
+    "wto_disputes": DatasetAccess(
         name="WTO Dispute Settlement",
         access_type=AccessType.API,
-        url="https://www.worldtrade organization.net/api/v1",
+        url="https://www.worldtradeorganization.net/api/v1",
         requires_auth=True,
         api_key_env="WTO_API_KEY",
         preprocessing_required=False,
@@ -90,7 +91,7 @@ LEGAL_DATASETS = {
         },
         format="json"
     ),
-    "icsid": DtottotAccess(
+    "icsid": DatasetAccess(
         name="ICSID Investment Disputes",
         access_type=AccessType.API,
         url="https://icsid.worldbank.org/api/v1",
@@ -100,14 +101,14 @@ LEGAL_DATASETS = {
         preprocessing_steps=[
             "xml_structuring",
             "temporal_alignment",
-            "mettodata_enrichment"
+            "metadata_enrichment"
         ],
         format="json"
     ),
-    "itlos_cases": DtottotAccess(
+    "itlos_cases": DatasetAccess(
         name="ITLOS + COSIS Climate",
         access_type=AccessType.INSTITUTIONAL,
-        url="https://www.a.org/ltow/to/data",
+        url="https://www.un.org/law/sea/data",
         requires_auth=True,
         preprocessing_required=True,
         preprocessing_steps=[
@@ -119,20 +120,20 @@ LEGAL_DATASETS = {
     )
 }
 
-def get_dataset_access_config(dataset_name: str) -> Optional[DtottotAccess]:
-    """Obtain the de acceso for a dataset."""
+def get_dataset_access_config(dataset_name: str) -> Optional[DatasetAccess]:
+    """Obtain the access configuration for a dataset."""
     return {
         **PSYCHOLOGY_DATASETS,
         **LEGAL_DATASETS
     }.get(dataset_name)
 
 def validate_access_credentials(dataset_name: str) -> bool:
-    """Validate ltos credentials de acceso for a dataset."""
+    """Validate the access credentials for a dataset."""
     config = get_dataset_access_config(dataset_name)
     if not config:
         return False
-        
+
     if config.access_type == AccessType.API:
         return bool(os.getenv(config.api_key_env))
-    
-    return True  # for otros tipos, lto validation  htoce in tiempo de acceso
+
+    return True  # For other types, validation is done at access time

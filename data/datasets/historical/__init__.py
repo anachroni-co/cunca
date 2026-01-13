@@ -1,10 +1,10 @@
 """
-CapibtortoGPT-v2 Historical Dtottots
-Dtottots historicos and culturales
+CapibaraGPT-v2 Historical Datasets
+Historical and cultural datasets
 """
 
-from . import historictol_cultural_datasets
+from . import historical_cultural_datasets
 
 __all__ = [
-    'historictol_cultural_datasets'
+    'historical_cultural_datasets'
 ]

@@ -2,18 +2,17 @@
 """
 Hybrid Inference Engine for CapibaraGPT-v2
 
-Sistema de inferencia híbrido que soporta múltiples backends:
-- TPU v6e: Para modelos grandes entrenados en TPU
-- ARM Axion: Para despliegue eficiente y bajo costo
-- GPU: Para desarrollo y testing local
-- CPU: Fallback universal
+Hybrid inference system that supports multiple backends:
+- TPU v6e: For large models trained on TPU
+- GPU: For local development and testing
+- CPU: Universal fallback
 
-Características:
-- Detección automática de hardware disponible
-- Optimizaciones específicas por backend
-- Load balancing entre múltiples instancias
-- Caching inteligente de modelos
-- Streaming de tokens en tiempo real
+Features:
+- Automatic detection of available hardware
+- Backend-specific optimizations
+- Load balancing between multiple instances
+- Intelligent model caching
+- Real-time token streaming
 """
 
 import os
@@ -43,7 +42,7 @@ try:
 except ImportError:
     JAX_AVAILABLE = False
 
-# PyTorch/ARM support
+# PyTorch support
 try:
     import torch
     import torch.nn.functional as F
@@ -52,19 +51,11 @@ try:
 except ImportError:
     TORCH_AVAILABLE = False
 
-# Import existing ARM inference
-try:
-    from .arm_optimized_inference import ARMInferenceEngine
-    ARM_ENGINE_AVAILABLE = True
-except ImportError:
-    ARM_ENGINE_AVAILABLE = False
-
 logger = logging.getLogger(__name__)
 
 class InferenceBackend(Enum):
-    """Tipos de backend de inferencia disponibles."""
+    """Available inference backend types."""
     TPU_V6E = "tpu_v6e"
-    ARM_AXION = "arm_axion"
     GPU_CUDA = "gpu_cuda"
     CPU = "cpu"
     AUTO = "auto"
@@ -81,10 +72,9 @@ class InferenceConfig:
     repetition_penalty: float = 1.1
     do_sample: bool = True
     
-    # Backend específicos
-    tpu_mesh_shape: Tuple[int, int] = (1, 1)  # Para TPU v6e
-    arm_num_threads: int = 8  # Para ARM Axion
-    gpu_device_id: int = 0    # Para GPU
+    # Backend-specific settings
+    tpu_mesh_shape: Tuple[int, int] = (1, 1)  # For TPU v6e
+    gpu_device_id: int = 0    # For GPU
     
     # Performance
     batch_size: int = 1
@@ -94,7 +84,7 @@ class InferenceConfig:
 
 @dataclass
 class InferenceResult:
-    """Resultado de inferencia."""
+    """Inference result."""
     text: str
     tokens_generated: int
     time_taken: float
@@ -105,7 +95,7 @@ class InferenceResult:
     cached: bool = False
 
 class TPUv6eInferenceEngine:
-    """Motor de inferencia optimizado para TPU v6e."""
+    """Inference engine optimized for TPU v6e."""
     
     def __init__(self, model_path: str, config: InferenceConfig):
         self.model_path = model_path
@@ -120,19 +110,19 @@ class TPUv6eInferenceEngine:
             raise RuntimeError("JAX not available for TPU inference")
     
     def load_model(self):
-        """Cargar modelo en TPU v6e."""
+        """Load model on TPU v6e."""
         logger.info(f"🚀 Loading model on TPU v6e: {self.model_path}")
-        
+
         try:
-            # Configurar JAX para TPU
+            # Configure JAX for TPU
             jax.config.update('jax_platforms', 'tpu')
-            
-            # Crear mesh para TPU v6e
+
+            # Create mesh for TPU v6e
             devices = jax.devices()
             if len(devices) == 0:
                 raise RuntimeError("No TPU devices found")
-            
-            # Configurar mesh según dispositivos disponibles
+
+            # Configure mesh based on available devices
             num_devices = len(devices)
             if num_devices >= 64:  # TPU v6e 8x8
                 mesh_shape = (8, 8)
@@ -145,8 +135,8 @@ class TPUv6eInferenceEngine:
             
             devices_array = np.array(devices[:mesh_shape[0] * mesh_shape[1]]).reshape(mesh_shape)
             self.mesh = jax.sharding.Mesh(devices_array, ('batch', 'model'))
-            
-            # Cargar tokenizer
+
+            # Load tokenizer
             self.tokenizer = AutoTokenizer.from_pretrained(self.model_path)
             if self.tokenizer.pad_token is None:
                 self.tokenizer.pad_token = self.tokenizer.eos_token
@@ -165,9 +155,9 @@ class TPUv6eInferenceEngine:
             raise
     
     def _load_model_params(self):
-        """Cargar parameters del modelo from checkpoint."""
-        # En implementación real, cargaría from checkpoint JAX/Flax
-        # Por ahora, simulamos la estructura
+        """Load model parameters from checkpoint."""
+        # In a real implementation, this would load from a JAX/Flax checkpoint
+        # For now, we simulate the structure
         checkpoint_path = Path(self.model_path) / "checkpoint.pkl"
         if checkpoint_path.exists():
             with open(checkpoint_path, 'rb') as f:
@@ -181,21 +171,21 @@ class TPUv6eInferenceEngine:
         """Compile optimized generation function."""
         @jax.jit
         def generate_step(params, input_ids, position):
-            # Simulación de forward pass
-            # En implementación real, sería el modelo JAX/Flax completo
+            # Simulation of forward pass
+            # In a real implementation, this would be the complete JAX/Flax model
             logits = jnp.ones((input_ids.shape[0], input_ids.shape[1], 32000))
             return logits
         
         self.compiled_generate = generate_step
     
     async def generate(self, prompt: str, **kwargs) -> InferenceResult:
-        """Generar texto usando TPU v6e."""
+        """Generate text using TPU v6e."""
         if not self.loaded:
             self.load_model()
-        
+
         start_time = time.time()
-        
-        # Tokenizar prompt
+
+        # Tokenize prompt
         inputs = self.tokenizer(prompt, return_tensors="np", padding=True)
         input_ids = jnp.array(inputs["input_ids"])
         
@@ -204,8 +194,8 @@ class TPUv6eInferenceEngine:
         
         generated_tokens = []
         current_ids = input_ids
-        
-        # Generación autoregresiva
+
+        # Autoregressive generation
         with self.mesh:
             for step in range(max_tokens):
                 # Forward pass
@@ -214,7 +204,7 @@ class TPUv6eInferenceEngine:
                 # Sampling
                 if temperature > 0:
                     probs = jax.nn.softmax(logits[:, -1, :] / temperature)
-                    # Simulación de sampling
+                    # Sampling simulation
                     next_token = jnp.argmax(probs, axis=-1, keepdims=True)
                 else:
                     next_token = jnp.argmax(logits[:, -1, :], axis=-1, keepdims=True)
@@ -225,8 +215,8 @@ class TPUv6eInferenceEngine:
                 # Check for EOS
                 if int(next_token[0]) == self.tokenizer.eos_token_id:
                     break
-        
-        # Decodificar resultado
+
+        # Decode result
         generated_text = self.tokenizer.decode(generated_tokens, skip_special_tokens=True)
         
         end_time = time.time()
@@ -390,11 +380,7 @@ class HybridInferenceEngine:
         # GPU CUDA
         if TORCH_AVAILABLE and torch.cuda.is_available():
             backends.append(InferenceBackend.GPU_CUDA)
-        
-        # ARM Axion
-        if ARM_ENGINE_AVAILABLE:
-            backends.append(InferenceBackend.ARM_AXION)
-        
+
         # CPU (siempre disponible)
         backends.append(InferenceBackend.CPU)
         
@@ -402,13 +388,11 @@ class HybridInferenceEngine:
     
     def _select_optimal_backend(self) -> InferenceBackend:
         """Seleccionar backend óptimo based en hardware disponible."""
-        # Prioridad: TPU v6e > GPU > ARM Axion > CPU
+        # Prioridad: TPU v6e > GPU > CPU
         if InferenceBackend.TPU_V6E in self.available_backends:
             return InferenceBackend.TPU_V6E
         elif InferenceBackend.GPU_CUDA in self.available_backends:
             return InferenceBackend.GPU_CUDA
-        elif InferenceBackend.ARM_AXION in self.available_backends:
-            return InferenceBackend.ARM_AXION
         else:
             return InferenceBackend.CPU
     
@@ -424,8 +408,6 @@ class HybridInferenceEngine:
         # Crear engine según backend
         if self.selected_backend == InferenceBackend.TPU_V6E:
             engine = TPUv6eInferenceEngine(model_path, self.config)
-        elif self.selected_backend == InferenceBackend.ARM_AXION and ARM_ENGINE_AVAILABLE:
-            engine = ARMInferenceEngine(model_path)
         else:  # GPU o CPU
             engine = GPUInferenceEngine(model_path, self.config)
         
@@ -450,18 +432,6 @@ class HybridInferenceEngine:
             # Usar engine específico
             if hasattr(self.active_engine, 'generate') and asyncio.iscoroutinefunction(self.active_engine.generate):
                 result = await self.active_engine.generate(prompt, **kwargs)
-            elif isinstance(self.active_engine, ARMInferenceEngine):
-                # ARM engine usa method sync
-                generated_text = self.active_engine.generate(prompt, **kwargs)
-                result = InferenceResult(
-                    text=generated_text,
-                    tokens_generated=len(generated_text.split()),
-                    time_taken=time.time() - start_time,
-                    tokens_per_second=len(generated_text.split()) / (time.time() - start_time),
-                    backend_used="arm_axion",
-                    model_name=self.config.model_path,
-                    prompt_tokens=len(prompt.split())
-                )
             else:
                 result = await self.active_engine.generate(prompt, **kwargs)
             
@@ -578,7 +548,7 @@ async def benchmark_backends(prompt: str, model_path: str, rounds: int = 3) -> D
     """Benchmark de rendimiento entre backends."""
     results = {}
     
-    for backend in [InferenceBackend.TPU_V6E, InferenceBackend.GPU_CUDA, InferenceBackend.ARM_AXION, InferenceBackend.CPU]:
+    for backend in [InferenceBackend.TPU_V6E, InferenceBackend.GPU_CUDA, InferenceBackend.CPU]:
         try:
             config = InferenceConfig(backend=backend, model_path=model_path)
             engine = create_inference_engine(config)

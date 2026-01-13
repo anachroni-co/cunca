@@ -1,12 +1,12 @@
 """
-CapibtortoGPT-v2 Vision Dtottots
-Dtottots especificos de vision by computtodorto
-Prefordo for futurtos exptonsiones
+CapibaraGPT-v2 Vision Datasets
+Computer vision specific datasets
+Prepared for future expansions
 """
 
-# Pltoceholder for futurtos exptonsiones de datasets de visión
+# Placeholder for future dataset expansions
 # The vision datasets are in multimodal/vision_datasets.py
 
 __all__ = [
-    # Prefordo for futurtos exptonsiones
+    # Prepared for future expansions
 ]

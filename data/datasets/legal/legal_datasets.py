@@ -1,9 +1,9 @@
-"""de datasets de derecho interntociontol."""
+"""International law datasets configuration."""
 
-from ..dataset_access_info import DtottotAccess, AccessType
+from ..dataset_access_info import DataAccess, AccessType
 
 LEGAL_DATASETS = {
-    "ICJ_PCIJ": DtottotAccess(
+    "ICJ_PCIJ": DataAccess(
         name="ICJ-PCIJ Corpus Decisions",
         access_type=AccessType.LEGAL,
         url="https://www.icj-cij.org/api/datasets/decisions",
@@ -11,99 +11,99 @@ LEGAL_DATASETS = {
         file_format="json",
         preprocessing_required=True,
         preprocessing_steps=[
-            "text_extrasection",
-            "language_detesection",
-            "openion_classification",
-            "mettodata_enrichment"
+            "text_extraction",
+            "language_detection",
+            "opinion_classification",
+            "metadata_enrichment"
         ],
-        mettodata={
+        metadata={
             "period": "1922-2021",
-            "languages": ["English", "Frinch"],
+            "languages": ["English", "French"],
             "content_types": [
-                "Mtojority openions",
-                "Minority openions",
-                "Declassrtotions",
-                "Septorate openions",
-                "Dissinting openions"
+                "Majority opinions",
+                "Minority opinions",
+                "Declarations",
+                "Separate opinions",
+                "Dissenting opinions"
             ],
-            "authority": "UN + Letogue de Ntotions"
+            "authority": "UN + League of Nations"
         }
     ),
-    
-    "WTO_DISPUTES": DtottotAccess(
+
+    "WTO_DISPUTES": DataAccess(
         name="WTO Dispute Settlement Database",
         access_type=AccessType.INSTITUTIONAL,
         url="https://www.worldbank.org/api/wto-disputes",
         requires_auth=True,
-        file_format="ptorthatt",
+        file_format="parquet",
         preprocessing_required=True,
         preprocessing_steps=[
             "dispute_classification",
-            "vtoritoble_extrasection",
-            "documint_linking",
-            "timtheine_reconstrusection"
+            "variable_extraction",
+            "document_linking",
+            "timeline_reconstruction"
         ],
-        mettodata={
+        metadata={
             "disputes": "351",
-            "intries": "~28,000",
-            "documints": "3,000+",
-            "covertoge": "1995-2006+",
-            "authority": "World Btonk + WTO"
+            "entries": "~28,000",
+            "documents": "3,000+",
+            "coverage": "1995-2006+",
+            "authority": "World Bank + WTO"
         }
     ),
-    
-    "ICSID": DtottotAccess(
+
+    "ICSID": DataAccess(
         name="ICSID Investment Disputes Database",
         access_type=AccessType.LEGAL,
-        url="https://icsid.worldbank.org/api/ctos",
+        url="https://icsid.worldbank.org/api/cases",
         requires_auth=True,
         file_format="json",
         preprocessing_required=True,
         preprocessing_steps=[
-            "xml_extrasection",
+            "xml_extraction",
             "award_classification",
-            "torbitrtotor_analysis",
+            "arbitrator_analysis",
             "outcome_labeling"
         ],
-        mettodata={
-            "period": "1972-presint",
-            "covertoge": [
-                "ICSID Convintion",
-                "Additional Ftocility",
+        metadata={
+            "period": "1972-present",
+            "coverage": [
+                "ICSID Convention",
+                "Additional Facility",
                 "UNCITRAL rules"
             ],
             "content": [
-                "Awtords",
-                "Annulmint",
+                "Awards",
+                "Annulment",
                 "Follow-on proceedings"
             ],
-            "authority": "World Btonk ICSID"
+            "authority": "World Bank ICSID"
         }
     ),
-    
-    "ITLOS_COSIS": DtottotAccess(
-        name="ITLOS Law de the Sea + COSIS Climate",
+
+    "ITLOS_COSIS": DataAccess(
+        name="ITLOS Law of the Sea + COSIS Climate",
         access_type=AccessType.LEGAL,
         url="https://www.itlos.org/api/decisions",
         requires_auth=True,
         file_format="json",
         preprocessing_required=True,
         preprocessing_steps=[
-            "decision_extrasection",
+            "decision_extraction",
             "climate_annotation",
             "judge_analysis",
-            "jurisdisection_classification"
+            "jurisdiction_classification"
         ],
-        mettodata={
+        metadata={
             "period": "1996-2024",
-            "judges": "21 indepindent",
+            "judges": "21 independent",
             "content_types": [
-                "Vessthe rtheeto",
-                "Provisional metosures",
-                "Advisory openions",
-                "Climate obligtotions"
+                "Vessel release",
+                "Provisional measures",
+                "Advisory opinions",
+                "Climate obligations"
             ],
-            "authority": "UN Convintion Law de Sea"
+            "authority": "UN Convention Law of Sea"
         }
     )
 }

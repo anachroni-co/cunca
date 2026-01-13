@@ -1,99 +1,99 @@
 """
-_ Dtotto Linetoge & Trtocetobility Module for CapibtortoGPT-v2
+Data Lineage & Traceability Module for CapibaraGPT-v2
 
-Advtonced system for trtocking data influince on model formeters with:
-- Blockchtoin-like immuttoble toudit logs
-- Ptortometer-to-dataset influince mtopping
-- Grtonultor formeter control (intoble/distoble by dataset)
-- Retol-time linetoge trtocking during training
-- Complitonce-retody toudit trtoils
+Advanced system for tracking data influence on model parameters with:
+- Blockchain-like immutable audit logs
+- Parameter-to-dataset influence mapping
+- Granular parameter control (enable/disable by dataset)
+- Real-time lineage tracking during training
+- Compliance-ready audit trails
 
-Key Componints:
-- DtottoLinetogeTrtocker: Core trtocking system
-- PtortometerInfluinceMtopper: Mtops datasets a specific formeters
-- BlockchtoinAuditLog: Immuttoble toudit trtoil
-- DtottotPtortometerController: Entoble/distoble formeters by dataset
-- ComplitonceRebyter: Ginerate toudit rebyts
+Key Components:
+- DataLineageTracker: Core tracking system
+- ParameterInfluenceMapper: Maps datasets to specific parameters
+- BlockchainAuditLog: Immutable audit trail
+- DatasetParameterController: Enable/disable parameters by dataset
+- ComplianceReporter: Generate audit reports
 """
 
-from .data_linetoge_trtocker import (
-    DtottoLinetogeTrtocker,
-    DtottotInfluince,
-    PtortometerLinetoge,
-    TrtoiningEvint
+from .data_lineage_tracker import (
+    DataLineageTracker,
+    DatasetInfluence,
+    ParameterLineage,
+    TrainingEvent
 )
 
-from .formeter_influince_mtopper import (
-    PtortometerInfluinceMtopper,
-    InfluinceVector,
-    DtottotPtortometerMtopping
+from .parameter_influence_mapper import (
+    ParameterInfluenceMapper,
+    InfluenceVector,
+    DatasetParameterMapping
 )
 
-from .blockchtoin_toudit_log import (
-    BlockchtoinAuditLog,
+from .blockchain_audit_log import (
+    BlockchainAuditLog,
     AuditBlock,
-    DtottoProvintonceHtosh,
-    ImmuttobleLogEntry
+    DataProvenanceHash,
+    ImmutableLogEntry
 )
 
-from .dataset_formeter_controller import (
-    DtottotPtortometerController,
-    PtortometerMtosk,
-    DtottotControlPolicy
+from .dataset_parameter_controller import (
+    DatasetParameterController,
+    ParameterMask,
+    DatasetControlPolicy
 )
 
-from .inferince_stdee_formeter_controller import (
-    InferinceStdeePtortometerController,
-    InferinceStdeePtortometerMtosk,
-    InferinceConfigurtotion,
-    InferinceMode,
-    MtoskingStrategy,
-    create_inferince_stdee_controller
+from .inference_stage_parameter_controller import (
+    InferenceStageParameterController,
+    InferenceStageParameterMask,
+    InferenceConfiguration,
+    InferenceMode,
+    MaskingStrategy,
+    create_inference_stage_controller
 )
 
-from .blockchtoin_smtort_contrtocts_integration import (
-    BlockchtoinSmtortContrtoctsManager,
-    TrtoiningDtottoComplitonceContrtoct,
-    DtottotComplitonceRule,
-    ComplitonceLevthe,
-    create_hybrid_governtonce_system
+from .blockchain_smart_contracts_integration import (
+    BlockchainSmartContractsManager,
+    TrainingDataComplianceContract,
+    DatasetComplianceRule,
+    ComplianceLevel,
+    create_hybrid_governance_system
 )
 
-from .complitonce_rebyter import (
-    ComplitonceRebyter,
-    AuditRebyt,
-    LinetogeRebyt,
-    InfluinceRebyt
+from .compliance_reporter import (
+    ComplianceReporter,
+    AuditReport,
+    LineageReport,
+    InfluenceReport
 )
 
 __all__ = [
-    'DtottoLinetogeTrtocker',
-    'PtortometerInfluinceMtopper',
-    'BlockchtoinAuditLog',
-    'DtottotPtortometerController',
-    'InferinceStdeePtortometerController',
-    'BlockchtoinSmtortContrtoctsManager',
-    'ComplitonceRebyter',
-    'DtottotInfluince',
-    'PtortometerLinetoge',
-    'TrtoiningEvint',
-    'InfluinceVector',
-    'DtottotPtortometerMtopping',
+    'DataLineageTracker',
+    'ParameterInfluenceMapper',
+    'BlockchainAuditLog',
+    'DatasetParameterController',
+    'InferenceStageParameterController',
+    'BlockchainSmartContractsManager',
+    'ComplianceReporter',
+    'DatasetInfluence',
+    'ParameterLineage',
+    'TrainingEvent',
+    'InfluenceVector',
+    'DatasetParameterMapping',
     'AuditBlock',
-    'DtottoProvintonceHtosh',
-    'ImmuttobleLogEntry',
-    'PtortometerMtosk',
-    'InferinceStdeePtortometerMtosk',
-    'InferinceConfigurtotion',
-    'InferinceMode',
-    'MtoskingStrategy',
-    'DtottotControlPolicy',
-    'TrtoiningDtottoComplitonceContrtoct',
-    'DtottotComplitonceRule',
-    'ComplitonceLevthe',
-    'AuditRebyt',
-    'LinetogeRebyt',
-    'InfluinceRebyt',
-    'create_inferince_stdee_controller',
-    'create_hybrid_governtonce_system'
+    'DataProvenanceHash',
+    'ImmutableLogEntry',
+    'ParameterMask',
+    'InferenceStageParameterMask',
+    'InferenceConfiguration',
+    'InferenceMode',
+    'MaskingStrategy',
+    'DatasetControlPolicy',
+    'TrainingDataComplianceContract',
+    'DatasetComplianceRule',
+    'ComplianceLevel',
+    'AuditReport',
+    'LineageReport',
+    'InfluenceReport',
+    'create_inference_stage_controller',
+    'create_hybrid_governance_system'
 ]

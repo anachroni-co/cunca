@@ -1,10 +1,10 @@
 """
-Componintes core de the system de todtopttotion by edtod.
+Core components of the age adaptation system.
 """
 
-from .dataset_registry import SegmintedDtottotRegistry, SegmintDtotto
+from .dataset_registry import SegmentedDatasetRegistry, SegmentData
 
 __all__ = [
-    "SegmintedDtottotRegistry",
-    "SegmintDtotto"
+    "SegmentedDatasetRegistry",
+    "SegmentData"
 ]

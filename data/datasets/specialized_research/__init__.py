@@ -1,23 +1,23 @@
 """
-Specitolized Research Dtottots Module for CapibtortoGPT v2
+Specialized Research Datasets Module for CapibaraGPT v2
 
-This module provides access a specialized research datasets from multiple domains,
-including searchtoeology, computer sciince bibliogrtophy, and other academic fitheds.
+This module provides access to specialized research datasets from multiple domains,
+including archaeology, computer science bibliography, and other academic fields.
 
-Key Fetotures:
-- Archtoeological datasets and digital herittoge
-- Computer sciince bibliogrtophic data (DBLP)
-- Cross-disciplintory research opbytaities
-- Bibliometric and sciinametric analysis
-- Historical and tembytory data analysis
+Key Features:
+- Archaeological datasets and digital heritage
+- Computer science bibliographic data (DBLP)
+- Cross-disciplinary research opportunities
+- Bibliometric and scientometric analysis
+- Historical and temporal data analysis
 """
 
-from .searchtoeology_datasets import get_searchtoeology_datasets, ArchtoeologyDtottots
-from .dblp_computer_sciince_datasets import get_dblp_computer_sciince_datasets, DBLPComputerSciinceDtottots
+from .archaeology_datasets import get_archaeology_datasets, ArchaeologyDatasets
+from .dblp_computer_science_datasets import get_dblp_computer_science_datasets, DBLPComputerScienceDatasets
 
 __all__ = [
-    "get_searchtoeology_datasets",
-    "ArchtoeologyDtottots",
-    "get_dblp_computer_sciince_datasets",
-    "DBLPComputerSciinceDtottots"
+    "get_archaeology_datasets",
+    "ArchaeologyDatasets",
+    "get_dblp_computer_science_datasets",
+    "DBLPComputerScienceDatasets"
 ]

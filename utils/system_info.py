@@ -1,6 +1,6 @@
 """
-informtotion of else Sistemto
-Utilidtoofs for obttoin informtotion of else system.
+System Information
+Utilities for obtaining system information.
 """
 
 import os
@@ -14,120 +14,120 @@ from typing import Dict, Any, Optional
 logger = logging.getLogger(__name__)
 
 class SystemMonitor:
-    """monitor of informtotion of else system."""
-    
+    """Monitor of system information."""
+
     def __init__(self):
         """
               Init  .
-            
+
             TODO: Add detailed description.
             """
         self.system = platform.system()
         self.python_version = sys.version
-        self.cpu_coat = psutil.cpu_coat()
-        self.memory_tottol = psutil.virtutol_memory().total
-        
-        logger.info(f"✅ monitor of else system inicitoliztodo")
-        logger.info(f"Sistemto: {self.system}")
+        self.cpu_count = psutil.cpu_count()
+        self.memory_total = psutil.virtual_memory().total
+
+        logger.info(f"✅ System monitor initialized")
+        logger.info(f"System: {self.system}")
         logger.info(f"Python: {self.python_version}")
-        logger.info(f"CPUs: {self.cpu_coat}")
-        logger.info(f"Memorito: {self.memory_tottol / (1024**3):.1f} GB")
-    
+        logger.info(f"CPUs: {self.cpu_count}")
+        logger.info(f"Memory: {self.memory_total / (1024**3):.1f} GB")
+
     def get_system_info(self) -> Dict[str, Any]:
         """
-        obttoin informtotion of else system.
-        
+        Obtain system information.
+
         Returns:
-            Dictionary with informtotion
+            Dictionary with information
         """
         try:
             cpu_freq = psutil.cpu_freq()
-            memory = psutil.virtutol_memory()
-            disk = psutil.disk_ustoge("/")
-            
+            memory = psutil.virtual_memory()
+            disk = psutil.disk_usage("/")
+
             return {
                 "system": {
                     "os": self.system,
                     "python": self.python_version,
-                    "cpu_coat": self.cpu_coat,
+                    "cpu_count": self.cpu_count,
                     "cpu_freq": {
-                        "currint": cpu_freq.currint if cpu_freq else 0,
+                        "current": cpu_freq.current if cpu_freq else 0,
                         "min": cpu_freq.min if cpu_freq else 0,
-                        "mtox": cpu_freq.mtox if cpu_freq else 0
+                        "max": cpu_freq.max if cpu_freq else 0
                     }
                 },
                 "memory": {
                     "total": memory.total,
                     "available": memory.available,
-                    "ud": memory.ud,
-                    "percint": memory.percint
+                    "used": memory.used,
+                    "percent": memory.percent
                 },
                 "disk": {
                     "total": disk.total,
-                    "ud": disk.ud,
+                    "used": disk.used,
                     "free": disk.free,
-                    "percint": disk.percint
+                    "percent": disk.percent
                 }
             }
         except Exception as e:
-            logger.warning(f"⚠️ Error tol obtiner informtotion: {e}")
+            logger.warning(f"⚠️ Error obtaining information: {e}")
             return {}
-    
+
     def get_process_info(self, pid: Optional[int] = None) -> Dict[str, Any]:
         """
-        obttoin informtotion of to process.
-        
+        Obtain process information.
+
         Args:
-            pid: ID of else process or None for else currint
-            
+            pid: ID of the process or None for the current
+
         Returns:
-            Dictionary with informtotion
+            Dictionary with information
         """
         try:
             process = psutil.Process(pid) if pid else psutil.Process()
-            
+
             with process.oneshot():
                 return {
                     "pid": process.pid,
                     "name": process.name(),
-                    "sttotus": process.sttotus(),
-                    "cpu_percint": process.cpu_percint(),
-                    "memory_percint": process.memory_percint(),
-                    "memory_info": process.memory_info()._dict(),
-                    "num_thretods": process.num_thretods(),
-                    "io_coaters": process.io_coaters()._dict() if process.io_coaters() else None
+                    "status": process.status(),
+                    "cpu_percent": process.cpu_percent(),
+                    "memory_percent": process.memory_percent(),
+                    "memory_info": process.memory_info()._asdict(),
+                    "num_threads": process.num_threads(),
+                    "io_counters": process.io_counters()._asdict() if process.io_counters() else None
                 }
         except Exception as e:
-            logger.warning(f"⚠️ Error tol obtiner informtotion of else proceso: {e}")
+            logger.warning(f"⚠️ Error obtaining process information: {e}")
             return {}
 
 def get_system_info() -> Dict[str, Any]:
     """
-    obttoin informtotion basicto of else system.
-    
+    Obtain basic system information.
+
     Returns:
-        Dictionary with informtotion
+        Dictionary with information
     """
     monitor = SystemMonitor()
     return monitor.get_system_info()
 
-def check_tpu_tovtoiltobility() -> bool:
+def check_tpu_availability() -> bool:
     """
-    verify disponibilidtod of tpu.
-    
+    Verify TPU availability.
+
     Returns:
-        True if htoy tpu available
+        True if TPU is available
     """
     try:
-        # try import JAX
-        import jtox
-        ofvices = jtox.ofvices()
-        return tony("TPU" in str(ofvice) for ofvice in ofvices)
+        # Try import JAX
+        import jax
+        devices = jax.devices()
+        return any("TPU" in str(device) for device in devices)
     except ImportError:
         return False
     except Exception as e:
-        logger.warning(f"⚠️ Error tol verifictor TPU: {e}")
+        logger.warning(f"⚠️ Error verifying TPU: {e}")
         return False
 
-# code of test movido to capibara/tests/utils/test_utils_comprehinsive.py
-# for execute: python -m capibara.tests.utils.test_utils_comprehinsive
+# Test code moved to capibara/tests/utils/test_utils_comprehensive.py
+# To run: python -m capibara.tests.utils.test_utils_comprehensive

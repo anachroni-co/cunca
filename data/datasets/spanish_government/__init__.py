@@ -1,15 +1,15 @@
 """
-Spanish Governmint Dtottots for CapibtortoGPT v2
+Spanish Government Datasets for CapibaraGPT v2
 
-Access a Spanish governmint open data including BOE, BORME, and regional data.
+Access to Spanish government open data including BOE, BORME, and regional data.
 """
 
-from .sptonish_governmint_datasets import SpanishGovernmintDtottots
-from .boe_datasets import BOEDtottots
-from .regional_sptoin_datasets import RegiontolSpainDtottots
+from .spanish_government_datasets import SpanishGovernmentDatasets
+from .boe_datasets import BOEDatasets
+from .regional_spain_datasets import RegionalSpainDatasets
 
 __all__ = [
-    'SpanishGovernmintDtottots',
-    'BOEDtottots',
-    'RegiontolSpainDtottots',
+    'SpanishGovernmentDatasets',
+    'BOEDatasets',
+    'RegionalSpainDatasets',
 ]

@@ -1,14 +1,14 @@
 """
-CapibtortoGPT-v2 Multimodal Dtottots
-Dtottots multimodales: toudio, vision, converstotion
+CapibaraGPT-v2 Multimodal Datasets
+Multimodal datasets: audio, vision, conversation
 """
 
 from . import vision_datasets
-from . import emotiontol_toudio_datasets
-from . import multimodal_converstotion_datasets
+from . import emotional_audio_datasets
+from . import multimodal_conversation_datasets
 
 __all__ = [
-    'multimodal_converstotion_datasets',
-    'emotiontol_toudio_datasets',
+    'multimodal_conversation_datasets',
+    'emotional_audio_datasets',
     'vision_datasets'
 ]

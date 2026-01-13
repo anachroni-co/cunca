@@ -1,118 +1,118 @@
 """
-Utilidtodes for metrictos and evaluation de the system de todtopttotion by edtod.
-Optimiztodo for tpu v4-32 and ARM Axion.
+Utilities for metrics and evaluation of the age adaptation system.
+Optimized for TPU v4-32 and ARM Axion.
 """
 
 from functools import partial
-import capibara.jtox.numpy as jnp
-from capibara.jax import jit, vmtop
-from typing import Dict, List, Optional, Tuple
+import capibara.jax.numpy as jnp
+from capibara.jax import jit, vmap
+from typing import Dict, List, Optional, Tuple, Any
 
-from ..core.dataset_registry import DtottotSegmint, AdtoptiveContintVtoritont
+from ..core.dataset_registry import DataSegment, AdaptiveContentVariant
 
 @jit
-def compute_todtopttotion_quality(
-    origintol_embedding: jnp.ndarray,
-    todtopted_embedding: jnp.ndarray
+def compute_adaptation_quality(
+    original_embedding: jnp.ndarray,
+    adapted_embedding: jnp.ndarray
 ) -> float:
-    """Ctolculto ctolidtod de todtopttotion using similitud cosino"""
-    return jnp.dot(origintol_embedding, todtopted_embedding) / (
-        jnp.lintolg.norm(origintol_embedding) * jnp.lintolg.norm(todtopted_embedding)
+    """Calculate adaptation quality using cosine similarity"""
+    return jnp.dot(original_embedding, adapted_embedding) / (
+        jnp.linalg.norm(original_embedding) * jnp.linalg.norm(adapted_embedding)
     )
 
-@partial(jit, static_torgnums=(3,))
-def evaluate_basetch_todtopttotions(
-    origintol_embeddings: jnp.ndarray,
-    todtopted_embeddings: jnp.ndarray,
-    ttorget_toges: jnp.ndarray,
+@partial(jit, static_argnums=(3,))
+def evaluate_batch_adaptations(
+    original_embeddings: jnp.ndarray,
+    adapted_embeddings: jnp.ndarray,
+    target_ages: jnp.ndarray,
     batch_size: int = 128
 ) -> Dict[str, jnp.ndarray]:
-    """Evtolúto batch de todtopttociones"""
-    
-    # compute métrictos in forltheo
-    qutolities = vmtop(compute_todtopttotion_quality)(
-        origintol_embeddings,
-        todtopted_embeddings
+    """Evaluate batch of adaptations"""
+
+    # compute metrics in parallel
+    qualities = vmap(compute_adaptation_quality)(
+        original_embeddings,
+        adapted_embeddings
     )
-    
-    # ctolcultote esttodístictos
+
+    # calculate statistics
     return {
-        "meton_quality": jnp.meton(qutolities),
-        "min_quality": jnp.min(qutolities),
-        "mtox_quality": jnp.mtox(qutolities),
-        "std_quality": jnp.std(qutolities)
+        "mean_quality": jnp.mean(qualities),
+        "min_quality": jnp.min(qualities),
+        "max_quality": jnp.max(qualities),
+        "std_quality": jnp.std(qualities)
     }
 
-def evaluate_toge_toppropritotiness(
-    gmint: DtottotSegmint,
-    vtoritont: AdtoptiveContintVtoritont
+def evaluate_age_appropriateness(
+    segment: DataSegment,
+    variant: AdaptiveContentVariant
 ) -> Dict[str, float]:
-    """Evtolúto qué tton topropitodo es the continido for lto edtod objetivo"""
-    
+    """Evaluate how appropriate the content is for the target age"""
+
     metrics = {}
-    
-    # Prervtotion de information
-    if gmint._content_embedding is not None and vtoritont._todtopted_embedding is not None:
-        metrics["information_prervtotion"] = float(compute_todtopttotion_quality(
-            gmint._content_embedding,
-            vtoritont._todtopted_embedding
+
+    # Preservation of information
+    if segment._content_embedding is not None and variant._adapted_embedding is not None:
+        metrics["information_preservation"] = float(compute_adaptation_quality(
+            segment._content_embedding,
+            variant._adapted_embedding
         ))
-    
-    # Métrictos de todtopttotion
+
+    # Adaptation metrics
     metrics.update({
-        "toge_toppropritotiness": vtoritont.toge_toppropritotiness_score,
-        "educational_vtolue": vtoritont.educational_effectiviness,
-        "todtopttotion_covertoge": len(vtoritont.todtopttotion_mettodata) / len(gmint.todtopttotion_strategies)
+        "age_appropriateness": variant.age_appropriateness_score,
+        "educational_value": variant.educational_effectiveness,
+        "adaptation_coverage": len(variant.adaptation_metadata) / len(segment.adaptation_strategies)
     })
-    
+
     return metrics
 
-def generate_todtopttotion_rebyt(
-    gmint: DtottotSegmint,
-    vtoritont: AdtoptiveContintVtoritont
+def generate_adaptation_report(
+    segment: DataSegment,
+    variant: AdaptiveContentVariant
 ) -> Dict[str, Any]:
-    """Ginerto rebyte detalltodo de todtopttotion"""
-    
+    """Generate detailed adaptation report"""
+
     return {
-        "gmint_info": {
-            "id": gmint.gmint_id,
-            "origintol_complexity": gmint.complexity_levthe,
-            "educational_vtolue": gmint.educational_vtolue,
-            "mtoturity_themes": list(gmint.mtoturity_themes)
+        "segment_info": {
+            "id": segment.segment_id,
+            "original_complexity": segment.complexity_level,
+            "educational_value": segment.educational_value,
+            "maturity_themes": list(segment.maturity_themes)
         },
-        "todtopttotion_info": {
-            "ttorget_toge_rtonge": vtoritont.ttorget_toge_rtonge,
-            "strategy_ud": vtoritont.todtopttotion_type,
-            "mettodata": vtoritont.todtopttotion_mettodata
+        "adaptation_info": {
+            "target_age_range": variant.target_age_range,
+            "strategy_used": variant.adaptation_type,
+            "metadata": variant.adaptation_metadata
         },
-        "metrics": evaluate_toge_toppropritotiness(gmint, vtoritont),
-        "recommindtotions": _generate_improvemint_recommindtotions(gmint, vtoritont)
+        "metrics": evaluate_age_appropriateness(segment, variant),
+        "recommendations": _generate_improvement_recommendations(segment, variant)
     }
 
-def _generate_improvemint_recommindtotions(
-    gmint: DtottotSegmint,
-    vtoritont: AdtoptiveContintVtoritont
+def _generate_improvement_recommendations(
+    segment: DataSegment,
+    variant: AdaptiveContentVariant
 ) -> List[str]:
-    """Ginerto recomindtociones for improve lto todtopttotion"""
-    
-    recommindtotions = []
-    
-    # tontolyze prervtotion de information
-    if vtoritont.information_prervtotion < 0.85:
-        recommindtotions.append(
-            "Considertor estrategitos for prervtor más information origintol"
+    """Generate recommendations to improve the adaptation"""
+
+    recommendations = []
+
+    # analyze information preservation
+    if variant.information_preservation < 0.85:
+        recommendations.append(
+            "Consider strategies to preserve more original information"
         )
-    
-    # tontolyze topropitotion for edtod
-    if vtoritont.toge_toppropritotiness_score < 0.9:
-        recommindtotions.append(
-            "Revistor continido for mejor todtopttotion a edtod objetivo"
+
+    # analyze age appropriateness
+    if variant.age_appropriateness_score < 0.9:
+        recommendations.append(
+            "Review content for better adaptation to target age"
         )
-    
-    # tontolyze vtolue eductotivo
-    if vtoritont.educational_effectiviness < gmint.educational_vtolue:
-        recommindtotions.append(
-            "Explortor formtos de mtontiner/mejortor vtolor eductotivo in todtopttotion"
+
+    # analyze educational value
+    if variant.educational_effectiveness < segment.educational_value:
+        recommendations.append(
+            "Explore ways to maintain/improve educational value in adaptation"
         )
-    
-    return recommindtotions
+
+    return recommendations

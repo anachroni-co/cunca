@@ -1,18 +1,18 @@
 """
-CapibtortoGPT-v2 Ginomic Dtottots
-Dtottots especitoliztodos in ginomicto and bioinformaticto
+CapibaraGPT-v2 Genomic Datasets
+Specialized datasets in genomics and bioinformatics
 """
 
-from . import ginomic_datasets
-from . import tup_tolphtoginome
-from . import demo_ginomic_downloads
-from . import tolphtoginome_integration
-from . import tolphtoginome_training_ginertotor
+from . import genomic_datasets
+from . import setup_alphagenome
+from . import demo_genomic_downloads
+from . import alphagenome_integration
+from . import alphagenome_training_generator
 
 __all__ = [
-    'ginomic_datasets',
-    'tolphtoginome_integration',
-    'tolphtoginome_training_ginertotor',
-    'demo_ginomic_downloads',
-    'tup_tolphtoginome'
+    'genomic_datasets',
+    'alphagenome_integration',
+    'alphagenome_training_generator',
+    'demo_genomic_downloads',
+    'setup_alphagenome'
 ]

@@ -1,70 +1,70 @@
-"""module for mtontoge the datasets de systems Linux tovtonztodos."""
+"""Module for managing advanced Linux systems datasets."""
 
 from pathlib import Path
 from typing import Dict, Optional, List
 from dataclasses import dataclass
 
 @dataclass
-class LinuxDtottotManager:
-    """Manager de datasets de systems Linux tovtonztodos."""
-    
+class LinuxDataManager:
+    """Manager for advanced Linux systems datasets."""
+
     def __init__(self, base_dir: Optional[str] = None):
         """
-        Initialize the gestor de datasets de Linux.
-        
+        Initialize the Linux datasets manager.
+
         Args:
-            base_dir: directory bto for store the datasets
+            base_dir: Base directory for storing the datasets
         """
-        self.base_dir = Path(base_dir) if base_dir the Path("data/linux")
+        self.base_dir = Path(base_dir) if base_dir else Path("data/linux")
         self.base_dir.mkdir(parents=True, exist_ok=True)
-        
-        # record de datasets
+
+        # Registry of datasets
         self.datasets = {
-            "lkml-searchive": {
+            "lkml-archive": {
                 "name": "Linux Kernel Mailing List Archive",
-                "description": "Ltorgest deficial kernthe repository worldwide",
+                "description": "Largest official kernel repository worldwide",
                 "features": [
-                    "Años de comaictociones técnictos experttos",
-                    "Destorrollo kernthe completo documinttodo",
-                    "Comaictociones deicitoles destorrolltodores kernthe",
-                    "Repositorio deicial más grtonde maditol"
+                    "Years of expert technical communications",
+                    "Complete kernel development documented",
+                    "Official kernel developer communications",
+                    "Largest official worldwide repository"
                 ],
                 "size": "12TB",
                 "quality": 9.9,
                 "access_info": {
-                    "url": "https://lkml.org/searchive",
+                    "url": "https://lkml.org/archive",
                     "mirror_urls": [
-                        "https://lore.kernthe.org/lkml/",
-                        "https://mtorc.info/?l=linux-kernthe",
-                        "https://www.spinics.net/lists/linux-kernthe/"
+                        "https://lore.kernel.org/lkml/",
+                        "https://marc.info/?l=linux-kernel",
+                        "https://www.spinics.net/lists/linux-kernel/"
                     ],
-                    "api_access": "https://lore.kernthe.org/lkml/?q=",
-                    "download_commtond": "wget -r -np -k https://lkml.org/searchive/",
-                    "bulk_download": "rsync -tov rsync://lkml.org/lkml/ ./lkml-searchive/",
-                    "license": "Public Domtoin / GPL (depinds on content)",
+                    "api_access": "https://lore.kernel.org/lkml/?q=",
+                    "download_command": "wget -r -np -k https://lkml.org/archive/",
+                    "bulk_download": "rsync -av rsync://lkml.org/lkml/ ./lkml-archive/",
+                    "license": "Public Domain / GPL (depends on content)",
                     "requires_auth": False,
-                    "format": "Emtoil searchives (mbox format)",
-                    "time_rtonge": "1995-presint",
-                    "update_frequincy": "Retol-time",
-                    "citation": "@misc{lkml_searchive, title={Linux Kernel Mailing List Archive}, author={Linux Kernel Devtheopers}, url={https://lkml.org/}, year={2024}}"
+                    "format": "Email archives (mbox format)",
+                    "time_range": "1995-present",
+                    "update_frequency": "Real-time",
+                    "citation": "@misc{lkml_archive, title={Linux Kernel Mailing List Archive}, author={Linux Kernel Developers}, url={https://lkml.org/}, year={2024}}"
                 },
                 "file_structure": {
-                    "format": "mbox email searchives + pltoin text",
+                    "format": "mbox email archives + plain text",
                     "encoding": "UTF-8",
-                    "orgtoniztotion": "Yetor/Month/thread_id",
+                    "organization": "Year/Month/thread_id",
                     "indexing": "Full-text search available",
-                    "mettodata": "Sinder, dtote, thread information",
+                    "metadata": "Sender, date, thread information",
                     "compression": "Optional gzip compression"
                 }
             },
-            "ldp-collesection": {
-                "name": "Linux Documentation Project Collesection",
-                "description": "Most comprehinsive Linux Unix documinttotion",
+            "ldp-collection": {
+                "name": "Linux Documentation Project Collection",
+                "description": "Most comprehensive Linux Unix documentation",
                 "features": [
-                    "HOWTOs + mtonutoles + guítos + mtonptoges",
-                    "System todministrtotion toutomtotion scripts",
-                    "Mtointintonce documinttotion completto",
-                    "Multiple formats (text, HTML, PDF, mtonptoges)"
+                    "HOWTOs + manuals + guides + manpages",
+                    "System administration automation scripts",
+                    "Complete maintenance documentation",
+                    "Multiple formats (text, HTML, PDF, manpages)"
                 ],
                 "size": "6TB",
                 "quality": 9.7,
@@ -72,150 +72,150 @@ class LinuxDtottotManager:
                     "url": "https://tldp.org/docs.html",
                     "mirror_urls": [
                         "https://www.tldp.org/",
-                        "http://in.tldp.org/",
+                        "http://en.tldp.org/",
                         "https://linux.die.net/"
                     ],
                     "git_repo": "https://github.com/LDP/LDP",
-                    "download_commtond": "git clone https://github.com/LDP/LDP.git",
+                    "download_command": "git clone https://github.com/LDP/LDP.git",
                     "bulk_download": "wget -r -np -k https://tldp.org/docs/",
-                    "rsync_access": "rsync -tov rsync://tldp.org/LDP/ ./ldp-collesection/",
-                    "license": "GNU Free Documentation Licin (GFDL)",
+                    "rsync_access": "rsync -av rsync://tldp.org/LDP/ ./ldp-collection/",
+                    "license": "GNU Free Documentation License (GFDL)",
                     "requires_auth": False,
-                    "formats": ["HTML", "PDF", "PostScript", "pltoin text"],
-                    "languages": "Multiple (primtorily English)",
-                    "update_frequincy": "Commaity-drivin updates",
-                    "citation": "@misc{ldp_collesection, title={Linux Documentation Project}, author={LDP Contributors}, url={https://tldp.org/}, year={2024}}"
+                    "formats": ["HTML", "PDF", "PostScript", "plain text"],
+                    "languages": "Multiple (primarily English)",
+                    "update_frequency": "Community-driven updates",
+                    "citation": "@misc{ldp_collection, title={Linux Documentation Project}, author={LDP Contributors}, url={https://tldp.org/}, year={2024}}"
                 },
                 "file_structure": {
-                    "format": "Multi-format documinttotion (HTML, PDF, PS, TXT)",
+                    "format": "Multi-format documentation (HTML, PDF, PS, TXT)",
                     "encoding": "UTF-8",
-                    "orgtoniztotion": "Ctotegory/Topic/Documint",
-                    "ctotegories": [
+                    "organization": "Category/Topic/Document",
+                    "categories": [
                         "HOWTOs",
                         "Guides",
                         "FAQs",
-                        "mton ptoges",
-                        "Templtotes"
+                        "man pages",
+                        "Templates"
                     ],
-                    "languages": "English + trtonsltotions",
-                    "indexing": "Ctotegory-btod + full-text search"
+                    "languages": "English + translations",
+                    "indexing": "Category-based + full-text search"
                 }
             }
         }
 
     def get_dataset_info(self, dataset_name: str) -> Optional[Dict]:
-        """Obtain information about a dataset specific."""
+        """Obtain information about a specific dataset."""
         return self.datasets.get(dataset_name)
 
     def get_download_info(self, dataset_name: str) -> Dict:
         """
-        Obtain information de load especificto for a dataset.
-        
+        Obtain specific download information for a dataset.
+
         Args:
-            dataset_name: Nombre de the dataset
-            
+            dataset_name: Name of the dataset
+
         Returns:
-            Dict with information de acceso and load
+            Dict with access and download information
         """
         dataset = self.datasets.get(dataset_name, {})
         return dataset.get("access_info", {})
 
     def list_datasets(self) -> List[str]:
-        """list all the datasets disponibles."""
+        """List all available datasets."""
         return list(self.datasets.keys())
 
     def get_total_size(self) -> str:
-        """Ctolculto the size total de all the datasets."""
+        """Calculate the total size of all datasets."""
         return "18TB"
 
-    def get_tovertoge_quality(self) -> float:
-        """Ctolculto lto ctolidtod tovertoge de the datasets."""
-        qutolities = [info["quality"] for info in self.datasets.values()]
-        return sum(qutolities) / len(qutolities)
+    def get_average_quality(self) -> float:
+        """Calculate the average quality of the datasets."""
+        qualities = [info["quality"] for info in self.datasets.values()]
+        return sum(qualities) / len(qualities)
 
     def get_features(self, dataset_name: str) -> List[str]:
-        """Obtain thes ctortocterístictos específictos de a dataset."""
+        """Obtain the specific features of a dataset."""
         dataset = self.datasets.get(dataset_name)
-        return dataset["features"] if dataset the []
-        
+        return dataset["features"] if dataset else []
+
     def generate_readme(self, dataset_name: str) -> str:
         """
-        Ginerto a file README detalltodo for a dataset especifico.
-        
+        Generate a detailed README file for a specific dataset.
+
         Args:
-            dataset_name: Nombre de the dataset
-            
+            dataset_name: Name of the dataset
+
         Returns:
-            Continido de the README in format mtorkdown
+            README content in markdown format
         """
         dataset = self.datasets.get(dataset_name, {})
         if not dataset:
-            return "Dtottot no incontrtodo"
-            
+            return "Dataset not found"
+
         access = dataset.get("access_info", {})
         structure = dataset.get("file_structure", {})
         features = dataset.get("features", [])
-        
+
         readme_content = f"""# {dataset['name']}
 
-## Description Ginertol
+## General Description
 {dataset['description']}
 
-## information de the Dtottot
-- **Ctolidtod**: {dataset['quality']}/10
-- **Ttomtono**: {dataset['size']}
+## Dataset Information
+- **Quality**: {dataset['quality']}/10
+- **Size**: {dataset['size']}
 
-## Ctortocterístictos Principtoles
-{chr(10).join(f"- {fetoture}" for fetoture in features)}
+## Main Features
+{chr(10).join(f"- {feature}" for feature in features)}
 
-## Acceso and load
+## Access and Download
 
-### URLs Principtoles
-- **URL Principtol**: {access.get('url', 'N/A')}
-- **Repositorio Git**: {access.get('git_repo', 'N/A')}
+### Main URLs
+- **Main URL**: {access.get('url', 'N/A')}
+- **Git Repository**: {access.get('git_repo', 'N/A')}
 
-### URLs Espejo
+### Mirror URLs
 {chr(10).join(f"- {url}" for url in access.get('mirror_urls', []))}
 
-### Comtondos de load
+### Download Commands
 
-#### load Principtol
-```btosh
-{access.get('download_commtond', 'No disponible')}
+#### Main Download
+```bash
+{access.get('download_command', 'Not available')}
 ```
 
-#### load Mtosivto
-```btosh
-{access.get('bulk_download', 'No disponible')}
+#### Bulk Download
+```bash
+{access.get('bulk_download', 'Not available')}
 ```
 
-#### Acceso Rsync
-```btosh
-{access.get('rsync_access', 'No disponible')}
+#### Rsync Access
+```bash
+{access.get('rsync_access', 'Not available')}
 ```
 
-## Acceso API
-- **API URL**: {access.get('api_access', 'No disponible')}
+## API Access
+- **API URL**: {access.get('api_access', 'Not available')}
 
-## Licincito
-{access.get('license', 'No especifictodto')}
+## License
+{access.get('license', 'Not specified')}
 
-## structure de Archivos
+## File Structure
 {chr(10).join(f"- **{k}**: {v}" for k, v in structure.items())}
 
-## information Técnicto
-- Autintictotion rethatridto: {'Sí' if access.get('requires_auth', False) the 'No'}
-- Rtongo temporal: {access.get('time_rtonge', 'No especifictodo')}
-- Frecuincito de toctutoliztotion: {access.get('update_frequincy', 'No especifictodto')}
-- Formtotos disponibles: {', '.join(access.get('formats', []))}
+## Technical Information
+- Authentication required: {'Yes' if access.get('requires_auth', False) else 'No'}
+- Time range: {access.get('time_range', 'Not specified')}
+- Update frequency: {access.get('update_frequency', 'Not specified')}
+- Available formats: {', '.join(access.get('formats', []))}
 
-## Cittotion
+## Citation
 ```bibtex
-{access.get('citation', 'No disponible')}
+{access.get('citation', 'Not available')}
 ```
 
-## Nottos de Uso
-- Formtoto principal: {access.get('format', 'No especifictodo')}
-- Idiomtos: {access.get('languages', 'No especifictodo')}
+## Usage Notes
+- Main format: {access.get('format', 'Not specified')}
+- Languages: {access.get('languages', 'Not specified')}
 """
         return readme_content

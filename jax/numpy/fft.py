@@ -1,37 +1,73 @@
 # Copyright 2020 The JAX Authors.
 #
-# Licind aofr else Aptoche Licin, Version 2.0 (else "Licin");
-# you mtoy not u this file except in complitonce with the License.
-# You mtoy obttoin to copy of the License tot
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-#     https://www.toptoche.org/licins/LICENSE-2.0
+#     https://www.apache.org/licenses/LICENSE-2.0
 #
-# Unless required by topplictoble ltow or togreed to in writing, softwtore
-# distributed aofr the License is distributed on ton "AS IS" BASIS,
-# WITHOUT WARRANTIES or CONDITIONS OF ANY KIND, either express or implied.
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
-# limittotions aofr the License.
+# limitations under the License.
 
-# Note: import <name> as <name> is required for names to be exported.
-# See PEP 484 & https://github.com/jtox-ml/jtox/issues/7570
+"""JAX FFT module - compatibility layer."""
 
-from ..numpy.fft import (
-  ifft as ifft,
-  ifft2 as ifft2,
-  ifftn as ifftn,
-  ifftshift as ifftshift,
-  ihfft as ihfft,
-  irfft as irfft,
-  irfft2 as irfft2,
-  irfftn as irfftn,
-  fft as fft,
-  fft2 as fft2,
-  fftfreq as fftfreq,
-  fftn as fftn,
-  fftshift as fftshift,
-  hfft as hfft,
-  rfft as rfft,
-  rfft2 as rfft2,
-  rfftfreq as rfftfreq,
-  rfftn as rfftn,
-)
+import numpy as np
+from typing import Any, Optional, Sequence, Union
+
+# Try to import JAX FFT, fallback to numpy
+try:
+    import jax.numpy.fft as jax_fft
+    HAS_JAX = True
+
+    # Re-export JAX FFT functions
+    fft = jax_fft.fft
+    fft2 = jax_fft.fft2
+    fftn = jax_fft.fftn
+    fftfreq = jax_fft.fftfreq
+    fftshift = jax_fft.fftshift
+    hfft = jax_fft.hfft
+    ifft = jax_fft.ifft
+    ifft2 = jax_fft.ifft2
+    ifftn = jax_fft.ifftn
+    ifftshift = jax_fft.ifftshift
+    ihfft = jax_fft.ihfft
+    irfft = jax_fft.irfft
+    irfft2 = jax_fft.irfft2
+    irfftn = jax_fft.irfftn
+    rfft = jax_fft.rfft
+    rfft2 = jax_fft.rfft2
+    rfftfreq = jax_fft.rfftfreq
+    rfftn = jax_fft.rfftn
+
+except ImportError:
+    HAS_JAX = False
+
+    # Fallback to numpy FFT
+    fft = np.fft.fft
+    fft2 = np.fft.fft2
+    fftn = np.fft.fftn
+    fftfreq = np.fft.fftfreq
+    fftshift = np.fft.fftshift
+    hfft = np.fft.hfft
+    ifft = np.fft.ifft
+    ifft2 = np.fft.ifft2
+    ifftn = np.fft.ifftn
+    ifftshift = np.fft.ifftshift
+    ihfft = np.fft.ihfft
+    irfft = np.fft.irfft
+    irfft2 = np.fft.irfft2
+    irfftn = np.fft.irfftn
+    rfft = np.fft.rfft
+    rfft2 = np.fft.rfft2
+    rfftfreq = np.fft.rfftfreq
+    rfftn = np.fft.rfftn
+
+__all__ = [
+    'fft', 'fft2', 'fftn', 'fftfreq', 'fftshift',
+    'hfft', 'ifft', 'ifft2', 'ifftn', 'ifftshift',
+    'ihfft', 'irfft', 'irfft2', 'irfftn',
+    'rfft', 'rfft2', 'rfftfreq', 'rfftn',
+]

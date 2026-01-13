@@ -243,27 +243,27 @@ class ModularModelConfig:
     enable_lazy_loading: bool = True
     lazy_loading_timeout: float = 30.0
     
-    # Configuración de monitoreo
+    # Monitoring configuration
     enable_metrics: bool = True
     metrics_window_size: int = 1000
     log_interval: int = 100
     enable_visualization: bool = True
     visualization_cleanup_interval: float = 3600.0
     max_visualization_files: int = 50
-    
-    # Configuración de memoria
+
+    # Memory configuration
     memory_pressure_threshold: float = 0.85
     enable_memory_monitoring: bool = True
     cleanup_interval: float = 300.0
-    
-    # Configuración de paths
+
+    # Paths configuration
     config_root: Path = None
     modules_root: Path = None
     checkpoints_dir: str = "checkpoints"
     logs_dir: str = "logs"
-    
-    # === CONFIGURACIÓN SERVICIOS TTS ===
-    # Configuración general de servicios
+
+    # === TTS SERVICES CONFIGURATION ===
+    # General services configuration
     enable_tts: bool = True
     tts_backend: str = "capibara_tts"
     tts_fallback: str = "pyttsx3"
@@ -276,7 +276,7 @@ class ModularModelConfig:
     audio_cache_size: int = 1000
     audio_cache_ttl: int = 3600
     
-    # Configuración específica TTS
+    # TTS specific configuration
     fastspeech_model_path: str = "models/fastspeech.onnx"
     hifigan_model_path: str = "models/hifigan.onnx"
     sample_rate: int = 22050
@@ -299,7 +299,7 @@ class ModularModelConfig:
     enable_voice_enhancement: bool = True
     
     def __post_init__(self):
-        """Inicialización post-creación."""
+        """Post-creation initialization."""
         if self.tpu_axis_names is None:
             self.tpu_axis_names = ["data", "model"]
         
@@ -319,20 +319,20 @@ class ModularModelConfig:
         if self.spectrogram_clipping is None:
             self.spectrogram_clipping = [-4.0, 4.0]
         
-        # Validaciones
-        assert self.hidden_size % 64 == 0, "hidden_size debe ser múltiplo de 64 para TPU"
-        assert self.hidden_size % self.num_router_experts == 0, "hidden_size debe ser divisible por num_router_experts"
+        # Validations
+        assert self.hidden_size % 64 == 0, "hidden_size must be a multiple of 64 for TPU"
+        assert self.hidden_size % self.num_router_experts == 0, "hidden_size must be divisible by num_router_experts"
     
     @classmethod
     def from_toml(cls, config_path: Optional[str] = None) -> 'ModularModelConfig':
         """
-        Carga configuración desde archivo TOML.
-        
+        Load configuration from TOML file.
+
         Args:
-            config_path: Ruta al archivo TOML. Si es None, usa el archivo por defecto.
-            
+            config_path: Path to TOML file. If None, uses the default file.
+
         Returns:
-            ModularModelConfig: Instancia con configuración cargada.
+            ModularModelConfig: Instance with loaded configuration.
         """
         if config_path is None:
             config_path = "capibara/config/configs_toml/modular_model_fusionado.toml"
@@ -363,7 +363,7 @@ class ModularModelConfig:
                     'activation_function': model_config.get('activation_function', 'gelu'),
                 })
             
-            # Configuración de memoria y optimización
+            # Memory and optimization configuration
             if 'memory_optimization' in config_dict:
                 memory_config = config_dict['memory_optimization']
                 kwargs['memory_config'] = MemoryOptimizationConfig(
@@ -391,7 +391,7 @@ class ModularModelConfig:
                     batch_growth_factor=memory_config.get('batch_growth_factor', 1.5),
                 )
             
-            # Configuración TPU v4-32
+            # TPU v4-32 configuration
             if 'tpu_v4' in config_dict:
                 tpu_config = config_dict['tpu_v4']
                 kwargs.update({
@@ -408,7 +408,7 @@ class ModularModelConfig:
                     'optimization_level': tpu_config.get('optimization_level', 3),
                 })
             
-            # Configuración neuroadaptativa
+            # Neuroadaptive configuration
             if 'neuroadaptive' in config_dict:
                 neuro_config = config_dict['neuroadaptive']
                 kwargs.update({
@@ -422,7 +422,7 @@ class ModularModelConfig:
                     'enable_adaptive_embedding': neuro_config.get('enable_adaptive_embedding', True),
                 })
             
-            # Configuración del router
+            # Router configuration
             if 'router' in config_dict:
                 router_config = config_dict['router']
                 kwargs.update({
@@ -437,7 +437,7 @@ class ModularModelConfig:
                     'enable_bio': router_config.get('enable_bio', True),
                 })
             
-            # Configuración de agentes
+            # Agent configuration
             if 'agents' in config_dict:
                 agents_config = config_dict['agents']
                 kwargs.update({
@@ -447,7 +447,7 @@ class ModularModelConfig:
                     'agent_timeout': agents_config.get('agent_timeout', 30.0),
                 })
             
-            # Configuración de modules
+            # Modules configuration
             if 'modules' in config_dict:
                 modules_config = config_dict['modules']
                 kwargs.update({
@@ -456,7 +456,7 @@ class ModularModelConfig:
                     'lazy_loading_timeout': modules_config.get('lazy_loading_timeout', 30.0),
                 })
             
-            # Configuración de monitoreo
+            # Monitoring configuration
             if 'monitoring' in config_dict:
                 monitoring_config = config_dict['monitoring']
                 kwargs.update({
@@ -468,7 +468,7 @@ class ModularModelConfig:
                     'max_visualization_files': monitoring_config.get('max_visualization_files', 50),
                 })
             
-            # Configuración de memoria
+            # Memory configuration
             if 'memory' in config_dict:
                 memory_config = config_dict['memory']
                 kwargs.update({
@@ -477,7 +477,7 @@ class ModularModelConfig:
                     'cleanup_interval': memory_config.get('cleanup_interval', 300.0),
                 })
             
-            # Configuración de paths
+            # Paths configuration
             if 'paths' in config_dict:
                 paths_config = config_dict['paths']
                 kwargs.update({
@@ -487,7 +487,7 @@ class ModularModelConfig:
                     'logs_dir': paths_config.get('logs_dir', 'logs'),
                 })
             
-            # === CONFIGURACIÓN SERVICIOS TTS ===
+            # === TTS SERVICES CONFIGURATION ===
             if 'services' in config_dict:
                 services_config = config_dict['services']
                 kwargs.update({
@@ -532,20 +532,20 @@ class ModularModelConfig:
             return cls(**kwargs)
             
         except FileNotFoundError:
-            logger.error(f"Archivo de configuración no encontrado: {config_path}")
-            logger.info("Usando configuración por defecto")
+            logger.error(f"Configuration file not found: {config_path}")
+            logger.info("Using default configuration")
             return cls()
         except Exception as e:
-            logger.error(f"Error cargando configuración desde {config_path}: {e}")
-            logger.info("Usando configuración por defecto")
+            logger.error(f"Error loading configuration from {config_path}: {e}")
+            logger.info("Using default configuration")
             return cls()
     
     def save_to_toml(self, output_path: str) -> None:
         """
-        Guarda la configuración actual a un archivo TOML.
-        
+        Save current configuration to a TOML file.
+
         Args:
-            output_path: Ruta donde guardar el archivo TOML.
+            output_path: Path where to save the TOML file.
         """
         config_dict = {
             'metadata': {
@@ -696,12 +696,12 @@ class ModularModelConfig:
         try:
             with open(output_path, 'w') as f:
                 toml.dump(config_dict, f)
-            logger.info(f"Configuración guardada en: {output_path}")
+            logger.info(f"Configuration saved to: {output_path}")
         except Exception as e:
-            logger.error(f"Error guardando configuración en {output_path}: {e}")
+            logger.error(f"Error saving configuration to {output_path}: {e}")
     
     def get_tpu_dtype(self):
-        """Convierte string dtype a tipo JAX."""
+        """Convert string dtype to JAX type."""
         import jax.numpy as jnp
         dtype_map = {
             'float32': jnp.float32,
@@ -711,7 +711,7 @@ class ModularModelConfig:
         return dtype_map.get(self.dtype, jnp.bfloat16)
     
     def get_param_dtype(self):
-        """Convierte string param_dtype a tipo JAX."""
+        """Convert string param_dtype to JAX type."""
         import jax.numpy as jnp
         dtype_map = {
             'float32': jnp.float32,
@@ -722,23 +722,23 @@ class ModularModelConfig:
 
 
 
-# Contenido de training_config.py
+# Content from training_config.py
 """
-Configuración de entrenamiento de CapibaraModel.
+CapibaraModel training configuration.
 
-This module defines the specific configuration for training del modelo,
-incluyendo strategys de entrenamiento, validación y monitoreo.
+This module defines the specific configuration for model training,
+including training strategies, validation and monitoring.
 """
 from typing import Optional, List, Dict, Any, cast, TypeVar, Callable
 try:
     from pydantic.v1 import BaseModel, Field, validator #type: ignore
 except ImportError:
-    raise ImportError("Por favor instala pydantic con: pip install pydantic")
+    raise ImportError("Please install pydantic with: pip install pydantic")
 
 try:
     import yaml #type: ignore
 except ImportError:
-    raise ImportError("Por favor instala PyYAML con: pip install PyYAML")
+    raise ImportError("Please install PyYAML with: pip install PyYAML")
 
 import os
 
@@ -746,13 +746,13 @@ T = TypeVar('T')
 
 def typed_validator(field: str) -> Callable[[Callable[[Any, T], T]], Callable[[Any, T], T]]:
     """
-    Decorador tipado para validadores de Pydantic.
-    
+    Typed decorator for Pydantic validators.
+
     Args:
-        field: Nombre del campo a validar
-        
+        field: Name of the field to validate
+
     Returns:
-        Un decorador que envuelve la function de validación con tipos correctos
+        A decorator that wraps the validation function with correct types
     """
     def decorator(func: Callable[[Any, T], T]) -> Callable[[Any, T], T]:
         return cast(Callable[[Any, T], T], validator(field)(func))
@@ -760,113 +760,113 @@ def typed_validator(field: str) -> Callable[[Callable[[Any, T], T]], Callable[[A
 
 class TrainingConfig(BaseModel):
     """
-    Configuración completa para el entrenamiento del modelo.
-    
-    Esta class define all necessary parameters to configure el proceso de entrenamiento,
-    incluyendo optimización, strategys de entrenamiento, validación y monitoreo.
-    
+    Complete configuration for model training.
+
+    This class defines all necessary parameters to configure the training process,
+    including optimization, training strategies, validation and monitoring.
+
     Attributes:
-        epochs: Número total de épocas de entrenamiento
-        steps_per_epoch: Pasos por época (opcional, se calcula automáticamente si es None)
-        validation_steps: Pasos de validación por época (opcional)
-        early_stopping_patience: Número de épocas sin mejora antes de detener el entrenamiento
-        strategy: Estrategia de distribución (mirrored, multi_worker, etc.)
-        use_tpu: Indica si se usa TPU para entrenamiento
-        use_mixed_precision: Activa el uso de precisión mixta para acelerar el entrenamiento
-        optimizer: Tipo de optimizador (adamw, sgd, etc.)
-        learning_rate: Tasa de aprendizaje inicial
-        warmup_steps: Número de pasos de calentamiento
-        weight_decay: Factor de decaimiento de pesos para regularización
-        gradient_clip_norm: Valor máximo para el clipping de gradientes
-        use_gradient_centralization: Activa la centralización de gradientes para mejorar la generalización
-        batch_size: Tamaño del batch de entrenamiento
-        per_replica_batch_size: Tamaño del batch por réplica en entrenamiento distribuido
-        save_checkpoints: Indica si se guardan checkpoints
-        checkpoint_frequency: Frecuencia de guardado de checkpoints
-        keep_checkpoint_max: Número máximo de checkpoints a mantener
-        log_frequency: Frecuencia de logging of metrics
-        tensorboard_update_freq: Frecuencia de actualización de TensorBoard
-        validation_frequency: Frecuencia de validación
-        metrics: Lista of metrics a monitorear
-        progressive_training_config: Ruta a configuración de entrenamiento progresivo
-        component_strategy_config: Ruta a configuración de strategy por componentes
-        custom_callbacks: Lista de callbacks personalizados
+        epochs: Total number of training epochs
+        steps_per_epoch: Steps per epoch (optional, calculated automatically if None)
+        validation_steps: Validation steps per epoch (optional)
+        early_stopping_patience: Number of epochs without improvement before stopping training
+        strategy: Distribution strategy (mirrored, multi_worker, etc.)
+        use_tpu: Whether to use TPU for training
+        use_mixed_precision: Enables mixed precision to accelerate training
+        optimizer: Optimizer type (adamw, sgd, etc.)
+        learning_rate: Initial learning rate
+        warmup_steps: Number of warmup steps
+        weight_decay: Weight decay factor for regularization
+        gradient_clip_norm: Maximum value for gradient clipping
+        use_gradient_centralization: Enables gradient centralization to improve generalization
+        batch_size: Training batch size
+        per_replica_batch_size: Batch size per replica in distributed training
+        save_checkpoints: Whether to save checkpoints
+        checkpoint_frequency: Checkpoint save frequency
+        keep_checkpoint_max: Maximum number of checkpoints to keep
+        log_frequency: Logging frequency for metrics
+        tensorboard_update_freq: TensorBoard update frequency
+        validation_frequency: Validation frequency
+        metrics: List of metrics to monitor
+        progressive_training_config: Path to progressive training configuration
+        component_strategy_config: Path to component strategy configuration
+        custom_callbacks: List of custom callbacks
     """
     
-    # Configuración básica
-    epochs: int = Field(10, description="Número de épocas de entrenamiento")
-    steps_per_epoch: Optional[int] = Field(None, description="Pasos por época")
-    validation_steps: Optional[int] = Field(None, description="Pasos de validación")
-    early_stopping_patience: int = Field(3, description="Paciencia para early stopping")
-    
-    # Configuración de strategy
-    strategy: str = Field("mirrored", description="Estrategia de distribución")
-    use_tpu: bool = Field(False, description="Usar TPU para entrenamiento")
-    use_mixed_precision: bool = Field(True, description="Usar precisión mixta")
-    
-    # Configuración de optimización
-    optimizer: str = Field("adamw", description="Optimizador a usar")
-    learning_rate: float = Field(1e-4, description="Tasa de aprendizaje base")
-    warmup_steps: int = Field(1000, description="Pasos de calentamiento")
-    weight_decay: float = Field(0.01, description="Decaimiento de pesos")
-    gradient_clip_norm: float = Field(1.0, description="Norma de gradiente para clipping")
+    # Basic configuration
+    epochs: int = Field(10, description="Number of training epochs")
+    steps_per_epoch: Optional[int] = Field(None, description="Steps per epoch")
+    validation_steps: Optional[int] = Field(None, description="Validation steps")
+    early_stopping_patience: int = Field(3, description="Patience for early stopping")
+
+    # Strategy configuration
+    strategy: str = Field("mirrored", description="Distribution strategy")
+    use_tpu: bool = Field(False, description="Use TPU for training")
+    use_mixed_precision: bool = Field(True, description="Use mixed precision")
+
+    # Optimization configuration
+    optimizer: str = Field("adamw", description="Optimizer to use")
+    learning_rate: float = Field(1e-4, description="Base learning rate")
+    warmup_steps: int = Field(1000, description="Warmup steps")
+    weight_decay: float = Field(0.01, description="Weight decay")
+    gradient_clip_norm: float = Field(1.0, description="Gradient norm for clipping")
     use_gradient_centralization: bool = Field(
-        True, 
-        description="Usar Gradient Centralization para mejorar la generalización"
+        True,
+        description="Use Gradient Centralization to improve generalization"
     )
-    
-    # Configuración de batch
-    batch_size: int = Field(32, description="Tamaño del batch")
-    per_replica_batch_size: Optional[int] = Field(None, description="Tamaño del batch por réplica")
-    
-    # Configuración de checkpoints
-    save_checkpoints: bool = Field(True, description="Guardar checkpoints")
-    checkpoint_frequency: int = Field(1000, description="Frecuencia de guardado de checkpoints")
-    keep_checkpoint_max: int = Field(5, description="Número máximo de checkpoints a mantener")
-    
-    # Configuración de logging
-    log_frequency: int = Field(100, description="Frecuencia de logging")
-    tensorboard_update_freq: int = Field(100, description="Frecuencia de actualización de TensorBoard")
-    
-    # Configuración de validación
-    validation_frequency: int = Field(1000, description="Frecuencia de validación")
+
+    # Batch configuration
+    batch_size: int = Field(32, description="Batch size")
+    per_replica_batch_size: Optional[int] = Field(None, description="Batch size per replica")
+
+    # Checkpoints configuration
+    save_checkpoints: bool = Field(True, description="Save checkpoints")
+    checkpoint_frequency: int = Field(1000, description="Checkpoint save frequency")
+    keep_checkpoint_max: int = Field(5, description="Maximum number of checkpoints to keep")
+
+    # Logging configuration
+    log_frequency: int = Field(100, description="Logging frequency")
+    tensorboard_update_freq: int = Field(100, description="TensorBoard update frequency")
+
+    # Validation configuration
+    validation_frequency: int = Field(1000, description="Validation frequency")
     metrics: List[str] = Field(
         default_factory=lambda: ["loss", "accuracy"],
-        description="Métricas a monitorear"
+        description="Metrics to monitor"
     )
-    
-    # Configuración de strategys
+
+    # Strategies configuration
     progressive_training_config: Optional[str] = Field(
         None,
-        description="Ruta al archivo de configuración de entrenamiento progresivo"
+        description="Path to progressive training configuration file"
     )
     component_strategy_config: Optional[str] = Field(
         None,
-        description="Ruta al archivo de strategy por componentes"
+        description="Path to component strategy configuration file"
     )
-    
-    # Configuración avanzada
+
+    # Advanced configuration
     custom_callbacks: List[Dict[str, Any]] = Field(
         default_factory=list,
-        description="Callbacks personalizados"
+        description="Custom callbacks"
     )
     
     def load_progressive_config(self) -> Dict[str, Any]:
         """
-        Carga la configuración de entrenamiento progresivo desde archivo YAML.
-        
+        Load progressive training configuration from YAML file.
+
         Returns:
-            Dict[str, Any]: Configuración cargada como diccionario
-            
+            Dict[str, Any]: Configuration loaded as dictionary
+
         Raises:
-            FileNotFoundError: Si el archivo de configuración no existe
+            FileNotFoundError: If configuration file does not exist
         """
         if not self.progressive_training_config:
             return {}
-        
+
         if not os.path.exists(self.progressive_training_config):
             raise FileNotFoundError(
-                f"Archivo de configuración progresiva no encontrado: {self.progressive_training_config}"
+                f"Progressive configuration file not found: {self.progressive_training_config}"
             )
         
         with open(self.progressive_training_config, 'r') as f:
@@ -874,20 +874,20 @@ class TrainingConfig(BaseModel):
     
     def load_component_strategy(self) -> Dict[str, Any]:
         """
-        Carga la strategy de entrenamiento por componentes desde archivo YAML.
-        
+        Load component training strategy from YAML file.
+
         Returns:
-            Dict[str, Any]: Estrategia cargada como diccionario
-            
+            Dict[str, Any]: Strategy loaded as dictionary
+
         Raises:
-            FileNotFoundError: Si el archivo de strategy no existe
+            FileNotFoundError: If strategy file does not exist
         """
         if not self.component_strategy_config:
             return {}
-        
+
         if not os.path.exists(self.component_strategy_config):
             raise FileNotFoundError(
-                f"Archivo de strategy por componentes no encontrado: {self.component_strategy_config}"
+                f"Component strategy file not found: {self.component_strategy_config}"
             )
         
         with open(self.component_strategy_config, 'r') as f:
@@ -896,46 +896,46 @@ class TrainingConfig(BaseModel):
     @typed_validator('learning_rate')
     def validate_learning_rate(cls, v: float) -> float:
         """
-        Valida que la tasa de aprendizaje sea positiva.
-        
+        Validate that learning rate is positive.
+
         Args:
-            v: Valor de la tasa de aprendizaje a validar
-            
+            v: Learning rate value to validate
+
         Returns:
-            float: Tasa de aprendizaje validada
-            
+            float: Validated learning rate
+
         Raises:
-            ValueError: Si la tasa de aprendizaje no es positiva
+            ValueError: If learning rate is not positive
         """
         if v <= 0:
-            raise ValueError("La tasa de aprendizaje debe ser positiva")
+            raise ValueError("Learning rate must be positive")
         return v
     
     @typed_validator('batch_size')
     def validate_batch_size(cls, v: int) -> int:
         """
-        Valida que el tamaño del batch sea positivo.
-        
+        Validate that batch size is positive.
+
         Args:
-            v: Valor del tamaño de batch a validar
-            
+            v: Batch size value to validate
+
         Returns:
-            int: Tamaño de batch validado
-            
+            int: Validated batch size
+
         Raises:
-            ValueError: Si el tamaño de batch no es positivo
+            ValueError: If batch size is not positive
         """
         if v <= 0:
-            raise ValueError("El tamaño del batch debe ser positivo")
+            raise ValueError("Batch size must be positive")
         return v
-    
+
     class Config:
         """
-        Configuración de Pydantic para la class TrainingConfig.
-        
+        Pydantic configuration for TrainingConfig class.
+
         Attributes:
-            validate_assignment: Activa la validación al asignar valores
-            extra: Prohíbe campos adicionales no definidos en el modelo
+            validate_assignment: Enables validation on value assignment
+            extra: Forbids additional fields not defined in the model
         """
         validate_assignment = True
         extra = "forbid" 

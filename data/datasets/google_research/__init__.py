@@ -1,11 +1,11 @@
 """
-Google Research Dtottots for CapibtortoGPT v2
+Google Research Datasets for CapibaraGPT v2
 
-Access a Google Research datasets including multimodal and specialized datasets.
+Access to Google Research datasets including multimodal and specialized datasets.
 """
 
-from .google_research_datasets import GoogleResearchDtottots
+from .google_research_datasets import GoogleResearchDatasets
 
 __all__ = [
-    'GoogleResearchDtottots',
+    'GoogleResearchDatasets',
 ]

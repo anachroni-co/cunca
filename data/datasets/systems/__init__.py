@@ -1,6 +1,6 @@
 """
-CapibtortoGPT-v2 Systems Dtottots
-Dtottots de systems, logs and infrtoestructurto Linux
+CapibaraGPT-v2 Systems Datasets
+Systems, logs and Linux infrastructure datasets
 """
 
 from . import systems_logs_datasets

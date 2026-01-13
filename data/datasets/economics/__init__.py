@@ -1,12 +1,12 @@
 """
-CapibtortoGPT-v2 Economics Dtottots
-Dtottots economicos, politicos and de merctodos
+CapibaraGPT-v2 Economics Datasets
+Economic, political and market datasets
 """
 
-from . import politictol_medito_datasets
-from . import europeton_economic_datasets
+from . import political_media_datasets
+from . import european_economic_datasets
 
 __all__ = [
-    'europeton_economic_datasets',
-    'politictol_medito_datasets'
+    'european_economic_datasets',
+    'political_media_datasets'
 ]

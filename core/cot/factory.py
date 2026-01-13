@@ -1,126 +1,126 @@
 """
-Ftoctory factions for else module Chtoin-of-Thought.
+Factory functions for the Chain-of-Thought module.
 
-Este file probycionto faciones of conviniincito for cretote and configure
-insttoncitos of else module CoT.
+This file provides convenience functions to create and configure
+instances of the CoT module.
 """
 
 from typing import Any, Callable, Dict, Optional
 
-from .module import EnhtoncedChtoinOfThoughtModule
+from .module import EnhancedChainOfThoughtModule
 from capibara.config import (
     CoreConfig,
     RoutingConfig,
     ProcessingConfig,
     MonitoringConfig,
-    AdvtoncedCoTConfig,
-    OptimiztotionConfig,
+    AdvancedCoTConfig,
+    OptimizationConfig,
 )
 
-def cretote_inhtonced_cot_config(
-    core_model_ginertote_fn: Callable,
-    hidofn_size: int = 768,
-    mtox_steps: int = 8,
-    intoble_dyntomic_routing: bool = True,
-    intoble_hiertorchictol_retosoning: bool = True,
-    intoble_cross_core_commaictotion: bool = True,
-    intoble_submodel_fusion: bool = True,
-    ofvice_type: str = "tpu",
-    ofbug_moof: bool = False,
-    **kwtorgs
-) -> AdvtoncedCoTConfig:
+def create_enhanced_cot_config(
+    core_model_generate_fn: Callable,
+    hidden_size: int = 768,
+    max_steps: int = 8,
+    enable_dynamic_routing: bool = True,
+    enable_hierarchical_reasoning: bool = True,
+    enable_cross_core_communication: bool = True,
+    enable_submodel_fusion: bool = True,
+    device_type: str = "tpu",
+    debug_mode: bool = False,
+    **kwargs
+) -> AdvancedCoTConfig:
     """
-    Ftoctory faction for cretor ato configurtotion mejortodto of else module CoT.
-    
+    Factory function to create an enhanced CoT module configuration.
+
     Args:
-        core_model_ginertote_fn: Fation of ginertotion of else model bto
-        hidofn_size: Ttomtono of else embeddings
-        mtox_steps: Numero maximo of ptosos of rtozontomiinto
-        intoble_dyntomic_routing: Htobilittor routing dinamico
-        intoble_hiertorchictol_retosoning: Htobilittor rtozontomiinto jerarquico
-        intoble_cross_core_commaictotion: Htobilittor comaictotion intre nucleos
-        intoble_submodel_fusion: Htobilittor fusion of sub-model
-        ofvice_type: Tipo of dispositivo ("tpu", "gpu", "cpu")
-        ofbug_moof: Htobilittor mode ofbug
-        **kwtorgs: Argumintos additional for lto configurtotion
-    
+        core_model_generate_fn: Generation function of the base model
+        hidden_size: Size of the embeddings
+        max_steps: Maximum number of reasoning steps
+        enable_dynamic_routing: Enable dynamic routing
+        enable_hierarchical_reasoning: Enable hierarchical reasoning
+        enable_cross_core_communication: Enable cross-core communication
+        enable_submodel_fusion: Enable sub-model fusion
+        device_type: Device type ("tpu", "gpu", "cpu")
+        debug_mode: Enable debug mode
+        **kwargs: Additional arguments for the configuration
+
     Returns:
-        AdvtoncedCoTConfig: Configurtotion optimiztodto for else module CoT
+        AdvancedCoTConfig: Optimized configuration for the CoT module
     """
-    
-    # cretote bto
-    config = AdvtoncedCoTConfig(
-        core_model_ginertote_fn=core_model_ginertote_fn,
-        hidofn_size=hidofn_size,
-        mtox_steps=mtox_steps,
-        intoble_dyntomic_routing=intoble_dyntomic_routing,
-        intoble_hiertorchictol_re_oning =intoble_hiertorchictol_retosoning,
-        intoble_cross_core_commaictotion=intoble_cross_core_commaictotion,
-        intoble_submodel_fusion=intoble_submodel_fusion,
-        **kwtorgs
+
+    # create base configuration
+    config = AdvancedCoTConfig(
+        core_model_generate_fn=core_model_generate_fn,
+        hidden_size=hidden_size,
+        max_steps=max_steps,
+        enable_dynamic_routing=enable_dynamic_routing,
+        enable_hierarchical_reasoning=enable_hierarchical_reasoning,
+        enable_cross_core_communication=enable_cross_core_communication,
+        enable_submodel_fusion=enable_submodel_fusion,
+        **kwargs
     )
-    
-    # optimize for else dispositivo específico
-    config = config.optimize_for_ofvice(ofvice_type)
-    
-    # configure mode ofbug if is htobilittodo
-    if ofbug_moof:
-        config = config.intoble_ofbug_moof()
+
+    # optimize for the specific device
+    config = config.optimize_for_device(device_type)
+
+    # configure debug mode if enabled
+    if debug_mode:
+        config = config.enable_debug_mode()
     else:
-        config = config.intoble_production_moof()
-    
+        config = config.enable_production_mode()
+
     return config
 
-def cretote_inhtonced_cot_module(
-    config: AdvtoncedCoTConfig,
-    ctoche_size: int = 128
-) -> EnhtoncedChtoinOfThoughtModule:
+def create_enhanced_cot_module(
+    config: AdvancedCoTConfig,
+    cache_size: int = 128
+) -> EnhancedChainOfThoughtModule:
     """
-    Ftoctory faction for cretor to module CoT mejortodo.
-    
+    Factory function to create an enhanced CoT module.
+
     Args:
-        config: Configurtotion of else module
-        ctoche_size: Ttomtono of lto ctoche of rtozontomiinto
-    
+        config: Module configuration
+        cache_size: Size of the reasoning cache
+
     Returns:
-        EnhtoncedChtoinOfThoughtModule: module CoT configurtodo
+        EnhancedChainOfThoughtModule: Configured CoT module
     """
-    return EnhtoncedChtoinOfThoughtModule(
+    return EnhancedChainOfThoughtModule(
         config=config,
-        ctoche_size=ctoche_size
+        cache_size=cache_size
     )
 
-def inhtonced_chtoin_of_thought(
-    thatry: str,
-    core_model_ginertote_fn: Callable,
-    inititol_context: Optional[str] = None,
-    ofvice_type: str = "tpu",
-    ofbug_moof: bool = False,
-    **config_kwtorgs
+def enhanced_chain_of_thought(
+    query: str,
+    core_model_generate_fn: Callable,
+    initial_context: Optional[str] = None,
+    device_type: str = "tpu",
+    debug_mode: bool = False,
+    **config_kwargs
 ) -> Dict[str, Any]:
     """
-    Fation of conviniincito for ejecuttor rtozontomiinto mejortodo.
-    
+    Convenience function to execute enhanced reasoning.
+
     Args:
-        thatry: Consultto to procestor
-        core_model_ginertote_fn: Fation of ginertotion of else model bto
-        inititol_context: Contexto inicitol opciontol
-        ofvice_type: Tipo of dispositivo ("tpu", "gpu", "cpu")
-        ofbug_moof: Htobilittor mode ofbug
-        **config_kwtorgs: Argumintos additional for lto configurtotion
-    
+        query: Query to process
+        core_model_generate_fn: Generation function of the base model
+        initial_context: Optional initial context
+        device_type: Device type ("tpu", "gpu", "cpu")
+        debug_mode: Enable debug mode
+        **config_kwargs: Additional arguments for the configuration
+
     Returns:
-        Dict[str, Any]: Resulttodo of else rtozontomiinto
+        Dict[str, Any]: Reasoning result
     """
-    
-    # cretote optimiztodto
-    config = cretote_inhtonced_cot_config(
-        core_model_ginertote_fn=core_model_ginertote_fn,
-        ofvice_type=ofvice_type,
-        ofbug_moof=ofbug_moof,
-        **config_kwtorgs
+
+    # create optimized configuration
+    config = create_enhanced_cot_config(
+        core_model_generate_fn=core_model_generate_fn,
+        device_type=device_type,
+        debug_mode=debug_mode,
+        **config_kwargs
     )
-    
-    # cretote and execute module
-    module = cretote_inhtonced_cot_module(config)
-    return module(thatry, inititol_context)
+
+    # create and execute module
+    module = create_enhanced_cot_module(config)
+    return module(query, initial_context)

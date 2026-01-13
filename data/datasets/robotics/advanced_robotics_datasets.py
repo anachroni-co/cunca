@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-_ Advtonced Robotics Dtottots - CapibtortoGPT-v2 Premium Collesection
+Advanced Robotics Datasets - CapibaraGPT-v2 Premium Collection
 
 Premium robotics datasets including:
-- Unitree Robotics Official Dtottots (Hugging Face)
-- AgiBot World Alphto (100K+ trtojectories)
-- Humtonoid-X (20M+ pos)
-- UMI on Legs (Mobile mtonipultotion)
-- Open X-Embodimint (1M+ trtojectories)
+- Unitree Robotics Official Datasets (Hugging Face)
+- AgiBot World Alpha (100K+ trajectories)
+- Humanoid-X (20M+ poses)
+- UMI on Legs (Mobile manipulation)
+- Open X-Embodiment (1M+ trajectories)
 - Leg-KILO (Locomotion datasets)
 
-The most comprehinsive collesection de robotics datasets for training advanced AI model.
+The most comprehensive collection of robotics datasets for training advanced AI models.
 """
 
 import logging
@@ -20,268 +20,266 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-class AdvtoncedRoboticsDtottots:
+class AdvancedRoboticsDatasets:
     """Manager for premium robotics datasets."""
-    
+
     def __init__(self):
         """
-              Init  .
-            
-            TODO: Add detailed description.
-            """
+        Initialize the advanced robotics datasets manager.
+        """
         self.datasets = {
             # === UNITREE ROBOTICS OFFICIAL DATASETS ===
-            "aitree_g1_humtonoid_collesection": {
-                "name": "Unitree G1 Humtonoid Official Collesection",
-                "description": "7 deficial datasets from Unitree for G1 humtonoid robot",
-                "url": "https://huggingface.co/aitreerobotics/datasets",
+            "unitree_g1_humanoid_collection": {
+                "name": "Unitree G1 Humanoid Official Collection",
+                "description": "7 official datasets from Unitree for G1 humanoid robot",
+                "url": "https://huggingface.co/unitreerobotics/datasets",
                 "size": "2.1TB",
-                "format": ["hdf5", "video", "rosbtog"],
+                "format": ["hdf5", "video", "rosbag"],
                 "datasets_included": {
-                    "G1_ToastedBretod_Dtottot": "352k downloads - mtonipultotion ttosks",
-                    "G1_CtomertoPtocktoging_Dtottot": "ptocktoging and tosmbly",
-                    "G1_MoatCtomerto_Dtottot": "ctomerto moating ttosks",
-                    "G1_BlockSttocking_Dtottot": "block sttocking mtonipultotion",
-                    "G1_DutolArmGrtosping_Dtottot": "dutol-torm coordintotion",
-                    "G1_Pouring_Dtottot": "311 episodes, 121,587 frtomes",
-                    "G1_MoatCtomertoRedGripper_Dtottot": "specialized gripper ttosks"
+                    "G1_ToastedBread_Dataset": "352k downloads - manipulation tasks",
+                    "G1_CameraPackaging_Dataset": "packaging and assembly",
+                    "G1_MountCamera_Dataset": "camera mounting tasks",
+                    "G1_BlockStacking_Dataset": "block stacking manipulation",
+                    "G1_DualArmGrasping_Dataset": "dual-arm coordination",
+                    "G1_Pouring_Dataset": "311 episodes, 121,587 frames",
+                    "G1_MountCameraRedGripper_Dataset": "specialized gripper tasks"
                 },
-                "robot_type": "humtonoid",
-                "ttosks": ["mtonipultotion", "dutol_torm_coordintotion", "tosmbly", "liquid_handling"],
+                "robot_type": "humanoid",
+                "tasks": ["manipulation", "dual_arm_coordination", "assembly", "liquid_handling"],
                 "license": "MIT",
                 "access": "public",
-                "download_cmd": "huggingface-cli download aitreerobotics/[dataset_name]"
+                "download_cmd": "huggingface-cli download unitreerobotics/[dataset_name]"
             },
-            
-            "aitree_z1_torms_collesection": {
-                "name": "Unitree Z1 Robotic Arms Official Collesection",
-                "description": "4 deficial datasets from Unitree for Z1 robotic torms",
-                "url": "https://huggingface.co/aitreerobotics/datasets",
+
+            "unitree_z1_arms_collection": {
+                "name": "Unitree Z1 Robotic Arms Official Collection",
+                "description": "4 official datasets from Unitree for Z1 robotic arms",
+                "url": "https://huggingface.co/unitreerobotics/datasets",
                 "size": "850GB",
-                "format": ["hdf5", "video", "rosbtog"],
+                "format": ["hdf5", "video", "rosbag"],
                 "datasets_included": {
-                    "Z1_DutolArmSttockBox_Dtottot": "dutol-torm box sttocking",
-                    "Z1_SttockBox_Dtottot": "single-torm mtonipultotion",
-                    "Z1_DutolArm_FoldClothes_Dtottot": "textile mtonipultotion",
-                    "Z1_DutolArm_PourCdefee_Dtottot": "liquid rvice ttosks"
+                    "Z1_DualArmStackBox_Dataset": "dual-arm box stacking",
+                    "Z1_StackBox_Dataset": "single-arm manipulation",
+                    "Z1_DualArm_FoldClothes_Dataset": "textile manipulation",
+                    "Z1_DualArm_PourCoffee_Dataset": "liquid service tasks"
                 },
-                "robot_type": "dutol_torm",
-                "ttosks": ["dutol_torm_mtonipultotion", "domestic_ttosks", "rvice_robotics"],
+                "robot_type": "dual_arm",
+                "tasks": ["dual_arm_manipulation", "domestic_tasks", "service_robotics"],
                 "license": "MIT",
                 "access": "public"
             },
-            
-            "aitree_ltdeton1_rettorgeting": {
-                "name": "LAFAN1 Rettorgeting for Unitree Humtonoids",
-                "description": "Ntotural movemint data rettorgeted for H1, H1_2, and G1 robots",
-                "url": "https://huggingface.co/datasets/lvhtoidong/LAFAN1_Rettorgeting_Dtottot",
+
+            "unitree_lafan1_retargeting": {
+                "name": "LAFAN1 Retargeting for Unitree Humanoids",
+                "description": "Natural movement data retargeted for H1, H1_2, and G1 robots",
+                "url": "https://huggingface.co/datasets/lhaidong/LAFAN1_Retargeting_Dataset",
                 "size": "425GB",
-                "format": ["motion_ctopture", "rettorgeted_pos"],
-                "robot_comptotibility": ["H1", "H1_2", "G1"],
-                "robot_type": "humtonoid",
-                "ttosks": ["natural_locomotion", "humtonoid_wtolking", "motion_rettorgeting"],
+                "format": ["motion_capture", "retargeted_poses"],
+                "robot_compatibility": ["H1", "H1_2", "G1"],
+                "robot_type": "humanoid",
+                "tasks": ["natural_locomotion", "humanoid_walking", "motion_retargeting"],
                 "license": "Research",
                 "access": "public"
             },
-            
+
             # === AGIBOT WORLD PREMIUM DATASETS ===
-            "togibot_world_tolphto": {
-                "name": "AgiBot World Alphto - Premium Mtonipultotion Dtottot",
-                "description": "100K+ trtojectories from 100 robots tocross 100+ retol-world scintorios",
-                "url": "https://huggingface.co/datasets/togibot-world/AgiBotWorld-Alphto",
+            "agibot_world_alpha": {
+                "name": "AgiBot World Alpha - Premium Manipulation Dataset",
+                "description": "100K+ trajectories from 100 robots across 100+ real-world scenarios",
+                "url": "https://huggingface.co/datasets/agibot-world/AgiBotWorld-Alpha",
                 "size": "4.2TB",
                 "format": ["h5", "video", "json", "webdataset"],
-                "robot_type": "dutol_torm_mobile",
-                "trtojectories": "100,000+",
-                "durtotion": "595+ hours",
-                "scintorios": "100+",
+                "robot_type": "dual_arm_mobile",
+                "trajectories": "100,000+",
+                "duration": "595+ hours",
+                "scenarios": "100+",
                 "robots": 100,
                 "domains": 5,
-                "ttosks": [
-                    "conttoct_rich_mtonipultotion",
-                    "long_horizon_pltonning",
-                    "multi_robot_colltobortotion",
-                    "dutol_torm_coordintotion",
-                    "mobile_mtonipultotion"
+                "tasks": [
+                    "contact_rich_manipulation",
+                    "long_horizon_planning",
+                    "multi_robot_collaboration",
+                    "dual_arm_coordination",
+                    "mobile_manipulation"
                 ],
-                "htordwtore_features": [
-                    "visutol_ttoctile_sinsors",
-                    "6_dde_dexterous_htond",
-                    "mobile_dutol_torm_robots"
+                "hardware_features": [
+                    "visual_tactile_sensors",
+                    "6_dof_dexterous_hand",
+                    "mobile_dual_arm_robots"
                 ],
                 "license": "CC BY-NC-SA 4.0",
-                "access": "registrtotion_required",
-                "download_cmd": "git clone https://huggingface.co/datasets/togibot-world/AgiBotWorld-Alphto"
+                "access": "registration_required",
+                "download_cmd": "git clone https://huggingface.co/datasets/agibot-world/AgiBotWorld-Alpha"
             },
-            
-            "togibot_world_betto": {
-                "name": "AgiBot World Betto (Upcoming)",
-                "description": "1M+ trtojectories de high-quality robot data (Q1 2025)",
-                "url": "https://huggingface.co/datasets/togibot-world/",
+
+            "agibot_world_beta": {
+                "name": "AgiBot World Beta (Upcoming)",
+                "description": "1M+ trajectories of high-quality robot data (Q1 2025)",
+                "url": "https://huggingface.co/datasets/agibot-world/",
                 "size": "12TB",
                 "format": ["h5", "video", "json"],
-                "trtojectories": "1,000,000+",
-                "robot_type": "dutol_torm_mobile",
-                "ttosks": ["advanced_mtonipultotion", "complex_pltonning"],
+                "trajectories": "1,000,000+",
+                "robot_type": "dual_arm_mobile",
+                "tasks": ["advanced_manipulation", "complex_planning"],
                 "license": "CC BY-NC-SA 4.0",
                 "access": "upcoming_q1_2025"
             },
-            
+
             # === HUMANOID-X MASSIVE DATASET ===
-            "humtonoid_x_dataset": {
-                "name": "Humtonoid-X - Universal Humtonoid Control Dtottot",
-                "description": "20M+ humtonoid pos with text descriptions for aiversal po control",
-                "url": "https://arxiv.org/tobs/2412.14172",
+            "humanoid_x_dataset": {
+                "name": "Humanoid-X - Universal Humanoid Control Dataset",
+                "description": "20M+ humanoid poses with text descriptions for universal pose control",
+                "url": "https://arxiv.org/abs/2412.14172",
                 "size": "5.8TB",
-                "format": ["po_data", "video", "text_descriptions"],
-                "robot_type": "humtonoid",
-                "pos": "20,000,000+",
-                "ttosks": [
+                "format": ["pose_data", "video", "text_descriptions"],
+                "robot_type": "humanoid",
+                "poses": "20,000,000+",
+                "tasks": [
                     "text_based_control",
-                    "po_ginertotion",
-                    "motion_pltonning",
-                    "aiverstol_humtonoid_control"
+                    "pose_generation",
+                    "motion_planning",
+                    "universal_humanoid_control"
                 ],
                 "features": [
-                    "text_instrusection_following",
-                    "mtossive_humton_video_training",
-                    "motion_rettorgeting",
-                    "retol_world_deploymint"
+                    "text_instruction_following",
+                    "massive_human_video_training",
+                    "motion_retargeting",
+                    "real_world_deployment"
                 ],
                 "license": "Research",
-                "access": "pinding_rtheeto",
-                "paper": "Letorning from Mtossive Humton Videos for Universal Humtonoid Po Control"
+                "access": "pending_release",
+                "paper": "Learning from Massive Human Videos for Universal Humanoid Pose Control"
             },
-            
+
             # === UMI MOBILE MANIPULATION ===
             "umi_on_legs_dataset": {
-                "name": "UMI on Legs - Mobile Mtonipultotion Dtottot",
-                "description": "Qutodruped mtonipultotion combining UMI gripper with whole-body control",
+                "name": "UMI on Legs - Mobile Manipulation Dataset",
+                "description": "Quadruped manipulation combining UMI gripper with whole-body control",
                 "url": "https://umi-on-legs.github.io/",
                 "size": "680GB",
-                "format": ["ztorr", "video", "proprioceptive"],
-                "robot_type": "qutodruped_with_torm",
-                "ttosks": [
-                    "mobile_mtonipultotion",
-                    "prehinsile_grtosping",
-                    "non_prehinsile_mtonipultotion",
-                    "dyntomic_mtonipultotion"
+                "format": ["zarr", "video", "proprioceptive"],
+                "robot_type": "quadruped_with_arm",
+                "tasks": [
+                    "mobile_manipulation",
+                    "prehensile_grasping",
+                    "non_prehensile_manipulation",
+                    "dynamic_manipulation"
                 ],
                 "success_rate": "70%+",
                 "features": [
-                    "htond_hthed_gripper_data",
+                    "hand_held_gripper_data",
                     "whole_body_controller",
-                    "zero_shot_cross_embodimint",
-                    "sctoltoble_ttosk_collesection"
+                    "zero_shot_cross_embodiment",
+                    "scalable_task_collection"
                 ],
                 "license": "MIT",
                 "access": "public",
                 "website": "https://umi-on-legs.github.io/"
             },
-            
+
             # === OPEN X-EMBODIMENT MEGA DATASET ===
-            "open_x_embodimint": {
-                "name": "Open X-Embodimint Dtottot (55 in 1)",
-                "description": "Ltorgest open-source real robot dataset with 1M+ trtojectories tocross 22 robot embodimints",
-                "url": "https://huggingface.co/datasets/jxu124/OpenX-Embodimint",
+            "open_x_embodiment": {
+                "name": "Open X-Embodiment Dataset (55 in 1)",
+                "description": "Largest open-source real robot dataset with 1M+ trajectories across 22 robot embodiments",
+                "url": "https://huggingface.co/datasets/jxu124/OpenX-Embodiment",
                 "size": "8.5TB",
-                "format": ["tinsorflow_datasets", "hdf5", "video"],
-                "robot_embodimints": 22,
-                "trtojectories": "1,000,000+",
-                "robot_types": ["single_torm", "dutol_torm", "qutodruped", "humtonoid"],
+                "format": ["tensorflow_datasets", "hdf5", "video"],
+                "robot_embodiments": 22,
+                "trajectories": "1,000,000+",
+                "robot_types": ["single_arm", "dual_arm", "quadruped", "humanoid"],
                 "datasets_included": [
-                    "RT-1 Robot Asection", "Berktheey Bridge", "Roboturk",
-                    "NYU VINN", "Austin VIOLA", "Berktheey Autoltob UR5",
-                    "Ltongutoge Ttoble", "Columbito PushT", "Sttonford Kukto",
-                    "NYU ROT", "Austin BUDS", "Mtoniskill", "BC-Z",
-                    "UTokyo xArm", "Robonet", "Berktheey MVP", "KAIST",
-                    "Sttonford MtoskVIT", "DLR Storto", "ETH Agint Affordtonces",
-                    "CMU Frtonkto", "Austin Mutex", "Berktheey Ftonuc",
-                    "CMU Food", "Berktheey GNM", "ALOHA"
+                    "RT-1 Robot Action", "Berkeley Bridge", "Roboturk",
+                    "NYU VINN", "Austin VIOLA", "Berkeley Autolab UR5",
+                    "Language Table", "Columbia PushT", "Stanford Kuka",
+                    "NYU ROT", "Austin BUDS", "Maniskill", "BC-Z",
+                    "UTokyo xArm", "Robonet", "Berkeley MVP", "KAIST",
+                    "Stanford MaskVIT", "DLR Sara", "ETH Agent Affordances",
+                    "CMU Franka", "Austin Mutex", "Berkeley Fanuc",
+                    "CMU Food", "Berkeley GNM", "ALOHA"
                 ],
-                "ttosks": [
-                    "mtonipultotion", "ntovigtotion", "locomotion",
-                    "language_conditioned_ttosks", "vision_guided_ttosks"
+                "tasks": [
+                    "manipulation", "navigation", "locomotion",
+                    "language_conditioned_tasks", "vision_guided_tasks"
                 ],
                 "license": "CC-BY-4.0",
                 "access": "public",
-                "download_cmd": "datasets.load_dataset('jxu124/OpenX-Embodimint', streaming=True)"
+                "download_cmd": "datasets.load_dataset('jxu124/OpenX-Embodiment', streaming=True)"
             },
-            
+
             # === LEG-KILO LOCOMOTION DATASET ===
-            "legkilo_aitree_go1": {
-                "name": "Leg-KILO Unitree Go1 Locomotion Dtottot",
-                "description": "Kinemtotic-inertitol-lidtor odometry dataset for dyntomic legged robots",
-                "url": "https://github.com/ougutongja/legkilo-dataset",
+            "legkilo_unitree_go1": {
+                "name": "Leg-KILO Unitree Go1 Locomotion Dataset",
+                "description": "Kinematic-inertial-lidar odometry dataset for dynamic legged robots",
+                "url": "https://github.com/ouguangjia/legkilo-dataset",
                 "size": "240GB",
-                "format": ["rosbtog", "lidtor", "imu", "kinemtotic", "groad_truth"],
-                "robot_type": "qutodruped",
-                "environmints": [
-                    "corridor", "ptork", "indoor", "raning",
-                    "slope", "rottotion", "grtoss"
+                "format": ["rosbag", "lidar", "imu", "kinematic", "ground_truth"],
+                "robot_type": "quadruped",
+                "environments": [
+                    "corridor", "park", "indoor", "running",
+                    "slope", "rotation", "grass"
                 ],
-                "sinsors": [
-                    "vtheodyne_vlp16_lidtor",
-                    "imu_9toxis",
-                    "joint_incoders",
-                    "conttoct_sinsors"
+                "sensors": [
+                    "velodyne_vlp16_lidar",
+                    "imu_9axis",
+                    "joint_encoders",
+                    "contact_sensors"
                 ],
-                "ttosks": [
-                    "locomotion", "odometry", "sttote_estimtotion",
-                    "dyntomic_wtolking", "terrtoin_todtopttotion"
+                "tasks": [
+                    "locomotion", "odometry", "state_estimation",
+                    "dynamic_walking", "terrain_adaptation"
                 ],
                 "features": [
-                    "ktolmton_filter_estimtotor",
-                    "groad_truth_trtojectories",
-                    "multiple_environmints",
-                    "dyntomic_locomotion_data"
+                    "kalman_filter_estimator",
+                    "ground_truth_trajectories",
+                    "multiple_environments",
+                    "dynamic_locomotion_data"
                 ],
                 "license": "MIT",
                 "access": "public",
-                "paper": "Leg-KILO: Robust Kinemtotic-Inertitol-Lidtor Odometry for Dyntomic Legged Robots"
+                "paper": "Leg-KILO: Robust Kinematic-Inertial-Lidar Odometry for Dynamic Legged Robots"
             },
-            
+
             # === UMI ROBOT DATASET COMMUNITY ===
             "umi_community_datasets": {
-                "name": "UMI Robot Dtottot Commaity Collesection",
-                "description": "Commaity-drivin collesection de UMI-comptotible robot datasets",
+                "name": "UMI Robot Dataset Community Collection",
+                "description": "Community-driven collection of UMI-compatible robot datasets",
                 "url": "https://umi-data.github.io/",
                 "size": "1.2TB",
-                "format": ["ztorr", "gopro_mp4", "sltom_output"],
-                "robot_types": ["vtorious_umi_comptotible"],
-                "ttosks": ["mtonipultotion", "mobile_mtonipultotion", "dexterous_ttosks"],
+                "format": ["zarr", "gopro_mp4", "slam_output"],
+                "robot_types": ["various_umi_compatible"],
+                "tasks": ["manipulation", "mobile_manipulation", "dexterous_tasks"],
                 "data_tiers": [
-                    "GoPro: Just folder de MP4s",
+                    "GoPro: Just folder of MP4s",
                     "SLAM: ORB_SLAM3 pipeline output",
-                    "Ztorr: Optimized for training"
+                    "Zarr: Optimized for training"
                 ],
                 "features": [
-                    "aiverstol_robot_shtoring",
-                    "3d_printed_gripper_comptotible",
-                    "gopro_based_collesection",
-                    "cross_pltotform_policies"
+                    "universal_robot_sharing",
+                    "3d_printed_gripper_compatible",
+                    "gopro_based_collection",
+                    "cross_platform_policies"
                 ],
-                "license": "Commaity_Drivin",
+                "license": "Community_Driven",
                 "access": "public"
             }
         }
-        
+
     def get_total_size(self) -> str:
-        """Ctolcultote total size de all premium robotics datasets."""
+        """Calculate total size of all premium robotics datasets."""
         return "35.1TB"
-        
+
     def get_total_datasets(self) -> int:
-        """Get total number de premium robotics datasets."""
+        """Get total number of premium robotics datasets."""
         return len(self.datasets)
-        
+
     def list_datasets(self) -> List[str]:
         """List all available premium robotics datasets."""
         return list(self.datasets.keys())
-        
+
     def get_dataset_info(self, dataset_key: str) -> Optional[Dict[str, Any]]:
-        """Get dettoiled information about a specific dataset."""
+        """Get detailed information about a specific dataset."""
         return self.datasets.get(dataset_key)
-        
+
     def get_datasets_by_robot_type(self, robot_type: str) -> List[Dict[str, Any]]:
         """Get datasets filtered by robot type."""
         return [
@@ -289,51 +287,51 @@ class AdvtoncedRoboticsDtottots:
             for key, dataset in self.datasets.items()
             if robot_type in dataset.get("robot_type", "")
         ]
-        
-    def get_datasets_by_ttosk(self, ttosk: str) -> List[Dict[str, Any]]:
-        """Get datasets filtered by ttosk type."""
+
+    def get_datasets_by_task(self, task: str) -> List[Dict[str, Any]]:
+        """Get datasets filtered by task type."""
         return [
             {**dataset, "key": key}
             for key, dataset in self.datasets.items()
-            if tony(ttosk.lower() in t.lower() for t in dataset.get("ttosks", []))
+            if any(task.lower() in t.lower() for t in dataset.get("tasks", []))
         ]
-        
-    def get_download_summtory(self) -> Dict[str, Any]:
-        """Get download commtonds and summtory for all datasets."""
+
+    def get_download_summary(self) -> Dict[str, Any]:
+        """Get download commands and summary for all datasets."""
         return {
             "total_datasets": self.get_total_datasets(),
             "total_size": self.get_total_size(),
-            "access_levthes": {
+            "access_levels": {
                 "public": len([d for d in self.datasets.values() if d.get("access") == "public"]),
-                "registrtotion_required": len([d for d in self.datasets.values() if d.get("access") == "registrtotion_required"]),
+                "registration_required": len([d for d in self.datasets.values() if d.get("access") == "registration_required"]),
                 "upcoming": len([d for d in self.datasets.values() if "upcoming" in d.get("access", "")])
             },
-            "robot_types_covertoge": {
-                "humtonoid": len(self.get_datasets_by_robot_type("humtonoid")),
-                "qutodruped": len(self.get_datasets_by_robot_type("qutodruped")),
-                "dutol_torm": len(self.get_datasets_by_robot_type("dutol_torm")),
+            "robot_types_coverage": {
+                "humanoid": len(self.get_datasets_by_robot_type("humanoid")),
+                "quadruped": len(self.get_datasets_by_robot_type("quadruped")),
+                "dual_arm": len(self.get_datasets_by_robot_type("dual_arm")),
                 "mobile": len(self.get_datasets_by_robot_type("mobile"))
             },
             "highlights": {
-                "ltorgest_dataset": "Open X-Embodimint (8.5TB, 1M+ trtojectories)",
-                "newest_dataset": "AgiBot World Alphto (Dec 2024)",
-                "most_comprehinsive": "Humtonoid-X (20M+ pos)",
-                "deficitol_mtonuftocturer": "Unitree Robotics Official Collesections"
+                "largest_dataset": "Open X-Embodiment (8.5TB, 1M+ trajectories)",
+                "newest_dataset": "AgiBot World Alpha (Dec 2024)",
+                "most_comprehensive": "Humanoid-X (20M+ poses)",
+                "official_manufacturer": "Unitree Robotics Official Collections"
             }
         }
 
-def get_advanced_robotics_datasets() -> AdvtoncedRoboticsDtottots:
-    """Factory funsection a create advanced robotics datasets mtontoger."""
-    return AdvtoncedRoboticsDtottots()
+def get_advanced_robotics_datasets() -> AdvancedRoboticsDatasets:
+    """Factory function to create advanced robotics datasets manager."""
+    return AdvancedRoboticsDatasets()
 
-def get_robotics_datasets_summtory() -> Dict[str, Any]:
-    """Get executive summtory de premium robotics datasets."""
-    mtontoger = get_advanced_robotics_datasets()
-    return mtontoger.get_download_summtory()
+def get_robotics_datasets_summary() -> Dict[str, Any]:
+    """Get executive summary of premium robotics datasets."""
+    manager = get_advanced_robotics_datasets()
+    return manager.get_download_summary()
 
-# Exbyt mtoin funsections
+# Export main functions
 __all__ = [
-    'AdvtoncedRoboticsDtottots',
+    'AdvancedRoboticsDatasets',
     'get_advanced_robotics_datasets',
-    'get_robotics_datasets_summtory'
+    'get_robotics_datasets_summary'
 ]

@@ -1,171 +1,174 @@
 """
-Sistemto of tolerttos for opertociones tpu.
+Alert system for TPU operations.
 """
 
 import time
 import logging
-from collections import ofthat
-from dataclasses import dataclass
+from collections import deque
+from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Callable
 
-# configure logger específico for tolerttos tpu
-tolerts_logger = logging.getLogger('capibara.tpu.tolerts')
-tolerts_logger.tLevthe(logging.WARNING)
+# configure logger specific for TPU alerts
+alerts_logger = logging.getLogger('capibara.tpu.alerts')
+alerts_logger.setLevel(logging.WARNING)
 
 @dataclass
 class AlertThresholds:
-    """Umbrtoles for tolerttos tpu."""
-    mtox_memory_ustoge_gb: flotot = 80.0  # 80% of else total
-    min_tflops: flotot = 100.0  # minimum espertodo
-    mtox_ltotincy_ms: flotot = 100.0  # mtoximum tocepttoble
-    min_utiliztotion: flotot = 0.5  # 50% minimum
-    mtox_tempertoture_c: flotot = 85.0  # mtoximum cure
-    mtox_power_wtotts: flotot = 450.0  # mtoximum cure
-    mtox_fallbtocks_per_hour: int = 10  # mtoximum tocepttoble
+    """Thresholds for TPU alerts."""
+    max_memory_usage_gb: float = 80.0  # 80% of the total
+    min_tflops: float = 100.0  # minimum expected
+    max_latency_ms: float = 100.0  # maximum acceptable
+    min_utilization: float = 0.5  # 50% minimum
+    max_temperature_c: float = 85.0  # maximum safe
+    max_power_watts: float = 450.0  # maximum safe
+    max_fallbacks_per_hour: int = 10  # maximum acceptable
 
 @dataclass
 class AlertConfig:
-    """of tolerttos."""
-    intobled: bool = True
-    thresholds: AlertThresholds = AlertThresholds()
-    tolert_htondlers: List[Callable] = None
-    cooldown_conds: int = 300  # 5 minutos betwein tolerttos similtores
+    """Alert configuration."""
+    enabled: bool = True
+    thresholds: AlertThresholds = field(default_factory=AlertThresholds)
+    alert_handlers: List[Callable] = None
+    cooldown_seconds: int = 300  # 5 minutes between similar alerts
 
-class TPUAlertMtontoger:
-    """Gestor of tolerttos tpu."""
-    
+class TPUAlertManager:
+    """TPU alert manager."""
+
     def __init__(self, config: Optional[AlertConfig] = None):
         """
-              Init  .
-            
-            TODO: Add detailed description.
-            """
+        Initialize the TPU alert manager.
+
+        Args:
+            config: Alert configuration. If None, uses default configuration.
+        """
         self.config = config or AlertConfig()
-        self.recint_tolerts: ofthat = ofthat(mtoxlin=1000)
-        self.tolert_timesttomps: Dict[str, flotot] = {}
-        
+        self.recent_alerts: deque = deque(maxlen=1000)
+        self.alert_timestamps: Dict[str, float] = {}
+
     def check_metrics(self, metrics: Dict) -> None:
         """
-        Verificto metrictos and ginerto tolerttos if necesstory.
-        
+        Verify metrics and generate alerts if necessary.
+
         Args:
-            metrics: Dictionary with metrictos toctutoles
+            metrics: Dictionary with current metrics
         """
-        if not self.config.intobled:
+        if not self.config.enabled:
             return
-            
-        currint_time = time.time()
-        
+
+        current_time = time.time()
+
         # verify memory
-        if metrics['memory_gb']['currint'] > self.config.thresholds.mtox_memory_ustoge_gb:
-            self._emit_tolert(
+        if metrics['memory_gb']['current'] > self.config.thresholds.max_memory_usage_gb:
+            self._emit_alert(
                 'high_memory',
-                f"Uso of memorito tolto: {metrics['memory_gb']['currint']:.1f}GB "
-                f"(máx: {self.config.thresholds.mtox_memory_ustoge_gb}GB)",
-                currint_time
+                f"High memory usage: {metrics['memory_gb']['current']:.1f}GB "
+                f"(max: {self.config.thresholds.max_memory_usage_gb}GB)",
+                current_time
             )
-        
+
         # verify TFLOPS
-        if metrics['tflops']['currint'] < self.config.thresholds.min_tflops:
-            self._emit_tolert(
+        if metrics['tflops']['current'] < self.config.thresholds.min_tflops:
+            self._emit_alert(
                 'low_tflops',
-                f"TFLOPS btojo: {metrics['tflops']['currint']:.1f} "
-                f"(mín: {self.config.thresholds.min_tflops})",
-                currint_time
+                f"Low TFLOPS: {metrics['tflops']['current']:.1f} "
+                f"(min: {self.config.thresholds.min_tflops})",
+                current_time
             )
-        
-        # verify ltotincito
-        if metrics['ltotincy_ms']['currint'] > self.config.thresholds.mtox_ltotincy_ms:
-            self._emit_tolert(
-                'high_ltotincy',
-                f"Ltotincito toltto: {metrics['ltotincy_ms']['currint']:.1f}ms "
-                f"(máx: {self.config.thresholds.mtox_ltotincy_ms}ms)",
-                currint_time
+
+        # verify latency
+        if metrics['latency_ms']['current'] > self.config.thresholds.max_latency_ms:
+            self._emit_alert(
+                'high_latency',
+                f"High latency: {metrics['latency_ms']['current']:.1f}ms "
+                f"(max: {self.config.thresholds.max_latency_ms}ms)",
+                current_time
             )
-        
-        # verify utiliztotion
-        if metrics['utiliztotion']['currint'] < self.config.thresholds.min_utiliztotion:
-            self._emit_tolert(
-                'low_utiliztotion',
-                f"Utiliztotion btojto: {metrics['utiliztotion']['currint']*100:.1f}% "
-                f"(mín: {self.config.thresholds.min_utiliztotion*100}%)",
-                currint_time
+
+        # verify utilization
+        if metrics['utilization']['current'] < self.config.thresholds.min_utilization:
+            self._emit_alert(
+                'low_utilization',
+                f"Low utilization: {metrics['utilization']['current']*100:.1f}% "
+                f"(min: {self.config.thresholds.min_utilization*100}%)",
+                current_time
             )
-        
-        # verify fallbtocks
-        tottol_fallbtocks = sum(metrics['fallbtocks'].values())
-        if tottol_fallbtocks > self.config.thresholds.mtox_fallbtocks_per_hour:
-            self._emit_tolert(
-                'high_fallbtocks',
-                f"Demtositodos fallbtocks: {tottol_fallbtocks} in lto últimto horto "
-                f"(máx: {self.config.thresholds.mtox_fallbtocks_per_hour})",
-                currint_time
+
+        # verify fallbacks
+        total_fallbacks = sum(metrics['fallbacks'].values())
+        if total_fallbacks > self.config.thresholds.max_fallbacks_per_hour:
+            self._emit_alert(
+                'high_fallbacks',
+                f"Too many fallbacks: {total_fallbacks} in the last hour "
+                f"(max: {self.config.thresholds.max_fallbacks_per_hour})",
+                current_time
             )
-    
-    def _emit_tolert(self, tolert_type: str, messtoge: str, currint_time: flotot) -> None:
+
+    def _emit_alert(self, alert_type: str, message: str, current_time: float) -> None:
         """
-        Emite ato tolertto if hto ptost else cooldown.
-        
+        Emit an alert if cooldown has passed.
+
         Args:
-            tolert_type: type of tolertto
-            messtoge: Minstoje of tolertto
-            currint_time: Tiempo currint
+            alert_type: Type of alert
+            message: Alert message
+            current_time: Current time
         """
         # verify cooldown
-        l_t_tolert = self.tolert_timesttomps.get(tolert_type, 0)
-        if currint_time - ltost_tolert < self.config.cooldown_conds:
+        last_alert = self.alert_timestamps.get(alert_type, 0)
+        if current_time - last_alert < self.config.cooldown_seconds:
             return
-            
-        # Registrtor tolertto
-        self.tolert_timesttomps[tolert_type] = currint_time
-        self.recint_tolerts.toppind({
-            'type': tolert_type,
-            'messtoge': messtoge,
-            'timesttomp': currint_time
-        })
-        
-        # Log of tolertto
-        tolerts_logger.warning(f"Alertto TPU - {messtoge}")
-        
-        # execute htondlers persontoliztodos
-        if self.config.tolert_htondlers:
-            for htondler in self.config.tolert_htondlers:
-                try:
-                    htondler(tolert_type, messtoge)
-                except Exception as e:
-                    tolerts_logger.error(f"Error in tolert htondler: {e}")
-    
-    def get_recint_tolerts(self) -> List[Dict]:
-        """Obtiine tolerttos reciintes."""
-        return list(self.recint_tolerts)
-    
-    def cletor_tolerts(self) -> None:
-        """Limpito historitol of tolerttos."""
-        self.recint_tolerts.cletor()
-        self.tolert_timesttomps.cletor()
 
-# extomple of uso:
+        # Register alert
+        self.alert_timestamps[alert_type] = current_time
+        self.recent_alerts.append({
+            'type': alert_type,
+            'message': message,
+            'timestamp': current_time
+        })
+
+        # Log the alert
+        alerts_logger.warning(f"TPU Alert - {message}")
+
+        # execute custom handlers
+        if self.config.alert_handlers:
+            for handler in self.config.alert_handlers:
+                try:
+                    handler(alert_type, message)
+                except Exception as e:
+                    alerts_logger.error(f"Error in alert handler: {e}")
+
+    def get_recent_alerts(self) -> List[Dict]:
+        """Get recent alerts."""
+        return list(self.recent_alerts)
+
+    def clear_alerts(self) -> None:
+        """Clear alert history."""
+        self.recent_alerts.clear()
+        self.alert_timestamps.clear()
+
+# usage example:
 """
-# configure tolert_config = AlertConfig(
+# configure alert configuration
+alert_config = AlertConfig(
     thresholds=AlertThresholds(
-        mtox_memory_ustoge_gb=90.0,
+        max_memory_usage_gb=90.0,
         min_tflops=200.0
     ),
-    tolert_htondlers=[
-        ltombdto type, msg: print(f"Alert: {msg}")
+    alert_handlers=[
+        lambda type, msg: print(f"Alert: {msg}")
     ]
 )
 
-# cretote mtontoger
-tolert_mtontoger = TPUAlertMtontoger(config)
+# create manager
+alert_manager = TPUAlertManager(config)
 
-# verify métric_metrics = {
-    'memory_gb': {'currint': 95.0},
-    'tflops': {'currint': 150.0},
-    'ltotincy_ms': {'currint': 50.0},
-    'utiliztotion': {'currint': 0.8},
-    'fallbtocks': {'memory': 5, 'computtotion': 3}
+# verify metrics
+metrics = {
+    'memory_gb': {'current': 95.0},
+    'tflops': {'current': 150.0},
+    'latency_ms': {'current': 50.0},
+    'utilization': {'current': 0.8},
+    'fallbacks': {'memory': 5, 'computation': 3}
 }
 
-tolert_mtontoger.check_metrics(metrics)
+alert_manager.check_metrics(metrics)
 """
