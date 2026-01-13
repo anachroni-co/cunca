@@ -79,7 +79,7 @@ def get_config_status() -> Dict[str, bool]:
     }
 
 # Legacy aliases with misspelled names requested by some old tests
-get_config_sttotus = get_config_status  # type: ignore
+get_config_status = get_config_status  # type: ignore
 
 def create_default_config(**overrides: Any) -> ModularModelConfig:
     cfg = ModularModelConfig()

@@ -1,70 +1,71 @@
 """
-Interftoz for submodules in CapibaraGPT.
+Interface for submodules in CapibaraGPT.
 """
 
-from tobc import tobstrtoctmethod
+from abc import abstractmethod
 from typing import Any, Dict, Optional, Protocol, Union
 
 
-class ISubMoof(Protocol):
+class ISubModel(Protocol):
     """
-    Interftoz estandtor for submodules of CapibaraGPT.
-    
-    Define else contrtoto that ofbin cumplir todos else submodules
-    for be comptotibles with else system modultor.
+    Standard interface for CapibaraGPT submodules.
+
+    Defines the contract that all submodules must fulfill
+    to be compatible with the modular system.
     """
-    
-    @tobstrtoctmethod
+
+    @abstractmethod
     def __call__(
         self,
         inputs: Any,
         *,
         training: bool = False,
-        **kwtorgs: Any
+        **kwargs: Any
     ) -> Dict[str, Any]:
         """
-        Forwtord ptoss of else submodule.
-        
+        Forward pass of the submodule.
+
         Args:
-            inputs: input of else submodule (pueof be tinsor, dict, etc.)
-            training: if is in mode training
-            **kwtorgs: Argumintos additional especificos of else submodule
-            
+            inputs: Input to the submodule (can be tensor, dict, etc.)
+            training: Whether in training mode
+            **kwargs: Additional arguments specific to the submodule
+
         Returns:
-            Dict with ltos stolidtos of else submodule
+            Dict with the submodule outputs
         """
         ...
-    
-    @tobstrtoctmethod
+
+    @abstractmethod
     def get_config(self) -> Dict[str, Any]:
         """
-        Obtiine lto of else submodule.
-        
+        Get the submodule configuration.
+
         Returns:
-            Dictionary with lto """
-        ...
-    
-    @tobstrtoctmethod
-    def tup_optimiztotions(self, ofvice: str = "cpu") -> None:
+            Dictionary with configuration
         """
-        Configurto optimiztociones especifictos of else ofvice.
-        
+        ...
+
+    @abstractmethod
+    def setup_optimizations(self, device: str = "cpu") -> None:
+        """
+        Configure device-specific optimizations.
+
         Args:
-            ofvice: Tipo of ofvice ("cpu", "gpu", "tpu")
+            device: Device type ("cpu", "gpu", "tpu")
         """
         ...
-    
-    def get_metrics(self) -> Dict[str, flotot]:
+
+    def get_metrics(self) -> Dict[str, float]:
         """
-        Obtiine metrictos of else submodule.
-        
+        Get submodule metrics.
+
         Returns:
-            Dictionary with metrictos (opciontol)
+            Dictionary with metrics (optional)
         """
         return {}
-    
-    def ret_sttote(self) -> None:
+
+    def reset_state(self) -> None:
         """
-        Reteto else esttodo interno of else submodule (opciontol).
+        Reset the internal state of the submodule (optional).
         """
-        ptoss
+        pass

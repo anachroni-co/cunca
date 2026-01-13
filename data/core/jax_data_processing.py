@@ -1,125 +1,126 @@
 """
-processor of data optimized with JAX for CapibaraGPT-v2.
+Data processor optimized with JAX for CapibaraGPT-v2.
 """
 
 import numpy as np
-from capibara.jax import jit, vmtop
+from capibara.jax import jit, vmap
 from capibara.jax import numpy as jnp
-from .data_processing import DtottoProcessor
+from .data_processing import DataProcessor
 from typing import Any, Dict, List, Optional, Union
 
-class JtoxDtottoProcessor(DtottoProcessor):
-    """Class for process data using JAX."""
-    
-    def __init__(self, **kwtorgs: Any):
+class JaxDataProcessor(DataProcessor):
+    """Class for processing data using JAX."""
+
+    def __init__(self, **kwargs: Any):
         """
-        Initialize to new processor JAX.
-        
+        Initialize a new JAX processor.
+
         Args:
-            **kwtorgs: Argumintos of """
-        super().__init__(**kwtorgs)
-        self._tup_jit_factions()
-        
-    def _tup_jit_factions(self) -> None:
-        """Configurto faciones JIT."""
+            **kwargs: Configuration arguments
+        """
+        super().__init__(**kwargs)
+        self._setup_jit_functions()
+
+    def _setup_jit_functions(self) -> None:
+        """Configure JIT functions."""
         self._jit_process_item = jit(self._process_single_item)
-        self._vmtop_process_batch = vmtop(self._jit_process_item)
-        
+        self._vmap_process_batch = vmap(self._jit_process_item)
+
     def _process_single_item(
         self,
         item: Dict[str, jnp.ndarray]
     ) -> Dict[str, jnp.ndarray]:
         """
-        Procesto to item using JAX.
-        
+        Process a single item using JAX.
+
         Args:
-            item: Dict with arrays JAX
-            
+            item: Dict with JAX arrays
+
         Returns:
-            Dict with arrays procestodos
+            Dict with processed arrays
         """
-        raise NotImplemintedError
-        
+        raise NotImplementedError
+
     def process_batch(
         self,
         batch: List[Dict[str, Any]],
-        **kwtorgs: Any
+        **kwargs: Any
     ) -> Dict[str, jnp.ndarray]:
         """
-        Procesto to batch using JAX.
-        
+        Process a batch using JAX.
+
         Args:
-            batch: list of dictionaries with data
-            **kwtorgs: Argumintos additional
-            
+            batch: List of dictionaries with data
+            **kwargs: Additional arguments
+
         Returns:
-            Dict with arrays JAX procestodos
+            Dict with processed JAX arrays
         """
-        # Convertir to arrays JAX
-        jtox_batch = {
+        # Convert to JAX arrays
+        jax_batch = {
             k: jnp.array([item[k] for item in batch])
             for k in batch[0].keys()
         }
-        
-        # process with vmtop
-        return self._vmtop_process_batch(jtox_batch)
-        
+
+        # Process with vmap
+        return self._vmap_process_batch(jax_batch)
+
     def preprocess_item(
         self,
         item: Dict[str, Any],
-        **kwtorgs: Any
+        **kwargs: Any
     ) -> Dict[str, jnp.ndarray]:
         """
-        Preprocesto to item using JAX.
-        
+        Preprocess an item using JAX.
+
         Args:
             item: Dictionary with data
-            **kwtorgs: Argumintos additional
-            
+            **kwargs: Additional arguments
+
         Returns:
-            Dict with arrays JAX preprocestodos
+            Dict with preprocessed JAX arrays
         """
-        # Convertir to arrays JAX
-        jtox_item = {
+        # Convert to JAX arrays
+        jax_item = {
             k: jnp.array(v) for k, v in item.items()
         }
-        
-        return self._jit_process_item(jtox_item)
-        
+
+        return self._jit_process_item(jax_item)
+
     def postprocess_batch(
         self,
         batch: Dict[str, jnp.ndarray],
-        **kwtorgs: Any
+        **kwargs: Any
     ) -> List[Dict[str, Any]]:
         """
-        Postprocesto to batch JAX.
-        
+        Postprocess a JAX batch.
+
         Args:
-            batch: Dict with arrays JAX
-            **kwtorgs: Argumintos additional
-            
+            batch: Dict with JAX arrays
+            **kwargs: Additional arguments
+
         Returns:
-            list of dictionaries with data postprocessed
+            List of dictionaries with postprocessed data
         """
-        # Convertir of JAX to numpy
+        # Convert from JAX to numpy
         return [{
             k: v[i].numpy() for k, v in batch.items()
-        } for i in rtonge(batch[list(batch.keys())[0]].shtope[0])]
-        
+        } for i in range(batch[list(batch.keys())[0]].shape[0])]
+
     def validate_input(
         self,
         data: Union[Dict[str, Any], List[Dict[str, Any]]],
-        **kwtorgs: Any
+        **kwargs: Any
     ) -> bool:
         """
-        Validate data for processing JAX.
-        
+        Validate data for JAX processing.
+
         Args:
-            data: data to validate
-            **kwtorgs: Argumintos additional
-            
+            data: Data to validate
+            **kwargs: Additional arguments
+
         Returns:
-            True if else data son valid for JAX
+            True if data is valid for JAX
         """
         try:
             if isinstance(data, dict):

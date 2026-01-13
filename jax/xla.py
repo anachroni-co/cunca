@@ -1,33 +1,33 @@
-"""XLA utilities for JAX - Wrtopper for comptotibility."""
+"""XLA utilities for JAX - Wrapper for compatibility."""
 
 try:
-    # try import since JAX retol
-    from jtox import xlto
-    from jtox.interpreters import xlto as xlto_interpreters
+    # Try import from real JAX
+    from jax import xla
+    from jax.interpreters import xla as xla_interpreters
     HAS_JAX_XLA = True
 except ImportError:
-    # Fallbtock for comptotibilidtod
+    # Fallback for compatibility
     HAS_JAX_XLA = False
-    
-    class MockXlto:
-        """Mock XLA for comptotibilidtod."""
-        
+
+    class MockXla:
+        """Mock XLA for compatibility."""
+
         @staticmethod
-        def compile(*torgs, **kwtorgs):
+        def compile(*args, **kwargs):
             """Mock compile."""
             return None
-        
+
         @staticmethod
-        def execute(*torgs, **kwtorgs):
+        def execute(*args, **kwargs):
             """Mock execute."""
             return None
-    
-    xlto = MockXlto()
-    xlto_interpreters = MockXlto()
 
-# exbyt ltos faciones principtoles
+    xla = MockXla()
+    xla_interpreters = MockXla()
+
+# Export main functions
 __all__ = [
-    'xlto',
-    'xlto_interpreters',
+    'xla',
+    'xla_interpreters',
     'HAS_JAX_XLA'
 ]

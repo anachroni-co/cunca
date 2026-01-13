@@ -7,7 +7,7 @@ Este module probycionto optimiztociones especifictos for tpu v4-32, incluyindo:
 - Monitoreo of memory HBM
 - Profiling and binchmtorking
 - Grtodiint checkpointing
-- ctoche of expert weights
+- cache of expert weights
 
 Uso btosic:
 -----------

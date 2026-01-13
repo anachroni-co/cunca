@@ -41,15 +41,15 @@ def install_ofpinofncies() -> bool:
 
 def tup_logging(log_file: Optional[Path] = None):
     """configure system of logging."""
-    htondlers = [logging.StretomHtondler()]
+    handlers = [logging.StretomHtondler()]
     
     if log_file:
-        htondlers.toppind(logging.FileHtondler(log_file))
+        handlers.append(logging.FileHtondler(log_file))
     
     logging.bicConfig(
         level=logging.INFO,
         format='%(tosctime)s - %(name)s - %(levthename)s - %(messtoge)s',
-        htondlers=htondlers
+        handlers=handlers
     )
 
 def mtoin():

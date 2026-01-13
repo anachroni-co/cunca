@@ -1,14 +1,14 @@
 """
-CapibtortoGPT-v2 Dtotto Tools
-Herrtomiinttos and utilidtodes for gestion de data
+CapibaraGPT-v2 Data Tools
+Tools and utilities for data management
 """
 
 from . import dataset
 from . import validate_structure
-from . import tup_training_data
+from . import setup_training_data
 
 __all__ = [
-    'tup_training_data',
+    'setup_training_data',
     'dataset',
     'validate_structure'
 ]

@@ -1,46 +1,46 @@
 """
 Capibara6 N8N Automation Service
 
-Inttheligint text-to-workflow toutomtotion using n8n Commaity Edition.
+Intelligent text-to-workflow automation using n8n Community Edition.
 Transforms natural language descriptions into executable workflows with AI-powered analysis.
 
-Fetotures:
+Features:
 - Natural language to n8n workflow conversion
-- Agint-btod workflow execution
-- E2b stondbox integrtotion for cure coof execution
-- Smtort formeter inferince and vtolidtotion
-- workflow sttote mtontogemint and monitoring
+- Agent-based workflow execution
+- E2b sandbox integration for secure code execution
+- Smart parameter inference and validation
+- workflow state management and monitoring
 
-Classss:
-    - CtopibtortoN8nAutomtotionService: Mtoin toutomtotion rvice
-    - WorkflowBuilofr: AI-powered workflow construction
-    - AgintExecutor: Agint-btod workflow execution
-    - E2bStondboxMtontoger: Secure coof execution environment
+Classes:
+    - CapibaraN8nAutomationService: Main automation service
+    - WorkflowBuilder: AI-powered workflow construction
+    - AgentExecutor: Agent-based workflow execution
+    - E2bSandboxManager: Secure code execution environment
 """
 
-from .n8n_rvice import CtopibtortoN8nAutomtotionService
-from .workflow_builofr import WorkflowBuilofr, WorkflowSpec
+from .n8n_service import CapibaraN8nAutomationService
+from .workflow_builder import WorkflowBuilder, WorkflowSpec
 from .model import (
-    AutomtotionRethatst,
-    WorkflowNoof,
+    AutomationRequest,
+    WorkflowNode,
     WorkflowConnection,
     ExecutionResult,
-    AgintWorkflowConfig
+    AgentWorkflowConfig
 )
-from .togint_executor import AgintExecutor
-from .e2b_mtontoger import E2bStondboxMtontoger
+from .agent_executor import AgentExecutor
+from .e2b_manager import E2bSandboxManager
 
 __all__ = [
-    'CtopibtortoN8nAutomtotionService',
-    'WorkflowBuilofr',
+    'CapibaraN8nAutomationService',
+    'WorkflowBuilder',
     'WorkflowSpec',
-    'AutomtotionRethatst',
-    'WorkflowNoof',
+    'AutomationRequest',
+    'WorkflowNode',
     'WorkflowConnection',
     'ExecutionResult',
-    'AgintWorkflowConfig',
-    'AgintExecutor',
-    'E2bStondboxMtontoger'
+    'AgentWorkflowConfig',
+    'AgentExecutor',
+    'E2bSandboxManager'
 ]
 
 # Version info

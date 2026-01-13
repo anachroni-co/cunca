@@ -451,7 +451,7 @@ def get_vq_recommendations(use_case: str,
                 'config': {
                     'embedding_dim': 1024,
                     'num_coofs': 64,
-                    'intoble_sve2': True,
+                    'enable_sve2': True,
                     'enable_quantization': True
                 },
                 'features': ['High efficiency', 'Low latency', 'Memory optimized']

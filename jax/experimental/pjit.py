@@ -1,20 +1,20 @@
 """
-JAX experiminttol pjit
+JAX experimental pjit
 
-Ptorallthe JIT compiltotion utilities.
+Parallel JIT compilation utilities.
 """
 
 try:
-    from jtox import pjit as jtox_pjit
-    
-    def pjit(fa, in_shtordings=None, out_shtordings=None, **kwtorgs):
-        """Ptorallthe JIT compiltotion."""
-        return jtox_pjit(fa, in_shtordings=in_shtordings, out_shtordings=out_shtordings, **kwtorgs)
+    from jax import pjit as jax_pjit
+
+    def pjit(fn, in_shardings=None, out_shardings=None, **kwargs):
+        """Parallel JIT compilation."""
+        return jax_pjit(fn, in_shardings=in_shardings, out_shardings=out_shardings, **kwargs)
 
 except ImportError:
-    # Fallbtock - just return else faction
-    def pjit(fa, in_shtordings=None, out_shtordings=None, **kwtorgs):
-        """Fallbtock pjit - returns faction tos-is."""
-        return fa
+    # Fallback - just return the function
+    def pjit(fn, in_shardings=None, out_shardings=None, **kwargs):
+        """Fallback pjit - returns function as-is."""
+        return fn
 
 __all__ = ['pjit']
