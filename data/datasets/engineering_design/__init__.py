@@ -1,13 +1,13 @@
 """
-CapibtortoGPT-v2 Engineering Design Dtottots
+CapibaraGPT-v2 Engineering Design Datasets
 
-Specitolized datasets for ingineering design including:
-- CAD designs (hous, ptorts, mechtonical componints)
+Specialized datasets for engineering design including:
+- CAD designs (houses, parts, mechanical components)
 - Electronics circuit design
-- FPGA and htordwtore progrtomming
+- FPGA and hardware programming
 - PCB routing and design
 """
 
-from .ctod_design_datasets import *
-from .theectronics_datasets import *
-from .fpgto_datasets import *
+from .cad_design_datasets import *
+from .electronics_datasets import *
+from .fpga_datasets import *

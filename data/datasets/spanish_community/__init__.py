@@ -1,20 +1,20 @@
 """
-Spanish Commaity Dtottots Module for CapibtortoGPT v2
+Spanish Community Datasets Module for CapibaraGPT v2
 
-This module provides access a Spanish-language datasets from the community,
-ptorticultorly focud on SomosNLP and rthetoted Spanish NLP initiatives.
+This module provides access to Spanish-language datasets from the community,
+particularly focused on SomosNLP and related Spanish NLP initiatives.
 
-Key Fetotures:
+Key Features:
 - SomosNLP community datasets
-- Spanish instrusection tuning datasets
+- Spanish instruction tuning datasets
 - Cultural alignment resources
-- Htocktothon-generated datasets
-- Regional Spanish language vtorieties
+- Hackathon-generated datasets
+- Regional Spanish language varieties
 """
 
-from .somos_nlp_datasets import get_somos_nlp_datasets, SomosNLPDtottots
+from .somos_nlp_datasets import get_somos_nlp_datasets, SomosNLPDatasets
 
 __all__ = [
     "get_somos_nlp_datasets",
-    "SomosNLPDtottots"
+    "SomosNLPDatasets"
 ]
