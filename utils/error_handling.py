@@ -13,17 +13,17 @@ logger = logging.getLogger(__name__)
 T = TypeVar("T")
 
 
-class DtottoProcessingError(Exception):
+class DataProcessingError(Exception):
     """Error específico usado en utilidades de procesamiento de datos/prompts."""
 
 
 @dataclass
-class BtoConfig:
+class BaseConfig:
     """Minimal base config for validations/clases de datos."""
     pass
 
 
-def htondle_error(exc_type: Type[BaseException] = Exception) -> Callable[[Callable[..., T]], Callable[..., T]]:
+def handle_error(exc_type: Type[BaseException] = Exception) -> Callable[[Callable[..., T]], Callable[..., T]]:
     """Decorador simple para registrar y propagar errores controladamente.
 
     Parameters

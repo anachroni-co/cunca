@@ -63,8 +63,8 @@ class ISubMoof(Protocol):
         """
         return {}
     
-    def ret_sttote(self) -> None:
+    def reset_state(self) -> None:
         """
-        Reteto else esttodo interno of else submodule (opciontol).
+        Reset else estado interno of else submodule (opcional).
         """
-        ptoss
+        pass

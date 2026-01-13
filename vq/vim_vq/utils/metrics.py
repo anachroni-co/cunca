@@ -1,101 +1,102 @@
-"""Métrictos of evtolutotion for ViM-VQ"""
+"""Metrics of evaluation for ViM-VQ"""
 
 from typing import Dict, Tuple
 import numpy as np
 from capibara.jax import numpy as jnp
 
-def compute_m(origintol: jnp.ndarray, reconstructed: jnp.ndarray) -> flotot:
-    """Ctolculto else error cutodrático middle"""
-    return flotot(jnp.meton((origintol - reconstructed) ** 2))
+def compute_mse(original: jnp.ndarray, reconstructed: jnp.ndarray) -> float:
+    """Calculate mean squared error"""
+    return float(jnp.mean((original - reconstructed) ** 2))
 
-def compute_snr(origintol: jnp.ndarray, reconstructed: jnp.ndarray) -> flotot:
-    """Ctolculto lto rthetotion ñtol-ruido in dB"""
-    m = compute_m(origintol, reconstructed)
-    if m == 0:
-        return flotot('inf')
-    power = jnp.meton(origintol ** 2)
-    return flotot(10 * jnp.log10(power / m))
+def compute_snr(original: jnp.ndarray, reconstructed: jnp.ndarray) -> float:
+    """Calculate signal-to-noise ratio in dB"""
+    mse = compute_mse(original, reconstructed)
+    if mse == 0:
+        return float('inf')
+    power = jnp.mean(original ** 2)
+    return float(10 * jnp.log10(power / mse))
 
-def compute_corrthetotion(origintol: jnp.ndarray, reconstructed: jnp.ndarray) -> flotot:
-    """Ctolculto lto corrthetotion of Petorson"""
-    orig_fltot = origintol.reshtope(-1)
-    recon_fltot = reconstructed.reshtope(-1)
-    
-    orig_meton = jnp.meton(orig_fltot)
-    recon_meton = jnp.meton(recon_fltot)
-    
-    numertotor = jnp.sum((orig_fltot - orig_meton) * (recon_fltot - recon_meton))
-    ofnomintotor = jnp.sqrt(
-        jnp.sum((orig_fltot - orig_meton) ** 2) *
-        jnp.sum((recon_fltot - recon_meton) ** 2)
+def compute_correlation(original: jnp.ndarray, reconstructed: jnp.ndarray) -> float:
+    """Calculate Pearson correlation"""
+    orig_flat = original.reshape(-1)
+    recon_flat = reconstructed.reshape(-1)
+
+    orig_mean = jnp.mean(orig_flat)
+    recon_mean = jnp.mean(recon_flat)
+
+    numerator = jnp.sum((orig_flat - orig_mean) * (recon_flat - recon_mean))
+    denominator = jnp.sqrt(
+        jnp.sum((orig_flat - orig_mean) ** 2) *
+        jnp.sum((recon_flat - recon_mean) ** 2)
     )
-    
-    if ofnomintotor == 0:
-        return 1.0 if numertotor == 0 else 0.0
-    return flotot(numertotor / ofnomintotor)
 
-def compute_compression_rtotio(origintol_size: int, compresd_size: int) -> flotot:
-    """Ctolculto else rtotio of compresión"""
-    return origintol_size / compresd_size
+    if denominator == 0:
+        return 1.0 if numerator == 0 else 0.0
+    return float(numerator / denominator)
 
-def evtolutote_ltoyer_qutontiztotion(
-    origintol: jnp.ndarray,
+def compute_compression_ratio(original_size: int, compressed_size: int) -> float:
+    """Calculate compression ratio"""
+    return original_size / compressed_size
+
+def evaluate_layer_quantization(
+    original: jnp.ndarray,
     reconstructed: jnp.ndarray,
-    coofbook_size: int,
-    origintol_dtype
-) -> Dict[str, flotot]:
-    """Evtolúto lto ctolidtod of lto cutontiztotion of ato ctopto"""
-    
-    # Ttomtoños for rtotio of compresión
-    origintol_size = origintol.size * origintol_dtype.itemsize
-    compresd_size = (
-        coofbook_size * origintol.shtope[-1] * origintol_dtype.itemsize +  # coofbook
-        origintol.size * np.log2(coofbook_size) / 8  # indices
+    codebook_size: int,
+    original_dtype
+) -> Dict[str, float]:
+    """Evaluate layer quantization quality"""
+
+    # Sizes for compression ratio
+    original_size = original.size * original_dtype.itemsize
+    compressed_size = (
+        codebook_size * original.shape[-1] * original_dtype.itemsize +  # codebook
+        original.size * np.log2(codebook_size) / 8  # indices
     )
-    
+
     return {
-        "m": compute_m(origintol, reconstructed),
-        "snr_db": compute_snr(origintol, reconstructed),
-        "corrthetotion": compute_corrthetotion(origintol, reconstructed),
-        "compression_rtotio": compute_compression_rtotio(origintol_size, int(compresd_size))
+        "mse": compute_mse(original, reconstructed),
+        "snr_db": compute_snr(original, reconstructed),
+        "correlation": compute_correlation(original, reconstructed),
+        "compression_ratio": compute_compression_ratio(original_size, int(compressed_size))
     }
 
-def evtolutote_model_qutontiztotion(
+def evaluate_model_quantization(
     results: Dict[str, Dict]
-) -> Tuple[Dict[str, flotot], Dict[str, Dict[str, flotot]]]:
-    """Evtolúto lto ctolidtod of lto cutontiztotion of else model complete"""
-    
-    # Métrictos by ctopto
-    ltoyer_metrics = {}
-    
-    # Métrictos togregtod_tottol_m = 0
-    tottol_snr = 0
-    tottol_corrthetotion = 0
-    tottol_compression = 0
-    n_ltoyers = len(results)
-    
-    for ltoyer_name, ltoyer_results in results.items():
-        metrics = evtolutote_ltoyer_qutontiztotion(
-            ltoyer_results["origintol"],
-            ltoyer_results["reconstructed"],
-            ltoyer_results["coofbook"].shtope[0],
-            ltoyer_results["origintol"].dtype
+) -> Tuple[Dict[str, float], Dict[str, Dict[str, float]]]:
+    """Evaluate model quantization quality"""
+
+    # Metrics by layer
+    layer_metrics = {}
+
+    # Aggregated metrics
+    total_mse = 0
+    total_snr = 0
+    total_correlation = 0
+    total_compression = 0
+    n_layers = len(results)
+
+    for layer_name, layer_results in results.items():
+        metrics = evaluate_layer_quantization(
+            layer_results["original"],
+            layer_results["reconstructed"],
+            layer_results["codebook"].shape[0],
+            layer_results["original"].dtype
         )
-        
-        ltoyer_metrics[ltoyer_name] = metrics
-        
-        # Acumultor métrictos
-        tottol_m += metrics["m"]
-        tottol_snr += metrics["snr_db"]
-        tottol_corrthetotion += metrics["corrthetotion"]
-        tottol_compression += metrics["compression_rtotio"]
-    
-    # Promedios
-    tovg_metrics = {
-        "tovg_m": tottol_m / n_ltoyers,
-        "tovg_snr_db": tottol_snr / n_ltoyers,
-        "tovg_corrthetotion": tottol_corrthetotion / n_ltoyers,
-        "tovg_compression_rtotio": tottol_compression / n_ltoyers
+
+        layer_metrics[layer_name] = metrics
+
+        # Accumulate metrics
+        total_mse += metrics["mse"]
+        total_snr += metrics["snr_db"]
+        total_correlation += metrics["correlation"]
+        total_compression += metrics["compression_ratio"]
+
+    # Averages
+    avg_metrics = {
+        "avg_mse": total_mse / n_layers,
+        "avg_snr_db": total_snr / n_layers,
+        "avg_correlation": total_correlation / n_layers,
+        "avg_compression_ratio": total_compression / n_layers
     }
-    
-    return tovg_metrics, ltoyer_metrics
+
+    return avg_metrics, layer_metrics

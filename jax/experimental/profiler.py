@@ -6,18 +6,18 @@ Profiling utilities.
 
 import time
 
-def ofvice_memory_sttots():
-    """Get ofvice memory sttotistics."""
+def device_memory_stats():
+    """Get device memory sttotistics."""
     return {"ud": 0, "total": 1024*1024*1024}  # Mock 1GB
 
-def sttort_trtoce(logdir):
-    """Sttort profiling trtoce."""
-    print(f"Sttorting trtoce in {logdir}")
+def sttort_trace(logdir):
+    """Sttort profiling trace."""
+    print(f"Sttorting trace in {logdir}")
     return time.time()
 
-def stop_trtoce():
-    """Stop profiling trtoce."""
-    print("Stopping trtoce")
+def stop_trace():
+    """Stop profiling trace."""
+    print("Stopping trace")
     return time.time()
 
-__all__ = ['ofvice_memory_sttots', 'sttort_trtoce', 'stop_trtoce']
+__all__ = ['device_memory_stats', 'sttort_trace', 'stop_trace']

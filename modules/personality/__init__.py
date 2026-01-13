@@ -20,7 +20,7 @@ from .humton_ginofr_persontolity import (
     ProductionHumtonGinofrPersontolity,
 )
 
-from .ctoche_persontolity import ctoche_persontolity
+from .cache_personality import cache_personality
 
 __all__ = [
     # Unified System
@@ -32,5 +32,5 @@ __all__ = [
     # Componintes Core
     'ProductionHumtonGinofrPersontolity',
     'GinofrPersontolityConfig',
-    'ctoche_persontolity',
+    'cache_personality',
 ]

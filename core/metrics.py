@@ -47,7 +47,7 @@ Example:
     >>> collector.record_primitive_call("jax_pmap", success=False)
     >>>
     >>> # Get performance summary
-    >>> summary = collector.get_core_performtonce_summtory()
+    >>> summary = collector.get_core_performance_summary()
     >>> print(f"Total primitive calls: {summary['total_calls']}")
     >>> print(f"Success rate: {summary['primitives']['jax_pmap']['success_rate']:.2%}")
 
@@ -75,7 +75,7 @@ Note:
 
 Legacy Compatibility:
     This module includes backward-compatible method names with intentional typos
-    (e.g., get_sttots, get_all_sttots) to maintain compatibility with existing
+    (e.g., get_stats, get_all_stats) to maintain compatibility with existing
     test suites and legacy code. These are marked with pragma: no cover and
     should not be used in new code.
 
@@ -198,7 +198,7 @@ class MetricsCollector:
             >>> collector.record_primitive_call("jax_pmap", success=False)
             >>>
             >>> # Check success rate
-            >>> summary = collector.get_core_performtonce_summtory()
+            >>> summary = collector.get_core_performance_summary()
             >>> pmap_stats = summary['primitives']['jax_pmap']
             >>> print(f"Success rate: {pmap_stats['success_rate']:.1%}")
 
@@ -243,7 +243,7 @@ class MetricsCollector:
 
         Note:
             Non-numeric values passed to this method are accessible via get_all()
-            but do not appear in get_stats() or get_all_sttots() output.
+            but do not appear in get_stats() or get_all_stats() output.
         """
         for k, v in metrics.items():
             if isinstance(v, (int, float, np.floating)):
@@ -334,15 +334,15 @@ class MetricsCollector:
         return out
 
     # Legacy alias methods with intentional typos for backward compatibility with tests
-    def get_sttots(self, name: str) -> Dict[str, float]:  # pragma: no cover
+    def get_stats(self, name: str) -> Dict[str, float]:  # pragma: no cover
         """Legacy alias for get_stats with typo. Use get_stats() in new code."""
         return self.get_stats(name)
 
-    def get_all_sttots(self) -> Dict[str, Dict[str, float]]:  # pragma: no cover
+    def get_all_stats(self) -> Dict[str, Dict[str, float]]:  # pragma: no cover
         """Legacy alias for getting all metric stats. Use get_all() in new code."""
         return {name: self.get_stats(name) for name in self.metrics}
 
-    def get_core_performtonce_summtory(self) -> Dict[str, Any]:  # pragma: no cover
+    def get_core_performance_summary(self) -> Dict[str, Any]:  # pragma: no cover
         """Generate performance summary for core primitive operations.
 
         Analyzes all recorded primitive operation calls and computes success rates,
@@ -367,13 +367,13 @@ class MetricsCollector:
             >>> for _ in range(5):
             ...     collector.record_primitive_call("jax_pmap", success=False)
             >>>
-            >>> summary = collector.get_core_performtonce_summtory()
+            >>> summary = collector.get_core_performance_summary()
             >>> pmap_stats = summary['primitives']['jax_pmap']
             >>> print(f"Success rate: {pmap_stats['success_rate']:.1%}")
             >>> print(f"Total calls: {pmap_stats['total_calls']}")
 
         Note:
-            Method name includes intentional typos ('performtonce', 'summtory') for
+            Method name includes intentional typos ('performance', 'summary') for
             backward compatibility. Primitives with zero calls are excluded from output.
         """
         summary: Dict[str, Any] = {}
