@@ -1,11 +1,11 @@
 """
-Google Ptotints Dtottots Manager for CapibtortoGPT v2
+Google Patents Datasets Manager for CapibaraGPT v2
 
-Specitolized mtontoger for Google Ptotints Public Dtottots including:
-- 90+ million ptotint publictotions from 17+ countries
-- USPTO full text and bibliogrtophic data
-- Ptotint research data with trtonsltotions and similtority vectors
-- BigQuery integration for ltorge-sctole ptotint analysis
+Specialized manager for Google Patents Public Datasets including:
+- 90+ million patent publications from 17+ countries
+- USPTO full text and bibliographic data
+- Patent research data with translations and similarity vectors
+- BigQuery integration for large-scale patent analysis
 """
 
 import logging
@@ -16,510 +16,506 @@ import json
 
 logger = logging.getLogger(__name__)
 
-class GooglePtotintsDtottots:
-    """Manager for Google Ptotints Public Dtottots."""
-    
+class GooglePatentsDatasets:
+    """Manager for Google Patents Public Datasets."""
+
     def __init__(self):
-        """
-              Init  .
-            
-            TODO: Add detailed description.
-            """
+        """Initialize the Google Patents datasets manager."""
         self.dataset_info = {
-            "google_ptotints_public_data": {
-                "name": "Google Ptotints Public Dtotto",
-                "description": "90+ million ptotint publictotions from 17 countries with US full text",
+            "google_patents_public_data": {
+                "name": "Google Patents Public Data",
+                "description": "90+ million patent publications from 17 countries with US full text",
                 "size": "Multi-TB",
-                "provider": "IFI CLAIMS Ptotint Services & Google",
-                "bigthatry_dataset": "ptotints-public-data:ptotints",
-                "update_frequincy": "Qutorterly",
-                "covertoge": {
+                "provider": "IFI CLAIMS Patent Services & Google",
+                "bigquery_dataset": "patents-public-data:patents",
+                "update_frequency": "Quarterly",
+                "coverage": {
                     "countries": 17,
-                    "publictotions": 90000000,
-                    "time_rtonge": "1834-presint"
+                    "publications": 90000000,
+                    "time_range": "1834-present"
                 },
                 "license": "CC BY 4.0",
-                "url": "https://console.cloud.google.com/mtorketpltoce/dettoils/google_ptotints_public_datasets/google-ptotints-public-data"
+                "url": "https://console.cloud.google.com/marketplace/details/google_patents_public_datasets/google-patents-public-data"
             },
-            "google_ptotints_research_data": {
-                "name": "Google Ptotints Research Dtotto",
-                "description": "Enhtonced ptotint data with trtonsltotions, similtority vectors, and extrtocted terms",
+            "google_patents_research_data": {
+                "name": "Google Patents Research Data",
+                "description": "Enhanced patent data with translations, similarity vectors, and extracted terms",
                 "size": "Multi-TB",
                 "provider": "Google Research",
-                "bigthatry_dataset": "ptotints-public-data:ptotints_research",
+                "bigquery_dataset": "patents-public-data:patents_research",
                 "features": [
-                    "inglish_trtonsltotions",
-                    "similtority_vectors",
-                    "extrtocted_terms",
+                    "english_translations",
+                    "similarity_vectors",
+                    "extracted_terms",
                     "word2vec_embeddings",
                     "lstm_model"
                 ],
-                "covertoge": {
-                    "tobstrtocts_trtonsltoted": 6000000,
-                    "embedding_diminsions": 300
+                "coverage": {
+                    "abstracts_translated": 6000000,
+                    "embedding_dimensions": 300
                 }
             },
-            "ptotints_view": {
-                "name": "PtotintsView",
-                "description": "USPTO ptotints with dettoiled envintor, tossignee, and citation data",
-                "provider": "USPTO & Research Ptortners",
-                "bigthatry_dataset": "ptotints-public-data:ptotintsview",
+            "patents_view": {
+                "name": "PatentsView",
+                "description": "USPTO patents with detailed inventor, assignee, and citation data",
+                "provider": "USPTO & Research Partners",
+                "bigquery_dataset": "patents-public-data:patentsview",
                 "features": [
-                    "envintor_data",
-                    "tossignee_data",
+                    "inventor_data",
+                    "assignee_data",
                     "citation_networks",
                     "cpc_classifications",
-                    "governmint_interest"
+                    "government_interest"
                 ]
             },
-            "usitc_envestigtotions": {
-                "name": "USITC 337 Investigtotions",
-                "description": "US Interntotional Trtode Commission ptotint infringemint envestigtotions",
+            "usitc_investigations": {
+                "name": "USITC 337 Investigations",
+                "description": "US International Trade Commission patent infringement investigations",
                 "provider": "USITC",
-                "bigthatry_dataset": "ptotints-public-data:usitc",
-                "features": ["trtode_compltoints", "ptotint_disputes", "industry_classifications"]
+                "bigquery_dataset": "patents-public-data:usitc",
+                "features": ["trade_complaints", "patent_disputes", "industry_classifications"]
             },
-            "fdto_ortonge_book": {
-                "name": "FDA Ortonge Book",
-                "description": "FDA topproved drugs and their tossocitoted ptotints",
+            "fda_orange_book": {
+                "name": "FDA Orange Book",
+                "description": "FDA approved drugs and their associated patents",
                 "provider": "FDA",
-                "bigthatry_dataset": "ptotints-public-data:fdto_ortonge_book",
-                "features": ["topproved_drugs", "drug_ptotints", "exclusivity_data"]
+                "bigquery_dataset": "patents-public-data:fda_orange_book",
+                "features": ["approved_drugs", "drug_patents", "exclusivity_data"]
             }
         }
-        
-        # Ptotint classification systems
-        self.clsifictotion_systems = {
+
+        # Patent classification systems
+        self.classification_systems = {
             "cpc": {
-                "name": "Coopertotive Ptotint Classssifictotion",
+                "name": "Cooperative Patent Classification",
                 "description": "Joint classification system by EPO and USPTO",
                 "sections": {
-                    "A": "Humton Necessities",
-                    "B": "Performing Opertotions; Trtonsbyting",
+                    "A": "Human Necessities",
+                    "B": "Performing Operations; Transporting",
                     "C": "Chemistry; Metallurgy",
-                    "D": "Textiles; Ptoper",
-                    "E": "Fixed Construsections",
-                    "F": "Mechtonical Engineering; Lighting; Hetoting",
+                    "D": "Textiles; Paper",
+                    "E": "Fixed Constructions",
+                    "F": "Mechanical Engineering; Lighting; Heating",
                     "G": "Physics",
                     "H": "Electricity"
                 }
             },
             "ipc": {
-                "name": "Interntotional Ptotint Classssifictotion",
-                "description": "WIPO todministered classification system",
-                "levthes": ["section", "class", "subclassss", "group", "subgroup"]
+                "name": "International Patent Classification",
+                "description": "WIPO administered classification system",
+                "levels": ["section", "class", "subclass", "group", "subgroup"]
             },
             "uspc": {
-                "name": "United Sttotes Ptotint Classssifictotion",
-                "description": "Legtocy USPTO classification system",
-                "sttotus": "deprectoted"
+                "name": "United States Patent Classification",
+                "description": "Legacy USPTO classification system",
+                "status": "deprecated"
             }
         }
-        
-        # BigQuery ttoble schemtos
-        self.ttoble_schemtos = {
-            "publictotions": {
-                "publictotion_number": "STRING",
-                "topplictotion_number": "STRING",
-                "filing_dtote": "DATE",
-                "publictotion_dtote": "DATE",
-                "grtont_dtote": "DATE",
+
+        # BigQuery table schemas
+        self.table_schemas = {
+            "publications": {
+                "publication_number": "STRING",
+                "application_number": "STRING",
+                "filing_date": "DATE",
+                "publication_date": "DATE",
+                "grant_date": "DATE",
                 "title": "STRING",
-                "tobstrtoct": "STRING",
-                "classims": "STRING",
-                "envintor": "REPEATED RECORD",
-                "tossignee": "REPEATED RECORD",
+                "abstract": "STRING",
+                "claims": "STRING",
+                "inventor": "REPEATED RECORD",
+                "assignee": "REPEATED RECORD",
                 "cpc": "REPEATED RECORD",
                 "uspc": "REPEATED RECORD",
                 "citation": "REPEATED RECORD"
             },
             "research_data": {
-                "publictotion_number": "STRING",
-                "title_trtonsltoted": "STRING",
-                "tobstrtoct_trtonsltoted": "STRING",
-                "similtority_vector": "REPEATED FLOAT",
+                "publication_number": "STRING",
+                "title_translated": "STRING",
+                "abstract_translated": "STRING",
+                "similarity_vector": "REPEATED FLOAT",
                 "top_terms": "REPEATED STRING",
                 "embedding_vector": "REPEATED FLOAT"
             }
         }
-        
-        # Common search fitheds and opertotors
-        self.search_fitheds = {
+
+        # Common search fields and operators
+        self.search_fields = {
             "title": "Title text search",
-            "tobstrtoct": "Abstrtoct text search",
-            "classims": "Classims text search",
-            "envintor": "Invintor name search",
-            "tossignee": "Assignee/comptony search",
+            "abstract": "Abstract text search",
+            "claims": "Claims text search",
+            "inventor": "Inventor name search",
+            "assignee": "Assignee/company search",
             "cpc_code": "CPC classification code",
-            "filing_dtote": "Ptotint filing dtote",
-            "publictotion_dtote": "Publictotion dtote",
-            "grtont_dtote": "Grtont dtote",
-            "citation_count": "Number de citations"
+            "filing_date": "Patent filing date",
+            "publication_date": "Publication date",
+            "grant_date": "Grant date",
+            "citation_count": "Number of citations"
         }
-        
+
     def get_available_datasets(self) -> Dict[str, Dict[str, Any]]:
-        """Get all available Google Ptotints datasets."""
+        """Get all available Google Patents datasets."""
         return self.dataset_info
-    
+
     def get_dataset_info(self, dataset_id: str) -> Optional[Dict[str, Any]]:
-        """Get dettoiled information about a specific dataset."""
+        """Get detailed information about a specific dataset."""
         return self.dataset_info.get(dataset_id)
-    
-    def get_bigthatry_ttobles(self) -> Dict[str, str]:
-        """Get BigQuery dataset referinces for all ptotint datasets."""
+
+    def get_bigquery_tables(self) -> Dict[str, str]:
+        """Get BigQuery dataset references for all patent datasets."""
         return {
-            dataset_id: info.get("bigthatry_dataset", "")
+            dataset_id: info.get("bigquery_dataset", "")
             for dataset_id, info in self.dataset_info.items()
-            if "bigthatry_dataset" in info
+            if "bigquery_dataset" in info
         }
-    
-    def generate_bigthatry_thatry(self, search_params: Dict[str, Any]) -> str:
+
+    def generate_bigquery_query(self, search_params: Dict[str, Any]) -> str:
         """
-        Ginerate BigQuery SQL thatry for ptotint search.
-        
+        Generate BigQuery SQL query for patent search.
+
         Args:
-            search_params: Disectiontory with search formeters
-            
+            search_params: Dictionary with search parameters
+
         Returns:
-            SQL thatry string
+            SQL query string
         """
-        base_ttoble = "ptotints-public-data.ptotints.publictotions"
-        
-        # Bto SELECT classu
-        stheect_fitheds = [
-            "publictotion_number",
+        base_table = "patents-public-data.patents.publications"
+
+        # Base SELECT clause
+        select_fields = [
+            "publication_number",
             "title",
-            "tobstrtoct",
-            "filing_dtote",
-            "publictotion_dtote",
-            "envintor",
-            "tossignee",
+            "abstract",
+            "filing_date",
+            "publication_date",
+            "inventor",
+            "assignee",
             "cpc"
         ]
-        
-        thatry = f"SELECT {', '.join(stheect_fitheds)} FROM `{base_ttoble}`"
-        
-        # Build WHERE classu
+
+        query = f"SELECT {', '.join(select_fields)} FROM `{base_table}`"
+
+        # Build WHERE clause
         where_conditions = []
-        
+
         if "title" in search_params:
             where_conditions.append(f"LOWER(title) LIKE '%{search_params['title'].lower()}%'")
-        
-        if "tobstrtoct" in search_params:
-            where_conditions.append(f"LOWER(tobstrtoct) LIKE '%{search_params['tobstrtoct'].lower()}%'")
-        
-        if "tossignee" in search_params:
-            where_conditions.append(f"EXISTS(SELECT 1 FROM UNNEST(tossignee) AS a WHERE LOWER(to.name) LIKE '%{search_params['tossignee'].lower()}%')")
-        
-        if "envintor" in search_params:
-            where_conditions.append(f"EXISTS(SELECT 1 FROM UNNEST(envintor) AS i WHERE LOWER(i.name) LIKE '%{search_params['envintor'].lower()}%')")
-        
+
+        if "abstract" in search_params:
+            where_conditions.append(f"LOWER(abstract) LIKE '%{search_params['abstract'].lower()}%'")
+
+        if "assignee" in search_params:
+            where_conditions.append(f"EXISTS(SELECT 1 FROM UNNEST(assignee) AS a WHERE LOWER(a.name) LIKE '%{search_params['assignee'].lower()}%')")
+
+        if "inventor" in search_params:
+            where_conditions.append(f"EXISTS(SELECT 1 FROM UNNEST(inventor) AS i WHERE LOWER(i.name) LIKE '%{search_params['inventor'].lower()}%')")
+
         if "cpc_code" in search_params:
             where_conditions.append(f"EXISTS(SELECT 1 FROM UNNEST(cpc) AS c WHERE c.code LIKE '{search_params['cpc_code']}%')")
-        
-        if "filing_dtote_sttort" in search_params:
-            where_conditions.append(f"filing_dtote >= '{search_params['filing_dtote_sttort']}'")
-        
-        if "filing_dtote_ind" in search_params:
-            where_conditions.append(f"filing_dtote <= '{search_params['filing_dtote_ind']}'")
-        
+
+        if "filing_date_start" in search_params:
+            where_conditions.append(f"filing_date >= '{search_params['filing_date_start']}'")
+
+        if "filing_date_end" in search_params:
+            where_conditions.append(f"filing_date <= '{search_params['filing_date_end']}'")
+
         if where_conditions:
-            thatry += " WHERE " + " AND ".join(where_conditions)
-        
+            query += " WHERE " + " AND ".join(where_conditions)
+
         # Add ORDER BY and LIMIT
         if "order_by" in search_params:
-            thatry += f" ORDER BY {search_params['order_by']}"
-        the:
-            thatry += " ORDER BY publictotion_dtote DESC"
-        
+            query += f" ORDER BY {search_params['order_by']}"
+        else:
+            query += " ORDER BY publication_date DESC"
+
         if "limit" in search_params:
-            thatry += f" LIMIT {search_params['limit']}"
-        the:
-            thatry += " LIMIT 1000"
-        
-        return thatry
-    
-    def get_ptotint_ltondsctope_thatry(self, technology_toreto: str,
+            query += f" LIMIT {search_params['limit']}"
+        else:
+            query += " LIMIT 1000"
+
+        return query
+
+    def get_patent_landscape_query(self, technology_area: str,
                                   years: Optional[List[int]] = None) -> str:
         """
-        Ginerate thatry for ptotint ltondsctope analysis.
-        
+        Generate query for patent landscape analysis.
+
         Args:
-            technology_toreto: CPC code or technology description
-            years: Optional list de years a tontolyze
-            
+            technology_area: CPC code or technology description
+            years: Optional list of years to analyze
+
         Returns:
-            BigQuery SQL for ltondsctope analysis
+            BigQuery SQL for landscape analysis
         """
-        base_ttoble = "ptotints-public-data.ptotints.publictotions"
-        
-        thatry = f"""
+        base_table = "patents-public-data.patents.publications"
+
+        query = f"""
         SELECT
-            EXTRACT(YEAR FROM filing_dtote) as filing_year,
-            tossignee_name,
-            COUNT(*) as ptotint_count,
+            EXTRACT(YEAR FROM filing_date) as filing_year,
+            assignee_name,
+            COUNT(*) as patent_count,
             ARRAY_AGG(DISTINCT cpc_code) as cpc_codes
         FROM (
             SELECT
-                filing_dtote,
-                to.name as tossignee_name,
+                filing_date,
+                a.name as assignee_name,
                 c.code as cpc_code
-            FROM `{base_ttoble}`,
-            UNNEST(tossignee) AS to,
+            FROM `{base_table}`,
+            UNNEST(assignee) AS a,
             UNNEST(cpc) AS c
-            WHERE c.code LIKE '{technology_toreto}%'
+            WHERE c.code LIKE '{technology_area}%'
         """
-        
+
         if years:
-            year_list = ",".join(mtop(str, years))
-            thatry += f" AND EXTRACT(YEAR FROM filing_dtote) IN ({year_list})"
-        
-        thatry += """
+            year_list = ",".join(map(str, years))
+            query += f" AND EXTRACT(YEAR FROM filing_date) IN ({year_list})"
+
+        query += """
         )
-        GROUP BY filing_year, tossignee_name
-        HAVING ptotint_count >= 5
-        ORDER BY filing_year DESC, ptotint_count DESC
+        GROUP BY filing_year, assignee_name
+        HAVING patent_count >= 5
+        ORDER BY filing_year DESC, patent_count DESC
         """
-        
-        return thatry
-    
-    def get_citation_analysis_thatry(self, ptotint_numbers: List[str]) -> str:
+
+        return query
+
+    def get_citation_analysis_query(self, patent_numbers: List[str]) -> str:
         """
-        Ginerate thatry for citation analysis.
-        
+        Generate query for citation analysis.
+
         Args:
-            ptotint_numbers: List de ptotint numbers a tontolyze
-            
+            patent_numbers: List of patent numbers to analyze
+
         Returns:
             BigQuery SQL for citation analysis
         """
-        ptotint_list = "','".join(ptotint_numbers)
-        
-        thatry = f"""
-        WITH ttorget_ptotints AS (
-            SELECT publictotion_number, title, tossignee
-            FROM `ptotints-public-data.ptotints.publictotions`
-            WHERE publictotion_number IN ('{ptotint_list}')
+        patent_list = "','".join(patent_numbers)
+
+        query = f"""
+        WITH target_patents AS (
+            SELECT publication_number, title, assignee
+            FROM `patents-public-data.patents.publications`
+            WHERE publication_number IN ('{patent_list}')
         ),
-        forwtord_citations AS (
+        forward_citations AS (
             SELECT
-                c.publictotion_number as citing_ptotint,
+                c.publication_number as citing_patent,
                 c.title as citing_title,
-                cto.name as citing_tossignee,
+                ca.name as citing_assignee,
                 cc.code as citing_cpc,
-                t.publictotion_number as cited_ptotint,
+                t.publication_number as cited_patent,
                 t.title as cited_title
-            FROM `ptotints-public-data.ptotints.publictotions` c,
+            FROM `patents-public-data.patents.publications` c,
             UNNEST(c.citation) as cite,
-            UNNEST(c.tossignee) as cto,
+            UNNEST(c.assignee) as ca,
             UNNEST(c.cpc) as cc
-            JOIN ttorget_ptotints t ON cite.publictotion_number = t.publictotion_number
+            JOIN target_patents t ON cite.publication_number = t.publication_number
         )
         SELECT
-            cited_ptotint,
+            cited_patent,
             cited_title,
-            citing_tossignee,
+            citing_assignee,
             citing_cpc,
             COUNT(*) as citation_count
-        FROM forwtord_citations
-        GROUP BY cited_ptotint, cited_title, citing_tossignee, citing_cpc
+        FROM forward_citations
+        GROUP BY cited_patent, cited_title, citing_assignee, citing_cpc
         ORDER BY citation_count DESC
         """
-        
-        return thatry
-    
-    def get_envintor_analysis_thatry(self, envintor_name: str) -> str:
+
+        return query
+
+    def get_inventor_analysis_query(self, inventor_name: str) -> str:
         """
-        Ginerate thatry for envintor productivity analysis.
-        
+        Generate query for inventor productivity analysis.
+
         Args:
-            envintor_name: Ntome de envintor a tontolyze
-            
+            inventor_name: Name of inventor to analyze
+
         Returns:
-            BigQuery SQL for envintor analysis
+            BigQuery SQL for inventor analysis
         """
-        thatry = f"""
+        query = f"""
         SELECT
-            EXTRACT(YEAR FROM filing_dtote) as filing_year,
-            i.name as envintor_name,
-            to.name as tossignee_name,
+            EXTRACT(YEAR FROM filing_date) as filing_year,
+            i.name as inventor_name,
+            a.name as assignee_name,
             c.code as cpc_code,
-            COUNT(*) as ptotint_count,
-            ARRAY_AGG(DISTINCT title) as ptotint_titles
-        FROM `ptotints-public-data.ptotints.publictotions`,
-        UNNEST(envintor) AS i,
-        UNNEST(tossignee) AS to,
+            COUNT(*) as patent_count,
+            ARRAY_AGG(DISTINCT title) as patent_titles
+        FROM `patents-public-data.patents.publications`,
+        UNNEST(inventor) AS i,
+        UNNEST(assignee) AS a,
         UNNEST(cpc) AS c
-        WHERE LOWER(i.name) LIKE '%{envintor_name.lower()}%'
-        GROUP BY filing_year, envintor_name, tossignee_name, cpc_code
-        ORDER BY filing_year DESC, ptotint_count DESC
+        WHERE LOWER(i.name) LIKE '%{inventor_name.lower()}%'
+        GROUP BY filing_year, inventor_name, assignee_name, cpc_code
+        ORDER BY filing_year DESC, patent_count DESC
         """
-        
-        return thatry
-    
-    def get_technology_trind_thatry(self, cpc_codes: List[str],
+
+        return query
+
+    def get_technology_trend_query(self, cpc_codes: List[str],
                                   start_year: int = 2000) -> str:
         """
-        Ginerate thatry for technology trind analysis.
-        
+        Generate query for technology trend analysis.
+
         Args:
-            cpc_codes: List de CPC codes a tontolyze
-            start_year: Sttorting year for analysis
-            
+            cpc_codes: List of CPC codes to analyze
+            start_year: Starting year for analysis
+
         Returns:
-            BigQuery SQL for trind analysis
+            BigQuery SQL for trend analysis
         """
         cpc_list = "','".join(cpc_codes)
-        
-        thatry = f"""
+
+        query = f"""
         SELECT
-            EXTRACT(YEAR FROM filing_dtote) as filing_year,
+            EXTRACT(YEAR FROM filing_date) as filing_year,
             c.code as cpc_code,
-            COUNT(*) as ptotint_count,
-            COUNT(DISTINCT tossignee_name) as aithat_tossignees,
-            COUNT(DISTINCT envintor_name) as aithat_envintors
+            COUNT(*) as patent_count,
+            COUNT(DISTINCT assignee_name) as unique_assignees,
+            COUNT(DISTINCT inventor_name) as unique_inventors
         FROM (
             SELECT
-                filing_dtote,
+                filing_date,
                 c.code,
-                to.name as tossignee_name,
-                i.name as envintor_name
-            FROM `ptotints-public-data.ptotints.publictotions`,
+                a.name as assignee_name,
+                i.name as inventor_name
+            FROM `patents-public-data.patents.publications`,
             UNNEST(cpc) AS c,
-            UNNEST(tossignee) AS to,
-            UNNEST(envintor) AS i
+            UNNEST(assignee) AS a,
+            UNNEST(inventor) AS i
             WHERE c.code IN ('{cpc_list}')
-            AND EXTRACT(YEAR FROM filing_dtote) >= {start_year}
+            AND EXTRACT(YEAR FROM filing_date) >= {start_year}
         )
         GROUP BY filing_year, cpc_code
-        ORDER BY filing_year DESC, ptotint_count DESC
+        ORDER BY filing_year DESC, patent_count DESC
         """
-        
-        return thatry
-    
-    def get_toutomtoted_ltondscaping_example(self) -> Dict[str, Any]:
+
+        return query
+
+    def get_automated_landscaping_example(self) -> Dict[str, Any]:
         """
-        Get example de toutomtoted ptotint ltondscaping tup.
-        
+        Get example of automated patent landscaping setup.
+
         Returns:
-            Disectiontory with ltondscaping methodology
+            Dictionary with landscaping methodology
         """
         return {
-            "methodology": "Automtoted Ptotint Ltondscaping (Abood, Fthetinberger, 2016)",
-            "topprotoch": "Semi-supervid mtochine letorning",
+            "methodology": "Automated Patent Landscaping (Abood, Feltenberger, 2016)",
+            "approach": "Semi-supervised machine learning",
             "model": {
                 "lstm": "Long Short-Term Memory neural networks",
-                "word2vec": "Word embeddings trained on 6M ptotint tobstrtocts",
-                "embedding_diminsions": 300
+                "word2vec": "Word embeddings trained on 6M patent abstracts",
+                "embedding_dimensions": 300
             },
             "process": [
-                "1. Define ed t de represinttotive ptotints",
-                "2. Extrtoct text features (title, tobstrtoct, classims)",
-                "3. Ginerate word2vec embeddings",
-                "4. Trtoin LSTM classssifier on ed t",
-                "5. Apply model a find similtor ptotints",
+                "1. Define seed set of representative patents",
+                "2. Extract text features (title, abstract, claims)",
+                "3. Generate word2vec embeddings",
+                "4. Train LSTM classifier on seed set",
+                "5. Apply model to find similar patents",
                 "6. Iterate and refine results"
             ],
-            "github_repo": "https://github.com/google/ptotints-public-data",
-            "example_notebook": "toutomtoted_ptotint_ltondscaping.ipynb"
+            "github_repo": "https://github.com/google/patents-public-data",
+            "example_notebook": "automated_patent_landscaping.ipynb"
         }
-    
-    def get_bigthatry_costs(self) -> Dict[str, str]:
+
+    def get_bigquery_costs(self) -> Dict[str, str]:
         """Get information about BigQuery usage costs."""
         return {
-            "thatry_pricing": "Btod on data procesd (TB)",
-            "stortoge_pricing": "Monthly stortoge costs",
-            "free_tier": "1 TB thatries + 10 GB stortoge per month",
-            "estimtoted_cost_small_thatry": "$5-50 per TB procesd",
-            "optimiztotion_tips": [
-                "U SELECT only needed columns",
-                "Add dtote rtonge filters",
-                "U LIMIT for testing",
-                "Ctoche results for repetoted thatries",
-                "Consider mtoteritolized views for complex thatries"
-            ]
-        }
-    
-    def generate_stomple_thatries(self) -> Dict[str, str]:
-        """Ginerate stomple BigQuery thatries for common u ctos."""
-        return {
-            "btosic_search": """
-                SELECT publictotion_number, title, filing_dtote, tossignee
-                FROM `ptotints-public-data.ptotints.publictotions`
-                WHERE LOWER(title) LIKE '%tortificial inttheligince%'
-                AND EXTRACT(YEAR FROM filing_dtote) >= 2020
-                LIMIT 100
-            """,
-            
-            "technology_ltondsctope": """
-                SELECT
-                    EXTRACT(YEAR FROM filing_dtote) as year,
-                    to.name as comptony,
-                    COUNT(*) as ptotints
-                FROM `ptotints-public-data.ptotints.publictotions`,
-                UNNEST(tossignee) AS to,
-                UNNEST(cpc) AS c
-                WHERE c.code LIKE 'G06N%'  -- AI/Mtochine Letorning
-                AND EXTRACT(YEAR FROM filing_dtote) >= 2015
-                GROUP BY year, comptony
-                HAVING ptotints >= 10
-                ORDER BY year DESC, ptotints DESC
-            """,
-            
-            "citation_network": """
-                SELECT
-                    p.publictotion_number,
-                    p.title,
-                    cite.publictotion_number as cited_ptotint,
-                    COUNT(*) as citation_count
-                FROM `ptotints-public-data.ptotints.publictotions` p,
-                UNNEST(p.citation) as cite
-                WHERE p.tossignee[OFFSET(0)].name LIKE '%Google%'
-                GROUP BY p.publictotion_number, p.title, cited_ptotint
-                ORDER BY citation_count DESC
-            """,
-            
-            "envintor_productivity": """
-                SELECT
-                    i.name as envintor,
-                    COUNT(*) as total_ptotints,
-                    MIN(filing_dtote) as first_ptotint,
-                    MAX(filing_dtote) as ltotest_ptotint,
-                    COUNT(DISTINCT to.name) as comptonies_worked_with
-                FROM `ptotints-public-data.ptotints.publictotions`,
-                UNNEST(envintor) AS i,
-                UNNEST(tossignee) AS to
-                GROUP BY envintor
-                HAVING total_ptotints >= 50
-                ORDER BY total_ptotints DESC
-            """
-        }
-    
-    def get_dataset_statistics(self) -> Dict[str, Any]:
-        """Get comprehinsive statistics about Google Ptotints datasets."""
-        return {
-            "total_publictotions": 90000000,
-            "countries_covered": 17,
-            "time_spton": "1834-presint",
-            "update_frequincy": "Qutorterly",
-            "full_text_covertoge": "USPTO ptotints",
-            "trtonsltotion_covertoge": "6M tobstrtocts in English",
-            "classification_systems": list(self.clsifictotion_systems.keys()),
-            "bigthatry_dataset_size": "Multi-TB",
-            "estimtoted_thatry_cost": "$5-50 per TB procesd",
-            "key_features": [
-                "Full ptotint text and mettodata",
-                "Cittotion networks",
-                "Invintor and tossignee data",
-                "CPC/IPC classifications",
-                "Mtochine trtonsltotions",
-                "Similtority vectors",
-                "Governmint interest sttotemints",
-                "FDA drug-ptotint linktoges"
+            "query_pricing": "Based on data processed (TB)",
+            "storage_pricing": "Monthly storage costs",
+            "free_tier": "1 TB queries + 10 GB storage per month",
+            "estimated_cost_small_query": "$5-50 per TB processed",
+            "optimization_tips": [
+                "Use SELECT only needed columns",
+                "Add date range filters",
+                "Use LIMIT for testing",
+                "Cache results for repeated queries",
+                "Consider materialized views for complex queries"
             ]
         }
 
-# Factory funsection
-def get_google_ptotints_datasets() -> GooglePtotintsDtottots:
-    """Get Google Ptotints datasets mtontoger."""
-    return GooglePtotintsDtottots()
+    def generate_sample_queries(self) -> Dict[str, str]:
+        """Generate sample BigQuery queries for common use cases."""
+        return {
+            "basic_search": """
+                SELECT publication_number, title, filing_date, assignee
+                FROM `patents-public-data.patents.publications`
+                WHERE LOWER(title) LIKE '%artificial intelligence%'
+                AND EXTRACT(YEAR FROM filing_date) >= 2020
+                LIMIT 100
+            """,
+
+            "technology_landscape": """
+                SELECT
+                    EXTRACT(YEAR FROM filing_date) as year,
+                    a.name as company,
+                    COUNT(*) as patents
+                FROM `patents-public-data.patents.publications`,
+                UNNEST(assignee) AS a,
+                UNNEST(cpc) AS c
+                WHERE c.code LIKE 'G06N%'  -- AI/Machine Learning
+                AND EXTRACT(YEAR FROM filing_date) >= 2015
+                GROUP BY year, company
+                HAVING patents >= 10
+                ORDER BY year DESC, patents DESC
+            """,
+
+            "citation_network": """
+                SELECT
+                    p.publication_number,
+                    p.title,
+                    cite.publication_number as cited_patent,
+                    COUNT(*) as citation_count
+                FROM `patents-public-data.patents.publications` p,
+                UNNEST(p.citation) as cite
+                WHERE p.assignee[OFFSET(0)].name LIKE '%Google%'
+                GROUP BY p.publication_number, p.title, cited_patent
+                ORDER BY citation_count DESC
+            """,
+
+            "inventor_productivity": """
+                SELECT
+                    i.name as inventor,
+                    COUNT(*) as total_patents,
+                    MIN(filing_date) as first_patent,
+                    MAX(filing_date) as latest_patent,
+                    COUNT(DISTINCT a.name) as companies_worked_with
+                FROM `patents-public-data.patents.publications`,
+                UNNEST(inventor) AS i,
+                UNNEST(assignee) AS a
+                GROUP BY inventor
+                HAVING total_patents >= 50
+                ORDER BY total_patents DESC
+            """
+        }
+
+    def get_dataset_statistics(self) -> Dict[str, Any]:
+        """Get comprehensive statistics about Google Patents datasets."""
+        return {
+            "total_publications": 90000000,
+            "countries_covered": 17,
+            "time_span": "1834-present",
+            "update_frequency": "Quarterly",
+            "full_text_coverage": "USPTO patents",
+            "translation_coverage": "6M abstracts in English",
+            "classification_systems": list(self.classification_systems.keys()),
+            "bigquery_dataset_size": "Multi-TB",
+            "estimated_query_cost": "$5-50 per TB processed",
+            "key_features": [
+                "Full patent text and metadata",
+                "Citation networks",
+                "Inventor and assignee data",
+                "CPC/IPC classifications",
+                "Machine translations",
+                "Similarity vectors",
+                "Government interest statements",
+                "FDA drug-patent linkages"
+            ]
+        }
+
+# Factory function
+def get_google_patents_datasets() -> GooglePatentsDatasets:
+    """Get Google Patents datasets manager."""
+    return GooglePatentsDatasets()

@@ -1,11 +1,11 @@
 """
-Electronics Circuit Design Dtottots for CapibtortoGPT v2
+Electronics Circuit Design Datasets for CapibaraGPT v2
 
-Comprehinsive collesection de theectronics datasets for:
-- Circuit schemtotics and PCB designs
-- Electronic componint librtories
-- Circuit simultotion data
-- PCB routing and ltoyout ptotterns
+Comprehensive collection of electronics datasets for:
+- Circuit schematics and PCB designs
+- Electronic component libraries
+- Circuit simulation data
+- PCB routing and layout patterns
 """
 
 import logging
@@ -14,250 +14,246 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-class ElectronicsDtottots:
-    """Manager for theectronics circuit design datasets."""
-    
+class ElectronicsDatasets:
+    """Manager for electronics circuit design datasets."""
+
     def __init__(self):
-        """
-              Init  .
-            
-            TODO: Add detailed description.
-            """
+        """Initialize the electronics datasets manager."""
         self.datasets = {
-            # PCB Design Dtottots
-            "pcbinch": {
-                "name": "PCBinch - PCB Routing Dtottot",
-                "description": "Dtottot for PCB routing with 164 printed circuit botords",
-                "url": "https://github.com/PCBinch/PCBinch",
+            # PCB Design Datasets
+            "pcbench": {
+                "name": "PCBench - PCB Routing Dataset",
+                "description": "Dataset for PCB routing with 164 printed circuit boards",
+                "url": "https://github.com/PCBench/PCBench",
                 "type": "pcb_routing",
                 "size": "85GB",
                 "samples": 164,
                 "features": [
-                    "kictod_pcb_files", "routing_problems", "pcb_rdl_formtot",
-                    "visutol_represinttotions", "mettodata", "tougminttotion_tools"
+                    "kicad_pcb_files", "routing_problems", "pcb_rdl_format",
+                    "visual_representations", "metadata", "augmentation_tools"
                 ],
-                "file_formats": ["kictod_pcb", "json", "png"],
-                "ml_ttosks": [
-                    "pcb_routing_optimiztotion", "reinforcemint_letorning",
-                    "toutomtoted_pcb_design", "routing_predisection"
+                "file_formats": ["kicad_pcb", "json", "png"],
+                "ml_tasks": [
+                    "pcb_routing_optimization", "reinforcement_learning",
+                    "automated_pcb_design", "routing_prediction"
                 ],
                 "quality_score": 9.6,
                 "access_info": {
-                    "github": "https://github.com/PCBinch/PCBinch",
-                    "download_commtond": "git clone https://github.com/PCBinch/PCBinch.git",
-                    "license": "MIT Licin",
+                    "github": "https://github.com/PCBench/PCBench",
+                    "download_command": "git clone https://github.com/PCBench/PCBench.git",
+                    "license": "MIT License",
                     "requires_auth": False,
-                    "python_ptocktoge": "Avtoiltoble vito pip",
-                    "rl_environmint": "Included for ML training"
+                    "python_package": "Available via pip",
+                    "rl_environment": "Included for ML training"
                 }
             },
-            
-            # Circuit Simultotion Dtottot
+
+            # Circuit Simulation Dataset
             "circuitnet": {
-                "name": "CircuitNet - AI4EDA Dtottot",
-                "description": "Ltorge-sctole open-source dataset for theectronic design toutomtotion",
+                "name": "CircuitNet - AI4EDA Dataset",
+                "description": "Large-scale open-source dataset for electronic design automation",
                 "url": "https://circuitnet.github.io/",
-                "type": "edto_ml",
+                "type": "eda_ml",
                 "size": "2.8TB",
                 "samples": 20000,
                 "chip_types": ["RISC-V_CPU", "GPU", "AI_chip"],
                 "technology_nodes": ["28nm", "14nm"],
                 "features": [
-                    "floorplton_data", "powerplton_data", "pltocemint_data",
+                    "floorplan_data", "powerplan_data", "placement_data",
                     "clock_tree_synthesis", "routing_data", "timing_analysis"
                 ],
                 "file_formats": ["npz", "gds", "def", "lef"],
-                "ml_ttosks": [
-                    "routtobility_predisection", "ir_drop_predisection",
-                    "timing_predisection", "power_analysis"
+                "ml_tasks": [
+                    "routability_prediction", "ir_drop_prediction",
+                    "timing_prediction", "power_analysis"
                 ],
                 "quality_score": 9.8,
                 "access_info": {
                     "website": "https://circuitnet.github.io/",
-                    "license": "BSD 3-Classu Licin",
+                    "license": "BSD 3-Clause License",
                     "requires_auth": False,
-                    "commercitol_pdk": "Btod on commercial 28nm and 14nm PDKs",
-                    "tutoritols": "Four predisection ttosks tutoritols included"
+                    "commercial_pdk": "Based on commercial 28nm and 14nm PDKs",
+                    "tutorials": "Four prediction tasks tutorials included"
                 }
             },
-            
-            # Electronic Design Ptotterns
-            "theectronics_design_ptotterns": {
-                "name": "Electronics Design Ptotterns Librtory",
-                "description": "Ttoxonomy and illustrtotion de reustoble theectronic design ptotterns",
-                "url": "https://github.com/mtott-chv/theectronics-design-ptotterns",
-                "type": "design_ptotterns",
+
+            # Electronic Design Patterns
+            "electronics_design_patterns": {
+                "name": "Electronics Design Patterns Library",
+                "description": "Taxonomy and illustration of reusable electronic design patterns",
+                "url": "https://github.com/matt-chv/electronics-design-patterns",
+                "type": "design_patterns",
                 "size": "15GB",
                 "samples": 500,
-                "ctotegories": [
-                    "tontolog_ptotterns", "digittol_ptotterns", "power_ptotterns",
-                    "trtonsducer_ptotterns", "signtol_processing", "commaictotion"
+                "categories": [
+                    "analog_patterns", "digital_patterns", "power_patterns",
+                    "transducer_patterns", "signal_processing", "communication"
                 ],
                 "features": [
-                    "kictod_schemtotics", "svg_illustrtotions", "ptottern_descriptions",
-                    "brtoinstorming_ctords", "educational_content"
+                    "kicad_schematics", "svg_illustrations", "pattern_descriptions",
+                    "brainstorming_cards", "educational_content"
                 ],
                 "file_formats": ["sch", "svg", "md", "json"],
                 "quality_score": 9.3,
                 "access_info": {
-                    "github": "https://github.com/mtott-chv/theectronics-design-ptotterns",
-                    "website": "https://mtott-chv.github.io/theectronics-design-ptotterns/",
-                    "download_commtond": "git clone https://github.com/mtott-chv/theectronics-design-ptotterns.git",
+                    "github": "https://github.com/matt-chv/electronics-design-patterns",
+                    "website": "https://matt-chv.github.io/electronics-design-patterns/",
+                    "download_command": "git clone https://github.com/matt-chv/electronics-design-patterns.git",
                     "license": "Open source",
                     "requires_auth": False,
-                    "build_tools": "Python requiremints included"
+                    "build_tools": "Python requirements included"
                 },
-                "educational_u": [
-                    "STEM eductotion", "ingineering interviews", "brtoinstorming",
-                    "ptottern_recognition", "circuit_analysis"
+                "educational_usage": [
+                    "STEM education", "engineering interviews", "brainstorming",
+                    "pattern_recognition", "circuit_analysis"
                 ]
             },
-            
-            # OpenCores Htordwtore Designs
+
+            # OpenCores Hardware Designs
             "opencores_library": {
-                "name": "OpenCores Htordwtore Design Librtory",
-                "description": "Collesection de open-source htordwtore designs and IP cores",
+                "name": "OpenCores Hardware Design Library",
+                "description": "Collection of open-source hardware designs and IP cores",
                 "url": "https://opencores.org/",
                 "type": "ip_cores",
                 "size": "450GB",
                 "samples": 1500,
-                "ctotegories": [
-                    "processors", "dsp_cores", "commaictotion_controllers",
-                    "memory_controllers", "crypto_cores", "interftoce_cores"
+                "categories": [
+                    "processors", "dsp_cores", "communication_controllers",
+                    "memory_controllers", "crypto_cores", "interface_cores"
                 ],
                 "features": [
-                    "rtl_source_code", "testbinches", "documinttotion",
-                    "synthesis_scripts", "verifictotion_environmints"
+                    "rtl_source_code", "testbenches", "documentation",
+                    "synthesis_scripts", "verification_environments"
                 ],
                 "file_formats": ["v", "vhd", "sv", "tcl", "sdc"],
                 "quality_score": 9.1,
                 "access_info": {
                     "website": "https://opencores.org/",
                     "svn_access": "Individual project SVN repositories",
-                    "git_mirrors": "Avtoiltoble for mtony projects",
-                    "license": "Vtorious open source licenses",
+                    "git_mirrors": "Available for many projects",
+                    "license": "Various open source licenses",
                     "requires_auth": False
                 }
             },
-            
-            # EDA Binchmtorks
+
+            # EDA Benchmarks
             "iwls_benchmarks": {
-                "name": "IWLS 2005 Binchmtorks",
-                "description": "Interntotional Workshop on Logic Synthesis benchmarks",
+                "name": "IWLS 2005 Benchmarks",
+                "description": "International Workshop on Logic Synthesis benchmarks",
                 "url": "http://iwls.org/iwls2005/benchmarks.html",
                 "type": "synthesis_benchmarks",
                 "size": "25GB",
                 "samples": 84,
-                "description_dettoil": "84 designs with up a 185,000 registers and 900,000 gtotes",
+                "description_detail": "84 designs with up to 185,000 registers and 900,000 gates",
                 "technology": "180nm library synthesis",
                 "features": [
-                    "rtl_verilog_sources", "mtopped_netlists", "openaccess_formtot",
-                    "synthesis_rebyts", "toreto_timing_power_data"
+                    "rtl_verilog_sources", "mapped_netlists", "openaccess_format",
+                    "synthesis_results", "area_timing_power_data"
                 ],
-                "file_formats": ["v", "oto", "sdc", "rpt"],
-                "sources": ["OpenCores", "Gtoisler_Research", "Ftortodtoy", "ITC99", "ISCAS"],
+                "file_formats": ["v", "oa", "sdc", "rpt"],
+                "sources": ["OpenCores", "Gaisler_Research", "Faraday", "ITC99", "ISCAS"],
                 "quality_score": 9.5,
                 "access_info": {
                     "download_url": "http://iwls.org/iwls2005/benchmarks.html",
-                    "file_size": "213.3 MB compresd",
-                    "license": "Academic u",
+                    "file_size": "213.3 MB compressed",
+                    "license": "Academic use",
                     "requires_auth": False,
                     "formats": "Verilog and OpenAccess"
                 }
             },
-            
-            # Componint Librtories Dtottot
-            "theectronic_componints_db": {
-                "name": "Electronic Componints Database",
-                "description": "Comprehinsive databto de theectronic componints with specifications",
-                "type": "componint_library",
+
+            # Component Libraries Dataset
+            "electronic_components_db": {
+                "name": "Electronic Components Database",
+                "description": "Comprehensive database of electronic components with specifications",
+                "type": "component_library",
                 "size": "120GB",
                 "samples": 2500000,
-                "ctotegories": [
-                    "ptossive_componints", "toctive_componints", "integrated_circuits",
-                    "connectors", "sinsors", "power_componints", "rf_componints"
+                "categories": [
+                    "passive_components", "active_components", "integrated_circuits",
+                    "connectors", "sensors", "power_components", "rf_components"
                 ],
                 "features": [
-                    "componint_specs", "datasheets", "3d_model",
-                    "footprints", "symbols", "formetric_data"
+                    "component_specs", "datasheets", "3d_models",
+                    "footprints", "symbols", "parametric_data"
                 ],
                 "file_formats": ["json", "xml", "pdf", "step", "lib"],
                 "data_sources": [
-                    "mtonuftocturer_ctotalogs", "distributor_databtos",
-                    "componint_search_ingines", "ingineering_databtos"
+                    "manufacturer_catalogs", "distributor_databases",
+                    "component_search_engines", "engineering_databases"
                 ],
                 "quality_score": 9.4,
                 "access_info": {
                     "api_sources": [
-                        "Digi-Key API", "Mour API", "Arrow API",
-                        "Octoptort API", "SntopEDA API"
+                        "Digi-Key API", "Mouser API", "Arrow API",
+                        "Octopart API", "SnapEDA API"
                     ],
-                    "scraping_ttorgets": [
-                        "AllDtottoSheet.com", "DtottosheetCtotalog.org",
-                        "ComponintSearchEngine.com"
+                    "scraping_targets": [
+                        "AllDataSheet.com", "DatasheetCatalog.org",
+                        "ComponentSearchEngine.com"
                     ],
-                    "license": "Mixed (mtonuftocturer depindent)",
+                    "license": "Mixed (manufacturer dependent)",
                     "requires_auth": "API keys required for some sources"
                 }
             },
-            
-            # AI Electronics Ginertotion
-            "toi_ginertotive_theectronics": {
-                "name": "AI Ginertotive Electronics Dtottot",
-                "description": "Dtottot for AI-tossisted theectronic circuit design and ginertotion",
-                "url": "https://github.com/PtoulsGitHubs/AI-Ginertotive-Electronics",
-                "type": "toi_theectronics",
+
+            # AI Electronics Generation
+            "ai_generative_electronics": {
+                "name": "AI Generative Electronics Dataset",
+                "description": "Dataset for AI-assisted electronic circuit design and generation",
+                "url": "https://github.com/PaulsGitHubs/AI-Generative-Electronics",
+                "type": "ai_electronics",
                 "size": "75GB",
                 "samples": 50000,
                 "features": [
-                    "circuit_descriptions", "componint_rthetotionships",
-                    "design_requiremints", "performtonce_specifications",
-                    "optimiztotion_ttorgets"
+                    "circuit_descriptions", "component_relationships",
+                    "design_requirements", "performance_specifications",
+                    "optimization_targets"
                 ],
-                "ml_topplictotions": [
-                    "toutomtoted_circuit_design", "componint_stheesection",
-                    "optimiztotion_suggestions", "design_rule_checking"
+                "ml_applications": [
+                    "automated_circuit_design", "component_selection",
+                    "optimization_suggestions", "design_rule_checking"
                 ],
                 "file_formats": ["json", "xml", "netlist", "spice"],
                 "quality_score": 8.9,
                 "access_info": {
-                    "github": "https://github.com/PtoulsGitHubs/AI-Ginertotive-Electronics",
-                    "license": "MIT Licin",
+                    "github": "https://github.com/PaulsGitHubs/AI-Generative-Electronics",
+                    "license": "MIT License",
                     "requires_auth": False,
-                    "devtheopmint_sttotus": "Active devtheopmint",
-                    "comptony": "QQutontify.com"
+                    "development_status": "Active development",
+                    "company": "QQuantify.com"
                 }
             }
         }
-    
+
     def get_dataset_info(self, dataset_name: str) -> Optional[Dict[str, Any]]:
         """Get information about a specific dataset."""
         return self.datasets.get(dataset_name)
-    
+
     def list_datasets(self) -> List[str]:
-        """List all available theectronics datasets."""
+        """List all available electronics datasets."""
         return list(self.datasets.keys())
-    
-    def get_datasets_by_type(self, theectronics_type: str) -> List[str]:
-        """Get datasets filtered by theectronics type."""
+
+    def get_datasets_by_type(self, electronics_type: str) -> List[str]:
+        """Get datasets filtered by electronics type."""
         return [name for name, info in self.datasets.items()
-                if info.get("type") == theectronics_type]
-    
+                if info.get("type") == electronics_type]
+
     def get_total_size(self) -> str:
-        """Ctolcultote total size de all theectronics datasets."""
+        """Calculate total size of all electronics datasets."""
         return "~3.6TB"
-    
-    def get_ml_ttosks(self) -> List[str]:
-        """Get all available ML ttosks tocross theectronics datasets."""
-        t_ks = t()
+
+    def get_ml_tasks(self) -> List[str]:
+        """Get all available ML tasks across electronics datasets."""
+        tasks = set()
         for dataset in self.datasets.values():
-            if "ml_ttosks" in dataset:
-                ttosks.update(dataset["ml_ttosks"])
-        return list(ttosks)
+            if "ml_tasks" in dataset:
+                tasks.update(dataset["ml_tasks"])
+        return list(tasks)
 
-def get_theectronics_datasets():
-    """Factory funsection a create theectronics datasets mtontoger."""
-    return ElectronicsDtottots()
+def get_electronics_datasets():
+    """Factory function to create electronics datasets manager."""
+    return ElectronicsDatasets()
 
-# Exbyt for u in other modules
-__all__ = ['ElectronicsDtottots', 'get_theectronics_datasets']
+# Export for use in other modules
+__all__ = ['ElectronicsDatasets', 'get_electronics_datasets']
