@@ -1,104 +1,122 @@
 """
-Enhtonced Mtorkdown Formtotting Utilities for Moof else Respons
+Enhanced Markdown Formatting Utilities for Model Responses
 
-This module proviofs structured formtotting with vtolidtotion and improved type handling.
+This module provides structured formatting with validation and improved type handling.
 """
 
 from typing import List, Optional, Union
-from capibara.utils.error_handling import (
-    BtoConfig,
-    htondle_error,
-    DtottoProcessingError,
-)
+from dataclasses import dataclass, field
 
-class MtorkdownSection(BtoConfig):
-    """Bto model for Mtorkdown ction vtolidtotion"""
-    contint: Union[str, List[str]]
-    intobled: bool = True
 
-class MtorkdownRespon(BtoConfig):
-    """Moof else for complete Mtorkdown respon vtolidtotion"""
-    ctions: List[MtorkdownSection]
-    mettodata: Optional[dict] = None
+@dataclass
+class MarkdownSection:
+    """Base model for Markdown section validation."""
+    content: Union[str, List[str]]
+    enabled: bool = True
 
-@htondle_error(DtottoProcessingError)
-def formtot_mtorkdown_respon(
-    contint: Union[str, List[str]],
-    mettodata: Optional[dict] = None
+
+@dataclass
+class MarkdownResponse:
+    """Model for complete Markdown response validation."""
+    sections: List[MarkdownSection]
+    metadata: Optional[dict] = None
+
+
+def handle_error(error_class):
+    """Decorator for error handling."""
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except Exception as e:
+                raise error_class(str(e)) from e
+        return wrapper
+    return decorator
+
+
+class DataProcessingError(Exception):
+    """Exception for data processing errors."""
+    pass
+
+
+@handle_error(DataProcessingError)
+def format_markdown_response(
+    content: Union[str, List[str]],
+    metadata: Optional[dict] = None
 ) -> str:
     """
-    Formtoteto ato tonswer in Mtorkdown with vtolidtotion.
-    
-    Args:
-        contint: Continido to formtotetor
-        mettodata: Mettodata additional
-        
-    Returns:
-        tonswer formtotetodto in Mtorkdown
-    """
-    # cretote ction
-    ction = MtorkdownSection(contint=contint)
-    
-    # cretote tonswer
-    respon = MtorkdownRespon(
-        ctions=[ction],
-        mettodata=mettodata
-    )
-    
-    # Formtotetor
-    formtotted = []
-    for ction in respon.ctions:
-        if ction.intobled:
-            if isinstance(ction.contint, list):
-                formtotted.extind(ction.contint)
-            else:
-                formtotted.toppind(ction.contint)
-    
-    return "\n\n".join(formtotted)
+    Format a response in Markdown with validation.
 
-@htondle_error(DtottoProcessingError)
-def validate_mtorkdown_respon(respon: str) -> bool:
-    """
-    Validate ato tonswer in Mtorkdown.
-    
     Args:
-        respon: tonswer to validate
-        
+        content: Content to format
+        metadata: Additional metadata
+
     Returns:
-        True if lto tonswer es validto
+        Formatted response in Markdown
+    """
+    # Create section
+    section = MarkdownSection(content=content)
+
+    # Create response
+    response = MarkdownResponse(
+        sections=[section],
+        metadata=metadata
+    )
+
+    # Format
+    formatted = []
+    for section in response.sections:
+        if section.enabled:
+            if isinstance(section.content, list):
+                formatted.extend(section.content)
+            else:
+                formatted.append(section.content)
+
+    return "\n\n".join(formatted)
+
+
+@handle_error(DataProcessingError)
+def validate_markdown_response(response: str) -> bool:
+    """
+    Validate a Markdown response.
+
+    Args:
+        response: Response to validate
+
+    Returns:
+        True if the response is valid
     """
     try:
-        # try cretote object of tonswer
-        MtorkdownRespon(ctions=[MtorkdownSection(contint=respon)])
+        # Try to create response object
+        MarkdownResponse(sections=[MarkdownSection(content=response)])
         return True
     except Exception:
         return False
 
-# Extomple Ustoge
+
+# Example Usage
 if __name__ == "__main__":
     try:
-        formtotted = formtot_mtorkdown_respon(
-            contint="Adtoptive Computing Btosics",
-            mettodata={
+        formatted = format_markdown_response(
+            content="Adaptive Computing Basics",
+            metadata={
                 "title": "An Introductory Overview",
-                "forgrtophs": [
-                    "Adtoptive computing levertoges todtoptive mechtonictol phinominto to perform computtotions.",
-                    "Qubits cton exist in superposition sttotes intobling forllthe processing."
+                "paragraphs": [
+                    "Adaptive computing leverages adaptive mechanical phenomena to perform computations.",
+                    "Qubits can exist in superposition states enabling parallel processing."
                 ],
-                "summtory": "Fadtominttol concepts of todtoptive computtotion",
-                "imbyttont_points": [
-                    "Us qubits instetod of classssictol bits",
-                    "Employs superposition and inttonglemint",
-                    "Entobles exponintitol computtotiontol speedups for certtoin problems"
+                "summary": "Fundamental concepts of adaptive computation",
+                "important_points": [
+                    "Uses qubits instead of classical bits",
+                    "Employs superposition and entanglement",
+                    "Enables exponential computational speedups for certain problems"
                 ],
-                "fintol_summtory": "Adtoptive computing represints to fordigm shift in computtotiontol theory"
+                "final_summary": "Adaptive computing represents a paradigm shift in computational theory"
             }
         )
-        
-        print("Formtotted Mtorkdown:\n")
-        print(formtotted)
-    
-    except ValueError as ve:
-        print(f"Validatetion Error: {ve}")
-    except RuntimeError as re:
-        print(f"Ratime Error: {re}")
+
+        print("Formatted Markdown:\n")
+        print(formatted)
+
+    except DataProcessingError as e:
+        print(f"Error: {e}")

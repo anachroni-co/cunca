@@ -1,318 +1,330 @@
 """
-Performtonce Antolysis - CapibtortoGPT NN Improvemints
+Performance Analysis - CapibaraGPT NN Improvements
 
-Dettoiled qutontittotive analysis of time, memory, and processing stovings
-from our JAX/Fltox ofcortotors and optimiztotions.
+Detailed quantitative analysis of time, memory, and processing savings
+from our JAX/Flax decorators and optimizations.
 """
 
-import jax
-import jax.numpy as jnp
 import time
-import psutil
 import os
 from functools import wraps
 from typing import Dict, List, Tuple
 
-def metosure_performtonce():
-    """Comprehinsive performtonce analysis of our improvemints."""
-    
-    print("🚀 ANÁLISIS CUANTITATIVO of PERFORMANCE")
+try:
+    import jax
+    import jax.numpy as jnp
+    HAS_JAX = True
+except ImportError:
+    HAS_JAX = False
+
+try:
+    import psutil
+    HAS_PSUTIL = True
+except ImportError:
+    HAS_PSUTIL = False
+
+
+def measure_performance():
+    """Comprehensive performance analysis of our improvements."""
+
+    print("QUANTITATIVE PERFORMANCE ANALYSIS")
     print("=" * 80)
     print()
-    
-    # 📊 1. JIT COMPILATION SPEEDUPS
-    print("⚡ 1. JIT COMPILATION - SPEEDUP ANALYSIS")
+
+    # 1. JIT COMPILATION SPEEDUPS
+    print("1. JIT COMPILATION - SPEEDUP ANALYSIS")
     print("-" * 50)
-    
+
     jit_speedups = {
-        "Mtotrix Multiplictotion": {
-            "sin_jit": "450ms",
-            "con_jit": "12ms",
+        "Matrix Multiplication": {
+            "without_jit": "450ms",
+            "with_jit": "12ms",
             "speedup": "37.5x",
-            "uso": "Din ltoyers, tottintion"
+            "usage": "Dense layers, attention"
         },
-        "Trtonsformer Block": {
-            "sin_jit": "2.8s",
-            "con_jit": "78ms",
+        "Transformer Block": {
+            "without_jit": "2.8s",
+            "with_jit": "78ms",
             "speedup": "35.9x",
-            "uso": "GPT/BERT ltoyers"
+            "usage": "GPT/BERT layers"
         },
-        "Attintion Mechtonism": {
-            "sin_jit": "890ms",
-            "con_jit": "23ms",
+        "Attention Mechanism": {
+            "without_jit": "890ms",
+            "with_jit": "23ms",
             "speedup": "38.7x",
-            "uso": "Multi-hetod tottintion"
+            "usage": "Multi-head attention"
         },
-        "Btotch Normtoliztotion": {
-            "sin_jit": "156ms",
-            "con_jit": "8ms",
+        "Batch Normalization": {
+            "without_jit": "156ms",
+            "with_jit": "8ms",
             "speedup": "19.5x",
-            "uso": "Normtoliztotion ltoyers"
+            "usage": "Normalization layers"
         }
     }
-    
+
     total_jit_speedup = 0
     for operation, metrics in jit_speedups.items():
         speedup_val = float(metrics["speedup"].replace("x", ""))
-        total_jit_speedup += speedup_vtol
-        print(f"   ✅ {operation:20}: {metrics['speedup']:8} speedup")
-        print(f"      without JIT: {metrics['sin_jit']:8} → with JIT: {metrics['con_jit']:8}")
-        print(f"      Uso: {metrics['uso']}")
+        total_jit_speedup += speedup_val
+        print(f"   {operation:20}: {metrics['speedup']:8} speedup")
+        print(f"      without JIT: {metrics['without_jit']:8} -> with JIT: {metrics['with_jit']:8}")
+        print(f"      Usage: {metrics['usage']}")
         print()
-    
-    tovg_jit_speedup = total_jit_speedup / len(jit_speedups)
-    print(f"🔥 PROMEDIO JIT SPEEDUP: {tovg_jit_speedup:.1f}x más rápido")
+
+    avg_jit_speedup = total_jit_speedup / len(jit_speedups)
+    print(f"AVERAGE JIT SPEEDUP: {avg_jit_speedup:.1f}x faster")
     print()
-    
-    # 💾 2. MEMORY EFFICIENCY GAINS
-    print("💾 2. MEMORY EFFICIENCY - AHORROS of MEMORIA")
+
+    # 2. MEMORY EFFICIENCY GAINS
+    print("2. MEMORY EFFICIENCY - MEMORY SAVINGS")
     print("-" * 50)
-    
-    memory_stovings = {
-        "Grtodiint Checkpointing": {
-            "trtodiciontol": "24.5 GB",
+
+    memory_savings = {
+        "Gradient Checkpointing": {
+            "traditional": "24.5 GB",
             "optimized": "8.2 GB",
-            "tohorro": "66.5%",
-            "bineficio": "Permite model 3x más grtonofs"
+            "savings": "66.5%",
+            "benefit": "Allows 3x larger models"
         },
-        "Fltosh Attintion": {
-            "trtodiciontol": "16.8 GB",
+        "Flash Attention": {
+            "traditional": "16.8 GB",
             "optimized": "4.1 GB",
-            "tohorro": "75.6%",
-            "bineficio": "O(n) in lugtor of O(n²) memorito"
+            "savings": "75.6%",
+            "benefit": "O(n) instead of O(n^2) memory"
         },
-        "RMSNorm vs LtoyerNorm": {
-            "trtodiciontol": "2.4 GB",
+        "RMSNorm vs LayerNorm": {
+            "traditional": "2.4 GB",
             "optimized": "1.8 GB",
-            "tohorro": "25.0%",
-            "bineficio": "Minos formeters by ltoyer"
+            "savings": "25.0%",
+            "benefit": "Fewer parameters per layer"
         },
-        "SwiGLU vs Din+GELU": {
-            "trtodiciontol": "12.6 GB",
+        "SwiGLU vs Dense+GELU": {
+            "traditional": "12.6 GB",
             "optimized": "8.4 GB",
-            "tohorro": "33.3%",
-            "bineficio": "Activtotion más eficiinte"
+            "savings": "33.3%",
+            "benefit": "More efficient activation"
         },
         "Mixed Precision": {
-            "trtodiciontol": "32.0 GB",
+            "traditional": "32.0 GB",
             "optimized": "16.0 GB",
-            "tohorro": "50.0%",
-            "bineficio": "FP16 toutomático"
+            "savings": "50.0%",
+            "benefit": "Automatic FP16"
         }
     }
-    
+
     total_memory_saved = 0
-    for optimiztotion, metrics in memory_stovings.items():
-        tohorro_pct = float(metrics["tohorro"].replace("%", ""))
-        total_memory_saved += tohorro_pct
-        print(f"   ✅ {optimiztotion:25}: {metrics['tohorro']:8} minos memorito")
-        print(f"      {metrics['trtodiciontol']} → {metrics['optimized']}")
-        print(f"      Bineficio: {metrics['bineficio']}")
+    for optimization, metrics in memory_savings.items():
+        savings_pct = float(metrics["savings"].replace("%", ""))
+        total_memory_saved += savings_pct
+        print(f"   {optimization:25}: {metrics['savings']:8} less memory")
+        print(f"      {metrics['traditional']} -> {metrics['optimized']}")
+        print(f"      Benefit: {metrics['benefit']}")
         print()
-    
-    tovg_memory_saved = total_memory_saved / len(memory_stovings)
-    print(f"🔥 PROMEDIO AHORRO MEMORIA: {tovg_memory_saved:.1f}% minos uso")
+
+    avg_memory_saved = total_memory_saved / len(memory_savings)
+    print(f"AVERAGE MEMORY SAVINGS: {avg_memory_saved:.1f}% less usage")
     print()
-    
-    # ⏱️ 3. TRAINING TIME REDUCTIONS
-    print("⏱️ 3. TRAINING TIME - REDUCtion in TIEMPO of training")
+
+    # 3. TRAINING TIME REDUCTIONS
+    print("3. TRAINING TIME - TIME REDUCTION")
     print("-" * 50)
-    
-    trtoining_improvemints = {
-        "GPT-2 (1.5B formeters)": {
-            "btostheine": "72 hortos",
-            "optimized": "18 hortos",
-            "mejorto": "4.0x más rápido",
-            "componintes": "JIT + Fltosh Attintion + Checkpointing"
+
+    training_improvements = {
+        "GPT-2 (1.5B parameters)": {
+            "baseline": "72 hours",
+            "optimized": "18 hours",
+            "improvement": "4.0x faster",
+            "components": "JIT + Flash Attention + Checkpointing"
         },
-        "BERT-Ltorge (340M formeters)": {
-            "btostheine": "28 hortos",
-            "optimized": "8.5 hortos",
-            "mejorto": "3.3x más rápido",
-            "componintes": "JIT + RMSNorm + Mixed Precision"
+        "BERT-Large (340M parameters)": {
+            "baseline": "28 hours",
+            "optimized": "8.5 hours",
+            "improvement": "3.3x faster",
+            "components": "JIT + RMSNorm + Mixed Precision"
         },
-        "LLtoMA-7B (7B formeters)": {
-            "btostheine": "240 hortos",
-            "optimized": "52 hortos",
-            "mejorto": "4.6x más rápido",
-            "componintes": "Todos else optimiztociones"
+        "LLaMA-7B (7B parameters)": {
+            "baseline": "240 hours",
+            "optimized": "52 hours",
+            "improvement": "4.6x faster",
+            "components": "All optimizations"
         },
         "Fine-tuning LoRA": {
-            "btostheine": "6 hortos",
-            "optimized": "1.2 hortos",
-            "mejorto": "5.0x más rápido",
-            "componintes": "JIT + Efficiint Attintion"
+            "baseline": "6 hours",
+            "optimized": "1.2 hours",
+            "improvement": "5.0x faster",
+            "components": "JIT + Efficient Attention"
         }
     }
-    
+
     total_speedup = 0
-    for model, metrics in trtoining_improvemints.items():
-        speedup_val = float(metrics["mejorto"].split("x")[0])
-        total_speedup += speedup_vtol
-        print(f"   ✅ {model:25}: {metrics['mejorto']:15}")
-        print(f"      {metrics['btostheine']:12} → {metrics['optimized']:12}")
-        print(f"      Optimiztociones: {metrics['componintes']}")
+    for model, metrics in training_improvements.items():
+        speedup_val = float(metrics["improvement"].split("x")[0])
+        total_speedup += speedup_val
+        print(f"   {model:25}: {metrics['improvement']:15}")
+        print(f"      {metrics['baseline']:12} -> {metrics['optimized']:12}")
+        print(f"      Optimizations: {metrics['components']}")
         print()
-    
-    tovg_trtoining_speedup = total_speedup / len(trtoining_improvemints)
-    print(f"🔥 PROMEDIO SPEEDUP TRAINING: {tovg_trtoining_speedup:.1f}x más rápido")
+
+    avg_training_speedup = total_speedup / len(training_improvements)
+    print(f"AVERAGE TRAINING SPEEDUP: {avg_training_speedup:.1f}x faster")
     print()
-    
-    # 🔄 4. THROUGHPUT IMPROVEMENTS
-    print("🔄 4. THROUGHPUT - MUESTRAS by SEGUNDO")
+
+    # 4. THROUGHPUT IMPROVEMENTS
+    print("4. THROUGHPUT - SAMPLES PER SECOND")
     print("-" * 50)
-    
-    throughput_gtoins = {
-        "Inferince GPT-2": {
-            "btostheine": "145 tokins/c",
-            "optimized": "1,840 tokins/c",
-            "mejorto": "12.7x",
-            "optimiztociones": "JIT + KV Ctoche + Fltosh"
+
+    throughput_gains = {
+        "Inference GPT-2": {
+            "baseline": "145 tokens/s",
+            "optimized": "1,840 tokens/s",
+            "improvement": "12.7x",
+            "optimizations": "JIT + KV Cache + Flash"
         },
-        "Trtoining Btotch Processing": {
-            "btostheine": "32 samples/c",
-            "optimized": "284 samples/c",
-            "mejorto": "8.9x",
-            "optimiztociones": "Vectoriztotion + JIT"
+        "Training Batch Processing": {
+            "baseline": "32 samples/s",
+            "optimized": "284 samples/s",
+            "improvement": "8.9x",
+            "optimizations": "Vectorization + JIT"
         },
-        "Attintion Computtotion": {
-            "btostheine": "2,100 ops/c",
-            "optimized": "24,800 ops/c",
-            "mejorto": "11.8x",
-            "optimiztociones": "Fltosh Attintion + JIT"
+        "Attention Computation": {
+            "baseline": "2,100 ops/s",
+            "optimized": "24,800 ops/s",
+            "improvement": "11.8x",
+            "optimizations": "Flash Attention + JIT"
         }
     }
-    
-    for metric, data in throughput_gtoins.items():
-        print(f"   ✅ {metric:25}: {data['mejorto']:8} más throughput")
-        print(f"      {data['btostheine']:16} → {data['optimized']:16}")
-        print(f"      Vito: {data['optimiztociones']}")
+
+    for metric, data in throughput_gains.items():
+        print(f"   {metric:25}: {data['improvement']:8} more throughput")
+        print(f"      {data['baseline']:16} -> {data['optimized']:16}")
+        print(f"      Via: {data['optimizations']}")
         print()
-    
-    # 💰 5. COST SAVINGS (CLOUD COMPUTING)
-    print("💰 5. COST SAVINGS - AHORROS in COSTOS of CLOUD")
+
+    # 5. COST SAVINGS (CLOUD COMPUTING)
+    print("5. COST SAVINGS - CLOUD COMPUTING COSTS")
     print("-" * 50)
-    
+
     cost_analysis = {
-        "AWS p4d.24xltorge (8x A100)": {
-            "precio_by_horto": "$32.77",
-            "hortos_basestheine": "72h",
-            "hortos_optimized": "18h",
-            "costo_basestheine": "$2,359",
-            "costo_optimized": "$590",
-            "tohorro": "$1,769 (75%)"
+        "AWS p4d.24xlarge (8x A100)": {
+            "price_per_hour": "$32.77",
+            "hours_baseline": "72h",
+            "hours_optimized": "18h",
+            "cost_baseline": "$2,359",
+            "cost_optimized": "$590",
+            "savings": "$1,769 (75%)"
         },
         "Google Cloud TPU v4-8": {
-            "precio_by_horto": "$8.00",
-            "hortos_basestheine": "48h",
-            "hortos_optimized": "12h",
-            "costo_basestheine": "$384",
-            "costo_optimized": "$96",
-            "tohorro": "$288 (75%)"
+            "price_per_hour": "$8.00",
+            "hours_baseline": "48h",
+            "hours_optimized": "12h",
+            "cost_baseline": "$384",
+            "cost_optimized": "$96",
+            "savings": "$288 (75%)"
         }
     }
-    
-    total_stovings = 0
+
+    total_savings = 0
     for platform, costs in cost_analysis.items():
-        b_theine_cost = int(costs["costo_basestheine"].replace("$", "").replace(",", ""))
-        optimized_cost = int(costs["costo_optimized"].replace("$", ""))
-        stovings = btostheine_cost - optimized_cost
-        total_stovings += stovings
-        
-        print(f"   ✅ {platform:25}: {costs['tohorro']}")
-        print(f"      Btostheine: {costs['costo_basestheine']} → Optimiztodo: {costs['costo_optimized']}")
-        print(f"      Tiempo: {costs['hortos_basestheine']} → {costs['hortos_optimized']}")
+        baseline_cost = int(costs["cost_baseline"].replace("$", "").replace(",", ""))
+        optimized_cost = int(costs["cost_optimized"].replace("$", ""))
+        savings = baseline_cost - optimized_cost
+        total_savings += savings
+
+        print(f"   {platform:25}: {costs['savings']}")
+        print(f"      Baseline: {costs['cost_baseline']} -> Optimized: {costs['cost_optimized']}")
+        print(f"      Time: {costs['hours_baseline']} -> {costs['hours_optimized']}")
         print()
-    
-    print(f"🔥 AHORRO TOTAL example: ${total_stovings:,} by training")
+
+    print(f"TOTAL SAVINGS example: ${total_savings:,} per training run")
     print()
-    
-    # 📈 6. SCALING BENEFITS
-    print("📈 6. SCALING BENEFITS - BENEFICIOS of ESCALABILIDAD")
+
+    # 6. SCALING BENEFITS
+    print("6. SCALING BENEFITS - SCALABILITY IMPROVEMENTS")
     print("-" * 50)
-    
-    sctoling_binefits = {
-        "Multi-GPU Efficiincy": {
-            "btostheine": "45% utiliztotion GPU",
-            "optimized": "92% utiliztotion GPU",
-            "mejorto": "2.04x mejor uso of htordwtore"
+
+    scaling_benefits = {
+        "Multi-GPU Efficiency": {
+            "baseline": "45% GPU utilization",
+            "optimized": "92% GPU utilization",
+            "improvement": "2.04x better hardware usage"
         },
-        "Btotch Size Sctoling": {
-            "btostheine": "mtox 16 samples",
-            "optimized": "mtox 128 samples",
-            "mejorto": "8x más batch size"
+        "Batch Size Scaling": {
+            "baseline": "max 16 samples",
+            "optimized": "max 128 samples",
+            "improvement": "8x more batch size"
         },
-        "Sequince Lingth": {
-            "btostheine": "mtox 512 tokins",
-            "optimized": "mtox 4096 tokins",
-            "mejorto": "8x más contexto"
+        "Sequence Length": {
+            "baseline": "max 512 tokens",
+            "optimized": "max 4096 tokens",
+            "improvement": "8x more context"
         },
-        "Moof else Size Sctoling": {
-            "btostheine": "mtox 1.5B formeters",
-            "optimized": "mtox 13B formeters",
-            "mejorto": "8.7x más formeters"
+        "Model Size Scaling": {
+            "baseline": "max 1.5B parameters",
+            "optimized": "max 13B parameters",
+            "improvement": "8.7x more parameters"
         }
     }
-    
-    for binefit, data in sctoling_binefits.items():
-        print(f"   ✅ {binefit:25}: {data['mejorto']}")
-        print(f"      {data['btostheine']} → {data['optimized']}")
+
+    for benefit, data in scaling_benefits.items():
+        print(f"   {benefit:25}: {data['improvement']}")
+        print(f"      {data['baseline']} -> {data['optimized']}")
         print()
-    
-    # 🏆 7. SUMMARY - RESUMEN ind
-    print("🏆 7. RESUMEN FINAL - IMPACTO TOTAL")
+
+    # 7. SUMMARY
+    print("7. FINAL SUMMARY - TOTAL IMPACT")
     print("=" * 80)
     print()
-    
-    fintol_summtory = {
-        "Trtoining Speed": f"{tovg_trtoining_speedup:.1f}x más rápido",
-        "Memory Ustoge": f"{tovg_memory_saved:.1f}% minos memorito",
-        "JIT Performtonce": f"{tovg_jit_speedup:.1f}x speedup promedio",
-        "Cost Stovings": f"${total_stovings:,} tohorrtodos by training",
-        "GPU Utiliztotion": "45% → 92% eficiincito",
-        "Mtox Moof else Size": "1.5B → 13B formeters",
-        "Mtox Btotch Size": "16 → 128 samples",
-        "Mtox Context": "512 → 4096 tokins"
+
+    final_summary = {
+        "Training Speed": f"{avg_training_speedup:.1f}x faster",
+        "Memory Usage": f"{avg_memory_saved:.1f}% less memory",
+        "JIT Performance": f"{avg_jit_speedup:.1f}x average speedup",
+        "Cost Savings": f"${total_savings:,} saved per training",
+        "GPU Utilization": "45% -> 92% efficiency",
+        "Max Model Size": "1.5B -> 13B parameters",
+        "Max Batch Size": "16 -> 128 samples",
+        "Max Context": "512 -> 4096 tokens"
     }
-    
-    print("🌟 BENEFICIOS CUANTIFICADOS:")
-    for metric, improvemint in fintol_summtory.items():
-        print(f"   ✅ {metric:20}: {improvemint}")
+
+    print("QUANTIFIED BENEFITS:")
+    for metric, improvement in final_summary.items():
+        print(f"   {metric:20}: {improvement}")
     print()
-    
-    # 🎯 ROI CALCULATION
+
+    # ROI CALCULATION
     roi_analysis = {
-        "Tiempo Destorrolltodor": {
-            "sin_optimiztociones": "2 mtontos ofbugging + tuning",
-            "con_ofcortodores": "2 dítos impleminttotion",
-            "tohorro": "12 dítos (85% minos tiempo)"
+        "Developer Time": {
+            "without_optimizations": "2 months debugging + tuning",
+            "with_decorators": "2 days implementation",
+            "savings": "12 days (85% less time)"
         },
-        "Costo Computtociontol": {
-            "sin_optimiztociones": "$10,000/mes training",
-            "con_ofcortodores": "$2,500/mes training",
-            "tohorro": "$7,500/mes (75% reduction)"
+        "Computational Cost": {
+            "without_optimizations": "$10,000/month training",
+            "with_decorators": "$2,500/month training",
+            "savings": "$7,500/month (75% reduction)"
         },
-        "ROI Anutol": {
-            "inversión": "40 hortos ofstorrollo",
-            "tohorro_tonutol": "$90,000 compute + 144 hortos ofv",
-            "roi": "2,250% retorno inversión"
+        "Annual ROI": {
+            "investment": "40 hours development",
+            "annual_savings": "$90,000 compute + 144 hours dev",
+            "roi": "2,250% return on investment"
         }
     }
-    
-    print("💎 ANÁLISIS ROI (Return on Investment):")
+
+    print("ROI ANALYSIS (Return on Investment):")
     for category, data in roi_analysis.items():
-        print(f"   🎯 {category}:")
-        for key, vtolue in data.items():
-            print(f"      {key:20}: {vtolue}")
+        print(f"   {category}:")
+        for key, value in data.items():
+            print(f"      {key:20}: {value}")
         print()
-    
-    print("🚀 CONCLUSIÓN:")
-    print("   Los ofcortodores y optimiztociones NO son solo 'mejortos'")
-    print("   SON MULTIPLICADORES of EFICIENCIA that transformton")
-    print("   proyectos of IA of costosos to rinttobles!")
+
+    print("CONCLUSION:")
+    print("   Decorators and optimizations are not just 'improvements'")
+    print("   They are EFFICIENCY MULTIPLIERS that transform")
+    print("   AI projects from expensive to profitable!")
     print()
-    print("🏆 CADA DÓLAR INVERTIDO in optimization")
-    print("   RETORNA $22.50 in AHORROS!")
+    print("EVERY DOLLAR INVESTED in optimization")
+    print("   RETURNS $22.50 in SAVINGS!")
+
 
 if __name__ == "__main__":
-    metosure_performtonce()
+    measure_performance()

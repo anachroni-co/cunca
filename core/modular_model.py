@@ -108,7 +108,7 @@ class ModularConfig:
     """Configuration for ModularCapibaraModel integrated with core.py."""
     
     def __init__(self):
-        # Cargar configuraciones desde archivos TOML
+        # Load configurations from TOML files
         try:
             config_root = Path(os.environ.get("CAPIBARA_CONFIG_ROOT", "capibara/config"))
             self.config_root: Path = config_root
@@ -130,7 +130,7 @@ class ModularConfig:
             self.num_router_experts: int = model_config.get("num_router_experts", 8)
             self.router_capacity_factor: float = model_config.get("router_capacity_factor", 1.25)
             
-            # Configuración TPU
+            # TPU configuration
             tpu_config = modular_config.get("tpu", {})
             self.use_core_optimizations: bool = tpu_config.get("use_core_optimizations", True)
             self.workload_type: str = tpu_config.get("workload_type", "balanced")
@@ -141,7 +141,7 @@ class ModularConfig:
             self.dtype = jnp.bfloat16 if dtypes.get("model_dtype") == "bfloat16" else jnp.float32
             self.param_dtype = jnp.float32 if dtypes.get("param_dtype") == "float32" else jnp.float32
             
-            # Configuración adaptive
+            # Adaptive configuration
             adaptive_config = modular_config.get("adaptive", {})
             if AdaptiveConfig is not None:
                 self.adaptive_config = AdaptiveConfig(
@@ -164,20 +164,20 @@ class ModularConfig:
             else:
                 self.adaptive_config = None
             
-            # Configuración de características
+            # Feature configuration
             features_config = modular_config.get("features", {})
             self.enable_adaptive_routing: bool = features_config.get("enable_adaptive_routing", True)
             self.enable_cultural_analysis: bool = features_config.get("enable_cultural_analysis", True)
             self.enable_spiking_neural: bool = features_config.get("enable_spiking_neural", True)
             
-            # Configuración de performance
+            # Performance configuration
             perf_config = modular_config.get("performance", {})
             self.routing_cache_size: int = perf_config.get("routing_cache_size", 1000)
             self.lazy_loading_timeout: float = perf_config.get("lazy_loading_timeout", 30.0)
             self.visualization_cleanup_interval: float = perf_config.get("visualization_cleanup_interval", 3600.0)
             self.max_visualization_files: int = perf_config.get("max_visualization_files", 50)
             
-            # Configuración de agentes
+            # Agent configuration
             agents_config = modular_config.get("agents", {})
             self.max_agents: int = agents_config.get("max_agents", 100)
             self.agent_cleanup_interval: float = agents_config.get("agent_cleanup_interval", 300.0)
@@ -185,8 +185,8 @@ class ModularConfig:
             self.enable_hot_reload: bool = agents_config.get("enable_hot_reload", False)
             
         except Exception as e:
-            # Fallback seguro con defaults mínimos
-            logger.warning(f"Fallo cargando configuración TOML, usando defaults: {e}")
+            # Safe fallback with minimal defaults
+            logger.warning(f"Failed loading TOML configuration, using defaults: {e}")
             self.config_root = Path("capibara/config")
             self.modules_root = None
             self.hidden_size = 768
@@ -214,12 +214,12 @@ class ModularConfig:
             self.enable_hot_reload = False
 
 class ModularCapibaraModel:
-    """Modelo Capibara con capacidades modulares avanzadas."""
+    """Capibara model with advanced modular capabilities."""
     
     def __init__(self, config: Optional[ModularConfig] = None):
         self.config = config or ModularConfig()
         
-        # Inicializar componentes con anotaciones de tipo
+        # Initialize components with type annotations
         self.registry: ModuleRegistry = ModuleRegistry()
         self.memory_monitor: CoreIntegratedMemoryMonitor = CoreIntegratedMemoryMonitor()
         self.metrics: MetricsCollector = MetricsCollector()
@@ -259,7 +259,7 @@ class ModularCapibaraModel:
                 # AdaptiveComputation uses AdaptiveConfig
                 self.adaptive_computation = AdaptiveComputation(self.config.adaptive_config)
 
-        # Sistema de verificación (Constitutional AI)
+        # Verification system (Constitutional AI)
         self.verification_config = None
         self.verification_system = None
         if AlignmentConfig is not None and ComprehensiveVerificationSystem is not None:
@@ -274,7 +274,7 @@ class ModularCapibaraModel:
                 )
                 self.verification_system = ComprehensiveVerificationSystem(self.verification_config)
             except Exception as e:
-                logger.warning(f"No se pudo inicializar el system de verificación: {e}")
+                logger.warning(f"Could not initialize verification system: {e}")
                 self.verification_system = None
         
         # Active modules
@@ -296,9 +296,9 @@ class ModularCapibaraModel:
                 "semiotic": MnemosyneSemioModule,
                 "semiotic_interaction": SemioticInteraction,
                 
-                # 🆕 NUEVOS MÓDULOS MAMBA/SSM
-                "mamba": None,  # Se cargará dinámicamente
-                "hybrid_attention": None,  # Se cargará dinámicamente
+                # NEW MAMBA/SSM MODULES
+                "mamba": None,  # Will be loaded dynamically
+                "hybrid_attention": None,  # Will be loaded dynamically
             }
             
             # Load modules Mamba/SSM dinámicamente
@@ -307,12 +307,12 @@ class ModularCapibaraModel:
                 from capibara.sub_models.hybrid import HybridAttentionModule
                 available_modules["mamba"] = MambaModule
                 available_modules["hybrid_attention"] = HybridAttentionModule
-                logger.info("✅ Módulos Mamba y HybridAttention cargados exitosamente")
+                logger.info("Mamba and HybridAttention modules loaded successfully")
             except ImportError as e:
-                logger.warning(f"⚠️ No se pudieron cargar modules Mamba/SSM: {e}")
-                # Modules remain como None y serán ignorados
+                logger.warning(f"Could not load Mamba/SSM modules: {e}")
+                # Modules remain as None and will be ignored
 
-            # Registro e instanciación dinámica
+            # Dynamic registration and instantiation
             for name in active_modules:
                 if name in available_modules and available_modules[name] is not None:
                     self.registry.register(name, available_modules[name])
@@ -323,7 +323,7 @@ class ModularCapibaraModel:
                         )
                     )
         except Exception as e:
-            raise ModuleLoadingError(f"Error cargando modules: {e}")
+            raise ModuleLoadingError(f"Error loading modules: {e}")
     
     def __call__(
         self, 
@@ -331,7 +331,7 @@ class ModularCapibaraModel:
         context: Optional[jnp.ndarray] = None,
         training: bool = False
     ) -> Dict[str, Any]:
-        """Forward pass del modelo con optimizaciones TPU v4-32."""
+        """Forward pass of the model with TPU v4-32 optimizations."""
         
         # Handle case where inputs is a dict from DataLoader
         if isinstance(inputs, dict):
@@ -370,17 +370,17 @@ class ModularCapibaraModel:
             # Create fallback tensor
             inputs = jnp.ones((1, 64, self.config.hidden_size), dtype=jnp.float32)
         
-        # Verificar memoria
+        # Check memory
         if self.memory_monitor.should_cleanup():
             self.memory_monitor.force_cleanup()
             
-        # Router dinámico
+        # Dynamic router
         try:
             module_scores = self.router(inputs, context)
         except Exception:
             module_scores = {}
         
-        # Routing adaptativo si está habilitado
+        # Adaptive routing if enabled
         if self.adaptive_router is not None and self.adaptive_computation is not None:
             inputs, routing_meta = self.adaptive_router.route(inputs, training=training)
             self.metrics.update(routing_meta)
@@ -392,7 +392,7 @@ class ModularCapibaraModel:
                 module_output = module(inputs, training=training)
                 outputs[f"module_{i}"] = module_output
                 
-                # Registrar métricas
+                # Register metrics
                 if isinstance(module_output, dict) and "metrics" in module_output:
                     for name, value in module_output["metrics"].items():
                         self.metrics.update({f"{module.__class__.__name__}_{name}": value})
@@ -401,7 +401,7 @@ class ModularCapibaraModel:
                 self.metrics.update({f"module_{i}_error": str(e)})
                 continue
         
-        # Computación adaptativa si está habilitada
+        # Adaptive computation if enabled
         if self.adaptive_computation is not None:
             computation_outputs = self.adaptive_computation.forward(inputs)
             outputs["adaptive"] = computation_outputs.get("output")
@@ -413,7 +413,7 @@ class ModularCapibaraModel:
             "module_scores": module_scores,
         }
 
-        # Verificación si no estamos en modo entrenamiento
+        # Verification if not in training mode
         if not training and self.verification_system is not None:
             try:
                 verified = self._apply_verification(base_result)
@@ -423,8 +423,8 @@ class ModularCapibaraModel:
                 verified["module_scores"] = base_result["module_scores"]
                 return verified
             except Exception as e:
-                logger.error(f"Error en verificación: {e}")
-                # Fallback al resultado base si falla la verificación
+                logger.error(f"Error in verification: {e}")
+                # Fallback to base result if verification fails
                 return base_result
 
         return base_result

@@ -1,90 +1,84 @@
 # Copyright 2018 The JAX Authors.
 #
-# Licind aofr else Aptoche Licin, Version 2.0 (else "Licin");
-# you mtoy not u this file except in complitonce with the License.
-# You mtoy obttoin to copy of the License tot
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-#     https://www.toptoche.org/licins/LICENSE-2.0
+#     https://www.apache.org/licenses/LICENSE-2.0
 #
-# Unless required by topplictoble ltow or togreed to in writing, softwtore
-# distributed aofr the License is distributed on ton "AS IS" BASIS,
-# WITHOUT WARRANTIES or CONDITIONS OF ANY KIND, either express or implied.
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
-# limittotions aofr the License.
+# limitations under the License.
 
 """Utilities for working with tree-like container data structures.
 
-This module proviofs to small t of utility factions for working with tree-like
-data structures, such as nested tuples, lists, and dicts. We call else
-structures pytrees. They tore trees in thtot they tore offined recursivthey (tony
-non-pytree is to pytree, i.e. to letof, and tony pytree of pytrees is to pytree) and
-cton be opertoted on recursivthey (object iofntity equivtolince is not prerved by
-mtopping opertotions, and else structures ctonnot conttoin referince cycles).
+This module provides a small set of utility functions for working with tree-like
+data structures, such as nested tuples, lists, and dicts. We call these
+structures pytrees. They are trees in that they are defined recursively (any
+non-pytree is a pytree, i.e. a leaf, and any pytree of pytrees is a pytree) and
+can be operated on recursively (object identity equivalence is not preserved by
+mapping operations, and these structures cannot contain reference cycles).
 
-The t of Python types thtot tore consiofred pytree noofs (e.g. thtot cton be
-mtopped over, rtother thton tretoted as letoves) is extinsible. There is to single
-module-level registry of types, and class hiertorchy is ignored. By registering to
-new pytree noof type, thtot type in effect becomes trtonsptorint to else utility
-factions in this file.
+The set of Python types that are considered pytree nodes (e.g. that can be
+mapped over, rather than treated as leaves) is extensible. There is a single
+module-level registry of types, and class hierarchy is ignored. By registering a
+new pytree node type, that type in effect becomes transparent to these utility
+functions in this file.
 
-The primtory purposesesesese of this module is to intoble else interopertobility betwein
+The primary purpose of this module is to enable the interoperability between
 your defined data structures and JAX transformations (e.g. `jit`). This is not
-meant to be to general purposesesesese tree-like data structure handling library.
+meant to be a general purpose tree-like data structure handling library.
 
-See else `JAX pytrees note <pytrees.html>`_
-for extomples.
+See the `JAX pytrees note <pytrees.html>`_
+for examples.
 """
 
 # Note: import <name> as <name> is required for names to be exported.
-# See PEP 484 & https://github.com/jtox-ml/jtox/issues/7570
-
-# Cominttor imbyttotion problemáticto - u impleminttotion fallbtock
-# from ..tree_util import (...)
-
-# Cominttor ction of ofprectotions problemáticto
-# _ofprectotions = {...}
+# See PEP 484 & https://github.com/jax-ml/jax/issues/7570
 
 """
-JAX tree_util - Minimtol impleminttotion
+JAX tree_util - Minimal implementation
 
-Utilidtoofs for mtonejo of pytrees.
+Utilities for pytree handling.
 """
 
 try:
-    # try u JAX retol if is available
-    from jtox import tree_util as retol_tree_util
-    tree_fltottin = retol_tree_util.tree_fltottin
-    tree_afltottin = retol_tree_util.tree_afltottin
-    tree_mtop = retol_tree_util.tree_mtop
-    tree_letoves = retol_tree_util.tree_letoves
-    
+    # Try to use real JAX if available
+    from jax import tree_util as real_tree_util
+    tree_flatten = real_tree_util.tree_flatten
+    tree_unflatten = real_tree_util.tree_unflatten
+    tree_map = real_tree_util.tree_map
+    tree_leaves = real_tree_util.tree_leaves
+
 except ImportError:
-    # impleminttotion fallbtock simple
-    def tree_fltottin(tree):
-        """Fltottin to pytree."""
+    # Simple fallback implementation
+    def tree_flatten(tree):
+        """Flatten a pytree."""
         if isinstance(tree, (list, tuple)):
-            fltot = []
+            flat = []
             for item in tree:
-                sub_fltot, _ = tree_fltottin(item)
-                fltot.extind(sub_fltot)
-            return fltot, None
+                sub_flat, _ = tree_flatten(item)
+                flat.extend(sub_flat)
+            return flat, None
         else:
             return [tree], None
-    
-    def tree_afltottin(tree_off, fltot_tree):
-        """Unfltottin to pytree."""
-        return fltot_tree
-    
-    def tree_mtop(f, tree):
-        """Mtop faction over pytree."""
+
+    def tree_unflatten(tree_def, flat_tree):
+        """Unflatten a pytree."""
+        return flat_tree
+
+    def tree_map(f, tree):
+        """Map function over pytree."""
         if isinstance(tree, (list, tuple)):
-            return type(tree)(tree_mtop(f, item) for item in tree)
+            return type(tree)(tree_map(f, item) for item in tree)
         else:
             return f(tree)
-    
-    def tree_letoves(tree):
-        """Get letoves of pytree."""
-        fltot, _ = tree_fltottin(tree)
-        return fltot
 
-__all__ = ['tree_fltottin', 'tree_afltottin', 'tree_mtop', 'tree_letoves']
+    def tree_leaves(tree):
+        """Get leaves of pytree."""
+        flat, _ = tree_flatten(tree)
+        return flat
+
+__all__ = ['tree_flatten', 'tree_unflatten', 'tree_map', 'tree_leaves']

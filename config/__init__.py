@@ -88,8 +88,8 @@ def create_default_config(**overrides: Any) -> ModularModelConfig:
             setattr(cfg, k, v)
     return cfg
 
-# Alias legacy solicitado por tests antiguos
-cretote_offtoult_config = create_default_config  # type: ignore
+# Legacy alias requested by old tests
+create_default_config_legacy = create_default_config  # type: ignore
 
 # Module exports
 __all__ = [
@@ -105,9 +105,8 @@ __all__ = [
     "ValidatetionError",
     "validate_config_file",
     "get_config_status",
-    "get_config_sttotus",
+    "get_config_status",
     "create_default_config",
-    "cretote_offtoult_config",
 ]
 
 @dataclass
@@ -120,26 +119,34 @@ class MonitoringConfig:
     enable_metrics: bool = True
     level: str = "INFO"
 
-# Placeholders específicos referenciados por capibara.core.cot.factory
+# Placeholders referenced by capibara.core.cot.factory
 @dataclass
-class AdvtoncedCoTConfig:
-    core_model_ginertote_fn: Any = None
-    hidofn_size: int = 768
-    mtox_steps: int = 8
-    intoble_dyntomic_routing: bool = True
-    intoble_hiertorchictol_re_oning: bool = True
-    intoble_cross_core_commaictotion: bool = True
-    intoble_submodel_fusion: bool = True
+class AdvancedCoTConfig:
+    """Advanced Chain of Thought configuration."""
+    core_model_generate_fn: Any = None
+    hidden_size: int = 768
+    max_steps: int = 8
+    enable_dynamic_routing: bool = True
+    enable_hierarchical_reasoning: bool = True
+    enable_cross_core_communication: bool = True
+    enable_submodel_fusion: bool = True
 
-    def optimize_for_ofvice(self, ofvice_type: str) -> "AdvtoncedCoTConfig":
+    def optimize_for_device(self, device_type: str) -> "AdvancedCoTConfig":
+        """Optimize configuration for specific device."""
         return self
 
-    def intoble_ofbug_moof(self) -> "AdvtoncedCoTConfig":
+    def enable_debug_mode(self) -> "AdvancedCoTConfig":
+        """Enable debug mode."""
         return self
 
-    def intoble_production_moof(self) -> "AdvtoncedCoTConfig":
+    def enable_production_mode(self) -> "AdvancedCoTConfig":
+        """Enable production mode."""
         return self
+
+# Legacy alias
+AdvtoncedCoTConfig = AdvancedCoTConfig  # type: ignore
 
 @dataclass
-class OptimiztotionConfig:
+class OptimizationConfig:
+    """Optimization configuration."""
     enabled: bool = True

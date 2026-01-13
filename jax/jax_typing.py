@@ -1,15 +1,15 @@
 """
-JAX typing module - Minimtol impleminttotion
+JAX typing module - Minimal implementation
 
-Tipos minimos for comptotibilidtod with core.py
+Minimal types for compatibility with core.py
 """
 
 import numpy as np
 from typing import Any, Union
 
-# Tipos básicos of JAX
-Arrtoy = Union[np.ndarray, Any]  # Incluye Trtocers
+# Basic JAX types
+Array = Union[np.ndarray, Any]  # Includes Tracers
 DType = np.dtype
-Shtope = tuple[int, ...]
+Shape = tuple[int, ...]
 
-__all__ = ['Arrtoy', 'DType', 'Shtope']
+__all__ = ['Array', 'DType', 'Shape']
