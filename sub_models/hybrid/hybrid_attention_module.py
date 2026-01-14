@@ -93,28 +93,28 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class HybridConfig:
-    """Configuration para HybridAttentionModule."""
+    """Configuration for HybridAttentionModule."""
     hidden_size: int = 768
     num_heads: int = 12
     intermediate_size: int = 3072
-    
-    # Parámetros de decisión híbrida
-    mamba_threshold: int = 512  # Longitud mínima para usar Mamba
-    transformer_max_length: int = 2048  # Longitud máxima para Transformer
-    
-    # Configuración Mamba
+
+    # Hybrid decision parameters
+    mamba_threshold: int = 512  # Minimum length to use Mamba
+    transformer_max_length: int = 2048  # Maximum length for Transformer
+
+    # Mamba configuration
     mamba_config: Optional[Dict[str, Any]] = None
-    
-    # Configuración Transformer
+
+    # Transformer configuration
     dropout_rate: float = 0.1
     layer_norm_eps: float = 1e-12
-    
-    # Optimizaciones
+
+    # Optimizations
     use_tpu_optimizations: bool = True
     use_mixed_precision: bool = True
     enable_caching: bool = True
-    
-    # Métricas y logging
+
+    # Metrics and logging
     collect_metrics: bool = True
     log_decisions: bool = False
 
@@ -129,10 +129,10 @@ class TransformerModule:
         if FLAX_AVAILABLE:
             self._init_flax_components()
         else:
-            self.logger.warning("Flax no disponible, usando implementación fallback")
-    
+            self.logger.warning("Flax not available, using fallback implementation")
+
     def _init_flax_components(self):
-        """Inicializar componentes Flax."""
+        """Initialize Flax components."""
         # Multi-head attention
         self.attention = nn.MultiHeadDotProductAttention(
             num_heads=self.config.num_heads,
@@ -163,22 +163,22 @@ class TransformerModule:
         self.dropout = nn.Dropout(rate=self.config.dropout_rate)
     
     def __call__(self, inputs: jnp.ndarray, training: bool = False) -> tuple:
-        """Forward pass del Transformer."""
+        """Forward pass of the Transformer."""
         if not FLAX_AVAILABLE:
             return self._fallback_forward(inputs, training)
-        
-        # Self-attention con conexión residual
+
+        # Self-attention with residual connection
         residual = inputs
         hidden_states = self.attention_norm(inputs)
-        
+
         attention_output = self.attention(
             hidden_states,
             deterministic=not training
         )
-        
+
         hidden_states = residual + attention_output
-        
-        # Feed-forward con conexión residual
+
+        # Feed-forward with residual connection
         residual = hidden_states
         hidden_states = self.ffn_norm(hidden_states)
         
@@ -200,10 +200,10 @@ class TransformerModule:
         return output, metrics
     
     def _fallback_forward(self, inputs: jnp.ndarray, training: bool = False) -> tuple:
-        """Implementsción fallback cuando Flax no está disponible."""
-        self.logger.warning("Usando fallback de Transformer")
-        
-        # Transformación mínima
+        """Fallback implementation when Flax is not available."""
+        self.logger.warning("Using Transformer fallback")
+
+        # Minimal transformation
         output = inputs * 1.05
         
         metrics = {
@@ -218,35 +218,35 @@ class TransformerModule:
 
 class HybridAttentionModule(IModule):
     """
-    Módulo de Atención Híbrida Inteligente.
-    
-    Decide automáticamente entre Transformer y Mamba basándose en:
-    - Longitud de secuencia
-    - Características del contenido
-    - Recursos disponibles
-    - Métricas de rendimiento
-    
-    Características:
-    - Routing inteligente automático
-    - Optimización O(n²) vs O(n) según contexto
-    - Compatible con arquitectura modular
-    - Métricas detalladas de decisiones
+    Intelligent Hybrid Attention Module.
+
+    Automatically decides between Transformer and Mamba based on:
+    - Sequence length
+    - Content characteristics
+    - Available resources
+    - Performance metrics
+
+    Features:
+    - Automatic intelligent routing
+    - O(n^2) vs O(n) optimization based on context
+    - Compatible with modular architecture
+    - Detailed decision metrics
     """
-    
+
     def __init__(self, config: Dict[str, Any]):
         """
-        Inicializar HybridAttentionModule.
-        
+        Initialize HybridAttentionModule.
+
         Args:
-            config: Diccionario de configuración
+            config: Configuration dictionary
         """
         self.config = HybridConfig(**config)
         self.logger = logging.getLogger(__name__)
         
         # Initialize underlying modules
         self._init_submodules()
-        
-        # Cache para decisiones
+
+        # Cache for decisions
         if self.config.enable_caching:
             self.decision_cache = {}
             self.performance_history = []
@@ -259,11 +259,11 @@ class HybridAttentionModule(IModule):
             "avg_sequence_length": 0.0
         }
         
-        self.logger.info(f"HybridAttentionModule inicializado: threshold={self.config.mamba_threshold}")
-    
+        self.logger.info(f"HybridAttentionModule initialized: threshold={self.config.mamba_threshold}")
+
     def _init_submodules(self):
         """Initialize Mamba and Transformer modules."""
-        # Configuración Mamba
+        # Mamba configuration
         mamba_config = self.config.mamba_config or {
             "hidden_size": self.config.hidden_size,
             "d_state": 64,
@@ -271,28 +271,28 @@ class HybridAttentionModule(IModule):
             "expand_factor": 2,
             "use_tpu_optimizations": self.config.use_tpu_optimizations
         }
-        
-        # Inicializar modules
+
+        # Initialize modules
         self.mamba_module = MambaModule(mamba_config)
         self.transformer_module = TransformerModule(self.config)
-        
-        self.logger.info("Submódulos Mamba y Transformer inicializados")
+
+        self.logger.info("Mamba and Transformer submodules initialized")
     
-    def _make_routing_decision(self, inputs: jnp.ndarray, 
+    def _make_routing_decision(self, inputs: jnp.ndarray,
                               training: bool = False) -> Dict[str, Any]:
         """
-        Decidir qué module usar basándose en características de entrada.
-        
+        Decide which module to use based on input characteristics.
+
         Args:
-            inputs: Tensor de entrada
-            training: Modo entrenamiento
-            
+            inputs: Input tensor
+            training: Training mode
+
         Returns:
-            Dict con decisión y metadatos
+            Dict with decision and metadata
         """
         batch_size, seq_len, hidden_size = inputs.shape
-        
-        # Decisión basada en longitud de secuencia
+
+        # Decision based on sequence length
         decision = {
             "use_mamba": False,
             "use_transformer": False,
@@ -302,9 +302,9 @@ class HybridAttentionModule(IModule):
             "batch_size": batch_size
         }
         
-        # Reglas de decisión
+        # Decision rules
         if seq_len >= self.config.mamba_threshold:
-            # Secuencias largas: usar Mamba (O(n))
+            # Long sequences: use Mamba (O(n))
             decision.update({
                 "use_mamba": True,
                 "reason": f"long_sequence_len_{seq_len}_threshold_{self.config.mamba_threshold}",
@@ -314,7 +314,7 @@ class HybridAttentionModule(IModule):
             })
             
         elif seq_len <= self.config.transformer_max_length:
-            # Secuencias cortas/medianas: usar Transformer (O(n²))
+            # Short/medium sequences: use Transformer (O(n^2))
             decision.update({
                 "use_transformer": True,
                 "reason": f"short_sequence_len_{seq_len}_max_{self.config.transformer_max_length}",
@@ -324,7 +324,7 @@ class HybridAttentionModule(IModule):
             })
             
         else:
-            # Caso límite: preferir Mamba para eficiencia
+            # Edge case: prefer Mamba for efficiency
             decision.update({
                 "use_mamba": True,
                 "reason": f"edge_case_len_{seq_len}_prefer_efficiency",
@@ -333,24 +333,24 @@ class HybridAttentionModule(IModule):
                 "memory_efficiency": "high"
             })
         
-        # Factores adicionales de decisión
+        # Additional decision factors
         self._apply_additional_decision_factors(decision, inputs, training)
-        
-        # Logging de decisión
+
+        # Decision logging
         if self.config.log_decisions:
             self.logger.debug(f"Routing decision: {decision['reason']} "
                             f"(seq_len={seq_len}, confidence={decision['confidence']:.2f})")
         
         return decision
     
-    def _apply_additional_decision_factors(self, decision: Dict[str, Any], 
+    def _apply_additional_decision_factors(self, decision: Dict[str, Any],
                                          inputs: jnp.ndarray, training: bool):
-        """Appliesr factores adicionales de decisión."""
+        """Apply additional decision factors."""
         seq_len = inputs.shape[1]
-        
-        # Factor de memoria disponible
+
+        # Available memory factor
         if seq_len > 1024 and training:
-            # En entrenamiento con secuencias muy largas, preferir Mamba
+            # In training with very long sequences, prefer Mamba
             if decision["use_transformer"]:
                 decision.update({
                     "use_transformer": False,
@@ -359,9 +359,9 @@ class HybridAttentionModule(IModule):
                     "confidence": min(decision["confidence"] + 0.2, 1.0)
                 })
         
-        # Factor de precisión vs eficiencia
+        # Precision vs efficiency factor
         if seq_len < 128:
-            # Secuencias muy cortas: Transformer puede ser más preciso
+            # Very short sequences: Transformer can be more precise
             if decision["use_mamba"]:
                 decision["confidence"] = max(decision["confidence"] - 0.1, 0.0)
                 decision["reason"] += "_precision_preference"
@@ -381,7 +381,7 @@ class HybridAttentionModule(IModule):
                 output, module_metrics = self.transformer_module(inputs, training=training)
                 
             else:
-                raise ValueError(f"Módulo desconocido: {module_name}")
+                raise ValueError(f"Unknown module: {module_name}")
             
             processing_time = time.time() - start_time
             
@@ -393,7 +393,7 @@ class HybridAttentionModule(IModule):
             
             self.decision_stats["total_decisions"] += 1
             
-            # Calcular promedio de longitud de secuencia
+            # Calculate average sequence length
             current_avg = self.decision_stats["avg_sequence_length"]
             total = self.decision_stats["total_decisions"]
             seq_len = inputs.shape[1]
@@ -402,29 +402,29 @@ class HybridAttentionModule(IModule):
             return output, module_metrics, processing_time
             
         except Exception as e:
-            self.logger.error(f"Error ejecutando module {module_name}: {e}")
-            # Fallback: devolver entrada sin modificar
+            self.logger.error(f"Error executing module {module_name}: {e}")
+            # Fallback: return input unchanged
             return inputs, {"error": str(e), "fallback_used": True}, 0.0
     
     def __call__(self, inputs: jnp.ndarray, training: bool = False) -> Dict[str, Any]:
         """
-        Interfaz principal del module híbrido.
-        
+        Main interface of the hybrid module.
+
         Args:
-            inputs: Tensor de entrada [batch, seq_len, hidden_size]
-            training: Modo entrenamiento
-            
+            inputs: Input tensor [batch, seq_len, hidden_size]
+            training: Training mode
+
         Returns:
-            Dict con output, metrics e información de decisión
+            Dict with output, metrics, and decision information
         """
         try:
-            # Validar entrada
+            # Validate input
             if not hasattr(inputs, 'shape') or len(inputs.shape) != 3:
-                raise ValueError(f"HybridAttentionModule esperaba tensor 3D, recibió: {inputs.shape if hasattr(inputs, 'shape') else type(inputs)}")
+                raise ValueError(f"HybridAttentionModule expected 3D tensor, received: {inputs.shape if hasattr(inputs, 'shape') else type(inputs)}")
             
             batch_size, seq_len, hidden_size = inputs.shape
             
-            # Hacer decisión de routing
+            # Make routing decision
             decision = self._make_routing_decision(inputs, training)
             
             # Execute with selected module
@@ -441,14 +441,14 @@ class HybridAttentionModule(IModule):
                 selected_module = "transformer"
                 
             else:
-                # Fallback a Transformer
+                # Fallback to Transformer
                 output, module_metrics, processing_time = self._execute_with_module(
                     "transformer", inputs, training
                 )
                 selected_module = "transformer_fallback"
                 decision["reason"] += "_fallback"
             
-            # Compilar métricas completas
+            # Compile complete metrics
             hybrid_metrics = {
                 **module_metrics,
                 "hybrid_active": True,
@@ -461,7 +461,7 @@ class HybridAttentionModule(IModule):
                 "decision_stats": self.decision_stats.copy()
             }
             
-            # Información de procesamiento
+            # Processing information
             processing_info = {
                 "module_type": "HybridAttentionModule",
                 "architecture": f"{selected_module}_selected",
@@ -479,16 +479,16 @@ class HybridAttentionModule(IModule):
                 "success": True
             }
             
-            # Logging de resultado
-            self.logger.debug(f"HybridAttentionModule: {selected_module} procesó secuencia {seq_len} "
-                            f"en {processing_time:.3f}s (confianza: {decision['confidence']:.2f})")
+            # Result logging
+            self.logger.debug(f"HybridAttentionModule: {selected_module} processed sequence {seq_len} "
+                            f"in {processing_time:.3f}s (confidence: {decision['confidence']:.2f})")
             
             return result
             
         except Exception as e:
-            self.logger.error(f"Error en HybridAttentionModule: {e}")
-            
-            # Fallback completo
+            self.logger.error(f"Error in HybridAttentionModule: {e}")
+
+            # Complete fallback
             return {
                 "output": inputs,
                 "metrics": {
@@ -504,7 +504,7 @@ class HybridAttentionModule(IModule):
             }
     
     def get_decision_statistics(self) -> Dict[str, Any]:
-        """Obtener statistics de decisiones de routing."""
+        """Get routing decision statistics."""
         total = self.decision_stats["total_decisions"]
         if total == 0:
             return {"no_decisions_made": True}
@@ -521,25 +521,25 @@ class HybridAttentionModule(IModule):
     def setup_tpu_optimizations(self):
         """Configures TPU optimizations for both modules."""
         if self.config.use_tpu_optimizations:
-            self.logger.info("Configurando optimizaciones TPU para HybridAttentionModule")
-            
-            # Configurar Mamba
+            self.logger.info("Configuring TPU optimizations for HybridAttentionModule")
+
+            # Configure Mamba
             self.mamba_module.setup_tpu_optimizations()
-            
-            # Configurar caching si está habilitado
+
+            # Configure caching if enabled
             if self.config.enable_caching:
-                self.logger.info("Habilitando caching de decisiones para optimización TPU")
-    
+                self.logger.info("Enabling decision caching for TPU optimization")
+
     def reset_statistics(self):
-        """Reiniciar statistics de decisiones."""
+        """Reset decision statistics."""
         self.decision_stats = {
             "mamba_used": 0,
             "transformer_used": 0,
             "total_decisions": 0,
             "avg_sequence_length": 0.0
         }
-        
+
         if hasattr(self, 'decision_cache'):
             self.decision_cache.clear()
-        
-        self.logger.info("Estadísticas de HybridAttentionModule reiniciadas")
+
+        self.logger.info("HybridAttentionModule statistics reset")
