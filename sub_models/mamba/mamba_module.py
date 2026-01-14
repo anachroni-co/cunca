@@ -107,18 +107,18 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class MambaConfig:
-    """Configuration para MambaModule."""
+    """Configuration for MambaModule."""
     hidden_size: int = 768
-    d_state: int = 64  # Dimensión del estado interno SSM
-    d_conv: int = 4    # Kernel size para convolución 1D
-    expand_factor: int = 2  # Factor de expansión para proyecciones
+    d_state: int = 64  # SSM internal state dimension
+    d_conv: int = 4    # Kernel size for 1D convolution
+    expand_factor: int = 2  # Expansion factor for projections
     dt_rank: int = 32  # Rank for temporal parameter Δ
     use_bias: bool = True
     use_conv_bias: bool = True
     activation: str = "swish"  # swish, gelu, relu
     layer_norm_epsilon: float = 1e-5
-    
-    # Optimizaciones TPU
+
+    # TPU optimizations
     use_tpu_optimizations: bool = True
     use_mixed_precision: bool = True
     scan_type: str = "associative"  # "linear", "associative"
@@ -127,185 +127,185 @@ class MambaConfig:
 class MambaModule(IModule):
     """
     Mamba (Selective State Space Model) Module.
-    
-    Implementa el modelo Mamba con complejidad O(n) para el procesamiento
-    de secuencias, compatible con la arquitectura modular de Capibara6.
-    
-    Características:
-    - Complejidad O(n) vs O(n²) de attention tradicional
-    - Selective State Space Model con parameters adaptativos
-    - Optimizaciones TPU nativas
-    - Compatible con interfaz IModule
+
+    Implements the Mamba model with O(n) complexity for sequence
+    processing, compatible with the Capibara6 modular architecture.
+
+    Features:
+    - O(n) complexity vs O(n^2) of traditional attention
+    - Selective State Space Model with adaptive parameters
+    - Native TPU optimizations
+    - Compatible with IModule interface
     """
-    
+
     def __init__(self, config: Dict[str, Any]):
         """
-        Inicializar MambaModule.
-        
+        Initialize MambaModule.
+
         Args:
-            config: Diccionario de configuración con parameters del modelo
+            config: Configuration dictionary with model parameters
         """
         self.config = MambaConfig(**config)
         self.logger = logging.getLogger(__name__)
         
-        # Calcular dimensiones
+        # Calculate dimensions
         self.d_inner = self.config.hidden_size * self.config.expand_factor
-        
+
         # Initialize parameters if JAX is available
         if JAX_AVAILABLE:
             self._init_parameters()
         else:
-            self.logger.warning("JAX no disponible, usando implementación fallback")
-            
-        self.logger.info(f"MambaModule inicializado: hidden_size={self.config.hidden_size}, "
+            self.logger.warning("JAX not available, using fallback implementation")
+
+        self.logger.info(f"MambaModule initialized: hidden_size={self.config.hidden_size}, "
                         f"d_state={self.config.d_state}, complexity=O(n)")
     
     def _init_parameters(self):
-        """Inicializar parameters del modelo Mamba."""
+        """Initialize Mamba model parameters."""
         key = random.PRNGKey(42)
         k1, k2, k3, k4, k5, k6, k7 = random.split(key, 7)
-        
-        # Proyecciones de entrada
+
+        # Input projections
         self.in_proj_weight = random.normal(k1, (self.d_inner * 2, self.config.hidden_size)) * 0.02
-        
-        # Parámetros de convolución 1D
+
+        # 1D convolution parameters
         self.conv1d_weight = random.normal(k2, (self.d_inner, 1, self.config.d_conv)) * 0.02
         if self.config.use_conv_bias:
             self.conv1d_bias = jnp.zeros((self.d_inner,))
-        
-        # Projections for parameters SSM
+
+        # Projections for SSM parameters
         self.x_proj_weight = random.normal(k3, (self.config.dt_rank + self.config.d_state * 2, self.d_inner)) * 0.02
         self.dt_proj_weight = random.normal(k4, (self.d_inner, self.config.dt_rank)) * 0.02
-        
-        # Parámetros SSM
-        # A: Matriz de transición (inicializada como diagonal negativa para estabilidad)
+
+        # SSM parameters
+        # A: Transition matrix (initialized as negative diagonal for stability)
         self.A_log = jnp.log(jnp.arange(1, self.config.d_state + 1, dtype=jnp.float32))
         self.A_log = jnp.broadcast_to(self.A_log, (self.d_inner, self.config.d_state))
-        
+
         # D: Skip connection parameter
         self.D = jnp.ones((self.d_inner,))
-        
-        # Proyección de salida
+
+        # Output projection
         self.out_proj_weight = random.normal(k5, (self.config.hidden_size, self.d_inner)) * 0.02
-        
+
         # Layer norm
         if FLAX_AVAILABLE:
             self.norm = nn.LayerNorm(epsilon=self.config.layer_norm_epsilon)
-        
-        self.logger.info("Parámetros Mamba inicializados correctamente")
+
+        self.logger.info("Mamba parameters initialized successfully")
     
-    def _selective_scan(self, x: jnp.ndarray, delta: jnp.ndarray, 
+    def _selective_scan(self, x: jnp.ndarray, delta: jnp.ndarray,
                        A: jnp.ndarray, B: jnp.ndarray, C: jnp.ndarray) -> jnp.ndarray:
         """
-        Implementación del Selective Scan (core de Mamba).
-        
+        Selective Scan implementation (core of Mamba).
+
         Args:
             x: Input tensor [batch, seq_len, d_inner]
-            delta: Parámetro temporal [batch, seq_len, d_inner]
-            A: Matriz de transición [d_inner, d_state]
-            B: Matriz de entrada [batch, seq_len, d_state]
-            C: Matriz de salida [batch, seq_len, d_state]
-            
+            delta: Temporal parameter [batch, seq_len, d_inner]
+            A: Transition matrix [d_inner, d_state]
+            B: Input matrix [batch, seq_len, d_state]
+            C: Output matrix [batch, seq_len, d_state]
+
         Returns:
             Output tensor [batch, seq_len, d_inner]
         """
         batch_size, seq_len, d_inner = x.shape
-        
-        # Discretización de A y B
+
+        # Discretization of A and B
         deltaA = jnp.exp(delta.unsqueeze(-1) * A)  # [batch, seq_len, d_inner, d_state]
         deltaB = delta.unsqueeze(-1) * B.unsqueeze(2)  # [batch, seq_len, d_inner, d_state]
-        
+
         def ssm_step(carry, inputs):
-            """Un paso del SSM."""
+            """One step of the SSM."""
             h = carry  # [batch, d_inner, d_state]
             x_t, deltaA_t, deltaB_t, C_t = inputs
-            
+
             # Update state: h = deltaA * h + deltaB * x
             h = deltaA_t * h + deltaB_t * x_t.unsqueeze(-1)
-            
+
             # Compute output: y = C * h
             y = jnp.sum(C_t.unsqueeze(1) * h, axis=-1)  # [batch, d_inner]
-            
+
             return h, y
-        
-        # Estado inicial
+
+        # Initial state
         initial_state = jnp.zeros((batch_size, d_inner, self.config.d_state))
-        
-        # Preparar inputs para scan
+
+        # Prepare inputs for scan
         inputs = (x, deltaA, deltaB, C)
-        
-        # Ejecutar scan
+
+        # Execute scan
         if self.config.scan_type == "associative" and seq_len > 512:
-            # Usar scan asociativo para paralelización en secuencias largas
+            # Use associative scan for parallelization on long sequences
             try:
                 _, outputs = jax.lax.associative_scan(ssm_step, initial_state, inputs, axis=1)
                 scan_complexity = "O(log n)"
             except Exception:
-                # Fallback a scan lineal
+                # Fallback to linear scan
                 _, outputs = jax.lax.scan(ssm_step, initial_state, inputs)
                 scan_complexity = "O(n)"
         else:
-            # Scan lineal estándar
+            # Standard linear scan
             _, outputs = jax.lax.scan(ssm_step, initial_state, inputs)
             scan_complexity = "O(n)"
-        
+
         return outputs, scan_complexity
     
     def _mamba_forward(self, x: jnp.ndarray) -> Tuple[jnp.ndarray, Dict[str, Any]]:
         """
-        Forward pass del modelo Mamba.
-        
+        Forward pass of the Mamba model.
+
         Args:
             x: Input tensor [batch, seq_len, hidden_size]
-            
+
         Returns:
             output: Output tensor [batch, seq_len, hidden_size]
-            metrics: Diccionario con métricas del procesamiento
+            metrics: Dictionary with processing metrics
         """
         if not JAX_AVAILABLE:
             return self._fallback_forward(x)
-            
+
         batch_size, seq_len, hidden_size = x.shape
-        
-        # 1. Proyección de entrada
+
+        # 1. Input projection
         xz = jnp.dot(x, self.in_proj_weight.T)  # [batch, seq_len, d_inner * 2]
-        x_proj, z = jnp.split(xz, 2, axis=-1)  # Cada uno: [batch, seq_len, d_inner]
-        
-        # 2. Convolución 1D (para dependencias locales)
+        x_proj, z = jnp.split(xz, 2, axis=-1)  # Each: [batch, seq_len, d_inner]
+
+        # 2. 1D convolution (for local dependencies)
         x_conv = self._apply_conv1d(x_proj)
-        
-        # 3. Activación
+
+        # 3. Activation
         if self.config.activation == "swish":
             x_conv = x_conv * jax.nn.sigmoid(x_conv)
         elif self.config.activation == "gelu":
             x_conv = jax.nn.gelu(x_conv)
         else:
             x_conv = jax.nn.relu(x_conv)
-        
-        # 4. Projection for parameters SSM
+
+        # 4. Projection for SSM parameters
         x_dbl = jnp.dot(x_conv, self.x_proj_weight.T)  # [batch, seq_len, dt_rank + d_state * 2]
         dt, B, C = jnp.split(x_dbl, [self.config.dt_rank, self.config.dt_rank + self.config.d_state], axis=-1)
-        
-        # 5. Parámetro temporal delta
+
+        # 5. Temporal parameter delta
         dt = jnp.dot(dt, self.dt_proj_weight.T)  # [batch, seq_len, d_inner]
-        dt = jax.nn.softplus(dt)  # Asegurar positividad
-        
-        # 6. Matriz A (estable)
+        dt = jax.nn.softplus(dt)  # Ensure positivity
+
+        # 6. Matrix A (stable)
         A = -jnp.exp(self.A_log)  # [d_inner, d_state]
-        
-        # 7. Selective Scan (core del algoritmo)
+
+        # 7. Selective Scan (core algorithm)
         y, scan_complexity = self._selective_scan(x_conv, dt, A, B, C)
-        
+
         # 8. Skip connection
         y = y + x_conv * self.D.unsqueeze(0).unsqueeze(0)
-        
-        # 9. Gate con z
+
+        # 9. Gate with z
         y = y * jax.nn.silu(z)
-        
-        # 10. Proyección de salida
+
+        # 10. Output projection
         output = jnp.dot(y, self.out_proj_weight.T)  # [batch, seq_len, hidden_size]
-        
-        # Métricas
+
+        # Metrics
         metrics = {
             "mamba_active": True,
             "complexity": scan_complexity,
@@ -314,122 +314,122 @@ class MambaModule(IModule):
             "selective_scan_used": True,
             "tpu_optimized": self.config.use_tpu_optimizations
         }
-        
+
         return output, metrics
     
     def _apply_conv1d(self, x: jnp.ndarray) -> jnp.ndarray:
-        """Appliesr convolución 1D."""
-        # Simplified implementation de conv1d
-        # En producción usaríamos jax.lax.conv_general_dilated
+        """Apply 1D convolution."""
+        # Simplified conv1d implementation
+        # In production we would use jax.lax.conv_general_dilated
         batch_size, seq_len, d_inner = x.shape
-        
-        # Padding para mantener longitud de secuencia
+
+        # Padding to maintain sequence length
         pad_width = ((0, 0), (self.config.d_conv - 1, 0), (0, 0))
         x_padded = jnp.pad(x, pad_width, mode='constant', constant_values=0)
-        
-        # Convolución simplificada (for demostración)
-        # En implementación completa usaríamos operaciones JAX optimizadas
-        output = x  # Placeholder - implementar convolución real
-        
+
+        # Simplified convolution (for demonstration)
+        # In full implementation we would use optimized JAX operations
+        output = x  # Placeholder - implement real convolution
+
         if self.config.use_conv_bias:
             output = output + self.conv1d_bias.unsqueeze(0).unsqueeze(0)
-        
+
         return output
     
     def _fallback_forward(self, x: jnp.ndarray) -> Tuple[jnp.ndarray, Dict[str, Any]]:
-        """Implementsción fallback cuando JAX no está disponible."""
-        self.logger.warning("Usando implementación fallback de Mamba")
-        
-        # Simplified implementation que simula el comportamiento
+        """Fallback implementation when JAX is not available."""
+        self.logger.warning("Using Mamba fallback implementation")
+
+        # Simplified implementation that simulates the behavior
         batch_size, seq_len, hidden_size = x.shape
-        
-        # Simulación de procesamiento Mamba
-        output = x * 1.1  # Transformación mínima
-        
+
+        # Mamba processing simulation
+        output = x * 1.1  # Minimal transformation
+
         metrics = {
             "mamba_active": True,
             "complexity": "O(n)",
             "sequence_length": seq_len,
             "fallback_used": True,
-            "warning": "JAX no disponible, usando fallback"
+            "warning": "JAX not available, using fallback"
         }
-        
+
         return output, metrics
     
     def __call__(self, inputs: jnp.ndarray, training: bool = False) -> Dict[str, Any]:
         """
-        Interfaz principal compatible con IModule.
-        
+        Main interface compatible with IModule.
+
         Args:
             inputs: Input tensor [batch, seq_len, hidden_size]
-            training: Si está en modo entrenamiento
-            
+            training: Whether in training mode
+
         Returns:
-            Dict con 'output', 'metrics' y información adicional
+            Dict with 'output', 'metrics' and additional information
         """
         try:
-            # Validar entrada
+            # Validate input
             if not hasattr(inputs, 'shape') or len(inputs.shape) != 3:
-                raise ValueError(f"MambaModule esperaba tensor 3D, recibió: {inputs.shape if hasattr(inputs, 'shape') else type(inputs)}")
+                raise ValueError(f"MambaModule expected 3D tensor, received: {inputs.shape if hasattr(inputs, 'shape') else type(inputs)}")
             
             batch_size, seq_len, hidden_size = inputs.shape
             
             if hidden_size != self.config.hidden_size:
-                self.logger.warning(f"Dimensión de entrada ({hidden_size}) no coincide con configuración ({self.config.hidden_size})")
+                self.logger.warning(f"Input dimension ({hidden_size}) does not match configuration ({self.config.hidden_size})")
             
             # Forward pass
             output, metrics = self._mamba_forward(inputs)
             
-            # Información adicional
+            # Additional information
             processing_info = {
                 "module_type": "MambaModule",
                 "architecture": "Selective State Space Model",
-                "complexity_advantage": f"O(n) vs O(n²) for seq_len={seq_len}",
+                "complexity_advantage": f"O(n) vs O(n^2) for seq_len={seq_len}",
                 "memory_efficiency": "Linear scaling",
                 "training_mode": training
             }
-            
+
             result = {
                 "output": output,
                 "metrics": metrics,
                 "processing_info": processing_info,
                 "success": True
             }
-            
-            self.logger.debug(f"MambaModule procesó secuencia de longitud {seq_len} con complejidad {metrics.get('complexity', 'O(n)')}")
+
+            self.logger.debug(f"MambaModule processed sequence of length {seq_len} with complexity {metrics.get('complexity', 'O(n)')}")
             
             return result
             
         except Exception as e:
-            self.logger.error(f"Error en MambaModule: {e}")
-            
-            # Fallback: devolver entrada sin modificar
+            self.logger.error(f"Error in MambaModule: {e}")
+
+            # Fallback: return input without modification
             return {
                 "output": inputs,
                 "metrics": {"error": str(e), "fallback_used": True},
                 "processing_info": {"module_type": "MambaModule", "error": True},
                 "success": False
             }
-    
+
     def setup_tpu_optimizations(self):
-        """Configures specific optimizations para TPU."""
+        """Configure specific optimizations for TPU."""
         if self.config.use_tpu_optimizations:
-            self.logger.info("Configurando optimizaciones TPU para MambaModule")
+            self.logger.info("Configuring TPU optimizations for MambaModule")
 
-            # Configurar precisión mixta
+            # Configure mixed precision
             if self.config.use_mixed_precision:
-                self.logger.info("Habilitando precisión mixta (BF16) para TPU")
+                self.logger.info("Enabling mixed precision (BF16) for TPU")
 
-            # Configurar scan asociativo para paralelización
+            # Configure associative scan for parallelization
             if self.config.scan_type == "associative":
-                self.logger.info("Habilitando scan asociativo para paralelización TPU")
+                self.logger.info("Enabling associative scan for TPU parallelization")
 
     def get_metrics(self) -> Dict[str, Any]:
         """
-        Obtener métricas del module (compatibilidad IModule).
+        Get module metrics (IModule compatibility).
 
         Returns:
-            Dict con métricas de configuración y estado
+            Dict with configuration and state metrics
         """
         return {
             "module_type": "MambaModule",
@@ -448,10 +448,10 @@ class MambaModule(IModule):
 
     def get_config(self) -> Dict[str, Any]:
         """
-        Obtener configuración del module (compatibilidad IModule).
+        Get module configuration (IModule compatibility).
 
         Returns:
-            Dict con toda la configuración actual
+            Dict with all current configuration
         """
         return {
             "hidden_size": self.config.hidden_size,

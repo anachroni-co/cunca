@@ -1,6 +1,6 @@
 """
-Configuraciones for componentes VQ (vector Quantization) de CapibaraGPT
-Incluye configuraciones for bloques, Códigos VQ and parameters generales
+Configurations for VQ (Vector Quantization) components of CapibaraGPT.
+Includes configurations for blocks, VQ codes, and general parameters.
 """
 
 import os
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class ModalityConfig:
-    """setup for una modalidad específica."""
+    """Configuration for a specific modality."""
     codebook_size: int
     embedding_dim: int
     adaptive_enabled: bool
@@ -27,15 +27,15 @@ class ModalityConfig:
     def __post_init__(self):
         """validation post-initialization."""
         if self.codebook_size <= 0:
-            raise ValueError("codebook_size debe ser positivo")
+            raise ValueError("codebook_size must be positive")
         if self.embedding_dim <= 0:
-            raise ValueError("embedding_dim debe ser positivo")
+            raise ValueError("embedding_dim must be positive")
         if self.backend not in ["jax", "torch", "flax"]:
-            raise ValueError("backend debe ser uno de: jax, torch, flax")
+            raise ValueError("backend must be one of: jax, torch, flax")
 
 @dataclass
 class BackendConfig:
-    """setup for un backend VQ específico."""
+    """Configuration for a specific VQ backend."""
     batch_size: int = 32
     optimization_level: int = 3
     precision: str = "bfloat16"
@@ -47,146 +47,146 @@ class BackendConfig:
     def __post_init__(self):
         """validation post-initialization."""
         if self.batch_size <= 0:
-            raise ValueError("batch_size debe ser positivo")
+            raise ValueError("batch_size must be positive")
         if not 0 <= self.optimization_level <= 3:
-            raise ValueError("optimization_level debe estar entre 0 y 3")
+            raise ValueError("optimization_level must be between 0 and 3")
         if self.precision not in ["bfloat16", "float32", "float16", "mixed"]:
-            raise ValueError("precision debe ser uno de: bfloat16, float32, float16, mixed")
+            raise ValueError("precision must be one of: bfloat16, float32, float16, mixed")
 
 class VQConfig(BaseModel):
-    """setup completa del module VQ."""
+    """Complete configuration for the VQ module."""
     
-    # setup general
+    # General configuration
     experimental: bool = True
     debug_mode: bool = False
     log_level: str = "INFO"
-    
-    # setup VQbit
+
+    # VQbit configuration
     beta: float = Field(
         default=0.25,
         ge=0.0,
         le=1.0,
-        description="Factor de compromiso para VQbit"
+        description="Commitment factor for VQbit"
     )
     decay: float = Field(
         default=0.99,
         ge=0.0,
         le=1.0,
-        description="Tasa de decaimiento para EMA"
+        description="Decay rate for EMA"
     )
     epsilon: float = Field(
         default=1e-5,
         gt=0.0,
-        description="Epsilon para estabilidad numérica"
+        description="Epsilon for numerical stability"
     )
-    
-    # setup de modalidades
+
+    # Modality configuration
     modalities: Dict[str, ModalityConfig]
-    
-    # setup de backends
+
+    # Backend configuration
     backends: Dict[str, BackendConfig]
-    
-    # setup de entrenamiento
+
+    # Training configuration
     learning_rate: float = Field(
         default=1e-4,
         gt=0.0,
-        description="Tasa de aprendizaje"
+        description="Learning rate"
     )
     batch_size: int = Field(
         default=32,
         gt=0,
-        description="Tamaño de batch"
+        description="Batch size"
     )
     max_epochs: int = Field(
         default=100,
         gt=0,
-        description="Máximo número de épocas"
+        description="Maximum number of epochs"
     )
     early_stopping_patience: int = Field(
         default=10,
         gt=0,
-        description="Paciencia para early stopping"
+        description="Patience for early stopping"
     )
     gradient_clip: float = Field(
         default=1.0,
         gt=0.0,
-        description="Valor máximo para gradiente"
+        description="Maximum gradient value"
     )
-    
-    # setup of metrics
+
+    # Metrics configuration
     track_vq_metrics: bool = True
     track_vqbit_metrics: bool = True
     track_performance_metrics: bool = True
     save_metrics_interval: int = Field(
         default=100,
         gt=0,
-        description="Intervalo para guardar métricas"
+        description="Interval for saving metrics"
     )
-    
-    # setup de optimization
+
+    # Optimization configuration
     use_mixed_precision: bool = True
     use_gradient_accumulation: bool = True
     accumulation_steps: int = Field(
         default=4,
         gt=0,
-        description="Pasos de acumulación de gradiente"
+        description="Gradient accumulation steps"
     )
     use_amp: bool = True
-    
-    # setup de memory
+
+    # Memory configuration
     max_memory_usage: str = Field(
         default="16GB",
-        description="Uso máximo de memoria"
+        description="Maximum memory usage"
     )
     clear_cache_interval: int = Field(
         default=1000,
         gt=0,
-        description="Intervalo para limpiar caché"
+        description="Interval for clearing cache"
     )
     use_memory_efficient_attention: bool = True
-    
-    # setup de dimensiones
+
+    # Dimension configuration
     hidden_size: int = Field(
         default=512,
         gt=0,
-        description="Tamaño del espacio oculto"
+        description="Hidden space size"
     )
     output_size: int = Field(
         default=512,
         gt=0,
-        description="Tamaño de la salida"
+        description="Output size"
     )
     
     @validator('max_memory_usage')
     def validate_memory_usage(cls, v):
         """Validates memory usage format."""
         if not v.endswith(('GB', 'MB')):
-            raise ValueError("max_memory_usage debe terminar en GB o MB")
+            raise ValueError("max_memory_usage must end with GB or MB")
         return v
     
     @validator('log_level')
     def validate_log_level(cls, v):
-        """Valida el level de logging."""
+        """Validates the logging level."""
         valid_levels = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
         if v.upper() not in valid_levels:
-            raise ValueError(f"log_level debe ser uno de {valid_levels}")
+            raise ValueError(f"log_level must be one of {valid_levels}")
         return v.upper()
     
     @classmethod
     def from_toml(cls, config_path: str = "configs_toml/vq.toml") -> "VQConfig":
-        """load la setup since un file TOML."""
+        """Loads the configuration from a TOML file."""
         config_path = Path(config_path)
         if not config_path.exists():
-            raise FileNotFoundError(f"Archivo de configuración no encontrado: {config_path}")
+            raise FileNotFoundError(f"Configuration file not found: {config_path}")
             
         with open(config_path, "rb") as f:
             config_dict = tomli.load(f)
             
-        # carry setup general
+        # Load general configuration
         general = config_dict.get("general", {})
         vqbit = config_dict.get("vqbit", {})
-        
-        # carry setup de modalidades
+
+        # Load modality configuration
         modalities = {}
         for name, mod_config in config_dict.get("modalities", {}).items():
             modalities[name] = ModalityConfig(
@@ -195,25 +195,25 @@ class VQConfig(BaseModel):
                 adaptive_enabled=mod_config["adaptive_enabled"],
                 backend=mod_config["backend"]
             )
-            
-        # carry setup de backends
+
+        # Load backend configuration
         backends = {}
         for name, backend_config in config_dict.get("vq", {}).get("backends", {}).items():
             backends[name] = BackendConfig(**backend_config)
-            
-        # carry setup de entrenamiento
+
+        # Load training configuration
         training = config_dict.get("training", {})
-        
-        # carry setup of metrics
+
+        # Load metrics configuration
         metrics = config_dict.get("metrics", {})
-        
-        # carry setup de optimization
+
+        # Load optimization configuration
         optimization = config_dict.get("optimization", {})
-        
-        # carry setup de memory
+
+        # Load memory configuration
         memory = config_dict.get("memory", {})
-        
-        # build setup completa
+
+        # Build complete configuration
         config_data = {
             **general,
             **vqbit,
@@ -228,7 +228,7 @@ class VQConfig(BaseModel):
         return cls(**config_data)
     
     def get_vqbit_config(self) -> Dict[str, Any]:
-        """Gets la setup VQbit."""
+        """Gets the VQbit configuration."""
         return {
             "beta": self.beta,
             "decay": self.decay,
@@ -237,7 +237,7 @@ class VQConfig(BaseModel):
         }
     
     def get_vq_config(self) -> Dict[str, Any]:
-        """Gets la setup VQ."""
+        """Gets the VQ configuration."""
         return {
             "modalities": self.modalities,
             "backends": self.backends,
@@ -245,7 +245,7 @@ class VQConfig(BaseModel):
         }
     
     def get_memory_config(self) -> Dict[str, Any]:
-        """Gets la setup de memory."""
+        """Gets the memory configuration."""
         return {
             "max_memory_usage": self.max_memory_usage,
             "clear_cache_interval": self.clear_cache_interval,
@@ -254,7 +254,7 @@ class VQConfig(BaseModel):
         }
     
     def get_training_config(self) -> Dict[str, Any]:
-        """Gets la setup de entrenamiento."""
+        """Gets the training configuration."""
         return {
             "learning_rate": self.learning_rate,
             "batch_size": self.batch_size,
@@ -264,7 +264,7 @@ class VQConfig(BaseModel):
         }
     
     def get_metrics_config(self) -> Dict[str, Any]:
-        """Gets la setup of metrics."""
+        """Gets the metrics configuration."""
         return {
             "track_vq_metrics": self.track_vq_metrics,
             "track_vqbit_metrics": self.track_vqbit_metrics,
@@ -272,7 +272,7 @@ class VQConfig(BaseModel):
             "save_metrics_interval": self.save_metrics_interval
         }
 
-# Configuraciones by defect
+# Default configurations
 DEFAULT_VQ_CONFIG = VQConfig(
     modalities={
         "text": ModalityConfig(
@@ -314,5 +314,5 @@ DEFAULT_VQ_CONFIG = VQConfig(
     }
 )
 
-# setup legacy for compatibilidad
-AdaptiveConfig = VQConfig  # Alias for retrocompatibilidad
+# Legacy configuration for compatibility
+AdaptiveConfig = VQConfig  # Alias for backward compatibility

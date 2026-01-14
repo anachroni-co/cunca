@@ -1,15 +1,14 @@
 """
-Implementation of backend de TPU v4-32 para JAX.
+TPU v4-32 backend implementation for JAX.
 
-This module provides el backend de TPU v4-32 para JAX, optimizado para las
-unidades de procesamiento tensorial de cuarta generación de Google con
-configuración de 32 chips.
+This module provides the TPU v4-32 backend for JAX, optimized for Google's
+fourth-generation tensor processing units with 32-chip configuration.
 
-Optimizaciones clave:
-- Utilización de arrays sistólicos for operations matriciales
-- Paralelización de 256 núcleos
-- Optimización de ancho de banda HBM (~1.2TB/s)
-- Kernels especializados para cargas de trabajo de ML
+Key optimizations:
+- Utilization of systolic arrays for matrix operations
+- 256-core parallelization
+- HBM bandwidth optimization (~1.2TB/s)
+- Specialized kernels for ML workloads
 """
 
 import os
@@ -57,10 +56,10 @@ except ImportError:
     
     jnp = _FakeJnp()
 
-# Configurar logger
+# Configure logger
 logger = logging.getLogger(__name__)
 
-# Importaciones específicas de TPU v4-32
+# TPU v4-32 specific imports
 try:
     from . import _rnn as tpu_v4_rnn
     from . import _prng as tpu_v4_prng
@@ -72,7 +71,7 @@ try:
     KERNELS_COMPLETE = True
 except ImportError:
     KERNELS_COMPLETE = False
-    logger.warning("No se pudieron importar todos los kernels TPU v4-32. Algunas funcionalidades no estarán disponibles.")
+    logger.warning("Could not import all TPU v4-32 kernels. Some functionality will not be available.")
 
 # New imports for ultra-specialized kernels
 try:
@@ -170,7 +169,7 @@ if NEUROMORPHIC_KERNELS_AVAILABLE:
 else:
     logger.warning("⚠ neuromorphic_kernels not available - using fallback")
 
-# Verificar disponibilidad de TPU v4-32
+# Verify TPU v4-32 availability
 TPU_V4_AVAILABLE = False
 try:
     TPU_V4_AVAILABLE = xla_bridge.get_backend('tpu_v4') is not None

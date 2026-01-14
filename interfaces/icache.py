@@ -1,5 +1,5 @@
 """
-Interfaz estandarizada para modules de caché en CapibaraGPT.
+Standardized interface for cache modules in CapibaraGPT.
 """
 
 from pathlib import Path
@@ -8,9 +8,9 @@ from typing import Any, Callable, Optional, Dict, Tuple, Union, Protocol
 
 class ICacheModule(Protocol):
     """
-    Contrato para systems de caché compatibles con Capibara.
+    Contract for cache systems compatible with Capibara.
 
-    Permite distintas implementaciones: en memoria, distribuido, híbrido o específico para TPU/FPGA.
+    Allows different implementations: in-memory, distributed, hybrid, or specific for TPU/FPGA.
     """
 
     def set(
@@ -20,7 +20,7 @@ class ICacheModule(Protocol):
         value: Any,
         ttl: Optional[float] = None,
     ) -> None:
-        """Saves un valor en el caché."""
+        """Saves a value in the cache."""
         ...
 
     def get(
@@ -28,7 +28,7 @@ class ICacheModule(Protocol):
         namespace: str,
         key: Union[str, int, float, tuple, dict, list],
     ) -> Optional[Any]:
-        """Recupera un valor del caché."""
+        """Retrieves a value from the cache."""
         ...
 
     def get_or_set(
@@ -42,15 +42,15 @@ class ICacheModule(Protocol):
         ...
 
     def clear_namespace(self, namespace: str) -> int:
-        """Removes todos los elementos en un namespace."""
+        """Removes all elements in a namespace."""
         ...
 
     def clear(self) -> None:
-        """Removes todos los elementos del caché."""
+        """Removes all elements from the cache."""
         ...
 
     def cleanup(self) -> int:
-        """Removes elementos expirados por TTL."""
+        """Removes elements expired by TTL."""
         ...
 
     def size(self) -> Tuple[int, int]:
@@ -62,7 +62,7 @@ class ICacheModule(Protocol):
         ...
 
     def save_to_pickle(self, file_path: Union[str, Path]) -> None:
-        """Saves the state del caché como pickle."""
+        """Saves the cache state as pickle."""
         ...
 
     def load_from_pickle(self, file_path: Union[str, Path]) -> None:
@@ -70,11 +70,11 @@ class ICacheModule(Protocol):
         ...
 
     def save_to_json(self, file_path: Union[str, Path]) -> None:
-        """Saves solo metadatos en JSON."""
+        """Saves only metadata in JSON."""
         ...
 
     def load_from_json(self, file_path: Union[str, Path]) -> None:
-        """Loads solo metadatos desde JSON."""
+        """Loads only metadata from JSON."""
         ...
 
     def save_to_disk(self, file_path: Union[str, Path], format: str = "auto") -> None:
@@ -93,10 +93,10 @@ class ICacheModule(Protocol):
         self,
         namespace_key: Tuple[str, Union[str, int, float, tuple, dict, list]],
     ) -> bool:
-        """Permite `if (namespace, key) in cache`."""
+        """Allows `if (namespace, key) in cache`."""
         ...
 
 
-# Alias de compatibilidad
+# Compatibility aliases
 ICtocheModule = ICacheModule
 ICtoche = ICacheModule

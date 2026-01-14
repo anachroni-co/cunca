@@ -1,15 +1,15 @@
 """
 CapibaraGPT-v2 Physics Datasets
 
-Datasets especializados en física teórica y experimental para entrenamiento
-en razonamiento científico y modelado físico.
+Specialized datasets in theoretical and experimental physics for training
+in scientific reasoning and physical modeling.
 
-Incluye:
-- Ecuaciones y fórmulas físicas
-- Datos experimentales
-- Simulaciones de systems físicos
-- Problemas y soluciones
-- Conceptos teóricos avanzados
+Includes:
+- Physical equations and formulas
+- Experimental data
+- Physical system simulations
+- Problems and solutions
+- Advanced theoretical concepts
 """
 
 import logging
@@ -63,18 +63,18 @@ class PhysicsDatasetLoader:
         logger.info(f"   📊 Available datasets: {len(self.available_datasets)}")
     
     def list_datasets(self) -> List[str]:
-        """Lista los datasets de física disponibles."""
+        """Lists the available physics datasets."""
         return list(self.available_datasets.keys())
     
     def get_dataset_info(self, dataset_name: str) -> Optional[Dict[str, Any]]:
-        """Gets information de un dataset específico."""
+        """Gets information for a specific dataset."""
         return self.available_datasets.get(dataset_name)
     
     def load_physics_equations(self, subject: str = 'mechanics') -> Dict[str, Any]:
-        """Loads ecuaciones físicas por tema."""
+        """Loads physics equations by topic."""
         logger.info(f"📥 Loading physics equations: {subject}")
-        
-        # Ecuaciones de ejemplo por tema
+
+        # Example equations by topic
         equations_db = {
             'mechanics': [
                 {'name': 'Newton Second Law', 'equation': 'F = ma', 'variables': ['F', 'm', 'a']},
@@ -107,14 +107,14 @@ class PhysicsDatasetLoader:
         }
     
     def load_experimental_data(self, experiment_type: str = 'particle_physics') -> Dict[str, Any]:
-        """Loads datos experimentales."""
+        """Loads experimental data."""
         logger.info(f"📥 Loading experimental data: {experiment_type}")
-        
-        # Datos experimentales simulados
+
+        # Simulated experimental data
         import numpy as np
         
         if experiment_type == 'particle_physics':
-            # Simular datos de colisión de partículas
+            # Simulate particle collision data
             num_events = 1000
             data = {
                 'energy': np.random.exponential(100, num_events),
@@ -123,7 +123,7 @@ class PhysicsDatasetLoader:
                 'charge': np.random.choice([-1, 0, 1], num_events)
             }
         else:
-            # Datos genéricos
+            # Generic data
             num_points = 500
             data = {
                 'measurement': np.random.normal(0, 1, num_points),
@@ -142,11 +142,11 @@ class PhysicsDatasetLoader:
         }
 
 def get_physics_loader() -> PhysicsDatasetLoader:
-    """Factory function para obtener el loader de física."""
+    """Factory function to get the physics loader."""
     return PhysicsDatasetLoader()
 
 def list_available_physics_datasets() -> List[str]:
-    """Lista rápida de datasets de física disponibles."""
+    """Quick list of available physics datasets."""
     return list(PHYSICS_DATASETS.keys())
 
 # Import submodules

@@ -1,4 +1,4 @@
-"""Profiling y métricas para TPU v4-32."""
+"""Profiling and metrics for TPU v4-32."""
 
 import os
 import sys
@@ -43,7 +43,7 @@ def checkpoint_fn(fn):
         return fn
 
 class TpuProfiler:
-    """Profiler específico para TPU v4-32."""
+    """TPU v4-32 specific profiler."""
     
     def __init__(self, model):
         self.model = model
@@ -72,8 +72,8 @@ class TpuProfiler:
         return metrics
     
     def benchmark_tpu_v4_32(self) -> List[Dict[str, Any]]:
-        """Benchmark específico para TPU v4-32."""
-        # Configuraciones de prueba optimizadas para TPU
+        """TPU v4-32 specific benchmark."""
+        # TPU-optimized test configurations
         batch_sizes = [32, 64, 128, 256]  # TPU works better with large batches
         seq_lengths = [512, 1024, 2048]
         
@@ -100,15 +100,15 @@ class TpuProfiler:
                     output["output"].block_until_ready()
                 duration = time.time() - start
                 
-                # Calcular métricas
+                # Calculate metrics
                 total_tokens = batch_size * seq_len * 100
                 throughput = total_tokens / duration
                 
-                # Estimar FLOPS (aproximado)
+                # Estimate FLOPS (approximate)
                 flops_per_token = 6 * self.config.hidden_size * self.config.hidden_size
                 tflops = (total_tokens * flops_per_token) / (duration * 1e12)
                 
-                # Obtener métricas de memoria
+                # Get memory metrics
                 memory_metrics = self.get_tpu_metrics()
                 
                 results.append({
@@ -120,7 +120,7 @@ class TpuProfiler:
                     "memory_metrics": memory_metrics
                 })
                 
-                # Registrar métricas
+                # Record metrics
                 self.metrics_collector.record(
                     f"benchmark_b{batch_size}_s{seq_len}_throughput", 
                     throughput
@@ -134,12 +134,12 @@ class TpuProfiler:
 
 @checkpoint_fn
 def checkpointed_transformer_block(block, x: ArrayType, training: bool) -> ArrayType:
-    """Transformer block con gradient checkpointing."""
+    """Transformer block with gradient checkpointing."""
     return block(x, training=training)
 
-def _uniform_fallback_weights(x: ArrayType, num_modules: int, 
+def _uniform_fallback_weights(x: ArrayType, num_modules: int,
                             dtype, mesh) -> ArrayType:
-    """Fallback weights optimizado para TPU."""
+    """TPU-optimized fallback weights."""
     batch_size = x.shape[0]
     
     # Create uniform weights with correct dtype
@@ -149,16 +149,16 @@ def _uniform_fallback_weights(x: ArrayType, num_modules: int,
         dtype=dtype  # Use bfloat16 for TPU
     )
     
-    # Aplicar sharding
+    # Apply sharding
     return jax.lax.with_sharding_constraint(
         uniform_weights, 
         P("data", None)
     )
 
-def _expert_weights_with_cache(x: ArrayType, context: Optional[ArrayType], 
+def _expert_weights_with_cache(x: ArrayType, context: Optional[ArrayType],
                              training: bool, cache: Dict) -> ArrayType:
-    """Compute expert weights con cache para TPU."""
-    # Añadir cache key based en shape para reutilizar compilaciones
+    """Compute expert weights with cache for TPU."""
+    # Add cache key based on shape to reuse compilations
     cache_key = (x.shape, context.shape if context is not None else None, training)
     
     if cache_key in cache:

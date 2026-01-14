@@ -60,7 +60,7 @@ from . import pretty_printer as pp
 from .lib import jax_jit, xla_client
 from .tree_util import tree_flatten, tree_unflatten
 
-# ✅ DEFINICIONES DE ERRORES LOCALES
+# LOCAL ERROR DEFINITIONS
 class InconclusiveDimensionOperation(ValueError):
     """error when dimension operation cannot be resolved."""
     pass
@@ -93,7 +93,7 @@ class ShardingTypeError(Exception):
     """error in sharding configuration."""
     pass
 
-# ✅ TIPOS BÁSICOS
+# BASIC TYPES
 Array = Union[np.ndarray, 'Tracer']
 DimSize = Union[int, 'Tracer']
 Shape = tuple[DimSize, ...]

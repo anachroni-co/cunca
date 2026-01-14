@@ -10,15 +10,15 @@ from pathlib import Path
 
 def validate_robotics_structure():
     """Validates robotics directory structure"""
-    print("🏗️  Validando estructura directorios robótica...")
-    
-    # directory principal
+    print("🏗️  Validating robotics directory structure...")
+
+    # main directory
     robotics_dir = Path("capibara/data/datasets/robotics")
     if not robotics_dir.exists():
-        print("❌ ERROR: Directorio robotics/ no existe")
+        print("❌ ERROR: Directory robotics/ does not exist")
         return False
-    
-    # Archivos requeridos
+
+    # Required files
     required_files = [
         "__init__.py",
         "robotics_premium_datasets.py"
@@ -33,30 +33,30 @@ def validate_robotics_structure():
             print(f"   ✅ {file} - Existe")
     
     if missing_files:
-        print(f"❌ ERROR: Archivos faltantes: {missing_files}")
+        print(f"❌ ERROR: Missing files: {missing_files}")
         return False
-        
-    print("✅ Estructura directorios robótica: VÁLIDA")
+
+    print("✅ Robotics directory structure: VALID")
     return True
 
 def validate_robotics_imports():
     """Validates robotics module imports"""
-    print("\n📦 Validando imports robótica...")
-    
+    print("\n📦 Validating robotics imports...")
+
     try:
-        # add path if es necessary
+        # add path if necessary
         current_dir = Path.cwd()
         if str(current_dir) not in sys.path:
             sys.path.append(str(current_dir))
         
-        # Test import principal
+        # Test main import
         from capibara.data.datasets.robotics import (
             RoboticsPremiumDatasetManager,
             RoboTurkConfig,
             CalvinConfig,
             OpenXEmbodimentConfig
         )
-        print("   ✅ Import classs principales - OK")
+        print("   ✅ Main classes import - OK")
         
         # Test factory functions
         from capibara.data.datasets.robotics import (
@@ -70,15 +70,15 @@ def validate_robotics_imports():
         print(f"❌ ERROR Import: {e}")
         return False
     except Exception as e:
-        print(f"❌ ERROR Inesperado: {e}")
+        print(f"❌ Unexpected ERROR: {e}")
         return False
-        
-    print("✅ Imports robótica: VÁLIDOS")
+
+    print("✅ Robotics imports: VALID")
     return True
 
 def validate_robotics_configs():
     """Validates robotics dataset configurations"""
-    print("\n⚙️  Validando configuraciones datasets...")
+    print("\n⚙️  Validating dataset configurations...")
     
     try:
         from capibara.data.datasets.robotics import (
@@ -90,27 +90,27 @@ def validate_robotics_configs():
         assert roboturk.quality_score == 9.8
         assert roboturk.total_demonstrations == 111000
         assert "imitation_learning" in roboturk.use_cases
-        print("   ✅ RoboTurk Config - Válida")
+        print("   ✅ RoboTurk Config - Valid")
         
         # Test CALVIN Config  
         calvin = CalvinConfig()
         assert calvin.quality_score == 9.6
         assert calvin.total_episodes == 25000
         assert "language_conditioned_robotics" in calvin.use_cases
-        print("   ✅ CALVIN Config - Válida")
+        print("   ✅ CALVIN Config - Valid")
         
         # Test Open X-Embodiment Config
         open_x = OpenXEmbodimentConfig()
         assert open_x.quality_score == 9.9
         assert open_x.total_robot_types == 22
         assert "cross_embodiment_learning" in open_x.use_cases
-        print("   ✅ Open X-Embodiment Config - Válida")
+        print("   ✅ Open X-Embodiment Config - Valid")
         
     except Exception as e:
         print(f"❌ ERROR Configs: {e}")
         return False
-        
-    print("✅ Configuraciones datasets: VÁLIDAS")
+
+    print("✅ Dataset configurations: VALID")
     return True
 
 def validate_robotics_manager():

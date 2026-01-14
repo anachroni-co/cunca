@@ -1,15 +1,15 @@
 """
 Genomic Datasets for CapibaraGPT v2
 
-This module provides acceso a datasets genómicos especializados para 
-entrenamiento en bioinformática y análisis genético.
+This module provides access to specialized genomic datasets for
+training in bioinformatics and genetic analysis.
 
-Características:
-- Secuencias de ADN/ARN/proteínas
-- Anotaciones genómicas
-- Datos de expresión génica
-- Variantes genéticas
-- Análisis filogenético
+Features:
+- DNA/RNA/protein sequences
+- Genomic annotations
+- Gene expression data
+- Genetic variants
+- Phylogenetic analysis
 """
 
 import logging
@@ -75,7 +75,7 @@ class GenomicSequenceProcessor:
         return [self.amino_acid_map.get(aa.upper(), 20) for aa in sequence]
     
     def one_hot_encode_dna(self, sequence: str) -> np.ndarray:
-        """Codifica ADN en formato one-hot."""
+        """Encodes DNA in one-hot format."""
         encoded = self.encode_dna_sequence(sequence)
         one_hot = np.zeros((len(encoded), 5))  # 4 bases + N
         for i, base_idx in enumerate(encoded):
@@ -115,11 +115,11 @@ class GenomicDatasetLoader:
         """Loads DNA sequences."""
         logger.info(f"📥 Loading DNA sequences: {organism} ({sequence_type})")
         
-        # En implementación real, cargaría desde archivos FASTA
-        # Por ahora, generar datos simulados
+        # In real implementation, would load from FASTA files
+        # For now, generate simulated data
         sequences = []
-        for i in range(min(max_sequences, 100)):  # Limitar for demo
-            # Generar secuencia aleatoria
+        for i in range(min(max_sequences, 100)):  # Limit for demo
+            # Generate random sequence
             length = np.random.randint(100, 2000)
             bases = ['A', 'T', 'G', 'C']
             sequence = ''.join(np.random.choice(bases, length))
@@ -151,9 +151,9 @@ class GenomicDatasetLoader:
         logger.info(f"📥 Loading protein sequences (max: {max_sequences})")
         
         sequences = []
-        amino_acids = list(self.processor.amino_acid_map.keys())[:-1]  # Excluir X
-        
-        for i in range(min(max_sequences, 50)):  # Limitar for demo
+        amino_acids = list(self.processor.amino_acid_map.keys())[:-1]  # Exclude X
+
+        for i in range(min(max_sequences, 50)):  # Limit for demo
             length = np.random.randint(50, 500)
             sequence = ''.join(np.random.choice(amino_acids, length))
             
@@ -181,7 +181,7 @@ class GenomicDatasetLoader:
         """Loads gene expression data."""
         logger.info(f"📥 Loading gene expression data: {condition}")
         
-        # Generar matriz de expresión simulada
+        # Generate simulated expression matrix
         expression_matrix = np.random.lognormal(mean=0, sigma=1, size=(num_genes, num_samples))
         
         gene_names = [f"GENE_{i:04d}" for i in range(num_genes)]
@@ -204,12 +204,12 @@ class GenomicDatasetLoader:
     def load_genetic_variants(self, population: str = '1000genomes',
                              chromosome: str = 'chr1',
                              max_variants: int = 10000) -> Dict[str, Any]:
-        """Loads variantes genéticas."""
+        """Loads genetic variants."""
         logger.info(f"📥 Loading genetic variants: {population} ({chromosome})")
         
         variants = []
-        for i in range(min(max_variants, 1000)):  # Limitar for demo
-            position = np.random.randint(1000000, 249000000)  # Posiciones en chr1
+        for i in range(min(max_variants, 1000)):  # Limit for demo
+            position = np.random.randint(1000000, 249000000)  # Positions in chr1
             ref_allele = np.random.choice(['A', 'T', 'G', 'C'])
             alt_allele = np.random.choice([a for a in ['A', 'T', 'G', 'C'] if a != ref_allele])
             

@@ -1,12 +1,12 @@
 """
 Robotics Datasets Module for CapibaraGPT
 
-This module provides datasets especializados para entrenamiento en robótica,
-incluyendo datasets de simulación, control de robots, navegación y manipulación.
+This module provides specialized datasets for robotics training,
+including simulation datasets, robot control, navigation, and manipulation.
 
-Datasets disponibles:
+Available datasets:
 - Robot control sequences
-- Navigation trajectories  
+- Navigation trajectories
 - Manipulation tasks
 - Multi-agent coordination
 - Sensor fusion data
@@ -63,15 +63,15 @@ class RoboticsDatasetLoader:
         logger.info(f"   📊 Available datasets: {len(self.available_datasets)}")
     
     def list_datasets(self) -> List[str]:
-        """Lista los datasets disponibles."""
+        """Lists the available datasets."""
         return list(self.available_datasets.keys())
     
     def get_dataset_info(self, dataset_name: str) -> Optional[Dict[str, Any]]:
-        """Gets information de un dataset específico."""
+        """Gets information for a specific dataset."""
         return self.available_datasets.get(dataset_name)
     
     def load_dataset(self, dataset_name: str, **kwargs) -> Dict[str, Any]:
-        """Loads un dataset de robótica."""
+        """Loads a robotics dataset."""
         if dataset_name not in self.available_datasets:
             raise ValueError(f"Dataset {dataset_name} not available")
         
@@ -92,11 +92,11 @@ class RoboticsDatasetLoader:
         }
 
 def get_robotics_loader() -> RoboticsDatasetLoader:
-    """Factory function para obtener el loader de robotics."""
+    """Factory function to get the robotics loader."""
     return RoboticsDatasetLoader()
 
 def list_available_robotics_datasets() -> List[str]:
-    """Lista rápida de datasets de robótica disponibles."""
+    """Quick list of available robotics datasets."""
     return list(ROBOTICS_DATASETS.keys())
 
 # Export main components

@@ -9,7 +9,7 @@ try:
     # try import since JAX retol
     from jtox.scipy import lintolg as jtox_lintolg
     
-    # Opertociones básictos of álgebrto linetol
+    # Basic linear algebra operations
     def qr(to, moof='reduced'):
         """QR ofcomposition."""
         return jtox_lintolg.qr(to, moof=moof)
