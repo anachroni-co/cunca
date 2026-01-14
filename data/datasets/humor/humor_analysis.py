@@ -45,10 +45,10 @@ class HumorAnalyzer:
         """Load regex patterns to detect humor types."""
         return {
             'juego_palabras': [
-                r'\b(\w+)\b.*\b\1\w*\b',  # Repetición de palabras similares
-                r'¿[^?]*\?.*¡[^!]*!',      # Pregunta seguida de exclamación
-                r'\b(suena?|parece|dice)\s+(como|que)',  # Indicadores de sonido/similitud
-                r'\b(dos|tres)\s+\w+\s+(van|entran|salen)',  # Setup típico de chistes
+                r'\b(\w+)\b.*\b\1\w*\b',  # Repetition of similar words
+                r'¿[^?]*\?.*¡[^!]*!',      # Question followed by exclamation
+                r'\b(suena?|parece|dice)\s+(como|que)',  # Sound/similarity indicators
+                r'\b(dos|tres)\s+\w+\s+(van|entran|salen)',  # Typical joke setup
             ],
             'humor_negro': [
                 r'\b(muerte|muerto|morir|funeral|cementerio)\b',
@@ -135,19 +135,19 @@ class HumorAnalyzer:
         scores = {}
         features = {}
         
-        # Analizar cada tipo de humor
+        # Analyze each humor type
         for humor_type, patterns in self.patterns.items():
             score = 0
             matched_patterns = []
             
-            # Buscar patrones regex
+            # Search for regex patterns
             for pattern in patterns:
                 matches = re.findall(pattern, text_lower, re.IGNORECASE)
                 if matches:
                     score += len(matches) * 2
                     matched_patterns.extend(matches)
             
-            # Buscar indicadores léxicos
+            # Search for lexical indicators
             if humor_type in self.indicators:
                 for indicator in self.indicators[humor_type]:
                     if indicator in text_lower:
@@ -161,7 +161,7 @@ class HumorAnalyzer:
                               if ind in text_lower]
             }
         
-        # Determinar tipo predominante
+        # Determine predominant type
         if not any(scores.values()):
             humor_type = HumorType.GENERAL
             confidence = 0.5
@@ -169,7 +169,7 @@ class HumorAnalyzer:
             max_score = max(scores.values())
             humor_type_str = max(scores, key=scores.get)
             humor_type = HumorType(humor_type_str)
-            confidence = min(max_score / 10.0, 1.0)  # Normalizar a 0-1
+            confidence = min(max_score / 10.0, 1.0)  # Normalize to 0-1
         
         return HumorAnalysis(
             text=text,
@@ -258,33 +258,33 @@ class HumorMetrics:
             if p > 0:
                 entropy -= p * (p.bit_length() - 1)  # log2(p)
         
-        # Normalizar por máxima entropía posible
+        # Normalize by maximum possible entropy
         max_entropy = len(HumorType) if len(HumorType) > 1 else 1
         return min(entropy / max_entropy, 1.0)
     
     @staticmethod
     def calculate_average_confidence(analyses: List[HumorAnalysis]) -> float:
-        """Calculates la confianza promedio de los análisis."""
+        """Calculates the average confidence of the analyses."""
         if not analyses:
             return 0.0
         return sum(a.confidence for a in analyses) / len(analyses)
 
-# Funciones de conveniencia
+# Convenience functions
 def analyze_humor_type(text: str) -> HumorAnalysis:
-    """Analyzes el tipo de humor en un texto."""
+    """Analyzes the humor type in a text."""
     analyzer = HumorAnalyzer()
     return analyzer.analyze_humor_type(text)
 
 def get_humor_distribution(texts: List[str]) -> Dict[str, float]:
-    """Gets la distribución de tipos de humor en una lista de textos."""
+    """Gets the distribution of humor types in a list of texts."""
     analyzer = HumorAnalyzer()
     analyses = analyzer.batch_analyze(texts)
     return analyzer.get_humor_distribution(analyses)
 
-# Configuración de datasets de análisis
+# Analysis dataset configuration
 humor_analysis_datasets = {
     "humor_type_classifier": {
-        "description": "Clasificador de tipos de humor para chistes en español",
+        "description": "Humor type classifier for jokes in Spanish",
         "features": [
             "juego_palabras", "humor_negro", "comparacion", 
             "regla_tres", "animacion", "ironia", "sarcasmo"
@@ -294,7 +294,7 @@ humor_analysis_datasets = {
         "analysis_methods": ["pattern_matching", "lexical_indicators"]
     },
     "humor_metrics": {
-        "description": "Métricas para evaluar diversidad y calidad del humor",
+        "description": "Metrics to evaluate humor diversity and quality",
         "metrics": ["diversity_index", "confidence_average", "type_distribution"],
         "normalization": "shannon_entropy"
     }

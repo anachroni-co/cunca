@@ -3,18 +3,18 @@ from typing import Any
 
 logger = logging.getLogger(__name__)
 
-# Intentar usar JAX real; si no está, usar fallbacks mínimos
+# Try to use real JAX; if not available, use minimal fallbacks
 try:
     import jax as _jax  # type: ignore
     import jax.numpy as _jnp  # type: ignore
     HAS_JAX = True
 except Exception as _e:  # pragma: no cover - environment without JAX
     HAS_JAX = False
-    logger.warning("JAX no disponible; usando fallbacks con numpy. Detalle: %s", _e)
+    logger.warning("JAX not available; using fallbacks with numpy. Detail: %s", _e)
     try:
         import numpy as _jnp  # type: ignore
     except Exception:
-        # Minimal fallback without numpy: proveer funciones básicas
+        # Minimal fallback without numpy: provide basic functions
         class _MiniNumpy:  # type: ignore
             float16 = float
             float32 = float
@@ -350,7 +350,7 @@ except Exception as _e:  # pragma: no cover - environment without JAX
         _jnp = _MiniNumpy()  # type: ignore
 
     class _FakeJax:
-        def __getattr__(self, name: str) -> Any:  # Proveer dummy attrs
+        def __getattr__(self, name: str) -> Any:  # Provide dummy attrs
             if name == 'jit':
                 # Return a no-op decorator for jit
                 return lambda func: func
@@ -377,8 +377,8 @@ except Exception as _e:  # pragma: no cover - environment without JAX
                     return _FakeRandom()
             else:
                 raise ImportError(
-                    "JAX no está instalado en este entorno. "
-                    f"Se intentó acceder a jax.{name}"
+                    "JAX is not installed in this environment. "
+                    f"Attempted to access jax.{name}"
                 )
 
     _jax = _FakeJax()  # type: ignore

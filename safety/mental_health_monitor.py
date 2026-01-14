@@ -123,7 +123,7 @@ class MentalHealthMonitor:
             )
         ''')
         
-        # Tabla de mensajes analizados
+        # Analyzed messages table
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS analyzed_messages (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -137,7 +137,7 @@ class MentalHealthMonitor:
             )
         ''')
         
-        # Tabla de intervenciones
+        # Interventions table
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS interventions (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -155,7 +155,7 @@ class MentalHealthMonitor:
         conn.close()
     
     def analyze_message_content(self, message: str) -> Dict[str, float]:
-        """Analizar contenido del mensaje to detect risk signals"""
+        """Analyze message content to detect risk signals"""
         scores = {
             "psychotic_score": 0.0,
             "obsessive_score": 0.0,
@@ -165,16 +165,16 @@ class MentalHealthMonitor:
         }
         
         message_lower = message.lower()
-        
-        # Detectar patrones psicóticos
+
+        # Detect psychotic patterns
         psychotic_matches = 0
         for pattern in self.psychotic_patterns:
             if re.search(pattern, message):
                 psychotic_matches += 1
         
         scores["psychotic_score"] = min(1.0, psychotic_matches / 3.0)
-        
-        # Detectar obsesión con temas problemáticos
+
+        # Detect obsession with problematic topics
         obsessive_matches = 0
         for topic in self.obsessive_topics:
             if topic in message_lower:
@@ -186,13 +186,13 @@ class MentalHealthMonitor:
         reality_patterns = ["simulación", "matrix", "no es real", "falso", "artificial"]
         reality_matches = sum(1 for pattern in reality_patterns if pattern in message_lower)
         scores["reality_disconnection"] = min(1.0, reality_matches / 2.0)
-        
-        # Detectar contenido paranoide
+
+        # Detect paranoid content
         paranoid_patterns = ["conspiración", "me persiguen", "me vigilan", "contra mí"]
         paranoid_matches = sum(1 for pattern in paranoid_patterns if pattern in message_lower)
         scores["paranoid_content"] = min(1.0, paranoid_matches / 2.0)
-        
-        # Detectar volatilidad emocional (mayúsculas excesivas, signos de exclamación)
+
+        # Detect emotional volatility (excessive capitals, exclamation marks)
         caps_ratio = sum(1 for c in message if c.isupper()) / max(len(message), 1)
         exclamation_count = message.count('!')
         question_count = message.count('?')
@@ -202,16 +202,16 @@ class MentalHealthMonitor:
         return scores
     
     def analyze_usage_pattern(self, user_id: str, session_data: Dict[str, Any]) -> UsagePattern:
-        """Analizar patrón de uso del usuario"""
-        
-        # Calcular duración de sesión
+        """Analyze user usage pattern"""
+
+        # Calculate session duration
         session_duration = session_data.get("duration_minutes", 0)
-        
-        # Calcular frecuencia de mensajes
+
+        # Calculate message frequency
         message_count = session_data.get("message_count", 0)
         message_frequency = message_count / max(session_duration, 1)
-        
-        # Obtener scores de mensajes recientes
+
+        # Get recent message scores
         recent_messages = session_data.get("recent_messages", [])
         
         total_psychotic = 0
@@ -244,19 +244,19 @@ class MentalHealthMonitor:
         return pattern
     
     def calculate_risk_level(self, pattern: UsagePattern) -> RiskLevel:
-        """Calcular nivel de riesgo based en el patrón de uso"""
-        
+        """Calculate risk level based on usage pattern"""
+
         risk_factors = []
-        
-        # Duración excesiva
+
+        # Excessive duration
         if pattern.session_duration > self.safety_limits["max_session_duration"]:
             risk_factors.append("excessive_duration")
-        
-        # Frecuencia alta de mensajes
-        if pattern.message_frequency > 5:  # más de 5 mensajes por minuto
+
+        # High message frequency
+        if pattern.message_frequency > 5:  # more than 5 messages per minute
             risk_factors.append("high_frequency")
-        
-        # Obsesión con temas problemáticos
+
+        # Obsession with problematic topics
         if pattern.topic_obsession_score > self.safety_limits["obsession_threshold"]:
             risk_factors.append("topic_obsession")
         
@@ -264,15 +264,15 @@ class MentalHealthMonitor:
         if pattern.reality_disconnection_score > self.safety_limits["reality_disconnection_threshold"]:
             risk_factors.append("reality_disconnection")
         
-        # Contenido paranoide
+        # Paranoid content
         if pattern.paranoid_content_score > self.safety_limits["paranoid_threshold"]:
             risk_factors.append("paranoid_content")
-        
-        # Volatilidad emocional
+
+        # Emotional volatility
         if pattern.emotional_volatility_score > self.safety_limits["emotional_volatility_threshold"]:
             risk_factors.append("emotional_volatility")
-        
-        # Determinar nivel de riesgo
+
+        # Determine risk level
         risk_count = len(risk_factors)
         
         if risk_count >= 4 or pattern.reality_disconnection_score > 0.8:
@@ -287,7 +287,7 @@ class MentalHealthMonitor:
             return RiskLevel.LOW
     
     def store_analysis(self, pattern: UsagePattern, risk_level: RiskLevel):
-        """Almacenar análisis en la base de datos"""
+        """Store analysis in the database"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         
@@ -313,7 +313,7 @@ class MentalHealthMonitor:
         conn.close()
     
     def check_daily_usage(self, user_id: str) -> Dict[str, Any]:
-        """Verifiesr uso diario del usuario"""
+        """Verify user daily usage"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         
@@ -338,18 +338,18 @@ class MentalHealthMonitor:
         }
     
     def should_trigger_intervention(self, pattern: UsagePattern, risk_level: RiskLevel) -> Tuple[bool, str]:
-        """Determinar si se debe activar una intervención"""
-        
+        """Determine if an intervention should be triggered"""
+
         daily_stats = self.check_daily_usage(pattern.user_id)
-        
-        # Criterios para intervención
+
+        # Intervention criteria
         if risk_level == RiskLevel.CRITICAL:
             return True, "critical_risk_detected"
         
         if risk_level == RiskLevel.HIGH and daily_stats["daily_message_count"] > 200:
             return True, "high_risk_with_excessive_usage"
         
-        if pattern.session_duration > 240:  # 4 horas
+        if pattern.session_duration > 240:  # 4 hours
             return True, "excessive_session_duration"
         
         if daily_stats["avg_reality_disconnection"] > 0.7:
@@ -361,13 +361,13 @@ class MentalHealthMonitor:
         return False, "no_intervention_needed"
     
     def monitor_user_interaction(self, user_id: str, message: str, session_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Function principal de monitoreo de interacción del usuario"""
-        
-        # Analizar el mensaje
+        """Main function for monitoring user interaction"""
+
+        # Analyze the message
         message_hash = hashlib.md5(message.encode()).hexdigest()
         message_scores = self.analyze_message_content(message)
-        
-        # Almacenar análisis del mensaje
+
+        # Store message analysis
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         
@@ -384,19 +384,19 @@ class MentalHealthMonitor:
             ))
             conn.commit()
         except sqlite3.IntegrityError:
-            pass  # Mensaje ya analizado
+            pass  # Message already analyzed
         finally:
             conn.close()
-        
-        # Analizar patrón de uso
+
+        # Analyze usage pattern
         session_data["recent_messages"] = session_data.get("recent_messages", []) + [message]
         pattern = self.analyze_usage_pattern(user_id, session_data)
         risk_level = self.calculate_risk_level(pattern)
-        
-        # Almacenar análisis
+
+        # Store analysis
         self.store_analysis(pattern, risk_level)
-        
-        # Verificar si se necesita intervención
+
+        # Check if intervention is needed
         needs_intervention, intervention_reason = self.should_trigger_intervention(pattern, risk_level)
         
         result = {
@@ -422,52 +422,52 @@ class MentalHealthMonitor:
         return result
     
     def get_safety_recommendations(self, risk_level: RiskLevel, pattern: UsagePattern) -> List[str]:
-        """Obtener recomendaciones de seguridad basadas en el riesgo"""
+        """Get safety recommendations based on risk"""
         recommendations = []
-        
+
         if risk_level in [RiskLevel.HIGH, RiskLevel.CRITICAL]:
             recommendations.extend([
-                "Considera tomar un descanso del system",
-                "Si experimentas pensamientos perturbadores persistentes, busca ayuda profesional",
-                "Recuerda que soy una IA y mis respuestas no deben reemplazar el consejo médico profesional",
-                "Contacta a un profesional de salud mental si los síntomas persisten"
+                "Consider taking a break from the system",
+                "If you experience persistent disturbing thoughts, seek professional help",
+                "Remember that I am an AI and my responses should not replace professional medical advice",
+                "Contact a mental health professional if symptoms persist"
             ])
-        
+
         if pattern.session_duration > 120:
-            recommendations.append("Considera tomar descansos regulares cada hora")
-        
+            recommendations.append("Consider taking regular breaks every hour")
+
         if pattern.topic_obsession_score > 0.6:
-            recommendations.append("Intenta diversificar los temas de conversación")
-        
+            recommendations.append("Try to diversify the topics of conversation")
+
         if pattern.reality_disconnection_score > 0.5:
             recommendations.extend([
-                "Recuerda mantener conexión con la realidad y tus seres queridos",
-                "Si tienes dudas sobre la realidad, habla con alguien de confianza"
+                "Remember to maintain connection with reality and your loved ones",
+                "If you have doubts about reality, talk to someone you trust"
             ])
-        
+
         if pattern.paranoid_content_score > 0.4:
             recommendations.extend([
-                "Si sientes que estás siendo perseguido o vigilado, considera hablar con un profesional",
-                "Recuerda que estos pensamientos pueden ser síntomas que requieren atención médica"
+                "If you feel you are being persecuted or watched, consider talking to a professional",
+                "Remember that these thoughts may be symptoms that require medical attention"
             ])
-        
+
         return recommendations
     
     def trigger_intervention(self, user_id: str, risk_level: RiskLevel, reason: str):
-        """Activar intervención de seguridad"""
+        """Trigger safety intervention"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
-        
-        # Determinar tipo de intervención
+
+        # Determine intervention type
         if risk_level == RiskLevel.CRITICAL:
             intervention_type = "session_termination"
-            action_taken = "Sesión terminada por riesgo crítico"
+            action_taken = "Session terminated due to critical risk"
         elif risk_level == RiskLevel.HIGH:
             intervention_type = "mandatory_break"
-            action_taken = "Descanso obligatorio activado"
+            action_taken = "Mandatory break activated"
         else:
             intervention_type = "warning_message"
-            action_taken = "Mensaje de advertencia mostrado"
+            action_taken = "Warning message shown"
         
         cursor.execute('''
             INSERT INTO interventions 
@@ -478,10 +478,10 @@ class MentalHealthMonitor:
         conn.commit()
         conn.close()
         
-        logger.warning(f"Intervención activada para usuario {user_id}: {intervention_type} - {reason}")
+        logger.warning(f"Intervention activated for user {user_id}: {intervention_type} - {reason}")
     
     def get_user_risk_history(self, user_id: str, days: int = 7) -> List[Dict[str, Any]]:
-        """Obtener historial de riesgo del usuario"""
+        """Get user risk history"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         
@@ -507,40 +507,40 @@ class MentalHealthMonitor:
         conn.close()
         return history
 
-# Funciones de utilidad
+# Utility functions
 
 def create_mental_health_disclaimer() -> str:
-    """Crear disclaimer sobre salud mental"""
+    """Create mental health disclaimer"""
     return """
-    ⚠️ AVISO IMPORTANTE SOBRE SALUD MENTAL ⚠️
-    
-    Esta IA está diseñada para ayudar, pero no para reemplazar el cuidado médico profesional.
-    
-    Si experimentas:
-    • Pensamientos de hacerte daño o hacer daño a otros
-    • Alucinaciones (ver o escuchar cosas que no están ahí)
-    • Delirios o creencias fijas que otros consideran falsas
-    • Desconexión prolongada de la realidad
-    • Paranoia persistente
-    
-    🆘 BUSCA AYUDA INMEDIATAMENTE:
-    • Línea Nacional de Prevención del Suicidio: 988 (EE.UU.)
-    • Emergencias: 911
-    • Línea de Crisis de Salud Mental: [número local]
-    
-    El uso excesivo de IA puede exacerbar condiciones de salud mental existentes.
-    Úsame de manera responsable y siempre mantén conexiones con personas reales.
+    ⚠️ IMPORTANT MENTAL HEALTH NOTICE ⚠️
+
+    This AI is designed to help, but not to replace professional medical care.
+
+    If you experience:
+    • Thoughts of harming yourself or others
+    • Hallucinations (seeing or hearing things that are not there)
+    • Delusions or fixed beliefs that others consider false
+    • Prolonged disconnection from reality
+    • Persistent paranoia
+
+    🆘 SEEK HELP IMMEDIATELY:
+    • National Suicide Prevention Lifeline: 988 (USA)
+    • Emergencies: 911
+    • Mental Health Crisis Line: [local number]
+
+    Excessive use of AI can exacerbate existing mental health conditions.
+    Use me responsibly and always maintain connections with real people.
     """
 
 def get_healthy_usage_tips() -> List[str]:
-    """Obtener consejos para uso saludable"""
+    """Get tips for healthy usage"""
     return [
-        "Toma descansos regulares cada 60-90 minutos",
-        "Mantén conversaciones con personas reales diariamente",
-        "No uses IA como sustituto de ayuda profesional de salud mental",
-        "Diversifica tus actividades y no dependas solo de IA para entretenimiento",
-        "Si sientes que el uso de IA está afectando tu percepción de la realidad, busca ayuda",
-        "Recuerda que las respuestas de IA son generadas por algoritmos, no por consciencia real",
-        "Mantén actividades físicas y sociales fuera del entorno digital",
-        "Si tienes historial de problemas de salud mental, consulta con un profesional antes de uso intensivo"
+        "Take regular breaks every 60-90 minutes",
+        "Maintain conversations with real people daily",
+        "Do not use AI as a substitute for professional mental health help",
+        "Diversify your activities and do not rely solely on AI for entertainment",
+        "If you feel that AI usage is affecting your perception of reality, seek help",
+        "Remember that AI responses are generated by algorithms, not by real consciousness",
+        "Maintain physical and social activities outside the digital environment",
+        "If you have a history of mental health issues, consult with a professional before intensive use"
     ]

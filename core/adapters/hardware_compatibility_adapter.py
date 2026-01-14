@@ -269,10 +269,10 @@ class HardwareDetector:
                             name=gpu_name,
                             memory_gb=8.0,  # Default estimation
                             compute_units=1,
-                            peak_performance_tflops=10.0,  # Estimación
+                            peak_performance_tflops=10.0,  # Estimation
                             supported_precisions=["float32", "float16"],
                             special_features=["rocm"],
-                            availability_score=0.8  # Menor que NVIDIA por compatibilidad
+                            availability_score=0.8  # Lower than NVIDIA due to compatibility
                         )
                         capabilities.append(capability)
                         
@@ -289,8 +289,8 @@ class HardwareDetector:
         
         try:
             import psutil
-            
-            # Información básica del CPU
+
+            # Basic CPU information
             cpu_info = platform.processor()
             cpu_count = psutil.cpu_count(logical=False)
             logical_count = psutil.cpu_count(logical=True)
@@ -301,15 +301,15 @@ class HardwareDetector:
                 cpu_type = HardwareType.CPU_AMD
             elif 'ARM' in cpu_info.upper() or platform.machine().lower().startswith('arm'):
                 cpu_type = HardwareType.CPU_ARM
-            
-            # Obtener frecuencia
+
+            # Get frequency
             try:
                 freq_info = psutil.cpu_freq()
                 max_freq_ghz = freq_info.max / 1000 if freq_info else 3.0
             except Exception:
                 max_freq_ghz = 3.0
-            
-            # Estimar rendimiento
+
+            # Estimate performance
             estimated_tflops = self._estimate_cpu_performance(cpu_info, cpu_count, max_freq_ghz)
             
             capability = HardwareCapability(
@@ -345,7 +345,7 @@ class HardwareDetector:
                 hardware_type=memory_type,
                 name="System Memory",
                 memory_gb=memory.total / (1024**3),
-                memory_bandwidth_gbps=50.0,  # Estimación DDR4
+                memory_bandwidth_gbps=50.0,  # DDR4 estimation
                 availability_score=1.0
             )
             capabilities.append(capability)
@@ -381,7 +381,7 @@ class HardwareDetector:
                         availability_score=0.9
                     )
                     capabilities.append(capability)
-                    break  # Solo el primer disco para evitar duplicados
+                    break  # Only the first disk to avoid duplicates
                     
         except ImportError:
             logger.debug("psutil not available for storage detection")
@@ -407,12 +407,12 @@ class HardwareDetector:
                     capability = HardwareCapability(
                         hardware_type=network_type,
                         name=f"Network {interface}",
-                        memory_bandwidth_gbps=1.0,  # 1 Gbps por defecto
+                        memory_bandwidth_gbps=1.0,  # 1 Gbps by default
                         special_features=["networking"],
                         availability_score=0.8
                     )
                     capabilities.append(capability)
-                    break  # Solo la primera interfaz
+                    break  # Only the first interface
                     
         except ImportError:
             logger.debug("psutil not available for network detection")
@@ -438,7 +438,7 @@ class HardwareDetector:
         
         # Estimates based on known models
         if 'A100' in name_upper:
-            return 312.0  # TFLOPS para A100
+            return 312.0  # TFLOPS for A100
         elif 'V100' in name_upper:
             return 125.0
         elif 'RTX 4090' in name_upper:
@@ -510,8 +510,8 @@ class HardwareDetector:
                     name = parts[0]
                     zone = parts[1]
                     accelerator_type = parts[2]
-                    
-                    # Determinar versión de TPU
+
+                    # Determine TPU version
                     tpu_version = HardwareType.TPU_V4
                     if 'v5' in accelerator_type:
                         tpu_version = HardwareType.TPU_V5
@@ -581,8 +581,8 @@ class HardwareDetector:
 )
 class HardwareCompatibilityAdapter(BaseAdapter):
     """
-    Adapter que detecta automáticamente el hardware disponible
-    and optimizes the system configuration para máximo rendimiento.
+    Adapter that automatically detects available hardware
+    and optimizes the system configuration for maximum performance.
     """
     
     def __init__(self, 
@@ -594,7 +594,7 @@ class HardwareCompatibilityAdapter(BaseAdapter):
         self.hardware_profile: Optional[HardwareProfile] = None
         self.optimization_cache: Dict[str, List[HardwareOptimization]] = {}
         self.last_detection_time = 0.0
-        self.detection_interval = 600.0  # 10 minutos
+        self.detection_interval = 600.0  # 10 minutes
         
     def _initialize_impl(self) -> bool:
         """Initializes adapter by detecting hardware."""
@@ -709,16 +709,16 @@ class HardwareCompatibilityAdapter(BaseAdapter):
             return
         
         self.optimization_cache.clear()
-        
-        # Optimizaciones para kernels
+
+        # Kernel optimizations
         kernel_optimizations = self._generate_kernel_optimizations()
         self.optimization_cache["kernel"] = kernel_optimizations
-        
-        # Optimizaciones para memoria
+
+        # Memory optimizations
         memory_optimizations = self._generate_memory_optimizations()
         self.optimization_cache["memory"] = memory_optimizations
-        
-        # Optimizaciones para compute
+
+        # Compute optimizations
         compute_optimizations = self._generate_compute_optimizations()
         self.optimization_cache["compute"] = compute_optimizations
         
@@ -848,9 +848,9 @@ class HardwareCompatibilityAdapter(BaseAdapter):
         all_optimizations = []
         for opts in self.optimization_cache.values():
             all_optimizations.extend(opts)
-        
-        # Filtrar por componente relevante
-        relevant_optimizations = [opt for opt in all_optimizations 
+
+        # Filter by relevant component
+        relevant_optimizations = [opt for opt in all_optimizations
                                 if component.lower() in opt.optimization_type.lower()]
         
         return relevant_optimizations
@@ -867,7 +867,7 @@ class HardwareCompatibilityAdapter(BaseAdapter):
     
     def _should_apply_optimization(self, optimization: HardwareOptimization) -> bool:
         """Determines if an optimization should be applied."""
-        # Verificar nivel de riesgo vs nivel de optimización
+        # Check risk level vs optimization level
         risk_tolerance = {
             OptimizationLevel.CONSERVATIVE: ["low"],
             OptimizationLevel.BALANCED: ["low", "medium"],
@@ -881,10 +881,10 @@ class HardwareCompatibilityAdapter(BaseAdapter):
     def _apply_optimization(self, optimization: HardwareOptimization) -> bool:
         """Applies a specific optimization."""
         try:
-            # En un system real, esto interactuaría con los componentes correspondientes
+            # In a real system, this would interact with the corresponding components
             self.logger.info(f"Applying optimization: {optimization.optimization_type} = {optimization.recommended_value}")
-            
-            # Simulación de aplicación exitosa
+
+            # Simulation of successful application
             return True
             
         except Exception as e:
@@ -892,7 +892,7 @@ class HardwareCompatibilityAdapter(BaseAdapter):
             return False
     
     def _serialize_profile(self, profile: HardwareProfile) -> Dict[str, Any]:
-        """Serializa un perfil de hardware para JSON."""
+        """Serializes a hardware profile to JSON."""
         return {
             "system_name": profile.system_name,
             "detection_timestamp": profile.detection_timestamp,
@@ -920,7 +920,7 @@ class HardwareCompatibilityAdapter(BaseAdapter):
     def set_optimization_level(self, level: OptimizationLevel):
         """Changes optimization level."""
         self.optimization_level = level
-        self._generate_optimizations()  # Re-generar optimizaciones
+        self._generate_optimizations()  # Regenerate optimizations
         self.logger.info(f"Optimization level changed to: {level.value}")
     
     def force_hardware_detection(self) -> Dict[str, Any]:
@@ -957,7 +957,7 @@ class HardwareCompatibilityAdapter(BaseAdapter):
 # Global adapter instance
 hardware_adapter = HardwareCompatibilityAdapter()
 
-# Funciones de utilidad
+# Utility functions
 def detect_system_hardware():
     """Detects system hardware."""
     if hardware_adapter.get_status().value == "ready":

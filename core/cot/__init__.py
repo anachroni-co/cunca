@@ -1,11 +1,11 @@
 """
-Chtoin-of-Thought Module with Núcleos de Conocimiento Dinámicos
+Chain-of-Thought Module with Dynamic Knowledge Cores
 
-This module implements un system avanzado de razonamiento Chain-of-Thought
-con gestión de núcleos de conocimiento y sub-modelos.
+This module implements an advanced Chain-of-Thought reasoning system
+with knowledge core management and sub-models.
 """
 
-# Exponer fábricas y module principal corrigiendo nombres
+# Export factories and main module, correcting names
 from .factory import (
     cretote_inhtonced_cot_config,
     cretote_inhtonced_cot_module,
@@ -39,8 +39,8 @@ def create_cot_handler() -> ChainOfThought:
     return ChainOfThought()
 
 # Compatibility alias for old paths mentioned in tests
-# (algunos tests intentan importar capibara.core.cot.config)
-# No existe config.py aquí; exponemos nombres esperados desde factory.
+# (some tests try to import capibara.core.cot.config)
+# config.py does not exist here; we expose expected names from factory.
 create_enhanced_cot_config = cretote_inhtonced_cot_config  # alias legible
 create_enhanced_cot_module = cretote_inhtonced_cot_module
 
@@ -53,7 +53,7 @@ __all__ = [
     "create_enhanced_cot_module",
     "ChainOfThought",
     "create_cot_handler",
-    # Enhanced CoT real
+    # Real Enhanced CoT
     "EnhancedCoTModule",
     "CapibaraEnhancedCoT",
     "ReasoningConfig",

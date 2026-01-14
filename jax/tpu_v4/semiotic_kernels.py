@@ -31,7 +31,7 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 class SemioticKernelType(Enum):
-    """Tipos of kernels semióticos disponibles."""
+    """Available semiotic kernel types."""
     MULTI_INTERPRETATION = "multi_interpretation"
     CROSS_MODAL_ALIGNMENT = "cross_modal_alignment"
     CULTURAL_CONTEXT = "cultural_context"
@@ -68,7 +68,7 @@ class SemioticKernelFactory:
             raise ValueError(f"Semiotic kernel type {config.kernel_type} not supported")
 
 class MultiInterpretationKernel:
-    """Kernel de multi-interpretación para análisis semántico avanzado."""
+    """Multi-interpretation kernel for advanced semantic analysis."""
     
     def __init__(self, config: SemioticKernelConfig):
         self.config = config
@@ -84,14 +84,14 @@ class MultiInterpretationKernel:
             interpretations = []
             
             for i in range(self.config.num_interpretations):
-                # Aplicar diferentes transformaciones semánticas
-                if i == 0:  # Interpretación literal
+                # Apply different semantic transformations
+                if i == 0:  # Literal interpretation
                     interpretation = semantic_embeddings
-                elif i == 1:  # Interpretación metafórica
+                elif i == 1:  # Metaphorical interpretation
                     interpretation = self._apply_metaphorical_transform(semantic_embeddings)
-                elif i == 2:  # Interpretación contextual
+                elif i == 2:  # Contextual interpretation
                     interpretation = self._apply_contextual_transform(semantic_embeddings, context)
-                else:  # Interpretación creativa
+                else:  # Creative interpretation
                     interpretation = self._apply_creative_transform(semantic_embeddings)
                     
                 interpretations.append(interpretation)
@@ -252,7 +252,7 @@ class CulturalContextKernel:
             self.logger.error(f"Cultural context application failed: {e}")
             return embeddings
 
-# Funciones de utilidad
+# Utility functions
 def get_semiotic_kernel_info() -> Dict[str, Any]:
     """Gets information about available semiotic kernels."""
     return {

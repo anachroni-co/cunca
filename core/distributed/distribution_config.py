@@ -36,26 +36,26 @@ from capibara.jax.tpu_v4.backend import (
 
 logger = logging.getLogger(__name__)
 
-# Tipos genéricos for funciones
+# Generic types for functions
 F = TypeVar('F', bound=Callable[..., Any])
 R = TypeVar('R')
 
-# setup de malla tpu v4-32
-TPU_MESH_SHAPE = (32, 8)  # 32 chips, 8 cores by chip
-TPU_MESH = None  # Se inicializará en setup_mesh()
+# TPU v4-32 mesh setup
+TPU_MESH_SHAPE = (32, 8)  # 32 chips, 8 cores per chip
+TPU_MESH = None  # Will be initialized in setup_mesh()
 
-# Especificaciones de sharding optimizadas for tpu v4-32
+# Sharding specifications optimized for TPU v4-32
 BATCH_SHARDING = P('batch', None, None)  # (batch, seq_len, hidden)
 MODEL_SHARDING = P(None, None, 'model')  # (batch, seq_len, hidden)
 HYBRID_SHARDING = P('batch', None, 'model')  # (batch, seq_len, hidden)
 REPLICATED = P(None, None, None)
 
-# Tipos de data optimizados for tpu v4-32
+# Data types optimized for TPU v4-32
 DTYPE = jnp.float32
-TPU_DTYPE = jnp.bfloat16  # better rendimiento en tpu v4-32
+TPU_DTYPE = jnp.bfloat16  # better performance on TPU v4-32
 
 def setup_mesh(shape: Tuple[int, ...] = TPU_MESH_SHAPE) -> Mesh:
-    """Initializes la malla tpu v4-32 global."""
+    """Initializes the global TPU v4-32 mesh."""
     pass
     def __init__(self):
         self.settings = {}

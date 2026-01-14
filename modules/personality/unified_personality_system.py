@@ -1,16 +1,16 @@
 """
 Unified Personality System for CapibaraGPT
 
-This module implements un system unificado de personalidad que permite al modelo
-adaptar su comportamiento, tono y estilo de respuesta based en perfiles de
-personalidad dinámicos y contextuales.
+This module implements a unified personality system that allows the model
+to adapt its behavior, tone and response style based on dynamic and
+contextual personality profiles.
 
-Características:
-- Perfiles de personalidad multidimensionales
-- Adaptación dinámica de comportamiento
-- Consistencia de personalidad a través de conversaciones
-- Personalidades especializadas por dominio
-- Sistema de evolución de personalidad
+Features:
+- Multidimensional personality profiles
+- Dynamic behavior adaptation
+- Personality consistency across conversations
+- Domain-specialized personalities
+- Personality evolution system
 """
 
 import logging
@@ -24,7 +24,7 @@ import json
 logger = logging.getLogger(__name__)
 
 class PersonalityDimension(Enum):
-    """Dimensiones de personalidad del modelo Big Five."""
+    """Big Five personality model dimensions."""
     OPENNESS = "openness"
     CONSCIENTIOUSNESS = "conscientiousness"
     EXTRAVERSION = "extraversion"
@@ -32,7 +32,7 @@ class PersonalityDimension(Enum):
     NEUROTICISM = "neuroticism"
 
 class PersonalityContext(Enum):
-    """Contextos donde se aplica la personalidad."""
+    """Contexts where personality is applied."""
     GENERAL = "general"
     TECHNICAL = "technical"
     CREATIVE = "creative"
@@ -43,7 +43,7 @@ class PersonalityContext(Enum):
 
 @dataclass
 class PersonalityProfile:
-    """Perfil de personalidad multidimensional."""
+    """Multidimensional personality profile."""
     
     # Big Five personality traits (0.0 to 1.0)
     openness: float = 0.5
@@ -93,7 +93,7 @@ class PersonalityProfile:
         return adjusted_profile
     
     def get_response_style(self) -> Dict[str, float]:
-        """Gets el estilo de respuesta based en la personalidad."""
+        """Gets the response style based on the personality."""
         return {
             'verbosity': self.verbosity,
             'formality': self.formality,
@@ -121,7 +121,7 @@ class PersonalityEvolution:
     evolution_history: List[Dict[str, Any]] = field(default_factory=list)
 
 class PersonalityAdapter:
-    """Adaptador que modifica respuestas based en personalidad."""
+    """Adapter that modifies responses based on personality."""
     
     def __init__(self, profile: PersonalityProfile):
         self.profile = profile
@@ -130,7 +130,7 @@ class PersonalityAdapter:
         logger.info(f"🎭 PersonalityAdapter initialized: {profile.profile_name}")
     
     def adapt_response(self, base_response: str, context: PersonalityContext = PersonalityContext.GENERAL) -> Dict[str, Any]:
-        """Adapta una respuesta base según la personalidad."""
+        """Adapts a base response according to the personality."""
         # Apply context-specific personality
         contextual_profile = self.profile.apply_context_modifier(context)
         response_style = contextual_profile.get_response_style()
@@ -148,7 +148,7 @@ class PersonalityAdapter:
         }
     
     def _apply_style_modifications(self, response: str, style: Dict[str, float]) -> str:
-        """Applies modificaciones de estilo a la respuesta."""
+        """Applies style modifications to the response."""
         modified = response
         
         # Verbosity adjustment
@@ -174,7 +174,7 @@ class PersonalityAdapter:
         return modified
     
     def _increase_verbosity(self, text: str) -> str:
-        """Aumenta la verbosidad del texto."""
+        """Increases the verbosity of the text."""
         # Add elaborative phrases
         elaborations = [
             "I'd like to elaborate on this point",
@@ -193,7 +193,7 @@ class PersonalityAdapter:
         return '. '.join(sentences)
     
     def _decrease_verbosity(self, text: str) -> str:
-        """Disminuye la verbosidad del texto."""
+        """Decreases the verbosity of the text."""
         # Remove filler words and phrases
         fillers = [r'\b(actually|basically|literally|you know|I mean)\b', 
                   r'\b(kind of|sort of|pretty much)\b']
@@ -206,7 +206,7 @@ class PersonalityAdapter:
         return text
     
     def _increase_formality(self, text: str) -> str:
-        """Aumenta la formalidad del texto."""
+        """Increases the formality of the text."""
         # Replace contractions
         contractions = {
             "don't": "do not",
@@ -223,7 +223,7 @@ class PersonalityAdapter:
         return text
     
     def _decrease_formality(self, text: str) -> str:
-        """Disminuye la formalidad del texto."""
+        """Decreases the formality of the text."""
         # Add casual expressions
         if not any(casual in text.lower() for casual in ['hey', 'yeah', 'cool', 'awesome']):
             casual_starters = ["Hey, ", "So, ", "Well, "]
@@ -233,7 +233,7 @@ class PersonalityAdapter:
         return text
     
     def _add_empathy_markers(self, text: str) -> str:
-        """Agrega marcadores de empatía."""
+        """Adds empathy markers."""
         empathy_phrases = [
             "I understand how you feel",
             "That sounds challenging",
@@ -246,7 +246,7 @@ class PersonalityAdapter:
         return f"{empathy}. {text}"
     
     def _add_creative_elements(self, text: str) -> str:
-        """Agrega elementos creativos."""
+        """Adds creative elements."""
         # Add metaphors or creative language
         creative_elements = [
             "like a puzzle waiting to be solved",
@@ -267,8 +267,8 @@ class PersonalityAdapter:
 
 class UnifiedPersonalitySystem:
     """
-    Sistema unificado de personalidad que coordina todos los componentes
-    de personalidad del modelo.
+    Unified personality system that coordinates all personality
+    components of the model.
     """
     
     def __init__(self):
@@ -285,7 +285,7 @@ class UnifiedPersonalitySystem:
         logger.info(f"   Default profiles: {len(self.personality_profiles)}")
     
     def _create_default_profiles(self):
-        """Crea perfiles de personalidad por defecto."""
+        """Creates default personality profiles."""
         default_profiles = {
             'helpful_assistant': PersonalityProfile(
                 openness=0.7,
@@ -333,7 +333,7 @@ class UnifiedPersonalitySystem:
             self.register_personality_profile(name, profile)
     
     def register_personality_profile(self, name: str, profile: PersonalityProfile):
-        """Registers un perfil de personalidad."""
+        """Registers a personality profile."""
         self.personality_profiles[name] = profile
         
         # Create adapter for this profile
@@ -347,7 +347,7 @@ class UnifiedPersonalitySystem:
         logger.info(f"📝 Registered personality profile: {name}")
     
     def set_active_profile(self, profile_name: str) -> bool:
-        """Establishes el perfil de personalidad activo."""
+        """Sets the active personality profile."""
         if profile_name not in self.personality_profiles:
             logger.error(f"❌ Personality profile not found: {profile_name}")
             return False
@@ -383,7 +383,7 @@ class UnifiedPersonalitySystem:
         return adaptation_result
     
     def evolve_personality(self, profile_name: str, feedback: Dict[str, Any]) -> bool:
-        """Evoluciona un perfil de personalidad based en feedback."""
+        """Evolves a personality profile based on feedback."""
         if profile_name not in self.personality_profiles:
             return False
         
@@ -406,11 +406,11 @@ class UnifiedPersonalitySystem:
         
         return False
     
-    def _apply_personality_evolution(self, 
+    def _apply_personality_evolution(self,
                                    profile: PersonalityProfile,
                                    evolution: PersonalityEvolution,
                                    feedback: Dict[str, Any]):
-        """Applies evolución al perfil de personalidad."""
+        """Applies evolution to the personality profile."""
         logger.info(f"🔄 Evolving personality: {profile.profile_name}")
         
         # Analyze recent feedback
@@ -469,7 +469,7 @@ class UnifiedPersonalitySystem:
         logger.info(f"✅ Personality evolution applied to {profile.profile_name}")
     
     def _record_interaction(self, profile_name: str, context: PersonalityContext, result: Dict[str, Any]):
-        """Registers una interacción para análisis."""
+        """Records an interaction for analysis."""
         interaction = {
             'timestamp': datetime.now().isoformat(),
             'profile': profile_name,
@@ -485,7 +485,7 @@ class UnifiedPersonalitySystem:
             self.interaction_history = self.interaction_history[-500:]
     
     def get_personality_analytics(self) -> Dict[str, Any]:
-        """Gets análisis de uso de personalidades."""
+        """Gets personality usage analytics."""
         analytics = {
             'total_profiles': len(self.personality_profiles),
             'active_profile': self.active_profile,
@@ -514,7 +514,7 @@ class UnifiedPersonalitySystem:
         return analytics
     
     def export_personality_data(self) -> Dict[str, Any]:
-        """Exporta datos de personalidad para backup."""
+        """Exports personality data for backup."""
         export_data = {
             'timestamp': datetime.now().isoformat(),
             'version': '1.0',
@@ -549,7 +549,7 @@ class UnifiedPersonalitySystem:
         return export_data
     
     def import_personality_data(self, import_data: Dict[str, Any]) -> bool:
-        """Importa datos de personalidad desde backup."""
+        """Imports personality data from backup."""
         try:
             # Import profiles
             for name, profile_data in import_data.get('profiles', {}).items():
@@ -574,7 +574,7 @@ class UnifiedPersonalitySystem:
 
 # Factory functions
 def create_personality_profile(**kwargs) -> PersonalityProfile:
-    """Crea un perfil de personalidad personalizado."""
+    """Creates a customized personality profile."""
     return PersonalityProfile(**kwargs)
 
 def create_unified_personality_system() -> UnifiedPersonalitySystem:

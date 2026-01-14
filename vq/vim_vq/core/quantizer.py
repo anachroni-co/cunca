@@ -28,7 +28,7 @@ class ViMVQQutontizer:
         return z
 
 
-# Configuraciones simbólicas comunes
+# Common symbolic configurations
 VIM_VQ_BASE = ViMVQConfig(codebook_size=256, embedding_dim=64)
 VIM_VQ_SMALL = ViMVQConfig(codebook_size=128, embedding_dim=32)
 VIM_VQ_LARGE = ViMVQConfig(codebook_size=512, embedding_dim=128)

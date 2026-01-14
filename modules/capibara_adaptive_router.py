@@ -1,9 +1,9 @@
 """
-Capibara Adaptive Router con HRMService y experto especial por consenso
+Capibara Adaptive Router with HRMService and special expert by consensus
 
-- HRMService: procesamiento simple de señal PPG/RR para extraer métricas (HR, HRV)
-- CapibaraAdaptiveRouter: selección de experto basada en señales HRM
-- Integración con HuggingFaceConsensusConfig para experto especial (medical)
+- HRMService: simple processing of PPG/RR signal to extract metrics (HR, HRV)
+- CapibaraAdaptiveRouter: expert selection based on HRM signals
+- Integration with HuggingFaceConsensusConfig for special expert (medical)
 """
 
 import os
@@ -51,19 +51,19 @@ class HRMConfig:
 
 
 class HRMService:
-    """Servicio simple para extraer métricas de una señal HRM (PPG o RR).
+    """Simple service to extract metrics from an HRM signal (PPG or RR).
 
-    Entrada esperada:
-    - Señal PPG (onda) en np.ndarray (float) o
-    - Serie de intervalos RR en ms (si rr_intervals_ms=True)
+    Expected input:
+    - PPG signal (waveform) as np.ndarray (float) or
+    - RR interval series in ms (if rr_intervals_ms=True)
     """
 
     def __init__(self, config: Optional[HRMConfig] = None):
         self.config = config or HRMConfig()
 
     def _detect_rr_intervals_from_ppg(self, signal: np.ndarray) -> np.ndarray:
-        """Estimación muy basic of intervalos RR a partir de PPG por autocorrelación.
-        Retorna RR en ms aprox.
+        """Very basic estimation of RR intervals from PPG via autocorrelation.
+        Returns RR in ms approximately.
         """
         if signal.ndim != 1:
             signal = signal.reshape(-1)
@@ -71,7 +71,7 @@ class HRMService:
         signal = (signal - np.mean(signal)) / (np.std(signal) + 1e-6)
         corr = np.correlate(signal, signal, mode="full")
         corr = corr[corr.size // 2 :]
-        # Ignorar el primer pico (lag 0). Buscar pico principal en [0.3s, 2.0s]
+        # Ignore the first peak (lag 0). Search for main peak in [0.3s, 2.0s]
         min_lag = int(0.3 * self.config.sampling_rate_hz)
         max_lag = int(2.0 * self.config.sampling_rate_hz)
         if max_lag <= min_lag:
@@ -80,9 +80,9 @@ class HRMService:
         if roi.size == 0:
             return np.array([], dtype=np.float32)
         peak_lag = np.argmax(roi) + min_lag
-        # Convertir periodo a RR (ms)
+        # Convert period to RR (ms)
         rr_ms = 1000.0 * float(peak_lag) / float(self.config.sampling_rate_hz)
-        # Construir una secuencia de RR constante como estimación
+        # Build a constant RR sequence as estimation
         num_beats = max(1, int(self.config.window_seconds * 60.0 / max(1.0, 60000.0 / rr_ms)))
         return np.full((num_beats,), rr_ms, dtype=np.float32)
 
@@ -103,7 +103,7 @@ class HRMService:
         data: np.ndarray,
         rr_intervals_ms: bool = False,
     ) -> Dict[str, Any]:
-        """Returns basic HRM metrics from PPG o RR.
+        """Returns basic HRM metrics from PPG or RR.
 
         Returns: {hr_bpm, rmssd_ms, anomaly_score, anomalies: {hr_out_of_range, hr_jump, high_rmssd}}
         """
@@ -134,7 +134,7 @@ class HRMService:
 
 
 class CapibaraAdaptiveRouter:
-    """Router adaptativo que utiliza señales HRM para seleccionar experto especial."""
+    """Adaptive router that uses HRM signals to select a special expert."""
 
     def __init__(self, config_path: Optional[str] = None):
         self.router_config = self._load_router_config(config_path)
@@ -146,8 +146,8 @@ class CapibaraAdaptiveRouter:
             try:
                 return toml.load(config_path)
             except Exception as e:  # pragma: no cover
-                logger.warning(f"No se pudo cargar TOML {config_path}: {e}")
-        # Fallback a archivo por defecto si existe
+                logger.warning(f"Could not load TOML {config_path}: {e}")
+        # Fallback to default file if it exists
         default_path = os.path.join(
             os.path.dirname(os.path.dirname(__file__)),
             "config",
@@ -159,7 +159,7 @@ class CapibaraAdaptiveRouter:
             try:
                 return toml.load(default_path)
             except Exception as e:  # pragma: no cover
-                logger.warning(f"No se pudo cargar TOML por defecto: {e}")
+                logger.warning(f"Could not load default TOML: {e}")
         return {}
 
     def _extract_hrm_config(self, cfg: Dict[str, Any]) -> HRMConfig:
@@ -183,11 +183,11 @@ class CapibaraAdaptiveRouter:
             return None
 
     def route(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-        """Returns routing decision considering HRM como experto especial.
+        """Returns routing decision considering HRM as special expert.
 
-        Contexto puede incluir:
-        - ppg_signal: np.ndarray de señal PPG
-        - rr_intervals_ms: np.ndarray de RR en ms
+        Context may include:
+        - ppg_signal: np.ndarray of PPG signal
+        - rr_intervals_ms: np.ndarray of RR in ms
         """
         context = context or {}
 
@@ -211,12 +211,12 @@ class CapibaraAdaptiveRouter:
 
         consensus_weights: Dict[str, float] = {}
         if self.consensus_config is not None:
-            # Aumentar peso de experto médico si HRM presente
+            # Increase medical expert weight if HRM is present
             expert_models = self.consensus_config.expert_models
             if selected_expert in expert_models:
                 base_weight = float(expert_models[selected_expert].get("weight", 1.0))
                 consensus_weights[selected_expert] = base_weight * (1.3 if specialist == "hrm" else 1.0)
-            # Añadir razonamiento como apoyo
+            # Add reasoning as support
             if "reasoning" in expert_models:
                 consensus_weights["reasoning"] = float(expert_models["reasoning"].get("weight", 1.0))
 
@@ -230,7 +230,7 @@ class CapibaraAdaptiveRouter:
 
 
 def main() -> bool:
-    logger.info("CapibaraAdaptiveRouter arrancando")
+    logger.info("CapibaraAdaptiveRouter starting")
     router = CapibaraAdaptiveRouter()
     # Minimal example with synthetic signal
     t = np.linspace(0, 5.0, 500)

@@ -138,18 +138,18 @@ class ResearchBehavior(BaseBehavior):
             )
     
     def _conduct_research(self, query: str, requirements: Dict[str, Any]) -> Dict[str, Any]:
-        """Conducir investigación completa."""
-        
+        """Conduct complete research."""
+
         # Phase 1: Research planning
         research_plan = self._plan_research(query, requirements)
-        
-        # Fase 2: Recopilación de información
+
+        # Phase 2: Information gathering
         gathered_data = self._gather_information(research_plan)
-        
-        # Fase 3: Validación de fuentes
+
+        # Phase 3: Source validation
         validated_sources = self._validate_sources(gathered_data)
-        
-        # Fase 4: Análisis y síntesis
+
+        # Phase 4: Analysis and synthesis
         analysis_result = self._analyze_and_synthesize(validated_sources)
         
         return {
@@ -164,9 +164,9 @@ class ResearchBehavior(BaseBehavior):
         }
     
     def _plan_research(self, query: str, requirements: Dict[str, Any]) -> Dict[str, Any]:
-        """Planificar strategy de investigación."""
-        
-        # Identificar palabras clave y conceptos
+        """Plan research strategy."""
+
+        # Identify keywords and concepts
         keywords = self._extract_keywords(query)
         concepts = self._identify_concepts(query)
         
@@ -185,32 +185,32 @@ class ResearchBehavior(BaseBehavior):
         }
     
     def _extract_keywords(self, query: str) -> List[str]:
-        """Extraer palabras clave relevantes."""
-        # Simplified implementation - en producción usaría NLP avanzado
+        """Extract relevant keywords."""
+        # Simplified implementation - in production would use advanced NLP
         stop_words = {"the", "a", "an", "and", "or", "but", "in", "on", "at", "to", "for", "of", "with"}
         words = [w.lower().strip(".,!?") for w in query.split()]
         return [w for w in words if len(w) > 3 and w not in stop_words]
     
     def _identify_concepts(self, query: str) -> List[str]:
-        """Identificar conceptos principales."""
+        """Identify main concepts."""
         concepts = []
-        
-        # Conceptos técnicos
+
+        # Technical concepts
         if any(term in query.lower() for term in ["algorithm", "model", "system", "architecture"]):
             concepts.append("technical")
-        
-        # Conceptos de negocio
+
+        # Business concepts
         if any(term in query.lower() for term in ["business", "market", "strategy", "customer"]):
             concepts.append("business")
-        
-        # Conceptos científicos
+
+        # Scientific concepts
         if any(term in query.lower() for term in ["research", "study", "analysis", "data"]):
             concepts.append("scientific")
         
         return concepts if concepts else ["general"]
     
     def _determine_source_types(self, query: str, requirements: Dict[str, Any]) -> List[str]:
-        """Determinar tipos de fuentes necesarias."""
+        """Determine required source types."""
         source_types = ["web", "documentation"]
         
         if requirements.get("academic_sources", False):
@@ -225,7 +225,7 @@ class ResearchBehavior(BaseBehavior):
         return source_types
     
     def _define_quality_criteria(self, requirements: Dict[str, Any]) -> Dict[str, Any]:
-        """Definir criterios de calidad para las fuentes."""
+        """Define quality criteria for sources."""
         return {
             "min_quality_score": requirements.get("min_quality", self.quality_threshold),
             "require_recent": requirements.get("require_recent", False),
@@ -243,18 +243,18 @@ class ResearchBehavior(BaseBehavior):
         }
     
     def _gather_information(self, research_plan: Dict[str, Any]) -> List[Dict[str, Any]]:
-        """Recopilar información de múltiples fuentes."""
+        """Gather information from multiple sources."""
         gathered_data = []
-        
-        # Simular recopilación de diferentes tipos de fuentes
+
+        # Simulate gathering from different source types
         for source_type in research_plan["source_types"]:
             source_data = self._gather_from_source_type(source_type, research_plan)
             gathered_data.extend(source_data)
-        
-        return gathered_data[:self.max_sources]  # Limitar número de fuentes
+
+        return gathered_data[:self.max_sources]  # Limit number of sources
     
     def _gather_from_source_type(self, source_type: str, plan: Dict[str, Any]) -> List[Dict[str, Any]]:
-        """Recopilar información de un tipo específico de fuente."""
+        """Gather information from a specific source type."""
         sources = []
         
         if source_type == "web":
@@ -294,7 +294,7 @@ class ResearchBehavior(BaseBehavior):
         return sources
     
     def _validate_sources(self, sources: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """Validar calidad y relevancia de las fuentes."""
+        """Validate quality and relevance of sources."""
         validated_sources = []
         
         for source in sources:
@@ -307,17 +307,17 @@ class ResearchBehavior(BaseBehavior):
                 # Cache quality score
                 source_id = source.get("url", source.get("title", "unknown"))
                 self.source_quality_scores[source_id] = quality_score
-        
-        # Ordenar por calidad
+
+        # Sort by quality
         validated_sources.sort(key=lambda x: x["quality_score"], reverse=True)
         
         return validated_sources
     
     def _calculate_source_quality(self, source: Dict[str, Any]) -> float:
-        """Calcular puntuación de calidad de una fuente."""
+        """Calculate quality score for a source."""
         indicators = source.get("quality_indicators", {})
-        
-        # Pesos para diferentes factores de calidad
+
+        # Weights for different quality factors
         weights = {
             "authority": 0.4,
             "relevance": 0.4,
@@ -328,8 +328,8 @@ class ResearchBehavior(BaseBehavior):
             indicators.get(factor, 0.5) * weight
             for factor, weight in weights.items()
         )
-        
-        # Bonus por tipo de fuente
+
+        # Bonus by source type
         source_type = source.get("type", "unknown")
         if source_type == "academic":
             quality_score += 0.1
@@ -340,20 +340,20 @@ class ResearchBehavior(BaseBehavior):
     
     def _analyze_and_synthesize(self, sources: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Analyze sources and synthesize findings."""
-        
-        # Extraer hallazgos clave
+
+        # Extract key findings
         findings = self._extract_key_findings(sources)
-        
-        # Identificar patrones y temas
+
+        # Identify patterns and themes
         patterns = self._identify_patterns(findings)
-        
-        # Generar síntesis
+
+        # Generate synthesis
         synthesis = self._generate_synthesis(findings, patterns)
-        
-        # Calcular confianza
+
+        # Calculate confidence
         confidence = self._calculate_confidence(sources, findings)
-        
-        # Generar recomendaciones
+
+        # Generate recommendations
         recommendations = self._generate_recommendations(synthesis, patterns)
         
         return {
@@ -366,13 +366,13 @@ class ResearchBehavior(BaseBehavior):
         }
     
     def _extract_key_findings(self, sources: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """Extraer hallazgos clave de las fuentes."""
+        """Extract key findings from sources."""
         findings = []
-        
+
         for source in sources:
             content = source.get("content", "")
-            
-            # Simulación de extracción de hallazgos
+
+            # Simulation of findings extraction
             finding = {
                 "source": source.get("title", source.get("url", "Unknown")),
                 "key_points": self._extract_key_points(content),
@@ -384,20 +384,20 @@ class ResearchBehavior(BaseBehavior):
         return findings
     
     def _extract_key_points(self, content: str) -> List[str]:
-        """Extraer puntos clave del contenido."""
+        """Extract key points from content."""
         # Simplified implementation
         sentences = content.split(". ")
         return [s.strip() for s in sentences[:3] if len(s.strip()) > 20]
     
     def _identify_patterns(self, findings: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """Identificar patrones en los hallazgos."""
+        """Identify patterns in findings."""
         patterns = []
-        
-        # Análisis de frecuencia de temas
+
+        # Theme frequency analysis
         theme_frequency = defaultdict(int)
         for finding in findings:
             for point in finding.get("key_points", []):
-                # Simulación de identificación de temas
+                # Simulation of theme identification
                 if "performance" in point.lower():
                     theme_frequency["performance"] += 1
                 if "security" in point.lower():
@@ -419,26 +419,26 @@ class ResearchBehavior(BaseBehavior):
     
     def _generate_synthesis(self, findings: List[Dict[str, Any]], patterns: List[Dict[str, Any]]) -> str:
         """Generate research synthesis."""
-        
+
         synthesis_parts = []
-        
-        # Resumen de hallazgos principales
+
+        # Summary of main findings
         high_importance_findings = [f for f in findings if f.get("importance", 0) > 0.7]
         if high_importance_findings:
             synthesis_parts.append(
                 f"Based on {len(high_importance_findings)} high-quality sources, "
                 f"the research reveals several key insights."
             )
-        
-        # Patrones identificados
+
+        # Identified patterns
         if patterns:
             main_themes = [p["theme"] for p in patterns if p.get("confidence", 0) > 0.5]
             if main_themes:
                 synthesis_parts.append(
                     f"The main themes that emerge are: {', '.join(main_themes)}."
                 )
-        
-        # Conclusión
+
+        # Conclusion
         synthesis_parts.append(
             f"The research provides comprehensive coverage with "
             f"{len(findings)} sources analyzed."
@@ -447,12 +447,12 @@ class ResearchBehavior(BaseBehavior):
         return " ".join(synthesis_parts)
     
     def _calculate_confidence(self, sources: List[Dict[str, Any]], findings: List[Dict[str, Any]]) -> float:
-        """Calcular nivel de confianza de la investigación."""
-        
-        # Factores de confianza
+        """Calculate research confidence level."""
+
+        # Confidence factors
         source_quality = sum(s.get("quality_score", 0.5) for s in sources) / len(sources)
-        source_diversity = len(set(s.get("type", "unknown") for s in sources)) / 4  # Max 4 tipos
-        findings_consistency = len(findings) / max(1, len(sources))  # Hallazgos por fuente
+        source_diversity = len(set(s.get("type", "unknown") for s in sources)) / 4  # Max 4 types
+        findings_consistency = len(findings) / max(1, len(sources))  # Findings per source
         
         confidence = (source_quality * 0.5 + source_diversity * 0.3 + 
                      min(1.0, findings_consistency) * 0.2)
@@ -462,8 +462,8 @@ class ResearchBehavior(BaseBehavior):
     def _generate_recommendations(self, synthesis: str, patterns: List[Dict[str, Any]]) -> List[str]:
         """Generate research-based recommendations."""
         recommendations = []
-        
-        # Recomendaciones basadas en patrones
+
+        # Recommendations based on patterns
         for pattern in patterns:
             theme = pattern.get("theme", "")
             confidence = pattern.get("confidence", 0.0)
@@ -475,8 +475,8 @@ class ResearchBehavior(BaseBehavior):
                     recommendations.append("Implement robust security measures")
                 elif theme == "scalability":
                     recommendations.append("Plan for scalability from the beginning")
-        
-        # Recomendación general
+
+        # General recommendation
         if not recommendations:
             recommendations.append("Further research may be needed for specific implementation details")
         
@@ -552,22 +552,22 @@ class CodingBehavior(BaseBehavior):
     
     def _generate_code_solution(self, task: str, requirements: Dict[str, Any]) -> Dict[str, Any]:
         """Generate complete code solution."""
-        
-        # Fase 1: Análisis de requisitos
+
+        # Phase 1: Requirements analysis
         code_requirements = self._analyze_coding_requirements(task, requirements)
-        
-        # Fase 2: Diseño de arquitectura
+
+        # Phase 2: Architecture design
         architecture = self._design_code_architecture(code_requirements)
-        
-        # Fase 3: Generación de código
+
+        # Phase 3: Code generation
         generated_code = self._generate_code(architecture, code_requirements)
-        
-        # Fase 4: Generación de tests
+
+        # Phase 4: Test generation
         tests = []
         if self.include_tests:
             tests = self._generate_tests(generated_code, code_requirements)
-        
-        # Fase 5: Documentación
+
+        # Phase 5: Documentation
         documentation = ""
         if self.include_docs:
             documentation = self._generate_documentation(generated_code, architecture)
@@ -587,17 +587,17 @@ class CodingBehavior(BaseBehavior):
     
     def _analyze_coding_requirements(self, task: str, requirements: Dict[str, Any]) -> Dict[str, Any]:
         """Analyze specific programming requirements."""
-        
-        # Determinar lenguaje de programación
+
+        # Determine programming language
         language = self._determine_language(task, requirements)
-        
-        # Identificar tipo de aplicación
+
+        # Identify application type
         app_type = self._identify_application_type(task)
-        
-        # Extraer funcionalidades requeridas
+
+        # Extract required features
         features = self._extract_required_features(task)
-        
-        # Determinar patrones de diseño necesarios
+
+        # Determine required design patterns
         design_patterns = self._suggest_design_patterns(task, features)
         
         return {
@@ -610,9 +610,9 @@ class CodingBehavior(BaseBehavior):
         }
     
     def _determine_language(self, task: str, requirements: Dict[str, Any]) -> str:
-        """Determinar el mejor lenguaje de programación para la tarea."""
-        
-        # Preferencia explícita
+        """Determine the best programming language for the task."""
+
+        # Explicit preference
         if "language" in requirements:
             requested_lang = requirements["language"].lower()
             if requested_lang in self.supported_languages:
@@ -626,12 +626,12 @@ class CodingBehavior(BaseBehavior):
         elif any(term in task_lower for term in ["api", "backend", "server", "data"]):
             return "python"
         elif "mobile" in task_lower:
-            return "typescript"  # Para React Native
+            return "typescript"  # For React Native
         else:
-            return self.supported_languages[0]  # Lenguaje por defecto
+            return self.supported_languages[0]  # Default language
     
     def _identify_application_type(self, task: str) -> str:
-        """Identificar tipo de aplicación a desarrollar."""
+        """Identify application type to develop."""
         task_lower = task.lower()
         
         if any(term in task_lower for term in ["api", "rest", "graphql", "backend"]):
@@ -646,7 +646,7 @@ class CodingBehavior(BaseBehavior):
             return "general"
     
     def _extract_required_features(self, task: str) -> List[str]:
-        """Extraer características requeridas del código."""
+        """Extract required code features."""
         features = []
         task_lower = task.lower()
         
@@ -667,29 +667,29 @@ class CodingBehavior(BaseBehavior):
         return features if features else ["basic_functionality"]
     
     def _suggest_design_patterns(self, task: str, features: List[str]) -> List[str]:
-        """Sugerir patrones de diseño apropiados."""
+        """Suggest appropriate design patterns."""
         patterns = []
-        
-        # Factory pattern para creación de objetos
+
+        # Factory pattern for object creation
         if any(term in task.lower() for term in ["create", "generate", "factory"]):
             patterns.append("factory")
-        
-        # Strategy pattern para diferentes comportamientos
+
+        # Strategy pattern for different behaviors
         if any(term in task.lower() for term in ["strategy", "behavior", "algorithm"]):
             patterns.append("strategy")
-        
-        # Observer pattern para eventos
+
+        # Observer pattern for events
         if any(term in task.lower() for term in ["event", "notify", "observer"]):
             patterns.append("observer")
-        
-        # Singleton para recursos únicos
+
+        # Singleton for unique resources
         if "database" in features or "config" in task.lower():
             patterns.append("singleton")
         
         return patterns if patterns else ["simple"]
     
     def _design_code_architecture(self, requirements: Dict[str, Any]) -> Dict[str, Any]:
-        """Diseñar arquitectura del código."""
+        """Design code architecture."""
         
         app_type = requirements.get("app_type", "general")
         language = requirements.get("language", "python")
@@ -705,7 +705,7 @@ class CodingBehavior(BaseBehavior):
         return architecture
     
     def _design_project_structure(self, app_type: str, language: str) -> Dict[str, Any]:
-        """Diseñar estructura del proyecto."""
+        """Design project structure."""
         
         if language == "python":
             if app_type == "api":
@@ -735,7 +735,7 @@ class CodingBehavior(BaseBehavior):
         }
     
     def _identify_components(self, features: List[str]) -> List[Dict[str, Any]]:
-        """Identificar componentes necesarios."""
+        """Identify required components."""
         components = []
         
         for feature in features:
@@ -768,7 +768,7 @@ class CodingBehavior(BaseBehavior):
         return components
     
     def _identify_dependencies(self, features: List[str], language: str) -> List[str]:
-        """Identificar dependencias necesarias."""
+        """Identify required dependencies."""
         dependencies = []
         
         if language == "python":
@@ -954,16 +954,16 @@ module.exports = app;
     def _generate_imports(self, dependencies: List[str], language: str) -> List[str]:
         """Generate import statements."""
         imports = []
-        
+
         if language == "python":
-            # Imports estándar
+            # Standard imports
             imports.extend([
                 "import logging",
                 "import sys",
                 "from typing import Dict, Any, Optional, List"
             ])
-            
-            # Imports de dependencias
+
+            # Dependency imports
             for dep in dependencies:
                 if dep == "fastapi":
                     imports.append("from fastapi import FastAPI, HTTPException")
@@ -1003,38 +1003,38 @@ def test_main_application_initialize():
     
     def _generate_documentation(self, generated_code: Dict[str, Any], architecture: Dict[str, Any]) -> str:
         """Generate code documentation."""
-        
+
         doc_sections = []
-        
-        # Título y descripción
+
+        # Title and description
         doc_sections.append("# Generated Code Documentation")
         doc_sections.append("\nThis code was generated by CapibaraGPT Coding Agent.\n")
-        
-        # Arquitectura
+
+        # Architecture
         doc_sections.append("## Architecture")
         components = architecture.get("components", [])
         if components:
             doc_sections.append("### Components:")
             for comp in components:
                 doc_sections.append(f"- **{comp['name']}**: {', '.join(comp.get('responsibilities', []))}")
-        
-        # Funciones
+
+        # Functions
         functions = generated_code.get("functions", [])
         if functions:
             doc_sections.append("\n## Functions")
             for func in functions:
                 doc_sections.append(f"### {func['name']}")
                 doc_sections.append("Generated utility function.")
-        
-        # Clases
+
+        # Classes
         classes = generated_code.get("classes", [])
         if classes:
             doc_sections.append("\n## Classes")
             for cls in classes:
                 doc_sections.append(f"### {cls['name']}")
                 doc_sections.append("Generated class component.")
-        
-        # Uso
+
+        # Usage
         doc_sections.append("\n## Usage")
         doc_sections.append("```python")
         doc_sections.append("# Example usage")
@@ -1044,13 +1044,13 @@ def test_main_application_initialize():
         return "\n".join(doc_sections)
     
     def _calculate_code_quality(self, generated_code: Dict[str, Any]) -> Dict[str, float]:
-        """Calcular métricas de calidad del código."""
-        
+        """Calculate code quality metrics."""
+
         main_code = generated_code.get("main_code", "")
         functions = generated_code.get("functions", [])
         classes = generated_code.get("classes", [])
-        
-        # Métricas básicas
+
+        # Basic metrics
         total_lines = len(main_code.split("\n"))
         comment_lines = len([line for line in main_code.split("\n") if line.strip().startswith("#")])
         

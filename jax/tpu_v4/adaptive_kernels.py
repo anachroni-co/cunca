@@ -279,7 +279,7 @@ def validate_adaptive_kernels() -> bool:
 
 # Module initialization
 if __name__ == "__main__":
-    # Test de validación
+    # Validation test
     success = validate_adaptive_kernels()
     if success:
         print("[OK] Adaptive kernels module loaded successfully")

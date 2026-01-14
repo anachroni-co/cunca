@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-🍲 Incremental Expert Soup Strategy - CapibaraGPT-v2
-Integración del system Expert Soup con entrenamiento incremental.
+Incremental Expert Soup Strategy - CapibaraGPT-v2
+Integration of Expert Soup system with incremental training.
 
-Configuración actualizada:
-- 5 checkpoints para modelos principales (LinuxCore, LaptopAssistant, etc.)
-- 3 checkpoints para modelos destilados (20% compression)
-- Sistema jerárquico de sopas de expertos
-- Herencia dual: conocimiento principal + compresión destilada
+Updated configuration:
+- 5 checkpoints for main models (LinuxCore, LaptopAssistant, etc.)
+- 3 checkpoints for distilled models (20% compression)
+- Hierarchical expert soup system
+- Dual inheritance: main knowledge + distilled compression
 
-Análisis de costos:
-- Sistema actual: 203.5 horas, $1,628
-- Con 5 checkpoints principales: +2.5 horas, +$20
-- Con 3 checkpoints destilados: +3.2 horas, +$26
-- Total adicional: solo $46 para 5.7 horas extra (23.6x ROI)
+Cost analysis:
+- Current system: 203.5 hours, $1,628
+- With 5 main checkpoints: +2.5 hours, +$20
+- With 3 distilled checkpoints: +3.2 hours, +$26
+- Total additional: only $46 for 5.7 extra hours (23.6x ROI)
 """
 
 import logging
@@ -37,20 +37,20 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 class ModelType(Enum):
-    """Tipos de modelos en el pipeline incremental"""
-    MAIN = "main"           # Modelos principales (5 checkpoints)
-    DISTILLED = "distilled" # Modelos destilados (3 checkpoints)
+    """Model types in the incremental pipeline"""
+    MAIN = "main"           # Main models (5 checkpoints)
+    DISTILLED = "distilled" # Distilled models (3 checkpoints)
 
 @dataclass
 class IncrementalModelConfig:
-    """Configuration extendida para modelos incrementales con Expert Soup"""
+    """Extended configuration for incremental models with Expert Soup"""
     name: str
     size: str
     parameters: int
     model_type: ModelType
-    
+
     # Expert Soup configuration
-    n_checkpoints: int  # 5 para principales, 3 para destilados
+    n_checkpoints: int  # 5 for main models, 3 for distilled models
     soup_config: Optional[Any]  # ModelSoupConfig or DistilledSoupConfig when available
     
     # Incremental training
@@ -65,46 +65,46 @@ class IncrementalModelConfig:
     # Training specifics
     training_hours: float = 0.0
     training_cost_usd: float = 0.0
-    expected_accuracy_improvement: float = 0.0  # % mejora esperada vs independiente
+    expected_accuracy_improvement: float = 0.0  # % expected improvement vs independent
 
 @dataclass
 class SoupHierarchy:
-    """Jerarquía de sopas de expertos"""
-    main_soups: Dict[str, str]  # modelo -> ruta sopa principal
-    distilled_soups: Dict[str, str]  # modelo -> ruta sopa destilada
-    meta_soup: Optional[str] = None  # Sopa de sopas (nivel superior)
-    
+    """Hierarchy of expert soups"""
+    main_soups: Dict[str, str]  # model -> main soup path
+    distilled_soups: Dict[str, str]  # model -> distilled soup path
+    meta_soup: Optional[str] = None  # Soup of soups (top level)
+
     def get_soup_for_model(self, model_name: str, prefer_distilled: bool = False) -> Optional[str]:
-        """Gets la sopa apropiada para un modelo"""
+        """Gets the appropriate soup for a model"""
         if prefer_distilled and model_name in self.distilled_soups:
             return self.distilled_soups[model_name]
         return self.main_soups.get(model_name)
 
 class IncrementalSoupStrategy:
     """
-    Estrategia completa de Expert Soup para entrenamiento incremental.
-    
-    Implementa:
-    - 5 checkpoints para modelos principales
-    - 3 checkpoints para modelos destilados
-    - Herencia dual (principal + destilado)
-    - Sistema jerárquico de sopas
+    Complete Expert Soup strategy for incremental training.
+
+    Implements:
+    - 5 checkpoints for main models
+    - 3 checkpoints for distilled models
+    - Dual inheritance (main + distilled)
+    - Hierarchical soup system
     """
     
     def __init__(self, base_dir: Union[str, Path]):
         self.base_dir = Path(base_dir)
         self.base_dir.mkdir(parents=True, exist_ok=True)
-        
-        # Configuración de modelos incrementales
+
+        # Incremental model configuration
         self.models_config = self._initialize_incremental_config()
-        
-        # Jerarquía de sopas
+
+        # Soup hierarchy
         self.soup_hierarchy = SoupHierarchy(
             main_soups={},
             distilled_soups={}
         )
-        
-        # Estado del entrenamiento
+
+        # Training state
         self.training_state = {
             "current_model": None,
             "completed_soups": [],
@@ -113,17 +113,17 @@ class IncrementalSoupStrategy:
         }
         
         if not EXPERT_SOUP_AVAILABLE:
-            logger.warning("⚠️ Expert Soup no disponible - funcionando en modo básico")
+            logger.warning("Expert Soup not available - running in basic mode")
         else:
-            logger.info("🍲 Incremental Expert Soup Strategy initialized")
-    
+            logger.info("Incremental Expert Soup Strategy initialized")
+
     def _initialize_incremental_config(self) -> Dict[str, IncrementalModelConfig]:
-        """Initializes configuración incremental con Expert Soup"""
-        
-        # Configuraciones de sopas
+        """Initializes incremental configuration with Expert Soup"""
+
+        # Soup configurations
         if EXPERT_SOUP_AVAILABLE and ModelSoupConfig is not None:
             main_soup_config = ModelSoupConfig(
-                n_best_models=5,  # ✨ 5 checkpoints principales
+                n_best_models=5,  # 5 main checkpoints
                 combination_strategy="weighted_average",
                 weight_strategy="adaptive",
                 min_overall_score=0.6,
@@ -135,7 +135,7 @@ class IncrementalSoupStrategy:
         
         if EXPERT_SOUP_AVAILABLE and DistilledSoupConfig is not None:
             distilled_soup_config = DistilledSoupConfig(
-                n_best_models=3,  # ✨ 3 checkpoints destilados
+                n_best_models=3,  # 3 distilled checkpoints
                 combination_strategy="knowledge_preservation",
                 weight_strategy="adaptive",
                 min_knowledge_retention=0.80,
@@ -146,7 +146,7 @@ class IncrementalSoupStrategy:
             distilled_soup_config = None
         
         return {
-            # 1. LinuxCore (300M) - Modelo base, entrena 100%
+            # 1. LinuxCore (300M) - Base model, trains 100%
             "300M_LinuxCore": IncrementalModelConfig(
                 name="LinuxCore Foundation",
                 size="300M",
@@ -163,7 +163,7 @@ class IncrementalSoupStrategy:
                 expected_accuracy_improvement=0.0  # Base model
             ),
             
-            # 1.1. LinuxCore Destilado (60M)
+            # 1.1. LinuxCore Distilled (60M)
             "60M_LinuxCore_Mini": IncrementalModelConfig(
                 name="LinuxCore Mini",
                 size="60M",
@@ -172,14 +172,14 @@ class IncrementalSoupStrategy:
                 n_checkpoints=3,
                 soup_config=distilled_soup_config,
                 inherits_from="300M_LinuxCore",
-                inherits_percentage=100.0,  # Destila del 100%
-                trains_new_percentage=20.0,  # Solo reentrenamiento de destilación
+                inherits_percentage=100.0,  # Distills from 100%
+                trains_new_percentage=20.0,  # Only distillation retraining
                 training_hours=6.6,
                 training_cost_usd=53,
-                expected_accuracy_improvement=45.0  # vs entrenamiento independiente
+                expected_accuracy_improvement=45.0  # vs independent training
             ),
             
-            # 2. LaptopAssistant (600M) - Hereda 360M + entrena 240M nuevos
+            # 2. LaptopAssistant (600M) - Inherits 360M + trains 240M new
             "600M_LaptopAssistant": IncrementalModelConfig(
                 name="Laptop Assistant",
                 size="600M",
@@ -188,16 +188,16 @@ class IncrementalSoupStrategy:
                 n_checkpoints=5,
                 soup_config=main_soup_config,
                 inherits_from="300M_LinuxCore",
-                inherits_percentage=60.0,  # 360M heredados
-                trains_new_percentage=40.0,  # 240M nuevos
+                inherits_percentage=60.0,  # 360M inherited
+                trains_new_percentage=40.0,  # 240M new
                 has_distilled_version=True,
-                distilled_inheritance_weight=0.2,  # + 20% del LinuxCore Mini
+                distilled_inheritance_weight=0.2,  # + 20% from LinuxCore Mini
                 training_hours=26.0,
                 training_cost_usd=208,
                 expected_accuracy_improvement=50.0
             ),
             
-            # 2.1. LaptopAssistant Destilado (120M)
+            # 2.1. LaptopAssistant Distilled (120M)
             "120M_LaptopAssistant_Mini": IncrementalModelConfig(
                 name="LaptopAssistant Mini",
                 size="120M",
@@ -213,7 +213,7 @@ class IncrementalSoupStrategy:
                 expected_accuracy_improvement=45.0
             ),
             
-            # 3. HumanoidBrain (1.5B) - Hereda 600M + entrena 900M nuevos
+            # 3. HumanoidBrain (1.5B) - Inherits 600M + trains 900M new
             "1.5B_HumanoidBrain": IncrementalModelConfig(
                 name="Humanoid Brain",
                 size="1.5B",
@@ -222,8 +222,8 @@ class IncrementalSoupStrategy:
                 n_checkpoints=5,
                 soup_config=main_soup_config,
                 inherits_from="600M_LaptopAssistant",
-                inherits_percentage=40.0,  # 600M heredados
-                trains_new_percentage=60.0,  # 900M nuevos
+                inherits_percentage=40.0,  # 600M inherited
+                trains_new_percentage=60.0,  # 900M new
                 has_distilled_version=True,
                 distilled_inheritance_weight=0.2,
                 training_hours=65.0,
@@ -231,7 +231,7 @@ class IncrementalSoupStrategy:
                 expected_accuracy_improvement=55.0
             ),
             
-            # 3.1. HumanoidBrain Destilado (300M)
+            # 3.1. HumanoidBrain Distilled (300M)
             "300M_HumanoidBrain_Mini": IncrementalModelConfig(
                 name="HumanoidBrain Mini",
                 size="300M",
@@ -247,7 +247,7 @@ class IncrementalSoupStrategy:
                 expected_accuracy_improvement=45.0
             ),
             
-            # 4. CodeMaster (3B) - Hereda 1.2B + entrena 1.8B nuevos
+            # 4. CodeMaster (3B) - Inherits 1.2B + trains 1.8B new
             "3B_CodeMaster": IncrementalModelConfig(
                 name="Code Master",
                 size="3B",
@@ -256,8 +256,8 @@ class IncrementalSoupStrategy:
                 n_checkpoints=5,
                 soup_config=main_soup_config,
                 inherits_from="1.5B_HumanoidBrain",
-                inherits_percentage=40.0,  # 1.2B heredados
-                trains_new_percentage=60.0,  # 1.8B nuevos
+                inherits_percentage=40.0,  # 1.2B inherited
+                trains_new_percentage=60.0,  # 1.8B new
                 has_distilled_version=True,
                 distilled_inheritance_weight=0.2,
                 training_hours=36.0,
@@ -265,7 +265,7 @@ class IncrementalSoupStrategy:
                 expected_accuracy_improvement=60.0
             ),
             
-            # 4.1. CodeMaster Destilado (600M)
+            # 4.1. CodeMaster Distilled (600M)
             "600M_CodeMaster_Mini": IncrementalModelConfig(
                 name="CodeMaster Mini",
                 size="600M",
@@ -281,7 +281,7 @@ class IncrementalSoupStrategy:
                 expected_accuracy_improvement=45.0
             ),
             
-            # 5. PolicyExpert (7B) - Heruda 2.1B + entrena 4.9B nuevos
+            # 5. PolicyExpert (7B) - Inherits 2.1B + trains 4.9B new
             "7B_PolicyExpert": IncrementalModelConfig(
                 name="Policy Expert",
                 size="7B",
@@ -290,8 +290,8 @@ class IncrementalSoupStrategy:
                 n_checkpoints=5,
                 soup_config=main_soup_config,
                 inherits_from="3B_CodeMaster",
-                inherits_percentage=30.0,  # 2.1B heredados
-                trains_new_percentage=70.0,  # 4.9B nuevos
+                inherits_percentage=30.0,  # 2.1B inherited
+                trains_new_percentage=70.0,  # 4.9B new
                 has_distilled_version=True,
                 distilled_inheritance_weight=0.2,
                 training_hours=24.5,
@@ -299,7 +299,7 @@ class IncrementalSoupStrategy:
                 expected_accuracy_improvement=65.0
             ),
             
-            # 5.1. PolicyExpert Destilado (1.4B)
+            # 5.1. PolicyExpert Distilled (1.4B)
             "1.4B_PolicyExpert_Mini": IncrementalModelConfig(
                 name="PolicyExpert Mini",
                 size="1.4B",
@@ -315,7 +315,7 @@ class IncrementalSoupStrategy:
                 expected_accuracy_improvement=45.0
             ),
             
-            # 6. OmniGenomic (15B) - Hereda 2.1B + entrena 12.9B nuevos
+            # 6. OmniGenomic (15B) - Inherits 2.1B + trains 12.9B new
             "15B_OmniGenomic": IncrementalModelConfig(
                 name="Omni Genomic",
                 size="15B",
@@ -324,8 +324,8 @@ class IncrementalSoupStrategy:
                 n_checkpoints=5,
                 soup_config=main_soup_config,
                 inherits_from="7B_PolicyExpert",
-                inherits_percentage=14.0,  # 2.1B heredados
-                trains_new_percentage=86.0,  # 12.9B nuevos
+                inherits_percentage=14.0,  # 2.1B inherited
+                trains_new_percentage=86.0,  # 12.9B new
                 has_distilled_version=True,
                 distilled_inheritance_weight=0.2,
                 training_hours=8.0,
@@ -333,7 +333,7 @@ class IncrementalSoupStrategy:
                 expected_accuracy_improvement=70.0
             ),
             
-            # 6.1. OmniGenomic Destilado (3B) - Router principal
+            # 6.1. OmniGenomic Distilled (3B) - Main router
             "3B_OmniGenomic_Mini": IncrementalModelConfig(
                 name="OmniGenomic Router",
                 size="3B",
@@ -351,17 +351,17 @@ class IncrementalSoupStrategy:
         }
     
     def get_strategy_overview(self) -> Dict[str, Any]:
-        """Resumen completo de la strategy incremental con Expert Soup"""
+        """Complete summary of the incremental strategy with Expert Soup"""
         main_models = [m for m in self.models_config.values() if m.model_type == ModelType.MAIN]
         distilled_models = [m for m in self.models_config.values() if m.model_type == ModelType.DISTILLED]
         
         total_hours = sum(m.training_hours for m in self.models_config.values())
         total_cost = sum(m.training_cost_usd for m in self.models_config.values())
-        
-        # Calcular mejoras por Expert Soup
-        main_soup_overhead = len(main_models) * 0.5  # 0.5h por modelo con 5 checkpoints
-        distilled_soup_overhead = len(distilled_models) * 0.4  # 0.4h por modelo con 3 checkpoints
-        expert_soup_cost = (main_soup_overhead + distilled_soup_overhead) * 8  # $8/hora
+
+        # Calculate Expert Soup improvements
+        main_soup_overhead = len(main_models) * 0.5  # 0.5h per model with 5 checkpoints
+        distilled_soup_overhead = len(distilled_models) * 0.4  # 0.4h per model with 3 checkpoints
+        expert_soup_cost = (main_soup_overhead + distilled_soup_overhead) * 8  # $8/hour
         
         return {
             "strategy_summary": {
@@ -396,7 +396,7 @@ class IncrementalSoupStrategy:
         }
     
     def _calculate_reused_parameters(self) -> Dict[str, float]:
-        """Calculates parameters reutilizados en el pipeline"""
+        """Calculates parameters reused in the pipeline"""
         total_params = sum(m.parameters for m in self.models_config.values())
         reused_params = sum(
             m.parameters * m.inherits_percentage / 100 
@@ -410,10 +410,10 @@ class IncrementalSoupStrategy:
         }
     
     def _calculate_time_savings(self) -> Dict[str, float]:
-        """Calculates ahorros de tiempo vs entrenamiento independiente"""
+        """Calculates time savings vs independent training"""
         current_time = sum(m.training_hours for m in self.models_config.values())
-        
-        # Estimar tiempo si fuera entrenamiento independiente
+
+        # Estimate time if training were independent
         independent_time = sum(
             m.parameters / 1e9 * 10  # ~10 hours per B parameters
             for m in self.models_config.values()
@@ -427,12 +427,12 @@ class IncrementalSoupStrategy:
         }
     
     def _calculate_speedup_factor(self) -> float:
-        """Calculates factor de aceleración total"""
+        """Calculates total speedup factor."""
         time_savings = self._calculate_time_savings()
         return time_savings["speedup_factor"]
-    
+
     def get_soup_configuration_details(self) -> Dict[str, Any]:
-        """Detalles específicos de la configuración de Expert Soup"""
+        """Specific details of Expert Soup configuration."""
         return {
             "main_models_soup": {
                 "n_checkpoints": 5,
@@ -459,43 +459,43 @@ class IncrementalSoupStrategy:
         }
     
     def validate_soup_strategy(self) -> Dict[str, Any]:
-        """Validates la strategy completa de Expert Soup"""
+        """Validates the complete Expert Soup strategy."""
         validation = {
             "configuration_valid": True,
             "warnings": [],
             "optimizations": [],
             "cost_efficiency": "excellent"
         }
-        
-        # Validar configuraciones
+
+        # Validate configurations
         if not EXPERT_SOUP_AVAILABLE:
-            validation["warnings"].append("Expert Soup no disponible - modo básico")
+            validation["warnings"].append("Expert Soup not available - basic mode")
             validation["configuration_valid"] = False
-        
-        # Validar balance de checkpoints
+
+        # Validate checkpoint balance
         main_checkpoints = sum(1 for m in self.models_config.values() if m.model_type == ModelType.MAIN)
         distilled_checkpoints = sum(1 for m in self.models_config.values() if m.model_type == ModelType.DISTILLED)
-        
+
         if main_checkpoints * 5 + distilled_checkpoints * 3 > 50:
-            validation["warnings"].append("Total checkpoints muy alto (>50) - considerar reducir")
-        
-        # Optimizaciones sugeridas
+            validation["warnings"].append("Total checkpoints very high (>50) - consider reducing")
+
+        # Suggested optimizations
         validation["optimizations"].extend([
-            "✅ 5 checkpoints principales optimizan precisión",
-            "✅ 3 checkpoints destilados balancean eficiencia",
-            "✅ Herencia dual maximiza conocimiento transferido",
-            "✅ Sistema jerárquico permite especialización",
-            "🎯 Configuración óptima para ROI 23.6x"
+            "✅ 5 main checkpoints optimize precision",
+            "✅ 3 distilled checkpoints balance efficiency",
+            "✅ Dual inheritance maximizes transferred knowledge",
+            "✅ Hierarchical system enables specialization",
+            "🎯 Optimal configuration for 23.6x ROI"
         ])
         
         return validation
 
 def create_incremental_soup_strategy(base_dir: str = "incremental_soup_training") -> IncrementalSoupStrategy:
-    """Factory function para crear la strategy incremental con Expert Soup"""
+    """Factory function to create the incremental strategy with Expert Soup."""
     return IncrementalSoupStrategy(base_dir)
 
 def get_optimal_soup_config(model_type: ModelType) -> Optional[Any]:
-    """Gets configuración óptima de Expert Soup para un tipo de modelo"""
+    """Gets optimal Expert Soup configuration for a model type."""
     if not EXPERT_SOUP_AVAILABLE:
         return None
     
@@ -521,20 +521,20 @@ def get_optimal_soup_config(model_type: ModelType) -> Optional[Any]:
         return None
 
 def analyze_incremental_soup_benefits() -> Dict[str, Any]:
-    """Análisis completo de beneficios de la strategy"""
+    """Complete analysis of strategy benefits."""
     strategy = create_incremental_soup_strategy()
-    
+
     return {
         "strategy_overview": strategy.get_strategy_overview(),
         "soup_details": strategy.get_soup_configuration_details(),
         "validation": strategy.validate_soup_strategy(),
         "key_benefits": [
-            "🍲 Expert Soup aumenta precisión 45-70%",
-            "🚀 Entrenamiento incremental 2.15x más rápido",
-            "💰 Solo +$46 overhead para massive mejoras",
-            "🧠 Herencia dual preserva todo el conocimiento",
-            "🎯 ROI 23.6x con riesgo mínimo",
-            "🔄 Sistema auto-adaptativo y escalable"
+            "🍲 Expert Soup increases precision 45-70%",
+            "🚀 Incremental training 2.15x faster",
+            "💰 Only +$46 overhead for massive improvements",
+            "🧠 Dual inheritance preserves all knowledge",
+            "🎯 23.6x ROI with minimal risk",
+            "🔄 Self-adaptive and scalable system"
         ],
         "implementation_ready": True
     }

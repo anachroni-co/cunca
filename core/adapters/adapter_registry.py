@@ -78,17 +78,17 @@ class AdapterRegistry:
                         metadata: Dict[str, Any] = None) -> bool:
         """
         Registers a new adapter in the system.
-        
+
         Args:
-            adapter_type: Tipo del adapter
-            adapter_class: Clase del adapter
-            priority: Prioridad (0-100, mayor = más prioridad)
-            requirements: Lista de requisitos del adapter
-            capabilities: Lista de capacidades del adapter
-            metadata: Metadatos adicionales
-            
+            adapter_type: Type of adapter
+            adapter_class: Adapter class
+            priority: Priority (0-100, higher = more priority)
+            requirements: List of adapter requirements
+            capabilities: List of adapter capabilities
+            metadata: Additional metadata
+
         Returns:
-            True si el registro fue exitoso
+            True if registration was successful
         """
         try:
             with self._lock:
@@ -100,15 +100,15 @@ class AdapterRegistry:
                     capabilities=capabilities or [],
                     metadata=metadata or {}
                 )
-                
-                # Verify that la class tenga los methods requeridos
+
+                # Verify that the class has the required methods
                 if not self._validate_adapter_class(adapter_class):
                     logger.error(f"Adapter class {adapter_class.__name__} does not implement required interface")
                     return False
                 
                 self._adapters[adapter_type].append(adapter_info)
-                
-                # Ordenar por prioridad (mayor prioridad primero)
+
+                # Sort by priority (higher priority first)
                 self._adapters[adapter_type].sort(key=lambda x: x.priority, reverse=True)
                 
                 logger.info(f"Registered adapter {adapter_class.__name__} for type {adapter_type.value}")
@@ -118,40 +118,40 @@ class AdapterRegistry:
             logger.error(f"Failed to register adapter {adapter_class.__name__}: {e}")
             return False
     
-    def get_adapter(self, 
+    def get_adapter(self,
                    adapter_type: AdapterType,
                    criteria: Optional[AdapterSelectionCriteria] = None,
                    force_new_instance: bool = False) -> Optional[Any]:
         """
-        Obtiene el mejor adapter disponible según los criterios.
-        
+        Gets the best available adapter according to criteria.
+
         Args:
-            adapter_type: Tipo de adapter requerido
-            criteria: Criterios de selección
-            force_new_instance: Forzar creación de nueva instancia
-            
+            adapter_type: Required adapter type
+            criteria: Selection criteria
+            force_new_instance: Force creation of new instance
+
         Returns:
-            Instancia del adapter seleccionado o None
+            Instance of selected adapter or None
         """
         start_time = time.time()
         
         try:
             with self._lock:
                 self._global_metrics['total_selections'] += 1
-                
-                # Usar criterios por defecto si no se proporcionan
+
+                # Use default criteria if not provided
                 if criteria is None:
                     criteria = AdapterSelectionCriteria(adapter_type=adapter_type)
-                
-                # Seleccionar el mejor adapter
+
+                # Select the best adapter
                 selected_adapter_info = self._select_best_adapter(adapter_type, criteria)
                 
                 if selected_adapter_info is None:
                     logger.warning(f"No suitable adapter found for type {adapter_type.value}")
                     self._global_metrics['fallback_selections'] += 1
                     return None
-                
-                # Obtener o crear instancia
+
+                # Get or create instance
                 instance_key = f"{adapter_type.value}_{selected_adapter_info.adapter_class.__name__}"
                 
                 if force_new_instance or instance_key not in self._instances:
@@ -162,8 +162,8 @@ class AdapterRegistry:
                     except Exception as e:
                         logger.error(f"Failed to create adapter instance: {e}")
                         return None
-                
-                # Actualizar métricas del adapter
+
+                # Update adapter metrics
                 selected_adapter_info.last_used = time.time()
                 selected_adapter_info.usage_count += 1
                 
@@ -179,15 +179,15 @@ class AdapterRegistry:
             return None
     
     def get_available_adapters(self, adapter_type: AdapterType) -> List[AdapterInfo]:
-        """Gets lista de adapters disponibles para un tipo."""
+        """Gets list of available adapters for a type."""
         with self._lock:
             return list(self._adapters.get(adapter_type, []))
     
     def get_adapter_metrics(self, adapter_type: Optional[AdapterType] = None) -> Dict[str, Any]:
-        """Gets métricas de uso de adapters."""
+        """Gets adapter usage metrics."""
         with self._lock:
             if adapter_type is None:
-                # Métricas globales
+                # Global metrics
                 return dict(self._global_metrics)
             else:
                 # Type-specific metrics
@@ -207,24 +207,24 @@ class AdapterRegistry:
                     ]
                 }
     
-    def update_adapter_performance(self, 
+    def update_adapter_performance(self,
                                  adapter_type: AdapterType,
                                  adapter_class_name: str,
                                  performance_score: float,
                                  success: bool = True):
-        """Updates metrics de rendimiento de un adapter."""
+        """Updates adapter performance metrics."""
         with self._lock:
             for adapter_info in self._adapters.get(adapter_type, []):
                 if adapter_info.adapter_class.__name__ == adapter_class_name:
-                    # Actualizar performance score (promedio móvil)
+                    # Update performance score (moving average)
                     if adapter_info.performance_score == 0.0:
                         adapter_info.performance_score = performance_score
                     else:
                         adapter_info.performance_score = (
                             adapter_info.performance_score * 0.8 + performance_score * 0.2
                         )
-                    
-                    # Actualizar success rate
+
+                    # Update success rate
                     total_attempts = adapter_info.usage_count
                     if total_attempts > 0:
                         current_successes = adapter_info.success_rate * (total_attempts - 1)
@@ -233,21 +233,21 @@ class AdapterRegistry:
                     
                     break
     
-    def set_selection_strategy(self, 
+    def set_selection_strategy(self,
                              adapter_type: AdapterType,
                              strategy_func: Callable[[List[AdapterInfo], AdapterSelectionCriteria], Optional[AdapterInfo]]):
-        """Establishes strategy for custom selection for an adapter type."""
+        """Establishes custom selection strategy for an adapter type."""
         self._selection_strategies[adapter_type] = strategy_func
         logger.info(f"Set custom selection strategy for {adapter_type.value}")
     
     def _setup_default_strategies(self):
-        """Configures strategies de selección por defecto."""
-        # Estrategia por defecto: prioridad + performance + success rate
+        """Configures default selection strategies."""
+        # Default strategy: priority + performance + success rate
         def default_strategy(adapters: List[AdapterInfo], criteria: AdapterSelectionCriteria) -> Optional[AdapterInfo]:
             if not adapters:
                 return None
-            
-            # Filtrar por requisitos
+
+            # Filter by requirements
             suitable_adapters = []
             for adapter in adapters:
                 if self._meets_requirements(adapter, criteria):
@@ -255,8 +255,8 @@ class AdapterRegistry:
             
             if not suitable_adapters:
                 return None
-            
-            # Calcular score combinado
+
+            # Calculate combined score
             best_adapter = None
             best_score = -1
             
@@ -272,15 +272,15 @@ class AdapterRegistry:
                     best_adapter = adapter
             
             return best_adapter
-        
-        # Aplicar strategy por defecto a todos los tipos
+
+        # Apply default strategy to all types
         for adapter_type in AdapterType:
             self._selection_strategies[adapter_type] = default_strategy
     
-    def _select_best_adapter(self, 
+    def _select_best_adapter(self,
                            adapter_type: AdapterType,
                            criteria: AdapterSelectionCriteria) -> Optional[AdapterInfo]:
-        """Selecciona el mejor adapter usando la strategy configurada."""
+        """Selects the best adapter using the configured strategy."""
         available_adapters = self._adapters.get(adapter_type, [])
         
         if not available_adapters:
@@ -293,21 +293,21 @@ class AdapterRegistry:
         
         return strategy(available_adapters, criteria)
     
-    def _meets_requirements(self, 
+    def _meets_requirements(self,
                           adapter: AdapterInfo,
                           criteria: AdapterSelectionCriteria) -> bool:
-        """Verifies si un adapter cumple con los requisitos."""
-        # Verificar requisitos de hardware
+        """Verifies if an adapter meets the requirements."""
+        # Verify hardware requirements
         for hw_req in criteria.hardware_requirements:
             if hw_req not in adapter.capabilities:
                 return False
-        
-        # Verificar requisitos de compatibilidad
+
+        # Verify compatibility requirements
         for compat_req in criteria.compatibility_requirements:
             if compat_req not in adapter.capabilities:
                 return False
-        
-        # Verificar requisitos de performance
+
+        # Verify performance requirements
         if criteria.max_latency_ms is not None:
             adapter_latency = adapter.metadata.get('average_latency_ms', float('inf'))
             if adapter_latency > criteria.max_latency_ms:
@@ -322,8 +322,8 @@ class AdapterRegistry:
     
     def _validate_adapter_class(self, adapter_class: Type) -> bool:
         """Validates that an adapter class implements the required interface."""
-        # Verify that tenga los methods básicos
-        required_methods = ['__init__']  # Métodos mínimos requeridos
+        # Verify that it has the basic methods
+        required_methods = ['__init__']  # Minimum required methods
         
         for method in required_methods:
             if not hasattr(adapter_class, method):
@@ -332,26 +332,26 @@ class AdapterRegistry:
         return True
     
     def _update_average_selection_time(self, new_time_ms: float):
-        """Updates the time promedio de selección."""
+        """Updates the average selection time."""
         current_avg = self._global_metrics['average_selection_time_ms']
         total_selections = self._global_metrics['total_selections']
-        
+
         if total_selections == 1:
             self._global_metrics['average_selection_time_ms'] = new_time_ms
         else:
-            # Promedio móvil
+            # Moving average
             self._global_metrics['average_selection_time_ms'] = (
                 current_avg * 0.9 + new_time_ms * 0.1
             )
     
     def clear_instances(self):
-        """Limpia todas las instancias cacheadas."""
+        """Clears all cached instances."""
         with self._lock:
             self._instances.clear()
             logger.info("Cleared all cached adapter instances")
     
     def get_registry_status(self) -> Dict[str, Any]:
-        """Gets the state completo del registro."""
+        """Gets the complete state of the registry."""
         with self._lock:
             status = {
                 'total_adapter_types': len(self._adapters),
@@ -383,7 +383,7 @@ def register_adapter_decorator(adapter_type: AdapterType,
                              requirements: List[str] = None,
                              capabilities: List[str] = None,
                              metadata: Dict[str, Any] = None):
-    """Decorador para registro automático de adapters."""
+    """Decorator for automatic adapter registration."""
     def decorator(cls):
         from . import adapter_registry
         adapter_registry.register_adapter(

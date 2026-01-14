@@ -1,5 +1,5 @@
 """
-JAX NumPy implementación simplificada con fallback interno.
+JAX NumPy simplified implementation with internal fallback.
 """
 
 from __future__ import annotations
@@ -153,11 +153,11 @@ except Exception:
 
 from typing import Any, Optional, Union, Tuple
 
-# Tipos básicos
+# Basic types
 Array = getattr(np, 'ndarray', list)
 ndarray = getattr(np, 'ndarray', list)
 
-# Creación de arrays
+# Array creation
 
 def array(object, dtype=None, copy=True, order='K', ndmin=0):
     return np.array(object, dtype=dtype, copy=copy, order=order, ndmin=ndmin)
@@ -206,7 +206,7 @@ def arange(start, stop=None, step=None, dtype=None):
 def linspace(start, stop, num=50, endpoint=True, retstep=False, dtype=None, axis=0):
     return np.linspace(start, stop, num, endpoint, retstep, dtype, axis)
 
-# Operaciones básicas
+# Basic operations
 
 def reshape(a, newshape, order='C'):
     return np.reshape(a, newshape, order)
@@ -275,7 +275,7 @@ def clip(a, a_min=None, a_max=None, out=None):
     """Clip (limit) the values in an array."""
     return np.clip(a, a_min, a_max, out=out)
 
-# Matemáticas
+# Mathematics
 
 def add(x1, x2, out=None):
     return np.add(x1, x2, out=out)
@@ -365,7 +365,7 @@ def cos(x, out=None):
 def tanh(x, out=None):
     return np.tanh(x, out=out)
 
-# Álgebra lineal básica
+# Basic linear algebra
 
 def dot(a, b, out=None):
     return np.dot(a, b, out=out)
@@ -374,7 +374,7 @@ def dot(a, b, out=None):
 def matmul(x1, x2, out=None):
     return np.matmul(x1, x2, out=out)
 
-# Reducciones
+# Reductions
 
 def sum(a, axis=None, dtype=None, out=None, keepdims=False):
     return np.sum(a, axis, dtype, out, keepdims)
@@ -413,12 +413,12 @@ def var(a, axis=None, dtype=None, out=None, ddof=0, keepdims=False):
     """Variance along the specified axis."""
     return np.var(a, axis, dtype, out, ddof, keepdims)
 
-# Lógica
+# Logic
 
 def where(condition, x=None, y=None):
     return np.where(condition, x, y)
 
-# Tipos de datos
+# Data types
 bfloat16 = getattr(np, 'float16', float)
 float16 = getattr(np, 'float16', float)
 float32 = getattr(np, 'float32', float)
@@ -435,7 +435,7 @@ bool_ = getattr(np, 'bool_', bool)
 complex64 = getattr(np, 'complex64', complex)
 complex128 = getattr(np, 'complex128', complex)
 
-# Constantes
+# Constants
 pi = getattr(np, 'pi', 3.141592653589793)
 e = getattr(np, 'e', 2.718281828459045)
 inf = getattr(np, 'inf', float('inf'))
@@ -443,27 +443,27 @@ inf = getattr(np, 'inf', float('inf'))
 # Import linalg submodule
 from . import linalg
 
-# Aliases comunes en JAX
+# Common JAX aliases
 import sys as _sys
 jnp = _sys.modules[__name__]
 
 __all__ = [
-    # Tipos
+    # Types
     'Array', 'ndarray',
-    # Creación
+    # Creation
     'array', 'asarray', 'zeros', 'ones', 'zeros_like', 'ones_like', 'empty', 'empty_like', 'full', 'full_like', 'arange', 'linspace',
-    # Manipulación
+    # Manipulation
     'reshape', 'transpose', 'concatenate', 'stack', 'split', 'expand_dims', 'squeeze', 'diff', 'clip',
-    # Matemáticas
+    # Mathematics
     'add', 'subtract', 'multiply', 'divide', 'power', 'sqrt', 'exp', 'log', 'sin', 'cos', 'tanh', 'dot', 'matmul',
-    # Reducciones
+    # Reductions
     'sum', 'mean', 'max', 'min', 'argmax', 'argmin', 'argsort', 'std', 'var',
-    # Lógica
+    # Logic
     'where',
     # Submodules
     'linalg',
     # Dtypes
     'bfloat16', 'float16', 'float32', 'float64', 'int8', 'int16', 'int32', 'int64', 'uint8', 'uint16', 'uint32', 'uint64', 'bool_', 'complex64', 'complex128',
-    # Constantes
+    # Constants
     'pi', 'e', 'inf'
 ]
