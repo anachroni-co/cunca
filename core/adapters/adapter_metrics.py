@@ -263,19 +263,19 @@ class AdapterMetricsCollector:
         tracker.record_metric(MetricType.SUCCESS_RATE, 1.0 if success else 0.0, operation)
         tracker.record_metric(MetricType.ERROR_RATE, 0.0 if success else 1.0, operation)
         
-        # Calcular throughput (operaciones por segundo)
+        # Calculate throughput (operations per second)
         current_time = time.time()
         if hasattr(tracker, '_last_throughput_calculation'):
             time_diff = current_time - tracker._last_throughput_calculation
-            if time_diff >= 1.0:  # Calcular cada segundo
+            if time_diff >= 1.0:  # Calculate every second
                 ops_count = len([t for t, _ in tracker.metrics_history[MetricType.EXECUTION_TIME] 
                                if t >= current_time - 1.0])
                 tracker.record_metric(MetricType.THROUGHPUT, ops_count, operation)
                 tracker._last_throughput_calculation = current_time
         else:
             tracker._last_throughput_calculation = current_time
-        
-        # Verificar umbrales
+
+        # Check thresholds
         self._check_thresholds(adapter_name, tracker)
     
     def start_collection(self):
@@ -308,8 +308,8 @@ class AdapterMetricsCollector:
             detailed_stats = {}
             for metric_type in MetricType:
                 detailed_stats[metric_type.value] = tracker.get_metric_statistics(metric_type)
-            
-            # Tendencias
+
+            # Trends
             trends = {}
             for metric_type in MetricType:
                 trends[metric_type.value] = tracker.get_trend(metric_type)
@@ -375,8 +375,8 @@ class AdapterMetricsCollector:
 
             # Sort by timestamp (most recent first)
             alerts.sort(key=lambda x: x.timestamp, reverse=True)
-            
-            # Limitar resultados
+
+            # Limit results
             alerts = alerts[:limit]
             
             return [
@@ -454,8 +454,8 @@ class AdapterMetricsCollector:
             try:
                 # Collect system metrics
                 self._collect_system_metrics()
-                
-                # Calcular performance scores
+
+                # Calculate performance scores
                 self._update_performance_scores()
                 
                 time.sleep(self.collection_interval)
@@ -469,8 +469,8 @@ class AdapterMetricsCollector:
         try:
             # Process memory metrics
             memory_usage = self._get_process_memory_usage()
-            
-            # Registrar para todos los adapters activos
+
+            # Record for all active adapters
             for adapter_name, tracker in self.trackers.items():
                 tracker.record_metric(MetricType.MEMORY_USAGE, memory_usage)
         
@@ -580,8 +580,8 @@ def monitor_adapter_performance(adapter_name: str, operation: str = ""):
                 raise
             finally:
                 execution_time = (time.time() - start_time) * 1000  # ms
-                
-                # Registrar métricas
+
+                # Record metrics
                 metrics_collector.record_execution(
                     adapter_name=adapter_name,
                     operation=operation or func.__name__,

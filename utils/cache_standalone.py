@@ -1,6 +1,6 @@
 """
-Sistema de cache optimizado para TPU v4-32.
-Implementación standalone sin dependencias externas.
+Optimized cache system for TPU v4-32.
+Standalone implementation without external dependencies.
 """
 
 import json
