@@ -2,11 +2,11 @@
 Agent and Behavior Factories - Factory Pattern Implementation - CapibaraGPT v2024
 ==================================================================================
 
-Implementation of pattern Factory para creación de agentes y comportamientos:
-- BehaviorFactory: Fábrica para crear diferentes comportamientos de agentes
-- AgentFactory: Fábrica mejorada para crear agentes con comportamientos específicos
-- OrchestrationStrategyFactory: Fábrica para strategys de orquestación
-- StrategyBasedAgentFactory: Fábrica que combina agentes con strategys
+Implementation of Factory pattern for creating agents and behaviors:
+- BehaviorFactory: Factory for creating different agent behaviors
+- AgentFactory: Enhanced factory for creating agents with specific behaviors
+- OrchestrationStrategyFactory: Factory for orchestration strategies
+- StrategyBasedAgentFactory: Factory that combines agents with strategies
 """
 
 import logging
@@ -68,10 +68,10 @@ logger = logging.getLogger(__name__)
 
 class BehaviorFactory(IBehaviorFactory):
     """
-    Fábrica para crear diferentes tipos de comportamientos de agentes.
-    
-    Implementa el patrón Factory para la creación de comportamientos específicos
-    que pueden ser utilizados por los agentes según sus necesidades.
+    Factory for creating different types of agent behaviors.
+
+    Implements the Factory pattern for creating specific behaviors
+    that can be used by agents according to their needs.
     """
     
     def __init__(self, config: Optional[Dict[str, Any]] = None):
@@ -80,7 +80,7 @@ class BehaviorFactory(IBehaviorFactory):
         self._behavior_instances: Dict[str, IAgentBehavior] = {}
         self._default_configs: Dict[AgentBehaviorType, Dict[str, Any]] = {}
         
-        # Registrar comportamientos por defecto
+        # Register default behaviors
         self._register_default_behaviors()
         
         # Factory statistics
@@ -93,7 +93,7 @@ class BehaviorFactory(IBehaviorFactory):
     def _register_default_behaviors(self) -> None:
         """Register default behaviors."""
         
-        # Registrar classs de comportamiento
+        # Register behavior classes
         self._behavior_registry[AgentBehaviorType.REASONING] = ReasoningBehavior
         self._behavior_registry[AgentBehaviorType.PLANNING] = PlanningBehavior
         self._behavior_registry[AgentBehaviorType.EXECUTION] = ExecutionBehavior
@@ -102,7 +102,7 @@ class BehaviorFactory(IBehaviorFactory):
         self._behavior_registry[AgentBehaviorType.COMMUNICATION] = CommunicationBehavior
         self._behavior_registry[AgentBehaviorType.MONITORING] = MonitoringBehavior
         
-        # Configuraciones por defecto
+        # Default configurations
         self._default_configs[AgentBehaviorType.REASONING] = {
             "reasoning_depth": 3,
             "use_formal_logic": False
@@ -148,32 +148,32 @@ class BehaviorFactory(IBehaviorFactory):
         logger.info(f"Registered {len(self._behavior_registry)} default behaviors")
     
     def create_behavior(
-        self, 
+        self,
         behavior_type: AgentBehaviorType,
         config: Optional[Dict[str, Any]] = None
     ) -> IAgentBehavior:
         """
-        Crear un comportamiento específico.
-        
+        Create a specific behavior.
+
         Args:
-            behavior_type: Tipo de comportamiento a crear
-            config: Configuración opcional para el comportamiento
-            
+            behavior_type: Type of behavior to create
+            config: Optional configuration for the behavior
+
         Returns:
-            IAgentBehavior: Instancia del comportamiento creado
-            
+            IAgentBehavior: Instance of the created behavior
+
         Raises:
-            ValueError: Si el tipo de comportamiento no está soportado
+            ValueError: If the behavior type is not supported
         """
         
         if behavior_type not in self._behavior_registry:
             raise ValueError(f"Behavior type {behavior_type} not supported. "
                            f"Available types: {list(self._behavior_registry.keys())}")
         
-        # Create configuration combinada
+        # Create combined configuration
         final_config = self._create_final_config(behavior_type, config)
-        
-        # Verificar si usar instancia cacheada
+
+        # Check if cached instance should be used
         cache_key = self._create_cache_key(behavior_type, final_config)
         if self.config.get("enable_caching", True) and cache_key in self._behavior_instances:
             self.creation_stats["behaviors_cached"] += 1
@@ -186,7 +186,7 @@ class BehaviorFactory(IBehaviorFactory):
         try:
             behavior_instance = behavior_class(final_config)
             
-            # Cachear si está habilitado
+            # Cache if enabled
             if self.config.get("enable_caching", True):
                 self._behavior_instances[cache_key] = behavior_instance
             
@@ -226,22 +226,22 @@ class BehaviorFactory(IBehaviorFactory):
         return f"{behavior_type}_{config_hash}"
     
     def get_available_behaviors(self) -> List[AgentBehaviorType]:
-        """Obtener lista de comportamientos disponibles."""
+        """Get list of available behaviors."""
         return list(self._behavior_registry.keys())
     
     def register_behavior_class(
-        self, 
+        self,
         behavior_type: AgentBehaviorType,
         behavior_class: Type[IAgentBehavior],
         default_config: Optional[Dict[str, Any]] = None
     ) -> None:
         """
-        Registrar una nueva class de comportamiento.
-        
+        Register a new behavior class.
+
         Args:
-            behavior_type: Tipo de comportamiento
-            behavior_class: Clase que implementa el comportamiento
-            default_config: Configuración por defecto opcional
+            behavior_type: Type of behavior
+            behavior_class: Class that implements the behavior
+            default_config: Optional default configuration
         """
         
         self._behavior_registry[behavior_type] = behavior_class
@@ -253,7 +253,7 @@ class BehaviorFactory(IBehaviorFactory):
         logger.info(f"Registered behavior class: {behavior_type} -> {behavior_class.__name__}")
     
     def get_behavior_info(self, behavior_type: AgentBehaviorType) -> Dict[str, Any]:
-        """Obtener información sobre un tipo de comportamiento."""
+        """Get information about a behavior type."""
         
         if behavior_type not in self._behavior_registry:
             return {"available": False, "error": "Behavior type not registered"}
@@ -270,7 +270,7 @@ class BehaviorFactory(IBehaviorFactory):
         }
     
     def clear_cache(self) -> None:
-        """Limpiar cache de instancias de comportamiento."""
+        """Clear cache of behavior instances."""
         cached_count = len(self._behavior_instances)
         self._behavior_instances.clear()
         logger.info(f"Cleared {cached_count} cached behavior instances")
@@ -290,20 +290,20 @@ class BehaviorFactory(IBehaviorFactory):
 
 class StrategyBasedAgentFactory(IAgentFactory):
     """
-    Fábrica de agentes mejorada que utiliza el patrón Strategy.
-    
-    Combina la creación de agentes con la asignación de comportamientos específicos,
-    permitiendo mayor flexibilidad y reutilización de componentes.
+    Enhanced agent factory that uses the Strategy pattern.
+
+    Combines agent creation with the assignment of specific behaviors,
+    allowing greater flexibility and component reuse.
     """
     
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         self.config = config or {}
         self.behavior_factory = BehaviorFactory(self.config.get("behavior_factory_config", {}))
         
-        # Registro de tipos de agentes soportados
+        # Registry of supported agent types
         self._supported_agent_types = list(AgentBehaviorType)
-        
-        # Templates de agentes predefinidos
+
+        # Predefined agent templates
         self._agent_templates = self._create_agent_templates()
         
         # Statistics
@@ -399,19 +399,19 @@ class StrategyBasedAgentFactory(IAgentFactory):
         return templates
     
     def create_agent(
-        self, 
+        self,
         agent_type: AgentBehaviorType,
         config: Optional[Dict[str, Any]] = None
     ) -> IAgent:
         """
-        Crear un agente de un tipo específico.
-        
+        Create an agent of a specific type.
+
         Args:
-            agent_type: Tipo de agente a crear
-            config: Configuración opcional
-            
+            agent_type: Type of agent to create
+            config: Optional configuration
+
         Returns:
-            IAgent: Instancia del agente creado
+            IAgent: Instance of the created agent
         """
         
         if agent_type not in self._supported_agent_types:
@@ -436,13 +436,13 @@ class StrategyBasedAgentFactory(IAgentFactory):
     
     def create_agent_from_spec(self, spec: Dict[str, Any]) -> IAgent:
         """
-        Crear un agente basándose en una especificación completa.
-        
+        Create an agent based on a complete specification.
+
         Args:
-            spec: Especificación del agente
-            
+            spec: Agent specification
+
         Returns:
-            IAgent: Instancia del agente creado
+            IAgent: Instance of the created agent
         """
         
         # Extract information from specification
@@ -455,7 +455,7 @@ class StrategyBasedAgentFactory(IAgentFactory):
         primary_behavior = self.behavior_factory.create_behavior(agent_type, config)
         secondary_behaviors = []
         
-        for behavior_type in behaviors[1:]:  # Comportamientos secundarios
+        for behavior_type in behaviors[1:]:  # Secondary behaviors
             if isinstance(behavior_type, str):
                 behavior_type = AgentBehaviorType(behavior_type)
             secondary_behavior = self.behavior_factory.create_behavior(behavior_type, config)
@@ -477,14 +477,14 @@ class StrategyBasedAgentFactory(IAgentFactory):
     
     def create_agent_from_template(self, template_name: str, config: Optional[Dict[str, Any]] = None) -> IAgent:
         """
-        Crear un agente usando un template predefinido.
-        
+        Create an agent using a predefined template.
+
         Args:
-            template_name: Nombre del template a usar
-            config: Configuración adicional opcional
-            
+            template_name: Name of the template to use
+            config: Optional additional configuration
+
         Returns:
-            IAgent: Instancia del agente creado
+            IAgent: Instance of the created agent
         """
         
         if template_name not in self._agent_templates:
@@ -505,7 +505,7 @@ class StrategyBasedAgentFactory(IAgentFactory):
             final_config
         )
         
-        # Create behaviors secundarios
+        # Create secondary behaviors
         secondary_behaviors = []
         for behavior_type in template.get("secondary_behaviors", []):
             behavior = self.behavior_factory.create_behavior(behavior_type, final_config)
@@ -526,7 +526,7 @@ class StrategyBasedAgentFactory(IAgentFactory):
         return agent
     
     def get_supported_types(self) -> List[AgentBehaviorType]:
-        """Obtener tipos de agentes soportados."""
+        """Get supported agent types."""
         return self._supported_agent_types.copy()
     
     def can_create(self, agent_type: AgentBehaviorType) -> bool:
@@ -534,7 +534,7 @@ class StrategyBasedAgentFactory(IAgentFactory):
         return agent_type in self._supported_agent_types
     
     def get_available_templates(self) -> Dict[str, str]:
-        """Obtener templates disponibles con sus descripciones."""
+        """Get available templates with their descriptions."""
         return {
             name: template["description"] 
             for name, template in self._agent_templates.items()
@@ -542,7 +542,7 @@ class StrategyBasedAgentFactory(IAgentFactory):
     
     def register_behavior(self, behavior: IAgentBehavior) -> None:
         """Register a new behavior."""
-        # Delegar al behavior factory
+        # Delegate to behavior factory
         if hasattr(behavior, 'behavior_type'):
             self.behavior_factory.register_behavior_class(
                 behavior.behavior_type,
@@ -573,10 +573,10 @@ class StrategyBasedAgentFactory(IAgentFactory):
 
 class StrategyBasedAgent(IAgent):
     """
-    Implementación de agente que utiliza el patrón Strategy.
-    
-    Este agente puede cambiar su comportamiento dinámicamente utilizando
-    diferentes strategys de comportamiento.
+    Agent implementation that uses the Strategy pattern.
+
+    This agent can dynamically change its behavior using
+    different behavior strategies.
     """
     
     def __init__(
@@ -598,7 +598,7 @@ class StrategyBasedAgent(IAgent):
         self._current_behavior = primary_behavior
         self._execution_history: List[Dict[str, Any]] = []
         
-        # Métricas del agente
+        # Agent metrics
         self._metrics = {
             "tasks_executed": 0,
             "successful_executions": 0,
@@ -619,19 +619,19 @@ class StrategyBasedAgent(IAgent):
     
     @property
     def capabilities(self) -> List[AgentCapability]:
-        """Obtener capacidades combinadas de todos los comportamientos."""
+        """Get combined capabilities from all behaviors."""
         capabilities = []
-        
-        # Agregar capacidades del comportamiento principal
+
+        # Add capabilities from primary behavior
         if hasattr(self._primary_behavior, 'required_capabilities'):
             capabilities.extend(self._primary_behavior.required_capabilities)
-        
-        # Agregar capacidades de comportamientos secundarios
+
+        # Add capabilities from secondary behaviors
         for behavior in self._secondary_behaviors:
             if hasattr(behavior, 'required_capabilities'):
                 capabilities.extend(behavior.required_capabilities)
-        
-        # Eliminar duplicados
+
+        # Remove duplicates
         return list(set(capabilities))
     
     def execute(self, context: AgentContext) -> AgentResult:
@@ -641,17 +641,17 @@ class StrategyBasedAgent(IAgent):
         self._metrics["tasks_executed"] += 1
         
         try:
-            # Seleccionar comportamiento apropiado
+            # Select appropriate behavior
             selected_behavior = self._select_behavior_for_context(context)
-            
-            # Cambiar comportamiento si es necesario
+
+            # Change behavior if necessary
             if selected_behavior != self._current_behavior:
                 self._switch_behavior(selected_behavior)
             
             # Execute with selected behavior
             result = self._current_behavior.execute_behavior(context, self)
             
-            # Actualizar métricas
+            # Update metrics
             execution_time = (time.time() - start_time) * 1000
             self._update_execution_metrics(result, execution_time)
             
@@ -682,7 +682,7 @@ class StrategyBasedAgent(IAgent):
             )
     
     def can_handle(self, task_description: str, requirements: Dict[str, Any]) -> bool:
-        """Determinar si el agente puede manejar una tarea."""
+        """Determine if the agent can handle a task."""
         
         # Create temporary context for evaluation
         temp_context = AgentContext(
@@ -699,7 +699,7 @@ class StrategyBasedAgent(IAgent):
                 if behavior.validate_context(temp_context):
                     return True
         
-        # Evaluación básica basada en tipo de agente
+        # Basic evaluation based on agent type
         task_lower = task_description.lower()
         
         if self._agent_type == AgentBehaviorType.REASONING:
@@ -712,7 +712,7 @@ class StrategyBasedAgent(IAgent):
             return True  # General agent can try any task
     
     def get_status(self) -> Dict[str, Any]:
-        """Obtener estado actual del agente."""
+        """Get current agent status."""
         return {
             "agent_id": self.agent_id,
             "agent_type": self.agent_type.value,
@@ -725,11 +725,11 @@ class StrategyBasedAgent(IAgent):
         }
     
     def _select_behavior_for_context(self, context: AgentContext) -> IAgentBehavior:
-        """Seleccionar el comportamiento más apropiado para el contexto."""
-        
+        """Select the most appropriate behavior for the context."""
+
         task_description = context.task_description.lower()
-        
-        # Evaluar comportamientos secundarios primero (más específicos)
+
+        # Evaluate secondary behaviors first (more specific)
         for behavior in self._secondary_behaviors:
             if self._is_behavior_suitable(behavior, task_description):
                 return behavior
@@ -738,13 +738,13 @@ class StrategyBasedAgent(IAgent):
         return self._primary_behavior
     
     def _is_behavior_suitable(self, behavior: IAgentBehavior, task_description: str) -> bool:
-        """Determinar si un comportamiento es adecuado para una tarea."""
-        
+        """Determine if a behavior is suitable for a task."""
+
         behavior_type = getattr(behavior, 'behavior_type', None)
         if not behavior_type:
             return False
-        
-        # Mapeo de palabras clave a tipos de comportamiento
+
+        # Keyword mapping to behavior types
         keyword_mapping = {
             AgentBehaviorType.REASONING: ["analyze", "reason", "think", "logic", "deduce"],
             AgentBehaviorType.PLANNING: ["plan", "strategy", "organize", "schedule"],
@@ -759,7 +759,7 @@ class StrategyBasedAgent(IAgent):
         return any(keyword in task_description for keyword in keywords)
     
     def _switch_behavior(self, new_behavior: IAgentBehavior) -> None:
-        """Cambiar al nuevo comportamiento."""
+        """Switch to the new behavior."""
         old_behavior_name = type(self._current_behavior).__name__
         new_behavior_name = type(new_behavior).__name__
         
@@ -769,7 +769,7 @@ class StrategyBasedAgent(IAgent):
         logger.info(f"Agent {self.agent_id} switched behavior: {old_behavior_name} -> {new_behavior_name}")
     
     def _update_execution_metrics(self, result: AgentResult, execution_time: float) -> None:
-        """Updatesr métricas de ejecución."""
+        """Update execution metrics."""
         
         self._metrics["total_execution_time_ms"] += execution_time
         
@@ -779,13 +779,13 @@ class StrategyBasedAgent(IAgent):
             self._metrics["failed_executions"] += 1
     
     def add_behavior(self, behavior: IAgentBehavior) -> None:
-        """Agregar un nuevo comportamiento secundario."""
+        """Add a new secondary behavior."""
         if behavior not in self._secondary_behaviors:
             self._secondary_behaviors.append(behavior)
             logger.info(f"Added behavior {type(behavior).__name__} to agent {self.agent_id}")
     
     def remove_behavior(self, behavior_type: AgentBehaviorType) -> bool:
-        """Remover un comportamiento secundario."""
+        """Remove a secondary behavior."""
         for i, behavior in enumerate(self._secondary_behaviors):
             if hasattr(behavior, 'behavior_type') and behavior.behavior_type == behavior_type:
                 removed_behavior = self._secondary_behaviors.pop(i)
@@ -794,7 +794,7 @@ class StrategyBasedAgent(IAgent):
         return False
     
     def get_execution_history(self, limit: Optional[int] = None) -> List[Dict[str, Any]]:
-        """Obtener historial de ejecuciones."""
+        """Get execution history."""
         if limit:
             return self._execution_history[-limit:]
         return self._execution_history.copy()

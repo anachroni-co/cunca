@@ -1,28 +1,28 @@
 """
 Core Adapter System for CapibaraGPT-v2
 
-This module provides el system central de adapters que permite:
-- Abstracción de diferentes backends (TPU, CPU, GPU)
-- Adaptación automática según hardware disponible
-- Optimización de rendimiento en tiempo real
-- Compatibilidad hacia atrás y fallbacks robustos
-- Monitoreo automático of metrics y alertas
-- Procesamiento multilingüe y adaptación cultural
+This module provides the central adapter system that enables:
+- Abstraction of different backends (TPU, CPU, GPU)
+- Automatic adaptation based on available hardware
+- Real-time performance optimization
+- Backward compatibility and robust fallbacks
+- Automatic monitoring of metrics and alerts
+- Multilingual processing and cultural adaptation
 
-## Beneficios Principales:
-- ⏱️ Ahorro de Tiempo (40-60%): Reutilización, desarrollo paralelo, testing simplificado
-- 🔧 Ahorro de Mantenimiento (50-70%): Punto único de cambio, fallbacks automáticos
-- 📊 Monitoreo Integrado: Métricas automáticas, alertas proactivas, optimización continua
-- 🌐 Soporte Multilingüe: Detección avanzada, adaptación cultural, code-switching
+## Key Benefits:
+- Time Savings (40-60%): Reuse, parallel development, simplified testing
+- Maintenance Savings (50-70%): Single point of change, automatic fallbacks
+- Integrated Monitoring: Automatic metrics, proactive alerts, continuous optimization
+- Multilingual Support: Advanced detection, cultural adaptation, code-switching
 
-## Uso Rápido:
+## Quick Start:
 ```python
 from capibara.core.adapters import (
     kernel_adapter, performance_adapter, hardware_adapter,
     quantization_adapter, language_adapter, start_metrics_collection
 )
 
-# Inicializar system
+# Initialize system
 start_metrics_collection()
 
 # Use adapters (automatic selection of best backend)

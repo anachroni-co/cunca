@@ -1,8 +1,8 @@
 """
 Adapter Metrics System
 
-Sistema automático of metrics para monitorear y optimizar
-el rendimiento de todos los adapters del system.
+Automatic metrics system to monitor and optimize
+the performance of all system adapters.
 """
 
 import logging
@@ -19,7 +19,7 @@ from datetime import datetime, timedelta
 logger = logging.getLogger(__name__)
 
 class MetricType(Enum):
-    """Tipos of metrics monitoreadas."""
+    """Types of monitored metrics."""
     EXECUTION_TIME = "execution_time"
     SUCCESS_RATE = "success_rate"
     THROUGHPUT = "throughput"
@@ -30,7 +30,7 @@ class MetricType(Enum):
     PERFORMANCE_SCORE = "performance_score"
 
 class AlertLevel(Enum):
-    """Niveles de alerta para métricas."""
+    """Alert levels for metrics."""
     INFO = "info"
     WARNING = "warning"
     ERROR = "error"
@@ -38,7 +38,7 @@ class AlertLevel(Enum):
 
 @dataclass
 class MetricThreshold:
-    """Umbral de métrica para alertas."""
+    """Metric threshold for alerts."""
     metric_type: MetricType
     adapter_name: str
     min_value: Optional[float] = None
@@ -69,7 +69,7 @@ class Alert:
     acknowledged: bool = False
 
 class PerformanceTracker:
-    """Tracker de rendimiento para adapters individuales."""
+    """Performance tracker for individual adapters."""
     
     def __init__(self, adapter_name: str, history_size: int = 1000):
         self.adapter_name = adapter_name
@@ -87,11 +87,11 @@ class PerformanceTracker:
         """Records a metric."""
         with self.lock:
             timestamp = time.time()
-            
-            # Registrar en historial general
+
+            # Record in general history
             self.metrics_history[metric_type].append((timestamp, value))
-            
-            # Registrar por operación si se especifica
+
+            # Record by operation if specified
             if operation:
                 self.operation_metrics[operation][metric_type].append((timestamp, value))
     
@@ -116,8 +116,8 @@ class PerformanceTracker:
         with self.lock:
             cutoff_time = time.time() - (window_minutes * 60)
             history = self.metrics_history[metric_type]
-            
-            # Filtrar por ventana de tiempo
+
+            # Filter by time window
             recent_values = [value for timestamp, value in history if timestamp >= cutoff_time]
             
             if not recent_values:
@@ -143,8 +143,8 @@ class PerformanceTracker:
             recent_history = history[-window_size:]
             if len(recent_history) < 2:
                 return 0.0
-            
-            # Regresión lineal simple
+
+            # Simple linear regression
             n = len(recent_history)
             sum_x = sum(i for i in range(n))
             sum_y = sum(value for _, value in recent_history)
@@ -181,14 +181,14 @@ class PerformanceTracker:
     def calculate_performance_score(self) -> float:
         """Calculates an overall performance score."""
         current_metrics = self.get_current_metrics()
-        
-        # Factores de score (pesos)
+
+        # Score factors (weights)
         weights = {
-            MetricType.EXECUTION_TIME: -0.3,  # Negativo porque menor es mejor
-            MetricType.SUCCESS_RATE: 0.4,     # Positivo porque mayor es mejor
-            MetricType.THROUGHPUT: 0.2,       # Positivo porque mayor es mejor
-            MetricType.ERROR_RATE: -0.3,      # Negativo porque menor es mejor
-            MetricType.CACHE_HIT_RATE: 0.1    # Positivo porque mayor es mejor
+            MetricType.EXECUTION_TIME: -0.3,  # Negative because lower is better
+            MetricType.SUCCESS_RATE: 0.4,     # Positive because higher is better
+            MetricType.THROUGHPUT: 0.2,       # Positive because higher is better
+            MetricType.ERROR_RATE: -0.3,      # Negative because lower is better
+            MetricType.CACHE_HIT_RATE: 0.1    # Positive because higher is better
         }
         
         score = 0.0
@@ -196,35 +196,35 @@ class PerformanceTracker:
         
         for metric_type, weight in weights.items():
             value = current_metrics.get(metric_type, 0.0)
-            
-            # Normalizar valores según el tipo de métrica
+
+            # Normalize values according to metric type
             if metric_type == MetricType.EXECUTION_TIME:
-                # Normalizar tiempo de ejecución (menor es mejor)
+                # Normalize execution time (lower is better)
                 normalized_value = max(0, 1.0 - (value / 1000.0))  # 1s = score 0
             elif metric_type in [MetricType.SUCCESS_RATE, MetricType.CACHE_HIT_RATE]:
-                # Ya están normalizados (0-1)
+                # Already normalized (0-1)
                 normalized_value = value
             elif metric_type == MetricType.THROUGHPUT:
-                # Normalizar throughput (mayor es mejor)
+                # Normalize throughput (higher is better)
                 normalized_value = min(value / 100.0, 1.0)  # 100 ops/s = score 1
             elif metric_type == MetricType.ERROR_RATE:
-                # Normalizar error rate (menor es mejor)
+                # Normalize error rate (lower is better)
                 normalized_value = max(0, 1.0 - value)
             else:
                 normalized_value = value
-            
+
             score += weight * normalized_value
             total_weight += abs(weight)
-        
-        # Normalizar score final
+
+        # Normalize final score
         if total_weight > 0:
             score = score / total_weight
-        
-        # Asegurar que esté en rango [0, 1]
-        return max(0.0, min(1.0, score + 0.5))  # +0.5 para centrar en 0.5
+
+        # Ensure it is in range [0, 1]
+        return max(0.0, min(1.0, score + 0.5))  # +0.5 to center at 0.5
 
 class AdapterMetricsCollector:
-    """Colector central of metrics para todos los adapters."""
+    """Central metrics collector for all adapters."""
     
     def __init__(self):
         self.trackers: Dict[str, PerformanceTracker] = {}
@@ -233,10 +233,10 @@ class AdapterMetricsCollector:
         self.alert_callbacks: List[Callable[[Alert], None]] = []
         self.collection_active = False
         self.collection_thread = None
-        self.collection_interval = 30.0  # segundos
+        self.collection_interval = 30.0  # seconds
         self.lock = threading.RLock()
-        
-        # Configurar umbrales por defecto
+
+        # Configure default thresholds
         self._setup_default_thresholds()
         
     def register_adapter(self, adapter_name: str) -> PerformanceTracker:
@@ -257,8 +257,8 @@ class AdapterMetricsCollector:
                         metadata: Optional[Dict[str, Any]] = None):
         """Records an adapter execution."""
         tracker = self.register_adapter(adapter_name)
-        
-        # Registrar métricas básicas
+
+        # Record basic metrics
         tracker.record_metric(MetricType.EXECUTION_TIME, execution_time_ms, operation)
         tracker.record_metric(MetricType.SUCCESS_RATE, 1.0 if success else 0.0, operation)
         tracker.record_metric(MetricType.ERROR_RATE, 0.0 if success else 1.0, operation)
@@ -300,11 +300,11 @@ class AdapterMetricsCollector:
         with self.lock:
             if adapter_name not in self.trackers:
                 return {}
-            
+
             tracker = self.trackers[adapter_name]
             current_metrics = tracker.get_current_metrics()
-            
-            # Statistics detalladas
+
+            # Detailed statistics
             detailed_stats = {}
             for metric_type in MetricType:
                 detailed_stats[metric_type.value] = tracker.get_metric_statistics(metric_type)
@@ -335,8 +335,8 @@ class AdapterMetricsCollector:
                 'adapters_summary': {},
                 'system_performance': {}
             }
-            
-            # Resumen por adapter
+
+            # Summary per adapter
             total_ops = 0
             total_score = 0.0
             
@@ -355,8 +355,8 @@ class AdapterMetricsCollector:
                     'success_rate': current_metrics.get(MetricType.SUCCESS_RATE, 0.0),
                     'status': self._get_adapter_status(current_metrics)
                 }
-            
-            # Métricas del system
+
+            # System metrics
             overview['system_performance'] = {
                 'total_operations': total_ops,
                 'average_system_score': total_score / len(self.trackers) if self.trackers else 0.0,
@@ -372,8 +372,8 @@ class AdapterMetricsCollector:
             
             if unacknowledged_only:
                 alerts = [a for a in alerts if not a.acknowledged]
-            
-            # Ordenar por timestamp (más recientes primero)
+
+            # Sort by timestamp (most recent first)
             alerts.sort(key=lambda x: x.timestamp, reverse=True)
             
             # Limitar resultados
@@ -395,7 +395,7 @@ class AdapterMetricsCollector:
             ]
     
     def acknowledge_alert(self, alert_index: int) -> bool:
-        """Marca una alerta como reconocida."""
+        """Marks an alert as acknowledged."""
         with self.lock:
             try:
                 if 0 <= alert_index < len(self.alerts):
@@ -406,17 +406,17 @@ class AdapterMetricsCollector:
                 return False
     
     def add_threshold(self, threshold: MetricThreshold):
-        """Añade un umbral de métrica."""
+        """Adds a metric threshold."""
         with self.lock:
             self.thresholds.append(threshold)
             logger.info(f"Added threshold for {threshold.adapter_name}.{threshold.metric_type.value}")
     
     def add_alert_callback(self, callback: Callable[[Alert], None]):
-        """Añade callback para alertas."""
+        """Adds callback for alerts."""
         self.alert_callbacks.append(callback)
     
     def export_metrics(self, format: str = "json") -> str:
-        """Exporta métricas en formato especificado."""
+        """Exports metrics in specified format."""
         overview = self.get_system_overview()
         
         if format.lower() == "json":
@@ -425,20 +425,20 @@ class AdapterMetricsCollector:
             raise ValueError(f"Unsupported export format: {format}")
     
     def _setup_default_thresholds(self):
-        """Configura umbrales por defecto."""
+        """Configures default thresholds."""
         default_thresholds = [
-            # Tiempo de ejecución
+            # Execution time
             MetricThreshold(MetricType.EXECUTION_TIME, "*", max_value=5000.0, alert_level=AlertLevel.WARNING),
             MetricThreshold(MetricType.EXECUTION_TIME, "*", max_value=10000.0, alert_level=AlertLevel.ERROR),
-            
-            # Tasa de éxito
+
+            # Success rate
             MetricThreshold(MetricType.SUCCESS_RATE, "*", min_value=0.95, alert_level=AlertLevel.WARNING),
             MetricThreshold(MetricType.SUCCESS_RATE, "*", min_value=0.90, alert_level=AlertLevel.ERROR),
-            
-            # Tasa de error
+
+            # Error rate
             MetricThreshold(MetricType.ERROR_RATE, "*", max_value=0.05, alert_level=AlertLevel.WARNING),
             MetricThreshold(MetricType.ERROR_RATE, "*", max_value=0.10, alert_level=AlertLevel.ERROR),
-            
+
             # Performance score
             MetricThreshold(MetricType.PERFORMANCE_SCORE, "*", min_value=0.7, alert_level=AlertLevel.WARNING),
             MetricThreshold(MetricType.PERFORMANCE_SCORE, "*", min_value=0.5, alert_level=AlertLevel.ERROR)
@@ -447,12 +447,12 @@ class AdapterMetricsCollector:
         self.thresholds.extend(default_thresholds)
     
     def _collection_loop(self):
-        """Main collection loop of metrics."""
+        """Main metrics collection loop."""
         self._collection_start_time = time.time()
-        
+
         while self.collection_active:
             try:
-                # Recolectar métricas del system
+                # Collect system metrics
                 self._collect_system_metrics()
                 
                 # Calcular performance scores
@@ -467,7 +467,7 @@ class AdapterMetricsCollector:
     def _collect_system_metrics(self):
         """Collects system metrics."""
         try:
-            # Métricas de memoria del proceso
+            # Process memory metrics
             memory_usage = self._get_process_memory_usage()
             
             # Registrar para todos los adapters activos
@@ -494,15 +494,15 @@ class AdapterMetricsCollector:
         for threshold in self.thresholds:
             if not threshold.enabled:
                 continue
-            
-            # Verificar si el umbral aplica a este adapter
+
+            # Check if threshold applies to this adapter
             if threshold.adapter_name != "*" and threshold.adapter_name != adapter_name:
                 continue
-            
+
             current_value = current_metrics.get(threshold.metric_type, 0.0)
             violated = False
-            
-            # Verificar violación de umbral
+
+            # Check threshold violation
             if threshold.min_value is not None and current_value < threshold.min_value:
                 violated = True
             elif threshold.max_value is not None and current_value > threshold.max_value:
@@ -525,8 +525,8 @@ class AdapterMetricsCollector:
         """Generates an alert."""
         with self.lock:
             self.alerts.append(alert)
-            
-            # Llamar callbacks
+
+            # Call callbacks
             for callback in self.alert_callbacks:
                 try:
                     callback(alert)
@@ -547,7 +547,7 @@ class AdapterMetricsCollector:
             return 0.0
     
     def _get_adapter_status(self, current_metrics: Dict[MetricType, float]) -> str:
-        """Determines the state de un adapter based en métricas."""
+        """Determines the state of an adapter based on metrics."""
         success_rate = current_metrics.get(MetricType.SUCCESS_RATE, 1.0)
         error_rate = current_metrics.get(MetricType.ERROR_RATE, 0.0)
         performance_score = current_metrics.get(MetricType.PERFORMANCE_SCORE, 0.5)
@@ -564,7 +564,7 @@ metrics_collector = AdapterMetricsCollector()
 
 # Decorator for automatic monitoring
 def monitor_adapter_performance(adapter_name: str, operation: str = ""):
-    """Decorador para monitorear automáticamente el rendimiento de adapters."""
+    """Decorator to automatically monitor adapter performance."""
     def decorator(func):
         def wrapper(*args, **kwargs):
             start_time = time.time()
@@ -593,7 +593,7 @@ def monitor_adapter_performance(adapter_name: str, operation: str = ""):
         return wrapper
     return decorator
 
-# Funciones de utilidad
+# Utility functions
 def start_metrics_collection():
     """Starts automatic collection of metrics."""
     metrics_collector.start_collection()
@@ -611,12 +611,12 @@ def get_adapter_performance(adapter_name: str):
     return metrics_collector.get_adapter_metrics(adapter_name)
 
 def export_metrics_report(format: str = "json"):
-    """Exporta reporte of metrics."""
+    """Exports metrics report."""
     return metrics_collector.export_metrics(format)
 
 # Example callback for alerts
 def default_alert_callback(alert: Alert):
-    """Callback por defecto para alertas."""
+    """Default callback for alerts."""
     level_emoji = {
         AlertLevel.INFO: "ℹ️",
         AlertLevel.WARNING: "⚠️", 
@@ -627,5 +627,5 @@ def default_alert_callback(alert: Alert):
     emoji = level_emoji.get(alert.alert_level, "❓")
     print(f"{emoji} ALERT: {alert.message}")
 
-# Registrar callback por defecto
+# Register default callback
 metrics_collector.add_alert_callback(default_alert_callback)

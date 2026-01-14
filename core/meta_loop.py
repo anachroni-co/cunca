@@ -81,12 +81,12 @@ class MetaLoopState:
             logger.info(f"🎯 New best configuration found: {performance:.4f}")
     
     def get_recent_performance(self, window: int = 10) -> List[float]:
-        """Gets el rendimiento reciente."""
+        """Gets recent performance."""
         return [p['performance'] for p in self.performance_history[-window:]]
 
 class MetaOptimizer:
-    """Optimizador meta que ajusta hiperparámetros based on performance."""
-    
+    """Meta optimizer that adjusts hyperparameters based on performance."""
+
     def __init__(self, config: MetaLoopConfig):
         self.config = config
         self.search_space = config.hyperparameter_search_space
@@ -94,7 +94,7 @@ class MetaOptimizer:
         self.gradient_estimates = {}
         
     def _initialize_params(self) -> Dict[str, float]:
-        """Initializes parameters en el centro del espacio de búsqueda."""
+        """Initializes parameters at the center of the search space."""
         params = {}
         for param_name, (min_val, max_val) in self.search_space.items():
             params[param_name] = (min_val + max_val) / 2
@@ -132,15 +132,15 @@ class MetaOptimizer:
         
         if len(history) < 2:
             return gradients
-        
-        recent_history = history[-10:]  # Usar historial reciente
-        
+
+        recent_history = history[-10:]  # Use recent history
+
         for param_name in self.search_space:
             param_values = [h['hyperparams'].get(param_name, 0) for h in recent_history]
             performances = [h['performance'] for h in recent_history]
-            
-            if len(set(param_values)) > 1:  # Solo si hay variación
-                # Correlación simple como aproximación de gradiente
+
+            if len(set(param_values)) > 1:  # Only if there is variation
+                # Simple correlation as gradient approximation
                 correlation = np.corrcoef(param_values, performances)[0, 1]
                 if not np.isnan(correlation):
                     gradients[param_name] = correlation
@@ -148,29 +148,29 @@ class MetaOptimizer:
         return gradients
 
 class ArchitectureAdaptor:
-    """Adaptador de arquitectura que modifica dinámicamente el modelo."""
-    
+    """Architecture adapter that dynamically modifies the model."""
+
     def __init__(self, config: MetaLoopConfig):
         self.config = config
         self.adaptation_history = []
         
     def suggest_architecture_changes(self, performance_trend: List[float]) -> Dict[str, Any]:
-        """Sugiere cambios de arquitectura based en tendencia de rendimiento."""
+        """Suggests architecture changes based on performance trend."""
         if not self.config.enable_architecture_adaptation:
             return {}
-        
+
         changes = {}
-        
-        # Analizar tendencia de rendimiento
+
+        # Analyze performance trend
         if len(performance_trend) >= 5:
             recent_trend = np.polyfit(range(len(performance_trend)), performance_trend, 1)[0]
-            
-            if recent_trend < -0.01:  # Rendimiento decreciente
+
+            if recent_trend < -0.01:  # Decreasing performance
                 changes['increase_model_capacity'] = True
                 changes['suggested_layer_increase'] = 1
                 logger.warning("📉 Performance declining, suggesting architecture expansion")
-                
-            elif recent_trend > 0.01 and performance_trend[-1] > 0.95:  # Rendimiento muy alto
+
+            elif recent_trend > 0.01 and performance_trend[-1] > 0.95:  # Very high performance
                 changes['regularization_increase'] = True
                 changes['suggested_dropout_increase'] = 0.1
                 logger.info("📈 High performance, suggesting regularization increase")
@@ -179,9 +179,9 @@ class ArchitectureAdaptor:
 
 class MetaLoop:
     """
-    Sistema principal de meta-loop que coordina el meta-learning.
+    Main meta-loop system that coordinates meta-learning.
     """
-    
+
     def __init__(self, config: Optional[MetaLoopConfig] = None):
         self.config = config or MetaLoopConfig()
         self.state = MetaLoopState()
@@ -200,44 +200,44 @@ class MetaLoop:
     
     def step(self, current_performance: float, current_hyperparams: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Ejecuta un paso del meta-loop.
-        
+        Executes a meta-loop step.
+
         Args:
-            current_performance: Rendimiento actual del modelo
-            current_hyperparams: Hiperparámetros actuales
-            
+            current_performance: Current model performance
+            current_hyperparams: Current hyperparameters
+
         Returns:
-            Diccionario con sugerencias de cambios
+            Dictionary with change suggestions
         """
         self.state.current_step += 1
         self.state.update_performance(current_performance, current_hyperparams)
-        
+
         suggestions = {}
-        
-        # Evaluar si es momento de hacer adaptaciones
+
+        # Evaluate if it's time to make adaptations
         if self.state.current_step % self.config.evaluation_frequency == 0:
             suggestions.update(self._evaluate_and_adapt())
-        
-        # Meta-update menos frecuente
+
+        # Less frequent meta-update
         if self.state.current_step % self.config.meta_update_frequency == 0:
             suggestions.update(self._meta_update())
         
         return suggestions
     
     def _evaluate_and_adapt(self) -> Dict[str, Any]:
-        """Evalúa el rendimiento actual y sugiere adaptaciones."""
+        """Evaluates current performance and suggests adaptations."""
         suggestions = {}
-        
+
         recent_performance = self.state.get_recent_performance(self.config.adaptation_window)
-        
+
         if len(recent_performance) >= 5:
             # Suggest new hyperparameters
             new_hyperparams = self.meta_optimizer.suggest_hyperparameters(
                 self.state.hyperparameter_history
             )
             suggestions['hyperparameters'] = new_hyperparams
-            
-            # Sugerir cambios de arquitectura
+
+            # Suggest architecture changes
             arch_changes = self.architecture_adaptor.suggest_architecture_changes(recent_performance)
             if arch_changes:
                 suggestions['architecture'] = arch_changes
@@ -251,22 +251,22 @@ class MetaLoop:
     def _meta_update(self) -> Dict[str, Any]:
         """Performs a meta-update of the system."""
         suggestions = {}
-        
-        # Analizar eficacia de adaptaciones pasadas
+
+        # Analyze effectiveness of past adaptations
         if len(self.state.performance_history) >= 10:
             performance_improvement = self._calculate_improvement()
-            
-            if performance_improvement < 0.01:  # Mejora insuficiente
+
+            if performance_improvement < 0.01:  # Insufficient improvement
                 suggestions['meta_strategy'] = 'increase_exploration'
                 logger.warning("⚠️ Insufficient improvement, increasing exploration")
-            elif performance_improvement > 0.05:  # Mejora significativa
+            elif performance_improvement > 0.05:  # Significant improvement
                 suggestions['meta_strategy'] = 'continue_exploitation'
                 logger.info("✅ Good improvement, continuing current strategy")
         
         return suggestions
     
     def _calculate_improvement(self) -> float:
-        """Calculates la mejora de rendimiento reciente."""
+        """Calculates recent performance improvement."""
         if len(self.state.performance_history) < 10:
             return 0.0
         
@@ -276,7 +276,7 @@ class MetaLoop:
         return recent_perf - older_perf
     
     def get_status(self) -> Dict[str, Any]:
-        """Gets the state actual del meta-loop."""
+        """Gets the current state of the meta-loop."""
         return {
             'current_step': self.state.current_step,
             'best_performance': self.state.best_performance,
@@ -297,14 +297,14 @@ class MetaLoop:
 
 # Factory function
 def create_meta_loop(config: Optional[MetaLoopConfig] = None) -> MetaLoop:
-    """Crea una instancia del meta-loop."""
+    """Creates a meta-loop instance."""
     return MetaLoop(config)
 
 # Global instance for easy access
 _global_meta_loop: Optional[MetaLoop] = None
 
 def get_global_meta_loop() -> MetaLoop:
-    """Gets la instancia global del meta-loop."""
+    """Gets the global meta-loop instance."""
     global _global_meta_loop
     if _global_meta_loop is None:
         _global_meta_loop = create_meta_loop()
@@ -313,13 +313,13 @@ def get_global_meta_loop() -> MetaLoop:
 def main():
     """Main function for testing."""
     logger.info("🔄 Meta-Loop System - Testing Mode")
-    
-    # Crear meta-loop
+
+    # Create meta-loop
     meta_loop = create_meta_loop()
-    
-    # Simular entrenamiento
+
+    # Simulate training
     for step in range(100):
-        # Simular rendimiento variable
+        # Simulate variable performance
         performance = 0.5 + 0.4 * np.sin(step * 0.1) + np.random.normal(0, 0.05)
         performance = np.clip(performance, 0, 1)
         
@@ -330,14 +330,14 @@ def main():
             'dropout_rate': 0.1,
             'weight_decay': 0.01
         }
-        
-        # Ejecutar paso del meta-loop
+
+        # Execute meta-loop step
         suggestions = meta_loop.step(performance, hyperparams)
         
         if suggestions:
             logger.info(f"Step {step}: Suggestions = {suggestions}")
-    
-    # Show state final
+
+    # Show final state
     status = meta_loop.get_status()
     logger.info(f"Final status: {status}")
 

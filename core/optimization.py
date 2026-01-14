@@ -521,16 +521,16 @@ def val_step(
     batch: Dict[str, jnp.ndarray]
 ) -> Dict[str, float]:
     """
-    Paso de validación con caching de JIT y float32.
-    
+    Validation step with JIT caching and float32.
+
     Args:
-        state: Estado de entrenamiento
-        batch: Lote de datos de validación
-        
+        state: Training state
+        batch: Validation data batch
+
     Returns:
-        Métricas de validación
+        Validation metrics
     """
-    # Usar float32 para validación
+    # Use float32 for validation
     with jax.default_matmul_precision('float32'):
         logits = state.apply_fn(
             state.params,
@@ -541,8 +541,8 @@ def val_step(
         loss = optax.softmax_cross_entropy_with_integer_labels(
             logits, batch['labels']
         ).mean()
-        
-        # Calcular perplexity
+
+        # Calculate perplexity
         perplexity = jnp.exp(loss)
     
     return {
@@ -552,31 +552,31 @@ def val_step(
 
 def setup_profiling(config: Config) -> None:
     """
-    Configura el profiling de JAX.
-    
+    Sets up JAX profiling.
+
     Args:
-        config: Configuración del modelo
+        config: Model configuration
     """
     if config.training.profiling:
         jax.profiler.start_trace(config.training.profile_dir)
     
 def stop_profiling(config: Config) -> None:
     """
-    Detiene el profiling de JAX.
-    
+    Stops JAX profiling.
+
     Args:
-        config: Configuración del modelo
+        config: Model configuration
     """
     if config.training.profiling:
         jax.profiler.stop_trace()
 
 def save_checkpoint(state: TrainingState, step: int) -> None:
     """
-    Guarda un checkpoint del modelo.
-    
+    Saves a model checkpoint.
+
     Args:
-        state: Estado del modelo
-        step: Paso actual
+        state: Model state
+        step: Current step
     """
     if jax.process_index() == 0:
         checkpoint_path = Path(state.config.training.checkpoint_dir) / f'checkpoint_{step}'
@@ -586,21 +586,21 @@ def save_checkpoint(state: TrainingState, step: int) -> None:
 
 def load_checkpoint(config: Config, step: Optional[int] = None) -> Optional[TrainingState]:
     """
-    Carga un checkpoint del modelo.
-    
+    Loads a model checkpoint.
+
     Args:
-        config: Configuración del modelo
-        step: Paso del checkpoint a cargar (opcional)
-        
+        config: Model configuration
+        step: Checkpoint step to load (optional)
+
     Returns:
-        Estado del modelo o None si no se encuentra
+        Model state or None if not found
     """
     checkpoint_dir = Path(config.training.checkpoint_dir)
     if not checkpoint_dir.exists():
         return None
-    
+
     if step is None:
-        # Cargar el último checkpoint
+        # Load the latest checkpoint
         checkpoints = list(checkpoint_dir.glob('checkpoint_*'))
         if not checkpoints:
             return None
@@ -616,13 +616,13 @@ def load_checkpoint(config: Config, step: Optional[int] = None) -> Optional[Trai
 
 def setup_logging(config: Config) -> Tuple[Optional[SummaryWriter], Optional[wandb.run]]:
     """
-    Configura el logging para el entrenamiento.
-    
+    Sets up logging for training.
+
     Args:
-        config: Configuración del modelo
-        
+        config: Model configuration
+
     Returns:
-        Tuple[Optional[SummaryWriter], Optional[wandb.run]]: Writer de TensorBoard y run de WandB
+        Tuple[Optional[SummaryWriter], Optional[wandb.run]]: TensorBoard writer and WandB run
     """
     writer = None
     wandb_run = None
@@ -641,11 +641,11 @@ def setup_logging(config: Config) -> Tuple[Optional[SummaryWriter], Optional[wan
 
 def teardown_logging(writer: Optional[SummaryWriter], wandb_run: Optional[wandb.run]) -> None:
     """
-    Cierra los recursos de logging.
-    
+    Closes logging resources.
+
     Args:
-        writer: Writer de TensorBoard
-        wandb_run: Run de WandB
+        writer: TensorBoard writer
+        wandb_run: WandB run
     """
     if jax.process_index() == 0:
         if writer is not None:

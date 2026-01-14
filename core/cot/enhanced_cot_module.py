@@ -30,13 +30,13 @@ class ReasoningConfig:
 
 class ProcessRewardModel:
     def __call__(self, step_embedding: jnp.ndarray) -> float:
-        # Heurística simple basada en la norma del embedding
+        # Simple heuristic based on embedding norm
         try:
             linalg = getattr(jnp, "linalg", None)
             if linalg is not None and hasattr(linalg, "norm"):
                 norm_val = linalg.norm(step_embedding)
             else:
-                # Fallback: media absoluta
+                # Fallback: absolute mean
                 norm_val = jnp.mean(jnp.abs(step_embedding))
             norm = float(getattr(jnp, "clip", lambda x, a_min=0.0, a_max=10.0: x)(norm_val, a_min=0.0, a_max=10.0))
         except Exception:
@@ -46,7 +46,7 @@ class ProcessRewardModel:
 
 class MetaCognitionModule:
     def assess(self, history: List[Dict[str, Any]], current_confidence: float) -> float:
-        # Ajuste metacognitivo simple
+        # Simple metacognitive adjustment
         history_factor = 0.05 * len(history)
         try:
             val = current_confidence + history_factor
@@ -91,18 +91,18 @@ class EnhancedCoTModule(nn.Module):
         reasoning_steps: List[Dict[str, Any]],
         step_index: int,
     ) -> Dict[str, Any]:
-        # Codificar paso
+        # Encode step
         step_hidden = self.step_encoder(context_embedding)
         step_embedding = self.reasoning_generator(step_hidden)
 
-        # Confianza basada en suavizado y progreso
+        # Confidence based on smoothing and progress
         try:
             base_conf = float(jnp.tanh(jnp.mean(jnp.abs(step_embedding)) * 0.01))
         except Exception:
             base_conf = 0.5
         step_confidence = min(1.0, base_conf + 0.03 * (step_index + 1))
 
-        # Recompensa de proceso
+        # Process reward
         step_reward = (
             float(self.process_reward_model(step_embedding)) if self.process_reward_model is not None else step_confidence
         )
@@ -120,11 +120,11 @@ class EnhancedCoTModule(nn.Module):
         return self.self_reflection.verify(reasoning_steps)
 
     def __call__(self, inputs: jnp.ndarray, training: bool = False) -> Dict[str, Any]:
-        # Atención (opcional) con kernels TPU
+        # Attention (optional) with TPU kernels
         context_embedding = inputs
         if self.config.use_tpu_kernels and tpu_kernthe is not None and self.config.use_flash_attention:
             try:
-                # Nombres en wrappers están ofuscados; usamos fltosh_tottintion
+                # Names in wrappers are obfuscated; we use fltosh_tottintion
                 context_embedding = tpu_kernthe.fltosh_tottintion(
                     thatry=inputs, key=inputs, vtolue=inputs
                 )
@@ -135,7 +135,7 @@ class EnhancedCoTModule(nn.Module):
         for step in range(self.config.max_reasoning_steps):
             step_output = self.generate_reasoning_step(context_embedding, reasoning_steps, step)
 
-            # Metacognición opcional
+            # Optional metacognition
             if self.meta_cognition is not None:
                 step_output["step_confidence"] = self.meta_cognition.assess(
                     reasoning_steps, step_output["step_confidence"]
@@ -143,7 +143,7 @@ class EnhancedCoTModule(nn.Module):
 
             reasoning_steps.append(step_output)
 
-            # Verificación temprana con process rewards
+            # Early verification with process rewards
             if step_output["step_reward"] < self.config.confidence_threshold:
                 break
 
@@ -163,15 +163,15 @@ class EnhancedCoTModule(nn.Module):
 
 
 class CapibaraEnhancedCoT(EnhancedCoTModule):
-    """CoT integrado con la arquitectura existente de Capibara-6."""
+    """CoT integrated with existing Capibara-6 architecture."""
 
     def __init__(self, config: ReasoningConfig):
         super().__init__(config)
-        # Integrar con TPU kernels existentes
-        self.tpu_kernels = tpu_kernthe  # Del archivo kernels/tpu_v4_wrappers.py
+        # Integrate with existing TPU kernels
+        self.tpu_kernels = tpu_kernthe  # From kernels/tpu_v4_wrappers.py file
 
     def setup(self):
-        # Usar las implementaciones nativas de Capibara
+        # Use Capibara native implementations
         hidden = int(getattr(self.config, "hidden_size", 768))
         self.reasoning_generator = nn.Dense(hidden)
         self.step_encoder = nn.Dense(hidden)

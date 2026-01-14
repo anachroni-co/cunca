@@ -136,7 +136,7 @@ class ModularConfig:
             self.workload_type: str = tpu_config.get("workload_type", "balanced")
             self.use_tpu_optimizations: bool = tpu_config.get("use_tpu_optimizations", True)
             
-            # Tipos de datos
+            # Data types
             dtypes = dtypes_config.get("dtypes", {})
             self.dtype = jnp.bfloat16 if dtypes.get("model_dtype") == "bfloat16" else jnp.float32
             self.param_dtype = jnp.float32 if dtypes.get("param_dtype") == "float32" else jnp.float32
@@ -224,7 +224,7 @@ class ModularCapibaraModel:
         self.memory_monitor: CoreIntegratedMemoryMonitor = CoreIntegratedMemoryMonitor()
         self.metrics: MetricsCollector = MetricsCollector()
         
-        # Router for selection de modules
+        # Router for module selection
         self.router: Router = Router(
             hidden_size=self.config.hidden_size,
             num_heads=self.config.num_router_experts,
@@ -232,7 +232,7 @@ class ModularCapibaraModel:
             dtype=self.config.dtype,
         )
 
-        # Componentes adaptive (opcionales)
+        # Adaptive components (optional)
         self.adaptive_router = None
         self.adaptive_computation = None
         if self.config.enable_adaptive_routing and self.config.adaptive_config is not None:
@@ -289,7 +289,7 @@ class ModularCapibaraModel:
                 modules_config = toml.load("capibara/config/configs_toml/default.toml")["modules"]
                 active_modules = modules_config.get("active", [])
 
-            # Dictionary of module classes disponibles
+            # Dictionary of available module classes
             available_modules = {
                 "dual_process": DualProcessThinking,
                 "adaptive": AdaptiveVQSubModel,
@@ -301,7 +301,7 @@ class ModularCapibaraModel:
                 "hybrid_attention": None,  # Will be loaded dynamically
             }
             
-            # Load modules Mamba/SSM dinámicamente
+            # Load Mamba/SSM modules dynamically
             try:
                 from capibara.sub_models.mamba import MambaModule
                 from capibara.sub_models.hybrid import HybridAttentionModule
@@ -385,7 +385,7 @@ class ModularCapibaraModel:
             inputs, routing_meta = self.adaptive_router.route(inputs, training=training)
             self.metrics.update(routing_meta)
         
-        # Forward pass in modules activos
+        # Forward pass in active modules
         outputs: Dict[str, Any] = {}
         for i, module in enumerate(self.active_modules):
             try:
@@ -417,7 +417,7 @@ class ModularCapibaraModel:
         if not training and self.verification_system is not None:
             try:
                 verified = self._apply_verification(base_result)
-                # Incluir outputs base para compatibilidad
+                # Include base outputs for compatibility
                 verified["outputs"] = outputs
                 verified["metrics"] = base_result["metrics"]
                 verified["module_scores"] = base_result["module_scores"]
@@ -430,26 +430,26 @@ class ModularCapibaraModel:
         return base_result
 
     def _apply_verification(self, model_result: Dict[str, Any]) -> Dict[str, Any]:
-        """Applies verification to all los outputs del modelo."""
+        """Applies verification to all model outputs."""
         verified_outputs: Dict[str, Any] = {}
         outputs = model_result.get("outputs", {})
 
         for module_name, module_output in outputs.items():
             try:
-                # Simular embedding del output para verificación
+                # Simulate output embedding for verification
                 output_embedding = jnp.ones((768,))
 
-                # Verificar output
+                # Verify output
                 verification_result = self.verification_system.verify_output(output_embedding)  # type: ignore[union-attr]
 
                 if verification_result.get("requires_correction", False):
-                    # Aplicar correcciones
+                    # Apply corrections
                     correction_result = self.verification_system.apply_corrections(  # type: ignore[union-attr]
                         output_embedding, verification_result
                     )
 
                     verified_outputs[module_name] = {
-                        "output": "Output verificado y corregido",
+                        "output": "Verified and corrected output",
                         "verification": correction_result["final_verification"],
                         "correction_applied": True,
                         "safety_level": correction_result["final_verification"]["safety_level"],
@@ -463,7 +463,7 @@ class ModularCapibaraModel:
                     }
 
             except Exception as e:
-                logger.error(f"Error en verificación de {module_name}: {e}")
+                logger.error(f"Error in verification of {module_name}: {e}")
                 verified_outputs[module_name] = {
                     "output": module_output,
                     "verification_error": str(e),
@@ -477,7 +477,7 @@ class ModularCapibaraModel:
         }
 
     def _compute_overall_safety(self, verified_outputs: Dict[str, Any]) -> str:
-        """Computa el nivel de seguridad general."""
+        """Computes the overall safety level."""
         safety_levels: List[str] = []
         for output in verified_outputs.values():
             if isinstance(output, dict) and "safety_level" in output:
