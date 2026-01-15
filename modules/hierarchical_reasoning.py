@@ -19,16 +19,16 @@ class HierarchicalReasoningConfig:
     override_threshold: float = 0.8
 
     keywords_math: Tuple[str, ...] = (
-        "calcular", "resolver", "ecuación", "integral", "derivada", "límite",
-        "matriz", "suma", "producto", "probabilidad", "combinatoria",
+        "calculate", "solve", "equation", "integral", "derivative", "limit",
+        "matrix", "sum", "product", "probability", "combinatorics",
     )
     keywords_reasoning: Tuple[str, ...] = (
-        "deducir", "inferir", "lógica", "premisa", "conclusión", "argumento",
-        "razonar", "hipótesis", "demostrar", "prueba",
+        "deduce", "infer", "logic", "premise", "conclusion", "argument",
+        "reason", "hypothesis", "demonstrate", "proof",
     )
     keywords_planning: Tuple[str, ...] = (
-        "planificar", "estrategia", "pasos", "optimizar", "cronograma",
-        "objetivos", "tareas", "secuencia",
+        "plan", "strategy", "steps", "optimize", "schedule",
+        "objectives", "tasks", "sequence",
     )
 
 
@@ -86,24 +86,24 @@ class HierarchicalReasoningModule:
         plan: List[str] = []
         if any(k in text for k in self.config.keywords_math):
             plan = [
-                "Identificar variables y lo que se pide",
-                "Descomponer el problema en subpasos matemáticos",
-                "Aplicar reglas y teoremas relevantes",
-                "Simplificar y verificar coherencia",
+                "Identify variables and what is being asked",
+                "Break down the problem into mathematical substeps",
+                "Apply relevant rules and theorems",
+                "Simplify and verify coherence",
             ]
         elif any(k in text for k in self.config.keywords_planning):
             plan = [
-                "Definir objetivo y restricciones",
-                "Listar recursos y riesgos",
-                "Secuenciar pasos con dependencias",
-                "Evaluar métricas de éxito y ajustar",
+                "Define objective and constraints",
+                "List resources and risks",
+                "Sequence steps with dependencies",
+                "Evaluate success metrics and adjust",
             ]
         else:
             plan = [
-                "Clarificar la premisa",
-                "Enumerar hipótesis y alternativas",
-                "Evaluar implicaciones lógicas",
-                "Llegar a una conclusión justificada",
+                "Clarify the premise",
+                "Enumerate hypotheses and alternatives",
+                "Evaluate logical implications",
+                "Reach a justified conclusion",
             ]
         return plan
 
@@ -111,9 +111,9 @@ class HierarchicalReasoningModule:
         # Simple deterministic refinement signal
         base = 1.0 / (iteration + 2.0)
         step_idx = min(iteration - 1, len(plan) - 1) if plan else 0
-        step_text = f"Paso {iteration}: {plan[step_idx] if plan else 'Analizar el problema'}"
+        step_text = f"Step {iteration}: {plan[step_idx] if plan else 'Analyze the problem'}"
         return step_text, base
 
     def _compose_response(self, plan: List[str], steps: List[str]) -> str:
-        lines = ["Plan propuesto:"] + [f"- {p}" for p in plan] + ["\nEjecución:"] + steps
+        lines = ["Proposed plan:"] + [f"- {p}" for p in plan] + ["\nExecution:"] + steps
         return "\n".join(lines)

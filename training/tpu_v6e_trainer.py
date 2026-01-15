@@ -1,18 +1,18 @@
 """
 TPU v6e Robust Trainer for CapibaraGPT-v2
 
-Entrenador especializado para TPU v6e con topología 8x8 (64 chips) que maneja:
-- Interrupciones de instancias preemptibles
-- Checkpoints automáticos frecuentes
-- Recuperación automática desde el último checkpoint
-- Optimizaciones específicas para 8x8 mesh topology
-- Paralelización distribuida a través de 8 hosts
+Specialized trainer for TPU v6e with 8x8 topology (64 chips) that handles:
+- Preemptible instance interruptions
+- Frequent automatic checkpoints
+- Automatic recovery from last checkpoint
+- Specific optimizations for 8x8 mesh topology
+- Distributed parallelization across 8 hosts
 
-Configuración target:
-- Topología: 8x8 (64 chips TPU v6e)
+Target configuration:
+- Topology: 8x8 (64 TPU v6e chips)
 - Hosts: 8
 - VMs: 16
-- Tipo: v6e-64 (ct6e-standard-4t)
+- Type: v6e-64 (ct6e-standard-4t)
 """
 
 import os
@@ -42,37 +42,37 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class TPUv6eConfig:
-    """Configuration específica para TPU v6e 8x8."""
-    # Topología
+    """Configuration specific for TPU v6e 8x8."""
+    # Topology
     mesh_rows: int = 8
-    mesh_cols: int = 8 
+    mesh_cols: int = 8
     total_chips: int = 64
     hosts: int = 8
     vms: int = 16
-    
-    # Hardware específico
+
+    # Specific hardware
     accelerator_type: str = "v6e-64"
     machine_type: str = "ct6e-standard-4t"
-    
-    # Optimizaciones
+
+    # Optimizations
     use_bf16: bool = True
     use_mixed_precision: bool = True
     gradient_accumulation_steps: int = 8
-    
-    # Paralelización
+
+    # Parallelization
     data_parallel_size: int = 16  # Across VMs
     model_parallel_size: int = 4  # Within each VM
     pipeline_parallel_size: int = 1
-    
-    # Checkpointing para preemptibles
-    checkpoint_every_steps: int = 100  # Muy frecuente para interrupciones
+
+    # Checkpointing for preemptibles
+    checkpoint_every_steps: int = 100  # Very frequent for interruptions
     keep_last_n_checkpoints: int = 3
-    emergency_checkpoint_interval: int = 50  # Checkpoint de emergencia
-    
-    # Tolerancia a fallos
+    emergency_checkpoint_interval: int = 50  # Emergency checkpoint
+
+    # Fault tolerance
     max_retries: int = 3
-    retry_delay_base: float = 30.0  # Segundos
-    health_check_interval: int = 10  # Steps entre health checks
+    retry_delay_base: float = 30.0  # Seconds
+    health_check_interval: int = 10  # Steps between health checks
 
 @dataclass 
 class CheckpointMetadata:
@@ -90,8 +90,8 @@ class CheckpointMetadata:
 
 class TPUv6eRobustTrainer:
     """
-    Entrenador robusto para TPU v6e que maneja interrupciones preemptibles
-    y garantiza continuidad del entrenamiento from checkpoints.
+    Robust trainer for TPU v6e that handles preemptible interruptions
+    and ensures training continuity from checkpoints.
     """
     
     def __init__(
@@ -106,99 +106,99 @@ class TPUv6eRobustTrainer:
         self.use_wandb = use_wandb
         self.config = config or TPUv6eConfig()
         
-        # Estados internos
+        # Internal states
         self.training_state = None
         self.current_step = 0
         self.current_epoch = 0
         self.is_training = False
         self.interrupted = False
         self.recovery_mode = False
-        
-        # Manejo de interrupciones
+
+        # Interruption handling
         self._setup_signal_handlers()
-        
-        # Directorios de checkpoint
+
+        # Checkpoint directories
         self._setup_checkpoint_dirs()
-        
-        # Configurar TPU v6e
+
+        # Configure TPU v6e
         self._setup_tpu_v6e()
-        
-        # Métricas
+
+        # Metrics
         self.metrics_history = []
         
     def _setup_signal_handlers(self):
-        """Configures manejadores de señales para interrupciones preemptibles."""
+        """Configure signal handlers for preemptible interruptions."""
         def signal_handler(signum, frame):
-            logger.warning(f"🚨 SEÑAL {signum} RECIBIDA - Iniciando checkpoint de emergencia...")
+            logger.warning(f"SIGNAL {signum} RECEIVED - Starting emergency checkpoint...")
             self.interrupted = True
             if self.is_training:
                 asyncio.create_task(self._emergency_checkpoint())
-        
-        # Manejar SIGTERM (Google Cloud preemption signal)
+
+        # Handle SIGTERM (Google Cloud preemption signal)
         signal.signal(signal.SIGTERM, signal_handler)
         signal.signal(signal.SIGINT, signal_handler)
-        
-        logger.info("✅ Signal handlers configurados for handling preemption")
+
+        logger.info("Signal handlers configured for handling preemption")
     
     def _setup_checkpoint_dirs(self):
-        """Configures directorios de checkpoint."""
+        """Configure checkpoint directories."""
         self.checkpoint_dir = self.base_output_dir / f"tpu_v6e_{self.model_scale}"
         self.emergency_dir = self.checkpoint_dir / "emergency"
         self.metadata_dir = self.checkpoint_dir / "metadata"
-        
-        # Crear directorios
+
+        # Create directories
         for dir_path in [self.checkpoint_dir, self.emergency_dir, self.metadata_dir]:
             dir_path.mkdir(parents=True, exist_ok=True)
-            
-        logger.info(f"📁 Checkpoint dirs configurados: {self.checkpoint_dir}")
+
+        logger.info(f"Checkpoint dirs configured: {self.checkpoint_dir}")
     
     def _setup_tpu_v6e(self):
-        """Configures TPU v6e con topología 8x8."""
-        logger.info("🚀 Configurando TPU v6e con topología 8x8...")
-        
-        # Configurar JAX para TPU v6e
+        """Configure TPU v6e with 8x8 topology."""
+        logger.info("Configuring TPU v6e with 8x8 topology...")
+
+        # Configure JAX for TPU v6e
         os.environ['XLA_FLAGS'] = '--xla_tpu_enable_async_collective_fusion=true'
         os.environ['LIBTPU_INIT_ARGS'] = '--xla_tpu_enable_async_collective_fusion_multiple_steps=true'
-        
-        # Inicializar JAX
-        jax.config.update('jax_enable_x64', False)  # Usar float32/bfloat16
+
+        # Initialize JAX
+        jax.config.update('jax_enable_x64', False)  # Use float32/bfloat16
         jax.config.update('jax_default_matmul_precision', 'bfloat16' if self.config.use_bf16 else 'float32')
-        
-        # Configurar mesh topology 8x8
+
+        # Configure mesh topology 8x8
         devices = jax.devices()
-        logger.info(f"🔍 Devices detectados: {len(devices)}")
+        logger.info(f"Devices detected: {len(devices)}")
         
         if len(devices) != self.config.total_chips:
             logger.warning(f"⚠️ Expected {self.config.total_chips} devices, got {len(devices)}")
         
-        # Crear mesh 8x8
+        # Create 8x8 mesh
         devices_array = np.array(devices).reshape(self.config.mesh_rows, self.config.mesh_cols)
         self.mesh = jax.sharding.Mesh(devices_array, ('data', 'model'))
-        
-        logger.info(f"✅ TPU v6e Mesh configurado: {self.config.mesh_rows}x{self.config.mesh_cols}")
-        logger.info(f"   📊 Data parallel: {self.config.data_parallel_size}")
-        logger.info(f"   🔧 Model parallel: {self.config.model_parallel_size}")
+
+        logger.info(f"TPU v6e Mesh configured: {self.config.mesh_rows}x{self.config.mesh_cols}")
+        logger.info(f"   Data parallel: {self.config.data_parallel_size}")
+        logger.info(f"   Model parallel: {self.config.model_parallel_size}")
         
     async def load_or_create_training_state(self, model, dataset):
-        """Cargar estado de entrenamiento from checkpoint o crear nuevo."""
-        logger.info("🔄 Buscando checkpoints existentes...")
-        
-        # Buscar último checkpoint válido
+        """Load training state from checkpoint or create new."""
+        logger.info("Searching for existing checkpoints...")
+
+        # Find latest valid checkpoint
         latest_checkpoint = self._find_latest_checkpoint()
-        
+
         if latest_checkpoint:
-            logger.info(f"📂 Checkpoint encontrado: {latest_checkpoint}")
+            logger.info(f"Checkpoint found: {latest_checkpoint}")
             try:
                 return await self._load_checkpoint(latest_checkpoint, model)
             except Exception as e:
-                logger.error(f"❌ Error cargando checkpoint: {e}")
-                logger.info("🆕 Creando nuevo estado de entrenamiento...")
-        
-        # Crear nuevo estado
+                logger.error(f"Error loading checkpoint: {e}")
+                logger.info("Creating new training state...")
+
+        # Create new state
         return self._create_new_training_state(model)
     
     def _find_latest_checkpoint(self) -> Optional[Path]:
-        """Encontrar el checkpoint más reciente."""
+        """Find the most recent checkpoint."""
         checkpoint_pattern = self.checkpoint_dir / "checkpoint_step_*"
         checkpoints = list(self.checkpoint_dir.glob("checkpoint_step_*"))
         
@@ -222,7 +222,7 @@ class TPUv6eRobustTrainer:
             return None
     
     def _verify_checkpoint_integrity(self, checkpoint_path: Path) -> bool:
-        """Verifiesr integridad del checkpoint."""
+        """Verify checkpoint integrity."""
         try:
             # Verificar archivos necesarios
             required_files = ["checkpoint", "metadata.pkl"]
@@ -247,40 +247,40 @@ class TPUv6eRobustTrainer:
             return False
     
     async def _load_checkpoint(self, checkpoint_path: Path, model) -> train_state.TrainState:
-        """Cargar checkpoint con manejo robusto de errores."""
-        logger.info(f"📂 Cargando checkpoint: {checkpoint_path}")
-        
+        """Load checkpoint with robust error handling."""
+        logger.info(f"Loading checkpoint: {checkpoint_path}")
+
         try:
-            # Cargar metadata
+            # Load metadata
             with open(checkpoint_path / "metadata.pkl", 'rb') as f:
                 metadata: CheckpointMetadata = pickle.load(f)
-            
-            # Restaurar training state
+
+            # Restore training state
             restored_state = checkpoints.restore_checkpoint(
                 ckpt_dir=str(checkpoint_path),
                 target=None,
                 prefix="checkpoint"
             )
-            
-            # Actualizar estados internos
+
+            # Update internal states
             self.current_step = metadata.step
             self.current_epoch = metadata.epoch
             self.recovery_mode = True
-            
-            logger.info(f"✅ Checkpoint cargado exitosamente")
-            logger.info(f"   📊 Step: {self.current_step}")
-            logger.info(f"   📅 Epoch: {self.current_epoch}")
-            logger.info(f"   📈 Loss: {metadata.loss:.4f}")
-            
+
+            logger.info(f"Checkpoint loaded successfully")
+            logger.info(f"   Step: {self.current_step}")
+            logger.info(f"   Epoch: {self.current_epoch}")
+            logger.info(f"   Loss: {metadata.loss:.4f}")
+
             return restored_state
-            
+
         except Exception as e:
-            logger.error(f"❌ Error cargando checkpoint: {e}")
+            logger.error(f"Error loading checkpoint: {e}")
             raise
     
     def _create_new_training_state(self, model) -> train_state.TrainState:
-        """Createsr nuevo estado de entrenamiento."""
-        logger.info("🆕 Creando nuevo estado de entrenamiento...")
+        """Create new training state."""
+        logger.info("Creating new training state...")
         
         # Configurar optimizador con warm-up para TPU v6e
         learning_rate = self._create_learning_rate_schedule()
@@ -302,11 +302,11 @@ class TPUv6eRobustTrainer:
             tx=optimizer
         )
         
-        logger.info("✅ Nuevo estado de entrenamiento creado")
+        logger.info("New training state created")
         return state
-    
+
     def _create_learning_rate_schedule(self):
-        """Createsr schedule de learning rate optimizado para TPU v6e."""
+        """Create learning rate schedule optimized for TPU v6e."""
         warmup_steps = 2000
         max_lr = 3e-4
         
@@ -322,8 +322,8 @@ class TPUv6eRobustTrainer:
         return schedule
     
     async def train(self, model, train_dataset, val_dataset=None, max_steps: int = 100000):
-        """Entrenamiento principal con manejo robusto de interrupciones."""
-        logger.info(f"🚀 Iniciando entrenamiento TPU v6e para {max_steps} steps")
+        """Main training with robust interruption handling."""
+        logger.info(f"Starting TPU v6e training for {max_steps} steps")
         
         self.is_training = True
         
@@ -371,15 +371,15 @@ class TPUv6eRobustTrainer:
                     logger.error(f"❌ Error en step {self.current_step}: {e}")
                     await self._handle_training_error(state, e)
             
-            # Checkpoint final
+            # Final checkpoint
             if not self.interrupted:
                 await self._save_checkpoint(state, self._get_current_metrics(), is_final=True)
-                logger.info("🎉 Entrenamiento completado exitosamente")
+                logger.info("Training completed successfully")
             else:
-                logger.info("⏸️ Entrenamiento interrumpido - Checkpoint de emergencia guardado")
+                logger.info("Training interrupted - Emergency checkpoint saved")
                 
         except Exception as e:
-            logger.error(f"💥 Error crítico en entrenamiento: {e}")
+            logger.error(f"Critical training error: {e}")
             if self.training_state:
                 await self._emergency_checkpoint()
             raise
@@ -387,10 +387,10 @@ class TPUv6eRobustTrainer:
             self.is_training = False
     
     async def _training_step(self, state, dataset) -> Dict[str, Any]:
-        """Single training step optimizado para TPU v6e."""
+        """Single training step optimized for TPU v6e."""
         start_time = time.time()
-        
-        # Obtener batch
+
+        # Get batch
         batch = next(dataset)
         
         # Definir training step con sharding
@@ -417,12 +417,12 @@ class TPUv6eRobustTrainer:
         with self.mesh:
             state, loss = train_step(state, batch)
         
-        # Actualizar training state para emergency checkpoints
+        # Update training state for emergency checkpoints
         self.training_state = state
-        
+
         step_time = time.time() - start_time
-        
-        # Métricas del step
+
+        # Step metrics
         metrics = {
             'loss': float(loss),
             'step_time': step_time,
@@ -434,10 +434,10 @@ class TPUv6eRobustTrainer:
         return metrics
     
     async def _validation_step(self, state, val_dataset) -> Dict[str, Any]:
-        """Validatestion step."""
+        """Validation step."""
         val_losses = []
-        
-        # Evaluar en algunos batches de validación
+
+        # Evaluate on some validation batches
         for i in range(min(10, len(val_dataset))):
             batch = next(val_dataset)
             
@@ -504,7 +504,7 @@ class TPUv6eRobustTrainer:
         raise error
     
     async def _save_checkpoint(self, state, metrics: Dict[str, Any], is_final: bool = False):
-        """Guardar checkpoint completo."""
+        """Save complete checkpoint."""
         checkpoint_name = f"checkpoint_step_{self.current_step}"
         if is_final:
             checkpoint_name += "_final"
@@ -522,7 +522,7 @@ class TPUv6eRobustTrainer:
                 keep=self.config.keep_last_n_checkpoints
             )
             
-            # Guardar metadata
+            # Save metadata
             metadata = CheckpointMetadata(
                 step=self.current_step,
                 epoch=self.current_epoch,
@@ -536,46 +536,46 @@ class TPUv6eRobustTrainer:
             
             with open(checkpoint_path / "metadata.pkl", 'wb') as f:
                 pickle.dump(metadata, f)
-            
-            logger.info(f"💾 Checkpoint guardado: {checkpoint_path}")
-            
-            # Cleanup checkpoints antiguos
+
+            logger.info(f"Checkpoint saved: {checkpoint_path}")
+
+            # Cleanup old checkpoints
             await self._cleanup_old_checkpoints()
-            
+
         except Exception as e:
-            logger.error(f"❌ Error guardando checkpoint: {e}")
+            logger.error(f"Error saving checkpoint: {e}")
             raise
     
     async def _quick_checkpoint(self, state):
-        """Checkpoint rápido de emergencia."""
+        """Quick emergency checkpoint."""
         emergency_path = self.emergency_dir / f"emergency_step_{self.current_step}.pkl"
-        
+
         try:
-            # Guardar solo lo esencial
+            # Save only essentials
             quick_state = {
                 'step': self.current_step,
                 'epoch': self.current_epoch,
                 'params': state.params,
                 'timestamp': time.time()
             }
-            
+
             with open(emergency_path, 'wb') as f:
                 pickle.dump(quick_state, f)
-                
-            logger.debug(f"⚡ Quick checkpoint: {emergency_path}")
-            
+
+            logger.debug(f"Quick checkpoint: {emergency_path}")
+
         except Exception as e:
-            logger.warning(f"⚠️ Error en quick checkpoint: {e}")
+            logger.warning(f"Error in quick checkpoint: {e}")
     
     async def _emergency_checkpoint(self):
-        """Checkpoint de emergencia en caso de interrupción."""
+        """Emergency checkpoint in case of interruption."""
         if not self.training_state:
             return
-            
-        logger.warning("🚨 EMERGENCY CHECKPOINT - Guardando estado...")
-        
+
+        logger.warning("EMERGENCY CHECKPOINT - Saving state...")
+
         emergency_path = self.emergency_dir / f"EMERGENCY_step_{self.current_step}_{int(time.time())}.pkl"
-        
+
         try:
             emergency_data = {
                 'step': self.current_step,
@@ -587,19 +587,19 @@ class TPUv6eRobustTrainer:
                     'model_scale': self.model_scale
                 }
             }
-            
+
             with open(emergency_path, 'wb') as f:
                 pickle.dump(emergency_data, f)
-            
-            logger.warning(f"🚨 EMERGENCY CHECKPOINT GUARDADO: {emergency_path}")
-            
+
+            logger.warning(f"EMERGENCY CHECKPOINT SAVED: {emergency_path}")
+
         except Exception as e:
-            logger.error(f"💥 FALLO EN EMERGENCY CHECKPOINT: {e}")
+            logger.error(f"EMERGENCY CHECKPOINT FAILED: {e}")
     
     async def _health_check(self):
-        """Health check del system TPU."""
+        """Health check of the TPU system."""
         try:
-            # Verify that todos los devices estén disponibles
+            # Verify that all devices are available
             devices = jax.devices()
             if len(devices) != self.config.total_chips:
                 logger.warning(f"⚠️ Device count mismatch: {len(devices)}/{self.config.total_chips}")
@@ -615,7 +615,7 @@ class TPUv6eRobustTrainer:
             logger.error(f"❌ Health check failed: {e}")
     
     def _setup_wandb(self):
-        """Configures W&B para TPU v6e."""
+        """Configure W&B for TPU v6e."""
         if self.use_wandb:
             try:
                 config = {
@@ -635,13 +635,13 @@ class TPUv6eRobustTrainer:
                     resume='allow' if self.recovery_mode else None
                 )
                 
-                logger.info("✅ W&B configurado para TPU v6e")
-                
+                logger.info("W&B configured for TPU v6e")
+
             except Exception as e:
-                logger.warning(f"⚠️ Error configurando W&B: {e}")
+                logger.warning(f"Error configuring W&B: {e}")
     
     def _log_progress(self, metrics: Dict[str, Any]):
-        """Log del progreso de entrenamiento."""
+        """Log training progress."""
         logger.info(
             f"Step {self.current_step:>6} | "
             f"Loss: {metrics['loss']:.4f} | "
@@ -654,26 +654,26 @@ class TPUv6eRobustTrainer:
             wandb.log(metrics, step=self.current_step)
     
     async def _cleanup_old_checkpoints(self):
-        """Limpiar checkpoints antiguos."""
+        """Clean up old checkpoints."""
         checkpoints = list(self.checkpoint_dir.glob("checkpoint_step_*"))
         if len(checkpoints) > self.config.keep_last_n_checkpoints:
-            # Ordenar por step
+            # Sort by step
             def extract_step(path):
                 try:
                     return int(path.name.split('_')[-1])
                 except ValueError:
                     return 0
-            
+
             checkpoints.sort(key=extract_step, reverse=True)
-            
-            # Eliminar checkpoints antiguos
+
+            # Delete old checkpoints
             for old_checkpoint in checkpoints[self.config.keep_last_n_checkpoints:]:
                 try:
                     import shutil
                     shutil.rmtree(old_checkpoint)
-                    logger.debug(f"🗑️ Checkpoint eliminado: {old_checkpoint}")
+                    logger.debug(f"Checkpoint deleted: {old_checkpoint}")
                 except Exception as e:
-                    logger.warning(f"⚠️ Error eliminando checkpoint: {e}")
+                    logger.warning(f"Error deleting checkpoint: {e}")
 
 # Convenience function for robust training
 async def train_robust_tpu_v6e(
@@ -686,39 +686,39 @@ async def train_robust_tpu_v6e(
     use_wandb: bool = True
 ):
     """
-    Función principal para entrenamiento robusto en TPU v6e.
-    
+    Main function for robust training on TPU v6e.
+
     Args:
-        model: Modelo a entrenar
-        train_dataset: Dataset de entrenamiento
-        val_dataset: Dataset de validación (opcional)
-        model_scale: Escala del modelo (300M, 1B, 3B, 7B, 13B)
-        max_steps: Máximo número de steps
-        output_dir: Directorio base para checkpoints
-        use_wandb: Usar Weights & Biases
+        model: Model to train
+        train_dataset: Training dataset
+        val_dataset: Validation dataset (optional)
+        model_scale: Model scale (300M, 1B, 3B, 7B, 13B)
+        max_steps: Maximum number of steps
+        output_dir: Base directory for checkpoints
+        use_wandb: Use Weights & Biases
     """
-    
-    logger.info("🦙 INICIANDO ENTRENAMIENTO ROBUSTO TPU v6e")
+
+    logger.info("STARTING ROBUST TPU v6e TRAINING")
     logger.info("="*80)
-    logger.info(f"🎯 Modelo: {model_scale}")
-    logger.info(f"🚀 Hardware: TPU v6e 8x8 (64 chips)")
-    logger.info(f"⚡ Preemptible: SÍ (con recovery automático)")
-    logger.info(f"💾 Checkpoints: Cada 100 steps + emergencia cada 50")
+    logger.info(f"Model: {model_scale}")
+    logger.info(f"Hardware: TPU v6e 8x8 (64 chips)")
+    logger.info(f"Preemptible: YES (with automatic recovery)")
+    logger.info(f"Checkpoints: Every 100 steps + emergency every 50")
     logger.info("="*80)
-    
-    # Crear trainer
+
+    # Create trainer
     trainer = TPUv6eRobustTrainer(
         model_scale=model_scale,
         base_output_dir=output_dir,
         use_wandb=use_wandb
     )
-    
-    # Entrenar
+
+    # Train
     await trainer.train(
         model=model,
         train_dataset=train_dataset,
         val_dataset=val_dataset,
         max_steps=max_steps
     )
-    
-    logger.info("🎉 ENTRENAMIENTO COMPLETADO!")
+
+    logger.info("TRAINING COMPLETED!")

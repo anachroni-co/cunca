@@ -1,6 +1,6 @@
 """
-Sistema de checkpointing optimizado para TPU v4-32.
-Implementación standalone sin dependencias externas.
+Optimized checkpointing system for TPU v4-32.
+Standalone implementation without external dependencies.
 """
 
 import os 
@@ -22,10 +22,10 @@ from capibara.jax.experimental.array_serialization import pytree_serialization
 logger = logging.getLogger(__name__)
 
 class CheckpointManager:
-    """Manager for checkpoints optimizado para TPU."""
-    
+    """Checkpoint manager optimized for TPU."""
+
     def __init__(self, config: CheckpointConfig):
-        """Initializes the manager de checkpoints."""
+        """Initialize the checkpoint manager."""
         self.config = config
         self.base_dir = Path(config.base_dir)
         self.base_dir.mkdir(parents=True, exist_ok=True)
@@ -37,7 +37,7 @@ class CheckpointManager:
         self._checkpoint_meta = self._load_checkpoint_meta()
         
     def _load_checkpoint_meta(self) -> Dict[str, Any]:
-        """Loads o crea los metadatos de checkpoints."""
+        """Load or create checkpoint metadata."""
         meta_path = self.base_dir / "checkpoint_meta.json"
         if meta_path.exists():
             with open(meta_path, "r") as f:
@@ -49,25 +49,25 @@ class CheckpointManager:
         }
         
     def _save_checkpoint_meta(self):
-        """Saves los metadatos de checkpoints."""
+        """Save checkpoint metadata."""
         meta_path = self.base_dir / "checkpoint_meta.json"
         with open(meta_path, "w") as f:
             json.dump(self._checkpoint_meta, f, indent=2)
             
     def _compress_array(self, array: jnp.ndarray) -> bytes:
-        """Comprime un array usando zlib."""
+        """Compress an array using zlib."""
         if not self.config.use_compression:
             return array.tobytes()
         return zlib.compress(array.tobytes(), level=self.config.compression_level)
         
     def _decompress_array(self, data: bytes, shape: Tuple[int, ...], dtype: Any) -> jnp.ndarray:
-        """Descomprime un array."""
+        """Decompress an array."""
         if not self.config.use_compression:
             return jnp.frombuffer(data, dtype=dtype).reshape(shape)
         return jnp.frombuffer(zlib.decompress(data), dtype=dtype).reshape(shape)
         
     def _shard_array(self, array: jnp.ndarray) -> List[bytes]:
-        """Divide un array en shards."""
+        """Divide an array into shards."""
         if not self.config.use_sharded_checkpoints:
             return [self._compress_array(array)]
             
@@ -82,7 +82,7 @@ class CheckpointManager:
         return shards
         
     def _merge_shards(self, shards: List[bytes], shape: Tuple[int, ...], dtype: Any) -> jnp.ndarray:
-        """Combina shards en un array."""
+        """Merge shards into an array."""
         if len(shards) == 1:
             return self._decompress_array(shards[0], shape, dtype)
             
@@ -99,7 +99,7 @@ class CheckpointManager:
         metrics: Optional[Dict[str, float]] = None,
         is_best: bool = False
     ) -> str:
-        """Saves un checkpoint."""
+        """Save a checkpoint."""
         checkpoint_id = f"checkpoint_{step:08d}"
         checkpoint_dir = self.base_dir / checkpoint_id
         checkpoint_dir.mkdir(parents=True, exist_ok=True)
@@ -129,7 +129,7 @@ class CheckpointManager:
                 else:
                     self._save_shard(shard_path, shard)
                     
-        # Wait for completion of todas las escrituras
+        # Wait for completion of all writes
         for future in futures:
             future.result()
             
@@ -144,7 +144,7 @@ class CheckpointManager:
         with open(checkpoint_dir / "meta.json", "w") as f:
             json.dump(meta, f, indent=2)
             
-        # Actualizar metadatos globales
+        # Update global metadata
         with self._lock:
             self._checkpoint_meta["checkpoints"].append(checkpoint_id)
             self._checkpoint_meta["latest"] = checkpoint_id
@@ -162,18 +162,18 @@ class CheckpointManager:
         return checkpoint_id
         
     def load(self, checkpoint_id: Optional[str] = None) -> Any:
-        """Loads un checkpoint."""
+        """Load a checkpoint."""
         if checkpoint_id is None:
             checkpoint_id = self._checkpoint_meta["latest"]
-            
+
         if checkpoint_id is None:
-            raise ValueError("No hay checkpoints disponibles")
-            
+            raise ValueError("No checkpoints available")
+
         checkpoint_dir = self.base_dir / checkpoint_id
         if not checkpoint_dir.exists():
-            raise ValueError(f"Checkpoint {checkpoint_id} no encontrado")
-            
-        # Cargar metadatos
+            raise ValueError(f"Checkpoint {checkpoint_id} not found")
+
+        # Load metadata
         with open(checkpoint_dir / "meta.json", "r") as f:
             meta = json.load(f)
             
@@ -198,14 +198,14 @@ class CheckpointManager:
             if not self.config.use_async_checkpointing:
                 state_dict[path] = self._merge_shards(shards, shape, dtype)
                 
-        # Wait for completion of todas las lecturas
+        # Wait for completion of all reads
         if self.config.use_async_checkpointing:
             for path, shape, dtype, future in futures:
                 if path not in state_dict:
                     state_dict[path] = []
                 state_dict[path].append(future.result())
                 
-            # Combinar shards
+            # Merge shards
             for path, array_meta in meta["arrays"].items():
                 shape = tuple(array_meta["shape"])
                 dtype = jnp.dtype(array_meta["dtype"])
@@ -219,17 +219,17 @@ class CheckpointManager:
         return state
         
     def _save_shard(self, path: Path, data: bytes):
-        """Saves un shard on disk."""
+        """Save a shard to disk."""
         with open(path, "wb") as f:
             f.write(data)
             
     def _load_shard(self, path: Path) -> bytes:
-        """Loads un shard desde disco."""
+        """Load a shard from disk."""
         with open(path, "rb") as f:
             return f.read()
             
     def _remove_checkpoint(self, checkpoint_id: str):
-        """Removes un checkpoint."""
+        """Remove a checkpoint."""
         checkpoint_dir = self.base_dir / checkpoint_id
         if checkpoint_dir.exists():
             for path in checkpoint_dir.rglob("*"):
@@ -245,56 +245,53 @@ class CheckpointManager:
     
     def _validate_checkpoint_integrity(self, state: Any) -> bool:
         """
-        Valida la integridad de un checkpoint.
-        
+        Validate checkpoint integrity.
+
         Args:
-            state: Estado del modelo a validar
-            
+            state: Model state to validate
+
         Returns:
-            True si el checkpoint es válido
+            True if checkpoint is valid
         """
         try:
             # Validate that state is not empty
             if state is None:
-                logger.error("Estado del checkpoint es None")
+                logger.error("Checkpoint state is None")
                 return False
-            
+
             # Validate state structure
             if hasattr(state, 'params'):
-                # Verify that params no esté vacío
+                # Verify that params is not empty
                 if not state.params:
-                    logger.error("Parámetros del modelo están vacíos")
+                    logger.error("Model parameters are empty")
                     return False
-                
+
                 # Verify that there are no NaN or Inf in parameters
                 def check_arrays(pytree):
                     def check_array(arr):
                         if jnp.any(jnp.isnan(arr)) or jnp.any(jnp.isinf(arr)):
                             return False
                         return True
-                    
+
                     from jax import tree_map
                     results = tree_map(check_array, pytree)
                     return all(jax.tree_util.tree_leaves(results))
-                
+
                 if not check_arrays(state.params):
-                    logger.error("Parámetros contienen valores NaN o Inf")
+                    logger.error("Parameters contain NaN or Inf values")
                     return False
-            
+
             # Validate that state has expected structure
             required_attrs = ['params']
             for attr in required_attrs:
                 if not hasattr(state, attr):
-                    logger.warning(f"Estado no tiene atributo requerido: {attr}")
-            
-            logger.info("✅ Validación de checkpoint exitosa")
+                    logger.warning(f"State is missing required attribute: {attr}")
+
+            logger.info("Checkpoint validation successful")
             return True
-            
+
         except Exception as e:
-            logger.error(f"Error validando checkpoint: {e}")
-            return False 
-        except Exception as e:
-            logger.error(f"Error al validar checkpoint: {e}")
+            logger.error(f"Error validating checkpoint: {e}")
             return False
 
 # Compatibility alias

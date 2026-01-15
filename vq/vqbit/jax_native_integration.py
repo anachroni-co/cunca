@@ -1,12 +1,12 @@
 """
 VQbit JAX Native Integration for Capibara-6
 
-Integración entre las implementaciones VQbit y la infraestructura JAX nativa:
-- Conexión con capibara.jax.numpy
-- Optimizaciones TPU v4/v6 nativas
-- Kernels especializados para VQbit
-- Fallbacks automáticos a numpy
-- Integración con backend TPU existente
+Integration between VQbit implementations and native JAX infrastructure:
+- Connection with capibara.jax.numpy
+- Native TPU v4/v6 optimizations
+- Specialized kernels for VQbit
+- Automatic fallbacks to numpy
+- Integration with existing TPU backend
 """
 
 import logging
@@ -47,7 +47,7 @@ except ImportError:
 
 @dataclass
 class NativeIntegrationConfig:
-    """Configurestion for native JAX integration."""
+    """Configuration for native JAX integration."""
     prefer_capibara_jax: bool = True
     enable_tpu_kernels: bool = True
     enable_fallback_numpy: bool = True
@@ -57,14 +57,14 @@ class NativeIntegrationConfig:
 
 class VQbitNativeIntegration:
     """
-    Integración nativa entre VQbit y capibara.jax
-    
-    Características:
-    - Detección automática de backend óptimo
-    - Uso of kernels TPU especializados cuando están disponibles
-    - Fallback automático a numpy
-    - Integración con el system de monitoring
-    - Optimizaciones específicas para cada backend
+    Native integration between VQbit and capibara.jax
+
+    Features:
+    - Automatic detection of optimal backend
+    - Use of specialized TPU kernels when available
+    - Automatic fallback to numpy
+    - Integration with monitoring system
+    - Backend-specific optimizations
     """
     
     def __init__(self, config: Optional[NativeIntegrationConfig] = None):

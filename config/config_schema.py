@@ -1,6 +1,6 @@
-# Contenido de config_types.py
+# Content of config_types.py
 """
-Tipos de setup for CapibaraModel usando Pydantic for validation.
+Configuration types for CapibaraModel using Pydantic for validation.
 """
 
 import logging
@@ -13,102 +13,102 @@ logger = logging.getLogger(__name__)
 
 class ModelConfig(BaseModel):
     """Model architecture configuration."""
-    hidden_size: int = Field(..., gt=0, description="Tamaño de la capa oculta")
-    seq_len: int = Field(..., gt=0, description="Longitud máxima de secuencia")
-    num_layers: int = Field(..., gt=0, description="Número de capas del modelo")
-    num_heads: int = Field(..., gt=0, description="Número de cabezas of attention")
-    dropout_rate: float = Field(..., ge=0.0, le=1.0, description="Tasa de dropout")
-    
-    # Atributos opcionales
-    input_dim: int = Field(default=768, gt=0, description="Dimensión de entrada")
-    use_self_attention: bool = Field(default=False, description="Usar self-attention")
-    use_sparse: bool = Field(default=False, description="Usar capas sparse")
-    use_meta_la: bool = Field(default=False, description="Usar meta-learning")
-    use_mixture: bool = Field(default=False, description="Usar mixture of experts")
-    use_liquid: bool = Field(default=False, description="Usar liquid state machine")
-    use_meta_bamdp: bool = Field(default=False, description="Usar meta-BAMDP")
-    use_snns_li_cell: bool = Field(default=False, description="Usar SNNs Li cell")
-    use_spike_ssm: bool = Field(default=False, description="Usar spike SSM")
-    use_platonic: bool = Field(default=False, description="Usar platonic attention")
-    use_quineana: bool = Field(default=False, description="Usar quineana attention")
-    use_aleph_tilde: bool = Field(default=False, description="Usar Aleph-tilde")
-    use_bitnet_quantizer: bool = Field(default=False, description="Usar quantizer BitNet")
-    bit_width: int = Field(default=8, ge=1, le=32, description="Ancho de bits para quantización")
-    symmetric: bool = Field(default=True, description="Quantización simétrica")
-    use_bitnet_in_mixture: bool = Field(default=False, description="Usar BitNet en mixture")
-    mixture_threshold: float = Field(default=0.5, ge=0.0, le=1.0, description="Umbral para mixture")
-    mixture_sparsity: float = Field(default=0.1, ge=0.0, le=1.0, description="Sparsity para mixture")
-    use_flax_deep_dialog: bool = Field(default=False, description="Usar Flax Deep Dialog")
-    num_bits: int = Field(default=8, description="Número de bits para cuantización")
-    use_quantization: bool = Field(default=False, description="Habilitar cuantización")
-    quant_min: float = Field(default=0.0, description="Valor mínimo para cuantización")
-    quant_max: float = Field(default=255.0, description="Valor máximo para cuantización")
+    hidden_size: int = Field(..., gt=0, description="Hidden layer size")
+    seq_len: int = Field(..., gt=0, description="Maximum sequence length")
+    num_layers: int = Field(..., gt=0, description="Number of model layers")
+    num_heads: int = Field(..., gt=0, description="Number of attention heads")
+    dropout_rate: float = Field(..., ge=0.0, le=1.0, description="Dropout rate")
+
+    # Optional attributes
+    input_dim: int = Field(default=768, gt=0, description="Input dimension")
+    use_self_attention: bool = Field(default=False, description="Use self-attention")
+    use_sparse: bool = Field(default=False, description="Use sparse layers")
+    use_meta_la: bool = Field(default=False, description="Use meta-learning")
+    use_mixture: bool = Field(default=False, description="Use mixture of experts")
+    use_liquid: bool = Field(default=False, description="Use liquid state machine")
+    use_meta_bamdp: bool = Field(default=False, description="Use meta-BAMDP")
+    use_snns_li_cell: bool = Field(default=False, description="Use SNNs Li cell")
+    use_spike_ssm: bool = Field(default=False, description="Use spike SSM")
+    use_platonic: bool = Field(default=False, description="Use platonic attention")
+    use_quineana: bool = Field(default=False, description="Use quineana attention")
+    use_aleph_tilde: bool = Field(default=False, description="Use Aleph-tilde")
+    use_bitnet_quantizer: bool = Field(default=False, description="Use BitNet quantizer")
+    bit_width: int = Field(default=8, ge=1, le=32, description="Bit width for quantization")
+    symmetric: bool = Field(default=True, description="Symmetric quantization")
+    use_bitnet_in_mixture: bool = Field(default=False, description="Use BitNet in mixture")
+    mixture_threshold: float = Field(default=0.5, ge=0.0, le=1.0, description="Threshold for mixture")
+    mixture_sparsity: float = Field(default=0.1, ge=0.0, le=1.0, description="Sparsity for mixture")
+    use_flax_deep_dialog: bool = Field(default=False, description="Use Flax Deep Dialog")
+    num_bits: int = Field(default=8, description="Number of bits for quantization")
+    use_quantization: bool = Field(default=False, description="Enable quantization")
+    quant_min: float = Field(default=0.0, description="Minimum value for quantization")
+    quant_max: float = Field(default=255.0, description="Maximum value for quantization")
 
     @validator('num_heads')
     def validate_num_heads(cls, v, values):
-        """Valida que num_heads divida a hidden_size."""
+        """Validate that num_heads divides hidden_size."""
         if 'hidden_size' in values and values['hidden_size'] % v != 0:
-            raise ValueError(f"num_heads ({v}) debe dividir a hidden_size ({values['hidden_size']})")
+            raise ValueError(f"num_heads ({v}) must divide hidden_size ({values['hidden_size']})")
         return v
 
     @validator('bit_width')
     def validate_bit_width(cls, v, values):
-        """Valida bit_width when se usa quantización."""
+        """Validate bit_width when quantization is used."""
         if values.get('use_bitnet_quantizer', False) and v not in [4, 8, 16]:
-            raise ValueError("bit_width debe ser 4, 8 o 16 para quantización")
+            raise ValueError("bit_width must be 4, 8, or 16 for quantization")
         return v
 
 class TrainingConfig(BaseModel):
     """Training configuration."""
-    train_data_path: str = Field(..., description="Ruta a datos de entrenamiento")
-    val_data_path: str = Field(..., description="Ruta a datos de validación")
-    
-    # Atributos opcionales
-    seed: int = Field(default=42, ge=0, description="Semilla aleatoria")
-    batch_size: int = Field(default=32, gt=0, description="Tamaño del batch")
-    learning_rate: float = Field(default=0.001, gt=0, description="Tasa de aprendizaje")
-    num_epochs: int = Field(default=10, gt=0, description="Número de épocas")
-    vocab_size: int = Field(default=32000, gt=0, description="Tamaño del vocabulario")
+    train_data_path: str = Field(..., description="Path to training data")
+    val_data_path: str = Field(..., description="Path to validation data")
+
+    # Optional attributes
+    seed: int = Field(default=42, ge=0, description="Random seed")
+    batch_size: int = Field(default=32, gt=0, description="Batch size")
+    learning_rate: float = Field(default=0.001, gt=0, description="Learning rate")
+    num_epochs: int = Field(default=10, gt=0, description="Number of epochs")
+    vocab_size: int = Field(default=32000, gt=0, description="Vocabulary size")
 
     @validator('train_data_path', 'val_data_path')
     def validate_data_paths(cls, v):
-        """Valida que las rutas de data existan."""
+        """Validate that data paths exist."""
         path = Path(v)
         if not path.exists():
-            logger.warning(f"Ruta de datos no encontrada: {v}")
+            logger.warning(f"Data path not found: {v}")
         return v
 
 class PruningConfig(BaseModel):
     """Pruning configuration."""
-    enabled: bool = Field(default=False, description="Habilitar pruning")
-    threshold: float = Field(default=0.2, ge=0.0, le=1.0, description="Umbral de pruning")
+    enabled: bool = Field(default=False, description="Enable pruning")
+    threshold: float = Field(default=0.2, ge=0.0, le=1.0, description="Pruning threshold")
 
 class WandbConfig(BaseModel):
     """Weights & Biases configuration."""
-    project: str = Field(..., description="Nombre del proyecto en W&B")
-    entity: str = Field(..., description="Entidad en W&B")
+    project: str = Field(..., description="Project name in W&B")
+    entity: str = Field(..., description="Entity in W&B")
 
 class ModulesConfig(BaseModel):
     """Module configuration."""
-    coherence_detector: bool = Field(default=False, description="Habilitar detector de coherencia")
-    contextual_activation: bool = Field(default=False, description="Habilitar activación contextual")
-    personality_manager: bool = Field(default=False, description="Habilitar gestor de personalidad")
-    ethics_module: bool = Field(default=False, description="Habilitar module de ética")
+    coherence_detector: bool = Field(default=False, description="Enable coherence detector")
+    contextual_activation: bool = Field(default=False, description="Enable contextual activation")
+    personality_manager: bool = Field(default=False, description="Enable personality manager")
+    ethics_module: bool = Field(default=False, description="Enable ethics module")
 
 class PathsConfig(BaseModel):
     """Paths configuration."""
-    checkpoints: str = Field(default="checkpoints", description="Ruta para checkpoints")
-    logs: str = Field(default="logs", description="Ruta para logs")
-    data: str = Field(default="data", description="Ruta para datos")
+    checkpoints: str = Field(default="checkpoints", description="Path for checkpoints")
+    logs: str = Field(default="logs", description="Path for logs")
+    data: str = Field(default="data", description="Path for data")
 
     @validator('checkpoints', 'logs', 'data')
     def validate_paths(cls, v):
-        """Valida and crea las rutas if not existen."""
+        """Validate and create paths if they don't exist."""
         path = Path(v)
         try:
             path.mkdir(parents=True, exist_ok=True)
         except Exception as e:
-            logger.error(f"Error creando directorio {v}: {str(e)}")
+            logger.error(f"Error creating directory {v}: {str(e)}")
         return v
 
 class CapibaraConfig(BaseModel):
@@ -138,27 +138,27 @@ class CapibaraConfig(BaseModel):
         return cls.from_dict(config_dict)
 
     def validate(self) -> List[str]:
-        """Performs validaciones adicionales de la setup completa."""
+        """Perform additional validations of the complete configuration."""
         warnings = []
-        
-        # validate memory requerida
+
+        # Validate required memory
         try:
             from .config_validators import estimate_model_memory
             model_mem = estimate_model_memory(self.dict())
-            logger.info(f"Memoria estimada del modelo: {model_mem/1e9:.2f}GB")
+            logger.info(f"Estimated model memory: {model_mem/1e9:.2f}GB")
         except Exception as e:
-            warnings.append(f"Error estimando memoria: {str(e)}")
-        
-        # validate compatibilidad de modules
+            warnings.append(f"Error estimating memory: {str(e)}")
+
+        # Validate module compatibility
         if self.modules.coherence_detector and not self.modules.contextual_activation:
-            warnings.append("Detector de coherencia requiere activación contextual")
-        
+            warnings.append("Coherence detector requires contextual activation")
+
         return warnings
 
-# Contenido de schemas.py
+# Content of schemas.py
 """
-Este file ha sido movido a capibara/config/__init__.py for tener una única fuente de verdad.
-El contenido se ha unificado en capibara/config/__init__.py
+This file has been moved to capibara/config/__init__.py to have a single source of truth.
+The content has been unified in capibara/config/__init__.py
 """
 
 # from typing import Dict, Any, Optional, List, Union

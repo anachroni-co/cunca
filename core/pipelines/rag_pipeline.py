@@ -1,5 +1,5 @@
 """
-RAG pipeline mínimo alineado con Advanced RAG y utilidades de prompts.
+Minimal RAG pipeline aligned with Advanced RAG and prompt utilities.
 """
 
 from __future__ import annotations
@@ -21,24 +21,24 @@ class RAGContext:
 
 
 class RAGIntegrator:
-    """Integrador RAG mínimo.
+    """Minimal RAG integrator.
 
-    Espera un `rag_system` con method `retrieve_documents(query, k)` que devuelva
-    documentos con claves al menos: {'text': str, 'score': float}.
-    Opcionalmente puede tener `generate_context(query, max_tokens)`.
+    Expects a `rag_system` with method `retrieve_documents(query, k)` that returns
+    documents with at least keys: {'text': str, 'score': float}.
+    Optionally can have `generate_context(query, max_tokens)`.
     """
 
-    def __init__(self, rag_system: Any, context_template: str = "Contexto: {context}\n\nPregunta: {query}\n\nRespuesta:"):
+    def __init__(self, rag_system: Any, context_template: str = "Context: {context}\n\nQuestion: {query}\n\nAnswer:"):
         self.rag_system = rag_system
         self.context_template = context_template
 
     def prepare_prompt(self, query: str, k: int = 3, max_tokens: Optional[int] = None) -> Dict[str, Any]:
-        """Prepares un prompt con contexto recuperado por RAG."""
+        """Prepare a prompt with RAG-retrieved context."""
         docs = []
         try:
             docs = self.rag_system.retrieve_documents(query, k)
         except Exception as e:
-            logger.warning(f"RAG retrieve_documents falló, usando vacío: {e}")
+            logger.warning(f"RAG retrieve_documents failed, using empty: {e}")
             docs = []
 
         if hasattr(self.rag_system, "generate_context"):
@@ -46,7 +46,7 @@ class RAGIntegrator:
                 ctx_res = self.rag_system.generate_context(query, max_tokens=max_tokens or 2048)
                 context_text = ctx_res.get("context", "")
             except Exception as e:
-                logger.warning(f"generate_context falló, construyendo contexto simple: {e}")
+                logger.warning(f"generate_context failed, building simple context: {e}")
                 context_text = "\n\n".join(doc.get("text", "") for doc in docs)
         else:
             context_text = "\n\n".join(doc.get("text", "") for doc in docs)
@@ -69,7 +69,7 @@ class RAGIntegrator:
         }
 
     def verify_response(self, response: str, docs: List[Dict[str, Any]]) -> Dict[str, Any]:
-        """Verification heurística mínima de cobertura de contexto."""
+        """Minimal heuristic verification of context coverage."""
         try:
             resp_words = set(response.lower().split())
             ctx_words: set[str] = set()
