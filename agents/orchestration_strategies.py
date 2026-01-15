@@ -123,21 +123,21 @@ class BaseOrchestrationStrategy(IOrchestrationStrategy):
             "agent_utilization": 0.0
         }
         
-        # Configuración común
+        # Common configuration
         self.max_concurrent_tasks = self.config.get("max_concurrent_tasks", 5)
         self.coordination_timeout = self.config.get("coordination_timeout", 60)
         self.enable_fallback_plans = self.config.get("enable_fallback_plans", True)
-    
+
     @property
     @abstractmethod
     def strategy_name(self) -> str:
-        """Nombre de la strategy."""
+        """Name of the strategy."""
         pass
-    
+
     @property
     @abstractmethod
     def supported_agent_types(self) -> List[AgentBehaviorType]:
-        """Tipos de agentes soportados."""
+        """Supported agent types."""
         pass
     
     def configure_strategy(self, config: Dict[str, Any]) -> None:
@@ -146,25 +146,25 @@ class BaseOrchestrationStrategy(IOrchestrationStrategy):
         logger.info(f"Configured {self.strategy_name} with {len(config)} parameters")
     
     def _decompose_task(self, task_description: str, requirements: Dict[str, Any]) -> TaskDecomposition:
-        """Descomponer tarea en subtareas manejables."""
-        
+        """Decompose task into manageable subtasks."""
+
         # Basic task analysis
         task_complexity = self._assess_task_complexity(task_description, requirements)
         task_type = self._classify_task_type(task_description)
-        
+
         # Generate subtasks based on type
         subtasks = self._generate_subtasks(task_description, task_type, task_complexity)
-        
-        # Identificar dependencias
+
+        # Identify dependencies
         dependencies = self._identify_dependencies(subtasks)
-        
-        # Establecer prioridades
+
+        # Establish priorities
         priority_order = self._prioritize_subtasks(subtasks, dependencies)
-        
-        # Estimar duraciones
+
+        # Estimate durations
         estimated_duration = self._estimate_durations(subtasks, task_complexity)
-        
-        # Asignar tipos de agentes requeridos
+
+        # Assign required agent types
         required_agents = self._assign_required_agent_types(subtasks)
         
         return TaskDecomposition(
@@ -177,32 +177,32 @@ class BaseOrchestrationStrategy(IOrchestrationStrategy):
         )
     
     def _assess_task_complexity(self, task_description: str, requirements: Dict[str, Any]) -> str:
-        """Evaluar complejidad de la tarea."""
+        """Evaluate task complexity."""
         factors = []
-        
-        # Longitud de descripción
+
+        # Description length
         if len(task_description.split()) > 30:
             factors.append("verbose_description")
-        
-        # Requisitos específicos
+
+        # Specific requirements
         if len(requirements) > 5:
             factors.append("many_requirements")
-        
-        # Palabras clave de complejidad
+
+        # Complexity keywords
         complex_keywords = ["optimize", "integrate", "analyze", "comprehensive", "advanced"]
         if any(keyword in task_description.lower() for keyword in complex_keywords):
             factors.append("complex_keywords")
-        
-        # Determinar nivel
+
+        # Determine level
         if len(factors) >= 3:
             return "high"
         elif len(factors) >= 1:
             return "medium"
         else:
             return "low"
-    
+
     def _classify_task_type(self, task_description: str) -> str:
-        """Clasificar tipo de tarea."""
+        """Classify task type."""
         task_lower = task_description.lower()
         
         if any(keyword in task_lower for keyword in ["code", "program", "implement", "develop"]):
@@ -248,19 +248,19 @@ class BaseOrchestrationStrategy(IOrchestrationStrategy):
                 {"id": "plan_5", "name": "Define success metrics", "type": "metrics"}
             ]
         else:
-            # Subtareas genéricas
+            # Generic subtasks
             subtasks = [
                 {"id": "generic_1", "name": "Understand task", "type": "analysis"},
                 {"id": "generic_2", "name": "Plan approach", "type": "planning"},
                 {"id": "generic_3", "name": "Execute work", "type": "execution"},
                 {"id": "generic_4", "name": "Validate results", "type": "validation"}
             ]
-        
-        # Ajustar según complejidad
+
+        # Adjust based on complexity
         if complexity == "low":
-            subtasks = subtasks[:3]  # Simplificar
+            subtasks = subtasks[:3]  # Simplify
         elif complexity == "high":
-            # Agregar subtareas adicionales
+            # Add additional subtasks
             subtasks.extend([
                 {"id": f"{task_type}_extra_1", "name": "Additional validation", "type": "validation"},
                 {"id": f"{task_type}_extra_2", "name": "Documentation", "type": "documentation"}
@@ -269,63 +269,63 @@ class BaseOrchestrationStrategy(IOrchestrationStrategy):
         return subtasks
     
     def _identify_dependencies(self, subtasks: List[Dict[str, Any]]) -> Dict[str, List[str]]:
-        """Identificar dependencias entre subtareas."""
+        """Identify dependencies between subtasks."""
         dependencies = {}
-        
+
         for i, subtask in enumerate(subtasks):
             subtask_id = subtask["id"]
             subtask_type = subtask.get("type", "unknown")
             deps = []
-            
-            # Reglas básicas de dependencias
+
+            # Basic dependency rules
             if subtask_type == "implementation" and i > 0:
-                # Implementación depende de diseño/análisis
+                # Implementation depends on design/analysis
                 for prev_task in subtasks[:i]:
                     if prev_task.get("type") in ["analysis", "design", "planning"]:
                         deps.append(prev_task["id"])
-            
+
             elif subtask_type == "testing" and i > 0:
-                # Testing depende de implementación
+                # Testing depends on implementation
                 for prev_task in subtasks[:i]:
                     if prev_task.get("type") == "implementation":
                         deps.append(prev_task["id"])
-            
+
             elif subtask_type == "optimization":
-                # Optimización depende de implementación y testing
+                # Optimization depends on implementation and testing
                 for prev_task in subtasks[:i]:
                     if prev_task.get("type") in ["implementation", "testing"]:
                         deps.append(prev_task["id"])
-            
+
             elif subtask_type == "synthesis":
-                # Síntesis depende de análisis
+                # Synthesis depends on analysis
                 for prev_task in subtasks[:i]:
                     if prev_task.get("type") == "analysis":
                         deps.append(prev_task["id"])
-            
+
             dependencies[subtask_id] = deps
         
         return dependencies
     
     def _prioritize_subtasks(self, subtasks: List[Dict[str, Any]], dependencies: Dict[str, List[str]]) -> List[str]:
-        """Establishesr orden de prioridad de subtareas."""
-        
-        # Ordenamiento topológico simple
+        """Establish priority order of subtasks."""
+
+        # Simple topological sorting
         priority_order = []
         remaining_tasks = {task["id"]: task for task in subtasks}
-        
+
         while remaining_tasks:
-            # Encontrar tareas sin dependencias pendientes
+            # Find tasks without pending dependencies
             ready_tasks = []
             for task_id, task in remaining_tasks.items():
                 deps = dependencies.get(task_id, [])
                 if all(dep_id in priority_order for dep_id in deps):
                     ready_tasks.append(task_id)
-            
+
             if not ready_tasks:
-                # Romper ciclos tomando cualquier tarea restante
+                # Break cycles by taking any remaining task
                 ready_tasks = [list(remaining_tasks.keys())[0]]
-            
-            # Agregar tareas listas por prioridad de tipo
+
+            # Add ready tasks by type priority
             type_priority = {
                 "analysis": 1,
                 "planning": 2,
@@ -341,8 +341,8 @@ class BaseOrchestrationStrategy(IOrchestrationStrategy):
             ready_tasks.sort(key=lambda tid: type_priority.get(
                 remaining_tasks[tid].get("type", "unknown"), 5
             ))
-            
-            # Agregar a orden de prioridad
+
+            # Add to priority order
             for task_id in ready_tasks:
                 priority_order.append(task_id)
                 del remaining_tasks[task_id]
@@ -350,21 +350,21 @@ class BaseOrchestrationStrategy(IOrchestrationStrategy):
         return priority_order
     
     def _estimate_durations(self, subtasks: List[Dict[str, Any]], complexity: str) -> Dict[str, float]:
-        """Estimar duración de subtareas en segundos."""
-        
+        """Estimate subtask duration in seconds."""
+
         base_durations = {
-            "analysis": 120,      # 2 minutos
-            "planning": 180,      # 3 minutos
-            "design": 240,        # 4 minutos
-            "implementation": 300, # 5 minutos
-            "testing": 180,       # 3 minutos
-            "optimization": 240,  # 4 minutos
-            "validation": 120,    # 2 minutos
-            "synthesis": 180,     # 3 minutos
-            "documentation": 120  # 2 minutos
+            "analysis": 120,      # 2 minutes
+            "planning": 180,      # 3 minutes
+            "design": 240,        # 4 minutes
+            "implementation": 300, # 5 minutes
+            "testing": 180,       # 3 minutes
+            "optimization": 240,  # 4 minutes
+            "validation": 120,    # 2 minutes
+            "synthesis": 180,     # 3 minutes
+            "documentation": 120  # 2 minutes
         }
-        
-        # Factores de complejidad
+
+        # Complexity factors
         complexity_multipliers = {
             "low": 0.7,
             "medium": 1.0,
@@ -382,7 +382,7 @@ class BaseOrchestrationStrategy(IOrchestrationStrategy):
         return estimated_duration
     
     def _assign_required_agent_types(self, subtasks: List[Dict[str, Any]]) -> Dict[str, AgentBehaviorType]:
-        """Asignar tipos de agentes requeridos para cada subtarea."""
+        """Assign required agent types for each subtask."""
         
         type_mapping = {
             "analysis": AgentBehaviorType.REASONING,
@@ -408,30 +408,30 @@ class BaseOrchestrationStrategy(IOrchestrationStrategy):
         return required_agents
     
     def _select_agents_for_plan(self, task_decomposition: TaskDecomposition, available_agents: List[IAgent]) -> Dict[str, str]:
-        """Seleccionar agentes para el plan de ejecución."""
-        
+        """Select agents for the execution plan."""
+
         agent_assignments = {}
         used_agents = set()
-        
-        # Agrupar agentes por tipo
+
+        # Group agents by type
         agents_by_type = defaultdict(list)
         for agent in available_agents:
             agents_by_type[agent.agent_type].append(agent)
-        
-        # Asignar agentes según prioridad de subtareas
+
+        # Assign agents according to subtask priority
         for subtask_id in task_decomposition.priority_order:
             required_type = task_decomposition.required_agents.get(subtask_id)
-            
-            # Buscar agente disponible del tipo requerido
+
+            # Find available agent of required type
             suitable_agents = agents_by_type.get(required_type, [])
             available_suitable = [a for a in suitable_agents if a.agent_id not in used_agents]
-            
+
             if available_suitable:
                 selected_agent = available_suitable[0]
                 agent_assignments[subtask_id] = selected_agent.agent_id
                 used_agents.add(selected_agent.agent_id)
             else:
-                # Buscar agente de cualquier tipo disponible
+                # Find available agent of any type
                 for agent_type, agents in agents_by_type.items():
                     available_any = [a for a in agents if a.agent_id not in used_agents]
                     if available_any:
@@ -450,20 +450,20 @@ class BaseOrchestrationStrategy(IOrchestrationStrategy):
         phase_number = 1
         
         while len(processed_tasks) < len(task_decomposition.subtasks):
-            # Encontrar tareas que pueden ejecutarse en esta fase
+            # Find tasks that can be executed in this phase
             ready_tasks = []
-            
+
             for subtask_id in task_decomposition.priority_order:
                 if subtask_id in processed_tasks:
                     continue
-                
-                # Verificar si todas las dependencias están procesadas
+
+                # Verify all dependencies are processed
                 dependencies = task_decomposition.dependencies.get(subtask_id, [])
                 if all(dep in processed_tasks for dep in dependencies):
                     ready_tasks.append(subtask_id)
-            
+
             if not ready_tasks:
-                # Romper deadlock
+                # Break deadlock
                 remaining = [sid for sid in task_decomposition.priority_order if sid not in processed_tasks]
                 if remaining:
                     ready_tasks = [remaining[0]]
@@ -493,16 +493,16 @@ class BaseOrchestrationStrategy(IOrchestrationStrategy):
         return phases
     
     def _update_performance_metrics(self, execution_result: Dict[str, Any]) -> None:
-        """Updatesr métricas de rendimiento."""
-        
+        """Update performance metrics."""
+
         self.performance_metrics["plans_created"] += 1
-        
+
         if execution_result.get("status") == "success":
             self.performance_metrics["successful_executions"] += 1
         else:
             self.performance_metrics["failed_executions"] += 1
-        
-        # Actualizar tiempo promedio de ejecución
+
+        # Update average execution time
         execution_time = execution_result.get("execution_time", 0)
         current_avg = self.performance_metrics["average_execution_time"]
         total_plans = self.performance_metrics["plans_created"]
@@ -512,7 +512,7 @@ class BaseOrchestrationStrategy(IOrchestrationStrategy):
         )
     
     def get_strategy_metrics(self) -> Dict[str, Any]:
-        """Obtener métricas de la strategy."""
+        """Get strategy metrics."""
         return {
             "strategy_name": self.strategy_name,
             "performance_metrics": self.performance_metrics.copy(),
@@ -545,21 +545,21 @@ class IntelligentOrchestrationStrategy(BaseOrchestrationStrategy):
         requirements: Dict[str, Any],
         available_agents: List[IAgent]
     ) -> Dict[str, Any]:
-        """Planificar ejecución usando inteligencia adaptativa."""
-        
-        # Descomponer tarea inteligentemente
+        """Plan execution using adaptive intelligence."""
+
+        # Decompose task intelligently
         task_decomposition = self._decompose_task(task_description, requirements)
-        
-        # Análisis inteligente de agentes disponibles
+
+        # Intelligent analysis of available agents
         agent_analysis = self._analyze_available_agents(available_agents)
-        
-        # Asignación inteligente de agentes
+
+        # Intelligent agent assignment
         agent_assignments = self._intelligent_agent_assignment(task_decomposition, available_agents, agent_analysis)
-        
-        # Create phases de ejecución optimizadas
+
+        # Create optimized execution phases
         execution_phases = self._create_optimized_phases(task_decomposition, agent_assignments)
-        
-        # Generar protocolo de coordinación
+
+        # Generate coordination protocol
         coordination_protocol = self._generate_coordination_protocol(task_decomposition, agent_assignments)
         
         # Create contingency plans
@@ -659,12 +659,12 @@ class IntelligentOrchestrationStrategy(BaseOrchestrationStrategy):
         context: AgentContext,
         available_agents: List[IAgent]
     ) -> Dict[str, Any]:
-        """Manejar fallo de agente con strategys inteligentes."""
-        
-        # Analizar causa del fallo
+        """Handle agent failure with intelligent strategies."""
+
+        # Analyze failure cause
         failure_analysis = self._analyze_agent_failure(failed_agent, context)
-        
-        # Encontrar agente de reemplazo
+
+        # Find replacement agent
         replacement_agent = self._find_replacement_agent(failed_agent, available_agents, failure_analysis)
         
         # Create recovery strategy
@@ -679,36 +679,36 @@ class IntelligentOrchestrationStrategy(BaseOrchestrationStrategy):
         }
     
     def _analyze_available_agents(self, agents: List[IAgent]) -> Dict[str, Any]:
-        """Análisis inteligente de agentes disponibles."""
-        
+        """Intelligent analysis of available agents."""
+
         analysis = {
             "total_agents": len(agents),
             "agents_by_type": defaultdict(list),
             "capability_coverage": defaultdict(int),
             "agent_scores": {}
         }
-        
+
         for agent in agents:
             agent_type = agent.agent_type
             analysis["agents_by_type"][agent_type].append(agent.agent_id)
-            
-            # Analizar capacidades
+
+            # Analyze capabilities
             capabilities = getattr(agent, 'capabilities', [])
             for capability in capabilities:
                 analysis["capability_coverage"][capability] += 1
-            
-            # Calcular puntuación del agente (simplificado)
+
+            # Calculate agent score (simplified)
             agent_score = self._calculate_agent_score(agent)
             analysis["agent_scores"][agent.agent_id] = agent_score
         
         return analysis
     
     def _calculate_agent_score(self, agent: IAgent) -> float:
-        """Calcular puntuación de calidad del agente."""
-        
+        """Calculate agent quality score."""
+
         base_score = 0.5
-        
-        # Bonus por tipo especializado
+
+        # Bonus for specialized type
         type_bonuses = {
             AgentBehaviorType.REASONING: 0.2,
             AgentBehaviorType.CODING: 0.15,
@@ -717,12 +717,12 @@ class IntelligentOrchestrationStrategy(BaseOrchestrationStrategy):
         }
         
         base_score += type_bonuses.get(agent.agent_type, 0.05)
-        
-        # Bonus por número de capacidades
+
+        # Bonus for number of capabilities
         capabilities = getattr(agent, 'capabilities', [])
         base_score += len(capabilities) * 0.02
-        
-        # Bonus por estado (si disponible)
+
+        # Bonus for status (if available)
         status = getattr(agent, 'get_status', lambda: {})()
         if status.get("status") == "ready":
             base_score += 0.1
@@ -735,12 +735,12 @@ class IntelligentOrchestrationStrategy(BaseOrchestrationStrategy):
         available_agents: List[IAgent],
         agent_analysis: Dict[str, Any]
     ) -> Dict[str, str]:
-        """Asignación inteligente de agentes basada en análisis."""
-        
+        """Intelligent agent assignment based on analysis."""
+
         assignments = {}
         agent_workload = defaultdict(int)
-        
-        # Ordenar subtareas por prioridad y complejidad
+
+        # Sort subtasks by priority and complexity
         sorted_subtasks = self._sort_subtasks_by_priority(task_decomposition)
         
         for subtask_id in sorted_subtasks:
@@ -762,28 +762,28 @@ class IntelligentOrchestrationStrategy(BaseOrchestrationStrategy):
         return assignments
     
     def _sort_subtasks_by_priority(self, task_decomposition: TaskDecomposition) -> List[str]:
-        """Ordenar subtareas por prioridad inteligente."""
-        
-        # Factores de prioridad
+        """Sort subtasks by intelligent priority."""
+
+        # Priority factors
         priority_scores = {}
-        
+
         for subtask_id in task_decomposition.priority_order:
             score = 0
-            
-            # Bonus por dependencias (tareas con más dependientes son más prioritarias)
+
+            # Bonus for dependencies (tasks with more dependents are more prioritized)
             dependents = sum(
                 1 for deps in task_decomposition.dependencies.values()
                 if subtask_id in deps
             )
             score += dependents * 10
-            
-            # Bonus por duración estimada (tareas más largas primero)
+
+            # Bonus for estimated duration (longer tasks first)
             duration = task_decomposition.estimated_duration.get(subtask_id, 0)
-            score += duration / 60  # Convertir a minutos
-            
+            score += duration / 60  # Convert to minutes
+
             priority_scores[subtask_id] = score
-        
-        # Ordenar por puntuación (mayor primero)
+
+        # Sort by score (higher first)
         return sorted(task_decomposition.priority_order, key=lambda x: priority_scores.get(x, 0), reverse=True)
     
     def _find_best_agent_candidates(
@@ -793,33 +793,33 @@ class IntelligentOrchestrationStrategy(BaseOrchestrationStrategy):
         agent_analysis: Dict[str, Any],
         current_workload: Dict[str, int]
     ) -> List[IAgent]:
-        """Encontrar los mejores candidatos para una tarea."""
-        
+        """Find the best candidates for a task."""
+
         candidates = []
-        
-        # Filtrar por tipo preferido
+
+        # Filter by preferred type
         preferred_agents = [a for a in available_agents if a.agent_type == required_type]
-        
-        # Si no hay del tipo preferido, usar cualquier agente
+
+        # If none of preferred type, use any agent
         if not preferred_agents:
             preferred_agents = available_agents
-        
-        # Calcular puntuación para cada candidato
+
+        # Calculate score for each candidate
         scored_candidates = []
         for agent in preferred_agents:
             score = agent_analysis["agent_scores"].get(agent.agent_id, 0.5)
-            
-            # Penalizar por carga de trabajo actual
+
+            # Penalize for current workload
             workload_penalty = current_workload.get(agent.agent_id, 0) * 0.1
             score -= workload_penalty
-            
-            # Bonus por tipo exacto
+
+            # Bonus for exact type
             if agent.agent_type == required_type:
                 score += 0.2
-            
+
             scored_candidates.append((agent, score))
-        
-        # Ordenar por puntuación (mayor primero)
+
+        # Sort by score (higher first)
         scored_candidates.sort(key=lambda x: x[1], reverse=True)
         
         return [agent for agent, score in scored_candidates]
@@ -832,16 +832,16 @@ class IntelligentOrchestrationStrategy(BaseOrchestrationStrategy):
         """Create optimized execution phases."""
         
         phases = self._create_execution_phases(task_decomposition, agent_assignments)
-        
-        # Optimizar fases para paralelización inteligente
+
+        # Optimize phases for intelligent parallelization
         optimized_phases = []
-        
+
         for phase in phases:
-            # Analizar si las tareas pueden ejecutarse en paralelo
+            # Analyze if tasks can be executed in parallel
             parallel_groups = self._analyze_parallel_potential(phase["tasks"], task_decomposition)
-            
+
             if len(parallel_groups) > 1:
-                # Dividir en subfases paralelas
+                # Split into parallel subphases
                 for i, group in enumerate(parallel_groups):
                     optimized_phases.append({
                         "phase_number": f"{phase['phase_number']}.{i+1}",
@@ -863,23 +863,23 @@ class IntelligentOrchestrationStrategy(BaseOrchestrationStrategy):
     ) -> List[List[Dict[str, Any]]]:
         """Analyze task parallelization potential."""
         
-        # Simplificado: agrupar tareas que no tienen dependencias entre sí
+        # Simplified: group tasks that have no dependencies between them
         groups = []
         remaining_tasks = tasks.copy()
-        
+
         while remaining_tasks:
             current_group = []
             used_tasks = []
-            
+
             for task in remaining_tasks:
                 task_id = task["subtask_id"]
-                
-                # Verificar si puede agregarse al grupo actual
+
+                # Check if can be added to current group
                 can_add = True
                 for group_task in current_group:
                     group_task_id = group_task["subtask_id"]
-                    
-                    # Verificar dependencias mutuas
+
+                    # Check mutual dependencies
                     if (task_id in task_decomposition.dependencies.get(group_task_id, []) or
                         group_task_id in task_decomposition.dependencies.get(task_id, [])):
                         can_add = False
@@ -888,15 +888,15 @@ class IntelligentOrchestrationStrategy(BaseOrchestrationStrategy):
                 if can_add:
                     current_group.append(task)
                     used_tasks.append(task)
-            
-            # Remover tareas usadas
+
+            # Remove used tasks
             for task in used_tasks:
                 remaining_tasks.remove(task)
-            
+
             if current_group:
                 groups.append(current_group)
             else:
-                # Evitar bucle infinito
+                # Avoid infinite loop
                 if remaining_tasks:
                     groups.append([remaining_tasks.pop(0)])
         
@@ -929,24 +929,24 @@ class IntelligentOrchestrationStrategy(BaseOrchestrationStrategy):
         """Create intelligent contingency plans."""
         
         fallback_plans = []
-        
-        # Plan 1: Reducir paralelismo
+
+        # Plan 1: Reduce parallelism
         fallback_plans.append({
             "plan_id": "reduce_parallelism",
             "trigger": "agent_unavailable",
             "description": "Reduce parallel execution to use fewer agents",
             "modifications": ["serialize_parallel_tasks", "extend_timeline"]
         })
-        
-        # Plan 2: Simplificar tareas
+
+        # Plan 2: Simplify tasks
         fallback_plans.append({
             "plan_id": "simplify_tasks",
             "trigger": "execution_timeout",
             "description": "Simplify complex subtasks to ensure completion",
             "modifications": ["remove_optimization_tasks", "reduce_quality_requirements"]
         })
-        
-        # Plan 3: Agente de respaldo
+
+        # Plan 3: Backup agent
         if len(available_agents) > len(set(task_decomposition.required_agents.values())):
             fallback_plans.append({
                 "plan_id": "backup_agent",
@@ -958,15 +958,15 @@ class IntelligentOrchestrationStrategy(BaseOrchestrationStrategy):
         return fallback_plans
     
     def _define_success_criteria(self, task_decomposition: TaskDecomposition) -> List[str]:
-        """Definir criterios de éxito inteligentes."""
-        
+        """Define intelligent success criteria."""
+
         criteria = [
             "all_subtasks_completed",
             "no_critical_failures",
             "execution_within_timeout"
         ]
-        
-        # Criterios adicionales baseds en tipo de tareas
+
+        # Additional criteria based on task types
         task_types = set(task.get("type", "unknown") for task in task_decomposition.subtasks)
         
         if "implementation" in task_types:
@@ -981,29 +981,29 @@ class IntelligentOrchestrationStrategy(BaseOrchestrationStrategy):
         return criteria
     
     def _calculate_plan_confidence(self, execution_plan: ExecutionPlan, available_agents: List[IAgent]) -> float:
-        """Calcular confianza en el plan de ejecución."""
-        
+        """Calculate confidence in the execution plan."""
+
         confidence = 0.5  # Base
-        
-        # Factor por cobertura de agentes
+
+        # Factor for agent coverage
         required_agents = len(execution_plan.agent_assignments)
         available_count = len(available_agents)
-        
+
         if available_count >= required_agents:
             confidence += 0.2
-        
-        # Factor por complejidad de coordinación
+
+        # Factor for coordination complexity
         coordination_complexity = len(execution_plan.execution_phases)
         if coordination_complexity <= 3:
             confidence += 0.1
         elif coordination_complexity > 6:
             confidence -= 0.1
-        
-        # Factor por planes de contingencia
+
+        # Factor for contingency plans
         if execution_plan.fallback_plans:
             confidence += 0.1
-        
-        # Factor por historial de éxito
+
+        # Factor for success history
         success_rate = (
             self.performance_metrics["successful_executions"] / 
             max(1, self.performance_metrics["plans_created"])

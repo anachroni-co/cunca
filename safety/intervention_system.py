@@ -102,7 +102,7 @@ class InterventionManager:
             )
         ''')
         
-        # Tabla de contactos de emergencia
+        # Emergency contacts table
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS emergency_contacts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -132,7 +132,7 @@ class InterventionManager:
         conn.close()
     
     def _load_intervention_configs(self) -> Dict[str, InterventionConfig]:
-        """Cargar configuraciones de intervención"""
+        """Load intervention configurations"""
         default_configs = {
             "mild_warning": InterventionConfig(
                 type=InterventionType.WARNING_MESSAGE,
@@ -195,22 +195,22 @@ class InterventionManager:
         """Activate a specific intervention"""
         
         if intervention_key not in self.intervention_configs:
-            logger.error(f"Configuración de intervención '{intervention_key}' no encontrada")
+            logger.error(f"Intervention configuration '{intervention_key}' not found")
             return False
         
         config = self.intervention_configs[intervention_key]
-        
-        # Verificar si el usuario tiene intervenciones habilitadas
+
+        # Verify if user has interventions enabled
         if not self._user_has_interventions_enabled(user_id):
-            logger.info(f"Intervenciones deshabilitadas para usuario {user_id}")
+            logger.info(f"Interventions disabled for user {user_id}")
             return False
-        
-        # Verificar si ya hay una intervención activa del mismo tipo
+
+        # Verify if there's already an active intervention of the same type
         if self._has_active_intervention(user_id, config.type):
-            logger.info(f"Intervención {config.type.value} ya activa para usuario {user_id}")
+            logger.info(f"Intervention {config.type.value} already active for user {user_id}")
             return False
-        
-        # Registrar intervención en base de datos
+
+        # Register intervention in database
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         
@@ -235,7 +235,7 @@ class InterventionManager:
         conn.commit()
         conn.close()
         
-        # Agregar a intervenciones activas en memoria
+        # Add to active interventions in memory
         if user_id not in self.active_interventions:
             self.active_interventions[user_id] = []
         
@@ -251,45 +251,45 @@ class InterventionManager:
             "additional_data": additional_data or {}
         })
         
-        # Ejecutar acciones de intervención
+        # Execute intervention actions
         self._execute_intervention_actions(user_id, config, intervention_id)
-        
-        logger.warning(f"Intervención '{intervention_key}' activada para usuario {user_id}: {trigger_reason}")
+
+        logger.warning(f"Intervention '{intervention_key}' activated for user {user_id}: {trigger_reason}")
         return True
-    
+
     def _execute_intervention_actions(self, user_id: str, config: InterventionConfig, intervention_id: int):
-        """Ejecutar acciones específicas de la intervención"""
-        
-        # Enviar mensaje al usuario
+        """Execute specific intervention actions"""
+
+        # Send message to user
         if config.message:
             self._send_intervention_message(user_id, config.message, config.require_acknowledgment)
-        
-        # Notificar contactos de emergencia si es necesario
+
+        # Notify emergency contacts if necessary
         if config.notify_emergency_contact:
             self._notify_emergency_contacts(user_id, config, intervention_id)
-        
-        # Ejecutar callbacks de notificación
+
+        # Execute notification callbacks
         for callback in self.notification_callbacks:
             try:
                 callback(user_id, config.type.value, config.severity.value)
             except Exception as e:
-                logger.error(f"Error en callback de notificación: {e}")
-        
-        # Programar escalación si es necesario
+                logger.error(f"Error in notification callback: {e}")
+
+        # Schedule escalation if necessary
         if config.escalate_after:
             self._schedule_escalation(user_id, intervention_id, config.escalate_after)
     
     def _send_intervention_message(self, user_id: str, message: str, require_acknowledgment: bool):
-        """Enviar mensaje de intervención al usuario"""
+        """Send intervention message to user"""
         # This function should be implemented according to specific messaging system
-        logger.info(f"Enviando mensaje de intervención a usuario {user_id}: {message}")
-        
+        logger.info(f"Sending intervention message to user {user_id}: {message}")
+
         # Here it would integrate with chat system/web interface
-        # Por ejemplo, enviando un mensaje especial al WebSocket del usuario
+        # For example, sending a special message to the user's WebSocket
         pass
-    
+
     def _notify_emergency_contacts(self, user_id: str, config: InterventionConfig, intervention_id: int):
-        """Notificar contactos de emergencia"""
+        """Notify emergency contacts"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         
@@ -310,7 +310,7 @@ class InterventionManager:
                 self._send_emergency_sms(user_id, contact_info, relationship, config, intervention_id)
     
     def _send_emergency_email(self, user_id: str, email: str, relationship: str, config: InterventionConfig, intervention_id: int):
-        """Enviar email de emergencia"""
+        """Send emergency email"""
         try:
             subject = f"🚨 Alerta de Salud Mental - Usuario {user_id}"
             
@@ -338,42 +338,42 @@ class InterventionManager:
             [enlace a recursos]
             """
             
-            # Aquí implementarías el envío real del email
-            logger.info(f"Email de emergencia enviado a {email} para usuario {user_id}")
+            # Here you would implement the actual email sending
+            logger.info(f"Emergency email sent to {email} for user {user_id}")
             
         except Exception as e:
-            logger.error(f"Error enviando email de emergencia: {e}")
+            logger.error(f"Error sending emergency email: {e}")
     
     def _send_emergency_sms(self, user_id: str, phone: str, relationship: str, config: InterventionConfig, intervention_id: int):
-        """Enviar SMS de emergencia"""
+        """Send emergency SMS"""
         try:
             message = f"🚨 ALERTA: Usuario {user_id} necesita supervisión por uso preocupante de IA. Contacta inmediatamente. Severidad: {config.severity.value}"
             
-            # Aquí implementarías el envío real del SMS
-            logger.info(f"SMS de emergencia enviado a {phone} para usuario {user_id}")
-            
+            # Here you would implement the actual SMS sending
+            logger.info(f"Emergency SMS sent to {phone} for user {user_id}")
+
         except Exception as e:
-            logger.error(f"Error enviando SMS de emergencia: {e}")
+            logger.error(f"Error sending emergency SMS: {e}")
     
     def _schedule_escalation(self, user_id: str, intervention_id: int, minutes: int):
-        """Programar escalación de intervención"""
+        """Schedule intervention escalation"""
         def escalate():
             time.sleep(minutes * 60)
-            
-            # Verificar si la intervención sigue activa
+
+            # Verify if intervention is still active
             if self._is_intervention_active(intervention_id):
-                # Escalar a siguiente nivel
+                # Escalate to next level
                 self._escalate_intervention(user_id, intervention_id)
-        
-        # Ejecutar en hilo separado
+
+        # Execute in separate thread
         threading.Thread(target=escalate, daemon=True).start()
-    
+
     def _escalate_intervention(self, user_id: str, intervention_id: int):
-        """Escalar intervención a siguiente nivel"""
+        """Escalate intervention to next level"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
-        
-        # Marcar como escalada
+
+        # Mark as escalated
         cursor.execute('''
             UPDATE active_interventions 
             SET escalated = TRUE 
@@ -392,8 +392,8 @@ class InterventionManager:
         
         if result:
             current_type, current_severity = result
-            
-            # Determinar siguiente nivel de escalación
+
+            # Determine next escalation level
             escalation_map = {
                 "warning_message": "moderate_break",
                 "mandatory_break": "severe_limitation",
@@ -409,7 +409,7 @@ class InterventionManager:
                 )
     
     def check_user_interventions(self, user_id: str) -> Dict[str, Any]:
-        """Verifiesr intervenciones activas para un usuario"""
+        """Verify active interventions for a user"""
         
         if user_id not in self.active_interventions:
             return {"has_active": False, "interventions": []}
@@ -425,7 +425,7 @@ class InterventionManager:
             else:
                 active.append(intervention)
         
-        # Remover intervenciones expiradas
+        # Remove expired interventions
         for exp in expired:
             self._resolve_intervention(user_id, exp["id"])
         
@@ -436,7 +436,7 @@ class InterventionManager:
         }
     
     def _can_user_access_system(self, user_id: str, active_interventions: List[Dict[str, Any]]) -> bool:
-        """Determinar si el usuario puede acceder al system"""
+        """Determine if user can access the system"""
         
         blocking_types = [
             InterventionType.ACCOUNT_SUSPENSION,
@@ -451,7 +451,7 @@ class InterventionManager:
         return True
     
     def acknowledge_intervention(self, user_id: str, intervention_id: int) -> bool:
-        """Marcar intervención como reconocida por el usuario"""
+        """Mark intervention as acknowledged by user"""
         
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -465,8 +465,8 @@ class InterventionManager:
         success = cursor.rowcount > 0
         conn.commit()
         conn.close()
-        
-        # Actualizar en memoria
+
+        # Update in memory
         if user_id in self.active_interventions:
             for intervention in self.active_interventions[user_id]:
                 if intervention["id"] == intervention_id:
@@ -476,19 +476,19 @@ class InterventionManager:
         return success
     
     def _resolve_intervention(self, user_id: str, intervention_id: int):
-        """Resolver/finalizar una intervención"""
-        
+        """Resolve/finalize an intervention"""
+
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
-        
-        # Marcar como resuelta en base de datos
+
+        # Mark as resolved in database
         cursor.execute('''
             UPDATE active_interventions 
             SET status = 'resolved', resolved = TRUE 
             WHERE id = ? AND user_id = ?
         ''', (intervention_id, user_id))
-        
-        # Mover a historial
+
+        # Move to history
         cursor.execute('''
             INSERT INTO intervention_history 
             (user_id, intervention_type, severity, trigger_reason, duration_minutes)
@@ -499,8 +499,8 @@ class InterventionManager:
         
         conn.commit()
         conn.close()
-        
-        # Remover de memoria
+
+        # Remove from memory
         if user_id in self.active_interventions:
             self.active_interventions[user_id] = [
                 i for i in self.active_interventions[user_id] 
@@ -508,7 +508,7 @@ class InterventionManager:
             ]
     
     def _has_active_intervention(self, user_id: str, intervention_type: InterventionType) -> bool:
-        """Verifiesr si hay intervención activa del tipo especificado"""
+        """Verify if there is an active intervention of the specified type"""
         
         if user_id not in self.active_interventions:
             return False
@@ -520,7 +520,7 @@ class InterventionManager:
         return False
     
     def _is_intervention_active(self, intervention_id: int) -> bool:
-        """Verifiesr si una intervención específica sigue activa"""
+        """Verify if a specific intervention is still active"""
         
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -536,7 +536,7 @@ class InterventionManager:
         return result is not None
     
     def _user_has_interventions_enabled(self, user_id: str) -> bool:
-        """Verifiesr si el usuario tiene intervenciones habilitadas"""
+        """Verify if the user has interventions enabled"""
         
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -549,25 +549,25 @@ class InterventionManager:
         result = cursor.fetchone()
         conn.close()
         
-        # Por defecto, las intervenciones están habilitadas
+        # By default, interventions are enabled
         return result[0] if result else True
     
     def _start_monitoring_thread(self):
-        """Iniciar hilo de monitoreo para limpieza automática"""
-        
+        """Start monitoring thread for automatic cleanup"""
+
         def monitor():
             while True:
                 try:
-                    # Limpiar intervenciones expiradas cada 5 minutos
+                    # Clean up expired interventions every 5 minutes
                     self._cleanup_expired_interventions()
-                    time.sleep(300)  # 5 minutos
+                    time.sleep(300)  # 5 minutes
                 except Exception as e:
-                    logger.error(f"Error en hilo de monitoreo: {e}")
+                    logger.error(f"Error in monitoring thread: {e}")
         
         threading.Thread(target=monitor, daemon=True).start()
     
     def _cleanup_expired_interventions(self):
-        """Limpiar intervenciones expiradas"""
+        """Clean up expired interventions"""
         
         current_time = datetime.now()
         users_to_cleanup = []
@@ -585,23 +585,23 @@ class InterventionManager:
             if not self.active_interventions[user_id]:
                 users_to_cleanup.append(user_id)
         
-        # Limpiar usuarios sin intervenciones activas
+        # Clean up users without active interventions
         for user_id in users_to_cleanup:
             del self.active_interventions[user_id]
     
     def add_notification_callback(self, callback: Callable):
-        """Agregar callback para notificaciones de intervención"""
+        """Add callback for intervention notifications"""
         self.notification_callbacks.append(callback)
     
     def get_intervention_statistics(self, days: int = 30) -> Dict[str, Any]:
-        """Obtener statistics de intervenciones"""
+        """Get intervention statistics"""
         
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         
         since_date = datetime.now() - timedelta(days=days)
         
-        # Intervenciones por tipo
+        # Interventions by type
         cursor.execute('''
             SELECT intervention_type, COUNT(*) 
             FROM intervention_history 
@@ -611,7 +611,7 @@ class InterventionManager:
         
         by_type = dict(cursor.fetchall())
         
-        # Intervenciones por severidad
+        # Interventions by severity
         cursor.execute('''
             SELECT severity, COUNT(*) 
             FROM intervention_history 
@@ -621,7 +621,7 @@ class InterventionManager:
         
         by_severity = dict(cursor.fetchall())
         
-        # Usuarios únicos afectados
+        # Unique users affected
         cursor.execute('''
             SELECT COUNT(DISTINCT user_id) 
             FROM intervention_history 
@@ -642,7 +642,7 @@ class InterventionManager:
 
 # Integration with main system
 class SafetyIntegrationManager:
-    """Manager para integrar el system de seguridad con Capibara"""
+    """Manager to integrate the safety system with Capibara"""
     
     def __init__(self):
         from capibara.safety.mental_health_monitor import MentalHealthMonitor
@@ -651,31 +651,31 @@ class SafetyIntegrationManager:
         self.mental_health_monitor = MentalHealthMonitor()
         self.content_filter = PsychosisPreventionSystem()
         self.intervention_manager = InterventionManager()
-        
-        # Configurar callbacks
+
+        # Configure callbacks
         self._setup_integration()
-    
+
     def _setup_integration(self):
-        """Configurar integración entre componentes"""
+        """Configure integration between components"""
         
         def on_intervention_triggered(user_id: str, intervention_type: str, severity: str):
-            logger.info(f"Intervención integrada: {intervention_type} para usuario {user_id}")
-            # Aquí se pueden agregar acciones adicionales
+            logger.info(f"Integrated intervention: {intervention_type} for user {user_id}")
+            # Additional actions can be added here
         
         self.intervention_manager.add_notification_callback(on_intervention_triggered)
     
     def process_user_message(self, user_id: str, message: str, session_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Procesar mensaje del usuario con todas las medidas de seguridad"""
-        
-        # 1. Monitorear salud mental
+        """Process user message with all safety measures"""
+
+        # 1. Monitor mental health
         mental_health_result = self.mental_health_monitor.monitor_user_interaction(
             user_id, message, session_data
         )
         
-        # 2. Verificar intervenciones activas
+        # 2. Check active interventions
         intervention_status = self.intervention_manager.check_user_interventions(user_id)
-        
-        # 3. Activar intervenciones si es necesario
+
+        # 3. Activate interventions if necessary
         if mental_health_result["needs_intervention"]:
             intervention_key = self._determine_intervention_level(mental_health_result["risk_level"])
             self.intervention_manager.trigger_intervention(
@@ -692,12 +692,12 @@ class SafetyIntegrationManager:
         }
     
     def process_ai_response(self, user_id: str, response: str, user_context: Dict[str, Any]) -> Dict[str, Any]:
-        """Procesar respuesta de IA con filtrado de contenido"""
+        """Process AI response with content filtering"""
         
         return self.content_filter.process_ai_response(response, user_id, user_context)
     
     def _determine_intervention_level(self, risk_level: str) -> str:
-        """Determinar nivel de intervención based en riesgo"""
+        """Determine intervention level based on risk"""
         
         mapping = {
             "low": "mild_warning",
@@ -708,13 +708,13 @@ class SafetyIntegrationManager:
         
         return mapping.get(risk_level, "mild_warning")
 
-# Ejemplo de uso
+# Usage example
 def example_integration():
-    """Ejemplo de integración completa"""
+    """Complete integration example"""
     
     safety_manager = SafetyIntegrationManager()
     
-    # Simular mensaje del usuario
+    # Simulate user message
     user_id = "user123"
     message = "Las voces me dicen que todos están en mi contra y que el gobierno me vigila"
     session_data = {
@@ -723,7 +723,7 @@ def example_integration():
         "recent_messages": [message]
     }
     
-    # Procesar mensaje
+    # Process message
     result = safety_manager.process_user_message(user_id, message, session_data)
     
     print("Análisis de salud mental:", result["mental_health_analysis"])

@@ -2,10 +2,10 @@
 Communication and Monitoring Behaviors - CapibaraGPT v2024
 ==========================================================
 
-Comportamientos especializados para comunicación y monitoreo:
-- CommunicationBehavior: Comunicación inter-agente avanzada
-- MonitoringBehavior: Monitoreo y métricas de system
-- LearningBehavior: Aprendizaje adaptativo
+Specialized behaviors for communication and monitoring:
+- CommunicationBehavior: Advanced inter-agent communication
+- MonitoringBehavior: System monitoring and metrics
+- LearningBehavior: Adaptive learning
 """
 
 import time
@@ -112,7 +112,7 @@ class CommunicationEvent:
 
 @dataclass
 class PerformanceMetric:
-    """Métrica de rendimiento."""
+    """Performance metric."""
     metric_name: str
     value: float
     timestamp: float
@@ -166,7 +166,7 @@ class CommunicationBehavior(BaseBehavior, IAgentCommunication):
         start_time = time.time()
         
         try:
-            # Registrar agente si no está registrado
+            # Register agent if not registered
             self._register_agent(agent)
             
             # Process context-based communication
@@ -206,8 +206,8 @@ class CommunicationBehavior(BaseBehavior, IAgentCommunication):
         task_description = context.task_description.lower()
         events = []
         messages_processed = 0
-        
-        # Determinar tipo de comunicación requerida
+
+        # Determine required communication type
         if "coordinate" in task_description or "collaborate" in task_description:
             result = self._coordinate_agents(context, agent)
             events.append({"type": "coordination", "result": result})
@@ -227,11 +227,11 @@ class CommunicationBehavior(BaseBehavior, IAgentCommunication):
             events.append({"type": "conflict_resolution", "result": result})
             
         else:
-            # Comunicación general
+            # General communication
             result = self._handle_general_communication(context, agent)
             events.append({"type": "general", "result": result})
         
-        # Procesar mensajes pendientes
+        # Process pending messages
         pending_messages = self._process_pending_messages(agent.agent_id)
         messages_processed += len(pending_messages)
         
@@ -259,10 +259,10 @@ class CommunicationBehavior(BaseBehavior, IAgentCommunication):
             logger.info(f"Registered agent {agent_id} for communication")
     
     def _coordinate_agents(self, context: AgentContext, agent: IAgent) -> Dict[str, Any]:
-        """Coordinar múltiples agentes para colaboración."""
-        
-        # Identificar agentes disponibles para coordinación
-        available_agents = [aid for aid, info in self.agent_registry.items() 
+        """Coordinate multiple agents for collaboration."""
+
+        # Identify agents available for coordination
+        available_agents = [aid for aid, info in self.agent_registry.items()
                           if info["status"] == "active" and aid != agent.agent_id]
         
         if not available_agents:
@@ -274,10 +274,10 @@ class CommunicationBehavior(BaseBehavior, IAgentCommunication):
         
         # Create coordination plan
         coordination_plan = self._create_coordination_plan(context, available_agents)
-        
-        # Enviar mensajes de coordinación
+
+        # Send coordination messages
         coordination_messages = []
-        for target_agent in available_agents[:3]:  # Limitar a 3 agentes
+        for target_agent in available_agents[:3]:  # Limit to 3 agents
             message = Message(
                 id=f"coord_{int(time.time() * 1000)}",
                 sender=agent.agent_id,
@@ -309,8 +309,8 @@ class CommunicationBehavior(BaseBehavior, IAgentCommunication):
         
         # Basic task analysis
         task_complexity = "high" if len(context.task_description.split()) > 20 else "medium"
-        
-        # Asignar roles baseds en tipos de agente (simplificado)
+
+        # Assign roles based on agent types (simplified)
         roles = {}
         for i, agent_id in enumerate(agents):
             if i == 0:
@@ -330,7 +330,7 @@ class CommunicationBehavior(BaseBehavior, IAgentCommunication):
         }
     
     def _handle_broadcast(self, context: AgentContext, agent: IAgent) -> Dict[str, Any]:
-        """Manejar broadcasting a múltiples agentes."""
+        """Handle broadcasting to multiple agents."""
         
         if not self.enable_broadcasting:
             return {"status": "broadcasting_disabled", "recipients": []}
@@ -374,12 +374,12 @@ class CommunicationBehavior(BaseBehavior, IAgentCommunication):
     def _handle_direct_communication(self, context: AgentContext, agent: IAgent) -> Dict[str, Any]:
         """Handle direct communication between agents."""
         
-        # Extract recipient from context (simplificado)
+        # Extract recipient from context (simplified)
         requirements = context.requirements
         recipient = requirements.get("recipient")
-        
+
         if not recipient:
-            # Seleccionar destinatario automáticamente
+            # Select recipient automatically
             available_agents = [aid for aid in self.agent_registry.keys() if aid != agent.agent_id]
             recipient = available_agents[0] if available_agents else None
         
@@ -410,9 +410,9 @@ class CommunicationBehavior(BaseBehavior, IAgentCommunication):
         }
     
     def _resolve_conflicts(self, context: AgentContext, agent: IAgent) -> Dict[str, Any]:
-        """Resolver conflictos entre agentes."""
-        
-        # Identificar agentes en conflicto (simplificado)
+        """Resolve conflicts between agents."""
+
+        # Identify agents in conflict (simplified)
         conflicted_agents = context.requirements.get("conflicted_agents", [])
         
         if not conflicted_agents:
@@ -420,8 +420,8 @@ class CommunicationBehavior(BaseBehavior, IAgentCommunication):
             conflicted_agents = self._detect_conflicts()
         
         resolution_strategy = self._determine_resolution_strategy(conflicted_agents)
-        
-        # Aplicar strategy de resolución
+
+        # Apply resolution strategy
         resolution_result = self._apply_resolution_strategy(
             resolution_strategy, conflicted_agents, agent
         )
@@ -435,20 +435,20 @@ class CommunicationBehavior(BaseBehavior, IAgentCommunication):
         }
     
     def _detect_conflicts(self) -> List[str]:
-        """Detectar conflictos entre agentes (implementación simplificada)."""
-        # En una implementación real, analizaría patrones de comunicación,
+        """Detect conflicts between agents (simplified implementation)."""
+        # In a real implementation, this would analyze communication patterns,
         # response times, coordination failures, etc.
         return []
-    
+
     def _determine_resolution_strategy(self, conflicted_agents: List[str]) -> str:
-        """Determinar strategy de resolución de conflictos."""
+        """Determine conflict resolution strategy."""
         if len(conflicted_agents) <= 2:
             return "mediation"
         else:
             return "consensus_building"
     
     def _apply_resolution_strategy(self, strategy: str, agents: List[str], mediator: IAgent) -> Dict[str, Any]:
-        """Appliesr strategy de resolución."""
+        """Apply resolution strategy."""
         if strategy == "mediation":
             return self._mediate_conflict(agents, mediator)
         elif strategy == "consensus_building":
@@ -457,7 +457,7 @@ class CommunicationBehavior(BaseBehavior, IAgentCommunication):
             return {"resolved": False, "reason": "unknown_strategy"}
     
     def _mediate_conflict(self, agents: List[str], mediator: IAgent) -> Dict[str, Any]:
-        """Mediar conflicto entre agentes."""
+        """Mediate conflict between agents."""
         # Simplified implementation
         return {
             "resolved": True,
@@ -467,7 +467,7 @@ class CommunicationBehavior(BaseBehavior, IAgentCommunication):
         }
     
     def _build_consensus(self, agents: List[str], facilitator: IAgent) -> Dict[str, Any]:
-        """Construir consenso entre múltiples agentes."""
+        """Build consensus among multiple agents."""
         # Simplified implementation
         return {
             "resolved": True,
@@ -485,7 +485,7 @@ class CommunicationBehavior(BaseBehavior, IAgentCommunication):
         }
     
     def send_message(self, recipient: str, message: Dict[str, Any]) -> bool:
-        """Implementation de IAgentCommunication.send_message."""
+        """Implementation of IAgentCommunication.send_message."""
         msg = Message(
             id=f"api_{int(time.time() * 1000)}",
             sender="api_caller",
@@ -497,8 +497,8 @@ class CommunicationBehavior(BaseBehavior, IAgentCommunication):
         return self._send_message_internal(msg)
     
     def receive_message(self) -> Optional[Dict[str, Any]]:
-        """Implementation de IAgentCommunication.receive_message."""
-        # Simplificado - en implementación real usaría queues específicos por agente
+        """Implementation of IAgentCommunication.receive_message."""
+        # Simplified - real implementation would use agent-specific queues
         if self.message_history:
             latest_message = self.message_history[-1]
             return {
@@ -510,7 +510,7 @@ class CommunicationBehavior(BaseBehavior, IAgentCommunication):
         return None
     
     def broadcast_message(self, message: Dict[str, Any]) -> List[str]:
-        """Implementation de IAgentCommunication.broadcast_message."""
+        """Implementation of IAgentCommunication.broadcast_message."""
         recipients = list(self.agent_registry.keys())
         
         for recipient in recipients:
@@ -519,21 +519,21 @@ class CommunicationBehavior(BaseBehavior, IAgentCommunication):
         return recipients
     
     def _send_message_internal(self, message: Message) -> bool:
-        """Enviar mensaje internamente."""
+        """Send message internally."""
         try:
-            # Validar destinatario
+            # Validate recipient
             if message.recipient not in self.agent_registry:
                 logger.warning(f"Recipient {message.recipient} not registered")
                 self.communication_metrics["failed_deliveries"] += 1
                 return False
             
-            # Agregar a historial
+            # Add to history
             self.message_history.append(message)
-            
+
             # Add to recipient queue
             self.message_queue[message.recipient].append(message)
-            
-            # Actualizar métricas
+
+            # Update metrics
             self.communication_metrics["messages_sent"] += 1
             
             # Log message
@@ -560,7 +560,7 @@ class CommunicationBehavior(BaseBehavior, IAgentCommunication):
                 "timestamp": message.timestamp
             })
         
-        # Limpiar cola procesada
+        # Clear processed queue
         self.message_queue[agent_id] = []
         self.communication_metrics["messages_received"] += len(processed_messages)
         
@@ -661,16 +661,16 @@ class MonitoringBehavior(BaseBehavior, IAgentMonitoring):
     def _perform_monitoring(self, context: AgentContext, agent: IAgent) -> Dict[str, Any]:
         """Perform complete system monitoring."""
         
-        # Recopilar métricas de rendimiento
+        # Collect performance metrics
         performance_metrics = self._collect_performance_metrics(agent)
-        
-        # Verificar salud de agentes
+
+        # Verify agent health
         health_status = self._check_agent_health(agent)
-        
-        # Detectar anomalías
+
+        # Detect anomalies
         anomalies = self._detect_anomalies()
-        
-        # Generar alertas si es necesario
+
+        # Generate alerts if necessary
         alerts = self._generate_alerts(performance_metrics, health_status, anomalies)
         
         # Update statistics
@@ -691,7 +691,7 @@ class MonitoringBehavior(BaseBehavior, IAgentMonitoring):
         }
     
     def _collect_performance_metrics(self, agent: IAgent) -> List[Dict[str, Any]]:
-        """Recopilar métricas de rendimiento."""
+        """Collect performance metrics."""
         metrics = []
         current_time = time.time()
         
@@ -703,7 +703,7 @@ class MonitoringBehavior(BaseBehavior, IAgentMonitoring):
         system_metrics = self._collect_system_metrics(current_time)
         metrics.extend(system_metrics)
         
-        # Almacenar métricas en historial
+        # Store metrics in history
         for metric_data in metrics:
             metric = PerformanceMetric(
                 metric_name=metric_data["name"],
@@ -718,7 +718,7 @@ class MonitoringBehavior(BaseBehavior, IAgentMonitoring):
         return metrics
     
     def _collect_agent_metrics(self, agent: IAgent, timestamp: float) -> List[Dict[str, Any]]:
-        """Collect specific metrics del agente."""
+        """Collect specific agent metrics."""
         metrics = []
         
         # Simulate agent metrics
@@ -790,7 +790,7 @@ class MonitoringBehavior(BaseBehavior, IAgentMonitoring):
         return metrics
     
     def _check_agent_health(self, agent: IAgent) -> Dict[str, Any]:
-        """Verifiesr salud del agente."""
+        """Verify agent health."""
         agent_id = agent.agent_id
         current_time = time.time()
         
@@ -805,17 +805,17 @@ class MonitoringBehavior(BaseBehavior, IAgentMonitoring):
             "performance_score": 0.9
         }
         
-        # Verificaciones específicas
+        # Specific verifications
         checks = self._perform_health_checks(agent)
         health_data.update(checks)
-        
-        # Actualizar registro de salud
+
+        # Update health registry
         self.agent_health_status[agent_id] = health_data
         
         return health_data
     
     def _perform_health_checks(self, agent: IAgent) -> Dict[str, Any]:
-        """Perform specific checks de salud."""
+        """Perform specific health checks."""
         checks = {
             "connectivity": "ok",
             "resource_usage": "normal",
@@ -824,8 +824,8 @@ class MonitoringBehavior(BaseBehavior, IAgentMonitoring):
         }
         
         warnings = []
-        
-        # Verificar tasa de errores
+
+        # Verify error rate
         if checks["error_rate"] > self.alert_thresholds.get("error_rate", 0.05):
             warnings.append("High error rate detected")
             checks["status"] = "warning"
@@ -841,16 +841,16 @@ class MonitoringBehavior(BaseBehavior, IAgentMonitoring):
         return checks
     
     def _detect_anomalies(self) -> List[Dict[str, Any]]:
-        """Detectar anomalías en las métricas."""
+        """Detect anomalies in metrics."""
         anomalies = []
         
         if len(self.metrics_history) < 10:
-            return anomalies  # Necesitamos suficientes datos
-        
-        # Analizar métricas recientes
+            return anomalies  # Need sufficient data
+
+        # Analyze recent metrics
         recent_metrics = list(self.metrics_history)[-10:]
-        
-        # Detectar anomalías por tipo de métrica
+
+        # Detect anomalies by metric type
         metric_groups = defaultdict(list)
         for metric in recent_metrics:
             metric_groups[metric.metric_name].append(metric.value)
@@ -892,13 +892,13 @@ class MonitoringBehavior(BaseBehavior, IAgentMonitoring):
         alerts = []
         current_time = time.time()
         
-        # Alertas basadas en métricas
+        # Alerts based on metrics
         for metric in metrics:
             alert = self._check_metric_alert(metric, current_time)
             if alert:
                 alerts.append(alert)
         
-        # Alertas basadas en salud
+        # Alerts based on health
         if health.get("status") != "healthy":
             alerts.append({
                 "alert_id": f"health_{int(current_time)}",
@@ -909,7 +909,7 @@ class MonitoringBehavior(BaseBehavior, IAgentMonitoring):
                 "source": "health_check"
             })
         
-        # Alertas basadas en anomalías
+        # Alerts based on anomalies
         for anomaly in anomalies:
             if anomaly.get("severity") in ["high", "critical"]:
                 alerts.append({
@@ -921,17 +921,17 @@ class MonitoringBehavior(BaseBehavior, IAgentMonitoring):
                     "source": "anomaly_detection"
                 })
         
-        # Almacenar alertas activas
+        # Store active alerts
         self.active_alerts.extend(alerts)
         
         return alerts
     
     def _check_metric_alert(self, metric: Dict[str, Any], timestamp: float) -> Optional[Dict[str, Any]]:
-        """Verifiesr si una métrica requiere alerta."""
+        """Verify if a metric requires an alert."""
         metric_name = metric["name"]
         value = metric["value"]
-        
-        # Verificar umbrales específicos
+
+        # Verify specific thresholds
         if metric_name == "agent_response_time_ms":
             threshold = self.alert_thresholds.get("response_time_ms", 1000)
             if value > threshold:
@@ -959,7 +959,7 @@ class MonitoringBehavior(BaseBehavior, IAgentMonitoring):
         return None
     
     def _assess_monitoring_quality(self) -> str:
-        """Evaluar calidad del monitoreo."""
+        """Evaluate monitoring quality."""
         total_metrics = self.monitoring_stats["total_metrics_collected"]
         total_alerts = self.monitoring_stats["alerts_generated"]
         
@@ -973,8 +973,8 @@ class MonitoringBehavior(BaseBehavior, IAgentMonitoring):
             return "basic"
     
     def get_performance_metrics(self) -> Dict[str, Any]:
-        """Implementation de IAgentMonitoring.get_performance_metrics."""
-        recent_metrics = list(self.metrics_history)[-20:]  # Últimas 20 métricas
+        """Implementation of IAgentMonitoring.get_performance_metrics."""
+        recent_metrics = list(self.metrics_history)[-20:]  # Last 20 metrics
         
         return {
             "total_metrics": len(self.metrics_history),
@@ -992,7 +992,7 @@ class MonitoringBehavior(BaseBehavior, IAgentMonitoring):
         }
     
     def get_health_status(self) -> Dict[str, Any]:
-        """Implementation de IAgentMonitoring.get_health_status."""
+        """Implementation of IAgentMonitoring.get_health_status."""
         return {
             "overall_status": "healthy" if not self.active_alerts else "warning",
             "agents_monitored": len(self.agent_health_status),
@@ -1002,7 +1002,7 @@ class MonitoringBehavior(BaseBehavior, IAgentMonitoring):
         }
     
     def log_activity(self, activity: Dict[str, Any]) -> None:
-        """Implementation de IAgentMonitoring.log_activity."""
+        """Implementation of IAgentMonitoring.log_activity."""
         logger.info(f"Activity logged: {activity}")
 
 

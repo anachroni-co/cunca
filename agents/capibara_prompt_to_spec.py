@@ -2,29 +2,29 @@
 
 class CapibaraPromptToAgentSpec:
     def __init__(self, model):
-        self.model = model  # Puede be CapibaraModel or any wrapper open source
+        self.model = model  # Can be CapibaraModel or any open source wrapper
 
     def generate_spec(self, instruction: str) -> dict:
         prompt = f"""
-Eres un generador de agentes para un system de IA llamado CapibaraGPT. 
+You are an agent generator for an AI system called CapibaraGPT.
 
-Tu tarea es crear una especificación JSON con esta estructura:
+Your task is to create a JSON specification with this structure:
 {{
-  "name": "...",           ← nombre del agente
+  "name": "...",           <- agent name
   "llm": {{
-    "type": "ollama",      ← solo usar LLMs open source
-    "model": "llama3"      ← modelo local
+    "type": "ollama",      <- only use open source LLMs
+    "model": "llama3"      <- local model
   }},
-  "tools": ["..."],        ← lista de herramientas a usar (por ejemplo: "sumar", "web_search", etc.)
+  "tools": ["..."],        <- list of tools to use (e.g.: "add", "web_search", etc.)
   "vectordb": {{
-    "type": "qdrant"       ← si se necesita contexto documental, incluir esto
+    "type": "qdrant"       <- if document context is needed, include this
   }}
 }}
 
-Instrucción del usuario:
+User instruction:
 {instruction}
 
-Devuelve solo el JSON con la especificación.
+Return only the JSON with the specification.
         """
 
         raw = self.model.generate(prompt)
@@ -32,4 +32,4 @@ Devuelve solo el JSON con la especificación.
             import json
             return json.loads(raw)
         except Exception:
-            raise ValueError(f"Error interpretando la salida del modelo: {raw}")
+            raise ValueError(f"Error interpreting model output: {raw}")
