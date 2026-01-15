@@ -12,7 +12,7 @@ import os
 
 @dataclass
 class HuggingFaceConsensusConfig:
-    """Configurestion for HuggingFace consensus strategy."""
+    """Configuration for HuggingFace consensus strategy."""
     
     # Model selection and weights
     expert_models: Dict[str, Dict[str, Any]] = field(default_factory=lambda: {
@@ -108,28 +108,28 @@ class HuggingFaceConsensusConfig:
     # Domain-specific keywords for quality scoring
     domain_keywords: Dict[str, List[str]] = field(default_factory=lambda: {
         "mathematics": [
-            "ecuación", "cálculo", "número", "matemática", "álgebra", "geometría",
-            "trigonométrico", "derivada", "integral", "función", "variable", "constante"
+            "equation", "calculus", "number", "mathematics", "algebra", "geometry",
+            "trigonometric", "derivative", "integral", "function", "variable", "constant"
         ],
         "programming": [
-            "código", "función", "variable", "programa", "algoritmo", "clase",
-            "método", "objeto", "array", "string", "boolean", "integer", "loop"
+            "code", "function", "variable", "program", "algorithm", "class",
+            "method", "object", "array", "string", "boolean", "integer", "loop"
         ],
         "spanish_language": [
-            "español", "gramática", "vocabulario", "idioma", "conjugación",
-            "sintaxis", "morfología", "semántica", "fonética", "ortografía"
+            "spanish", "grammar", "vocabulary", "language", "conjugation",
+            "syntax", "morphology", "semantics", "phonetics", "spelling"
         ],
         "medical": [
-            "médico", "paciente", "tratamiento", "diagnóstico", "síntoma",
-            "enfermedad", "medicamento", "terapia", "cirugía", "análisis"
+            "medical", "patient", "treatment", "diagnosis", "symptom",
+            "disease", "medication", "therapy", "surgery", "analysis"
         ],
         "legal": [
-            "ley", "legal", "jurídico", "contrato", "derecho", "tribunal",
-            "juez", "abogado", "proceso", "sentencia", "normativa", "reglamento"
+            "law", "legal", "juridical", "contract", "right", "court",
+            "judge", "lawyer", "process", "sentence", "regulation", "rule"
         ],
         "logical_reasoning": [
-            "lógica", "razonamiento", "premisa", "conclusión", "argumento",
-            "inferencia", "deducción", "inducción", "silenogismo", "falacia"
+            "logic", "reasoning", "premise", "conclusion", "argument",
+            "inference", "deduction", "induction", "syllogism", "fallacy"
         ]
     })
     
@@ -269,7 +269,7 @@ def get_spanish_optimized_config() -> HuggingFaceConsensusConfig:
 
 # Configuration validation
 def validate_config(config: HuggingFaceConsensusConfig) -> List[str]:
-    """Validates configuration and return list of errors."""
+    """Validate configuration and return list of errors."""
     errors = []
     
     # Check required fields for each model

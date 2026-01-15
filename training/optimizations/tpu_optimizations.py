@@ -1,7 +1,7 @@
 """
-Optimizaciones TPU v4-32 centralizadas para CapibaraGPT
+Centralized TPU v4-32 optimizations for CapibaraGPT
 
-Este module concentra optimizaciones específicas para TPU v4-32.
+This module concentrates specific optimizations for TPU v4-32.
 """
 
 import os
@@ -21,7 +21,7 @@ try:
     from capibara.jax.sharding import PartitionSpec as P  # type: ignore
     from capibara.jax.experimental import mesh_utils, shard_map  # type: ignore
 except ImportError:
-    # Fallbacks si faltan dependencias
+    # Fallbacks if dependencies are missing
     train_state = None
     P = None
     mesh_utils = None
@@ -41,10 +41,10 @@ if jax:
 
 @dataclass
 class TPUConfig:
-    """Configuration para TPU v4-32."""
+    """Configuration for TPU v4-32."""
 
     def __init__(self, config_path: Optional[str] = None):
-        # Cargar desde TOML si está disponible
+        # Load from TOML if available
         config_root = Path(os.environ.get("CAPIBARA_CONFIG_ROOT", "capibara/config"))
         config_path = config_path or str(config_root / "configs_toml/production/hardware.toml")
 
@@ -61,13 +61,13 @@ class TPUConfig:
             self.memory_per_core_gb = tpu_config.get("memory_per_core_gb", 32)
             self.hbm_bandwidth_gbps = tpu_config.get("hbm_bandwidth_gbps", 1200)
 
-            # Memoria
+            # Memory
             self.memory_pressure_threshold = tpu_config.get("memory_pressure_threshold", 0.85)
             self.cleanup_threshold = tpu_config.get("cleanup_threshold", 0.9)
             self.enable_memory_monitoring = tpu_config.get("enable_memory_monitoring", True)
             self.enable_systolic_arrays = tpu_config.get("enable_systolic_arrays", True)
 
-            # Optimización
+            # Optimization
             opt_config = config.get("optimization", {})
             self.enable_xla = opt_config.get("enable_xla", True)
             self.enable_auto_sharding = opt_config.get("enable_auto_sharding", True)
@@ -78,8 +78,8 @@ class TPUConfig:
             self.learning_rate = opt_config.get("learning_rate", 1e-4)
 
         except Exception as e:
-            logger.error(f"Error cargando configuración TPU: {e}")
-            # Defaults seguros
+            logger.error(f"Error loading TPU configuration: {e}")
+            # Safe defaults
             self.cores = 32
             self.mesh_shape = (4, 8)
             self.memory_per_core_gb = 32
@@ -97,7 +97,7 @@ class TPUConfig:
             self.learning_rate = 1e-4
 
 class TPUOptimizer:
-    """Optimizador centralizado para TPU v4-32."""
+    """Centralized optimizer for TPU v4-32."""
 
     def __init__(self, config: Optional[TPUConfig] = None):
         self.config = config or TPUConfig()
@@ -105,16 +105,16 @@ class TPUOptimizer:
             self._setup_device()
 
     def _setup_device(self) -> None:
-        """Configura el dispositivo TPU si está disponible."""
+        """Configure TPU device if available."""
         try:
             devices = jax.devices("tpu") if jax else []  # type: ignore[attr-defined]
         except Exception:
             devices = []
         if not devices:
-            logger.warning("No hay dispositivos TPU o JAX no está disponible")
+            logger.warning("No TPU devices or JAX is not available")
             return
 
-        # Configuración XLA
+        # XLA configuration
         if self.config.enable_xla:
             try:
                 jax.config.update("jax_xla_backend", "tpu")  # type: ignore[attr-defined]
@@ -128,14 +128,14 @@ class TPUOptimizer:
             except Exception:
                 pass
 
-        # Nivel de optimización
+        # Optimization level
         try:
             jax.config.update("jax_optimization_level", self.config.optimization_level)  # type: ignore[attr-defined]
         except Exception:
             pass
 
     def create_mesh(self) -> Tuple[Any, Any]:  # type: ignore[name-defined]
-        """Crea la malla de dispositivos TPU."""
+        """Create the TPU device mesh."""
         if not mesh_utils or not jax:  # type: ignore[truthy-bool]
             return None, None
         devices = mesh_utils.create_device_mesh(self.config.mesh_shape)  # type: ignore[attr-defined]
@@ -143,7 +143,7 @@ class TPUOptimizer:
         return devices, mesh
 
     def get_sharding_rules(self) -> Dict[str, Any]:
-        """Reglas de sharding predefinidas."""
+        """Predefined sharding rules."""
         if not P:
             return {}
         return {
@@ -155,7 +155,7 @@ class TPUOptimizer:
         }
 
     def get_training_state(self, model_params: Dict[str, Any]):
-        """Crea un estado de entrenamiento optimizado."""
+        """Create an optimized training state."""
         if not train_state or not optax:
             return None
 
@@ -169,17 +169,17 @@ class TPUOptimizer:
         )
 
         return train_state.TrainState.create(
-            apply_fn=None,  # Se asigna después
+            apply_fn=None,  # Assigned later
             params=model_params.get("params", {}),
             tx=tx,
         )
 
     def get_batch_size(self) -> int:
-        """Calculates el batch size óptimo."""
+        """Calculate the optimal batch size."""
         return self.config.batch_size_per_core * self.config.cores
 
     def should_cleanup_memory(self) -> bool:
-        """Verifies si se debe limpiar memoria."""
+        """Check if memory cleanup is needed."""
         if not self.config.enable_memory_monitoring or not jax:
             return False
         try:
@@ -189,7 +189,7 @@ class TPUOptimizer:
             return False
 
     def force_cleanup(self) -> None:
-        """Fuerza limpieza de memoria."""
+        """Force memory cleanup."""
         try:
             if jax and self.should_cleanup_memory():
                 jax.clear_caches()  # type: ignore[attr-defined]
@@ -198,15 +198,15 @@ class TPUOptimizer:
             pass
 
 def setup_tpu_environment():
-    """Configura entorno TPU v4-32 completo."""
+    """Configure complete TPU v4-32 environment."""
     config = TPUConfig()
     optimizer = TPUOptimizer(config)
     return optimizer
 
 def verify_tpu_setup() -> Dict[str, Any]:
-    """Verifies entorno TPU y devuelve información básica."""
+    """Verify TPU environment and return basic information."""
     if not jax:
-        return {"tpu_available": False, "error": "JAX no disponible"}
+        return {"tpu_available": False, "error": "JAX not available"}
 
     try:
         devices = jax.devices("tpu")

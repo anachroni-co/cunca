@@ -17,45 +17,45 @@ from pathlib import Path
 
 @dataclass
 class TPUv6eHardwareConfig:
-    """Configuration specific for hardware TPU v6e."""
-    # Especificaciones TPU v6e
+    """Configuration specific for TPU v6e hardware."""
+    # TPU v6e specifications
     accelerator_type: str = "v6e-64"
     machine_type: str = "ct6e-standard-4t"
-    
-    # Topología 8x8
+
+    # 8x8 Topology
     mesh_rows: int = 8
     mesh_cols: int = 8
     total_chips: int = 64
     
-    # Distribución física
+    # Physical distribution
     hosts: int = 8
     vms: int = 16
     chips_per_host: int = 8
     chips_per_vm: int = 4
-    
-    # Especificaciones de memoria
-    hbm_per_chip_gb: int = 32  # 32GB HBM por chip TPU v6e
+
+    # Memory specifications
+    hbm_per_chip_gb: int = 32  # 32GB HBM per TPU v6e chip
     total_hbm_gb: int = 2048   # 64 chips × 32GB
-    
-    # Network y bandwidth
+
+    # Network and bandwidth
     interconnect_bandwidth_gbps: int = 4800  # ICI bandwidth
     host_bandwidth_gbps: int = 1600
     
 @dataclass
 class PreemptibleConfig:
-    """Configuration for handling instancias preemptibles."""
-    # Checkpoint frequency (muy importante para preemptibles)
+    """Configuration for handling preemptible instances."""
+    # Checkpoint frequency (very important for preemptibles)
     checkpoint_every_steps: int = 100
     emergency_checkpoint_steps: int = 50
     quick_save_steps: int = 25
     
-    # Estrategias de respaldo
+    # Backup strategies
     keep_last_n_checkpoints: int = 5
     keep_emergency_checkpoints: int = 10
     backup_to_gcs: bool = True
     gcs_bucket: str = "capibara-tpu-checkpoints"
-    
-    # Monitoring de preemption
+
+    # Preemption monitoring
     preemption_warning_seconds: int = 30
     max_preemption_retries: int = 5
     retry_delay_base_seconds: float = 60.0
@@ -67,8 +67,8 @@ class PreemptibleConfig:
 
 @dataclass
 class ParallelizationConfig:
-    """Configuration for optimized parallelization para 8x8."""
-    # Estrategias parallelization
+    """Configuration for optimized parallelization for 8x8."""
+    # Parallelization strategies
     data_parallel_size: int = 16    # A través de VMs
     model_parallel_size: int = 4    # Dentro de cada VM
     pipeline_parallel_size: int = 1 # No pipeline por defecto
@@ -129,13 +129,13 @@ class MonitoringConfig:
     monitor_memory: bool = True
     monitor_network: bool = True
     
-    # Alertas
+    # Alerts
     alert_on_high_loss: bool = True
     loss_spike_threshold: float = 2.0
     alert_webhook: Optional[str] = None
 
 class TPUv6eConfigManager:
-    """Configuration manager para TPU v6e."""
+    """Configuration manager for TPU v6e."""
     
     def __init__(self, config_path: Optional[str] = None):
         self.config_path = Path(config_path) if config_path else None
@@ -149,14 +149,14 @@ class TPUv6eConfigManager:
             self.load_config()
     
     def load_config(self):
-        """Load configuration from archivo YAML."""
+        """Load configuration from YAML file."""
         if not self.config_path or not self.config_path.exists():
             return
-            
+
         with open(self.config_path, 'r') as f:
             config_data = yaml.safe_load(f)
-        
-        # Actualizar configuraciones
+
+        # Update configurations
         if 'hardware' in config_data:
             self._update_dataclass(self.hardware, config_data['hardware'])
         if 'preemptible' in config_data:
@@ -169,7 +169,7 @@ class TPUv6eConfigManager:
             self._update_dataclass(self.monitoring, config_data['monitoring'])
     
     def save_config(self, output_path: str):
-        """Save current configuration to archivo YAML."""
+        """Save current configuration to YAML file."""
         config_data = {
             'hardware': self._dataclass_to_dict(self.hardware),
             'preemptible': self._dataclass_to_dict(self.preemptible),
@@ -182,7 +182,7 @@ class TPUv6eConfigManager:
             yaml.dump(config_data, f, default_flow_style=False, indent=2)
     
     def setup_environment_variables(self):
-        """Configures environment variables para TPU v6e."""
+        """Configure environment variables for TPU v6e."""
         # JAX configuration
         os.environ['JAX_PLATFORMS'] = 'tpu'
         os.environ['JAX_ENABLE_X64'] = str(self.optimization.jax_enable_x64).lower()
@@ -214,53 +214,53 @@ class TPUv6eConfigManager:
             os.environ['XLA_PYTHON_CLIENT_ALLOCATOR'] = 'platform'
     
     def get_optimal_batch_size(self, model_size_b: float) -> int:
-        """Calcular batch size óptimo based en el tamaño del modelo."""
-        # Memoria disponible por chip (reservando espacio para activaciones)
+        """Calculate optimal batch size based on model size."""
+        # Available memory per chip (reserving space for activations)
         available_memory_gb = self.hardware.hbm_per_chip_gb * 0.7  # 70% utilization
-        
+
         # Memory estimation per parameter (bf16 + gradients + optimizer states)
         memory_per_param_bytes = 8  # 2 (bf16) + 2 (grad) + 4 (optimizer states)
-        
+
         # Model memory
         model_memory_gb = (model_size_b * 1e9 * memory_per_param_bytes) / (1024**3)
-        
-        # Memoria por sample (estimación conservadora)
+
+        # Memory per sample (conservative estimate)
         sequence_length = 2048
         hidden_size = int((model_size_b * 1e9 / (12 * sequence_length))**0.5)  # Rough estimate
         memory_per_sample_gb = (sequence_length * hidden_size * 4) / (1024**3)  # bf16 activations
         
-        # Calcular batch size por chip
+        # Calculate batch size per chip
         memory_for_batch = available_memory_gb - (model_memory_gb / self.parallelization.model_parallel_size)
         samples_per_chip = max(1, int(memory_for_batch / memory_per_sample_gb))
-        
+
         # Global batch size
         global_batch = samples_per_chip * self.hardware.total_chips // self.parallelization.model_parallel_size
-        
-        # Redondear a múltiplo de data parallel size
+
+        # Round to multiple of data parallel size
         global_batch = (global_batch // self.parallelization.data_parallel_size) * self.parallelization.data_parallel_size
         
         return max(self.parallelization.data_parallel_size, global_batch)
     
     def validate_configuration(self) -> List[str]:
-        """Validates la configuration and return warnings/errors."""
+        """Validate the configuration and return warnings/errors."""
         warnings = []
-        
-        # Validar topología
+
+        # Validate topology
         if self.hardware.mesh_rows * self.hardware.mesh_cols != self.hardware.total_chips:
             warnings.append(f"Mesh topology mismatch: {self.hardware.mesh_rows}x{self.hardware.mesh_cols} != {self.hardware.total_chips}")
-        
-        # Validar paralelización
+
+        # Validate parallelization
         total_parallel = (self.parallelization.data_parallel_size * 
                          self.parallelization.model_parallel_size * 
                          self.parallelization.pipeline_parallel_size)
         if total_parallel > self.hardware.total_chips:
             warnings.append(f"Parallelization exceeds available chips: {total_parallel} > {self.hardware.total_chips}")
         
-        # Validar batch size
+        # Validate batch size
         if self.parallelization.global_batch_size % self.parallelization.data_parallel_size != 0:
             warnings.append(f"Global batch size {self.parallelization.global_batch_size} not divisible by data parallel size {self.parallelization.data_parallel_size}")
-        
-        # Validar checkpointing para preemptibles
+
+        # Validate checkpointing for preemptibles
         if self.preemptible.checkpoint_every_steps > 500:
             warnings.append(f"Checkpoint interval {self.preemptible.checkpoint_every_steps} may be too high for preemptible instances")
         
@@ -268,14 +268,14 @@ class TPUv6eConfigManager:
     
     @staticmethod
     def _update_dataclass(obj, data: Dict[str, Any]):
-        """Updatesr dataclass con datos del diccionario."""
+        """Update dataclass with dictionary data."""
         for key, value in data.items():
             if hasattr(obj, key):
                 setattr(obj, key, value)
     
     @staticmethod
     def _dataclass_to_dict(obj) -> Dict[str, Any]:
-        """Convertir dataclass a diccionario."""
+        """Convert dataclass to dictionary."""
         result = {}
         for key, value in obj.__dict__.items():
             if not key.startswith('_'):
@@ -288,48 +288,48 @@ def get_config_for_model_scale(model_scale: str) -> TPUv6eConfigManager:
     config = TPUv6eConfigManager()
     
     if model_scale == "300M":
-        # Modelo pequeño - máximo throughput
+        # Small model - maximum throughput
         config.parallelization.data_parallel_size = 32
         config.parallelization.model_parallel_size = 2
         config.parallelization.global_batch_size = 4096
         config.parallelization.micro_batch_size = 64
         
     elif model_scale == "1B":
-        # Modelo mediano
+        # Medium model
         config.parallelization.data_parallel_size = 16
         config.parallelization.model_parallel_size = 4
         config.parallelization.global_batch_size = 2048
         config.parallelization.micro_batch_size = 32
         
     elif model_scale == "3B":
-        # Modelo grande
+        # Large model
         config.parallelization.data_parallel_size = 16
         config.parallelization.model_parallel_size = 4
         config.parallelization.global_batch_size = 1024
         config.parallelization.micro_batch_size = 16
         
     elif model_scale == "7B":
-        # Modelo muy grande
+        # Very large model
         config.parallelization.data_parallel_size = 8
         config.parallelization.model_parallel_size = 8
         config.parallelization.global_batch_size = 512
         config.parallelization.micro_batch_size = 8
         
     elif model_scale == "13B":
-        # Modelo extra grande
+        # Extra large model
         config.parallelization.data_parallel_size = 4
         config.parallelization.model_parallel_size = 16
         config.parallelization.global_batch_size = 256
         config.parallelization.micro_batch_size = 4
         
-    # Ajustar checkpointing para modelos más grandes (más costosos de restart)
+    # Adjust checkpointing for larger models (more expensive to restart)
     if model_scale in ["7B", "13B"]:
         config.preemptible.checkpoint_every_steps = 75
         config.preemptible.emergency_checkpoint_steps = 25
     
     return config
 
-# Configuración de ejemplo for development/testing
+# Example configuration for development/testing
 DEVELOPMENT_CONFIG = {
     'hardware': {
         'mesh_rows': 2,
@@ -352,7 +352,7 @@ DEVELOPMENT_CONFIG = {
 }
 
 def create_development_config() -> TPUv6eConfigManager:
-    """Createsr configuración for development/testing."""
+    """Create configuration for development/testing."""
     config = TPUv6eConfigManager()
     config._update_dataclass(config.hardware, DEVELOPMENT_CONFIG['hardware'])
     config._update_dataclass(config.preemptible, DEVELOPMENT_CONFIG['preemptible'])

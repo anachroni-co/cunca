@@ -62,7 +62,7 @@ except ImportError:
 # Use the project native language detector
 def detect_language(text) -> str:
     """
-    Usa el detector of language nativo del proyecto Capibara.
+    Use the native language detector from the Capibara project.
     Handles both string and non-string inputs safely.
     """
     # Handle non-string inputs
@@ -76,8 +76,8 @@ def detect_language(text) -> str:
         except Exception:
             return 'en'  # Default fallback
     
-    # El LanguageDetector del proyecto detecta si está en idiomas permitidos
-    # Para nuestro caso, vamos a usar una versión simplificada que retorna el idioma
+    # The project's LanguageDetector checks if text is in allowed languages
+    # For our case, we use a simplified version that returns the language
     try:
         text_lower = text.lower()
         if any(word in text_lower for word in ['hola', 'como', 'estas', 'gracias', 'por', 'favor']):
@@ -96,26 +96,26 @@ def detect_language(text) -> str:
 
 class SapirWhorfAdapter:
     """
-    Modula las activaciones semánticas y cognitivas en function del idioma.
-    Inspirado en la hipótesis de relatividad lingüística de Sapir-Whorf.
+    Modulates semantic and cognitive activations based on language.
+    Inspired by the Sapir-Whorf linguistic relativity hypothesis.
     """
 
     def __init__(self, config=None):
         """
-        Inicializa el adaptador Sapir-Whorf.
-        
+        Initialize the Sapir-Whorf adapter.
+
         Args:
-            config: Diccionario de configuración opcional con parameters como:
-                   - hidden_size: Tamaño de las capas ocultas
-                   - language_dimensions: Dimensiones específicas del idioma
-                   - cultural_contexts: Número de contextos culturales
+            config: Optional configuration dictionary with parameters such as:
+                   - hidden_size: Size of hidden layers
+                   - language_dimensions: Language-specific dimensions
+                   - cultural_contexts: Number of cultural contexts
         """
         self.config = config or {}
         self.hidden_size = self.config.get('hidden_size', 768)
         self.language_dimensions = self.config.get('language_dimensions', 64)
         self.cultural_contexts = self.config.get('cultural_contexts', 16)
         
-        # Mapa predefinido de estructuras cognitivas asociadas a idiomas
+        # Predefined map of cognitive structures associated with languages
         self.language_cognition_map = {
             "en": {
                 "time": "linear",
@@ -141,23 +141,23 @@ class SapirWhorfAdapter:
                 "agency": "divine-modulated",
                 "gender": "dualistic"
             }
-            # Añade más idiomas aquí
+            # Add more languages here
         }
 
     def adapt_embedding(self, input_embedding, language: str):
         """
-        Aplica un ajuste semántico al embedding según la estructura cognitiva del idioma.
-        
+        Apply semantic adjustment to embedding based on language cognitive structure.
+
         Args:
-            input_embedding: Embedding de entrada a adaptar (puede ser numpy array, list, o cualquier tipo)
-            language: Código of language (ej: 'en', 'es', 'zh', 'ar')
-            
+            input_embedding: Input embedding to adapt (can be numpy array, list, or any type)
+            language: Language code (e.g., 'en', 'es', 'zh', 'ar')
+
         Returns:
-            Embedding adaptado según la estructura cognitiva del idioma
+            Embedding adapted according to language cognitive structure
         """
         modifiers = self.language_cognition_map.get(language, {})
         
-        # Si no tenemos JAX/numpy disponible, solo retornamos información de modificación
+        # If JAX/numpy is not available, we only return modification info
         if not JAX_AVAILABLE and not hasattr(input_embedding, 'shape'):
             return {
                 'original_embedding': input_embedding,
@@ -168,7 +168,7 @@ class SapirWhorfAdapter:
         
         embedding = input_embedding
 
-        # Modifica el embedding según propiedades cognitivas
+        # Modify embedding based on cognitive properties
         try:
             if modifiers.get("time") == "cyclical":
                 embedding = embedding * jnp.sin(embedding) if hasattr(embedding, '__mul__') else embedding
@@ -193,40 +193,40 @@ class SapirWhorfAdapter:
 
     def route_contextually(self, input_text: str, router=None) -> str:
         """
-        Detecta idioma y ajusta el router para que active las capas semánticas correctas.
-        
+        Detect language and adjust router to activate correct semantic layers.
+
         Args:
-            input_text: Texto de entrada para detectar idioma
-            router: Router contextual para configurar (opcional)
-            
+            input_text: Input text for language detection
+            router: Contextual router to configure (optional)
+
         Returns:
-            Código of language detectado
+            Detected language code
         """
         language = detect_language(input_text)
         cognition_profile = self.language_cognition_map.get(language, {})
 
-        # Enviar información al router si está disponible
+        # Send information to router if available
         if router and ROUTER_AVAILABLE:
             try:
                 router.set_language_context(language)
                 router.set_cognition_profile(cognition_profile)
             except Exception as e:
-                # Si el router no tiene estos methods, simplemente continuamos
+                # If the router doesn't have these methods, we simply continue
                 pass
 
         return language
 
     def __call__(self, input_data, input_embedding=None, router=None):
         """
-        Método principal que combina detección of language y adaptación de embedding.
-        
+        Main method that combines language detection and embedding adaptation.
+
         Args:
-            input_data: Texto de entrada (str) o tensor/array de entrada
-            input_embedding: Embedding a adaptar (opcional)
-            router: Router contextual (opcional)
-            
+            input_data: Input text (str) or input tensor/array
+            input_embedding: Embedding to adapt (optional)
+            router: Contextual router (optional)
+
         Returns:
-            Embedding adaptado según la estructura cognitiva del idioma o tensor modificado
+            Embedding adapted according to language cognitive structure or modified tensor
         """
         # Handle different input types
         if isinstance(input_data, str):
@@ -299,31 +299,31 @@ class SapirWhorfAdapter:
 
     def add_language_profile(self, language_code: str, profile: Dict[str, str]):
         """
-        Añade un nuevo perfil of language al mapa cognitivo.
-        
+        Add a new language profile to the cognitive map.
+
         Args:
-            language_code: Código del idioma (ej: 'fr', 'de', 'ja')
-            profile: Diccionario con las características cognitivas del idioma
+            language_code: Language code (e.g., 'fr', 'de', 'ja')
+            profile: Dictionary with language cognitive characteristics
         """
         self.language_cognition_map[language_code] = profile
 
     def get_language_profile(self, language_code: str) -> Optional[Dict[str, str]]:
         """
-        Obtiene el perfil cognitivo de un idioma específico.
-        
+        Get the cognitive profile for a specific language.
+
         Args:
-            language_code: Código del idioma
-            
+            language_code: Language code
+
         Returns:
-            Perfil cognitivo del idioma o None si no existe
+            Language cognitive profile or None if not found
         """
         return self.language_cognition_map.get(language_code)
 
     def list_supported_languages(self) -> list:
         """
-        Lista todos los idiomas soportados por el adaptador.
-        
+        List all languages supported by the adapter.
+
         Returns:
-            Lista de códigos of language soportados
+            List of supported language codes
         """
         return list(self.language_cognition_map.keys())
