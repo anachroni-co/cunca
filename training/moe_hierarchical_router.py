@@ -86,15 +86,15 @@ def main():
     return True
 
 class QueryComplexity(Enum):
-    """Niveles de complejidad de consulta"""
-    SIMPLE = "simple"           # Respuestas directas, Level 1
-    MODERATE = "moderate"       # Requiere algún razonamiento, Level 2
-    COMPLEX = "complex"         # Conocimiento especializado, Level 3
-    MULTI_DOMAIN = "multi_domain"  # Requiere ensemble
-    ROUTER_DIRECT = "router_direct"  # Router puede responder
+    """Query complexity levels"""
+    SIMPLE = "simple"           # Direct answers, Level 1
+    MODERATE = "moderate"       # Requires some reasoning, Level 2
+    COMPLEX = "complex"         # Specialized knowledge, Level 3
+    MULTI_DOMAIN = "multi_domain"  # Requires ensemble
+    ROUTER_DIRECT = "router_direct"  # Router can answer
 
 class ExpertDomain(Enum):
-    """Dominios de expertise de each model"""
+    """Expertise domains of each model"""
     LINUX_SYSTEMS = "linux_systems"
     GENERAL_PROGRAMMING = "general_programming"
     ROBOTICS_MANIPULATION = "robotics_manipulation"
@@ -107,7 +107,7 @@ class ExpertDomain(Enum):
 
 @dataclass
 class QueryAnalysis:
-    """analysis detallado de una consulta"""
+    """Detailed query analysis"""
     complexity: QueryComplexity
     required_domains: List[ExpertDomain]
     confidence_scores: Dict[str, float]
@@ -118,7 +118,7 @@ class QueryAnalysis:
 
 @dataclass
 class RoutingDecision:
-    """Decisión de routing end"""
+    """Final routing decision"""
     selected_models: List[str]
     routing_level: int
     estimated_cost: float
@@ -128,7 +128,7 @@ class RoutingDecision:
 
 @dataclass
 class ModelPerformanceMetrics:
-    """Métricas de rendimiento de each model"""
+    """Performance metrics of each model"""
     model_name: str
     domain: ExpertDomain
     size: str
@@ -140,7 +140,7 @@ class ModelPerformanceMetrics:
 
 @dataclass
 class HierarchicalExpert:
-    """Representa un expert en el system jerárquico MoE"""
+    """Represents an expert in the hierarchical MoE system"""
     name: str
     domain: ExpertDomain
     model_path: str
@@ -150,11 +150,11 @@ class HierarchicalExpert:
     distilled_from: Optional[str] = None
     
     def get_cost_per_token(self) -> float:
-        """Gets el costo por token del expert"""
+        """Get the cost per token of the expert"""
         return self.performance_metrics.cost_per_1k_tokens / 1000.0
-    
+
     def can_handle_complexity(self, complexity: QueryComplexity) -> bool:
-        """Determina si el expert puede manejar la complejidad dada"""
+        """Determine if the expert can handle the given complexity"""
         complexity_levels = {
             QueryComplexity.SIMPLE: 1,
             QueryComplexity.MODERATE: 2, 
@@ -166,14 +166,14 @@ class HierarchicalExpert:
 
 class HierarchicalMoERouter:
     """
-    🎭 Router jerárquico MoE que coordina 6 modelos principales + 6 destilados.
-    
-    architecture CORREGIDA:
-    - Router: 2.6B OmniGenomic-Mini (destilado automático del 13B)
-    - Destilación automática for TODOS los modelos (300M → 13B)
-    - Routing: Router → Destilados (except 2 pequeños) → Modelos grandes
-    - ARM Axion optimizado for inferencia del router
-    - without consensus training en este pipeline inicial
+    🎭 Hierarchical MoE Router that coordinates 6 main models + 6 distilled ones.
+
+    CORRECTED architecture:
+    - Router: 2.6B OmniGenomic-Mini (auto-distilled from 13B)
+    - Auto-distillation for ALL models (300M → 13B)
+    - Routing: Router → Distilled (except 2 smallest) → Large models
+    - ARM Axion optimized for router inference
+    - No consensus training in this initial pipeline
     """
     
     def __init__(self, 
@@ -181,13 +181,13 @@ class HierarchicalMoERouter:
                  model_configs: Dict[str, Dict],
                  enable_arm_axion: bool = True,
                  cost_optimization: bool = True):
-        # not super().__init__() ya que not heredamos de nn.Module
+        # No super().__init__() since we don't inherit from nn.Module
         
         self.router_model_path = router_model_path
         self.cost_optimization = cost_optimization
         self.enable_arm_axion = enable_arm_axion
         
-        # 🚀 ARM Axion optimizer for inferencia del router
+        # 🚀 ARM Axion optimizer for router inference
         if self.enable_arm_axion and ARM_OPTIMIZATIONS_AVAILABLE:
             self.arm_optimizer = ARMAxionInferenceOptimizer(
                 model_size="2.6B",
@@ -199,7 +199,7 @@ class HierarchicalMoERouter:
             self.arm_optimizer = ARMAxionInferenceOptimizer()  # Dummy optimizer
             logger.info("🚀 ARM Axion optimization enabled for router inference")
         
-        # Model tier definitions (CORREGIDAS according to especificación)
+        # Model tier definitions (CORRECTED according to specification)
         self.model_tiers = self._initialize_corrected_model_tiers()
         self.model_performance = self._initialize_performance_metrics()
         
@@ -236,7 +236,7 @@ class HierarchicalMoERouter:
         logger.info("🎭 Hierarchical MoE Router initialized with JAX + ARM Axion")
     
     def _init_classifier_params(self, input_dim: int, output_dim: int) -> Dict:
-        """Initializes parameters for clasificador JAX"""
+        """Initialize parameters for JAX classifier"""
         if JAX_AVAILABLE and hasattr(self, 'key'):
             key1, key2, key3 = jax.random.split(self.key, 3)
             
@@ -272,7 +272,7 @@ class HierarchicalMoERouter:
             }
     
     def _init_ensemble_params(self, input_dim: int) -> Dict:
-        """Initializes parameters for ensemble predictor JAX"""
+        """Initialize parameters for JAX ensemble predictor"""
         if JAX_AVAILABLE and hasattr(self, 'key'):
             key1, key2, key3 = jax.random.split(self.key, 3)
             
@@ -308,7 +308,7 @@ class HierarchicalMoERouter:
             }
     
     def _forward_classifier(self, x, params: Dict):
-        """Forward pass for clasificador JAX"""
+        """Forward pass for JAX classifier"""
         if JAX_AVAILABLE:
             # Layer 1
             x = jnp.dot(x, params['layer1']['weights']) + params['layer1']['bias']
@@ -326,7 +326,7 @@ class HierarchicalMoERouter:
             return [0.2, 0.3, 0.3, 0.2]  # Dummy probabilities
     
     def _forward_ensemble(self, x, params: Dict):
-        """Forward pass for ensemble predictor JAX"""
+        """Forward pass for JAX ensemble predictor"""
         if JAX_AVAILABLE:
             # Layer 1
             x = jnp.dot(x, params['layer1']['weights']) + params['layer1']['bias']
@@ -345,15 +345,15 @@ class HierarchicalMoERouter:
     
     def _initialize_corrected_model_tiers(self) -> Dict[int, List[Dict]]:
         """
-        🎭 architecture CORREGIDA - Define los tiers according to especificación:
-        
-        - DESTILACIÓN AUTOMÁTICA for TODOS los modelos (300M → 13B)
-        - Router: 2.6B_OmniGenomic_Mini (destilado automático del 13B)
-        - Routing: Router → Destilados (except 2 pequeños) → Modelos grandes
-        - without consensus training en este pipeline inicial
+        🎭 CORRECTED architecture - Define tiers according to specification:
+
+        - AUTO-DISTILLATION for ALL models (300M → 13B)
+        - Router: 2.6B_OmniGenomic_Mini (auto-distilled from 13B)
+        - Routing: Router → Distilled (except 2 smallest) → Large models
+        - No consensus training in this initial pipeline
         """
         return {
-            # 🎯 ROUTER LEVEL: 2.6B destilado del 13B (ARM Axion optimizado)
+            # 🎯 ROUTER LEVEL: 2.6B distilled from 13B (ARM Axion optimized)
             "router": {
                 "name": "2.6B_OmniGenomic_Mini",
                 "teacher_model": "13B_OmniGenomic",
@@ -367,8 +367,8 @@ class HierarchicalMoERouter:
                 "routing_capability": True
             },
             
-            # 🔄 level 1: Destilados de modelos principales (ROUTING TARGET)
-            # Router enruta here primero (except los 2 more pequeños)
+            # 🔄 Level 1: Distilled versions of main models (ROUTING TARGET)
+            # Router routes here first (except the 2 smallest ones)
             1: [
                 {
                     "name": "240M_HumanoidBrain_Mini",
@@ -405,7 +405,7 @@ class HierarchicalMoERouter:
                 }
             ],
             
-            # 📚 MODELOS PEQUEÑOS: Destilados de 300M and 600M (not en routing inicial)
+            # 📚 SMALL MODELS: Distilled from 300M and 600M (not in initial routing)
             "small_distilled": [
                 {
                     "name": "60M_LinuxCore_Mini",
@@ -433,7 +433,7 @@ class HierarchicalMoERouter:
                 }
             ],
             
-            # 🔥 level 2: Modelos medianos (ROUTING SECUNDARIO)
+            # 🔥 Level 2: Medium models (SECONDARY ROUTING)
             2: [
                 {
                     "name": "600M_LaptopAssistant",
@@ -455,7 +455,7 @@ class HierarchicalMoERouter:
                 }
             ],
             
-            # 🚀 level 3: Modelos grandes (ROUTING end - only for consultas complejas)
+            # 🚀 Level 3: Large models (FINAL ROUTING - only for complex queries)
             3: [
                 {
                     "name": "3B_CodeMaster",
@@ -483,11 +483,11 @@ class HierarchicalMoERouter:
                     "quality_score": 9.7,
                     "specialization": ["genomics", "multimodal_synthesis", "complex_analysis"],
                     "main_model": True,
-                    "has_distilled_router": True  # Indica que de here sale el router 2.6B
+                    "has_distilled_router": True  # Indicates the 2.6B router comes from here
                 }
             ],
-            
-            # 📊 MODELOS BASE: without destilación (for reference del pipeline)
+
+            # 📊 BASE MODELS: Without distillation (for pipeline reference)
             "base_models": [
                 {
                     "name": "300M_LinuxCore",
@@ -503,7 +503,7 @@ class HierarchicalMoERouter:
         }
     
     def _initialize_performance_metrics(self) -> Dict[str, ModelPerformanceMetrics]:
-        """Initializes métricas de rendimiento for todos los modelos"""
+        """Initialize performance metrics for all models"""
         metrics = {}
         
         # Add metrics for all models in all tiers
@@ -538,7 +538,7 @@ class HierarchicalMoERouter:
         return metrics
     
     def _estimate_response_time(self, model_size: str) -> float:
-        """Estima tiempo de answer based en size del model"""
+        """Estimate response time based on model size"""
         size_num = float(model_size.replace('M', '').replace('B', '').replace('T', ''))
         
         if 'M' in model_size:
@@ -550,20 +550,20 @@ class HierarchicalMoERouter:
     
     def analyze_query(self, query: str, context: Optional[str] = None) -> QueryAnalysis:
         """
-        🧠 Analiza una consulta usando JAX nativo + ARM Axion optimization.
-        
+        🧠 Analyze a query using native JAX + ARM Axion optimization.
+
         Args:
-            query: La consulta del usuario
-            context: Contexto adicional optional
-            
+            query: The user query
+            context: Optional additional context
+
         Returns:
-            QueryAnalysis with toda la information de analysis
+            QueryAnalysis with all analysis information
         """
         # 🚀 ARM Axion optimized embedding processing
         if self.enable_arm_axion:
             query_embedding = self.arm_optimizer.process_embedding(query, context)
         else:
-            # Simulate embedding (en implementation real, use embeddings reales)
+            # Simulate embedding (in real implementation, use real embeddings)
             if JAX_AVAILABLE and self.key is not None:
                 query_embedding = jax.random.normal(self.key, (768,))
             else:
@@ -634,17 +634,17 @@ class HierarchicalMoERouter:
             quality_expectation=9.0 if requires_ensemble else 8.5
         )
     
-    def route_query(self, query_analysis: QueryAnalysis, 
+    def route_query(self, query_analysis: QueryAnalysis,
                    cost_preference: str = "balanced") -> RoutingDecision:
         """
-        Decide routing based en análisis de consulta y preferencias.
-        
+        Decide routing based on query analysis and preferences.
+
         Args:
-            query_analysis: Resultado del análisis de consulta
+            query_analysis: Query analysis result
             cost_preference: "cost_optimized", "balanced", "quality_first"
-            
+
         Returns:
-            RoutingDecision con modelos seleccionados y reasoning
+            RoutingDecision with selected models and reasoning
         """
         
         # Start with recommended level
@@ -712,7 +712,7 @@ class HierarchicalMoERouter:
         )
     
     def _find_best_model_for_domain(self, domain: ExpertDomain, level: int) -> Optional[str]:
-        """Encuentra el better model for un dominio en un level específico"""
+        """Find the best model for a domain at a specific level"""
         if level not in self.model_tiers:
             return None
         
@@ -732,14 +732,14 @@ class HierarchicalMoERouter:
         return None
     
     def _get_model_cost(self, model_name: str) -> float:
-        """Gets el costo by 1K tokens de un model"""
+        """Get the cost per 1K tokens of a model"""
         if model_name in self.model_performance:
             return self.model_performance[model_name].cost_per_1k_tokens
         return 0.40  # Default router cost
     
-    def _generate_fallback_options(self, query_analysis: QueryAnalysis, 
+    def _generate_fallback_options(self, query_analysis: QueryAnalysis,
                                   primary_models: List[str]) -> List[str]:
-        """Generates opciones de fallback for casos de failure"""
+        """Generate fallback options for failure cases"""
         fallbacks = []
         
         # Always include router as fallback
@@ -758,7 +758,7 @@ class HierarchicalMoERouter:
         return fallbacks[:3]  # Max 3 fallbacks
     
     def update_routing_stats(self, decision: RoutingDecision, actual_cost: float):
-        """Updates statistics de routing for optimization continua"""
+        """Update routing statistics for continuous optimization"""
         self.routing_stats["total_queries"] += 1
         
         if decision.routing_level == 1:
@@ -783,7 +783,7 @@ class HierarchicalMoERouter:
         self.routing_stats["cost_savings_vs_industry"] = (industry_avg - self.routing_stats["avg_cost_per_query"]) / industry_avg
     
     def get_routing_statistics(self) -> Dict[str, Any]:
-        """Gets statistics completas de routing"""
+        """Get complete routing statistics"""
         total = self.routing_stats["total_queries"]
         if total == 0:
             return {"message": "No queries processed yet"}
@@ -812,14 +812,14 @@ class HierarchicalMoERouter:
         }
 
 # Factory functions and utilities
-def create_hierarchical_router(router_model_path: str, 
+def create_hierarchical_router(router_model_path: str,
                              config_path: Optional[str] = None) -> HierarchicalMoERouter:
-    """Factory function for create el router jerárquico"""
+    """Factory function to create the hierarchical router"""
     model_configs = {}  # Load from config_path if provided
     return HierarchicalMoERouter(router_model_path, model_configs)
 
 def estimate_routing_efficiency() -> Dict[str, Any]:
-    """Estima la eficiencia del system de routing vs alternativas"""
+    """Estimate routing system efficiency vs alternatives"""
     return {
         "cost_comparison": {
             "capibara_avg_cost": "$0.27/1K tokens",
@@ -842,7 +842,7 @@ def estimate_routing_efficiency() -> Dict[str, Any]:
         }
     }
 
-# Compatibility alias con imports existentes
+# Compatibility alias with existing imports
 MoEHierarchicalRouter = HierarchicalMoERouter
 MoEHierarchicalRouteer = HierarchicalMoERouter  # Fix typo in import
 

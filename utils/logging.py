@@ -140,24 +140,24 @@ class CapibaraConfig(BaseModel):
 
 
 def setup_logging(log_level: Optional[str] = None) -> None:
-    """Configures the logging system para CapibaraGPT-v2."""
-    
-    # Nivel de log por defecto
+    """Configures the logging system for CapibaraGPT-v2."""
+
+    # Default log level
     if log_level is None:
         log_level = os.environ.get("CAPIBARA_LOG_LEVEL", "INFO")
-    
-    # Configuración básica
+
+    # Basic configuration
     logging.basicConfig(
         level=getattr(logging, log_level),
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         datefmt='%Y-%m-%d %H:%M:%S'
     )
-    
-    # Logger específico para CapibaraGPT
+
+    # Specific logger for CapibaraGPT
     logger = logging.getLogger("capibara")
     logger.setLevel(getattr(logging, log_level))
-    
-    # Mensaje de inicio
+
+    # Startup message
     logger.info(f"CapibaraGPT-v2 logging initialized at level {log_level}")
 
 

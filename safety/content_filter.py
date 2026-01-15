@@ -111,14 +111,14 @@ class AIContentFilter:
             ]
         }
         
-        # Temas que requieren redirección a ayuda profesional
+        # Topics that require redirection to professional help
         self.professional_referral_topics = [
             "voces", "alucinaciones", "persecución", "conspiración", "control mental",
             "poderes sobrenaturales", "misión especial", "elegido", "simulación",
             "realidad falsa", "todos mienten", "no puedo confiar"
         ]
         
-        # Respuestas completamente prohibidas
+        # Completely prohibited responses
         self.prohibited_responses = [
             "Role-playing de entidades sobrenaturales",
             "Confirmación de teorías de conspiración personal",
@@ -129,20 +129,20 @@ class AIContentFilter:
         ]
     
     def analyze_content(self, content: str, user_context: Dict[str, Any] = None) -> ContentAnalysis:
-        """Analizar contenido generado por IA para riesgos psicológicos"""
+        """Analyze AI-generated content for psychological risks"""
         
         risk_factors = []
         risk_level = ContentRiskLevel.SAFE
         
         content_lower = content.lower()
         
-        # Verificar patrones peligrosos
+        # Check dangerous patterns
         for category, patterns in self.dangerous_patterns.items():
             for pattern in patterns:
                 if re.search(pattern, content):
                     risk_factors.append(category)
                     
-                    # Determinar nivel de riesgo
+                    # Determine risk level
                     if category in ["hallucination_validation", "medical_dismissal"]:
                         risk_level = ContentRiskLevel.PROHIBITED
                     elif category in ["persecution_reinforcement", "derealization_reinforcement"]:
@@ -150,7 +150,7 @@ class AIContentFilter:
                     else:
                         risk_level = max(risk_level, ContentRiskLevel.CAUTION)
         
-        # Verificar temas que requieren referencia profesional
+        # Check topics that require professional referral
         professional_topics_found = []
         for topic in self.professional_referral_topics:
             if topic in content_lower:
@@ -160,7 +160,7 @@ class AIContentFilter:
             risk_factors.append("professional_referral_needed")
             risk_level = max(risk_level, ContentRiskLevel.CAUTION)
         
-        # Considerar contexto del usuario si está disponible
+        # Consider user context if available
         if user_context:
             user_risk = user_context.get("mental_health_risk", "low")
             if user_risk in ["high", "critical"] and risk_level != ContentRiskLevel.SAFE:
@@ -173,24 +173,24 @@ class AIContentFilter:
         )
     
     def filter_and_modify_content(self, content: str, user_context: Dict[str, Any] = None) -> ContentAnalysis:
-        """Filtrar y modificar contenido peligroso"""
+        """Filter and modify dangerous content"""
         
         analysis = self.analyze_content(content, user_context)
         
         if analysis.risk_level == ContentRiskLevel.SAFE:
             return analysis
         
-        # Contenido prohibido - reemplazar completamente
+        # Prohibited content - replace completely
         if analysis.risk_level == ContentRiskLevel.PROHIBITED:
             analysis.modified_content = self._create_safe_alternative(analysis.risk_factors)
             analysis.safety_note = "⚠️ La respuesta original fue filtrada por seguridad. Si experimentas síntomas preocupantes, busca ayuda profesional."
         
-        # Contenido peligroso - modificar y añadir advertencias
+        # Dangerous content - modify and add warnings
         elif analysis.risk_level == ContentRiskLevel.DANGEROUS:
             analysis.modified_content = self._modify_dangerous_content(content, analysis.risk_factors)
             analysis.safety_note = "🔔 Recuerda: Si estos temas te causan angustia, considera hablar con un profesional de salud mental."
         
-        # Contenido de precaución - añadir advertencias y contexto
+        # Caution content - add warnings and context
         elif analysis.risk_level == ContentRiskLevel.CAUTION:
             analysis.modified_content = content + "\n\n" + self._add_safety_context(analysis.risk_factors)
             analysis.safety_note = "💡 Mantén siempre conexión con la realidad y personas de confianza."
@@ -198,7 +198,7 @@ class AIContentFilter:
         return analysis
     
     def _create_safe_alternative(self, risk_factors: List[str]) -> str:
-        """Crear alternativa segura para contenido prohibido"""
+        """Create safe alternative for prohibited content"""
         
         if "hallucination_validation" in risk_factors:
             return random.choice([
@@ -224,25 +224,25 @@ class AIContentFilter:
         return "No puedo proporcionar una respuesta apropiada a esta consulta. Te recomiendo hablar con un profesional de salud mental si tienes preocupaciones."
     
     def _modify_dangerous_content(self, content: str, risk_factors: List[str]) -> str:
-        """Modificar contenido peligroso para hacerlo más seguro"""
+        """Modify dangerous content to make it safer"""
         
         modified = content
         
-        # Añadir realismo y perspectiva
+        # Add realism and perspective
         if "derealization_reinforcement" in risk_factors:
             modified += "\n\n🌍 Nota importante: Es fundamental mantener conexión con la realidad compartida y las personas reales en tu vida."
         
         if "grandiosity_deflection" in risk_factors:
             modified += "\n\n🤝 Recordatorio: Todos tenemos valor, pero es importante mantener perspectiva y conexiones humanas saludables."
         
-        # Añadir redirección profesional
+        # Add professional redirection
         if any(rf in risk_factors for rf in ["persecution_reinforcement", "hallucination_validation"]):
             modified += "\n\n🏥 Si estos temas causan angustia o afectan tu vida diaria, considera hablar con un profesional de salud mental."
         
         return modified
     
     def _add_safety_context(self, risk_factors: List[str]) -> str:
-        """Añadir contexto de seguridad a contenido de precaución"""
+        """Add safety context to caution content"""
         
         safety_notes = []
         
@@ -262,18 +262,18 @@ class AIContentFilter:
         
         analysis = self.analyze_content(content)
         
-        # Bloquear contenido prohibido
+        # Block prohibited content
         if analysis.risk_level == ContentRiskLevel.PROHIBITED:
             return True
         
-        # Bloquear contenido peligroso para usuarios de alto riesgo
+        # Block dangerous content for high-risk users
         if user_risk_level in ["high", "critical"] and analysis.risk_level == ContentRiskLevel.DANGEROUS:
             return True
         
         return False
     
     def get_crisis_intervention_message(self) -> str:
-        """Obtener mensaje de intervención en crisis"""
+        """Get crisis intervention message"""
         return """
         🆘 INTERVENCIÓN DE SEGURIDAD ACTIVADA 🆘
         
@@ -296,7 +296,7 @@ class AIContentFilter:
         """
     
     def create_healthy_usage_prompt(self) -> str:
-        """Crear prompt para fomentar uso saludable"""
+        """Create prompt to promote healthy usage"""
         return """
         🌟 CONSEJOS PARA USO SALUDABLE DE IA:
         
@@ -324,12 +324,12 @@ class PsychosisPreventionSystem:
         self.max_interventions_per_session = 3
     
     def process_ai_response(self, response: str, user_id: str, user_context: Dict[str, Any]) -> Dict[str, Any]:
-        """Procesar respuesta de IA antes de enviarla al usuario"""
-        
-        # Analizar y filtrar contenido
+        """Process AI response before sending it to user"""
+
+        # Analyze and filter content
         analysis = self.content_filter.filter_and_modify_content(response, user_context)
         
-        # Determinar si bloquear la respuesta
+        # Determine if response should be blocked
         user_risk = user_context.get("mental_health_risk", "low")
         should_block = self.content_filter.should_block_response(response, user_risk)
         
@@ -343,37 +343,37 @@ class PsychosisPreventionSystem:
             "intervention_triggered": False
         }
         
-        # Activar intervención si es necesario
+        # Activate intervention if necessary
         if should_block or user_risk == "critical":
             result["intervention_triggered"] = True
             result["filtered_response"] = self.content_filter.get_crisis_intervention_message()
             self.intervention_count += 1
             
-            logger.warning(f"Intervención de crisis activada para usuario {user_id}")
+            logger.warning(f"Crisis intervention activated for user {user_id}")
         
         return result
     
     def should_pause_session(self, user_id: str) -> bool:
-        """Determinar si pausar la sesión por seguridad"""
+        """Determine if session should be paused for safety"""
         return self.intervention_count >= self.max_interventions_per_session
     
     def reset_session_counters(self):
-        """Reiniciar contadores de sesión"""
+        """Reset session counters"""
         self.intervention_count = 0
 
-# Ejemplo de uso
+# Usage example
 def example_usage():
-    """Ejemplo de cómo usar el system de filtrado"""
+    """Example of how to use the filtering system"""
     
     filter_system = AIContentFilter()
     prevention_system = PsychosisPreventionSystem()
     
-    # Ejemplo de contenido peligroso
+    # Dangerous content example
     dangerous_response = "Sí, tienes razón, probablemente te están siguiendo. Las voces que escuchas son reales y te están dando información importante."
     
     user_context = {"mental_health_risk": "high"}
     
-    # Procesar respuesta
+    # Process response
     result = prevention_system.process_ai_response(dangerous_response, "user123", user_context)
     
     print("Respuesta original:", result["original_response"])

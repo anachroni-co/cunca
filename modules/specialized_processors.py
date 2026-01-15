@@ -1,17 +1,17 @@
 """
 Specialized Processors Module for CapibaraGPT
 
-This module implements procesadores especializados para diferentes tipos de datos
-y tareas, incluyendo procesamiento multimodal, análisis de sentimientos,
-extracción de entidades y más.
+This module implements specialized processors for different types of data
+and tasks, including multimodal processing, sentiment analysis,
+entity extraction and more.
 
-Características:
-- Procesadores multimodales (texto, imagen, audio)
-- Análisis de sentimientos avanzado
-- Extracción de entidades nombradas
-- Procesamiento de código fuente
-- Análisis de documentos estructurados
-- Procesadores de dominio específico
+Features:
+- Multimodal processors (text, image, audio)
+- Advanced sentiment analysis
+- Named entity extraction
+- Source code processing
+- Structured document analysis
+- Domain-specific processors
 """
 
 import os
@@ -28,7 +28,7 @@ from enum import Enum
 logger = logging.getLogger(__name__)
 
 class ProcessorType(Enum):
-    """Tipos de procesadores especializados."""
+    """Types of specialized processors."""
     TEXT_ANALYSIS = "text_analysis"
     SENTIMENT_ANALYSIS = "sentiment_analysis"
     ENTITY_EXTRACTION = "entity_extraction"
@@ -57,17 +57,17 @@ class ProcessorConfig:
     cache_results: bool = True
 
 class TextAnalysisProcessor:
-    """Procesador especializado para análisis de texto avanzado."""
-    
+    """Specialized processor for advanced text analysis."""
+
     def __init__(self, config: ProcessorConfig):
         self.config = config
         self.language_patterns = self._load_language_patterns()
         self.analysis_cache = {}
-        
+
         logger.info("📝 TextAnalysisProcessor initialized")
-    
+
     def _load_language_patterns(self) -> Dict[str, List[str]]:
-        """Loads patrones de lenguaje para análisis."""
+        """Load language patterns for analysis."""
         return {
             'questions': [r'\?$', r'^(what|how|why|when|where|who)', r'could you', r'can you'],
             'commands': [r'^(please|kindly)', r'(do|make|create|generate)', r'!$'],
@@ -118,22 +118,22 @@ class TextAnalysisProcessor:
         return analysis
     
     def _calculate_complexity(self, text: str) -> float:
-        """Calculates complejidad del texto."""
+        """Calculate text complexity."""
         words = text.split()
         if not words:
             return 0.0
-        
-        # Factores de complejidad
+
+        # Complexity factors
         avg_word_length = np.mean([len(word) for word in words])
         unique_words_ratio = len(set(words)) / len(words)
         sentence_length_variance = self._calculate_sentence_variance(text)
-        
-        # Complejidad normalizada
+
+        # Normalized complexity
         complexity = (avg_word_length / 10 + unique_words_ratio + sentence_length_variance / 100) / 3
         return min(complexity, 1.0)
-    
+
     def _calculate_readability(self, text: str) -> float:
-        """Calculates índice de legibilidad (Flesch-like)."""
+        """Calculate readability index (Flesch-like)."""
         sentences = re.split(r'[.!?]+', text)
         words = text.split()
         
@@ -148,17 +148,17 @@ class TextAnalysisProcessor:
         return max(0, min(100, readability)) / 100  # Normalize to 0-1
     
     def _calculate_sentence_variance(self, text: str) -> float:
-        """Calculates varianza en longitud de oraciones."""
+        """Calculate variance in sentence length."""
         sentences = re.split(r'[.!?]+', text)
         sentence_lengths = [len(sentence.split()) for sentence in sentences if sentence.strip()]
-        
+
         if len(sentence_lengths) < 2:
             return 0.0
-        
+
         return np.var(sentence_lengths)
-    
+
     def _extract_language_features(self, text: str) -> Dict[str, Any]:
-        """Extrae características lingüísticas del texto."""
+        """Extract linguistic features from the text."""
         words = text.split()
         
         # POS tag simulation (simplified)
@@ -182,17 +182,17 @@ class TextAnalysisProcessor:
         return features
 
 class SentimentAnalysisProcessor:
-    """Procesador especializado para análisis de sentimientos."""
-    
+    """Specialized processor for sentiment analysis."""
+
     def __init__(self, config: ProcessorConfig):
         self.config = config
         self.sentiment_lexicon = self._load_sentiment_lexicon()
-        
+
         logger.info("😊 SentimentAnalysisProcessor initialized")
-    
+
     def _load_sentiment_lexicon(self) -> Dict[str, float]:
-        """Loads léxico de sentimientos."""
-        # Léxico básico de sentimientos (en implementación real sería más extenso)
+        """Load sentiment lexicon."""
+        # Basic sentiment lexicon (in real implementation would be more extensive)
         return {
             # Positive words
             'excellent': 0.8, 'amazing': 0.9, 'wonderful': 0.8, 'great': 0.7,
@@ -256,16 +256,16 @@ class SentimentAnalysisProcessor:
         }
 
 class EntityExtractionProcessor:
-    """Procesador para extracción de entidades nombradas."""
-    
+    """Processor for named entity extraction."""
+
     def __init__(self, config: ProcessorConfig):
         self.config = config
         self.entity_patterns = self._load_entity_patterns()
-        
+
         logger.info("🏷️ EntityExtractionProcessor initialized")
-    
+
     def _load_entity_patterns(self) -> Dict[str, List[str]]:
-        """Loads patrones para reconocimiento de entidades."""
+        """Load patterns for entity recognition."""
         return {
             'person': [
                 r'\b[A-Z][a-z]+ [A-Z][a-z]+\b',  # First Last
@@ -297,7 +297,7 @@ class EntityExtractionProcessor:
         }
     
     def extract_entities(self, text: str) -> Dict[str, Any]:
-        """Extrae entidades del texto."""
+        """Extract entities from the text."""
         if not text or len(text.strip()) == 0:
             return {'error': 'Empty text provided'}
         
@@ -339,7 +339,7 @@ class EntityExtractionProcessor:
         }
 
 class CodeAnalysisProcessor:
-    """Procesador especializado para análisis de código fuente."""
+    """Specialized processor for source code analysis."""
     
     def __init__(self, config: ProcessorConfig):
         self.config = config
@@ -406,7 +406,7 @@ class CodeAnalysisProcessor:
         return max(language_scores.items(), key=lambda x: x[1])[0]
     
     def _extract_functions(self, code: str, language: str) -> List[Dict[str, Any]]:
-        """Extrae funciones del código."""
+        """Extract functions from the code."""
         functions = []
         
         if language == 'python':
@@ -452,7 +452,7 @@ class CodeAnalysisProcessor:
         return classes
     
     def _extract_imports(self, code: str, language: str) -> List[str]:
-        """Extrae imports/includes del código."""
+        """Extract imports/includes from the code."""
         imports = []
         
         if language == 'python':
@@ -471,7 +471,7 @@ class CodeAnalysisProcessor:
         return list(set(imports))  # Remove duplicates
     
     def _extract_comments(self, code: str) -> Dict[str, Any]:
-        """Extrae comentarios del código."""
+        """Extract comments from the code."""
         # Single line comments
         single_line = re.findall(r'//.*$|#.*$', code, re.MULTILINE)
         
@@ -542,7 +542,7 @@ class CodeAnalysisProcessor:
         }
 
 class MultimodalFusionProcessor:
-    """Procesador para fusión de datos multimodales."""
+    """Processor for multimodal data fusion."""
     
     def __init__(self, config: ProcessorConfig):
         self.config = config
@@ -588,7 +588,7 @@ class MultimodalFusionProcessor:
             return {'error': 'No valid modalities found'}
     
     def _extract_text_features(self, text: str) -> np.ndarray:
-        """Extrae características de texto (simulado)."""
+        """Extract text features (simulated)."""
         # Simple text feature extraction
         words = text.split()
         
@@ -613,7 +613,7 @@ class MultimodalFusionProcessor:
         return features
     
     def _normalize_numerical_features(self, data: Union[List, np.ndarray]) -> np.ndarray:
-        """Normaliza características numéricas."""
+        """Normalize numerical features."""
         if isinstance(data, list):
             data = np.array(data, dtype=np.float32)
         
@@ -636,7 +636,7 @@ class MultimodalFusionProcessor:
     
     def _weighted_fusion(self, normalized_data: Dict[str, np.ndarray], 
                         weights: Dict[str, float]) -> np.ndarray:
-        """Fusión ponderada de características."""
+        """Weighted feature fusion."""
         fused = np.zeros(768, dtype=np.float32)
         total_weight = 0
         
@@ -788,11 +788,11 @@ class SpecializedProcessorManager:
 
 # Factory functions
 def create_processor_manager() -> SpecializedProcessorManager:
-    """Creates a specialized processor manager."""
+    """Create a specialized processor manager."""
     return SpecializedProcessorManager()
 
 def create_default_processors(manager: SpecializedProcessorManager):
-    """Creates default processors."""
+    """Create default processors."""
     default_configs = [
         ('text_analyzer', ProcessorType.TEXT_ANALYSIS),
         ('sentiment_analyzer', ProcessorType.SENTIMENT_ANALYSIS),

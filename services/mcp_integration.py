@@ -1,16 +1,16 @@
 """
 MCP (Model Context Protocol) Integration for CapibaraGPT
 
-This module implements la integración con el protocolo MCP para permitir
-comunicación y coordinación entre diferentes instancias del modelo y
-servicios externos.
+This module implements integration with the MCP protocol to enable
+communication and coordination between different model instances and
+external services.
 
-Características:
-- Protocolo de comunicación estándar
-- Sincronización de contexto entre modelos
-- Intercambio de información de entrenamiento
-- Coordinación distribuida
-- Monitoreo y control remoto
+Features:
+- Standard communication protocol
+- Context synchronization between models
+- Training information exchange
+- Distributed coordination
+- Remote monitoring and control
 """
 
 import logging
@@ -26,7 +26,7 @@ from enum import Enum
 logger = logging.getLogger(__name__)
 
 class MCPMessageType(Enum):
-    """Tipos de mensajes MCP."""
+    """MCP message types."""
     HANDSHAKE = "handshake"
     CONTEXT_SYNC = "context_sync"
     TRAINING_UPDATE = "training_update"
@@ -38,23 +38,23 @@ class MCPMessageType(Enum):
 
 @dataclass
 class MCPMessage:
-    """Mensaje estándar del protocolo MCP."""
-    
+    """Standard MCP protocol message."""
+
     message_type: MCPMessageType
     sender_id: str
-    recipient_id: Optional[str] = None  # None para broadcast
+    recipient_id: Optional[str] = None  # None for broadcast
     timestamp: str = field(default_factory=lambda: datetime.now().isoformat())
     message_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     payload: Dict[str, Any] = field(default_factory=dict)
     priority: int = 1  # 1=low, 2=medium, 3=high, 4=critical
     
     def to_dict(self) -> Dict[str, Any]:
-        """Convierte el mensaje a diccionario."""
+        """Convert the message to dictionary."""
         return asdict(self)
-    
+
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'MCPMessage':
-        """Creates mensaje desde diccionario."""
+        """Create message from dictionary."""
         # Convert message_type string back to enum
         if isinstance(data.get('message_type'), str):
             data['message_type'] = MCPMessageType(data['message_type'])
@@ -62,8 +62,8 @@ class MCPMessage:
 
 @dataclass
 class MCPNode:
-    """Nodo en la red MCP."""
-    
+    """Node in the MCP network."""
+
     node_id: str
     node_type: str  # 'trainer', 'inference', 'coordinator', 'monitor'
     capabilities: List[str] = field(default_factory=list)
@@ -72,21 +72,21 @@ class MCPNode:
     metadata: Dict[str, Any] = field(default_factory=dict)
 
 class MCPMessageHandler:
-    """Manejador base para mensajes MCP."""
-    
+    """Base handler for MCP messages."""
+
     def __init__(self, node_id: str):
         self.node_id = node_id
         self.handlers: Dict[MCPMessageType, List[Callable]] = {}
-        
+
     def register_handler(self, message_type: MCPMessageType, handler: Callable):
-        """Registers un manejador para un tipo de mensaje."""
+        """Register a handler for a message type."""
         if message_type not in self.handlers:
             self.handlers[message_type] = []
         self.handlers[message_type].append(handler)
         logger.info(f"📡 Registered handler for {message_type.value}")
     
     async def handle_message(self, message: MCPMessage) -> Optional[MCPMessage]:
-        """Maneja un mensaje entrante."""
+        """Handle an incoming message."""
         logger.debug(f"📨 Handling message: {message.message_type.value} from {message.sender_id}")
         
         handlers = self.handlers.get(message.message_type, [])
@@ -127,25 +127,25 @@ class MCPClient:
         logger.info(f"📡 MCP Client initialized: {node_id} ({node_type})")
     
     async def start(self):
-        """Inicia el cliente MCP."""
+        """Start the MCP client."""
         self.running = True
         logger.info(f"🚀 MCP Client {self.node_id} started")
-        
-        # Enviar handshake inicial
+
+        # Send initial handshake
         await self.send_handshake()
-        
-        # Iniciar heartbeat
+
+        # Start heartbeat
         asyncio.create_task(self._heartbeat_loop())
-    
+
     async def stop(self):
-        """Detiene el cliente MCP."""
+        """Stop the MCP client."""
         self.running = False
         logger.info(f"🛑 MCP Client {self.node_id} stopped")
-    
+
     async def send_message(self, message: MCPMessage) -> bool:
-        """Envía un mensaje."""
+        """Send a message."""
         try:
-            # En implementación real, esto se enviaría por red
+            # In real implementation, this would be sent over network
             # For now, simulate local sending
             self.message_queue.append(message)
             self.messages_sent += 1
@@ -158,7 +158,7 @@ class MCPClient:
             return False
     
     async def send_handshake(self):
-        """Envía mensaje de handshake."""
+        """Send handshake message."""
         handshake_message = MCPMessage(
             message_type=MCPMessageType.HANDSHAKE,
             sender_id=self.node_id,
@@ -172,7 +172,7 @@ class MCPClient:
         await self.send_message(handshake_message)
     
     async def send_training_update(self, training_metrics: Dict[str, Any]):
-        """Envía actualización de entrenamiento."""
+        """Send training update."""
         update_message = MCPMessage(
             message_type=MCPMessageType.TRAINING_UPDATE,
             sender_id=self.node_id,
@@ -186,7 +186,7 @@ class MCPClient:
         await self.send_message(update_message)
     
     async def send_performance_report(self, performance_data: Dict[str, Any]):
-        """Envía reporte de rendimiento."""
+        """Send performance report."""
         report_message = MCPMessage(
             message_type=MCPMessageType.PERFORMANCE_REPORT,
             sender_id=self.node_id,
@@ -196,7 +196,7 @@ class MCPClient:
         await self.send_message(report_message)
     
     async def send_context_sync(self, context_data: Dict[str, Any]):
-        """Envía sincronización de contexto."""
+        """Send context synchronization."""
         sync_message = MCPMessage(
             message_type=MCPMessageType.CONTEXT_SYNC,
             sender_id=self.node_id,
@@ -206,7 +206,7 @@ class MCPClient:
         await self.send_message(sync_message)
     
     async def _heartbeat_loop(self):
-        """Loop de heartbeat para mantener conexión."""
+        """Heartbeat loop to maintain connection."""
         while self.running:
             try:
                 heartbeat_message = MCPMessage(
@@ -228,11 +228,11 @@ class MCPClient:
                 await asyncio.sleep(5)
     
     def register_handler(self, message_type: MCPMessageType, handler: Callable):
-        """Registers un manejador de mensajes."""
+        """Register a message handler."""
         self.message_handler.register_handler(message_type, handler)
-    
+
     def get_status(self) -> Dict[str, Any]:
-        """Gets the state del cliente MCP."""
+        """Get the MCP client state."""
         return {
             'node_id': self.node_id,
             'node_type': self.node_type,
@@ -245,7 +245,7 @@ class MCPClient:
         }
 
 class MCPCoordinator:
-    """Coordinador MCP para gestionar múltiples nodos."""
+    """MCP Coordinator to manage multiple nodes."""
     
     def __init__(self):
         self.nodes: Dict[str, MCPNode] = {}
@@ -255,77 +255,77 @@ class MCPCoordinator:
         logger.info("🎯 MCP Coordinator initialized")
     
     async def start(self):
-        """Inicia el coordinador."""
+        """Start the coordinator."""
         self.running = True
         logger.info("🚀 MCP Coordinator started")
-        
-        # Iniciar tareas de mantenimiento
+
+        # Start maintenance tasks
         asyncio.create_task(self._maintenance_loop())
-    
+
     async def stop(self):
-        """Detiene el coordinador."""
+        """Stop the coordinator."""
         self.running = False
         logger.info("🛑 MCP Coordinator stopped")
-    
+
     def register_node(self, node: MCPNode):
-        """Registers un nuevo nodo."""
+        """Register a new node."""
         self.nodes[node.node_id] = node
         logger.info(f"📡 Node registered: {node.node_id} ({node.node_type})")
-    
+
     def unregister_node(self, node_id: str):
-        """Desregistra un nodo."""
+        """Unregister a node."""
         if node_id in self.nodes:
             del self.nodes[node_id]
             logger.info(f"📡 Node unregistered: {node_id}")
-    
+
     async def broadcast_message(self, message: MCPMessage):
-        """Envía mensaje a todos los nodos."""
+        """Send message to all nodes."""
         for node_id in self.nodes:
             message.recipient_id = node_id
-            # En implementación real, enviar por red
+            # In real implementation, send over network
             logger.debug(f"📡 Broadcasting to {node_id}: {message.message_type.value}")
-    
+
     async def route_message(self, message: MCPMessage):
-        """Enruta un mensaje al destinatario apropiado."""
+        """Route a message to the appropriate recipient."""
         if message.recipient_id:
             if message.recipient_id in self.nodes:
-                # Enviar a nodo específico
+                # Send to specific node
                 logger.debug(f"📡 Routing to {message.recipient_id}: {message.message_type.value}")
             else:
                 logger.warning(f"⚠️ Unknown recipient: {message.recipient_id}")
         else:
             # Broadcast
             await self.broadcast_message(message)
-    
+
     async def _maintenance_loop(self):
-        """Loop de mantenimiento del coordinador."""
+        """Coordinator maintenance loop."""
         while self.running:
             try:
-                # Limpiar nodos inactivos
+                # Clean up inactive nodes
                 current_time = datetime.now()
                 inactive_nodes = []
-                
+
                 for node_id, node in self.nodes.items():
                     last_seen = datetime.fromisoformat(node.last_seen)
-                    if (current_time - last_seen).total_seconds() > 300:  # 5 minutos
+                    if (current_time - last_seen).total_seconds() > 300:  # 5 minutes
                         inactive_nodes.append(node_id)
-                
+
                 for node_id in inactive_nodes:
                     logger.warning(f"⚠️ Removing inactive node: {node_id}")
                     self.unregister_node(node_id)
-                
-                # Limpiar historial de mensajes antiguo
+
+                # Clean up old message history
                 if len(self.message_history) > 1000:
                     self.message_history = self.message_history[-500:]
-                
+
                 await asyncio.sleep(60)  # Maintenance every minute
-                
+
             except Exception as e:
                 logger.error(f"❌ Maintenance error: {e}")
                 await asyncio.sleep(10)
-    
+
     def get_network_status(self) -> Dict[str, Any]:
-        """Gets the state de la red MCP."""
+        """Get the MCP network state."""
         node_types = {}
         for node in self.nodes.values():
             node_types[node.node_type] = node_types.get(node.node_type, 0) + 1
@@ -341,9 +341,9 @@ class MCPCoordinator:
 
 class MCPIntegration:
     """
-    Integración principal MCP para CapibaraGPT.
-    
-    Esta class proporciona una interfaz unificada para toda la funcionalidad MCP.
+    Main MCP Integration for CapibaraGPT.
+
+    This class provides a unified interface for all MCP functionality.
     """
     
     def __init__(self, node_id: Optional[str] = None, node_type: str = "trainer"):
@@ -357,16 +357,16 @@ class MCPIntegration:
         self.performance_callback: Optional[Callable] = None
         self.context_sync_callback: Optional[Callable] = None
         
-        # Registrar manejadores por defecto
+        # Register default handlers
         self._register_default_handlers()
         
         logger.info(f"🌐 MCP Integration initialized: {self.node_id}")
     
     def _register_default_handlers(self):
-        """Registers manejadores por defecto."""
+        """Register default handlers."""
         
         async def handle_handshake(message: MCPMessage) -> MCPMessage:
-            """Maneja mensajes de handshake."""
+            """Handle handshake messages."""
             logger.info(f"🤝 Handshake from {message.sender_id}")
             return MCPMessage(
                 message_type=MCPMessageType.HANDSHAKE,
@@ -380,18 +380,18 @@ class MCPIntegration:
             )
         
         async def handle_training_update(message: MCPMessage):
-            """Maneja actualizaciones de entrenamiento."""
+            """Handle training updates."""
             logger.info(f"📊 Training update from {message.sender_id}")
             if self.training_update_callback:
                 await self.training_update_callback(message.payload)
         
         async def handle_performance_report(message: MCPMessage):
-            """Maneja reportes de rendimiento."""
+            """Handle performance reports."""
             logger.info(f"📈 Performance report from {message.sender_id}")
             if self.performance_callback:
                 await self.performance_callback(message.payload)
         
-        # Registrar manejadores
+        # Register handlers
         self.client.register_handler(MCPMessageType.HANDSHAKE, handle_handshake)
         self.client.register_handler(MCPMessageType.TRAINING_UPDATE, handle_training_update)
         self.client.register_handler(MCPMessageType.PERFORMANCE_REPORT, handle_performance_report)
@@ -448,11 +448,11 @@ class MCPIntegration:
 # Factory functions
 def create_mcp_integration(node_id: Optional[str] = None, 
                           node_type: str = "trainer") -> MCPIntegration:
-    """Creates una instancia de integración MCP."""
+    """Create an MCP integration instance."""
     return MCPIntegration(node_id, node_type)
 
 def create_mcp_coordinator() -> MCPCoordinator:
-    """Creates un coordinador MCP."""
+    """Create an MCP coordinator."""
     return MCPCoordinator()
 
 # Global instance
