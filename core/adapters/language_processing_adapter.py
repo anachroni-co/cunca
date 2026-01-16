@@ -1,9 +1,9 @@
 """
 Language Processing Adapter
 
-Extiende y mejora el system de adaptación lingüística existente,
-integrando el SapirWhorfAdapter y añadiendo nuevas capacidades
-para procesamiento multilingüe avanzado.
+Extends and improves the existing linguistic adaptation system,
+integrating the SapirWhorfAdapter and adding new capabilities
+for advanced multilingual processing.
 """
 
 import logging
@@ -19,7 +19,7 @@ from .adapter_registry import register_adapter_decorator, AdapterType
 logger = logging.getLogger(__name__)
 
 class LanguageFamily(Enum):
-    """Linguistic families para agrupación y optimización."""
+    """Linguistic families for grouping and optimization."""
     INDO_EUROPEAN = "indo_european"
     SINO_TIBETAN = "sino_tibetan"
     AFRO_ASIATIC = "afro_asiatic"
@@ -51,7 +51,7 @@ class CulturalContext(Enum):
 
 @dataclass
 class LanguageProfile:
-    """Perfil completo de un idioma."""
+    """Complete profile for a language."""
     language_code: str
     language_name: str
     family: LanguageFamily
@@ -61,7 +61,7 @@ class LanguageProfile:
     word_order: str = "svo"  # svo, sov, vso, etc.
     cultural_context: CulturalContext = CulturalContext.WESTERN_INDIVIDUALISTIC
     cognitive_features: Dict[str, str] = field(default_factory=dict)
-    processing_complexity: float = 1.0  # Factor de complejidad de procesamiento
+    processing_complexity: float = 1.0  # Processing complexity factor
     available_resources: List[str] = field(default_factory=list)
     special_adaptations: Dict[str, Any] = field(default_factory=dict)
 
@@ -71,12 +71,12 @@ class MultilingualContext:
     primary_language: str
     secondary_languages: List[str] = field(default_factory=list)
     code_switching_probability: float = 0.0
-    cultural_adaptation_level: float = 0.5  # 0 = mínima, 1 = máxima
+    cultural_adaptation_level: float = 0.5  # 0 = minimum, 1 = maximum
     processing_mode: ProcessingMode = ProcessingMode.MONOLINGUAL
     context_metadata: Dict[str, Any] = field(default_factory=dict)
 
 class AdvancedLanguageDetector:
-    """Detector of language avanzado con soporte multilingüe."""
+    """Advanced language detector with multilingual support."""
     
     def __init__(self):
         self.language_patterns = self._initialize_language_patterns()
@@ -84,7 +84,7 @@ class AdvancedLanguageDetector:
         self.code_switching_detector = CodeSwitchingDetector()
         
     def detect_language_advanced(self, text: str) -> Dict[str, Any]:
-        """Advanced detection of language con múltiples métricas."""
+        """Advanced language detection with multiple metrics."""
         if not isinstance(text, str) or not text.strip():
             return {
                 'primary_language': 'en',
@@ -94,16 +94,16 @@ class AdvancedLanguageDetector:
                 'code_switching': False
             }
         
-        # Detección básica using patterns
+        # Basic detection using patterns
         basic_detection = self._detect_basic_language(text)
-        
-        # Detección de code-switching
+
+        # Code-switching detection
         code_switching_result = self.code_switching_detector.detect(text)
-        
-        # Análisis de características lingüísticas
+
+        # Linguistic features analysis
         linguistic_features = self._analyze_linguistic_features(text)
         
-        # Combinar resultados
+        # Combine results
         result = {
             'primary_language': basic_detection['language'],
             'confidence': basic_detection['confidence'],
@@ -118,7 +118,7 @@ class AdvancedLanguageDetector:
         return result
     
     def _initialize_language_patterns(self) -> Dict[str, List[str]]:
-        """Initializes patterns extendidos for detection of languages."""
+        """Initializes extended patterns for language detection."""
         return {
             'es': [
                 'que', 'de', 'a', 'en', 'un', 'es', 'se', 'no', 'te', 'lo', 'le', 'da', 'su', 'por', 'son',
@@ -168,21 +168,21 @@ class AdvancedLanguageDetector:
         }
     
     def _detect_basic_language(self, text: str) -> Dict[str, Any]:
-        """Basic detection using patterns de palabras."""
+        """Basic detection using word patterns."""
         text_lower = text.lower()
         language_scores = defaultdict(float)
         
         for lang, patterns in self.language_patterns.items():
             for pattern in patterns:
                 if pattern in text_lower:
-                    # Peso based en longitud del patrón (patrones más largos = más específicos)
+                    # Weight based on pattern length (longer patterns = more specific)
                     weight = len(pattern.split()) * 2 if ' ' in pattern else 1
                     language_scores[lang] += weight
         
         if not language_scores:
             return {'language': 'en', 'confidence': 0.1}
-        
-        # Normalizar scores
+
+        # Normalize scores
         total_score = sum(language_scores.values())
         best_lang = max(language_scores, key=language_scores.get)
         confidence = language_scores[best_lang] / total_score if total_score > 0 else 0.1
@@ -192,8 +192,8 @@ class AdvancedLanguageDetector:
     def _analyze_linguistic_features(self, text: str) -> Dict[str, Any]:
         """Analyzes linguistic features of text."""
         features = {}
-        
-        # Análisis de longitud promedio de palabras
+
+        # Average word length analysis
         words = text.split()
         if words:
             features['avg_word_length'] = sum(len(word) for word in words) / len(words)
@@ -201,14 +201,14 @@ class AdvancedLanguageDetector:
         else:
             features['avg_word_length'] = 0
             features['word_count'] = 0
-        
-        # Análisis de caracteres especiales
+
+        # Special characters analysis
         features['has_accents'] = any(ord(char) > 127 for char in text)
         features['has_chinese_chars'] = any('\u4e00' <= char <= '\u9fff' for char in text)
         features['has_arabic_chars'] = any('\u0600' <= char <= '\u06ff' for char in text)
         features['has_cyrillic_chars'] = any('\u0400' <= char <= '\u04ff' for char in text)
-        
-        # Análisis de puntuación
+
+        # Punctuation analysis
         punctuation_chars = '.,!?;:'
         features['punctuation_density'] = sum(1 for char in text if char in punctuation_chars) / len(text) if text else 0
         
@@ -222,7 +222,7 @@ class AdvancedLanguageDetector:
             'direction': 'ltr'
         }
         
-        # Detectar scripts
+        # Detect scripts
         has_latin = any('a' <= char.lower() <= 'z' for char in text)
         has_chinese = any('\u4e00' <= char <= '\u9fff' for char in text)
         has_arabic = any('\u0600' <= char <= '\u06ff' for char in text)
@@ -240,11 +240,11 @@ class AdvancedLanguageDetector:
             script_analysis['primary_script'] = scripts[0]
             script_analysis['mixed_scripts'] = len(scripts) > 1
         
-        # Determinar dirección
+        # Determine direction
         if has_arabic:
             script_analysis['direction'] = 'rtl'
         elif has_chinese:
-            script_analysis['direction'] = 'ttb'  # Top-to-bottom (tradicional)
+            script_analysis['direction'] = 'ttb'  # Top-to-bottom (traditional)
         
         return script_analysis
     
@@ -254,18 +254,18 @@ class AdvancedLanguageDetector:
             return 0.0
         
         complexity = 0.0
-        
-        # Complejidad por longitud de palabras
+
+        # Complexity by word length
         words = text.split()
         if words:
             avg_word_length = sum(len(word) for word in words) / len(words)
-            complexity += min(avg_word_length / 10.0, 1.0)  # Normalizar a 1.0
-        
-        # Complejidad por caracteres especiales
+            complexity += min(avg_word_length / 10.0, 1.0)  # Normalize to 1.0
+
+        # Complexity by special characters
         special_chars = sum(1 for char in text if ord(char) > 127)
         complexity += min(special_chars / len(text), 0.5) if text else 0
-        
-        # Complejidad por scripts mixtos
+
+        # Complexity by mixed scripts
         script_analysis = self._analyze_script(text)
         if script_analysis['mixed_scripts']:
             complexity += 0.3
@@ -273,13 +273,13 @@ class AdvancedLanguageDetector:
         return min(complexity, 2.0)  # Cap at 2.0
 
 class CodeSwitchingDetector:
-    """Detector de cambio de código (code-switching) en texto multilingüe."""
+    """Detector of code-switching in multilingual text."""
     
     def __init__(self):
-        self.window_size = 10  # Palabras a analizar por ventana
+        self.window_size = 10  # Words to analyze per window
         
     def detect(self, text: str) -> Dict[str, Any]:
-        """Detecta cambio de código en el texto."""
+        """Detects code-switching in the text."""
         words = text.split()
         if len(words) < 2:
             return {
@@ -289,7 +289,7 @@ class CodeSwitchingDetector:
                 'confidence': 0.0
             }
         
-        # Analizar ventanas deslizantes
+        # Analyze sliding windows
         languages_detected = set()
         switch_points = []
         
@@ -299,7 +299,7 @@ class CodeSwitchingDetector:
             window = ' '.join(words[i:i + self.window_size])
             result = detector._detect_basic_language(window)
             
-            if result['confidence'] > 0.3:  # Umbral mínimo de confianza
+            if result['confidence'] > 0.3:  # Minimum confidence threshold
                 languages_detected.add(result['language'])
                 
                 if len(languages_detected) > 1:
@@ -320,7 +320,7 @@ class CulturalAdaptationEngine:
         self.adaptation_strategies = self._initialize_adaptation_strategies()
     
     def _initialize_cultural_mappings(self) -> Dict[str, Dict[str, Any]]:
-        """Initializes mapeos culturales."""
+        """Initializes cultural mappings."""
         return {
             'privacy_concepts': {
                 'western_individualistic': {'weight': 1.0, 'emphasis': 'individual_rights'},
@@ -367,8 +367,8 @@ class CulturalAdaptationEngine:
         """Adapts content between cultural contexts."""
         
         adaptations = {}
-        
-        # Aplicar strategys de adaptación
+
+        # Apply adaptation strategies
         for strategy_name, strategy_func in self.adaptation_strategies.items():
             try:
                 adaptation = strategy_func(content, source_culture, target_culture)
@@ -376,8 +376,8 @@ class CulturalAdaptationEngine:
             except Exception as e:
                 logger.warning(f"Cultural adaptation strategy {strategy_name} failed: {e}")
                 adaptations[strategy_name] = {'adapted_content': content, 'changes': []}
-        
-        # Combinar adaptaciones
+
+        # Combine adaptations
         final_content = content
         all_changes = []
         
@@ -398,15 +398,15 @@ class CulturalAdaptationEngine:
         }
     
     def _adjust_formality(self, content: str, source: CulturalContext, target: CulturalContext) -> Dict[str, Any]:
-        """Ajusta el nivel de formalidad."""
+        """Adjusts the formality level."""
         source_formality = self.cultural_mappings['communication_styles'].get(source.value, {}).get('formality', 0.5)
         target_formality = self.cultural_mappings['communication_styles'].get(target.value, {}).get('formality', 0.5)
         
         changes = []
         adapted_content = content
         
-        if target_formality > source_formality + 0.2:  # Aumentar formalidad
-            # Reemplazos para aumentar formalidad
+        if target_formality > source_formality + 0.2:  # Increase formality
+            # Replacements to increase formality
             formal_replacements = {
                 'hi': 'hello',
                 'thanks': 'thank you',
@@ -421,8 +421,8 @@ class CulturalAdaptationEngine:
                     adapted_content = adapted_content.replace(informal, formal)
                     changes.append(f"Increased formality: '{informal}' → '{formal}'")
         
-        elif source_formality > target_formality + 0.2:  # Reducir formalidad
-            # Reemplazos para reducir formalidad
+        elif source_formality > target_formality + 0.2:  # Reduce formality
+            # Replacements to reduce formality
             informal_replacements = {
                 'greetings': 'hi',
                 'thank you very much': 'thanks',
@@ -448,8 +448,8 @@ class CulturalAdaptationEngine:
         
         source_time = self.cultural_mappings['time_concepts'].get(source.value, {})
         target_time = self.cultural_mappings['time_concepts'].get(target.value, {})
-        
-        # Adaptaciones básicas de tiempo
+
+        # Basic time adaptations
         if target_time.get('structure') == 'event_based' and 'at 3 PM' in content:
             adapted_content = adapted_content.replace('at 3 PM', 'after lunch')
             changes.append("Adapted time reference to event-based: '3 PM' → 'after lunch'")
@@ -471,8 +471,8 @@ class CulturalAdaptationEngine:
         source_directness = self.cultural_mappings['communication_styles'].get(source.value, {}).get('directness', 0.5)
         target_directness = self.cultural_mappings['communication_styles'].get(target.value, {}).get('directness', 0.5)
         
-        if target_directness < source_directness - 0.2:  # Reducir directness
-            # Hacer el lenguaje más indirecto
+        if target_directness < source_directness - 0.2:  # Reduce directness
+            # Make the language more indirect
             indirect_replacements = {
                 'you should': 'you might want to consider',
                 'you must': 'it would be advisable to',
@@ -491,7 +491,7 @@ class CulturalAdaptationEngine:
         }
     
     def _contextualize_privacy(self, content: str, source: CulturalContext, target: CulturalContext) -> Dict[str, Any]:
-        """Contextualiza conceptos de privacidad según la cultura."""
+        """Contextualizes privacy concepts according to culture."""
         changes = []
         adapted_content = content
         
@@ -515,8 +515,8 @@ class CulturalAdaptationEngine:
 )
 class LanguageProcessingAdapter(BaseAdapter):
     """
-    Adapter avanzado para procesamiento de lenguaje que extiende
-    las capacidades del SapirWhorfAdapter existente.
+    Advanced adapter for language processing that extends
+    the capabilities of the existing SapirWhorfAdapter.
     """
     
     def __init__(self, config: Optional[AdapterConfig] = None):
@@ -529,7 +529,7 @@ class LanguageProcessingAdapter(BaseAdapter):
     def _initialize_impl(self) -> bool:
         """Initializes language processing adapter."""
         try:
-            # Intentar importar y usar el SapirWhorfAdapter existente
+            # Try to import and use the existing SapirWhorfAdapter
             try:
                 from capibara.sub_models.semiotic.sapir_whorf_adapter import SapirWhorfAdapter
                 self.sapir_whorf_adapter = SapirWhorfAdapter()
@@ -569,8 +569,8 @@ class LanguageProcessingAdapter(BaseAdapter):
     def _execute_language_detection(self, text: str, **kwargs) -> Dict[str, Any]:
         """Executes advanced language detection."""
         detection_result = self.language_detector.detect_language_advanced(text)
-        
-        # Enriquecer con información de perfiles
+
+        # Enrich with profile information
         primary_lang = detection_result['primary_language']
         if primary_lang in self.language_profiles:
             profile = self.language_profiles[primary_lang]
@@ -612,27 +612,27 @@ class LanguageProcessingAdapter(BaseAdapter):
                                        context: Optional[MultilingualContext],
                                        **kwargs) -> Dict[str, Any]:
         """Executes complete multilingual processing."""
-        
-        # Detección of languages
+
+        # Language detection
         detection = self.language_detector.detect_language_advanced(text)
-        
-        # Análisis de code-switching si es multilingüe
+
+        # Code-switching analysis if multilingual
         code_switching = None
         if detection['is_multilingual']:
             code_switching = self.language_detector.code_switching_detector.detect(text)
-        
-        # Adaptación cultural si se especifica contexto
+
+        # Cultural adaptation if context is specified
         cultural_adaptation = None
         if context and context.cultural_adaptation_level > 0.3:
-            # Determinar culturas basadas en idiomas
+            # Determine cultures based on languages
             primary_culture = self._map_language_to_culture(detection['primary_language'])
             if context.secondary_languages:
                 secondary_culture = self._map_language_to_culture(context.secondary_languages[0])
                 cultural_adaptation = self.cultural_engine.adapt_content(
                     text, primary_culture, secondary_culture
                 )
-        
-        # Procesamiento con SapirWhorf si está disponible
+
+        # SapirWhorf processing if available
         sapir_whorf_result = None
         if self.sapir_whorf_adapter:
             try:
@@ -653,7 +653,7 @@ class LanguageProcessingAdapter(BaseAdapter):
         """Executes code-switching specific detection."""
         result = self.language_detector.code_switching_detector.detect(text)
         
-        # Enriquecer con análisis adicional
+        # Enrich with additional analysis
         if result['detected']:
             result['analysis'] = {
                 'switch_frequency': len(result['switch_points']) / len(text.split()) if text.split() else 0,
@@ -669,10 +669,10 @@ class LanguageProcessingAdapter(BaseAdapter):
             return {"error": "SapirWhorf adapter not available"}
         
         try:
-            # Usar el adapter existente
+            # Use the existing adapter
             result = self.sapir_whorf_adapter(text, **kwargs)
             
-            # Enriquecer con análisis adicional
+            # Enrich with additional analysis
             if isinstance(result, dict):
                 result['enhanced_analysis'] = {
                     'linguistic_relativity_score': self._calculate_relativity_score(text),
@@ -710,7 +710,7 @@ class LanguageProcessingAdapter(BaseAdapter):
         }
     
     def _initialize_language_profiles(self) -> Dict[str, LanguageProfile]:
-        """Initializes perfiles extendidos of languages."""
+        """Initializes extended language profiles."""
         profiles = {
             'en': LanguageProfile(
                 language_code='en',
@@ -809,19 +809,19 @@ class LanguageProcessingAdapter(BaseAdapter):
     def _get_processing_recommendations(self, detection_result: Dict[str, Any]) -> List[str]:
         """Generates processing recommendations based on detection."""
         recommendations = []
-        
-        # Recomendaciones basadas en complejidad
+
+        # Recommendations based on complexity
         complexity = detection_result.get('complexity_score', 1.0)
         if complexity > 1.5:
             recommendations.append("Use advanced tokenization for complex linguistic structure")
             recommendations.append("Enable morphological analysis")
-        
-        # Recomendaciones basadas en multilingualismo
+
+        # Recommendations based on multilingualism
         if detection_result.get('is_multilingual', False):
             recommendations.append("Enable code-switching detection")
             recommendations.append("Use multilingual embedding models")
-        
-        # Recomendaciones basadas en script
+
+        # Recommendations based on script
         script_analysis = detection_result.get('script_analysis', {})
         if script_analysis.get('direction') == 'rtl':
             recommendations.append("Configure right-to-left text processing")
@@ -835,11 +835,11 @@ class LanguageProcessingAdapter(BaseAdapter):
                                            context: Optional[MultilingualContext]) -> List[str]:
         """Generates complete processing recommendations."""
         recommendations = []
-        
-        # Recomendaciones básicas de detección
+
+        # Basic detection recommendations
         recommendations.extend(self._get_processing_recommendations(detection))
-        
-        # Recomendaciones basadas en contexto
+
+        # Recommendations based on context
         if context:
             if context.processing_mode == ProcessingMode.CODE_SWITCHING:
                 recommendations.append("Optimize for code-switching scenarios")
@@ -850,8 +850,8 @@ class LanguageProcessingAdapter(BaseAdapter):
                 recommendations.append("Apply high-level cultural adaptations")
             elif context.cultural_adaptation_level > 0.3:
                 recommendations.append("Apply moderate cultural adaptations")
-        
-        # Recomendaciones basadas en recursos disponibles
+
+        # Recommendations based on available resources
         primary_lang = detection.get('primary_language', 'en')
         if primary_lang in self.language_profiles:
             profile = self.language_profiles[primary_lang]
@@ -859,15 +859,15 @@ class LanguageProcessingAdapter(BaseAdapter):
                 recommendations.append("Utilize syntactic parsing for better understanding")
             if 'morphological_analyzer' in profile.available_resources:
                 recommendations.append("Apply morphological analysis")
-        
-        return list(set(recommendations))  # Eliminar duplicados
+
+        return list(set(recommendations))  # Remove duplicates
     
     def _map_language_to_culture(self, language_code: str) -> CulturalContext:
-        """Mapea código of language a contexto cultural."""
+        """Maps language code to cultural context."""
         if language_code in self.language_profiles:
             return self.language_profiles[language_code].cultural_context
-        
-        # Mapeo por defecto
+
+        # Default mapping
         cultural_mapping = {
             'en': CulturalContext.WESTERN_INDIVIDUALISTIC,
             'es': CulturalContext.LATIN_HIERARCHICAL,
@@ -892,26 +892,26 @@ class LanguageProcessingAdapter(BaseAdapter):
         text_lower = text.lower()
         score = sum(1 for indicator in complexity_indicators if indicator in text_lower)
         
-        return min(score / 10.0, 1.0)  # Normalizar a 1.0
+        return min(score / 10.0, 1.0)  # Normalize to 1.0
     
     def _estimate_cognitive_load(self, text: str) -> float:
-        """Estima la carga cognitiva del texto."""
+        """Estimates the cognitive load of the text."""
         words = text.split()
         if not words:
             return 0.0
-        
-        # Factores de carga cognitiva
+
+        # Cognitive load factors
         avg_word_length = sum(len(word) for word in words) / len(words)
         sentence_count = text.count('.') + text.count('!') + text.count('?')
         avg_sentence_length = len(words) / max(sentence_count, 1)
-        
-        # Combinar factores
+
+        # Combine factors
         load = (avg_word_length / 10.0) + (avg_sentence_length / 20.0)
         
         return min(load, 2.0)
     
     def _identify_cultural_markers(self, text: str) -> List[str]:
-        """Identifica marcadores culturales en el texto."""
+        """Identifies cultural markers in the text."""
         markers = []
         
         cultural_indicators = {
@@ -930,9 +930,9 @@ class LanguageProcessingAdapter(BaseAdapter):
                     markers.append(f"{category}: {indicator}")
         
         return markers
-    
-    # Métodos de conveniencia
-    
+
+    # Convenience methods
+
     def detect_language(self, text: str) -> Dict[str, Any]:
         """Convenience method for language detection."""
         return self.execute("detect", text=text)
@@ -959,7 +959,7 @@ class LanguageProcessingAdapter(BaseAdapter):
 # Global adapter instance
 language_adapter = LanguageProcessingAdapter()
 
-# Funciones de utilidad globales
+# Global utility functions
 def detect_language_advanced(text: str) -> Dict[str, Any]:
     """Global function for advanced language detection."""
     return language_adapter.detect_language(text)

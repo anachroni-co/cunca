@@ -144,26 +144,26 @@ class EnhancedCSAGenerator:
         """Load domain-specific hypothesis patterns."""
         return {
             CSATaskType.DIAGNOSIS: [
-                "si el componente crítico {0} falla de manera intermitente",
-                "si la configuración del system {0} está desactualizada",
-                "si el entorno operativo varía en un rango del ±{1}%",
-                "si los datos del sensor {0} están sesgados",
-                "si la dependencia externa {0} no responde a tiempo",
-                "si las condiciones ambientales {0} están fuera del rango normal"
+                "if the critical component {0} fails intermittently",
+                "if the system configuration {0} is outdated",
+                "if the operating environment varies in a range of ±{1}%",
+                "if the sensor data {0} is biased",
+                "if the external dependency {0} does not respond in time",
+                "if the environmental conditions {0} are outside the normal range"
             ],
             CSATaskType.PLANNING: [
-                "si los recursos disponibles {0} se reducen en un {1}%",
-                "si el cronograma del proyecto {0} se extiende {1} semanas",
-                "si los requisitos del cliente {0} cambian significativamente",
-                "si surgen dependencias imprevistas con {0}",
-                "si el presupuesto {0} se ve afectado por inflación del {1}%"
+                "if the available resources {0} are reduced by {1}%",
+                "if the project schedule {0} is extended by {1} weeks",
+                "if the client requirements {0} change significantly",
+                "if unforeseen dependencies arise with {0}",
+                "if the budget {0} is affected by {1}% inflation"
             ],
             CSATaskType.TROUBLESHOOTING: [
-                "si el problema se origina en la capa {0} del system",
-                "si existe una condición de carrera en {0}",
-                "si los permisos de {0} están mal configurados",
-                "si hay un cuello de botella en {0}",
-                "si la versión de {0} es incompatible"
+                "if the problem originates in the {0} layer of the system",
+                "if there is a race condition in {0}",
+                "if the permissions for {0} are misconfigured",
+                "if there is a bottleneck in {0}",
+                "if the version of {0} is incompatible"
             ]
         }
     
@@ -183,13 +183,13 @@ class EnhancedCSAGenerator:
                     str(10 + i * 5)  # Variable percentage
                 )
             else:
-                filled_pattern = pattern.format("sistema", str(15))
+                filled_pattern = pattern.format("system", str(15))
             
             hypothesis = Hypothesis(
-                premise=f"Contexto base: {context.text[:200]}...",
+                premise=f"Base context: {context.text[:200]}...",
                 delta=filled_pattern,
                 prior_score=0.5 + (i * 0.05),  # Slight variation
-                rationale=f"Análisis contrafactual based en patrón {task_type.value}",
+                rationale=f"Counterfactual analysis based on pattern {task_type.value}",
                 task_type=task_type,
                 confidence=0.6 + (i * 0.02),
                 metadata={
@@ -269,40 +269,40 @@ class EnhancedWorldModel:
     
     def _apply_diagnosis_delta(self, state: Dict[str, float], delta: str):
         """Apply diagnosis-specific deltas."""
-        if "intermitente" in delta:
+        if "intermittent" in delta:
             state["risk"] += 0.3
             state["stability"] -= 0.2
-        if "configuración" in delta or "configuracion" in delta:
+        if "configuration" in delta:
             state["risk"] += 0.2
             state["cost"] += 0.15
         if "sensor" in delta:
             state["confidence"] -= 0.3
             state["risk"] += 0.1
-        if "dependencia" in delta:
+        if "dependency" in delta:
             state["time"] += 0.4
             state["risk"] += 0.2
     
     def _apply_planning_delta(self, state: Dict[str, float], delta: str):
         """Apply planning-specific deltas."""
-        if "recursos" in delta:
+        if "resources" in delta:
             state["cost"] += 0.3
             state["time"] += 0.2
-        if "cronograma" in delta:
+        if "schedule" in delta:
             state["time"] += 0.5
             state["risk"] += 0.1
-        if "presupuesto" in delta:
+        if "budget" in delta:
             state["cost"] += 0.4
             state["risk"] += 0.15
     
     def _apply_troubleshooting_delta(self, state: Dict[str, float], delta: str):
         """Apply troubleshooting-specific deltas."""
-        if "capa" in delta or "layer" in delta:
+        if "layer" in delta:
             state["complexity"] += 0.3
             state["time"] += 0.2
-        if "carrera" in delta or "race" in delta:
+        if "race" in delta:
             state["risk"] += 0.4
             state["stability"] -= 0.3
-        if "cuello" in delta or "bottleneck" in delta:
+        if "bottleneck" in delta:
             state["time"] += 0.6
             state["risk"] += 0.1
     
@@ -338,25 +338,25 @@ class EnhancedWorldModel:
     def _generate_consequences(self, state: Dict[str, float], hypothesis: Hypothesis) -> str:
         """Generates human-readable consequences."""
         consequences = []
-        
+
         if state["risk"] > 0.7:
-            consequences.append("Alto riesgo detectado")
+            consequences.append("High risk detected")
         if state["cost"] > 1.3:
-            consequences.append("Sobrecosto significativo")
+            consequences.append("Significant cost overrun")
         if state["time"] > 1.5:
-            consequences.append("Retrasos considerables")
+            consequences.append("Considerable delays")
         if state["confidence"] < 0.4:
-            consequences.append("Baja confianza en resultados")
-            
+            consequences.append("Low confidence in results")
+
         if not consequences:
-            consequences.append("Impacto moderado en el system")
-        
-        risk_str = f"riesgo={state['risk']:.2f}"
-        cost_str = f"coste={state['cost']:.2f}"
-        time_str = f"tiempo={state['time']:.2f}"
-        conf_str = f"confianza={state['confidence']:.2f}"
-        
-        return f"Bajo '{hypothesis.delta}': {', '.join(consequences)}. Métricas: {risk_str}, {cost_str}, {time_str}, {conf_str}"
+            consequences.append("Moderate impact on the system")
+
+        risk_str = f"risk={state['risk']:.2f}"
+        cost_str = f"cost={state['cost']:.2f}"
+        time_str = f"time={state['time']:.2f}"
+        conf_str = f"confidence={state['confidence']:.2f}"
+
+        return f"Under '{hypothesis.delta}': {', '.join(consequences)}. Metrics: {risk_str}, {cost_str}, {time_str}, {conf_str}"
 
 class EnhancedCSAScorer:
     """Enhanced scoring with multiple evaluation criteria."""
@@ -541,17 +541,17 @@ class CSAExpert(ICounterfactualExpert):
         
         # Keyword-based detection
         counterfactual_keywords = {
-            "si", "if", "qué pasaría", "what if", "alternatively", 
+            "if", "what if", "alternatively",
             "scenario", "hypothesis", "assume", "suppose"
         }
-        
+
         text_lower = context.text.lower()
         if any(keyword in text_lower for keyword in counterfactual_keywords):
             return True
-        
+
         # Complexity-based activation (for complex problems)
-        if len(context.text) > 200 and any(word in text_lower for word in 
-                                          ["problema", "error", "falla", "problem", "issue", "failure"]):
+        if len(context.text) > 200 and any(word in text_lower for word in
+                                          ["problem", "error", "failure", "issue"]):
             return True
         
         return False
@@ -801,9 +801,9 @@ def main():
     """Main function for testing CSA Expert."""
     # Simple test
     expert = CSAExpert()
-    
+
     context = ExpertContext(
-        text="El system de producción se detiene 3 veces al día. Los sensores muestran valores normales pero el consumo energético aumentó 15%. La temperatura ambiente es de 35°C.",
+        text="The production system stops 3 times a day. The sensors show normal values but energy consumption increased by 15%. The ambient temperature is 35°C.",
         task_hint="diagnosis",
         constraints={"budget": 1.0, "time": 1.0, "risk_tolerance": 0.5},
         flags={"ask_counterfactual": True}

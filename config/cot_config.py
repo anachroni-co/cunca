@@ -1,8 +1,8 @@
 """
-setup avanzada for el module Chain-of-Thought.
+Advanced configuration for the Chain-of-Thought module.
 
-This module defines las configuraciones específicas for el module CoT,
-incluyendo optimizaciones de memory, paralelismo and gestión de recursos.
+This module defines the specific configurations for the CoT module,
+including memory optimizations, parallelism, and resource management.
 """
 
 import logging
@@ -15,15 +15,15 @@ from .memory_config import MemoryOptimizationConfig
 from .unified_model_config import ModularModelConfig
 
 class ThoughtProcessingStrategy(Enum):
-    """Estrategias de procesamiento de pensamientos."""
-    SEQUENTIAL = "sequential"  # Procesamiento secuencial tradicional
-    PARALLEL = "parallel"      # Procesamiento paralelo de pensamientos
-    HIERARCHICAL = "hierarchical"  # Procesamiento jerárquico with dependencias
-    ADAPTIVE = "adaptive"      # Adaptativo based en complejidad
+    """Thought processing strategies."""
+    SEQUENTIAL = "sequential"  # Traditional sequential processing
+    PARALLEL = "parallel"      # Parallel thought processing
+    HIERARCHICAL = "hierarchical"  # Hierarchical processing with dependencies
+    ADAPTIVE = "adaptive"      # Adaptive based on complexity
 
 @dataclass
 class CoreConfig:
-    """setup for núcleos de conocimiento."""
+    """Configuration for knowledge cores."""
     enabled: bool = True
     temperature: float = 0.7
     max_tokens: int = 150
@@ -36,7 +36,7 @@ class CoreConfig:
 
 @dataclass
 class RoutingConfig:
-    """setup for el routing de conocimiento."""
+    """Configuration for knowledge routing."""
     strategy: str = "dynamic"  # dynamic, static, hybrid
     cache_size: int = 1000
     context_window: int = 512
@@ -49,7 +49,7 @@ class RoutingConfig:
 
 @dataclass
 class ProcessingConfig:
-    """setup for el procesamiento de pensamientos."""
+    """Configuration for thought processing."""
     strategy: ThoughtProcessingStrategy = ThoughtProcessingStrategy.ADAPTIVE
     max_steps: int = 8
     min_steps: int = 2
@@ -62,7 +62,7 @@ class ProcessingConfig:
 
 @dataclass
 class OptimizationConfig:
-    """setup for optimizaciones de rendimiento."""
+    """Configuration for performance optimizations."""
     use_gradient_checkpointing: bool = True
     checkpoint_every_n_steps: int = 2
     mixed_precision: bool = True
@@ -77,7 +77,7 @@ class OptimizationConfig:
 
 @dataclass
 class MonitoringConfig:
-    """setup for monitoreo and logging."""
+    """Configuration for monitoring and logging."""
     enable_memory_tracking: bool = True
     memory_log_interval: float = 60.0
     performance_metrics_interval: float = 300.0
@@ -91,45 +91,45 @@ class MonitoringConfig:
 class AdvancedCoTConfig:
     """Complete advanced setup for the CoT module."""
     
-    # setup base del model
+    # Base model configuration
     model_config: ModularModelConfig
-    
-    # setup de memory
+
+    # Memory configuration
     memory_config: MemoryOptimizationConfig
-    
-    # Configuraciones específicas
+
+    # Specific configurations
     core_config: CoreConfig = field(default_factory=CoreConfig)
     routing_config: RoutingConfig = field(default_factory=RoutingConfig)
     processing_config: ProcessingConfig = field(default_factory=ProcessingConfig)
     optimization_config: OptimizationConfig = field(default_factory=OptimizationConfig)
     monitoring_config: MonitoringConfig = field(default_factory=MonitoringConfig)
-    
-    # setup de paralelismo
+
+    # Parallelism configuration
     enable_model_parallel: bool = True
     model_parallel_size: int = 2
     pipeline_parallel_size: int = 2
     data_parallel_size: int = 2
-    
-    # setup de núcleos
+
+    # Cores configuration
     knowledge_core_configs: Dict[str, CoreConfig] = field(default_factory=dict)
     enable_dynamic_routing: bool = True
     enable_hierarchical_reasoning: bool = True
     enable_cross_core_communication: bool = True
-    
-    # Layers setup
+
+    # Layers configuration
     layer_configs: Dict[str, Any] = field(default_factory=dict)
     layer_selection_strategy: str = "dynamic"
     
     def __post_init__(self):
-        """initialization posterior a la creation."""
+        """Post-initialization after creation."""
         if not self.knowledge_core_configs:
             self.knowledge_core_configs = self._create_default_core_configs()
-        
+
         if not self.layer_configs:
             self.layer_configs = self._create_default_layer_configs()
-    
+
     def _create_default_core_configs(self) -> Dict[str, CoreConfig]:
-        """Crea configuraciones by defect for los núcleos."""
+        """Create default configurations for knowledge cores."""
         return {
             "logical": CoreConfig(
                 temperature=0.3,
@@ -150,12 +150,12 @@ class AdvancedCoTConfig:
                 temperature=0.9,
                 confidence_threshold=0.5,
                 priority=3,
-                use_quantization=False  # maintain precision for creatividad
+                use_quantization=False  # maintain precision for creativity
             )
         }
-    
+
     def _create_default_layer_configs(self) -> Dict[str, Any]:
-        """Crea configuraciones by defect for los layers."""
+        """Create default configurations for layers."""
         return {
             "attention": {
                 "num_heads": 8,
@@ -176,7 +176,7 @@ class AdvancedCoTConfig:
         }
     
     def optimize_for_device(self, device_type: str = "tpu"):
-        """Optimiza la setup for un type específico de dispositivo."""
+        """Optimize the configuration for a specific device type."""
         if device_type == "tpu":
             self.optimization_config.compute_dtype = "bfloat16"
             self.optimization_config.use_kernel_fusion = True
@@ -193,7 +193,7 @@ class AdvancedCoTConfig:
         return self
     
     def enable_debug_mode(self):
-        """Activa configuraciones for debugging."""
+        """Enable configurations for debugging."""
         self.monitoring_config.profiling_enabled = True
         self.monitoring_config.trace_enabled = True
         self.monitoring_config.log_thought_stats = True
@@ -201,7 +201,7 @@ class AdvancedCoTConfig:
         return self
     
     def enable_production_mode(self):
-        """Activa configuraciones optimizadas for producción."""
+        """Enable optimized configurations for production."""
         self.monitoring_config.profiling_enabled = False
         self.monitoring_config.trace_enabled = False
         self.optimization_config.use_kernel_fusion = True

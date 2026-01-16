@@ -1,9 +1,9 @@
 """
 Kernel Abstraction Adapter
 
-Proporciona una interfaz unificada para diferentes backends of kernels
-(TPU v4/v6, CPU, GPU, Neuromorphic, etc.) con selección automática
-y fallbacks robustos.
+Provides a unified interface for different kernel backends
+(TPU v4/v6, CPU, GPU, Neuromorphic, etc.) with automatic selection
+and robust fallbacks.
 """
 
 import logging
@@ -18,7 +18,7 @@ from .adapter_registry import register_adapter_decorator, AdapterType
 logger = logging.getLogger(__name__)
 
 class KernelBackend(Enum):
-    """Tipos de backend of kernels disponibles."""
+    """Available kernel backend types."""
     TPU_V4 = "tpu_v4"
     TPU_V6 = "tpu_v6"
     GPU_CUDA = "gpu_cuda"
@@ -28,7 +28,7 @@ class KernelBackend(Enum):
     PYTHON_FALLBACK = "python_fallback"
 
 class KernelOperation(Enum):
-    """Operaciones of kernel disponibles."""
+    """Available kernel operations."""
     FLASH_ATTENTION = "flash_attention"
     MATRIX_MULTIPLY = "matrix_multiply"
     CONVOLUTION = "convolution"
@@ -54,9 +54,9 @@ class KernelExecutionContext:
     enable_checkpointing: bool = False
     metadata: Dict[str, Any] = field(default_factory=dict)
 
-@dataclass 
+@dataclass
 class KernelCapabilities:
-    """Capacidades de un backend of kernel."""
+    """Capabilities of a kernel backend."""
     supported_operations: List[KernelOperation]
     max_memory_gb: float
     supports_bfloat16: bool = True
@@ -68,7 +68,7 @@ class KernelCapabilities:
     initialization_time_s: float = 0.0
 
 class KernelBackendInterface:
-    """Interfaz base para backends of kernels."""
+    """Base interface for kernel backends."""
     
     def __init__(self):
         self.capabilities = KernelCapabilities(supported_operations=[])
@@ -87,11 +87,11 @@ class KernelBackendInterface:
         return self.capabilities
     
     def is_available(self) -> bool:
-        """Verifies si el backend está disponible."""
+        """Verifies if the backend is available."""
         return self.initialized
 
 class TPUv4Backend(KernelBackendInterface):
-    """Backend para TPU v4."""
+    """Backend for TPU v4."""
     
     def __init__(self):
         super().__init__()
@@ -116,14 +116,14 @@ class TPUv4Backend(KernelBackendInterface):
     def initialize(self) -> bool:
         """Initializes TPU v4 backend."""
         try:
-            # Intentar importar y configurar TPU v4
+            # Try to import and configure TPU v4
             from capibara.core.kernels import TPUv4Kernels
             from capibara.jax.tpu_v4.backend import tpu_v4_ops
             
             self.tpu_kernels = TPUv4Kernels()
             self.tpu_ops = tpu_v4_ops
-            
-            # Verificar disponibilidad
+
+            # Verify availability
             if self.tpu_ops.initialize():
                 self.initialized = True
                 logger.info("TPU v4 backend initialized successfully")
@@ -167,7 +167,7 @@ class TPUv4Backend(KernelBackendInterface):
         return self.tpu_ops.vqbit_quantize(vectors, codebooks)
 
 class CythonBackend(KernelBackendInterface):
-    """Backend para kernels Cython optimizados."""
+    """Backend for optimized Cython kernels."""
     
     def __init__(self):
         super().__init__()
@@ -199,7 +199,7 @@ class CythonBackend(KernelBackendInterface):
                 return True
             else:
                 logger.info("Cython backend using Python fallbacks")
-                self.initialized = True  # Usar fallbacks de Python
+                self.initialized = True  # Use Python fallbacks
                 return True
                 
         except ImportError as e:
@@ -224,7 +224,7 @@ class CythonBackend(KernelBackendInterface):
             raise NotImplementedError(f"Operation {operation} not implemented for Cython")
 
 class NeuromorphicBackend(KernelBackendInterface):
-    """Backend para kernels neuromórficos."""
+    """Backend for neuromorphic kernels."""
     
     def __init__(self):
         super().__init__()
@@ -270,16 +270,16 @@ class NeuromorphicBackend(KernelBackendInterface):
     
     def _execute_neuromorphic_simulation(self, context: KernelExecutionContext, *args, **kwargs):
         """Executes neuromorphic simulation."""
-        # Implementación específica de simulación neuromórfica
+        # Specific implementation of neuromorphic simulation
         return {"simulation_result": "neuromorphic_output", "context": context}
 
 class PythonFallbackBackend(KernelBackendInterface):
-    """Backend de fallback usando Python puro."""
+    """Fallback backend using pure Python."""
     
     def __init__(self):
         super().__init__()
         self.capabilities = KernelCapabilities(
-            supported_operations=list(KernelOperation),  # Soporta todas las operaciones
+            supported_operations=list(KernelOperation),  # Supports all operations
             max_memory_gb=8.0,
             supports_bfloat16=False,
             supports_int8=False,
@@ -306,8 +306,8 @@ class PythonFallbackBackend(KernelBackendInterface):
         """Executes operation using pure Python."""
         if not self.initialized:
             raise RuntimeError("Python fallback backend not initialized")
-        
-        # Implementaciones básicas de fallback
+
+        # Basic fallback implementations
         if operation == KernelOperation.MATRIX_MULTIPLY:
             return self.np.dot(args[0], args[1])
         elif operation == KernelOperation.FLASH_ATTENTION:
@@ -318,7 +318,7 @@ class PythonFallbackBackend(KernelBackendInterface):
     
     def _fallback_attention(self, query, key, value, mask=None):
         """Basic implementation of attention."""
-        # Atención básica sin optimizaciones
+        # Basic attention without optimizations
         scores = self.np.dot(query, key.transpose())
         if mask is not None:
             scores = self.np.where(mask, scores, -1e9)
@@ -327,7 +327,7 @@ class PythonFallbackBackend(KernelBackendInterface):
         return self.np.dot(attn_weights, value)
     
     def _softmax(self, x):
-        """Softmax básico."""
+        """Basic softmax."""
         exp_x = self.np.exp(x - self.np.max(x, axis=-1, keepdims=True))
         return exp_x / self.np.sum(exp_x, axis=-1, keepdims=True)
 
@@ -339,10 +339,10 @@ class PythonFallbackBackend(KernelBackendInterface):
 )
 class KernelAbstractionAdapter(BaseAdapter):
     """
-    Adapter principal para abstracción of kernels.
-    
-    Proporciona una interfaz unificada para diferentes backends of kernels
-    con selección automática basada en disponibilidad y rendimiento.
+    Main adapter for kernel abstraction.
+
+    Provides a unified interface for different kernel backends
+    with automatic selection based on availability and performance.
     """
     
     def __init__(self, config: Optional[AdapterConfig] = None):
@@ -359,10 +359,10 @@ class KernelAbstractionAdapter(BaseAdapter):
         self.operation_backend_cache: Dict[KernelOperation, KernelBackend] = {}
         
     def _initialize_impl(self) -> bool:
-        """Initializes todos los backends disponibles."""
+        """Initializes all available backends."""
         self.logger.info("Initializing kernel backends...")
-        
-        # Inicializar backends en orden de prioridad
+
+        # Initialize backends in priority order
         backend_classes = {
             KernelBackend.TPU_V4: TPUv4Backend,
             KernelBackend.CYTHON: CythonBackend,
@@ -395,8 +395,8 @@ class KernelAbstractionAdapter(BaseAdapter):
         """Executes a kernel operation using the best available backend."""
         if context is None:
             context = KernelExecutionContext(operation=operation)
-        
-        # Buscar en cache el mejor backend para esta operación
+
+        # Look up the best backend for this operation in cache
         if operation in self.operation_backend_cache:
             cached_backend = self.operation_backend_cache[operation]
             if cached_backend in self.backends:
@@ -404,10 +404,10 @@ class KernelAbstractionAdapter(BaseAdapter):
                     return self.backends[cached_backend].execute(operation, context, *args, **kwargs)
                 except Exception as e:
                     self.logger.warning(f"Cached backend {cached_backend.value} failed: {e}")
-                    # Eliminar del cache y continuar con selección automática
+                    # Remove from cache and continue with automatic selection
                     del self.operation_backend_cache[operation]
-        
-        # Seleccionar el mejor backend disponible
+
+        # Select the best available backend
         selected_backend = self._select_best_backend(operation, context)
         
         if selected_backend is None:
@@ -416,7 +416,7 @@ class KernelAbstractionAdapter(BaseAdapter):
         try:
             result = self.backends[selected_backend].execute(operation, context, *args, **kwargs)
             
-            # Cachear el backend exitoso para futuras operaciones
+            # Cache the successful backend for future operations
             self.operation_backend_cache[operation] = selected_backend
             
             return result
@@ -428,8 +428,8 @@ class KernelAbstractionAdapter(BaseAdapter):
     def _select_best_backend(self, operation: KernelOperation, context: KernelExecutionContext) -> Optional[KernelBackend]:
         """Selects the best backend for a specific operation."""
         candidates = []
-        
-        # Filtrar backends que soportan la operación
+
+        # Filter backends that support the operation
         for backend_type, backend in self.backends.items():
             capabilities = backend.get_capabilities()
             if operation in capabilities.supported_operations:
@@ -438,8 +438,8 @@ class KernelAbstractionAdapter(BaseAdapter):
         if not candidates:
             self.logger.warning(f"No backend supports operation {operation.value}")
             return None
-        
-        # Scoring based en múltiples factores
+
+        # Scoring based on multiple factors
         best_backend = None
         best_score = -1
         
@@ -461,34 +461,34 @@ class KernelAbstractionAdapter(BaseAdapter):
                                context: KernelExecutionContext) -> float:
         """Calculates backend score for the given context."""
         score = 0.0
-        
-        # Factor de prioridad base
+
+        # Base priority factor
         priority_index = self.backend_priority.index(backend_type) if backend_type in self.backend_priority else len(self.backend_priority)
         priority_score = (len(self.backend_priority) - priority_index) / len(self.backend_priority)
         score += priority_score * 30
         
-        # Factor de throughput
+        # Throughput factor
         throughput_score = min(capabilities.estimated_throughput_tflops / 100.0, 1.0)
         score += throughput_score * 25
         
         # Latency factor (inverse)
         latency_score = max(0, 1.0 - (capabilities.average_latency_ms / 100.0))
         score += latency_score * 20
-        
-        # Factor de memoria disponible
+
+        # Available memory factor
         if context.memory_constraints:
             memory_ratio = min(capabilities.max_memory_gb / (context.memory_constraints / 1024), 1.0)
             score += memory_ratio * 15
         else:
-            score += 15  # Sin restricciones de memoria
-        
-        # Factor de precisión soportada
+            score += 15  # No memory constraints
+
+        # Supported precision factor
         if context.dtype == "bfloat16" and capabilities.supports_bfloat16:
             score += 5
         elif context.dtype == "int8" and capabilities.supports_int8:
             score += 5
-        
-        # Penalización por tiempo de inicialización alto
+
+        # Penalty for high initialization time
         init_penalty = min(capabilities.initialization_time_s / 10.0, 1.0)
         score -= init_penalty * 5
         
@@ -527,7 +527,7 @@ class KernelAbstractionAdapter(BaseAdapter):
             ))
         }
     
-    # Métodos de conveniencia for operations comunes
+    # Convenience methods for common operations
     
     def flash_attention(self, query, key, value, mask=None, context: Optional[KernelExecutionContext] = None):
         """Executes flash attention."""
@@ -557,7 +557,7 @@ class KernelAbstractionAdapter(BaseAdapter):
 # Global adapter instance
 kernel_adapter = KernelAbstractionAdapter()
 
-# Funciones de conveniencia globales
+# Global convenience functions
 def execute_kernel_operation(operation: KernelOperation, context: Optional[KernelExecutionContext] = None, *args, **kwargs):
     """Global function to execute kernel operations."""
     return kernel_adapter.execute(operation, context, *args, **kwargs)

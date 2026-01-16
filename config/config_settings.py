@@ -87,63 +87,63 @@ class Settings(BaseModel):
     @validator("security")
     def validate_security(cls, v):
         if len(v.api_key) < 32:
-            raise ValueError("API key debe tener al menos 32 caracteres")
+            raise ValueError("API key must have at least 32 characters")
         return v
 
     @validator("database")
     def validate_database(cls, v):
         if not v.password:
-            raise ValueError("Se requiere contraseña de base de datos")
+            raise ValueError("Database password is required")
         return v
 
 def load_yaml_config(config_path: Optional[str] = None) -> Dict[str, Any]:
     """
-    load la setup since un file YAML.
-    
+    Load the configuration from a YAML file.
+
     Args:
-        config_path: path al file de setup YAML
-        
+        config_path: Path to the YAML configuration file
+
     Returns:
-        Diccionario with la setup
+        Dictionary with the configuration
     """
     if config_path is None:
         config_path = os.getenv("CONFIG_PATH", "config/config.yaml")
     
     config_file = Path(config_path)
     if not config_file.exists():
-        raise FileNotFoundError(f"Archivo de configuración no encontrado: {config_path}")
+        raise FileNotFoundError(f"Configuration file not found: {config_path}")
     
     with open(config_file) as f:
         return yaml.safe_load(f)
 
 def get_settings(config_path: Optional[str] = None) -> Settings:
     """
-    load and valida la setup del system.
-    
+    Load and validate the system configuration.
+
     Args:
-        config_path: path al file de setup YAML
-        
+        config_path: Path to the YAML configuration file
+
     Returns:
-        object Settings with la setup validada
+        Settings object with the validated configuration
     """
     config_data = load_yaml_config(config_path)
     return Settings(**config_data)
 
-# instance global de setup
-settings = get_settings() 
+# Global settings instance
+settings = get_settings()
 
-# Contenido de paths.py
+# paths.py content
 """
-setup de rutas for el proyecto Capibara.
+Path configuration for the Capibara project.
 """
 
 def get_project_root() -> Path:
-    
-    # Primero intenta obtain la path since la variable de entorno
+    """Get the project root path."""
+    # First try to get the path from environment variable
     if 'CAPIBARA_ROOT' in os.environ:
         return Path(os.environ['CAPIBARA_ROOT'])
-    
-    # if not está definida, usa la path relativa al module current
+
+    # If not defined, use the path relative to current module
     return Path(__file__).parent.parent
 
 # Define important project paths
@@ -154,19 +154,19 @@ MODELS_DIR = PROJECT_ROOT / 'models'
 LOGS_DIR = PROJECT_ROOT / 'logs'
 CACHE_DIR = PROJECT_ROOT / 'cache'
 
-# create directorios if not existen
+# Create directories if they don't exist
 for directory in [CONFIG_DIR, DATA_DIR, MODELS_DIR, LOGS_DIR, CACHE_DIR]:
     directory.mkdir(parents=True, exist_ok=True)
 
-# configure rutas for diferentes entornos
+# Configure paths for different environments
 def get_model_path(model_name: str) -> Path:
-    """Gets la path for un model específico."""
+    """Get the path for a specific model."""
     return MODELS_DIR / model_name
 
 def get_data_path(data_name: str) -> Path:
-    """Gets la path for un conjunto de data específico."""
+    """Get the path for a specific data set."""
     return DATA_DIR / data_name
 
 def get_config_path(config_name: str) -> Path:
-    """Gets la path for un file de setup específico."""
+    """Get the path for a specific configuration file."""
     return CONFIG_DIR / config_name 

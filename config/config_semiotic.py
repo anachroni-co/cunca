@@ -1,5 +1,5 @@
 """
-Compatibilidad: stub para SemioticConfig si algún import lo requiere.
+Compatibility: stub for SemioticConfig if any import requires it.
 """
 from dataclasses import dataclass
 

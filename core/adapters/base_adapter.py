@@ -79,10 +79,10 @@ class BaseAdapter(ABC):
     
     def initialize(self) -> bool:
         """
-        Inicializa el adapter. Debe ser llamado antes del primer uso.
-        
+        Initialize the adapter. Must be called before first use.
+
         Returns:
-            True si la inicialización fue exitosa
+            True if initialization was successful
         """
         if self.status == AdapterStatus.READY:
             return True
@@ -93,7 +93,7 @@ class BaseAdapter(ABC):
         try:
             self.logger.info(f"Initializing adapter {self.config.name}")
             
-            # Call specific initialization del adapter
+            # Call adapter-specific initialization
             success = self._initialize_impl()
             
             if success:
@@ -113,10 +113,10 @@ class BaseAdapter(ABC):
     
     def execute(self, *args, **kwargs) -> Any:
         """
-        Ejecuta la operación principal del adapter con manejo de errores y métricas.
-        
+        Execute the adapter's main operation with error handling and metrics.
+
         Returns:
-            Resultado de la ejecución
+            Execution result
         """
         if not self.config.enabled:
             raise RuntimeError(f"Adapter {self.config.name} is disabled")
@@ -125,7 +125,7 @@ class BaseAdapter(ABC):
             if not self.initialize():
                 raise RuntimeError(f"Adapter {self.config.name} is not ready")
         
-        # Intentar obtener resultado del cache
+        # Try to get result from cache
         if self.config.enable_caching:
             cache_key = self._generate_cache_key(*args, **kwargs)
             if cache_key in self._cache:
@@ -135,21 +135,21 @@ class BaseAdapter(ABC):
             else:
                 self.metrics.cache_misses += 1
         
-        # Ejecutar con reintentos
+        # Execute with retries
         last_exception = None
         for attempt in range(self.config.max_retries + 1):
             try:
                 start_time = time.time()
                 self.status = AdapterStatus.BUSY
                 
-                # Ejecutar implementación específica
+                # Execute specific implementation
                 result = self._execute_impl(*args, **kwargs)
                 
-                # Actualizar métricas de éxito
+                # Update success metrics
                 execution_time = (time.time() - start_time) * 1000
                 self._update_success_metrics(execution_time)
                 
-                # Guardar en cache si está habilitado
+                # Save to cache if enabled
                 if self.config.enable_caching and cache_key:
                     self._update_cache(cache_key, result)
                 
@@ -163,7 +163,7 @@ class BaseAdapter(ABC):
                 
                 if attempt < self.config.max_retries:
                     self.logger.warning(f"Attempt {attempt + 1} failed for {self.config.name}: {e}. Retrying...")
-                    time.sleep(0.1 * (attempt + 1))  # Backoff exponencial
+                    time.sleep(0.1 * (attempt + 1))  # Exponential backoff
                 else:
                     self.logger.error(f"All {self.config.max_retries + 1} attempts failed for {self.config.name}")
         
@@ -171,38 +171,38 @@ class BaseAdapter(ABC):
         raise RuntimeError(f"Adapter {self.config.name} failed after {self.config.max_retries + 1} attempts") from last_exception
     
     def get_metrics(self) -> AdapterMetrics:
-        """Gets las métricas actuales del adapter."""
+        """Get the adapter's current metrics."""
         return self.metrics
-    
+
     def get_status(self) -> AdapterStatus:
-        """Gets the state actual del adapter."""
+        """Get the adapter's current state."""
         return self.status
-    
+
     def reset_metrics(self):
-        """Reinicia las métricas del adapter."""
+        """Reset the adapter's metrics."""
         self.metrics = AdapterMetrics()
         self.logger.info(f"Metrics reset for adapter {self.config.name}")
-    
+
     def clear_cache(self):
-        """Limpia el cache del adapter."""
+        """Clear the adapter's cache."""
         self._cache.clear()
         self.logger.info(f"Cache cleared for adapter {self.config.name}")
-    
+
     def disable(self):
-        """Deshabilita el adapter."""
+        """Disable the adapter."""
         self.config.enabled = False
         self.status = AdapterStatus.DISABLED
         self.logger.info(f"Adapter {self.config.name} disabled")
-    
+
     def enable(self):
-        """Habilita el adapter."""
+        """Enable the adapter."""
         self.config.enabled = True
         if self.status == AdapterStatus.DISABLED:
             self.status = AdapterStatus.UNINITIALIZED
         self.logger.info(f"Adapter {self.config.name} enabled")
-    
+
     def get_info(self) -> Dict[str, Any]:
-        """Gets information completa del adapter."""
+        """Get complete adapter information."""
         return {
             'name': self.config.name,
             'class': self.__class__.__name__,
@@ -229,68 +229,68 @@ class BaseAdapter(ABC):
         }
     
     def get_success_rate(self) -> float:
-        """Calculates la tasa de éxito del adapter."""
+        """Calculate the adapter's success rate."""
         if self.metrics.total_calls == 0:
             return 1.0
         return self.metrics.successful_calls / self.metrics.total_calls
-    
+
     def get_cache_hit_rate(self) -> float:
-        """Calculates la tasa de aciertos del cache."""
+        """Calculate the cache hit rate."""
         total_cache_requests = self.metrics.cache_hits + self.metrics.cache_misses
         if total_cache_requests == 0:
             return 0.0
         return self.metrics.cache_hits / total_cache_requests
-    
-    # Métodos abstractos que deben implementar las subclases
-    
+
+    # Abstract methods that subclasses must implement
+
     @abstractmethod
     def _initialize_impl(self) -> bool:
         """
-        Implementación específica de inicialización.
-        
+        Specific initialization implementation.
+
         Returns:
-            True si la inicialización fue exitosa
+            True if initialization was successful
         """
         pass
-    
+
     @abstractmethod
     def _execute_impl(self, *args, **kwargs) -> Any:
         """
-        Implementación específica de ejecución.
-        
+        Specific execution implementation.
+
         Returns:
-            Resultado de la operación
+            Operation result
         """
         pass
-    
-    # Métodos opcionales que pueden ser sobrescritos
-    
+
+    # Optional methods that can be overridden
+
     def _generate_cache_key(self, *args, **kwargs) -> Optional[str]:
         """
-        Genera una clave de cache para los argumentos dados.
-        
+        Generate a cache key for the given arguments.
+
         Returns:
-            Clave de cache o None si no se debe cachear
+            Cache key or None if it should not be cached
         """
         try:
-            # Implementación básica usando hash de argumentos
+            # Basic implementation using argument hash
             import hashlib
             key_data = str(args) + str(sorted(kwargs.items()))
             return hashlib.md5(key_data.encode()).hexdigest()
         except Exception:
             return None
-    
+
     def _update_cache(self, key: str, value: Any):
-        """Updates el cache con un nuevo valor."""
+        """Update the cache with a new value."""
         if len(self._cache) >= self.config.cache_size:
-            # Eliminar entrada más antigua (LRU simple)
+            # Remove oldest entry (simple LRU)
             oldest_key = next(iter(self._cache))
             del self._cache[oldest_key]
-        
+
         self._cache[key] = value
-    
+
     def _update_success_metrics(self, execution_time_ms: float):
-        """Updates metrics tras una ejecución exitosa."""
+        """Update metrics after a successful execution."""
         self.metrics.total_calls += 1
         self.metrics.successful_calls += 1
         self.metrics.total_execution_time_ms += execution_time_ms
@@ -298,9 +298,9 @@ class BaseAdapter(ABC):
             self.metrics.total_execution_time_ms / self.metrics.total_calls
         )
         self.metrics.last_execution_time = time.time()
-    
+
     def _update_failure_metrics(self, execution_time_ms: float, error_message: str):
-        """Updates metrics tras una ejecución fallida."""
+        """Update metrics after a failed execution."""
         self.metrics.total_calls += 1
         self.metrics.failed_calls += 1
         self.metrics.total_execution_time_ms += execution_time_ms
@@ -313,9 +313,9 @@ class BaseAdapter(ABC):
 
 class FallbackAdapter(BaseAdapter):
     """
-    Adapter de fallback que puede usar múltiples implementaciones.
-    
-    Útil cuando se necesita robustez ante fallos de adapters específicos.
+    Fallback adapter that can use multiple implementations.
+
+    Useful when robustness against specific adapter failures is needed.
     """
     
     def __init__(self, 
@@ -329,10 +329,10 @@ class FallbackAdapter(BaseAdapter):
         self.fallback_count = 0
     
     def _initialize_impl(self) -> bool:
-        """Initializes the adapter primario y fallbacks."""
+        """Initialize the primary adapter and fallbacks."""
         success = self.primary_adapter.initialize()
-        
-        # Intentar inicializar fallbacks
+
+        # Try to initialize fallbacks
         for adapter in self.fallback_adapters:
             try:
                 adapter.initialize()
@@ -342,14 +342,14 @@ class FallbackAdapter(BaseAdapter):
         return success
     
     def _execute_impl(self, *args, **kwargs) -> Any:
-        """Ejecuta con fallback automático en caso de fallo."""
-        # Intentar con adapter primario
+        """Execute with automatic fallback on failure."""
+        # Try with primary adapter
         try:
             return self.primary_adapter.execute(*args, **kwargs)
         except Exception as e:
             self.logger.warning(f"Primary adapter {self.primary_adapter.config.name} failed: {e}")
-        
-        # Intentar con fallbacks
+
+        # Try with fallbacks
         for adapter in self.fallback_adapters:
             try:
                 self.logger.info(f"Trying fallback adapter {adapter.config.name}")
@@ -362,7 +362,7 @@ class FallbackAdapter(BaseAdapter):
         raise RuntimeError("All adapters (primary and fallbacks) failed")
     
     def get_info(self) -> Dict[str, Any]:
-        """Gets information incluyendo statistics de fallback."""
+        """Get information including fallback statistics."""
         info = super().get_info()
         info['fallback_count'] = self.fallback_count
         info['primary_adapter'] = self.primary_adapter.config.name

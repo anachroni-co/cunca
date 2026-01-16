@@ -234,21 +234,21 @@ class TPUv6eInferenceEngine:
         )
     
     async def generate_stream(self, prompt: str, **kwargs) -> AsyncGenerator[str, None]:
-        """Generar texto con streaming."""
+        """Generate text with streaming."""
         if not self.loaded:
             self.load_model()
-        
-        # Para streaming, enviaríamos tokens uno por uno
-        # Por ahora, simulamos con chunks
+
+        # For streaming, we would send tokens one by one
+        # For now, we simulate with chunks
         result = await self.generate(prompt, **kwargs)
         words = result.text.split()
-        
+
         for word in words:
             yield word + " "
-            await asyncio.sleep(0.05)  # Simular velocidad de generación
+            await asyncio.sleep(0.05)  # Simulate generation speed
 
 class GPUInferenceEngine:
-    """Motor de inferencia para GPU/CPU usando PyTorch."""
+    """Inference engine for GPU/CPU using PyTorch."""
     
     def __init__(self, model_path: str, config: InferenceConfig):
         self.model_path = model_path
@@ -262,17 +262,17 @@ class GPUInferenceEngine:
             raise RuntimeError("PyTorch not available for GPU inference")
     
     def load_model(self):
-        """Cargar modelo en GPU/CPU."""
+        """Load model on GPU/CPU."""
         logger.info(f"💻 Loading model on GPU/CPU: {self.model_path}")
-        
+
         try:
-            # Detectar dispositivo
+            # Detect device
             if torch.cuda.is_available() and self.config.backend == InferenceBackend.GPU_CUDA:
                 self.device = f"cuda:{self.config.gpu_device_id}"
             else:
                 self.device = "cpu"
-            
-            # Cargar tokenizer y modelo
+
+            # Load tokenizer and model
             self.tokenizer = AutoTokenizer.from_pretrained(self.model_path)
             if self.tokenizer.pad_token is None:
                 self.tokenizer.pad_token = self.tokenizer.eos_token
@@ -297,22 +297,22 @@ class GPUInferenceEngine:
             raise
     
     async def generate(self, prompt: str, **kwargs) -> InferenceResult:
-        """Generar texto usando GPU/CPU."""
+        """Generate text using GPU/CPU."""
         if not self.loaded:
             self.load_model()
-        
+
         start_time = time.time()
-        
-        # Tokenizar
+
+        # Tokenize
         inputs = self.tokenizer(prompt, return_tensors="pt", padding=True)
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
-        
+
         # Configure generation parameters
         max_tokens = kwargs.get('max_tokens', self.config.max_tokens)
         temperature = kwargs.get('temperature', self.config.temperature)
         top_p = kwargs.get('top_p', self.config.top_p)
-        
-        # Generar
+
+        # Generate
         with torch.no_grad():
             outputs = self.model.generate(
                 **inputs,
@@ -323,8 +323,8 @@ class GPUInferenceEngine:
                 repetition_penalty=self.config.repetition_penalty,
                 pad_token_id=self.tokenizer.eos_token_id
             )
-        
-        # Decodificar
+
+        # Decode
         generated_ids = outputs[0][len(inputs["input_ids"][0]):]
         generated_text = self.tokenizer.decode(generated_ids, skip_special_tokens=True)
         
@@ -343,19 +343,19 @@ class GPUInferenceEngine:
         )
 
 class HybridInferenceEngine:
-    """Motor de inferencia híbrido con soporte para múltiples backends."""
-    
+    """Hybrid inference engine with support for multiple backends."""
+
     def __init__(self, config: InferenceConfig):
         self.config = config
         self.engines = {}
         self.active_engine = None
         self.model_cache = {}
         self.performance_stats = {}
-        
-        # Detectar hardware disponible
+
+        # Detect available hardware
         self.available_backends = self._detect_available_backends()
-        
-        # Seleccionar backend óptimo
+
+        # Select optimal backend
         if config.backend == InferenceBackend.AUTO:
             self.selected_backend = self._select_optimal_backend()
         else:
@@ -365,9 +365,9 @@ class HybridInferenceEngine:
         logger.info(f"📊 Available backends: {[b.value for b in self.available_backends]}")
     
     def _detect_available_backends(self) -> List[InferenceBackend]:
-        """Detectar backends disponibles."""
+        """Detect available backends."""
         backends = []
-        
+
         # TPU v6e
         if JAX_AVAILABLE:
             try:
@@ -376,19 +376,19 @@ class HybridInferenceEngine:
                     backends.append(InferenceBackend.TPU_V6E)
             except Exception:
                 pass
-        
+
         # GPU CUDA
         if TORCH_AVAILABLE and torch.cuda.is_available():
             backends.append(InferenceBackend.GPU_CUDA)
 
-        # CPU (siempre disponible)
+        # CPU (always available)
         backends.append(InferenceBackend.CPU)
-        
+
         return backends
     
     def _select_optimal_backend(self) -> InferenceBackend:
-        """Seleccionar backend óptimo based en hardware disponible."""
-        # Prioridad: TPU v6e > GPU > CPU
+        """Select optimal backend based on available hardware."""
+        # Priority: TPU v6e > GPU > CPU
         if InferenceBackend.TPU_V6E in self.available_backends:
             return InferenceBackend.TPU_V6E
         elif InferenceBackend.GPU_CUDA in self.available_backends:
@@ -397,24 +397,24 @@ class HybridInferenceEngine:
             return InferenceBackend.CPU
     
     def load_model(self, model_path: str):
-        """Cargar modelo en el backend seleccionado."""
+        """Load model on the selected backend."""
         self.config.model_path = model_path
-        
+
         if model_path in self.model_cache:
             logger.info(f"📋 Using cached model: {model_path}")
             self.active_engine = self.model_cache[model_path]
             return
-        
-        # Crear engine según backend
+
+        # Create engine based on backend
         if self.selected_backend == InferenceBackend.TPU_V6E:
             engine = TPUv6eInferenceEngine(model_path, self.config)
-        else:  # GPU o CPU
+        else:  # GPU or CPU
             engine = GPUInferenceEngine(model_path, self.config)
-        
-        # Cargar modelo
+
+        # Load model
         engine.load_model()
-        
-        # Cache y activar
+
+        # Cache and activate
         if self.config.enable_caching:
             self.model_cache[model_path] = engine
         
@@ -422,42 +422,42 @@ class HybridInferenceEngine:
         logger.info(f"✅ Model loaded successfully on {self.selected_backend.value}")
     
     async def generate(self, prompt: str, **kwargs) -> InferenceResult:
-        """Generar texto usando el motor activo."""
+        """Generate text using the active engine."""
         if not self.active_engine:
             raise RuntimeError("No model loaded")
-        
+
         start_time = time.time()
-        
+
         try:
-            # Usar engine específico
+            # Use specific engine
             if hasattr(self.active_engine, 'generate') and asyncio.iscoroutinefunction(self.active_engine.generate):
                 result = await self.active_engine.generate(prompt, **kwargs)
             else:
                 result = await self.active_engine.generate(prompt, **kwargs)
-            
+
             # Update statistics
             self._update_performance_stats(result)
-            
+
             return result
-            
+
         except Exception as e:
             logger.error(f"❌ Generation failed: {e}")
-            # Fallback a CPU si hay error
+            # Fallback to CPU if there's an error
             if self.selected_backend != InferenceBackend.CPU:
                 logger.warning("🔄 Falling back to CPU")
                 await self._fallback_to_cpu(prompt, **kwargs)
             raise
     
     async def generate_stream(self, prompt: str, **kwargs) -> AsyncGenerator[str, None]:
-        """Generar texto con streaming."""
+        """Generate text with streaming."""
         if not self.active_engine:
             raise RuntimeError("No model loaded")
-        
+
         if hasattr(self.active_engine, 'generate_stream'):
             async for token in self.active_engine.generate_stream(prompt, **kwargs):
                 yield token
         else:
-            # Fallback: generar completo y simular streaming
+            # Fallback: generate complete and simulate streaming
             result = await self.generate(prompt, **kwargs)
             words = result.text.split()
             for word in words:
@@ -465,7 +465,7 @@ class HybridInferenceEngine:
                 await asyncio.sleep(0.05)
     
     def get_backend_info(self) -> Dict[str, Any]:
-        """Obtener información del backend actual."""
+        """Get current backend information."""
         return {
             'selected_backend': self.selected_backend.value,
             'available_backends': [b.value for b in self.available_backends],
@@ -476,11 +476,11 @@ class HybridInferenceEngine:
         }
     
     def get_performance_stats(self) -> Dict[str, Any]:
-        """Obtener statistics de rendimiento."""
+        """Get performance statistics."""
         return self.performance_stats.copy()
     
     def switch_backend(self, backend: InferenceBackend):
-        """Cambiar backend dinámicamente."""
+        """Switch backend dynamically."""
         if backend not in self.available_backends:
             raise ValueError(f"Backend {backend.value} not available")
         
@@ -513,22 +513,22 @@ class HybridInferenceEngine:
         stats['last_request_time'] = time.time()
     
     async def _fallback_to_cpu(self, prompt: str, **kwargs):
-        """Fallback a CPU en caso de error."""
+        """Fallback to CPU in case of error."""
         original_backend = self.selected_backend
         try:
             self.switch_backend(InferenceBackend.CPU)
             return await self.generate(prompt, **kwargs)
         except Exception as e:
-            # Restaurar backend original si el fallback también falla
+            # Restore original backend if fallback also fails
             self.selected_backend = original_backend
             raise e
 
 # Factory function
 def create_inference_engine(config: InferenceConfig = None) -> HybridInferenceEngine:
-    """Crear motor de inferencia híbrido."""
+    """Create hybrid inference engine."""
     if config is None:
         config = InferenceConfig()
-    
+
     return HybridInferenceEngine(config)
 
 # Convenience functions
@@ -545,7 +545,7 @@ async def quick_generate(prompt: str, model_path: str = "", **kwargs) -> str:
 
 # Benchmark function
 async def benchmark_backends(prompt: str, model_path: str, rounds: int = 3) -> Dict[str, Any]:
-    """Benchmark de rendimiento entre backends."""
+    """Performance benchmark across backends."""
     results = {}
     
     for backend in [InferenceBackend.TPU_V6E, InferenceBackend.GPU_CUDA, InferenceBackend.CPU]:
