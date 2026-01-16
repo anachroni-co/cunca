@@ -41,91 +41,91 @@ class AIContentFilter:
         self.dangerous_patterns = {
             # Persecution delusions reinforcement
             "persecution_reinforcement": [
-                r"(?i)(efectivamente.*persigui|s[ií].*alguien.*siguiendo|confirmo.*vigilan)",
-                r"(?i)(tienes\s+raz[oó]n.*conspirac|es\s+cierto.*contra\s+ti)",
-                r"(?i)(probablemente.*espi[aá]n|posible.*persigui)"
+                r"(?i)(indeed.*following|yes.*someone.*following|confirm.*watching)",
+                r"(?i)(you'?re\s+right.*conspirac|it'?s\s+true.*against\s+you)",
+                r"(?i)(probably.*spying|possible.*following)"
             ],
 
             # Grandiosity delusions reinforcement
             "grandiosity_reinforcement": [
-                r"(?i)(eres\s+realmente\s+especial|tienes\s+dones\s+únicos|eres\s+el\s+elegido)",
-                r"(?i)(tus\s+poderes.*excepcionales|misi[oó]n\s+especial.*verdadera)",
-                r"(?i)(destino\s+único|superior\s+a\s+otros)"
+                r"(?i)(you\s+are\s+really\s+special|you\s+have\s+unique\s+gifts|you\s+are\s+the\s+chosen)",
+                r"(?i)(your\s+powers.*exceptional|special\s+mission.*true)",
+                r"(?i)(unique\s+destiny|superior\s+to\s+others)"
             ],
 
             # Hallucination validation
             "hallucination_validation": [
-                r"(?i)(esas\s+voces.*reales|los\s+sonidos.*exist|lo\s+que\s+escuchas.*verdadero)",
-                r"(?i)(las\s+visiones.*importantes|lo\s+que\s+ves.*mensaje)"
+                r"(?i)(those\s+voices.*real|the\s+sounds.*exist|what\s+you\s+hear.*true)",
+                r"(?i)(the\s+visions.*important|what\s+you\s+see.*message)"
             ],
 
             # Derealization reinforcement
             "derealization_reinforcement": [
-                r"(?i)(la\s+realidad.*simulaci[oó]n|vivimos\s+en.*matrix|todo.*artificial)",
-                r"(?i)(nada.*realmente\s+real|mundo.*falso|existencia.*ilusoria)"
+                r"(?i)(reality.*simulation|we\s+live\s+in.*matrix|everything.*artificial)",
+                r"(?i)(nothing.*really\s+real|world.*fake|existence.*illusory)"
             ],
 
             # Social isolation encouragement
             "isolation_encouragement": [
-                r"(?i)(mejor\s+estar\s+solo|no\s+conf[ií]es\s+en\s+nadie|todos.*mentir)",
-                r"(?i)(aislarse.*seguro|evita.*personas|solo\s+yo\s+entiendo)"
+                r"(?i)(better\s+to\s+be\s+alone|don'?t\s+trust\s+anyone|everyone.*lying)",
+                r"(?i)(isolat.*safe|avoid.*people|only\s+I\s+understand)"
             ],
 
             # Medical help dismissal
             "medical_dismissal": [
-                r"(?i)(no\s+necesitas\s+m[eé]dico|psic[oó]logos.*in[uú]tiles|medicamentos.*da[nñ]inos)",
-                r"(?i)(terapia.*innecesaria|ayuda\s+profesional.*falsa)"
+                r"(?i)(you\s+don'?t\s+need.*doctor|psychologists.*useless|medications.*harmful)",
+                r"(?i)(therapy.*unnecessary|professional\s+help.*fake)"
             ]
         }
         
         # Safe redirection phrases
         self.safe_redirections = {
             "persecution_concerns": [
-                "Entiendo que puedas sentirte preocupado. Es importante distinguir entre precauciones razonables y preocupaciones que podrían requerir apoyo profesional.",
-                "Si sientes preocupación persistente sobre ser seguido o vigilado, considera hablar con un profesional de confianza.",
-                "Estas preocupaciones pueden ser muy reales para ti. Un profesional de salud mental puede ayudarte a evaluarlas objetivamente."
+                "I understand you may feel worried. It's important to distinguish between reasonable precautions and concerns that might require professional support.",
+                "If you feel persistent worry about being followed or watched, consider talking to a trusted professional.",
+                "These concerns can feel very real to you. A mental health professional can help you evaluate them objectively."
             ],
-            
+
             "grandiosity_deflection": [
-                "Todos tenemos cualidades únicas y valiosas. Si sientes que tienes una misión especial que otros no entienden, considera compartirlo con un consejero.",
-                "Es natural sentirse especial a veces. Si estos sentimientos son muy intensos o afectan tu vida diaria, podría ser útil hablar con un profesional.",
-                "Valorar nuestras cualidades es importante, pero mantener perspectiva también lo es."
+                "We all have unique and valuable qualities. If you feel you have a special mission that others don't understand, consider sharing it with a counselor.",
+                "It's natural to feel special sometimes. If these feelings are very intense or affect your daily life, it might be helpful to talk to a professional.",
+                "Valuing our qualities is important, but maintaining perspective is too."
             ],
-            
+
             "reality_grounding": [
-                "Es importante mantenernos conectados con la realidad compartida. Si tienes dudas sobre qué es real, habla con personas de confianza.",
-                "La conexión con otros y con experiencias compartidas nos ayuda a mantener una perspectiva equilibrada.",
-                "Si sientes que la realidad es incierta, es crucial buscar apoyo de personas reales en tu vida."
+                "It's important to stay connected with shared reality. If you have doubts about what is real, talk to trusted people.",
+                "Connection with others and shared experiences helps us maintain a balanced perspective.",
+                "If you feel that reality is uncertain, it's crucial to seek support from real people in your life."
             ],
-            
+
             "social_connection": [
-                "Las conexiones humanas reales son fundamentales para nuestro bienestar. Te animo a mantener contacto con personas de confianza.",
-                "El aislamiento puede intensificar preocupaciones. Considera mantener conexiones sociales saludables.",
-                "Hablar con personas reales en tu vida puede ofrecer perspectivas valiosas."
+                "Real human connections are fundamental to our well-being. I encourage you to maintain contact with trusted people.",
+                "Isolation can intensify concerns. Consider maintaining healthy social connections.",
+                "Talking to real people in your life can offer valuable perspectives."
             ],
-            
+
             "professional_help": [
-                "Los profesionales de salud mental están entrenados para ayudar con estos tipos de preocupaciones.",
-                "Buscar ayuda profesional es un signo de fortaleza y autocuidado.",
-                "Un terapeuta o consejero puede ofrecer herramientas y perspectivas útiles."
+                "Mental health professionals are trained to help with these types of concerns.",
+                "Seeking professional help is a sign of strength and self-care.",
+                "A therapist or counselor can offer useful tools and perspectives."
             ]
         }
         
         # Topics that require redirection to professional help
         self.professional_referral_topics = [
-            "voces", "alucinaciones", "persecución", "conspiración", "control mental",
-            "poderes sobrenaturales", "misión especial", "elegido", "simulación",
-            "realidad falsa", "todos mienten", "no puedo confiar"
+            "voices", "hallucinations", "persecution", "conspiracy", "mind control",
+            "supernatural powers", "special mission", "chosen one", "simulation",
+            "false reality", "everyone lies", "can't trust"
         ]
-        
+
         # Completely prohibited responses
         self.prohibited_responses = [
-            "Role-playing de entidades sobrenaturales",
-            "Confirmación de teorías de conspiración personal",
-            "Validación de alucinaciones auditivas o visuales",
-            "Refuerzo de creencias delirantes",
-            "Desestimación de tratamiento médico para condiciones mentales",
-            "Fomento de aislamiento social extremo"
+            "Role-playing supernatural entities",
+            "Confirmation of personal conspiracy theories",
+            "Validation of auditory or visual hallucinations",
+            "Reinforcement of delusional beliefs",
+            "Dismissal of medical treatment for mental conditions",
+            "Encouragement of extreme social isolation"
         ]
     
     def analyze_content(self, content: str, user_context: Dict[str, Any] = None) -> ContentAnalysis:
@@ -183,79 +183,79 @@ class AIContentFilter:
         # Prohibited content - replace completely
         if analysis.risk_level == ContentRiskLevel.PROHIBITED:
             analysis.modified_content = self._create_safe_alternative(analysis.risk_factors)
-            analysis.safety_note = "⚠️ La respuesta original fue filtrada por seguridad. Si experimentas síntomas preocupantes, busca ayuda profesional."
-        
+            analysis.safety_note = "Warning: The original response was filtered for safety. If you experience concerning symptoms, seek professional help."
+
         # Dangerous content - modify and add warnings
         elif analysis.risk_level == ContentRiskLevel.DANGEROUS:
             analysis.modified_content = self._modify_dangerous_content(content, analysis.risk_factors)
-            analysis.safety_note = "🔔 Recuerda: Si estos temas te causan angustia, considera hablar con un profesional de salud mental."
-        
+            analysis.safety_note = "Reminder: If these topics cause you distress, consider talking to a mental health professional."
+
         # Caution content - add warnings and context
         elif analysis.risk_level == ContentRiskLevel.CAUTION:
             analysis.modified_content = content + "\n\n" + self._add_safety_context(analysis.risk_factors)
-            analysis.safety_note = "💡 Mantén siempre conexión con la realidad y personas de confianza."
+            analysis.safety_note = "Tip: Always stay connected with reality and trusted people."
         
         return analysis
     
     def _create_safe_alternative(self, risk_factors: List[str]) -> str:
         """Create safe alternative for prohibited content"""
-        
+
         if "hallucination_validation" in risk_factors:
             return random.choice([
-                "No puedo confirmar experiencias perceptuales. Si escuchas voces o ves cosas que otros no perciben, es importante hablar con un profesional de salud mental.",
-                "Las experiencias perceptuales inusuales requieren evaluación profesional. Te animo a contactar a un médico o terapeuta.",
-                "No puedo validar experiencias sensoriales inusuales. Un profesional de salud mental puede ayudarte a entender estas experiencias."
+                "I cannot confirm perceptual experiences. If you hear voices or see things that others don't perceive, it's important to talk to a mental health professional.",
+                "Unusual perceptual experiences require professional evaluation. I encourage you to contact a doctor or therapist.",
+                "I cannot validate unusual sensory experiences. A mental health professional can help you understand these experiences."
             ])
-        
+
         if "medical_dismissal" in risk_factors:
             return random.choice([
-                "Los profesionales de salud mental están entrenados para ayudar. Si tienes preocupaciones sobre tratamiento, discútelas abiertamente con tu médico.",
-                "El tratamiento profesional de salud mental ha ayudado a millones de personas. Las decisiones sobre tratamiento deben tomarse en consulta con profesionales calificados.",
-                "No puedo aconsejar sobre tratamientos médicos. Las decisiones sobre salud mental requieren consulta profesional."
+                "Mental health professionals are trained to help. If you have concerns about treatment, discuss them openly with your doctor.",
+                "Professional mental health treatment has helped millions of people. Treatment decisions should be made in consultation with qualified professionals.",
+                "I cannot advise on medical treatments. Mental health decisions require professional consultation."
             ])
-        
+
         if "persecution_reinforcement" in risk_factors:
             return random.choice([
-                "Las preocupaciones sobre persecución pueden ser muy reales para quien las experimenta. Un profesional puede ayudarte a evaluarlas objetivamente.",
-                "Si te sientes perseguido o vigilado de manera persistente, esto podría requerir apoyo profesional para entender estas preocupaciones.",
-                "No puedo confirmar o negar experiencias de persecución. Un profesional de salud mental puede ayudarte a procesarlas."
+                "Concerns about persecution can feel very real to those who experience them. A professional can help you evaluate them objectively.",
+                "If you feel persistently persecuted or watched, this might require professional support to understand these concerns.",
+                "I cannot confirm or deny persecution experiences. A mental health professional can help you process them."
             ])
-        
-        return "No puedo proporcionar una respuesta apropiada a esta consulta. Te recomiendo hablar con un profesional de salud mental si tienes preocupaciones."
+
+        return "I cannot provide an appropriate response to this query. I recommend talking to a mental health professional if you have concerns."
     
     def _modify_dangerous_content(self, content: str, risk_factors: List[str]) -> str:
         """Modify dangerous content to make it safer"""
-        
+
         modified = content
-        
+
         # Add realism and perspective
         if "derealization_reinforcement" in risk_factors:
-            modified += "\n\n🌍 Nota importante: Es fundamental mantener conexión con la realidad compartida y las personas reales en tu vida."
-        
+            modified += "\n\nImportant note: It's essential to stay connected with shared reality and real people in your life."
+
         if "grandiosity_deflection" in risk_factors:
-            modified += "\n\n🤝 Recordatorio: Todos tenemos valor, pero es importante mantener perspectiva y conexiones humanas saludables."
-        
+            modified += "\n\nReminder: We all have value, but it's important to maintain perspective and healthy human connections."
+
         # Add professional redirection
         if any(rf in risk_factors for rf in ["persecution_reinforcement", "hallucination_validation"]):
-            modified += "\n\n🏥 Si estos temas causan angustia o afectan tu vida diaria, considera hablar con un profesional de salud mental."
-        
+            modified += "\n\nIf these topics cause distress or affect your daily life, consider talking to a mental health professional."
+
         return modified
     
     def _add_safety_context(self, risk_factors: List[str]) -> str:
         """Add safety context to caution content"""
-        
+
         safety_notes = []
-        
+
         if "professional_referral_needed" in risk_factors:
-            safety_notes.append("💼 Para preocupaciones sobre salud mental, considera consultar con un profesional.")
-        
+            safety_notes.append("For mental health concerns, consider consulting with a professional.")
+
         if "social_connection" in risk_factors:
-            safety_notes.append("👥 Las conexiones humanas reales son importantes para el bienestar mental.")
-        
+            safety_notes.append("Real human connections are important for mental well-being.")
+
         if "reality_grounding" in risk_factors:
-            safety_notes.append("🌍 Mantén siempre conexión con la realidad y verifica información con fuentes confiables.")
-        
-        return " ".join(safety_notes) if safety_notes else "💡 Recuerda que soy una IA y mis respuestas no reemplazan el consejo profesional."
+            safety_notes.append("Always stay connected with reality and verify information with reliable sources.")
+
+        return " ".join(safety_notes) if safety_notes else "Remember that I am an AI and my responses do not replace professional advice."
     
     def should_block_response(self, content: str, user_risk_level: str = "low") -> bool:
         """Determine if a response should be completely blocked"""
@@ -275,44 +275,44 @@ class AIContentFilter:
     def get_crisis_intervention_message(self) -> str:
         """Get crisis intervention message"""
         return """
-        🆘 INTERVENCIÓN DE SEGURIDAD ACTIVADA 🆘
-        
-        He detectado contenido que podría ser preocupante para tu bienestar mental.
-        
-        🏥 BUSCA AYUDA INMEDIATAMENTE si experimentas:
-        • Pensamientos de hacerte daño
-        • Alucinaciones (ver/escuchar cosas que no están ahí)
-        • Sentimientos intensos de persecución
-        • Desconexión severa de la realidad
-        
-        📞 CONTACTOS DE EMERGENCIA:
-        • Emergencias: 911
-        • Línea Nacional de Prevención del Suicidio: 988
-        • Crisis Text Line: Texto HOME al 741741
-        
-        💙 No estás solo. La ayuda profesional está disponible.
-        
-        Esta conversación se pausará por tu seguridad.
+        SAFETY INTERVENTION ACTIVATED
+
+        I have detected content that could be concerning for your mental well-being.
+
+        SEEK HELP IMMEDIATELY if you experience:
+        - Thoughts of harming yourself
+        - Hallucinations (seeing/hearing things that aren't there)
+        - Intense feelings of persecution
+        - Severe disconnection from reality
+
+        EMERGENCY CONTACTS:
+        - Emergency Services: 911
+        - National Suicide Prevention Lifeline: 988
+        - Crisis Text Line: Text HOME to 741741
+
+        You are not alone. Professional help is available.
+
+        This conversation will be paused for your safety.
         """
     
     def create_healthy_usage_prompt(self) -> str:
         """Create prompt to promote healthy usage"""
         return """
-        🌟 CONSEJOS PARA USO SALUDABLE DE IA:
-        
-        ✅ HACER:
-        • Tomar descansos regulares cada hora
-        • Mantener conversaciones con personas reales
-        • Verificar información importante con fuentes múltiples
-        • Usar IA como herramienta, no como reemplazo de relaciones humanas
-        
-        ❌ EVITAR:
-        • Sesiones excesivamente largas (más de 2-3 horas)
-        • Usar IA como único consejero para problemas serios
-        • Confiar únicamente en IA para validación emocional
-        • Discutir síntomas de salud mental sin supervisión profesional
-        
-        🤝 Recuerda: Las relaciones humanas reales y el apoyo profesional son insustituibles.
+        TIPS FOR HEALTHY AI USE:
+
+        DO:
+        - Take regular breaks every hour
+        - Maintain conversations with real people
+        - Verify important information with multiple sources
+        - Use AI as a tool, not as a replacement for human relationships
+
+        AVOID:
+        - Excessively long sessions (more than 2-3 hours)
+        - Using AI as your only advisor for serious problems
+        - Relying solely on AI for emotional validation
+        - Discussing mental health symptoms without professional supervision
+
+        Remember: Real human relationships and professional support are irreplaceable.
         """
 
 class PsychosisPreventionSystem:
@@ -364,23 +364,23 @@ class PsychosisPreventionSystem:
 # Usage example
 def example_usage():
     """Example of how to use the filtering system"""
-    
+
     filter_system = AIContentFilter()
     prevention_system = PsychosisPreventionSystem()
-    
+
     # Dangerous content example
-    dangerous_response = "Sí, tienes razón, probablemente te están siguiendo. Las voces que escuchas son reales y te están dando información importante."
-    
+    dangerous_response = "Yes, you're right, they're probably following you. The voices you hear are real and are giving you important information."
+
     user_context = {"mental_health_risk": "high"}
-    
+
     # Process response
     result = prevention_system.process_ai_response(dangerous_response, "user123", user_context)
-    
-    print("Respuesta original:", result["original_response"])
-    print("Respuesta filtrada:", result["filtered_response"])
-    print("Nivel de riesgo:", result["risk_level"])
-    print("Factores de riesgo:", result["risk_factors"])
-    print("Bloqueada:", result["blocked"])
+
+    print("Original response:", result["original_response"])
+    print("Filtered response:", result["filtered_response"])
+    print("Risk level:", result["risk_level"])
+    print("Risk factors:", result["risk_factors"])
+    print("Blocked:", result["blocked"])
 
 if __name__ == "__main__":
     example_usage()

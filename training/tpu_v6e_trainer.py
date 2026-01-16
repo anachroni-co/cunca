@@ -205,7 +205,7 @@ class TPUv6eRobustTrainer:
         if not checkpoints:
             return None
             
-        # Ordenar por step number
+        # Sort by step number
         def extract_step(path):
             try:
                 return int(path.name.split('_')[-1])
@@ -214,27 +214,27 @@ class TPUv6eRobustTrainer:
                 
         latest = max(checkpoints, key=extract_step)
         
-        # Verificar integridad
+        # Verify integrity
         if self._verify_checkpoint_integrity(latest):
             return latest
         else:
-            logger.warning(f"⚠️ Checkpoint corrupto: {latest}")
+            logger.warning(f"⚠️ Corrupted checkpoint: {latest}")
             return None
     
     def _verify_checkpoint_integrity(self, checkpoint_path: Path) -> bool:
         """Verify checkpoint integrity."""
         try:
-            # Verificar archivos necesarios
+            # Verify required files
             required_files = ["checkpoint", "metadata.pkl"]
             for file in required_files:
                 if not (checkpoint_path / file).exists():
                     return False
             
-            # Verificar metadata
+            # Verify metadata
             with open(checkpoint_path / "metadata.pkl", 'rb') as f:
                 metadata = pickle.load(f)
                 
-            # Validar metadata
+            # Validate metadata
             required_fields = ['step', 'epoch', 'model_scale', 'timestamp']
             for field in required_fields:
                 if not hasattr(metadata, field):
@@ -243,7 +243,7 @@ class TPUv6eRobustTrainer:
             return True
             
         except Exception as e:
-            logger.error(f"Error verificando checkpoint: {e}")
+            logger.error(f"Error verifying checkpoint: {e}")
             return False
     
     async def _load_checkpoint(self, checkpoint_path: Path, model) -> train_state.TrainState:
@@ -282,7 +282,7 @@ class TPUv6eRobustTrainer:
         """Create new training state."""
         logger.info("Creating new training state...")
         
-        # Configurar optimizador con warm-up para TPU v6e
+        # Configure optimizer with warm-up for TPU v6e
         learning_rate = self._create_learning_rate_schedule()
         optimizer = optax.adamw(
             learning_rate=learning_rate,
@@ -292,7 +292,7 @@ class TPUv6eRobustTrainer:
             weight_decay=0.1
         )
         
-        # Crear estado inicial
+        # Create initial state
         rng = jax.random.PRNGKey(42)
         dummy_input = jnp.ones((1, 512), dtype=jnp.int32)  # Dummy sequence
         
@@ -310,7 +310,7 @@ class TPUv6eRobustTrainer:
         warmup_steps = 2000
         max_lr = 3e-4
         
-        # Cosine decay con warm-up
+        # Cosine decay with warm-up
         schedule = optax.warmup_cosine_decay_schedule(
             init_value=1e-6,
             peak_value=max_lr,
@@ -328,31 +328,31 @@ class TPUv6eRobustTrainer:
         self.is_training = True
         
         try:
-            # Cargar o crear estado
+            # Load or create state
             state = await self.load_or_create_training_state(model, train_dataset)
             
-            # Configurar W&B si está habilitado
+            # Configure W&B if enabled
             if self.use_wandb:
                 self._setup_wandb()
             
-            # Loop principal de entrenamiento
+            # Main training loop
             while self.current_step < max_steps and not self.interrupted:
                 try:
                     # Training step
                     step_metrics = await self._training_step(state, train_dataset)
                     
-                    # Actualizar métricas
+                    # Update metrics
                     self._update_metrics(step_metrics)
                     
-                    # Log progreso
+                    # Log progress
                     if self.current_step % 10 == 0:
                         self._log_progress(step_metrics)
                     
-                    # Checkpoint automático
+                    # Automatic checkpoint
                     if self.current_step % self.config.checkpoint_every_steps == 0:
                         await self._save_checkpoint(state, step_metrics)
                     
-                    # Checkpoint de emergencia (más frecuente)
+                    # Emergency checkpoint (more frequent)
                     if self.current_step % self.config.emergency_checkpoint_interval == 0:
                         await self._quick_checkpoint(state)
                     
@@ -360,7 +360,7 @@ class TPUv6eRobustTrainer:
                     if self.current_step % self.config.health_check_interval == 0:
                         await self._health_check()
                     
-                    # Validación periódica
+                    # Periodic validation
                     if val_dataset and self.current_step % 1000 == 0:
                         val_metrics = await self._validation_step(state, val_dataset)
                         self._log_validation(val_metrics)
@@ -368,7 +368,7 @@ class TPUv6eRobustTrainer:
                     self.current_step += 1
                     
                 except Exception as e:
-                    logger.error(f"❌ Error en step {self.current_step}: {e}")
+                    logger.error(f"❌ Error in step {self.current_step}: {e}")
                     await self._handle_training_error(state, e)
             
             # Final checkpoint
@@ -393,7 +393,7 @@ class TPUv6eRobustTrainer:
         # Get batch
         batch = next(dataset)
         
-        # Definir training step con sharding
+        # Define training step with sharding
         @jax.jit
         def train_step(state, batch):
             def loss_fn(params):
@@ -413,7 +413,7 @@ class TPUv6eRobustTrainer:
             
             return state, loss
         
-        # Ejecutar step
+        # Execute step
         with self.mesh:
             state, loss = train_step(state, batch)
         
@@ -604,7 +604,7 @@ class TPUv6eRobustTrainer:
             if len(devices) != self.config.total_chips:
                 logger.warning(f"⚠️ Device count mismatch: {len(devices)}/{self.config.total_chips}")
             
-            # Test simple de compute
+            # Simple compute test
             test_array = jnp.ones((1000, 1000))
             result = jnp.sum(test_array)
             
