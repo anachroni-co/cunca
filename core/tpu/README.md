@@ -1,10 +1,10 @@
 # capibara/core/tpu - TPU Optimization Module
 
-El módulo **tpu** proporciona configuraciones y optimizaciones específicas para Google Cloud TPU v4, v5e y v6e, incluyendo integración con Vector Quantization.
+The **tpu** module provides specific configurations and optimizations for Google Cloud TPU v4, v5e, and v6e, including integration with Vector Quantization.
 
-## 📋 Tabla de Contenidos
+## 📋 Table of Contents
 
-1. [Visión General](#visión-general)
+1. [Overview](#overview)
 2. [TPU Versions Supported](#tpu-versions-supported)
 3. [Quick Start](#quick-start)
 4. [TPU Configuration](#tpu-configuration)
@@ -19,33 +19,33 @@ El módulo **tpu** proporciona configuraciones y optimizaciones específicas par
 
 ---
 
-## 🎯 Visión General
+## 🎯 Overview
 
-Este módulo especializa el sistema para aprovechar al máximo las capacidades de Google Cloud TPUs, incluyendo:
+This module specializes the system to take full advantage of Google Cloud TPU capabilities, including:
 
-- ⚡ **TPU v4/v5e/v6e Support**: Optimizaciones específicas para cada generación
-- 🔧 **Automatic Configuration**: Setup automático de entorno TPU
-- 📊 **Mesh Configuration**: Data/model parallelism automático
-- 🎯 **XLA Optimization**: Compilación XLA optimizada
-- 💾 **Memory Management**: Gestión eficiente de HBM
-- 📦 **VQ Integration**: Vector Quantization acelerada por hardware
-- 📈 **Performance Monitoring**: Métricas en tiempo real
+- ⚡ **TPU v4/v5e/v6e Support**: Specific optimizations for each generation
+- 🔧 **Automatic Configuration**: Automatic TPU environment setup
+- 📊 **Mesh Configuration**: Automatic data/model parallelism
+- 🎯 **XLA Optimization**: Optimized XLA compilation
+- 💾 **Memory Management**: Efficient HBM management
+- 📦 **VQ Integration**: Hardware-accelerated Vector Quantization
+- 📈 **Performance Monitoring**: Real-time metrics
 
-### Arquitectura
+### Architecture
 
 ```
 capibara/core/tpu/
-├── tpu_config.py              # Configuración general TPU
-├── tpu_v6_vq_integration.py   # Integración VQ para TPU v6
-└── README.md                  # Este archivo
+├── tpu_config.py              # General TPU configuration
+├── tpu_v6_vq_integration.py   # VQ integration for TPU v6
+└── README.md                  # This file
 ```
 
 ---
 
 ## 🖥️ TPU Versions Supported
 
-| TPU Version | Chips | Memory/Chip | BF16 TFLOPS | INT8 TOPS | Recomendado Para |
-|-------------|-------|-------------|-------------|-----------|------------------|
+| TPU Version | Chips | Memory/Chip | BF16 TFLOPS | INT8 TOPS | Recommended For |
+|-------------|-------|-------------|-------------|-----------|-----------------|
 | **v4-8** | 4 | 16GB HBM | 275 | 550 | Development |
 | **v4-32** | 32 | 16GB HBM | 2,200 | 4,400 | Medium models |
 | **v5e-4** | 4 | 16GB HBM | 197 | 394 | Cost-efficient dev |
@@ -54,68 +54,68 @@ capibara/core/tpu/
 | **v6e-64** | 64 | 32GB HBM | 21,000 | 42,000 | Advanced production |
 | **v6e-256** | 256 | 32GB HBM | 84,000 | 168,000 | Massive models |
 
-### Características por Generación
+### Features by Generation
 
 **TPU v4**:
-- BFloat16 nativo
-- SparseCore para embedding lookups
+- Native BFloat16
+- SparseCore for embedding lookups
 - 2nd gen interconnect
 
 **TPU v5e**:
-- 40% más eficiente que v4
-- Menor costo por TFLOP
-- Ideal para producción cost-sensitive
+- 40% more efficient than v4
+- Lower cost per TFLOP
+- Ideal for cost-sensitive production
 
 **TPU v6e**:
-- 2x memoria (32GB vs 16GB)
+- 2x memory (32GB vs 16GB)
 - 3rd gen interconnect
 - Hardware VQ acceleration
-- Mejor para modelos grandes
+- Better for large models
 
 ---
 
 ## 🚀 Quick Start
 
-### Configuración Básica
+### Basic Configuration
 
 ```python
 from capibara.core.tpu import TPUConfig, configure_tpu_environment
 
-# Auto-detectar y configurar TPU
+# Auto-detect and configure TPU
 configure_tpu_environment()
 
-# Crear configuración
+# Create configuration
 config = TPUConfig(
     tpu_version="v6e",       # v4, v5e, v6e
     num_chips=64,            # 4, 8, 32, 64, 256
     topology="8x8"           # Mesh topology
 )
 
-# Verificar configuración
+# Verify configuration
 config.validate()
-print(f"TPU configurado: {config.tpu_version}-{config.num_chips}")
+print(f"TPU configured: {config.tpu_version}-{config.num_chips}")
 print(f"Total TFLOPS: {config.get_total_tflops():.1f}")
 ```
 
-### Training en TPU
+### Training on TPU
 
 ```python
 from capibara.core.tpu import TPUTrainer
 
-# Crear trainer optimizado para TPU
+# Create TPU-optimized trainer
 trainer = TPUTrainer(
     config=config,
     model=model,
-    mesh_shape=(8, 8),       # Para v6e-64: 8x8
+    mesh_shape=(8, 8),       # For v6e-64: 8x8
     use_bf16=True,
     enable_xla_optimizations=True
 )
 
-# Entrenar
+# Train
 trainer.train(
     train_data="gs://bucket/data/",
     num_steps=100000,
-    batch_size_per_chip=16   # Batch size por chip TPU
+    batch_size_per_chip=16   # Batch size per TPU chip
 )
 ```
 
@@ -123,7 +123,7 @@ trainer.train(
 
 ## ⚙️ TPU Configuration
 
-### Configuración Completa
+### Complete Configuration
 
 ```python
 from capibara.core.tpu import TPUConfig
@@ -138,7 +138,7 @@ config = TPUConfig(
     # Precision
     precision="bfloat16",    # bfloat16, float32, mixed
     use_mixed_precision=True,
-    fp32_params=True,        # Parámetros en FP32, cómputo en BF16
+    fp32_params=True,        # Parameters in FP32, compute in BF16
 
     # Compilation
     xla_optimization_level=3,  # 0-3
@@ -155,18 +155,18 @@ config = TPUConfig(
     use_collective_matmul=True,
 
     # Monitoring
-    enable_profiling=False,  # Solo para debugging (overhead)
+    enable_profiling=False,  # Only for debugging (overhead)
     log_device_placement=False
 )
 ```
 
-### Variables de Entorno TPU
+### TPU Environment Variables
 
 ```python
-# El módulo configura automáticamente:
+# The module automatically configures:
 config.setup_environment_variables()
 
-# Configura:
+# Configures:
 # - JAX_PLATFORMS=tpu
 # - XLA_FLAGS=...
 # - LIBTPU_INIT_ARGS=...
@@ -174,10 +174,10 @@ config.setup_environment_variables()
 # - XLA_PYTHON_CLIENT_PREALLOCATE=false
 ```
 
-### Configuración Manual de Entorno
+### Manual Environment Configuration
 
 ```bash
-# Alternativa: Configurar manualmente
+# Alternative: Configure manually
 export JAX_PLATFORMS=tpu
 export XLA_FLAGS="--xla_tpu_enable_data_parallelism=true \
                   --xla_tpu_enable_async_collective_fusion=true \
@@ -196,7 +196,7 @@ export XLA_PYTHON_CLIENT_PREALLOCATE=false
 ```python
 from capibara.core.tpu import create_mesh, MeshConfig
 
-# Configurar mesh para data + model parallelism
+# Configure mesh for data + model parallelism
 mesh_config = MeshConfig(
     mesh_shape=(8, 8),       # (data_parallel, model_parallel)
     axis_names=('data', 'model'),
@@ -205,15 +205,15 @@ mesh_config = MeshConfig(
 
 mesh = create_mesh(mesh_config)
 
-# Usar mesh para sharding
+# Use mesh for sharding
 from jax.experimental import mesh_utils
 from jax.sharding import PartitionSpec as P
 
-# Particionar datos
-data_sharding = P('data', None)    # Shard en dimension data
+# Partition data
+data_sharding = P('data', None)    # Shard on data dimension
 
-# Particionar modelo
-weight_sharding = P(None, 'model')  # Shard en dimension model
+# Partition model
+weight_sharding = P(None, 'model')  # Shard on model dimension
 ```
 
 ### Sharding Strategies
@@ -231,13 +231,13 @@ hybrid_mesh = create_mesh(
     axis_names=('data', 'model')
 )
 
-# Strategy 3: Expert Parallelism (para MoE)
+# Strategy 3: Expert Parallelism (for MoE)
 moe_mesh = create_mesh(
     mesh_shape=(4, 4, 4),    # (data, model, expert)
     axis_names=('data', 'model', 'expert')
 )
 
-# Aplicar sharding a modelo
+# Apply sharding to model
 from capibara.core.tpu import shard_model
 
 sharded_model = shard_model(
@@ -256,7 +256,7 @@ sharded_model = shard_model(
 ```python
 from capibara.core.tpu import enable_xla_optimizations
 
-# Habilitar todas las optimizaciones XLA
+# Enable all XLA optimizations
 enable_xla_optimizations(
     level=3,                 # 0 (none) - 3 (maximum)
     enable_fusion=True,
@@ -271,7 +271,7 @@ enable_xla_optimizations(
 ```python
 from capibara.core.tpu import set_xla_flags
 
-# Configurar flags XLA específicos
+# Configure specific XLA flags
 set_xla_flags({
     "xla_tpu_enable_data_parallelism": True,
     "xla_tpu_enable_async_collective_fusion": True,
@@ -288,16 +288,16 @@ set_xla_flags({
 ```python
 import jax
 
-# JIT con optimizaciones TPU
+# JIT with TPU optimizations
 @jax.jit(
-    donate_argnums=(0,),     # Donate buffers para memory efficiency
+    donate_argnums=(0,),     # Donate buffers for memory efficiency
     backend="tpu",
     device=jax.devices()[0]
 )
 def optimized_forward(params, inputs):
     return model.apply(params, inputs)
 
-# Compilar ahead-of-time
+# Compile ahead-of-time
 compiled_fn = jax.jit(optimized_forward).lower(params, inputs).compile()
 ```
 
@@ -310,7 +310,7 @@ compiled_fn = jax.jit(optimized_forward).lower(params, inputs).compile()
 ```python
 from capibara.core.tpu import MemoryOptimizer
 
-# Crear memory optimizer
+# Create memory optimizer
 mem_opt = MemoryOptimizer(
     strategy="aggressive",   # none, normal, aggressive
     enable_rematerialization=True,
@@ -318,7 +318,7 @@ mem_opt = MemoryOptimizer(
     activation_checkpointing_layers=2
 )
 
-# Aplicar optimizaciones
+# Apply optimizations
 optimized_model = mem_opt.optimize(model)
 
 # Estimate memory usage
@@ -335,23 +335,23 @@ print(f"Estimated HBM: {memory_estimate['total_gb']:.1f}GB")
 ```python
 from capibara.core.tpu import enable_gradient_checkpointing
 
-# Habilitar gradient checkpointing (recompute activations)
+# Enable gradient checkpointing (recompute activations)
 checkpointed_model = enable_gradient_checkpointing(
     model,
-    checkpoint_every_n_layers=2,  # Checkpoint cada 2 capas
+    checkpoint_every_n_layers=2,  # Checkpoint every 2 layers
     checkpoint_policy="nothing_saveable"  # everything, nothing_saveable, minimal
 )
 
-# Reduce memoria ~50%, aumenta cómputo ~20%
+# Reduces memory ~50%, increases compute ~20%
 ```
 
 ### Buffer Donation
 
 ```python
-# Donate buffers para reusar memoria
-@jax.jit(donate_argnums=(0, 1))  # Donate params y state
+# Donate buffers to reuse memory
+@jax.jit(donate_argnums=(0, 1))  # Donate params and state
 def train_step(params, state, batch):
-    # params y state se pueden reusar in-place
+    # params and state can be reused in-place
     return updated_params, updated_state
 ```
 
@@ -364,24 +364,24 @@ def train_step(params, state, batch):
 ```python
 from capibara.core.tpu import TPUv6VQIntegration
 
-# Configurar VQ acelerado por hardware (TPU v6 only)
+# Configure hardware-accelerated VQ (TPU v6 only)
 vq_integration = TPUv6VQIntegration(
     quantization_bits=8,     # 4, 8, 16
     vector_length=512,
     codebook_size=1024,
-    enable_hardware_acceleration=True,  # Usa HW accel si disponible
+    enable_hardware_acceleration=True,  # Uses HW accel if available
     distance_metric="euclidean"  # euclidean, cosine, dot_product
 )
 
-# Quantizar modelo
+# Quantize model
 quantized_model = vq_integration.quantize_model(
     model=model,
     calibration_data=calibration_dataset,
-    target_accuracy_retention=0.98,  # Mantener 98% accuracy
+    target_accuracy_retention=0.98,  # Maintain 98% accuracy
     num_calibration_batches=100
 )
 
-# Métricas
+# Metrics
 metrics = vq_integration.get_metrics()
 print(f"Compression ratio: {metrics['compression_ratio']:.1f}x")
 print(f"Speedup: {metrics['inference_speedup']:.1f}x")
@@ -391,21 +391,21 @@ print(f"Accuracy retention: {metrics['accuracy_retention']:.2%}")
 ### VQ Codebook Management
 
 ```python
-# Entrenar codebook
+# Train codebook
 codebook = vq_integration.train_codebook(
     training_data=train_vectors,
     num_iterations=1000,
     batch_size=1024
 )
 
-# Guardar/cargar codebook
+# Save/load codebook
 vq_integration.save_codebook("codebooks/model_vq.pkl")
 vq_integration.load_codebook("codebooks/model_vq.pkl")
 
-# Quantizar activaciones en tiempo real
+# Quantize activations in real-time
 @jax.jit
 def quantized_forward(inputs):
-    # Activations se quantizan automáticamente
+    # Activations are automatically quantized
     return quantized_model(inputs)
 ```
 
@@ -418,16 +418,16 @@ def quantized_forward(inputs):
 ```python
 from capibara.core.tpu import find_optimal_batch_size
 
-# Encontrar batch size óptimo
+# Find optimal batch size
 optimal_bs = find_optimal_batch_size(
     model=model,
     sequence_length=2048,
-    target_utilization=0.90,  # 90% utilización TPU
+    target_utilization=0.90,  # 90% TPU utilization
     available_memory_gb=32 * 64  # 32GB * 64 chips
 )
 
 print(f"Optimal batch size: {optimal_bs}")
-# Típicamente: 128-256 para v6e-64
+# Typically: 128-256 for v6e-64
 ```
 
 ### Profiling
@@ -435,7 +435,7 @@ print(f"Optimal batch size: {optimal_bs}")
 ```python
 from capibara.core.tpu import TPUProfiler
 
-# Profiler TPU
+# TPU profiler
 profiler = TPUProfiler(
     output_dir="profiles/",
     capture_memory=True,
@@ -446,22 +446,22 @@ profiler = TPUProfiler(
 with profiler.profile("train_step"):
     loss = train_step(params, batch)
 
-# Generar reporte
+# Generate report
 profiler.generate_report()
-# Ver en TensorBoard: tensorboard --logdir profiles/
+# View in TensorBoard: tensorboard --logdir profiles/
 ```
 
 ### Bottleneck Analysis
 
 ```python
-# Analizar bottlenecks
+# Analyze bottlenecks
 analysis = profiler.analyze_bottlenecks()
 
 print(f"Compute bound: {analysis['compute_bound']:.1%}")
 print(f"Memory bound: {analysis['memory_bound']:.1%}")
 print(f"Communication bound: {analysis['communication_bound']:.1%}")
 
-# Recomendaciones
+# Recommendations
 for recommendation in analysis['recommendations']:
     print(f"- {recommendation}")
 ```
@@ -475,20 +475,20 @@ for recommendation in analysis['recommendations']:
 ```python
 from capibara.core.tpu import TPUMonitor
 
-# Crear monitor
+# Create monitor
 monitor = TPUMonitor(
     update_frequency_seconds=10,
     enable_prometheus=True,
     prometheus_port=9090
 )
 
-# Monitorear training
+# Monitor training
 monitor.start()
 
 for batch in dataloader:
     loss = train_step(batch)
 
-    # Métricas automáticamente logged
+    # Metrics automatically logged
     metrics = monitor.get_current_metrics()
     print(f"TPU Utilization: {metrics['utilization']:.1%}")
     print(f"HBM Usage: {metrics['memory_usage_gb']:.1f}GB")
@@ -500,7 +500,7 @@ monitor.stop()
 ### Performance Metrics
 
 ```python
-# Obtener métricas detalladas
+# Get detailed metrics
 perf_metrics = config.get_performance_metrics()
 
 print(f"Total TFLOPS: {perf_metrics['total_tflops']:.1f}")
@@ -513,7 +513,7 @@ print(f"Samples/sec: {perf_metrics['throughput_samples_s']:.1f}")
 ### Alerting
 
 ```python
-# Configurar alertas
+# Configure alerts
 monitor.set_alert(
     metric="utilization",
     condition="<",
@@ -524,7 +524,7 @@ monitor.set_alert(
 monitor.set_alert(
     metric="memory_usage_gb",
     condition=">",
-    threshold=28,  # 28GB de 32GB
+    threshold=28,  # 28GB of 32GB
     action=lambda: print("⚠️ High memory usage!")
 )
 ```
@@ -536,13 +536,13 @@ monitor.set_alert(
 ### Error: "TPU not found"
 
 ```python
-# Verificar TPU disponible
+# Verify TPU available
 import jax
 print(f"Devices: {jax.devices()}")
 
-# Si no aparecen TPUs:
-# 1. Verificar que estás en TPU VM
-# 2. Verificar variables de entorno
+# If no TPUs appear:
+# 1. Verify you are on a TPU VM
+# 2. Verify environment variables
 from capibara.core.tpu import diagnose_tpu
 
 diagnosis = diagnose_tpu()
@@ -551,29 +551,29 @@ print(diagnosis['summary'])
 
 ### Error: "Out of Memory"
 
-**Soluciones**:
+**Solutions**:
 
 ```python
-# 1. Reducir batch size
-config.batch_size_per_chip = 8  # De 16 a 8
+# 1. Reduce batch size
+config.batch_size_per_chip = 8  # From 16 to 8
 
-# 2. Habilitar gradient checkpointing
+# 2. Enable gradient checkpointing
 config.gradient_checkpointing = True
 
-# 3. Usar aggressive memory optimization
+# 3. Use aggressive memory optimization
 config.memory_optimization = "aggressive"
 
-# 4. Aumentar model parallelism
-config.mesh_shape = (4, 16)  # Más model parallel
+# 4. Increase model parallelism
+config.mesh_shape = (4, 16)  # More model parallel
 
-# 5. Usar quantization
+# 5. Use quantization
 from capibara.core.tpu import quantize_for_tpu
 quantized_model = quantize_for_tpu(model, bits=8)
 ```
 
 ### Slow Training
 
-**Diagnóstico**:
+**Diagnosis**:
 
 ```python
 from capibara.core.tpu import diagnose_performance
@@ -581,38 +581,38 @@ from capibara.core.tpu import diagnose_performance
 perf_diagnosis = diagnose_performance(
     model=model,
     dataloader=dataloader,
-    target_tflops=15000  # Para v6e-64
+    target_tflops=15000  # For v6e-64
 )
 
-# Ver recomendaciones
+# View recommendations
 for issue in perf_diagnosis['issues']:
     print(f"Issue: {issue['problem']}")
     print(f"Impact: {issue['impact']}")
     print(f"Solution: {issue['solution']}\n")
 ```
 
-**Soluciones comunes**:
+**Common solutions**:
 
-1. **Data loading bottleneck**: Aumentar `num_workers`, usar prefetching
-2. **Compilation overhead**: Pre-compilar funciones con `jax.jit`
-3. **Communication overhead**: Reducir all-reduce frequency
-4. **Suboptimal batch size**: Usar `find_optimal_batch_size()`
+1. **Data loading bottleneck**: Increase `num_workers`, use prefetching
+2. **Compilation overhead**: Pre-compile functions with `jax.jit`
+3. **Communication overhead**: Reduce all-reduce frequency
+4. **Suboptimal batch size**: Use `find_optimal_batch_size()`
 
 ### Debugging TPU Code
 
 ```python
-# Habilitar debugging mode
+# Enable debugging mode
 config.enable_debugging_mode()
 
-# Deshabilitar JIT temporalmente
+# Temporarily disable JIT
 import jax
 jax.config.update('jax_disable_jit', True)
 
-# Habilitar NaN/Inf detection
+# Enable NaN/Inf detection
 jax.config.update('jax_debug_nans', True)
 jax.config.update('jax_debug_infs', True)
 
-# Ver compilaciones
+# View compilations
 jax.config.update('jax_log_compiles', True)
 ```
 
@@ -649,7 +649,7 @@ jax.config.update('jax_log_compiles', True)
 
 ---
 
-## 📚 Referencias
+## 📚 References
 
 ### Google Cloud Documentation
 
@@ -680,7 +680,7 @@ jax.config.update('jax_log_compiles', True)
 ```python
 from capibara.jax.tpu_v4 import adaptive_kernels
 
-# Usar kernels TPU-optimizados
+# Use TPU-optimized kernels
 output = adaptive_kernels.adaptive_matmul(
     a, b,
     precision="highest",
@@ -691,7 +691,7 @@ output = adaptive_kernels.adaptive_matmul(
 ### Multi-Host Training
 
 ```python
-# Para TPU pods con múltiples hosts
+# For TPU pods with multiple hosts
 from capibara.core.tpu import MultiHostConfig
 
 multi_host_config = MultiHostConfig(
@@ -704,7 +704,7 @@ multi_host_config = MultiHostConfig(
 multi_host_config.setup()
 ```
 
-### Checkpointing en TPU
+### Checkpointing on TPU
 
 ```python
 from capibara.core.tpu import TPUCheckpointer
@@ -712,22 +712,22 @@ from capibara.core.tpu import TPUCheckpointer
 checkpointer = TPUCheckpointer(
     checkpoint_dir="gs://bucket/checkpoints/",
     max_to_keep=3,
-    async_checkpointing=True  # No bloquea training
+    async_checkpointing=True  # Does not block training
 )
 
-# Guardar checkpoint
+# Save checkpoint
 checkpointer.save(
     step=1000,
     params=params,
     opt_state=opt_state
 )
 
-# Restaurar
+# Restore
 restored = checkpointer.restore(step=1000)
 ```
 
 ---
 
-**Última actualización**: 2025-11-16
-**Versión**: 2.0.0
+**Last update**: 2025-11-16
+**Version**: 2.0.0
 **TPU Versions**: v4, v5e, v6e

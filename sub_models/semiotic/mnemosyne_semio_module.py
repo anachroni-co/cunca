@@ -20,22 +20,22 @@ logger = logging.getLogger(__name__)
 
 class MnemosyneSemioModule:
     """
-    Módulo especializado para análisis semiótico y cultural de arte visual y literario,
-    inspirado en el enfoque de Mario Praz. Este module está diseñado para activarse
-    automáticamente durante la inferencia en CapibaraGPT cuando se detecten solicitudes
-    relacionadas con arte, fotografía, vídeo o descripciones de obras clásicas.
+    Specialized module for semiotic and cultural analysis of visual and literary art,
+    inspired by Mario Praz's approach. This module is designed to automatically activate
+    during inference in CapibaraGPT when requests related to art, photography, video,
+    or descriptions of classical works are detected.
     """
 
     def __init__(self, use_sparse=False, use_meta_bamdp=False):
         self.activated: bool = False
         self.context_keywords: List[str] = [
-            "obra de arte", "análisis artístico", "pintura", "escultura", "videoarte",
-            "fotografía", "interpretación simbólica", "símbolos visuales", "arte clásico",
-            "romanticismo", "barroco", "renacimiento", "iconografía"
+            "artwork", "artistic analysis", "painting", "sculpture", "video art",
+            "photography", "symbolic interpretation", "visual symbols", "classical art",
+            "romanticism", "baroque", "renaissance", "iconography"
         ]
-        # Se cargará durante el entrenamiento
+        # Will be loaded during training
         self.literary_corpus: Optional[Dict] = None
-        # Índice vectorial visual
+        # Visual vector index
         self.visual_reference_db: Optional[Dict] = None
         self.style_lookup: Dict[str, str] = {}
         self.symbol_lookup: Dict[str, List[str]] = {}
@@ -94,13 +94,13 @@ class MnemosyneSemioModule:
         if not self.activated:
             return {"status": "inactive", "reason": "context not matched"}
 
-        # Paso 1: Identificación de época y estilo
+        # Step 1: Era and style identification
         style, style_conf = self.identify_historical_style(input_text)
 
-        # Paso 2: Iconografía y simbolismo
+        # Step 2: Iconography and symbolism
         symbols, symbols_conf = self.extract_symbols(input_text, image_metadata)
 
-        # Paso 3: Paralelismo cultural
+        # Step 3: Cultural parallelism
         parallels = self.find_cross_modal_parallels(style)
 
         return {
@@ -137,7 +137,7 @@ class MnemosyneSemioModule:
             confidence = min(1.0, best_match[1] / 10.0)  # Normalize confidence
             return best_match[0], confidence
         
-        return "Desconocido", 0.0
+        return "Unknown", 0.0
 
     def extract_symbols(self, text: str, image_metadata: Optional[Dict]) -> Tuple[List[str], float]:
         """Extract symbols from text and image metadata with confidence score."""
@@ -170,8 +170,8 @@ class MnemosyneSemioModule:
                                symbol_mapping: Dict[str, List[str]],
                                parallel_mapping: Dict[str, List[str]]):
         """
-        Carga de material de entrenamiento, incluyendo corpus literario, referencias visuales,
-        mapa de estilos, mapa simbólico e índice de paralelismos interdisciplinares.
+        Load training material, including literary corpus, visual references,
+        style mapping, symbolic mapping, and interdisciplinary parallelism index.
         """
         self.literary_corpus = corpus
         self.visual_reference_db = visual_db
@@ -198,7 +198,7 @@ class MnemosyneSemioModule:
 
     def to_jax_array(self, x):
         """
-        Convierte tensores de PyTorch o NumPy a jnp.ndarray para compatibilidad con JAX/Flax.
+        Convert PyTorch or NumPy tensors to jnp.ndarray for JAX/Flax compatibility.
         """
         if isinstance(x, jnp.ndarray):
             return x
@@ -216,7 +216,7 @@ class MnemosyneSemioModule:
             try:
                 return jnp.array(x)
             except Exception as e:
-                raise TypeError(f"Tipo de tensor no soportado: {type(x)}, error: {e}")
+                raise TypeError(f"Unsupported tensor type: {type(x)}, error: {e}")
 
     def analyze(
         self,
@@ -252,7 +252,7 @@ class MnemosyneSemioModule:
             else:
                 full_text = input_text
 
-            # Conversión robusta de features a jnp.ndarray
+            # Robust conversion of features to jnp.ndarray
             processed_features = None
             if features is not None:
                 try:
@@ -286,7 +286,7 @@ class MnemosyneSemioModule:
             }
 
         except Exception as e:
-            logger.error(f"Error en análisis semiótico: {str(e)}")
+            logger.error(f"Error in semiotic analysis: {str(e)}")
             return {
                 "status": "error",
                 "error": str(e),
@@ -298,7 +298,7 @@ class MnemosyneSemioModule:
         Describe an image using BLIP if available, otherwise return placeholder.
         """
         if not self.processor:
-            return "Imagen no procesada (BLIP no disponible)", 0.0
+            return "Image not processed (BLIP not available)", 0.0
             
         try:
             # This would require PIL and the actual BLIP model

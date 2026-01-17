@@ -1,9 +1,9 @@
-# Perfiles de producción (TPU)
+# Production Profiles (TPU)
 
-Se han creado perfiles fusionados:
-- `fusion_base.toml`: base común con parámetros del modelo, memoria, router, módulos, servicios, etc.
-- `fusion_production.toml`: perfil de producción (TPU v6e / MoE) que complementa la base.
+Merged profiles have been created:
+- `fusion_base.toml`: common base with model parameters, memory, router, modules, services, etc.
+- `fusion_production.toml`: production profile (TPU v6e / MoE) that complements the base.
 
-Recomendado: en código, apuntar a `fusion_production.toml` o a `fusion_base.toml` según necesidad.
+Recommended: in code, point to `fusion_production.toml` or `fusion_base.toml` as needed.
 
-Archivos anteriores pueden mantenerse por compatibilidad, pero se sugiere migrar.
+Previous files can be kept for compatibility, but migration is suggested.

@@ -1,14 +1,14 @@
 """
 Shared Attention Module for CapibaraGPT
 
-This module implements mecanismos of attention compartida optimizados para TPU,
-incluyendo multi-head attention, cross-attention, y attention caching para
-mejorar la eficiencia computacional.
+This module implements shared attention mechanisms optimized for TPU,
+including multi-head attention, cross-attention, and attention caching to
+improve computational efficiency.
 
-Características:
-- Multi-head attention optimizada para TPU
-- Cross-attention para modelos encoder-decoder
-- Attention caching para inferencia eficiente
+Features:
+- Multi-head attention optimized for TPU
+- Cross-attention for encoder-decoder models
+- Attention caching for efficient inference
 - Sparse attention patterns
 - Memory-efficient attention computation
 - Gradient checkpointing support
@@ -77,7 +77,7 @@ class AttentionConfig:
     shard_attention: bool = True
 
 class AttentionCache:
-    """Cache para keys y values en inferencia."""
+    """Cache for keys and values during inference."""
     
     def __init__(self, config: AttentionConfig):
         self.config = config
@@ -91,7 +91,7 @@ class AttentionCache:
         return self.cache.get(cache_key)
     
     def set(self, layer_id: int, head_id: int, keys: jnp.ndarray, values: jnp.ndarray):
-        """Saves keys y values en el cache."""
+        """Saves keys and values in the cache."""
         cache_key = (layer_id, head_id)
         
         # Evict if cache is full
@@ -103,7 +103,7 @@ class AttentionCache:
             self.cache_size += 1
     
     def clear(self):
-        """Limpia el cache."""
+        """Clears the cache."""
         self.cache.clear()
         self.cache_size = 0
     
@@ -116,8 +116,8 @@ class AttentionCache:
 
 class MultiHeadAttention:
     """
-    Multi-head attention optimizada para TPU con soporte para caching
-    y patrones of attention sparse.
+    Multi-head attention optimized for TPU with caching support
+    and sparse attention patterns.
     """
     
     def __init__(self, config: AttentionConfig, layer_id: int = 0):
@@ -156,7 +156,7 @@ class MultiHeadAttention:
                  training: bool = True,
                  use_cache: bool = False) -> Dict[str, jnp.ndarray]:
         """
-        Forward pass del multi-head attention.
+        Forward pass of multi-head attention.
         
         Args:
             query: Query tensor [batch, seq_len, hidden_size]
@@ -218,14 +218,14 @@ class MultiHeadAttention:
         return result
     
     def _linear_projection(self, x: jnp.ndarray, weight: jnp.ndarray) -> jnp.ndarray:
-        """Proyección linear."""
+        """Linear projection."""
         if HAS_JAX:
             return jnp.dot(x, weight)
         else:
             return np.dot(x, weight)
     
     def _reshape_for_attention(self, x: jnp.ndarray, batch_size: int, seq_len: int) -> jnp.ndarray:
-        """Reshape tensor para multi-head attention."""
+        """Reshape tensor for multi-head attention."""
         # [batch, seq_len, hidden] -> [batch, seq_len, num_heads, head_dim]
         x = x.reshape(batch_size, seq_len, self.num_heads, self.head_dim)
         # -> [batch, num_heads, seq_len, head_dim]
@@ -235,7 +235,7 @@ class MultiHeadAttention:
             return np.transpose(x, (0, 2, 1, 3))
     
     def _reshape_from_attention(self, x: jnp.ndarray, batch_size: int, seq_len: int) -> jnp.ndarray:
-        """Reshape tensor de vuelta desde multi-head attention."""
+        """Reshape tensor back from multi-head attention."""
         # [batch, num_heads, seq_len, head_dim] -> [batch, seq_len, num_heads, head_dim]
         if HAS_JAX:
             x = jnp.transpose(x, (0, 2, 1, 3))
@@ -250,7 +250,7 @@ class MultiHeadAttention:
                           v: jnp.ndarray,
                           mask: Optional[jnp.ndarray] = None,
                           training: bool = True) -> Tuple[jnp.ndarray, jnp.ndarray]:
-        """Implementation standard attention."""
+        """Standard attention implementation."""
         # Compute attention scores
         if HAS_JAX:
             scores = jnp.matmul(q, jnp.transpose(k, (0, 1, 3, 2))) * self.scale
@@ -284,7 +284,7 @@ class MultiHeadAttention:
                                   v: jnp.ndarray,
                                   mask: Optional[jnp.ndarray] = None,
                                   training: bool = True) -> Tuple[jnp.ndarray, jnp.ndarray]:
-        """Implementation memory-efficient attention using chunking."""
+        """Memory-efficient attention implementation using chunking."""
         batch_size, num_heads, seq_len, head_dim = q.shape
         chunk_size = min(512, seq_len)  # Chunk size for memory efficiency
         
@@ -369,7 +369,7 @@ class MultiHeadAttention:
             return x * mask / (1 - rate)
     
     def _apply_cache(self, k: jnp.ndarray, v: jnp.ndarray) -> Tuple[jnp.ndarray, jnp.ndarray]:
-        """Applies cache de keys y values."""
+        """Applies keys and values cache."""
         if self.cache is None:
             return k, v
         
@@ -395,7 +395,7 @@ class MultiHeadAttention:
                 new_k = k[:, head_id:head_id+1, :, :]
                 new_v = v[:, head_id:head_id+1, :, :]
             
-            # Actualizar cache
+            # Update cache
             self.cache.set(self.layer_id, head_id, new_k, new_v)
             
             cached_k_list.append(new_k)
@@ -413,8 +413,8 @@ class MultiHeadAttention:
 
 class CrossAttention(MultiHeadAttention):
     """
-    Cross-attention para modelos encoder-decoder.
-    Hereda de MultiHeadAttention pero especializada para cross-attention.
+    Cross-attention for encoder-decoder models.
+    Inherits from MultiHeadAttention but specialized for cross-attention.
     """
     
     def __init__(self, config: AttentionConfig, layer_id: int = 0):
@@ -427,7 +427,7 @@ class CrossAttention(MultiHeadAttention):
                  encoder_mask: Optional[jnp.ndarray] = None,
                  training: bool = True) -> Dict[str, jnp.ndarray]:
         """
-        Cross-attention entre decoder query y encoder output.
+        Cross-attention between decoder query and encoder output.
         
         Args:
             query: Decoder query [batch, dec_seq_len, hidden_size]
@@ -447,7 +447,7 @@ class CrossAttention(MultiHeadAttention):
 
 class SparseAttention(MultiHeadAttention):
     """
-    Sparse attention patterns para reducir complejidad computacional.
+    Sparse attention patterns to reduce computational complexity.
     """
     
     def __init__(self, config: AttentionConfig, layer_id: int = 0):
@@ -538,7 +538,7 @@ class SparseAttention(MultiHeadAttention):
         return mask
     
     def __call__(self, *args, **kwargs) -> Dict[str, jnp.ndarray]:
-        """Override para aplicar sparse attention."""
+        """Override to apply sparse attention."""
         # Get sequence length from query
         query = args[0] if args else kwargs['query']
         batch_size, seq_len, _ = query.shape
@@ -563,7 +563,7 @@ class SparseAttention(MultiHeadAttention):
 
 class SharedAttentionManager:
     """
-    Manager para coordinar múltiples modules of attention compartida.
+    Manager to coordinate multiple shared attention modules.
     """
     
     def __init__(self, config: AttentionConfig):
@@ -601,7 +601,7 @@ class SharedAttentionManager:
         return self.attention_modules.get(module_key)
     
     def clear_all_caches(self):
-        """Limpia todos los caches of attention."""
+        """Clears all attention caches."""
         self.global_cache.clear()
         for module in self.attention_modules.values():
             if hasattr(module, 'cache') and module.cache is not None:
@@ -689,7 +689,7 @@ def main():
     cross_attention = manager.create_attention_module("cross_attention", layer_id=1)
     sparse_attention = manager.create_attention_module("sparse_attention", layer_id=2)
     
-    # Test básico
+    # Basic test
     batch_size, seq_len, hidden_size = 2, 128, 768
     
     if HAS_JAX:

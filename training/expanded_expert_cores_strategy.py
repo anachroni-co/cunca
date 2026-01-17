@@ -69,7 +69,7 @@ class ExpandedExpertCoresStrategy:
             ExpertCoreType.SPANISH_LANGUAGE: ExpertCoreConfig(
                 core_type=ExpertCoreType.SPANISH_LANGUAGE,
                 name="Spanish Language Core",
-                description="Core especializado en idioma español con múltiples expertos",
+                description="Core specialized in Spanish language with multiple experts",
                 weight=3.0,  # Highest weight for Spanish
                 priority=1,
                 models=[
@@ -114,7 +114,7 @@ class ExpandedExpertCoresStrategy:
             ExpertCoreType.MATHEMATICS: ExpertCoreConfig(
                 core_type=ExpertCoreType.MATHEMATICS,
                 name="Mathematics Core",
-                description="Core especializado en matemáticas y cálculos",
+                description="Core specialized in mathematics and calculations",
                 weight=2.5,
                 priority=2,
                 models=[
@@ -152,7 +152,7 @@ class ExpandedExpertCoresStrategy:
             ExpertCoreType.PROGRAMMING: ExpertCoreConfig(
                 core_type=ExpertCoreType.PROGRAMMING,
                 name="Programming Core",
-                description="Core especializado en programación y desarrollo",
+                description="Core specialized in programming and development",
                 weight=2.3,
                 priority=3,
                 models=[
@@ -197,7 +197,7 @@ class ExpandedExpertCoresStrategy:
             ExpertCoreType.MEDICAL: ExpertCoreConfig(
                 core_type=ExpertCoreType.MEDICAL,
                 name="Medical Core",
-                description="Core especializado en medicina y salud",
+                description="Core specialized in medicine and health",
                 weight=2.2,
                 priority=4,
                 models=[
@@ -235,7 +235,7 @@ class ExpandedExpertCoresStrategy:
             ExpertCoreType.LEGAL: ExpertCoreConfig(
                 core_type=ExpertCoreType.LEGAL,
                 name="Legal Core",
-                description="Core especializado en derecho y legal",
+                description="Core specialized in law and legal matters",
                 weight=2.1,
                 priority=5,
                 models=[
@@ -273,7 +273,7 @@ class ExpandedExpertCoresStrategy:
             ExpertCoreType.REASONING: ExpertCoreConfig(
                 core_type=ExpertCoreType.REASONING,
                 name="Logical Reasoning Core",
-                description="Core especializado en razonamiento lógico",
+                description="Core specialized in logical reasoning",
                 weight=2.0,
                 priority=6,
                 models=[
@@ -311,7 +311,7 @@ class ExpandedExpertCoresStrategy:
             ExpertCoreType.SCIENTIFIC: ExpertCoreConfig(
                 core_type=ExpertCoreType.SCIENTIFIC,
                 name="Scientific Core",
-                description="Core especializado en ciencias y investigación",
+                description="Core specialized in sciences and research",
                 weight=1.9,
                 priority=7,
                 models=[
@@ -349,7 +349,7 @@ class ExpandedExpertCoresStrategy:
             ExpertCoreType.TECHNICAL: ExpertCoreConfig(
                 core_type=ExpertCoreType.TECHNICAL,
                 name="Technical Core",
-                description="Core especializado en ingeniería y tecnología",
+                description="Core specialized in engineering and technology",
                 weight=1.8,
                 priority=8,
                 models=[
@@ -387,7 +387,7 @@ class ExpandedExpertCoresStrategy:
             ExpertCoreType.CREATIVE: ExpertCoreConfig(
                 core_type=ExpertCoreType.CREATIVE,
                 name="Creative Core",
-                description="Core especializado en creatividad y arte",
+                description="Core specialized in creativity and art",
                 weight=1.7,
                 priority=9,
                 models=[
@@ -425,7 +425,7 @@ class ExpandedExpertCoresStrategy:
             ExpertCoreType.ANALYTICAL: ExpertCoreConfig(
                 core_type=ExpertCoreType.ANALYTICAL,
                 name="Analytical Core",
-                description="Core especializado en análisis de datos",
+                description="Core specialized in data analysis",
                 weight=1.6,
                 priority=10,
                 models=[
@@ -463,7 +463,7 @@ class ExpandedExpertCoresStrategy:
             ExpertCoreType.CONVERSATIONAL: ExpertCoreConfig(
                 core_type=ExpertCoreType.CONVERSATIONAL,
                 name="Conversational Core",
-                description="Core especializado en conversación natural",
+                description="Core specialized in natural conversation",
                 weight=1.5,
                 priority=11,
                 models=[
@@ -501,7 +501,7 @@ class ExpandedExpertCoresStrategy:
             ExpertCoreType.MULTIMODAL: ExpertCoreConfig(
                 core_type=ExpertCoreType.MULTIMODAL,
                 name="Multimodal Core",
-                description="Core especializado en contenido multimodal",
+                description="Core specialized in multimodal content",
                 weight=1.4,
                 priority=12,
                 models=[
