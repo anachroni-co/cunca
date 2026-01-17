@@ -1,31 +1,31 @@
 # Monitoring Module
 
-Sistema avanzado de monitoreo y alertas para TPU con métricas en tiempo real, detección de anomalías y gestión proactiva de rendimiento.
+Advanced monitoring and alerts system for TPU with real-time metrics, anomaly detection, and proactive performance management.
 
-## 📋 Descripción
+## 📋 Description
 
-Este módulo proporciona capacidades comprehensivas de monitoreo para infraestructura TPU, incluyendo métricas de rendimiento, alertas configurables, análisis de tendencias y optimizaciones automáticas basadas en telemetría en tiempo real.
+This module provides comprehensive monitoring capabilities for TPU infrastructure, including performance metrics, configurable alerts, trend analysis, and automatic optimizations based on real-time telemetry.
 
-## 🏗️ Arquitectura
+## 🏗️ Architecture
 
 ```
 monitoring/
-├── __init__.py          # Exports del sistema de monitoreo
-├── tpu_alerts.py        # Sistema de alertas TPU
-├── tpu_monitor.py       # Monitor básico TPU
-└── tpu_decorators.py    # Decoradores de monitoreo
+├── __init__.py          # Monitoring system exports
+├── tpu_alerts.py        # TPU alert system
+├── tpu_monitor.py       # Basic TPU monitor
+└── tpu_decorators.py    # Monitoring decorators
 ```
 
-## 🔍 Componentes Principales
+## 🔍 Main Components
 
-### 1. Sistema de Alertas TPU (`tpu_alerts.py`)
+### 1. TPU Alert System (`tpu_alerts.py`)
 
-Sistema avanzado de alertas con umbrales configurables y gestión de cooldown.
+Advanced alert system with configurable thresholds and cooldown management.
 
 ```python
 from capibara.core.monitoring import TPUAlertManager
 
-# Configurar sistema de alertas
+# Configure alert system
 alert_manager = TPUAlertManager(
     alert_thresholds={
         "memory_utilization": 0.85,
@@ -36,19 +36,19 @@ alert_manager = TPUAlertManager(
         "tflops_degradation": 0.20
     },
     cooldown_periods={
-        "memory_alert": 300,    # 5 minutos
-        "temperature_alert": 600, # 10 minutos
-        "performance_alert": 180  # 3 minutos
+        "memory_alert": 300,    # 5 minutes
+        "temperature_alert": 600, # 10 minutes
+        "performance_alert": 180  # 3 minutes
     },
     notification_channels=["email", "slack", "webhook"],
     alert_severity_levels=["info", "warning", "critical", "emergency"]
 )
 
-# Configurar métricas críticas
+# Configure critical metrics
 critical_metrics = alert_manager.configure_critical_metrics({
     "oom_detection": {
         "threshold": 0.95,
-        "window_size": 30,  # segundos
+        "window_size": 30,  # seconds
         "severity": "critical"
     },
     "thermal_throttling": {
@@ -63,7 +63,7 @@ critical_metrics = alert_manager.configure_critical_metrics({
     }
 })
 
-# Procesar métricas y generar alertas
+# Process metrics and generate alerts
 current_metrics = {
     "memory_utilization": 0.89,
     "compute_utilization": 0.94,
@@ -80,42 +80,42 @@ for alert in alerts_triggered:
     print(f"   Suggested Action: {alert.suggested_action}")
 ```
 
-### 2. Monitor TPU Básico (`tpu_monitor.py`)
+### 2. Basic TPU Monitor (`tpu_monitor.py`)
 
-Monitor fundamental con métricas básicas de TPU.
+Fundamental monitor with basic TPU metrics.
 
 ```python
 from capibara.core.monitoring import TPUMonitor
 
-# Inicializar monitor básico
+# Initialize basic monitor
 monitor = TPUMonitor(
-    monitoring_interval=5,  # segundos
+    monitoring_interval=5,  # seconds
     metrics_history_size=1000,
     enable_automatic_logging=True,
     log_level="INFO"
 )
 
-# Monitoreo básico de métricas
+# Basic metrics monitoring
 basic_metrics = monitor.get_basic_metrics()
 print(f"TPU Status: {basic_metrics['status']}")
 print(f"Memory Usage: {basic_metrics['memory_usage_gb']:.1f}GB")
 print(f"Temperature: {basic_metrics['temperature']:.1f}°C")
 print(f"Utilization: {basic_metrics['utilization']:.1%}")
 
-# Monitoreo con contexto
+# Context-based monitoring
 with monitor.context("model_inference"):
-    # Código a monitorear
+    # Code to monitor
     model_output = model(input_batch)
-    
-# Obtener métricas del contexto
+
+# Get context metrics
 context_metrics = monitor.get_context_metrics("model_inference")
 print(f"Inference Time: {context_metrics['duration_ms']:.1f}ms")
 print(f"Peak Memory: {context_metrics['peak_memory_gb']:.1f}GB")
 ```
 
-### 3. Decoradores de Monitoreo (`tpu_decorators.py`)
+### 3. Monitoring Decorators (`tpu_decorators.py`)
 
-Decoradores para monitoreo automático de funciones.
+Decorators for automatic function monitoring.
 
 ```python
 from capibara.core.monitoring import (
@@ -125,7 +125,7 @@ from capibara.core.monitoring import (
     alert_on_anomaly
 )
 
-# Decorador de rendimiento completo
+# Full performance decorator
 @monitor_tpu_performance(
     track_memory=True,
     track_compute=True,
@@ -138,49 +138,49 @@ from capibara.core.monitoring import (
 def inference_function(inputs):
     return model(inputs)
 
-# Decorador específico de memoria
+# Memory-specific decorator
 @monitor_memory_usage(
     alert_threshold=0.90,
     track_leaks=True,
     auto_gc=True
 )
 def memory_intensive_function(large_tensor):
-    # Procesamiento que usa mucha memoria
+    # Memory-intensive processing
     result = complex_computation(large_tensor)
     return result
 
-# Decorador de detección de anomalías
+# Anomaly detection decorator
 @alert_on_anomaly(
     baseline_window=100,
-    deviation_threshold=2.0,  # 2 desviaciones estándar
+    deviation_threshold=2.0,  # 2 standard deviations
     metrics=["latency", "memory", "compute"]
 )
 def production_inference(batch):
     return model.predict(batch)
 
-# Usar funciones decoradas
+# Use decorated functions
 inputs = get_batch_inputs()
 outputs = inference_function(inputs)
 
-# Obtener métricas de la función decorada
+# Get decorated function metrics
 function_metrics = monitor_tpu_performance.get_metrics("inference_function")
 print(f"Average Latency: {function_metrics['avg_latency_ms']:.1f}ms")
 print(f"Peak Memory: {function_metrics['peak_memory_gb']:.1f}GB")
 ```
 
-## 📊 Métricas Detalladas
+## 📊 Detailed Metrics
 
-### Sistema de Métricas Comprehensivo
+### Comprehensive Metrics System
 
 ```python
-# Configurar colector de métricas avanzado
+# Configure advanced metrics collector
 from capibara.core.monitoring import AdvancedMetricsCollector
 
 metrics_collector = AdvancedMetricsCollector(
     collection_frequency=1,  # Hz
     metrics_categories=[
         "hardware_utilization",
-        "memory_statistics", 
+        "memory_statistics",
         "compute_performance",
         "thermal_management",
         "power_consumption",
@@ -191,16 +191,16 @@ metrics_collector = AdvancedMetricsCollector(
     anomaly_detection=True
 )
 
-# Métricas de hardware
+# Hardware metrics
 hardware_metrics = metrics_collector.collect_hardware_metrics()
 detailed_metrics = {
     "tpu_utilization": {
         "scalar_utilization": hardware_metrics["scalar_util"],
-        "vector_utilization": hardware_metrics["vector_util"], 
+        "vector_utilization": hardware_metrics["vector_util"],
         "matrix_utilization": hardware_metrics["matrix_util"],
         "memory_bandwidth_util": hardware_metrics["mem_bandwidth_util"]
     },
-    
+
     "memory_breakdown": {
         "hbm_total_gb": hardware_metrics["hbm_total"],
         "hbm_used_gb": hardware_metrics["hbm_used"],
@@ -208,7 +208,7 @@ detailed_metrics = {
         "fragmentation_ratio": hardware_metrics["fragmentation"],
         "allocation_efficiency": hardware_metrics["alloc_efficiency"]
     },
-    
+
     "thermal_profile": {
         "core_temperature": hardware_metrics["core_temp"],
         "memory_temperature": hardware_metrics["mem_temp"],
@@ -216,7 +216,7 @@ detailed_metrics = {
         "cooling_efficiency": hardware_metrics["cooling_eff"],
         "thermal_throttling": hardware_metrics["throttling"]
     },
-    
+
     "performance_counters": {
         "instructions_per_cycle": hardware_metrics["ipc"],
         "cache_hit_ratio": hardware_metrics["cache_hits"],
@@ -236,10 +236,10 @@ for category, metrics in detailed_metrics.items():
             print(f"  {metric}: {value}")
 ```
 
-### Análisis Predictivo
+### Predictive Analytics
 
 ```python
-# Sistema de análisis predictivo
+# Predictive analytics system
 from capibara.core.monitoring import PredictiveAnalytics
 
 predictor = PredictiveAnalytics(
@@ -249,7 +249,7 @@ predictor = PredictiveAnalytics(
     retrain_frequency="daily"
 )
 
-# Predicciones de rendimiento
+# Performance predictions
 performance_forecast = predictor.predict_performance_trends(
     historical_data=metrics_collector.get_historical_data(hours=24),
     forecast_metrics=["memory_usage", "latency", "throughput", "temperature"]
@@ -264,7 +264,7 @@ for metric, prediction in performance_forecast.items():
     if prediction['alert_probability'] > 0.3:
         print(f"  ⚠️  Alert Probability: {prediction['alert_probability']:.1%}")
 
-# Detección de anomalías
+# Anomaly detection
 anomaly_detector = predictor.get_anomaly_detector()
 current_state = metrics_collector.get_current_state()
 anomaly_score = anomaly_detector.compute_anomaly_score(current_state)
@@ -275,16 +275,16 @@ if anomaly_score > 0.8:
     print(f"Primary Contributing Factors: {anomaly_details['factors']}")
 ```
 
-## 🎯 Dashboard y Visualización
+## 🎯 Dashboard and Visualization
 
-### Dashboard en Tiempo Real
+### Real-Time Dashboard
 
 ```python
 from capibara.core.monitoring import MonitoringDashboard
 
-# Crear dashboard de monitoreo
+# Create monitoring dashboard
 dashboard = MonitoringDashboard(
-    refresh_rate=2,  # segundos
+    refresh_rate=2,  # seconds
     charts=[
         "tpu_utilization_timeline",
         "memory_usage_heatmap",
@@ -297,7 +297,7 @@ dashboard = MonitoringDashboard(
     real_time_alerts=True
 )
 
-# Configurar widgets del dashboard
+# Configure dashboard widgets
 dashboard.add_widget("performance_summary", {
     "type": "summary_card",
     "metrics": ["avg_latency", "peak_memory", "current_tflops"],
@@ -305,7 +305,7 @@ dashboard.add_widget("performance_summary", {
 })
 
 dashboard.add_widget("alert_status", {
-    "type": "alert_panel", 
+    "type": "alert_panel",
     "severity_filter": ["warning", "critical"],
     "max_alerts": 10
 })
@@ -316,7 +316,7 @@ dashboard.add_widget("resource_utilization", {
     "thresholds": {"warning": 0.7, "critical": 0.9}
 })
 
-# Exportar métricas para sistemas externos
+# Export metrics for external systems
 dashboard.export_metrics(
     format="prometheus",
     endpoint="/metrics",
@@ -324,10 +324,10 @@ dashboard.export_metrics(
 )
 ```
 
-### Integración con Grafana
+### Grafana Integration
 
 ```python
-# Configuración para Grafana
+# Grafana configuration
 grafana_config = {
     "datasource": {
         "name": "CapibaraTPU",
@@ -356,16 +356,16 @@ grafana_config = {
     ]
 }
 
-# Exportar configuración
+# Export configuration
 dashboard.export_grafana_config(grafana_config)
 ```
 
-## 🔧 Configuración Avanzada
+## 🔧 Advanced Configuration
 
-### Configuración de Alertas Personalizadas
+### Custom Alert Configuration
 
 ```python
-# Configuración avanzada de alertas
+# Advanced alert configuration
 custom_alert_rules = [
     {
         "name": "memory_leak_detection",
@@ -375,7 +375,7 @@ custom_alert_rules = [
     },
     {
         "name": "performance_regression",
-        "condition": "avg_latency > baseline * 1.5 for 5min", 
+        "condition": "avg_latency > baseline * 1.5 for 5min",
         "severity": "critical",
         "actions": ["alert", "auto_scale", "circuit_breaker"]
     },
@@ -393,10 +393,10 @@ custom_alert_rules = [
     }
 ]
 
-# Aplicar reglas personalizadas
+# Apply custom rules
 alert_manager.add_custom_rules(custom_alert_rules)
 
-# Sistema de escalación
+# Escalation system
 escalation_policy = {
     "warning": {
         "immediate": ["log", "metrics_update"],
@@ -418,10 +418,10 @@ escalation_policy = {
 alert_manager.configure_escalation(escalation_policy)
 ```
 
-### Optimización Automática
+### Automatic Optimization
 
 ```python
-# Sistema de optimización automática basado en métricas
+# Metrics-based automatic optimization system
 from capibara.core.monitoring import AutoOptimizer
 
 auto_optimizer = AutoOptimizer(
@@ -439,7 +439,7 @@ auto_optimizer = AutoOptimizer(
     rollback_on_degradation=True
 )
 
-# Configurar parámetros optimizables
+# Configure optimizable parameters
 optimizable_params = {
     "batch_size": {"range": [8, 64], "type": "discrete"},
     "learning_rate": {"range": [1e-5, 1e-3], "type": "continuous"},
@@ -447,7 +447,7 @@ optimizable_params = {
     "compute_precision": {"options": ["float32", "bfloat16", "int8"], "type": "categorical"}
 }
 
-# Ejecutar optimización automática
+# Execute automatic optimization
 optimization_result = auto_optimizer.optimize(
     parameters=optimizable_params,
     evaluation_duration="30min",
@@ -460,12 +460,12 @@ print(f"Throughput Improvement: {optimization_result['throughput_improvement']:.
 print(f"Optimal Parameters: {optimization_result['optimal_params']}")
 ```
 
-## 🔒 Monitoreo de Seguridad
+## 🔒 Security Monitoring
 
-### Seguridad y Compliance
+### Security and Compliance
 
 ```python
-# Monitoreo de seguridad integrado
+# Integrated security monitoring
 from capibara.core.monitoring import SecurityMonitor
 
 security_monitor = SecurityMonitor(
@@ -475,7 +475,7 @@ security_monitor = SecurityMonitor(
     anomaly_detection=True
 )
 
-# Métricas de seguridad
+# Security metrics
 security_metrics = security_monitor.get_security_metrics()
 compliance_status = {
     "data_encryption": security_metrics["encryption_status"],
@@ -485,7 +485,7 @@ compliance_status = {
     "privacy_protection": security_metrics["privacy_score"]
 }
 
-# Alertas de seguridad
+# Security alerts
 security_alerts = security_monitor.check_security_violations()
 for alert in security_alerts:
     print(f"🔒 Security Alert: {alert.message}")
@@ -493,17 +493,17 @@ for alert in security_alerts:
     print(f"   Compliance Impact: {alert.compliance_impact}")
 ```
 
-## 📚 Integración y APIs
+## 📚 Integration and APIs
 
-### APIs de Monitoreo
+### Monitoring APIs
 
 ```python
-# API RESTful para métricas
+# RESTful API for metrics
 from capibara.core.monitoring import MonitoringAPI
 
 api = MonitoringAPI(port=8080)
 
-# Endpoints disponibles
+# Available endpoints
 @api.route("/metrics/current")
 def get_current_metrics():
     return metrics_collector.get_current_state()
@@ -524,27 +524,27 @@ def health_check():
         "last_update": monitor.get_last_update_time()
     }
 
-# Webhooks para integraciones
+# Webhooks for integrations
 api.add_webhook("/webhook/slack", slack_notification_handler)
 api.add_webhook("/webhook/pagerduty", pagerduty_integration)
 api.add_webhook("/webhook/custom", custom_alert_handler)
 
-# Iniciar API
+# Start API
 api.start()
 ```
 
-## 📈 Benchmarking y Testing
+## 📈 Benchmarking and Testing
 
-### Suite de Benchmarks
+### Benchmark Suite
 
 ```python
-# Sistema de benchmarking integrado
+# Integrated benchmarking system
 from capibara.core.monitoring import BenchmarkSuite
 
 benchmark_suite = BenchmarkSuite(
     benchmark_categories=[
         "inference_performance",
-        "training_throughput", 
+        "training_throughput",
         "memory_efficiency",
         "thermal_stability",
         "scaling_behavior"
@@ -553,14 +553,14 @@ benchmark_suite = BenchmarkSuite(
     regression_detection=True
 )
 
-# Ejecutar benchmarks
+# Execute benchmarks
 benchmark_results = benchmark_suite.run_comprehensive_benchmark(
     model=production_model,
     test_data=benchmark_dataset,
     duration="1h"
 )
 
-# Análisis de resultados
+# Results analysis
 performance_report = benchmark_suite.generate_performance_report(
     results=benchmark_results,
     include_recommendations=True,
@@ -573,7 +573,7 @@ print(f"Regression Detected: {'Yes' if performance_report['regression'] else 'No
 print(f"Recommendations: {len(performance_report['recommendations'])} items")
 ```
 
-## 🤝 Referencias y Documentación
+## 🤝 References and Documentation
 
 - [TPU Monitoring Best Practices](https://cloud.google.com/tpu/docs/monitoring)
 - [Prometheus Metrics Design](https://prometheus.io/docs/practices/naming/)
