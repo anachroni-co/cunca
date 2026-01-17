@@ -1,11 +1,10 @@
 """
-nn decorators module.
+Advanced Decorators for Neural Networks
+======================================
 
-# This module provides functionality for decorators.
+High-performance decorators for JAX neural network functions.
+Includes JIT compilation, validation, memory optimization, and more.
 """
-
-import logging
-import time
 
 try:
     import jax
@@ -15,10 +14,6 @@ try:
     import inspect
     
     # JAX compilation decorators
-except Exception:
-    pass
-
-
     
     def jit_compile(static_argnums=None, static_argnames=None):
         """JIT compile function for maximum performance."""
@@ -296,15 +291,134 @@ except Exception:
         """Get the original undecorated function."""
         return getattr(func, '_original', func)
 
-logger = logging.getLogger(__name__)
+except ImportError:
+    # Fallback decorators for when JAX is not available
+    from functools import wraps
+    
+    def jit_compile(static_argnums=None, static_argnames=None):
+        """Fallback JIT (not-op)."""
+        def decorator(func):
+            @wraps(func)
+            def wrapper(*args, **kwargs):
+                return func(*args, **kwargs)
+            wrapper._compiled = False
+            return wrapper
+        return decorator
+    
+    def auto_vmap(in_axes=0, out_axes=0):
+        """Fallback vmap (not-op)."""
+        def decorator(func):
+            return func
+        return decorator
+    
+    def memory_efficient(policy='nothing_saveable'):
+        """Fallback memory efficiency (not-op)."""
+        def decorator(func):
+            return func
+        return decorator
+    
+    def validate_shapes(*expected_shapes):
+        """Fallback shape validation."""
+        def decorator(func):
+            @wraps(func)
+            def wrapper(*args, **kwargs):
+                # Basic numpy-based validation
+                for i, (arg, expected_shape) in enumerate(zip(args, expected_shapes)):
+                    if hasattr(arg, 'shape') and expected_shape is not None:
+                        if len(arg.shape) != len(expected_shape):
+                            raise ValueError(f"Shape mismatch for arg {i}")
+                return func(*args, **kwargs)
+            return wrapper
+        return decorator
+    
+    def validate_dtype(*expected_dtypes):
+        """Fallback dtype validation."""
+        def decorator(func):
+            return func
+        return decorator
+    
+    def ensure_finite(check_inputs=True, check_outputs=True):
+        """Fallback finite check."""
+        def decorator(func):
+            return func
+        return decorator
+    
+    def profile_time(name=None):
+        """Fallback time profiling."""
+        def decorator(func):
+            import time
+            func_name = name or func.__name__
+            
+            @wraps(func)
+            def wrapper(*args, **kwargs):
+                start_time = time.time()
+                result = func(*args, **kwargs)
+                end_time = time.time()
+                print(f"⏱️  {func_name}: {(end_time - start_time) * 1000:.2f}ms")
+                return result
+            return wrapper
+        return decorator
+    
+    def count_flops(name=None):
+        """Fallback FLOP counting."""
+        def decorator(func):
+            return func
+        return decorator
+    
+    def activation_function(stable_numerics=True):
+        """Fallback activation decorator."""
+        def decorator(func):
+            return func
+        return decorator
+    
+    def attention_function(causal=False, scale=None):
+        """Fallback attention decorator."""
+        def decorator(func):
+            return func
+        return decorator
+    
+    def layer_function(residual=False, pre_norm=False):
+        """Fallback layer decorator."""
+        def decorator(func):
+            return func
+        return decorator
+    
+    def fast_attention(num_heads, causal=False):
+        """Fallback fast attention."""
+        def decorator(func):
+            return func
+        return decorator
+    
+    def fast_layer(residual=True, validate=True):
+        """Fallback fast layer."""
+        def decorator(func):
+            return func
+        return decorator
+    
+    def get_decorator_info(func):
+        """Fallback decorator info."""
+        return {'compiled': False, 'vmapped': False, 'checkpointed': False}
+    
+    def unwrap_function(func):
+        """Fallback unwrap."""
+        return func
 
-def main():
-    # Main function for this module.
-    logger.info("Module decorators.py starting")
-    return True
-
-if __name__ == "__main__":
-    try:
-        main()
-    except Exception:
-        pass
+__all__ = [
+    # JAX optimization
+    'jit_compile', 'auto_vmap', 'memory_efficient',
+    
+    # Validation
+    'validate_shapes', 'validate_dtype', 'ensure_finite',
+    
+    # Performance monitoring
+    'profile_time', 'count_flops',
+    
+    # Specialized NN decorators
+    'activation_function', 'attention_function', 'layer_function',
+    
+    # Composite decorators
+    'fast_attention', 'fast_layer',
+    
+    # Utilities
+    'get_decorator_info', 'unwrap_function'
+]

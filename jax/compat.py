@@ -1,53 +1,192 @@
 """
-JAX compat module (portable stubs).
+Módulo de compatibilidad for JAX.
 
-Provides minimal utilities required by capibara.jax.nn
-without depending on real JAX.
+Este módulo proporciona una capa de compatibilidad between la implementation
+interna de JAX en CapibaraGPT and la implementation estándar de JAX.
 """
 
-from __future__ import annotations
+import os
+from typing import Any, Dict, Optional, Union
 
-from types import SimpleNamespace
-from typing import Any
-
-# Try to use real numpy; if not available, use the internal capibara.jax.numpy submodule
+# try import JAX estándar
 try:
-    import numpy as _np  # type: ignore
-except Exception:  # pragma: no cover - environment without numpy
-    try:
-        from . import numpy as _np  # type: ignore
-    except Exception:
-        # Minimal fallback without numpy
-        class _MiniNP:  # type: ignore
-            def array(self, obj, dtype=None):
-                return obj
-            def asarray(self, obj, dtype=None):
-                return obj
-            def zeros(self, shape):
-                return [0 for _ in range(shape if isinstance(shape, int) else shape[0])]
-            def ones(self, shape):
-                return [1 for _ in range(shape if isinstance(shape, int) else shape[0])]
-            def sum(self, a, axis=None):
-                return sum(a) if isinstance(a, (list, tuple)) else a
-            def mean(self, a, axis=None):
-                return (sum(a) / len(a)) if isinstance(a, (list, tuple)) and a else a
-            def tanh(self, x):
-                return x
-        _np = _MiniNP()  # type: ignore
+    import numpy as _base_jnp
+    _base_jax = None  # not tenemos JAX estándar, usamos nuestro mock
+    HAS_JAX = True
+except ImportError:
+    _base_jax = None
+    _base_jnp = None
+    HAS_JAX = False
 
-
+# Funciones de compatibilidad
 def get_jax() -> Any:
-    """Returns a jax stub with minimal API used by nn (random.bernoulli)."""
-    def _bernoulli(rng, p, shape):  # rng ignorado en stub
-        try:
-            import random as _random
-            return [[1 if _random.random() < p else 0 for _ in range(shape[-1])]]
-        except Exception:
-            return 1
-
-    return SimpleNamespace(random=SimpleNamespace(bernoulli=_bernoulli))
-
+    """
+    Obtiene la implementation de JAX a use.
+    
+    Returns:
+        Módulo JAX (estándar or mock)
+    """
+                # always use nuestro mock JAX for CapibaraGPT
+    if True:  # use nuestro JAX interno
+        # create mock JAX compatible
+        class MockJAX:
+            def __init__(self):
+                self.random = MockRandom()
+                
+            def jit(self, fn=None, **kwargs):
+                """Mock jit - acepta todos los argumentos."""
+                if fn is None:
+                    return lambda f: f
+                return fn
+                
+            def vmap(self, fn=None, **kwargs):
+                if fn is None:
+                    return lambda f: f
+                return fn
+                
+            def grad(self, fn=None, **kwargs):
+                if fn is None:
+                    return lambda f: f
+                return fn
+                
+            def devices(self):
+                return [MockDevice()]
+                
+        return MockJAX()
 
 def get_numpy() -> Any:
-    """Returns real numpy or internal submodule capibara.jax.numpy as a substitute for jnp."""
-    return _np
+    """
+    Obtiene la implementation de numpy de JAX a use.
+    
+    Returns:
+        Módulo numpy de JAX (estándar or mock)
+    """
+    if HAS_JAX and _base_jnp is not None:
+        return _base_jnp
+    else:
+        # create un mock simple for testing
+        import numpy as np
+        class MockJNP:
+            def __getattr__(self, name):
+                return getattr(np, name, lambda *args, **kwargs: np.array([]))
+                
+        return MockJNP()
+
+class MockRandom:
+    def PRNGKey(self, seed):
+        return seed
+        
+    def normal(self, key, shape):
+        import numpy as np
+        return np.random.normal(size=shape).astype(np.float32)
+        
+    def randint(self, key, shape, minval, maxval):
+        import numpy as np
+        return np.random.randint(minval, maxval, size=shape)
+    
+    def uniform(self, key, shape, minval=0.0, maxval=1.0):
+        import numpy as np
+        return np.random.uniform(minval, maxval, size=shape).astype(np.float32)
+    
+    def choice(self, key, a, shape=(), replace=True, p=None):
+        import numpy as np
+        return np.random.choice(a, size=shape, replace=replace, p=p)
+
+class MockLax:
+    """Mock LAX module with common operations."""
+    
+    def stop_gradient(self, x):
+        return x
+    
+    def select(self, pred, on_true, on_false):
+        import numpy as np
+        return np.where(pred, on_true, on_false)
+    
+    def cond(self, pred, true_fun, false_fun, operand):
+        if pred:
+            return true_fun(operand)
+        else:
+            return false_fun(operand)
+    
+    def dynamic_slice(self, operand, start_indices, slice_sizes):
+        return operand[tuple(slice(start, start + size) 
+                           for start, size in zip(start_indices, slice_sizes))]
+    
+    def dynamic_update_slice(self, operand, update, start_indices):
+        import numpy as np
+        result = operand.copy()
+        slices = tuple(slice(start, start + update.shape[i]) 
+                      for i, start in enumerate(start_indices))
+        result[slices] = update
+        return result
+
+class MockLib:
+    """Mock JAX lib module."""
+    
+    def __init__(self):
+        self.xla_bridge = MockXLABridge()
+        self.xla_client = MockXLAClient()
+
+class MockXLABridge:
+    """Mock XLA bridge."""
+    
+    def get_backend(self, platform=None):
+        return MockXLABackend()
+
+class MockXLAClient:
+    """Mock XLA client."""
+    pass
+
+class MockXLABackend:
+    """Mock XLA backend."""
+    
+    def platform(self):
+        return 'cpu'
+
+class MockDevice:
+    def __init__(self):
+        self.platform = 'cpu'
+
+def setup_tpu():
+    """Configure environment for tpu."""
+    if HAS_JAX:
+        jax = get_jax()
+        if jax.devices()[0].platform == 'tpu':
+            os.environ['XLA_PYTHON_CLIENT_MEM_FRACTION'] = '0.9'
+            os.environ['XLA_FLAGS'] = '--xla_force_host_platform_device_count=32'
+            return True
+    return False
+
+def setup_gpu():
+    """Configure environment for gpu."""
+    if HAS_JAX:
+        jax = get_jax()
+        if jax.devices()[0].platform == 'gpu':
+            os.environ['XLA_PYTHON_CLIENT_MEM_FRACTION'] = '0.8'
+            return True
+    return False
+
+def get_device_type() -> str:
+    """Get the type of device being used (tpu, gpu, or cpu)."""
+    if HAS_JAX:
+        jax = get_jax()
+        return jax.devices()[0].platform
+    return 'cpu'
+
+def get_device_count() -> int:
+    """Get the number of available devices."""
+    if HAS_JAX:
+        jax = get_jax()
+        return len(jax.devices())
+    return 1
+
+# export funciones de compatibilidad
+__all__ = [
+    'get_jax',
+    'get_numpy',
+    'HAS_JAX',
+    'setup_tpu',
+    'setup_gpu',
+    'get_device_type',
+    'get_device_count'
+] 

@@ -1,19 +1,14 @@
 """
-nn layers module.
+Fundamental Neural Network Layers
+=================================
 
-# This module provides functionality for layers.
+Essential layers for building transformer and other neural network architectures.
 """
-
-import logging
 
 try:
     import jax.numpy as jnp
     from jax import random, lax
     from . import initializers
-except Exception:
-    pass
-
-
     
     class Dense:
         """Dense/Linear layer with optional bias."""
@@ -335,15 +330,235 @@ except Exception:
         """Functional embedding lookup."""
         return embedding_table[indices]
 
-logger = logging.getLogger(__name__)
+except ImportError:
+    # Fallback using numpy
+    import numpy as np
+    
+    class Dense:
+        def __init__(self, features, use_bias=True, kernel_init='kaiming_normal', bias_init='zeros'):
+            self.features = features
+            self.use_bias = use_bias
+            self.kernel_init = kernel_init
+            self.bias_init = bias_init
+            
+        def init_params(self, key, input_shape):
+            np.random.seed(key)
+            in_features = input_shape[-1]
+            
+            if self.kernel_init == 'kaiming_normal':
+                std = np.sqrt(2.0 / in_features)
+                kernel = np.random.normal(0, std, (in_features, self.features))
+            else:
+                kernel = np.random.normal(0, 0.02, (in_features, self.features))
+            
+            params = {'kernel': kernel}
+            
+            if self.use_bias:
+                params['bias'] = np.zeros((self.features,))
+                
+            return params
+        
+        def __call__(self, x, params):
+            y = np.dot(x, params['kernel'])
+            if self.use_bias and 'bias' in params:
+                y = y + params['bias']
+            return y
+    
+    class Embedding:
+        def __init__(self, num_embeddings, features, embedding_init='normal'):
+            self.num_embeddings = num_embeddings
+            self.features = features
+            self.embedding_init = embedding_init
+            
+        def init_params(self, key):
+            np.random.seed(key)
+            embedding = np.random.normal(0, 0.02, (self.num_embeddings, self.features))
+            return {'embedding': embedding}
+        
+        def __call__(self, indices, params):
+            return params['embedding'][indices]
+        
+        def attend(self, query, params):
+            return np.dot(query, params['embedding'].T)
+    
+    class PositionalEncoding:
+        def __init__(self, d_model, max_len=5000):
+            self.d_model = d_model
+            self.max_len = max_len
+            
+        def __call__(self, positions):
+            d_model = self.d_model
+            pos = positions.reshape(-1, 1)
+            div_term = np.exp(np.arange(0, d_model, 2) * -(np.log(10000.0) / d_model))
+            
+            pe = np.zeros((positions.shape[0], d_model))
+            pe[:, 0::2] = np.sin(pos * div_term)
+            pe[:, 1::2] = np.cos(pos * div_term)
+            
+            return pe
+    
+    class RotaryPositionalEmbedding:
+        def __init__(self, dim, max_seq_len=2048, base=10000):
+            self.dim = dim
+            self.max_seq_len = max_seq_len
+            self.base = base
+            
+        def __call__(self, seq_len):
+            positions = np.arange(seq_len)
+            inv_freq = 1.0 / (self.base ** (np.arange(0, self.dim, 2) / self.dim))
+            sinusoid_inp = np.outer(positions, inv_freq)
+            
+            cos_cached = np.cos(sinusoid_inp)
+            sin_cached = np.sin(sinusoid_inp)
+            
+            return cos_cached, sin_cached
+        
+        def apply_rotary_emb(self, x, cos, sin):
+            def rotate_half(x):
+                x1, x2 = np.split(x, 2, axis=-1)
+                return np.concatenate([-x2, x1], axis=-1)
+            
+            return x * cos + rotate_half(x) * sin
+    
+    class FeedForward:
+        def __init__(self, d_model, d_ff, activation='relu', dropout_rate=0.1):
+            self.d_model = d_model
+            self.d_ff = d_ff
+            self.activation = activation
+            self.dropout_rate = dropout_rate
+            
+        def init_params(self, key):
+            np.random.seed(key)
+            std = np.sqrt(2.0 / self.d_model)
+            
+            w1 = np.random.normal(0, std, (self.d_model, self.d_ff))
+            b1 = np.zeros((self.d_ff,))
+            w2 = np.random.normal(0, std, (self.d_ff, self.d_model))
+            b2 = np.zeros((self.d_model,))
+            
+            return {'w1': w1, 'b1': b1, 'w2': w2, 'b2': b2}
+        
+        def __call__(self, x, params, training=True, key=None):
+            hidden = np.dot(x, params['w1']) + params['b1']
+            
+            if self.activation == 'relu':
+                hidden = np.maximum(0, hidden)
+            elif self.activation == 'gelu':
+                hidden = 0.5 * hidden * (1.0 + np.tanh(np.sqrt(2.0 / np.pi) * (hidden + 0.044715 * np.power(hidden, 3))))
+            
+            if training and self.dropout_rate > 0:
+                mask = np.random.binomial(1, 1 - self.dropout_rate, hidden.shape) / (1 - self.dropout_rate)
+                hidden = hidden * mask
+            
+            output = np.dot(hidden, params['w2']) + params['b2']
+            return output
+    
+    class SwiGLU:
+        def __init__(self, d_model, d_ff=None, bias=False):
+            self.d_model = d_model
+            self.d_ff = d_ff or int(2.67 * d_model)
+            self.bias = bias
+            
+        def init_params(self, key):
+            np.random.seed(key)
+            std = np.sqrt(2.0 / self.d_model)
+            
+            params = {
+                'w_gate': np.random.normal(0, std, (self.d_model, self.d_ff)),
+                'w_up': np.random.normal(0, std, (self.d_model, self.d_ff)),
+                'w_down': np.random.normal(0, std, (self.d_ff, self.d_model))
+            }
+            
+            if self.bias:
+                params.update({
+                    'b_gate': np.zeros((self.d_ff,)),
+                    'b_up': np.zeros((self.d_ff,)),
+                    'b_down': np.zeros((self.d_model,))
+                })
+                
+            return params
+        
+        def __call__(self, x, params):
+            gate = np.dot(x, params['w_gate'])
+            up = np.dot(x, params['w_up'])
+            
+            if self.bias:
+                gate = gate + params['b_gate']
+                up = up + params['b_up']
+            
+            # SwiGLU: swish(gate) * up
+            swish_gate = gate / (1.0 + np.exp(-gate))  # swish
+            hidden = swish_gate * up
+            
+            output = np.dot(hidden, params['w_down'])
+            if self.bias:
+                output = output + params['b_down']
+                
+            return output
+    
+    class GLU:
+        def __init__(self, d_model, d_ff, variant='glu', bias=True):
+            self.d_model = d_model
+            self.d_ff = d_ff
+            self.variant = variant
+            self.bias = bias
+            
+        def init_params(self, key):
+            np.random.seed(key)
+            std = np.sqrt(2.0 / self.d_model)
+            
+            params = {
+                'w1': np.random.normal(0, std, (self.d_model, 2 * self.d_ff)),
+                'w2': np.random.normal(0, std, (self.d_ff, self.d_model))
+            }
+            
+            if self.bias:
+                params.update({
+                    'b1': np.zeros((2 * self.d_ff,)),
+                    'b2': np.zeros((self.d_model,))
+                })
+                
+            return params
+        
+        def __call__(self, x, params):
+            hidden = np.dot(x, params['w1'])
+            if self.bias:
+                hidden = hidden + params['b1']
+            
+            a, b = np.split(hidden, 2, axis=-1)
+            
+            if self.variant == 'glu':
+                gated = a * (1.0 / (1.0 + np.exp(-b)))  # sigmoid
+            elif self.variant == 'geglu':
+                gated = (0.5 * a * (1.0 + np.tanh(np.sqrt(2.0 / np.pi) * (a + 0.044715 * np.power(a, 3))))) * b  # gelu
+            elif self.variant == 'swiglu':
+                gated = (a / (1.0 + np.exp(-a))) * b  # swish
+            elif self.variant == 'reglu':
+                gated = np.maximum(0, a) * b  # relu
+            
+            output = np.dot(gated, params['w2'])
+            if self.bias:
+                output = output + params['b2']
+                
+            return output
+    
+    def dropout(x, rate, key, training=True):
+        if not training or rate == 0:
+            return x
+        np.random.seed(key)
+        mask = np.random.binomial(1, 1 - rate, x.shape) / (1 - rate)
+        return x * mask
+    
+    def linear(x, weight, bias=None):
+        y = np.dot(x, weight)
+        if bias is not None:
+            y = y + bias
+        return y
+    
+    def embedding_lookup(indices, embedding_table):
+        return embedding_table[indices]
 
-def main():
-    # Main function for this module.
-    logger.info("Module layers.py starting")
-    return True
-
-if __name__ == "__main__":
-    try:
-        main()
-    except Exception: 
-        pass
+__all__ = [
+    'Dense', 'Embedding', 'PositionalEncoding', 'RotaryPositionalEmbedding',
+    'FeedForward', 'SwiGLU', 'GLU', 'dropout', 'linear', 'embedding_lookup'
+]

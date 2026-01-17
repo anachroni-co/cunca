@@ -1,244 +1,403 @@
 """
-Capibara Adaptive Router with HRMService and special expert by consensus
-
-- HRMService: simple processing of PPG/RR signal to extract metrics (HR, HRV)
-- CapibaraAdaptiveRouter: expert selection based on HRM signals
-- Integration with HuggingFaceConsensusConfig for special expert (medical)
+Router Cuántico Optimizado for CapibaraGPT - tpu v4-32
+Versión optimizada with JAX JIT, diferenciabilidad completa and eficiencia tpu.
 """
 
 import os
 import sys
-# Gets the current directory path (scripts) -> /.../scripts
+# Obtiene la path del directory current (scripts) -> /.../scripts
 script_dir = os.path.dirname(os.path.abspath(__file__))
-# Go up one level to obtain project root -> /.../capibaraGPT-v2
+# Sube un level for obtain la raíz del proyecto -> /.../capibaraGPT-v2
 project_root = os.path.dirname(script_dir)
-# Add project root to sys.path
+# Añade la raíz del proyecto a sys.path
 if project_root not in sys.path:
     # Fixed: Using proper imports instead of sys.path manipulation
-    pass
 
 import logging
-import os
-from dataclasses import dataclass
-from typing import Any, Dict, Optional
+from flax import linen as nn
+import jax
+import jax.numpy as jnp
+from jax import partial
+from typing import Dict, List, Optional, Any, Tuple
 
-import numpy as np
+# Imports relativos with fallbacks
+try:
+    from .contextual_activation import ContextualActivation
+except ImportError:
+    # Fallback if not existe
+    class ContextualActivation(nn.Module):
+        def __call__(self, x, **kwargs):
+            return x
 
 try:
-    import toml  # type: ignore
-except Exception:  # pragma: no cover
-    toml = None  # type: ignore
-
-try:
-    from capibara.training.huggingface_consensus_config import (
-        HuggingFaceConsensusConfig,
-    )
-except Exception:
-    HuggingFaceConsensusConfig = None  # type: ignore
+    from .personality.conversation_manager import ConversationManager
+except ImportError:
+    # Fallback if not existe
+    class ConversationManager:
+        pass
 
 logger = logging.getLogger(__name__)
 
+class OptimizedAdaptiveRouter(nn.Module):
+    """Router cuántico optimizado for tpu v4-32 with procesamiento diferenciable."""
+    
+    hidden_size: int
+    num_virtual_qubits: int
+    vocab_size: int = 50257
+    max_context_length: int = 2048
+    num_router_experts: int = 8
+    router_capacity_factor: float = 1.25
+    
+    def setup(self):
+        """initialization optimizada for tpu."""
+        
+        # 1. Context encoder diferenciable
+        self.context_embedding = nn.Embed(
+            num_embeddings=self.vocab_size,
+            features=self.hidden_size,
+            embedding_init=nn.initializers.normal(stddev=0.02)
+        )
+        
+        # 2. Router gate network
+        self.router_gate = nn.Sequential([
+            nn.Dense(self.hidden_size * 2),
+            nn.LayerNorm(),
+            lambda x: nn.gelu(x),
+            nn.Dense(2),  # [dynamic_weight, pretrained_weight]
+        ])
+        
+        # 3. VQbit layers optimizados
+        self.dynamic_vq_codes = VQbitLayerOptimized(
+            codebook_size=self.num_virtual_qubits,
+            embedding_dim=self.hidden_size,
+            name="dynamic"
+        )
+        
+        self.pretrained_vq_codes = VQbitLayerOptimized(
+            codebook_size=self.num_virtual_qubits,
+            embedding_dim=self.hidden_size,
+            name="pretrained"
+        )
+        
+        # 4. Expert routing (Mixture of Experts)
+        self.expert_gate = nn.Dense(self.num_router_experts)
+        self.experts = [
+            ExpertLayer(self.hidden_size, name=f"expert_{i}")
+            for i in range(self.num_router_experts)
+        ]
+        
+        # 5. Output projection
+        self.output_projection = nn.Dense(self.hidden_size)
 
-@dataclass
-class HRMConfig:
-    enabled: bool = True
-    sampling_rate_hz: int = 100
-    window_seconds: int = 10
-    expected_hr_min: int = 40
-    expected_hr_max: int = 180
-    anomaly_rmssd_threshold_ms: float = 80.0
-    anomaly_hr_jump_bpm: float = 30.0
+    def _encode_context_efficiently(
+        self, 
+        context_tokens: jnp.ndarray
+    ) -> jnp.ndarray:
+        """Codificación eficiente de contexto for tpu."""
+        # Shape: [batch_size, seq_len] -> [batch_size, hidden_size]
+        
+        # 1. Embed tokens
+        embedded = self.context_embedding(context_tokens)  # [B, L, H]
+        
+        # 2. Attention pooling (more eficiente que mean pooling)
+        attention_weights = nn.Dense(1)(embedded)  # [B, L, 1]
+        attention_weights = nn.softmax(attention_weights, axis=1)
+        
+        # 3. Weighted pooling
+        context_repr = jnp.sum(embedded * attention_weights, axis=1)  # [B, H]
+        
+        return context_repr
 
-
-class HRMService:
-    """Simple service to extract metrics from an HRM signal (PPG or RR).
-
-    Expected input:
-    - PPG signal (waveform) as np.ndarray (float) or
-    - RR interval series in ms (if rr_intervals_ms=True)
-    """
-
-    def __init__(self, config: Optional[HRMConfig] = None):
-        self.config = config or HRMConfig()
-
-    def _detect_rr_intervals_from_ppg(self, signal: np.ndarray) -> np.ndarray:
-        """Very basic estimation of RR intervals from PPG via autocorrelation.
-        Returns RR in ms approximately.
-        """
-        if signal.ndim != 1:
-            signal = signal.reshape(-1)
-        signal = signal.astype(np.float32)
-        signal = (signal - np.mean(signal)) / (np.std(signal) + 1e-6)
-        corr = np.correlate(signal, signal, mode="full")
-        corr = corr[corr.size // 2 :]
-        # Ignore the first peak (lag 0). Search for main peak in [0.3s, 2.0s]
-        min_lag = int(0.3 * self.config.sampling_rate_hz)
-        max_lag = int(2.0 * self.config.sampling_rate_hz)
-        if max_lag <= min_lag:
-            max_lag = min_lag + 1
-        roi = corr[min_lag:max_lag]
-        if roi.size == 0:
-            return np.array([], dtype=np.float32)
-        peak_lag = np.argmax(roi) + min_lag
-        # Convert period to RR (ms)
-        rr_ms = 1000.0 * float(peak_lag) / float(self.config.sampling_rate_hz)
-        # Build a constant RR sequence as estimation
-        num_beats = max(1, int(self.config.window_seconds * 60.0 / max(1.0, 60000.0 / rr_ms)))
-        return np.full((num_beats,), rr_ms, dtype=np.float32)
-
-    def _compute_rmssd_ms(self, rr_ms: np.ndarray) -> float:
-        if rr_ms.size < 2:
-            return 0.0
-        diff = np.diff(rr_ms)
-        return float(np.sqrt(np.mean(diff * diff)))
-
-    def _compute_hr_bpm(self, rr_ms: np.ndarray) -> float:
-        if rr_ms.size == 0:
-            return 0.0
-        mean_rr_ms = float(np.mean(rr_ms))
-        return 60000.0 / max(1e-6, mean_rr_ms)
-
-    def analyze(
+    @partial(jax.jit, static_argnums=(0,))
+    def _compute_router_weights(
         self,
-        data: np.ndarray,
-        rr_intervals_ms: bool = False,
-    ) -> Dict[str, Any]:
-        """Returns basic HRM metrics from PPG or RR.
-
-        Returns: {hr_bpm, rmssd_ms, anomaly_score, anomalies: {hr_out_of_range, hr_jump, high_rmssd}}
-        """
-        if data is None:
-            return {"hr_bpm": 0.0, "rmssd_ms": 0.0, "anomaly_score": 0.0, "anomalies": {}}
-
-        rr_ms = data.astype(np.float32)
-        if not rr_intervals_ms:
-            rr_ms = self._detect_rr_intervals_from_ppg(rr_ms)
-
-        hr_bpm = self._compute_hr_bpm(rr_ms)
-        rmssd_ms = self._compute_rmssd_ms(rr_ms)
-
-        anomalies = {
-            "hr_out_of_range": not (self.config.expected_hr_min <= hr_bpm <= self.config.expected_hr_max),
-            "high_rmssd": rmssd_ms >= self.config.anomaly_rmssd_threshold_ms,
-            # Note: hr_jump requires history; here we approximate with 0
-            "hr_jump": False,
+        context_features: jnp.ndarray,
+        training: bool = False
+    ) -> Tuple[jnp.ndarray, Dict[str, jnp.ndarray]]:
+        """Computa pesos de router de forma diferenciable."""
+        
+        # 1. Router logits
+        router_logits = self.router_gate(context_features)  # [B, 2]
+        
+        # 2. Soft routing with temperature
+        temperature = 1.0 if training else 0.1  # more determinístico en inferencia
+        router_weights = nn.softmax(router_logits / temperature, axis=-1)
+        
+        # 3. Métricas de routing
+        routing_metrics = {
+            "dynamic_usage": jnp.mean(router_weights[:, 0]),
+            "pretrained_usage": jnp.mean(router_weights[:, 1]),
+            "routing_entropy": -jnp.sum(
+                router_weights * jnp.log(router_weights + 1e-8), axis=-1
+            ).mean(),
+            "routing_load_balance": jnp.std(jnp.mean(router_weights, axis=0))
         }
-        anomaly_score = sum(float(v) for v in anomalies.values()) / 3.0
+        
+        return router_weights, routing_metrics
 
-        return {
-            "hr_bpm": hr_bpm,
-            "rmssd_ms": rmssd_ms,
-            "anomaly_score": anomaly_score,
-            "anomalies": anomalies,
+    def _expert_routing(
+        self,
+        x: jnp.ndarray,
+        context_features: jnp.ndarray,
+        training: bool = False
+    ) -> Tuple[jnp.ndarray, Dict[str, jnp.ndarray]]:
+        """Routing by expertos optimizado for tpu."""
+        batch_size, seq_len, hidden_size = x.shape
+        
+        # 1. Expert gate
+        gate_logits = self.expert_gate(context_features)  # [B, num_experts]
+        
+        # 2. Top-k routing (k=2 for balance load/quality)
+        k = 2
+        top_k_logits, top_k_indices = jax.lax.top_k(gate_logits, k)
+        top_k_weights = nn.softmax(top_k_logits, axis=-1)
+        
+        # 3. process with expertos seleccionados
+        expert_outputs = []
+        for i in range(k):
+            expert_idx = top_k_indices[:, i]  # [B]
+            expert_weight = top_k_weights[:, i:i+1]  # [B, 1]
+            
+            # select experto dinámicamente
+            expert_output = jnp.zeros_like(x)
+            for j in range(self.num_router_experts):
+                mask = (expert_idx == j).astype(jnp.float32)[:, None, None]
+                expert_j_output = self.experts[j](x)
+                expert_output += mask * expert_j_output
+            
+            expert_outputs.append(expert_weight[:, :, None] * expert_output)
+        
+        # 4. combine salidas
+        final_output = sum(expert_outputs)
+        
+        # 5. Métricas de expertos
+        expert_metrics = {
+            "expert_usage": jnp.mean(nn.one_hot(top_k_indices, self.num_router_experts), axis=(0, 1)),
+            "expert_load_balance": jnp.std(jnp.mean(nn.softmax(gate_logits), axis=0)),
+            "routing_efficiency": jnp.mean(jnp.max(top_k_weights, axis=-1))
         }
+        
+        return final_output, expert_metrics
 
-
-class CapibaraAdaptiveRouter:
-    """Adaptive router that uses HRM signals to select a special expert."""
-
-    def __init__(self, config_path: Optional[str] = None):
-        self.router_config = self._load_router_config(config_path)
-        self.hrm_service = HRMService(self._extract_hrm_config(self.router_config))
-        self.consensus_config = self._load_consensus_config()
-
-    def _load_router_config(self, config_path: Optional[str]) -> Dict[str, Any]:
-        if config_path and os.path.exists(config_path) and toml:
-            try:
-                return toml.load(config_path)
-            except Exception as e:  # pragma: no cover
-                logger.warning(f"Could not load TOML {config_path}: {e}")
-        # Fallback to default file if it exists
-        default_path = os.path.join(
-            os.path.dirname(os.path.dirname(__file__)),
-            "config",
-            "configs_toml",
-            "production",
-            "unified_router.toml",
+    @nn.compact
+    def __call__(
+        self,
+        x: jnp.ndarray,
+        context_tokens: jnp.ndarray,
+        training: bool = False
+    ) -> Dict[str, jnp.ndarray]:
+        """Forward pass optimizado for tpu v4-32."""
+        
+        # 1. Codificar contexto
+        context_features = self._encode_context_efficiently(context_tokens)
+        
+        # 2. Compute router weights
+        router_weights, routing_metrics = self._compute_router_weights(
+            context_features, training
         )
-        if toml and os.path.exists(default_path):
-            try:
-                return toml.load(default_path)
-            except Exception as e:  # pragma: no cover
-                logger.warning(f"Could not load default TOML: {e}")
-        return {}
-
-    def _extract_hrm_config(self, cfg: Dict[str, Any]) -> HRMConfig:
-        hrm_dict = (cfg.get("hrm", {}) if isinstance(cfg, dict) else {}) or {}
-        return HRMConfig(
-            enabled=bool(hrm_dict.get("enabled", True)),
-            sampling_rate_hz=int(hrm_dict.get("sampling_rate_hz", 100)),
-            window_seconds=int(hrm_dict.get("window_seconds", 10)),
-            expected_hr_min=int(hrm_dict.get("expected_hr_min", 40)),
-            expected_hr_max=int(hrm_dict.get("expected_hr_max", 180)),
-            anomaly_rmssd_threshold_ms=float(hrm_dict.get("anomaly_rmssd_threshold_ms", 80.0)),
-            anomaly_hr_jump_bpm=float(hrm_dict.get("anomaly_hr_jump_bpm", 30.0)),
+        
+        # 3. process with ambos tipos de VQ codes en paralelo
+        dynamic_output = self.dynamic_vq_codes(x, training=training)
+        pretrained_output = self.pretrained_vq_codes(x, training=training)
+        
+        # 4. Mezcla diferenciable
+        vqbit_mixed = (
+            router_weights[:, 0:1, None] * dynamic_output +
+            router_weights[:, 1:2, None] * pretrained_output
         )
-
-    def _load_consensus_config(self):
-        if HuggingFaceConsensusConfig is None:
-            return None
-        try:
-            return HuggingFaceConsensusConfig()
-        except Exception:  # pragma: no cover
-            return None
-
-    def route(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-        """Returns routing decision considering HRM as special expert.
-
-        Context may include:
-        - ppg_signal: np.ndarray of PPG signal
-        - rr_intervals_ms: np.ndarray of RR in ms
-        """
-        context = context or {}
-
-        specialist = None
-        hrm_metrics: Optional[Dict[str, Any]] = None
-
-        if self.hrm_service and self.hrm_service.config.enabled:
-            if "ppg_signal" in context and isinstance(context["ppg_signal"], np.ndarray):
-                hrm_metrics = self.hrm_service.analyze(context["ppg_signal"], rr_intervals_ms=False)
-                specialist = "hrm"
-            elif "rr_intervals_ms" in context and isinstance(context["rr_intervals_ms"], np.ndarray):
-                hrm_metrics = self.hrm_service.analyze(context["rr_intervals_ms"], rr_intervals_ms=True)
-                specialist = "hrm"
-
-        # Simple expert selection based on HRM
-        selected_expert = "general"
-        confidence = 0.6
-        if hrm_metrics is not None:
-            selected_expert = "medical"
-            confidence = 0.8 if hrm_metrics["anomaly_score"] >= 0.34 else 0.7
-
-        consensus_weights: Dict[str, float] = {}
-        if self.consensus_config is not None:
-            # Increase medical expert weight if HRM is present
-            expert_models = self.consensus_config.expert_models
-            if selected_expert in expert_models:
-                base_weight = float(expert_models[selected_expert].get("weight", 1.0))
-                consensus_weights[selected_expert] = base_weight * (1.3 if specialist == "hrm" else 1.0)
-            # Add reasoning as support
-            if "reasoning" in expert_models:
-                consensus_weights["reasoning"] = float(expert_models["reasoning"].get("weight", 1.0))
-
+        
+        # 5. Expert routing adicional
+        expert_output, expert_metrics = self._expert_routing(
+            vqbit_mixed, context_features, training
+        )
+        
+        # 6. Proyección end
+        final_output = self.output_projection(expert_output)
+        
+        # 7. combine métricas
+        all_metrics = {
+            **routing_metrics,
+            **expert_metrics,
+            "total_params": sum(
+                p.size for p in jax.tree_util.tree_leaves(self.variables)
+            ) if hasattr(self, 'variables') else 0
+        }
+        
         return {
-            "expert": selected_expert,
-            "specialist": specialist,
-            "confidence": confidence,
-            "hrm_metrics": hrm_metrics,
-            "consensus_weights": consensus_weights,
+            "output": final_output,
+            "router_weights": router_weights,
+            "context_features": context_features,
+            "metrics": all_metrics
         }
 
 
-def main() -> bool:
-    logger.info("CapibaraAdaptiveRouter starting")
-    router = CapibaraAdaptiveRouter()
-    # Minimal example with synthetic signal
-    t = np.linspace(0, 5.0, 500)
-    ppg = 0.6 * np.sin(2 * np.pi * 1.2 * t) + 0.4 * np.sin(2 * np.pi * 2.4 * t)
-    decision = router.route("analyze patient status", {"ppg_signal": ppg.astype(np.float32)})
-    logger.info(f"Routing decision: {decision}")
-    return True
+class VQbitLayerOptimized(nn.Module):
+    """VQbit layer optimizado for tpu."""
+    
+    codebook_size: int
+    embedding_dim: int
+    name: str
+    commitment_cost: float = 0.25
+    
+    def setup(self):
+        self.codebook = self.param(
+            'codebook',
+            nn.initializers.uniform(scale=1.0),
+            (self.codebook_size, self.embedding_dim)
+        )
+    
+    @nn.compact
+    def __call__(self, x: jnp.ndarray, training: bool = False) -> jnp.ndarray:
+        """Forward pass optimizado."""
+        
+        # 1. Compute distances
+        distances = jnp.linalg.norm(
+            x[..., None, :] - self.codebook[None, None, :, :], 
+            axis=-1
+        )
+        
+        # 2. Find closest codes
+        indices = jnp.argmin(distances, axis=-1)
+        quantized = self.codebook[indices]
+        
+        # 3. Straight-through estimator
+        quantized = x + jax.lax.stop_gradient(quantized - x)
+        
+        # 4. VQ loss
+        if training:
+            vq_loss = jnp.mean((jax.lax.stop_gradient(x) - quantized) ** 2)
+            commitment_loss = self.commitment_cost * jnp.mean((x - jax.lax.stop_gradient(quantized)) ** 2)
+            total_loss = vq_loss + commitment_loss
+        else:
+            total_loss = 0.0
+        
+        return quantized
 
 
-if __name__ == "__main__":
-    main()
+class ExpertLayer(nn.Module):
+    """Capa de experto optimizada."""
+    
+    hidden_size: int
+    name: str
+    expansion_factor: int = 4
+    
+    @nn.compact
+    def __call__(self, x: jnp.ndarray) -> jnp.ndarray:
+        """FFN expert optimizado."""
+        
+        # 1. Expand
+        expanded = nn.Dense(
+            self.hidden_size * self.expansion_factor,
+            name=f"{self.name}_expand"
+        )(x)
+        activated = nn.gelu(expanded)
+        
+        # 2. Contract
+        output = nn.Dense(
+            self.hidden_size,
+            name=f"{self.name}_contract"
+        )(activated)
+        
+        return output
+
+
+class ContextualRouterOptimized(nn.Module):
+    """Router contextual optimizado que combina activation and routing cuántico."""
+    
+    hidden_size: int
+    num_virtual_qubits: int
+    vocab_size: int = 50257
+    activation_threshold: float = 0.5
+    
+    def setup(self):
+        # 1. Módulo de activation contextual
+        self.activation_gate = nn.Sequential([
+            nn.Dense(self.hidden_size),
+            nn.LayerNorm(),
+            lambda x: nn.gelu(x),
+            nn.Dense(1),
+            lambda x: nn.sigmoid(x)
+        ])
+        
+        # 2. Router cuántico optimizado
+        self.adaptive_router = OptimizedAdaptiveRouter(
+            hidden_size=self.hidden_size,
+            num_virtual_qubits=self.num_virtual_qubits,
+            vocab_size=self.vocab_size
+        )
+        
+        # 3. path clásica (bypass)
+        self.classical_path = nn.Dense(self.hidden_size)
+
+    @nn.compact
+    def __call__(
+        self,
+        x: jnp.ndarray,
+        context_tokens: jnp.ndarray,
+        training: bool = False
+    ) -> Dict[str, jnp.ndarray]:
+        """Forward pass optimizado with routing soft."""
+        
+        # 1. Compute activation gate
+        context_repr = jnp.mean(
+            self.adaptive_router.context_embedding(context_tokens), 
+            axis=1
+        )
+        activation_gate = self.activation_gate(context_repr)  # [B, 1]
+        
+        # 2. process ambas rutas en paralelo
+        classical_output = self.classical_path(x)
+        adaptive_result = self.adaptive_router(x, context_tokens, training=training)
+        adaptive_output = adaptive_result["output"]
+        
+        # 3. Soft routing basado en gate
+        final_output = (
+            activation_gate[..., None] * adaptive_output +
+            (1 - activation_gate[..., None]) * classical_output
+        )
+        
+        return {
+            "output": final_output,
+            "activation_gate": activation_gate,
+            "adaptive_metrics": adaptive_result["metrics"],
+            "classical_usage": jnp.mean(1 - activation_gate),
+            "adaptive_usage": jnp.mean(activation_gate)
+        }
+
+
+# Funciones de utilidad for tpu
+@partial(jax.pmap, axis_name='batch')
+def distributed_router_forward(
+    router: ContextualRouterOptimized,
+    params: Dict,
+    x: jnp.ndarray,
+    context_tokens: jnp.ndarray,
+    training: bool = False
+) -> Dict[str, jnp.ndarray]:
+    """Forward pass distribuido for tpu v4-32."""
+    
+    result = router.apply(params, x, context_tokens, training=training)
+    
+    # synchronize métricas across devices
+    for key in result["adaptive_metrics"]:
+        if isinstance(result["adaptive_metrics"][key], jnp.ndarray):
+            result["adaptive_metrics"][key] = jax.lax.pmean(
+                result["adaptive_metrics"][key], axis_name='batch'
+            )
+    
+    return result
+
+
+def create_router_for_tpu_v4_32(
+    hidden_size: int = 768,
+    num_virtual_qubits: int = 512,
+    vocab_size: int = 50257
+) -> ContextualRouterOptimized:
+    """Crea router optimizado for tpu v4-32."""
+    
+    return ContextualRouterOptimized(
+        hidden_size=hidden_size,
+        num_virtual_qubits=num_virtual_qubits,
+        vocab_size=vocab_size,
+        activation_threshold=0.5
+    )

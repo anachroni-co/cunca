@@ -1,712 +1,827 @@
 """
-Shared Attention Module for CapibaraGPT
-
-This module implements shared attention mechanisms optimized for TPU,
-including multi-head attention, cross-attention, and attention caching to
-improve computational efficiency.
-
-Features:
-- Multi-head attention optimized for TPU
-- Cross-attention for encoder-decoder models
-- Attention caching for efficient inference
-- Sparse attention patterns
-- Memory-efficient attention computation
-- Gradient checkpointing support
+Shared Attention Module - Optimizado for tpu v4-32
+Atención multi-cabeza eficiente with fusión de operaciones.
 """
 
 import os
 import sys
-import logging
 import math
-import numpy as np
-from typing import Dict, List, Optional, Any, Tuple, Union, Callable
-from dataclasses import dataclass, field
+# Obtiene la path del directory current (scripts) -> /.../scripts
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# Sube un level for obtain la raíz del proyecto -> /.../capibaraGPT-v2
+project_root = os.path.dirname(script_dir)
+# Añade la raíz del proyecto a sys.path
+if project_root not in sys.path:
+    # Fixed: Using proper imports instead of sys.path manipulation
+
+from capibara.jax import jax
+from flax import linen as nn
 from functools import partial
+from capibara.jax import numpy as jnp
+from typing import Optional, Dict, Any, Tuple
+from capibara.modules.shared_attention import create_shared_attention
 
-logger = logging.getLogger(__name__)
-
-# JAX imports with fallbacks
-try:
-    import jax
-    import jax.numpy as jnp
-    from jax import partial as jax_partial
-    HAS_JAX = True
-    logger.info("✅ JAX available for shared attention")
-except ImportError:
-    HAS_JAX = False
-    logger.warning("⚠️ JAX not available, using numpy fallbacks")
-    import numpy as jnp
-    
-    # Create fallback partial
-    def jax_partial(func, *args, **kwargs):
-        def wrapper(*inner_args, **inner_kwargs):
-            return func(*args, *inner_args, **kwargs, **inner_kwargs)
-        return wrapper
-
-@dataclass
-class AttentionConfig:
-    """Configuration for attention modules."""
-    
-    # Basic attention parameters
-    hidden_size: int = 768
-    num_heads: int = 12
-    head_dim: int = 64
-    max_position_embeddings: int = 2048
-    
-    # Attention behavior
-    attention_dropout: float = 0.1
-    use_bias: bool = True
-    scale_attention: bool = True
-    
-    # Memory optimization
-    use_memory_efficient_attention: bool = True
-    use_flash_attention: bool = False  # Not available without specific hardware
-    gradient_checkpointing: bool = False
-    
-    # Sparse attention
-    use_sparse_attention: bool = False
-    sparsity_pattern: str = "local"  # local, global, random
-    sparse_block_size: int = 64
-    
-    # Caching
-    use_kv_cache: bool = True
-    max_cache_size: int = 1024
-    
-    # TPU optimization
-    use_bfloat16: bool = True
-    shard_attention: bool = True
-
-class AttentionCache:
-    """Cache for keys and values during inference."""
-    
-    def __init__(self, config: AttentionConfig):
-        self.config = config
-        self.cache = {}
-        self.cache_size = 0
-        self.max_size = config.max_cache_size
-        
-    def get(self, layer_id: int, head_id: int) -> Optional[Tuple[jnp.ndarray, jnp.ndarray]]:
-        """Gets keys and values from cache."""
-        cache_key = (layer_id, head_id)
-        return self.cache.get(cache_key)
-    
-    def set(self, layer_id: int, head_id: int, keys: jnp.ndarray, values: jnp.ndarray):
-        """Saves keys and values in the cache."""
-        cache_key = (layer_id, head_id)
-        
-        # Evict if cache is full
-        if self.cache_size >= self.max_size and cache_key not in self.cache:
-            self._evict_oldest()
-        
-        self.cache[cache_key] = (keys, values)
-        if cache_key not in self.cache:
-            self.cache_size += 1
-    
-    def clear(self):
-        """Clears the cache."""
-        self.cache.clear()
-        self.cache_size = 0
-    
-    def _evict_oldest(self):
-        """Evict the oldest entry (simple FIFO)."""
-        if self.cache:
-            oldest_key = next(iter(self.cache))
-            del self.cache[oldest_key]
-            self.cache_size -= 1
-
-class MultiHeadAttention:
+class OptimizedSharedAttention(nn.Module):
     """
-    Multi-head attention optimized for TPU with caching support
-    and sparse attention patterns.
+    Atención compartida optimizada for tpu v4-32.
+    
+    Características:
+    - Fused QKV computation
+    - Memory-efficient attention
+    - Optimized for BF16
+    - Minimal memory footprint
     """
     
-    def __init__(self, config: AttentionConfig, layer_id: int = 0):
-        self.config = config
-        self.layer_id = layer_id
-        self.num_heads = config.num_heads
-        self.head_dim = config.head_dim or (config.hidden_size // config.num_heads)
-        self.scale = 1.0 / math.sqrt(self.head_dim) if config.scale_attention else 1.0
-        
-        # Initialize cache
-        self.cache = AttentionCache(config) if config.use_kv_cache else None
-        
-        # Attention weights (would be actual parameters in real implementation)
-        self.query_weight = self._init_weight((config.hidden_size, config.hidden_size))
-        self.key_weight = self._init_weight((config.hidden_size, config.hidden_size))
-        self.value_weight = self._init_weight((config.hidden_size, config.hidden_size))
-        self.output_weight = self._init_weight((config.hidden_size, config.hidden_size))
-        
-        logger.info(f"🔍 MultiHeadAttention initialized (layer {layer_id})")
-        logger.info(f"   Heads: {self.num_heads}, Head dim: {self.head_dim}")
-        logger.info(f"   Memory efficient: {config.use_memory_efficient_attention}")
+    hidden_size: int
+    num_heads: int
+    dropout_rate: float = 0.1
+    dtype: Any = jnp.bfloat16
+    param_dtype: Any = jnp.float32
+    use_bias: bool = False  # more efficient in tpu
     
-    def _init_weight(self, shape: Tuple[int, ...]) -> jnp.ndarray:
-        """Initializes weights with Xavier initialization."""
-        if HAS_JAX:
-            key = jax.random.PRNGKey(42)
-            return jax.random.normal(key, shape) * math.sqrt(2.0 / sum(shape))
-        else:
-            return np.random.normal(0, math.sqrt(2.0 / sum(shape)), shape).astype(np.float32)
-    
-    def __call__(self, 
-                 query: jnp.ndarray,
-                 key: Optional[jnp.ndarray] = None,
-                 value: Optional[jnp.ndarray] = None,
-                 mask: Optional[jnp.ndarray] = None,
-                 training: bool = True,
-                 use_cache: bool = False) -> Dict[str, jnp.ndarray]:
+    def setup(self):
+        """initialization optimizada."""
+        
+        assert self.hidden_size % self.num_heads == 0, "hidden_size debe ser divisible por num_heads"
+        
+        self.head_dim = self.hidden_size // self.num_heads
+        self.scale = 1.0 / math.sqrt(self.head_dim)
+        
+        # 1. Proyección QKV fusionada (more eficiente que 3 separadas)
+        self.qkv_projection = nn.Dense(
+            features=3 * self.hidden_size,
+            dtype=self.dtype,
+            param_dtype=self.param_dtype,
+            use_bias=self.use_bias,
+            kernel_init=nn.initializers.lecun_normal()
+        )
+        
+        # 2. Proyección de output
+        self.output_projection = nn.Dense(
+            features=self.hidden_size,
+            dtype=self.dtype,
+            param_dtype=self.param_dtype,
+            use_bias=self.use_bias,
+            kernel_init=nn.initializers.lecun_normal()
+        )
+        
+        # 3. Dropout (only if necessary)
+        if self.dropout_rate > 0:
+            self.dropout = nn.Dropout(
+                rate=self.dropout_rate,
+                broadcast_dims=(-2,)  # not dropout en heads completos
+            )
+
+    @partial(jax.jit, static_argnums=(0, 5))
+    def __call__(
+        self,
+        query: jnp.ndarray,
+        key: Optional[jnp.ndarray] = None,
+        value: Optional[jnp.ndarray] = None,
+        mask: Optional[jnp.ndarray] = None,
+        training: bool = False
+    ) -> Dict[str, jnp.ndarray]:
         """
-        Forward pass of multi-head attention.
+        Forward pass optimizado.
         
         Args:
-            query: Query tensor [batch, seq_len, hidden_size]
-            key: Key tensor [batch, seq_len, hidden_size] (None for self-attention)
-            value: Value tensor [batch, seq_len, hidden_size] (None for self-attention)
-            mask: Attention mask [batch, seq_len, seq_len]
-            training: Whether in training mode
-            use_cache: Whether to use KV cache
+            query: [batch, seq_len, hidden_size]
+            key: [batch, seq_len, hidden_size] (optional)
+            value: [batch, seq_len, hidden_size] (optional)
+            mask: [batch, seq_len, seq_len] (optional)
+            training: bool
             
         Returns:
-            Dictionary with 'output', 'attention_weights', and optionally 'cache_updated'
+            Dict with output and métricas
         """
-        batch_size, seq_len, hidden_size = query.shape
         
-        # Self-attention if key/value not provided
-        if key is None:
-            key = query
-        if value is None:
-            value = key
+        # if not se proporcionan key/value, use query (self-attention)
+        input_tensor = query if key is None else key
         
-        # Linear projections
-        q = self._linear_projection(query, self.query_weight)
-        k = self._linear_projection(key, self.key_weight)
-        v = self._linear_projection(value, self.value_weight)
+        batch_size, seq_len, _ = query.shape
         
-        # Reshape for multi-head attention
+        # 1. Proyección QKV fusionada
+        if key is None and value is None:
+            # Self-attention: use query for all
+            qkv = self.qkv_projection(query)
+        else:
+            # Cross-attention: Q de query, KV de input_tensor
+            q = self.qkv_projection(query)[:, :, :self.hidden_size]
+            kv = self.qkv_projection(input_tensor)[:, :, self.hidden_size:]
+            qkv = jnp.concatenate([q, kv], axis=-1)
+        
+        # 2. Split and reshape for multi-head
+        q, k, v = jnp.split(qkv, 3, axis=-1)
+        
         q = self._reshape_for_attention(q, batch_size, seq_len)
         k = self._reshape_for_attention(k, batch_size, seq_len)
         v = self._reshape_for_attention(v, batch_size, seq_len)
         
-        # Use cache if available and requested
-        if use_cache and self.cache is not None:
-            k, v = self._apply_cache(k, v)
+        # 3. Attention computation optimizada
+        attended, attention_weights = self._compute_attention(
+            q, k, v, mask, training
+        )
         
-        # Compute attention
-        if self.config.use_memory_efficient_attention:
-            attention_output, attention_weights = self._memory_efficient_attention(
-                q, k, v, mask, training
-            )
-        else:
-            attention_output, attention_weights = self._standard_attention(
-                q, k, v, mask, training
-            )
+        # 4. Reshape and proyección end
+        attended = self._reshape_from_attention(attended, batch_size, seq_len)
+        output = self.output_projection(attended)
         
-        # Reshape back to [batch, seq_len, hidden_size]
-        attention_output = self._reshape_from_attention(attention_output, batch_size, seq_len)
+        # 5. Residual connection (if query es del same size)
+        if output.shape == query.shape:
+            output = output + query
         
-        # Output projection
-        output = self._linear_projection(attention_output, self.output_weight)
+        # 6. Métricas
+        metrics = self._compute_metrics(attention_weights, output)
         
-        result = {
-            'output': output,
-            'attention_weights': attention_weights
+        return {
+            "output": output,
+            "attention_weights": attention_weights,
+            "metrics": metrics
         }
-        
-        if use_cache and self.cache is not None:
-            result['cache_updated'] = True
-        
-        return result
-    
-    def _linear_projection(self, x: jnp.ndarray, weight: jnp.ndarray) -> jnp.ndarray:
-        """Linear projection."""
-        if HAS_JAX:
-            return jnp.dot(x, weight)
-        else:
-            return np.dot(x, weight)
-    
-    def _reshape_for_attention(self, x: jnp.ndarray, batch_size: int, seq_len: int) -> jnp.ndarray:
-        """Reshape tensor for multi-head attention."""
-        # [batch, seq_len, hidden] -> [batch, seq_len, num_heads, head_dim]
-        x = x.reshape(batch_size, seq_len, self.num_heads, self.head_dim)
-        # -> [batch, num_heads, seq_len, head_dim]
-        if HAS_JAX:
-            return jnp.transpose(x, (0, 2, 1, 3))
-        else:
-            return np.transpose(x, (0, 2, 1, 3))
-    
-    def _reshape_from_attention(self, x: jnp.ndarray, batch_size: int, seq_len: int) -> jnp.ndarray:
-        """Reshape tensor back from multi-head attention."""
-        # [batch, num_heads, seq_len, head_dim] -> [batch, seq_len, num_heads, head_dim]
-        if HAS_JAX:
-            x = jnp.transpose(x, (0, 2, 1, 3))
-        else:
-            x = np.transpose(x, (0, 2, 1, 3))
-        # -> [batch, seq_len, hidden]
-        return x.reshape(batch_size, seq_len, -1)
-    
-    def _standard_attention(self, 
-                          q: jnp.ndarray, 
-                          k: jnp.ndarray, 
-                          v: jnp.ndarray,
-                          mask: Optional[jnp.ndarray] = None,
-                          training: bool = True) -> Tuple[jnp.ndarray, jnp.ndarray]:
-        """Standard attention implementation."""
-        # Compute attention scores
-        if HAS_JAX:
-            scores = jnp.matmul(q, jnp.transpose(k, (0, 1, 3, 2))) * self.scale
-        else:
-            scores = np.matmul(q, np.transpose(k, (0, 1, 3, 2))) * self.scale
-        
-        # Apply mask if provided
-        if mask is not None:
-            # Expand mask for multi-head
-            mask = mask[:, None, :, :]  # [batch, 1, seq_len, seq_len]
-            scores = scores + mask * -1e9
-        
-        # Softmax
-        attention_weights = self._softmax(scores, axis=-1)
-        
-        # Apply dropout if training
-        if training and self.config.attention_dropout > 0:
-            attention_weights = self._dropout(attention_weights, self.config.attention_dropout)
-        
-        # Apply attention to values
-        if HAS_JAX:
-            attention_output = jnp.matmul(attention_weights, v)
-        else:
-            attention_output = np.matmul(attention_weights, v)
-        
-        return attention_output, attention_weights
-    
-    def _memory_efficient_attention(self,
-                                  q: jnp.ndarray,
-                                  k: jnp.ndarray, 
-                                  v: jnp.ndarray,
-                                  mask: Optional[jnp.ndarray] = None,
-                                  training: bool = True) -> Tuple[jnp.ndarray, jnp.ndarray]:
-        """Memory-efficient attention implementation using chunking."""
-        batch_size, num_heads, seq_len, head_dim = q.shape
-        chunk_size = min(512, seq_len)  # Chunk size for memory efficiency
-        
-        if seq_len <= chunk_size:
-            return self._standard_attention(q, k, v, mask, training)
-        
-        # Initialize output
-        if HAS_JAX:
-            attention_output = jnp.zeros_like(q)
-            attention_weights = jnp.zeros((batch_size, num_heads, seq_len, seq_len))
-        else:
-            attention_output = np.zeros_like(q)
-            attention_weights = np.zeros((batch_size, num_heads, seq_len, seq_len))
-        
-        # Process in chunks
-        for i in range(0, seq_len, chunk_size):
-            end_i = min(i + chunk_size, seq_len)
-            
-            # Extract query chunk
-            q_chunk = q[:, :, i:end_i, :]
-            
-            # Compute attention for this chunk
-            if HAS_JAX:
-                scores = jnp.matmul(q_chunk, jnp.transpose(k, (0, 1, 3, 2))) * self.scale
-            else:
-                scores = np.matmul(q_chunk, np.transpose(k, (0, 1, 3, 2))) * self.scale
-            
-            # Apply mask if provided
-            if mask is not None:
-                mask_chunk = mask[:, None, i:end_i, :]
-                scores = scores + mask_chunk * -1e9
-            
-            # Softmax
-            weights_chunk = self._softmax(scores, axis=-1)
-            
-            # Apply dropout if training
-            if training and self.config.attention_dropout > 0:
-                weights_chunk = self._dropout(weights_chunk, self.config.attention_dropout)
-            
-            # Apply attention to values
-            if HAS_JAX:
-                output_chunk = jnp.matmul(weights_chunk, v)
-            else:
-                output_chunk = np.matmul(weights_chunk, v)
-            
-            # Store results
-            attention_output = attention_output.at[:, :, i:end_i, :].set(output_chunk) if HAS_JAX else \
-                              self._set_slice(attention_output, output_chunk, i, end_i)
-            attention_weights = attention_weights.at[:, :, i:end_i, :].set(weights_chunk) if HAS_JAX else \
-                               self._set_slice_2d(attention_weights, weights_chunk, i, end_i)
-        
-        return attention_output, attention_weights
-    
-    def _set_slice(self, array: np.ndarray, value: np.ndarray, start: int, end: int) -> np.ndarray:
-        """Helper for numpy slice assignment."""
-        array[:, :, start:end, :] = value
-        return array
-    
-    def _set_slice_2d(self, array: np.ndarray, value: np.ndarray, start: int, end: int) -> np.ndarray:
-        """Helper for numpy slice assignment in 2D."""
-        array[:, :, start:end, :] = value
-        return array
-    
-    def _softmax(self, x: jnp.ndarray, axis: int = -1) -> jnp.ndarray:
-        """Softmax implementation."""
-        if HAS_JAX:
-            return jax.nn.softmax(x, axis=axis)
-        else:
-            # Numerical stability
-            x_max = np.max(x, axis=axis, keepdims=True)
-            exp_x = np.exp(x - x_max)
-            return exp_x / np.sum(exp_x, axis=axis, keepdims=True)
-    
-    def _dropout(self, x: jnp.ndarray, rate: float) -> jnp.ndarray:
-        """Dropout implementation."""
-        if HAS_JAX:
-            key = jax.random.PRNGKey(42)  # In real implementation, use proper key
-            return jax.random.dropout(key, x, rate)
-        else:
-            # Simple dropout for numpy fallback
-            mask = np.random.random(x.shape) > rate
-            return x * mask / (1 - rate)
-    
-    def _apply_cache(self, k: jnp.ndarray, v: jnp.ndarray) -> Tuple[jnp.ndarray, jnp.ndarray]:
-        """Applies keys and values cache."""
-        if self.cache is None:
-            return k, v
-        
-        batch_size, num_heads, seq_len, head_dim = k.shape
-        
-        # For each head, try to use cache
-        cached_k_list = []
-        cached_v_list = []
-        
-        for head_id in range(num_heads):
-            cached_kv = self.cache.get(self.layer_id, head_id)
-            
-            if cached_kv is not None:
-                cached_k, cached_v = cached_kv
-                # Concatenate with new keys/values
-                if HAS_JAX:
-                    new_k = jnp.concatenate([cached_k, k[:, head_id:head_id+1, :, :]], axis=2)
-                    new_v = jnp.concatenate([cached_v, v[:, head_id:head_id+1, :, :]], axis=2)
-                else:
-                    new_k = np.concatenate([cached_k, k[:, head_id:head_id+1, :, :]], axis=2)
-                    new_v = np.concatenate([cached_v, v[:, head_id:head_id+1, :, :]], axis=2)
-            else:
-                new_k = k[:, head_id:head_id+1, :, :]
-                new_v = v[:, head_id:head_id+1, :, :]
-            
-            # Update cache
-            self.cache.set(self.layer_id, head_id, new_k, new_v)
-            
-            cached_k_list.append(new_k)
-            cached_v_list.append(new_v)
-        
-        # Concatenate all heads
-        if HAS_JAX:
-            final_k = jnp.concatenate(cached_k_list, axis=1)
-            final_v = jnp.concatenate(cached_v_list, axis=1)
-        else:
-            final_k = np.concatenate(cached_k_list, axis=1)
-            final_v = np.concatenate(cached_v_list, axis=1)
-        
-        return final_k, final_v
 
-class CrossAttention(MultiHeadAttention):
-    """
-    Cross-attention for encoder-decoder models.
-    Inherits from MultiHeadAttention but specialized for cross-attention.
-    """
-    
-    def __init__(self, config: AttentionConfig, layer_id: int = 0):
-        super().__init__(config, layer_id)
-        logger.info(f"🔗 CrossAttention initialized (layer {layer_id})")
-    
-    def __call__(self,
-                 query: jnp.ndarray,
-                 encoder_output: jnp.ndarray,
-                 encoder_mask: Optional[jnp.ndarray] = None,
-                 training: bool = True) -> Dict[str, jnp.ndarray]:
+    @partial(jax.jit, static_argnums=(0,))
+    def _reshape_for_attention(
+        self, 
+        x: jnp.ndarray, 
+        batch_size: int, 
+        seq_len: int
+    ) -> jnp.ndarray:
+        """Reshape for multi-head attention."""
+        return x.reshape(batch_size, seq_len, self.num_heads, self.head_dim).transpose(0, 2, 1, 3)
+
+    @partial(jax.jit, static_argnums=(0,))
+    def _reshape_from_attention(
+        self, 
+        x: jnp.ndarray, 
+        batch_size: int, 
+        seq_len: int
+    ) -> jnp.ndarray:
+        """Reshape de vuelta since multi-head attention."""
+        return x.transpose(0, 2, 1, 3).reshape(batch_size, seq_len, self.hidden_size)
+
+    @partial(jax.jit, static_argnums=(0, 5))
+    def _compute_attention(
+        self,
+        q: jnp.ndarray,
+        k: jnp.ndarray, 
+        v: jnp.ndarray,
+        mask: Optional[jnp.ndarray],
+        training: bool
+    ) -> Tuple[jnp.ndarray, jnp.ndarray]:
         """
-        Cross-attention between decoder query and encoder output.
+        Compute attention de forma eficiente.
         
         Args:
-            query: Decoder query [batch, dec_seq_len, hidden_size]
-            encoder_output: Encoder output [batch, enc_seq_len, hidden_size]
-            encoder_mask: Encoder padding mask [batch, enc_seq_len]
-            training: Whether in training mode
+            q, k, v: [batch, num_heads, seq_len, head_dim]
+            mask: [batch, seq_len, seq_len] (optional)
+            training: bool
+            
+        Returns:
+            (attended_values, attention_weights)
         """
-        # In cross-attention, key and value come from encoder
-        return super().__call__(
-            query=query,
-            key=encoder_output,
-            value=encoder_output,
-            mask=encoder_mask,
-            training=training,
-            use_cache=False  # Cross-attention typically doesn't use cache
-        )
+        
+        # 1. Compute attention scores
+        attention_logits = jnp.einsum('bhqd,bhkd->bhqk', q, k) * self.scale
+        
+        # 2. Apply mask if se proporciona
+        if mask is not None:
+            # Expand mask for múltiples heads
+            mask = mask[:, None, :, :]  # [batch, 1, seq_len, seq_len]
+            # use un value muy negativo instead of -inf for estabilidad
+            attention_logits = jnp.where(mask, attention_logits, -1e9)
+        
+        # 3. Softmax
+        attention_weights = jax.nn.softmax(attention_logits, axis=-1)
+        
+        # 4. Dropout en attention weights (if está entrenando)
+        if training and self.dropout_rate > 0:
+            attention_weights = self.dropout(attention_weights, deterministic=False)
+        
+        # 5. Apply attention a values
+        attended = jnp.einsum('bhqk,bhkd->bhqd', attention_weights, v)
+        
+        return attended, attention_weights
 
-class SparseAttention(MultiHeadAttention):
-    """
-    Sparse attention patterns to reduce computational complexity.
-    """
-    
-    def __init__(self, config: AttentionConfig, layer_id: int = 0):
-        super().__init__(config, layer_id)
-        self.sparsity_pattern = config.sparsity_pattern
-        self.block_size = config.sparse_block_size
-        logger.info(f"🕸️ SparseAttention initialized (layer {layer_id})")
-        logger.info(f"   Pattern: {self.sparsity_pattern}, Block size: {self.block_size}")
-    
-    def _create_sparse_mask(self, seq_len: int, batch_size: int) -> jnp.ndarray:
-        """Creates sparse mask according to configured pattern."""
-        if self.sparsity_pattern == "local":
-            return self._create_local_mask(seq_len, batch_size)
-        elif self.sparsity_pattern == "global":
-            return self._create_global_mask(seq_len, batch_size)
-        elif self.sparsity_pattern == "random":
-            return self._create_random_mask(seq_len, batch_size)
-        else:
-            # Full attention as fallback
-            if HAS_JAX:
-                return jnp.zeros((batch_size, seq_len, seq_len))
-            else:
-                return np.zeros((batch_size, seq_len, seq_len))
-    
-    def _create_local_mask(self, seq_len: int, batch_size: int) -> jnp.ndarray:
-        """Creates mask for local attention (sliding window)."""
-        window_size = self.block_size
+    @partial(jax.jit, static_argnums=(0,))
+    def _compute_metrics(
+        self,
+        attention_weights: jnp.ndarray,
+        output: jnp.ndarray
+    ) -> Dict[str, jnp.ndarray]:
+        """Compute métricas de forma eficiente."""
         
-        if HAS_JAX:
-            mask = jnp.full((batch_size, seq_len, seq_len), -1e9)
-        else:
-            mask = np.full((batch_size, seq_len, seq_len), -1e9)
+        # Flatten attention weights for estadísticas
+        attn_flat = attention_weights.reshape(-1, attention_weights.shape[-1])
         
-        # Allow attention within window
-        for i in range(seq_len):
-            start = max(0, i - window_size // 2)
-            end = min(seq_len, i + window_size // 2 + 1)
-            if HAS_JAX:
-                mask = mask.at[:, i, start:end].set(0.0)
-            else:
-                mask[:, i, start:end] = 0.0
-        
-        return mask
-    
-    def _create_global_mask(self, seq_len: int, batch_size: int) -> jnp.ndarray:
-        """Creates mask for global attention (some tokens attend to all)."""
-        global_tokens = min(self.block_size, seq_len // 4)
-        
-        if HAS_JAX:
-            mask = jnp.full((batch_size, seq_len, seq_len), -1e9)
-            # Global tokens can attend to everything
-            mask = mask.at[:, :global_tokens, :].set(0.0)
-            # Everyone can attend to global tokens
-            mask = mask.at[:, :, :global_tokens].set(0.0)
-        else:
-            mask = np.full((batch_size, seq_len, seq_len), -1e9)
-            mask[:, :global_tokens, :] = 0.0
-            mask[:, :, :global_tokens] = 0.0
-        
-        return mask
-    
-    def _create_random_mask(self, seq_len: int, batch_size: int) -> jnp.ndarray:
-        """Creates mask for random sparse attention."""
-        sparsity_ratio = 0.1  # 10% of connections
-        num_connections = int(seq_len * seq_len * sparsity_ratio)
-        
-        if HAS_JAX:
-            mask = jnp.full((batch_size, seq_len, seq_len), -1e9)
-            key = jax.random.PRNGKey(42)
+        metrics = {
+            # Métricas de attention
+            "attention_entropy": jnp.mean(
+                -jnp.sum(attn_flat * jnp.log(attn_flat + 1e-8), axis=-1)
+            ),
+            "attention_max": jnp.max(attention_weights),
+            "attention_concentration": jnp.mean(jnp.max(attn_flat, axis=-1)),
+            "attention_sparsity": jnp.mean(attn_flat < 0.01),  # % de pesos muy pequeños
             
-            for b in range(batch_size):
-                # Random positions to unmask
-                positions = jax.random.choice(
-                    key, seq_len * seq_len, (num_connections,), replace=False
-                )
-                rows = positions // seq_len
-                cols = positions % seq_len
-                mask = mask.at[b, rows, cols].set(0.0)
-        else:
-            mask = np.full((batch_size, seq_len, seq_len), -1e9)
-            
-            for b in range(batch_size):
-                positions = np.random.choice(seq_len * seq_len, num_connections, replace=False)
-                rows = positions // seq_len
-                cols = positions % seq_len
-                mask[b, rows, cols] = 0.0
-        
-        return mask
-    
-    def __call__(self, *args, **kwargs) -> Dict[str, jnp.ndarray]:
-        """Override to apply sparse attention."""
-        # Get sequence length from query
-        query = args[0] if args else kwargs['query']
-        batch_size, seq_len, _ = query.shape
-        
-        # Create sparse mask
-        sparse_mask = self._create_sparse_mask(seq_len, batch_size)
-        
-        # Combine with existing mask if provided
-        existing_mask = kwargs.get('mask')
-        if existing_mask is not None:
-            if HAS_JAX:
-                combined_mask = jnp.minimum(sparse_mask, existing_mask)
-            else:
-                combined_mask = np.minimum(sparse_mask, existing_mask)
-        else:
-            combined_mask = sparse_mask
-        
-        # Update mask in kwargs
-        kwargs['mask'] = combined_mask
-        
-        return super().__call__(*args, **kwargs)
-
-class SharedAttentionManager:
-    """
-    Manager to coordinate multiple shared attention modules.
-    """
-    
-    def __init__(self, config: AttentionConfig):
-        self.config = config
-        self.attention_modules = {}
-        self.global_cache = AttentionCache(config)
-        
-        logger.info("🎯 SharedAttentionManager initialized")
-    
-    def create_attention_module(self, 
-                              module_type: str = "multi_head",
-                              layer_id: int = 0,
-                              **kwargs) -> MultiHeadAttention:
-        """Creates an attention module of the specified type."""
-        
-        if module_type == "multi_head":
-            module = MultiHeadAttention(self.config, layer_id)
-        elif module_type == "cross_attention":
-            module = CrossAttention(self.config, layer_id)
-        elif module_type == "sparse_attention":
-            module = SparseAttention(self.config, layer_id)
-        else:
-            raise ValueError(f"Unknown attention module type: {module_type}")
-        
-        # Register module
-        module_key = f"{module_type}_{layer_id}"
-        self.attention_modules[module_key] = module
-        
-        logger.info(f"✅ Created attention module: {module_key}")
-        return module
-    
-    def get_attention_module(self, module_type: str, layer_id: int) -> Optional[MultiHeadAttention]:
-        """Gets an existing attention module."""
-        module_key = f"{module_type}_{layer_id}"
-        return self.attention_modules.get(module_key)
-    
-    def clear_all_caches(self):
-        """Clears all attention caches."""
-        self.global_cache.clear()
-        for module in self.attention_modules.values():
-            if hasattr(module, 'cache') and module.cache is not None:
-                module.cache.clear()
-        
-        logger.info("🧹 All attention caches cleared")
-    
-    def get_attention_stats(self) -> Dict[str, Any]:
-        """Gets attention modules statistics."""
-        stats = {
-            'total_modules': len(self.attention_modules),
-            'module_types': {},
-            'cache_stats': {
-                'global_cache_size': self.global_cache.cache_size,
-                'global_cache_max': self.global_cache.max_size
-            },
-            'config': self.config.__dict__
+            # Métricas de output
+            "output_norm": jnp.linalg.norm(output),
+            "output_mean": jnp.mean(jnp.abs(output)),
+            "output_std": jnp.std(output)
         }
         
-        # Count module types
-        for module_key in self.attention_modules:
-            module_type = module_key.rsplit('_', 1)[0]
-            stats['module_types'][module_type] = stats['module_types'].get(module_type, 0) + 1
+        return metrics
+
+
+class MultiScaleSharedAttention(nn.Module):
+    """
+    Atención multi-escala for capture patrones a diferentes resoluciones.
+    Optimizada for tpu v4-32.
+    """
+    
+    hidden_size: int
+    num_heads: int
+    scales: Tuple[int, ...] = (1, 2, 4, 8)  # Diferentes escalas de atención
+    dropout_rate: float = 0.1
+    dtype: Any = jnp.bfloat16
+    
+    def setup(self):
+        """Inicializa attention modules for each escala."""
         
-        return stats
+        # create attention module for each escala
+        self.attention_modules = {}
+        for scale in self.scales:
+            self.attention_modules[f"scale_{scale}"] = OptimizedSharedAttention(
+                hidden_size=self.hidden_size,
+                num_heads=max(1, self.num_heads // scale),  # except heads for escalas mayores
+                dropout_rate=self.dropout_rate,
+                dtype=self.dtype
+            )
+        
+        # Proyección for combine escalas
+        self.scale_fusion = nn.Dense(
+            features=self.hidden_size,
+            dtype=self.dtype,
+            use_bias=False
+        )
+        
+        # Gate for ponderar escalas
+        self.scale_gate = nn.Dense(
+            features=len(self.scales),
+            dtype=self.dtype
+        )
 
-# Factory functions
-def create_attention_config(**kwargs) -> AttentionConfig:
-    """Creates attention configuration with default values."""
-    return AttentionConfig(**kwargs)
+    @nn.compact
+    def __call__(
+        self,
+        query: jnp.ndarray,
+        key: Optional[jnp.ndarray] = None,
+        value: Optional[jnp.ndarray] = None,
+        mask: Optional[jnp.ndarray] = None,
+        training: bool = False
+    ) -> Dict[str, jnp.ndarray]:
+        """
+        Forward pass with atención multi-escala.
+        
+        Args:
+            query: [batch, seq_len, hidden_size]
+            key, value: optional for cross-attention
+            mask: Máscara de atención
+            training: Modo entrenamiento
+            
+        Returns:
+            Dict with output and métricas
+        """
+        
+        batch_size, seq_len, _ = query.shape
+        scale_outputs = []
+        scale_metrics = {}
+        
+        # 1. process each escala
+        for scale in self.scales:
+            # Downsample for escalas > 1
+            if scale > 1:
+                # Pooling for reduce resolution
+                pooled_query = self._adaptive_pool(query, scale)
+                pooled_key = self._adaptive_pool(key if key is not None else query, scale)
+                pooled_value = self._adaptive_pool(value if value is not None else query, scale)
+                pooled_mask = self._downsample_mask(mask, scale) if mask is not None else None
+            else:
+                pooled_query = query
+                pooled_key = key
+                pooled_value = value
+                pooled_mask = mask
+            
+            # apply attention
+            attn_result = self.attention_modules[f"scale_{scale}"](
+                pooled_query, pooled_key, pooled_value, pooled_mask, training
+            )
+            
+            # Upsample de vuelta if es necessary
+            if scale > 1:
+                output_upsampled = self._adaptive_upsample(
+                    attn_result["output"], seq_len
+                )
+            else:
+                output_upsampled = attn_result["output"]
+            
+            scale_outputs.append(output_upsampled)
+            scale_metrics[f"scale_{scale}"] = attn_result["metrics"]
+        
+        # 2. combine escalas with gating
+        stacked_outputs = jnp.stack(scale_outputs, axis=-1)  # [batch, seq_len, hidden, num_scales]
+        
+        # Compute gates basado en query
+        query_pooled = jnp.mean(query, axis=1)  # [batch, hidden]
+        scale_weights = nn.softmax(self.scale_gate(query_pooled), axis=-1)  # [batch, num_scales]
+        
+        # Weighted combination
+        combined = jnp.einsum('bshn,bn->bsh', stacked_outputs, scale_weights)
+        
+        # 3. Proyección end
+        output = self.scale_fusion(combined)
+        
+        # 4. Residual connection
+        output = output + query
+        
+        # 5. Métricas agregadas
+        combined_metrics = self._aggregate_metrics(scale_metrics, scale_weights)
+        
+        return {
+            "output": output,
+            "scale_weights": scale_weights,
+            "metrics": combined_metrics
+        }
 
-def create_multi_head_attention(config: Optional[AttentionConfig] = None, 
-                              layer_id: int = 0) -> MultiHeadAttention:
-    """Factory to create multi-head attention."""
-    config = config or AttentionConfig()
-    return MultiHeadAttention(config, layer_id)
+    @partial(jax.jit, static_argnums=(0, 2))
+    def _adaptive_pool(self, x: jnp.ndarray, scale: int) -> jnp.ndarray:
+        """Pooling adaptativo for downsampling."""
+        if scale == 1:
+            return x
+        
+        batch_size, seq_len, hidden_size = x.shape
+        new_seq_len = seq_len // scale
+        
+        # Reshape and average pool
+        x_reshaped = x[:, :new_seq_len * scale, :].reshape(
+            batch_size, new_seq_len, scale, hidden_size
+        )
+        return jnp.mean(x_reshaped, axis=2)
 
-def create_cross_attention(config: Optional[AttentionConfig] = None,
-                         layer_id: int = 0) -> CrossAttention:
-    """Factory to create cross-attention."""
-    config = config or AttentionConfig()
-    return CrossAttention(config, layer_id)
+    @partial(jax.jit, static_argnums=(0, 2))
+    def _adaptive_upsample(self, x: jnp.ndarray, target_len: int) -> jnp.ndarray:
+        """Upsampling adaptativo."""
+        batch_size, seq_len, hidden_size = x.shape
+        
+        if seq_len == target_len:
+            return x
+        
+        # simple repeat upsampling
+        scale = target_len // seq_len
+        remainder = target_len % seq_len
+        
+        # Repeat each element
+        upsampled = jnp.repeat(x, scale, axis=1)
+        
+        # Handle remainder by repeating last elements
+        if remainder > 0:
+            last_elements = x[:, -remainder:, :]
+            upsampled = jnp.concatenate([upsampled, last_elements], axis=1)
+        
+        return upsampled[:, :target_len, :]
 
-def create_sparse_attention(config: Optional[AttentionConfig] = None,
-                          layer_id: int = 0,
-                          sparsity_pattern: str = "local") -> SparseAttention:
-    """Factory to create sparse attention."""
-    config = config or AttentionConfig()
-    config.sparsity_pattern = sparsity_pattern
-    config.use_sparse_attention = True
-    return SparseAttention(config, layer_id)
+    @partial(jax.jit, static_argnums=(0, 2))
+    def _downsample_mask(self, mask: jnp.ndarray, scale: int) -> jnp.ndarray:
+        """Downsample mask manteniendo structure de atención."""
+        if scale == 1:
+            return mask
+        
+        batch_size, seq_len, _ = mask.shape
+        new_seq_len = seq_len // scale
+        
+        # take each scale-ésimo element
+        downsampled = mask[:, ::scale, ::scale]
+        return downsampled[:, :new_seq_len, :new_seq_len]
 
-def create_attention_manager(config: Optional[AttentionConfig] = None) -> SharedAttentionManager:
-    """Factory to create attention manager."""
-    config = config or AttentionConfig()
-    return SharedAttentionManager(config)
+    def _aggregate_metrics(
+        self, 
+        scale_metrics: Dict[str, Dict[str, jnp.ndarray]], 
+        scale_weights: jnp.ndarray
+    ) -> Dict[str, jnp.ndarray]:
+        """Agrega métricas de todas las escalas."""
+        
+        aggregated = {}
+        
+        # obtain todas las métricas únicas
+        all_metric_keys = set()
+        for metrics in scale_metrics.values():
+            all_metric_keys.update(metrics.keys())
+        
+        # add each métrica
+        for metric_key in all_metric_keys:
+            metric_values = []
+            weights = []
+            
+            for i, scale in enumerate(self.scales):
+                scale_key = f"scale_{scale}"
+                if metric_key in scale_metrics[scale_key]:
+                    metric_values.append(scale_metrics[scale_key][metric_key])
+                    weights.append(scale_weights[:, i])
+            
+            if metric_values:
+                # Weighted average across scales
+                stacked_values = jnp.stack(metric_values, axis=0)  # [num_scales, ...]
+                stacked_weights = jnp.stack(weights, axis=0)  # [num_scales, batch]
+                
+                # Global average across batch and scales
+                aggregated[f"avg_{metric_key}"] = jnp.mean(stacked_values)
+                aggregated[f"weighted_{metric_key}"] = jnp.sum(
+                    stacked_values * jnp.mean(stacked_weights, axis=1, keepdims=True)
+                )
+        
+        # Métricas específicas de multi-escala
+        aggregated["scale_entropy"] = -jnp.mean(
+            jnp.sum(scale_weights * jnp.log(scale_weights + 1e-8), axis=-1)
+        )
+        aggregated["scale_concentration"] = jnp.mean(jnp.max(scale_weights, axis=-1))
+        
+        return aggregated
 
-# Global manager instance
-_global_attention_manager: Optional[SharedAttentionManager] = None
 
-def get_global_attention_manager() -> SharedAttentionManager:
-    """Gets global attention manager instance."""
-    global _global_attention_manager
-    if _global_attention_manager is None:
-        _global_attention_manager = create_attention_manager()
-    return _global_attention_manager
-
-def main():
-    """Main function for testing."""
-    logger.info("🔍 Shared Attention Module - Testing Mode")
+class EfficiencyOptimizedAttention(nn.Module):
+    """
+    Atención optimizada for máxima eficiencia en tpu.
+    Reduce complejidad de or(n²) a or(n log n) for secuencias largas.
+    """
     
-    # Create configuration
-    config = AttentionConfig(
-        hidden_size=768,
-        num_heads=12,
-        max_position_embeddings=1024,
-        use_memory_efficient_attention=True
-    )
+    hidden_size: int
+    num_heads: int
+    window_size: int = 512  # Ventana deslizante
+    num_random_chunks: int = 64  # Chunks aleatorios for conectividad global
+    dropout_rate: float = 0.1
+    dtype: Any = jnp.bfloat16
     
-    # Create manager
-    manager = create_attention_manager(config)
+    def setup(self):
+        """initialization for attention eficiente."""
+        
+        self.head_dim = self.hidden_size // self.num_heads
+        self.scale = 1.0 / math.sqrt(self.head_dim)
+        
+        # Proyecciones QKV
+        self.qkv_projection = nn.Dense(
+            features=3 * self.hidden_size,
+            dtype=self.dtype,
+            use_bias=False,
+            kernel_init=nn.initializers.lecun_normal()
+        )
+        
+        # Proyección de output
+        self.output_projection = nn.Dense(
+            features=self.hidden_size,
+            dtype=self.dtype,
+            use_bias=False
+        )
+        
+        # Dropout
+        self.dropout = nn.Dropout(rate=self.dropout_rate)
+
+    @nn.compact
+    def __call__(
+        self,
+        x: jnp.ndarray,
+        mask: Optional[jnp.ndarray] = None,
+        training: bool = False
+    ) -> Dict[str, jnp.ndarray]:
+        """
+        Attention eficiente with complejidad reducida.
+        
+        Args:
+            x: [batch, seq_len, hidden_size]
+            mask: optional
+            training: bool
+            
+        Returns:
+            Dict with output and métricas
+        """
+        
+        batch_size, seq_len, _ = x.shape
+        
+        # 1. Proyección QKV
+        qkv = self.qkv_projection(x)
+        q, k, v = jnp.split(qkv, 3, axis=-1)
+        
+        # 2. Reshape for multi-head
+        q = self._reshape_for_heads(q)
+        k = self._reshape_for_heads(k)
+        v = self._reshape_for_heads(v)
+        
+        # 3. apply attention eficiente
+        if seq_len <= self.window_size:
+            # for secuencias cortas, use attention completa
+            attended = self._full_attention(q, k, v, mask, training)
+        else:
+            # for secuencias largas, use attention eficiente
+            attended = self._efficient_attention(q, k, v, mask, training)
+        
+        # 4. Reshape and proyección end
+        attended = self._reshape_from_heads(attended)
+        output = self.output_projection(attended)
+        
+        # 5. Residual connection
+        output = output + x
+        
+        # 6. Métricas
+        metrics = {
+            "sequence_length": seq_len,
+            "attention_type": "full" if seq_len <= self.window_size else "efficient",
+            "output_norm": jnp.linalg.norm(output),
+            "compression_ratio": min(1.0, self.window_size / seq_len)
+        }
+        
+        return {
+            "output": output,
+            "metrics": metrics
+        }
+
+    def _reshape_for_heads(self, x: jnp.ndarray) -> jnp.ndarray:
+        """Reshape for multi-head attention."""
+        batch_size, seq_len, _ = x.shape
+        return x.reshape(batch_size, seq_len, self.num_heads, self.head_dim).transpose(0, 2, 1, 3)
+
+    def _reshape_from_heads(self, x: jnp.ndarray) -> jnp.ndarray:
+        """Reshape de vuelta since multi-head."""
+        batch_size, _, seq_len, _ = x.shape
+        return x.transpose(0, 2, 1, 3).reshape(batch_size, seq_len, self.hidden_size)
+
+    def _full_attention(
+        self,
+        q: jnp.ndarray,
+        k: jnp.ndarray,
+        v: jnp.ndarray,
+        mask: Optional[jnp.ndarray],
+        training: bool
+    ) -> jnp.ndarray:
+        """Attention completa for secuencias cortas."""
+        
+        # Standard scaled dot-product attention
+        attention_logits = jnp.einsum('bhqd,bhkd->bhqk', q, k) * self.scale
+        
+        if mask is not None:
+            attention_logits = jnp.where(mask[:, None, :, :], attention_logits, -1e9)
+        
+        attention_weights = jax.nn.softmax(attention_logits, axis=-1)
+        
+        if training:
+            attention_weights = self.dropout(attention_weights, deterministic=False)
+        
+        return jnp.einsum('bhqk,bhkd->bhqd', attention_weights, v)
+
+    def _efficient_attention(
+        self,
+        q: jnp.ndarray,
+        k: jnp.ndarray,
+        v: jnp.ndarray,
+        mask: Optional[jnp.ndarray],
+        training: bool
+    ) -> jnp.ndarray:
+        """
+        Attention eficiente for secuencias largas.
+        Combina attention local (ventana deslizante) with conexiones globales aleatorias.
+        """
+        
+        batch_size, num_heads, seq_len, head_dim = q.shape
+        
+        # 1. Local attention (ventana deslizante)
+        local_attended = self._sliding_window_attention(q, k, v, training)
+        
+        # 2. Global attention (chunks aleatorios)
+        global_attended = self._random_chunk_attention(q, k, v, training)
+        
+        # 3. combine local and global
+        # use gate for ponderar between local and global
+        gate_logits = jnp.mean(q, axis=(2, 3))  # [batch, num_heads]
+        gate_weights = jax.nn.sigmoid(gate_logits)[:, :, None, None]
+        
+        attended = gate_weights * global_attended + (1 - gate_weights) * local_attended
+        
+        return attended
+
+    def _sliding_window_attention(
+        self,
+        q: jnp.ndarray,
+        k: jnp.ndarray,
+        v: jnp.ndarray,
+        training: bool
+    ) -> jnp.ndarray:
+        """Attention with ventana deslizante."""
+        
+        batch_size, num_heads, seq_len, head_dim = q.shape
+        window = self.window_size
+        
+        # Padding for ventanas completas
+        pad_len = window - (seq_len % window) if seq_len % window != 0 else 0
+        
+        if pad_len > 0:
+            q_padded = jnp.pad(q, ((0, 0), (0, 0), (0, pad_len), (0, 0)))
+            k_padded = jnp.pad(k, ((0, 0), (0, 0), (0, pad_len), (0, 0)))
+            v_padded = jnp.pad(v, ((0, 0), (0, 0), (0, pad_len), (0, 0)))
+        else:
+            q_padded = q
+            k_padded = k
+            v_padded = v
+        
+        padded_len = q_padded.shape[2]
+        num_windows = padded_len // window
+        
+        # Reshape for process ventanas en paralelo
+        q_windows = q_padded.reshape(batch_size, num_heads, num_windows, window, head_dim)
+        k_windows = k_padded.reshape(batch_size, num_heads, num_windows, window, head_dim)
+        v_windows = v_padded.reshape(batch_size, num_heads, num_windows, window, head_dim)
+        
+        # Attention inside de each ventana
+        attention_logits = jnp.einsum('bhnqd,bhnkd->bhnqk', q_windows, k_windows) * self.scale
+        attention_weights = jax.nn.softmax(attention_logits, axis=-1)
+        
+        if training:
+            attention_weights = self.dropout(attention_weights, deterministic=False)
+        
+        attended_windows = jnp.einsum('bhnqk,bhnkd->bhnqd', attention_weights, v_windows)
+        
+        # Reshape de vuelta
+        attended = attended_windows.reshape(batch_size, num_heads, padded_len, head_dim)
+        
+        # remove padding
+        if pad_len > 0:
+            attended = attended[:, :, :seq_len, :]
+        
+        return attended
+
+    def _random_chunk_attention(
+        self,
+        q: jnp.ndarray,
+        k: jnp.ndarray,
+        v: jnp.ndarray,
+        training: bool
+    ) -> jnp.ndarray:
+        """Attention with chunks aleatorios for conectividad global."""
+        
+        batch_size, num_heads, seq_len, head_dim = q.shape
+        chunk_size = seq_len // self.num_random_chunks
+        
+        if chunk_size < 1:
+            # if hay more chunks que tokens, use attention completa
+            return self._full_attention(q, k, v, None, training)
+        
+        # select chunks aleatorios
+        rng = self.make_rng('random') if training else jax.random.PRNGKey(42)
+        chunk_indices = jax.random.choice(
+            rng, 
+            seq_len, 
+            shape=(self.num_random_chunks,), 
+            replace=False
+        )
+        chunk_indices = jnp.sort(chunk_indices)
+        
+        # Extraer chunks
+        q_chunks = q[:, :, chunk_indices, :]
+        k_chunks = k[:, :, chunk_indices, :]
+        v_chunks = v[:, :, chunk_indices, :]
+        
+        # Attention between chunks
+        attention_logits = jnp.einsum('bhqd,bhkd->bhqk', q_chunks, k_chunks) * self.scale
+        attention_weights = jax.nn.softmax(attention_logits, axis=-1)
+        
+        if training:
+            attention_weights = self.dropout(attention_weights, deterministic=False)
+        
+        attended_chunks = jnp.einsum('bhqk,bhkd->bhqd', attention_weights, v_chunks)
+        
+        # Interpolar de vuelta a secuencia completa
+        attended = jnp.zeros_like(q)
+        attended = attended.at[:, :, chunk_indices, :].set(attended_chunks)
+        
+        # Interpolación simple for posiciones not cubiertas
+        for i in range(seq_len):
+            if i not in chunk_indices:
+                # find chunks more cercanos
+                distances = jnp.abs(chunk_indices - i)
+                closest_idx = jnp.argmin(distances)
+                attended = attended.at[:, :, i, :].set(attended_chunks[:, :, closest_idx, :])
+        
+        return attended
+
+
+# Funciones de utilidad
+def create_shared_attention(
+    hidden_size: int,
+    num_heads: int,
+    attention_type: str = "standard",
+    **kwargs
+) -> nn.Module:
+    """
+    Factory function para crear diferentes tipos de attention.
     
-    # Create different attention types
-    multi_head = manager.create_attention_module("multi_head", layer_id=0)
-    cross_attention = manager.create_attention_module("cross_attention", layer_id=1)
-    sparse_attention = manager.create_attention_module("sparse_attention", layer_id=2)
+    Args:
+        hidden_size: Dimensión del espacio oculto
+        num_heads: Número de cabezas de atención
+        attention_type: Tipo de attention ("standard", "multiscale", "efficient")
+        **kwargs: Argumentos adicionales
     
-    # Basic test
-    batch_size, seq_len, hidden_size = 2, 128, 768
+    Returns:
+        Módulo de attention configurado
+    """
     
-    if HAS_JAX:
-        key = jax.random.PRNGKey(42)
-        query = jax.random.normal(key, (batch_size, seq_len, hidden_size))
+    if attention_type == "standard":
+        return OptimizedSharedAttention(
+            hidden_size=hidden_size,
+            num_heads=num_heads,
+            **kwargs
+        )
+    elif attention_type == "multiscale":
+        return MultiScaleSharedAttention(
+            hidden_size=hidden_size,
+            num_heads=num_heads,
+            **kwargs
+        )
+    elif attention_type == "efficient":
+        return EfficiencyOptimizedAttention(
+            hidden_size=hidden_size,
+            num_heads=num_heads,
+            **kwargs
+        )
     else:
-        query = np.random.randn(batch_size, seq_len, hidden_size).astype(np.float32)
+        raise ValueError(f"Unknown attention type: {attention_type}")
+
+
+# Benchmark functions
+@jax.jit
+def benchmark_attention_performance(
+    attention_module: nn.Module,
+    params: Dict,
+    batch_size: int = 8,
+    seq_len: int = 2048,
+    hidden_size: int = 768,
+    num_iterations: int = 50
+) -> Dict[str, float]:
+    """Benchmark de rendimiento de attention."""
     
-    # Test multi-head attention
-    result = multi_head(query, training=False)
-    logger.info(f"Multi-head attention output shape: {result['output'].shape}")
+    # data de test
+    rng = jax.random.PRNGKey(42)
+    x = jax.random.normal(rng, (batch_size, seq_len, hidden_size))
     
-    # Show statistics
-    stats = manager.get_attention_stats()
-    logger.info(f"Attention stats: {stats}")
+    # function a medir
+    def forward_fn():
+        return attention_module.apply(params, x, training=True)
     
-    logger.info("✅ Shared attention testing completed")
+    # Warmup
+    for _ in range(5):
+        forward_fn()
+    
+    # Benchmark
+    import time
+    start_time = time.time()
+    
+    for _ in range(num_iterations):
+        result = forward_fn()
+        result["output"].block_until_ready()
+    
+    end_time = time.time()
+    
+    total_time = end_time - start_time
+    avg_time = total_time / num_iterations
+    tokens_per_sec = (batch_size * seq_len) / avg_time
+    
+    return {
+        "avg_time_ms": avg_time * 1000,
+        "tokens_per_second": tokens_per_sec,
+        "memory_efficiency": seq_len / (seq_len ** 2),  # Theoretical efficiency
+        "total_time_sec": total_time
+    }
+
 
 if __name__ == "__main__":
-    main()
+    # Test de los diferentes tipos de attention
+    hidden_size = 768
+    num_heads = 12
+    
+    # Standard attention
+    std_attention = create_shared_attention(hidden_size, num_heads, "standard")
+    
+    # Multi-scale attention
+    ms_attention = create_shared_attention(hidden_size, num_heads, "multiscale")
+    
+    # Efficient attention
+    eff_attention = create_shared_attention(hidden_size, num_heads, "efficient")
+    
+    print("✅ Todos los módulos de attention creados exitosamente")
+    
+    # Test basic
+    rng = jax.random.PRNGKey(42)
+    x = jax.random.normal(rng, (2, 128, hidden_size))
+    
+    # Inicializar parámetros
+    std_params = std_attention.init(rng, x, training=False)
+    
+    # Forward pass
+    result = std_attention.apply(std_params, x, training=False)
+    
+    print(f"Output shape: {result['output'].shape}")
+    print(f"Metrics: {list(result['metrics'].keys())}")
