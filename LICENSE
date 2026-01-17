@@ -1,0 +1,135 @@
+# CapibaraGPT Dual License
+
+Copyright (c) 2024-2025 CapibaraGPT Contributors. All rights reserved.
+
+This software is licensed under a **Dual License** model. Please read both licenses carefully to determine which applies to your use case.
+
+---
+
+## License A: Open Source License (Non-Commercial)
+
+### Permitted Uses
+
+This license grants you a free, non-exclusive, worldwide license to use, copy, modify, and distribute this software **exclusively** for:
+
+1. **Scientific Research**: Academic and scientific research conducted by universities, research institutions, and individual researchers.
+
+2. **Educational Purposes**: Teaching, learning, and educational activities in academic institutions, online courses, tutorials, and self-study.
+
+3. **Non-Profit Use**: Projects and activities conducted by registered non-profit organizations, charities, and NGOs where no commercial gain is derived.
+
+4. **Personal Projects**: Individual hobbyist projects with no commercial intent or revenue generation.
+
+### Conditions
+
+- **Attribution Required**: You must give appropriate credit, provide a link to this license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
+
+- **Share-Alike**: If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.
+
+- **Non-Commercial**: You may not use the material for commercial purposes under this license. Commercial use requires a Commercial License (see License B below).
+
+- **No Warranty**: This software is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and noninfringement.
+
+### What Constitutes Non-Commercial Use?
+
+Non-commercial use means use that is NOT primarily intended for or directed toward commercial advantage or monetary compensation. Examples include:
+
+- Academic research published in journals or conferences
+- Student projects and theses
+- Open-source contributions to other non-commercial projects
+- Prototype development with no intent to commercialize
+- Educational workshops and training (free of charge)
+
+---
+
+## License B: Commercial License
+
+### When You Need a Commercial License
+
+A Commercial License is **required** for any use that does not fall under License A, including but not limited to:
+
+1. **Commercial Products**: Incorporating this software into products or services that are sold, licensed, or otherwise monetized.
+
+2. **Internal Business Use**: Using this software within a for-profit organization for business operations, even if the software itself is not sold.
+
+3. **SaaS/Cloud Services**: Offering this software as part of a hosted or cloud-based service.
+
+4. **Consulting Services**: Using this software as part of paid consulting, development, or professional services.
+
+5. **Commercial Training**: Paid training programs, courses, or workshops that use this software.
+
+6. **Derivative Commercial Works**: Creating commercial products or services based on or derived from this software.
+
+### Commercial License Terms
+
+Commercial licenses are available under individual agreements. Each commercial license includes:
+
+- **Usage Rights**: Clearly defined scope of permitted commercial use
+- **Support Options**: Technical support and maintenance packages available
+- **Customization**: Possibility of custom development and feature requests
+- **Indemnification**: Liability and indemnification terms
+- **Duration**: License term and renewal conditions
+
+### How to Obtain a Commercial License
+
+To obtain a commercial license, please contact us at:
+
+- **Email**: [Insert contact email]
+- **Website**: [Insert website URL]
+
+Please include the following information in your inquiry:
+1. Company/Organization name
+2. Intended use case and scope
+3. Expected number of users/deployments
+4. Desired license duration
+
+We will respond with a customized licensing proposal within 5 business days.
+
+---
+
+## General Terms
+
+### Intellectual Property
+
+All intellectual property rights in and to this software, including but not limited to patents, copyrights, trademarks, and trade secrets, remain the exclusive property of the copyright holders.
+
+### Termination
+
+Either license terminates automatically if you fail to comply with its terms. Upon termination, you must cease all use and destroy all copies of the software in your possession.
+
+### Governing Law
+
+This license shall be governed by and construed in accordance with the laws of the jurisdiction in which the primary copyright holder resides, without regard to its conflict of law provisions.
+
+### Severability
+
+If any provision of this license is held to be unenforceable, such provision shall be reformed only to the extent necessary to make it enforceable, and the remaining provisions shall remain in full force and effect.
+
+### Entire Agreement
+
+This license constitutes the entire agreement between you and the copyright holders concerning the use of this software and supersedes all prior agreements and understandings.
+
+---
+
+## Summary Table
+
+| Use Case | License Required |
+|----------|------------------|
+| Academic research | Open Source (A) |
+| University coursework | Open Source (A) |
+| Non-profit projects | Open Source (A) |
+| Personal hobby projects | Open Source (A) |
+| Commercial products | Commercial (B) |
+| Internal business tools | Commercial (B) |
+| SaaS offerings | Commercial (B) |
+| Paid consulting | Commercial (B) |
+
+---
+
+## Questions?
+
+If you are unsure which license applies to your use case, please contact us for clarification before using this software.
+
+---
+
+*This dual license model is designed to support open science and education while ensuring sustainable development through commercial partnerships.*
