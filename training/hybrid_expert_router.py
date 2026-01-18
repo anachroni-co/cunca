@@ -1,89 +1,30 @@
 """
-Hybrid Expert Router for Meta-Consensus Training
+Hybrid Expert Router - CapibaraGPT v3
 
-This module extends the hierarchical MoE router with:
+Extends hierarchical MoE router with:
 - Multi-tier routing (local, serverless, premium)
 - Dynamic cost-quality optimization
 - Branch-Train-MiX (BTX) integration
-- Advanced routing algorithms with ARM Axion optimization
 """
 
 import logging
 import asyncio
+import json
+import time
 from enum import Enum
 from pathlib import Path
 from datetime import datetime
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple, Any, Union
-import json
-import time
 
-# JAX imports with fallbacks
-try:
-    import capibara.jax as jax
-    import capibara.jax.numpy as jnp
-    from capibara.jax.nn import softmax, relu, sigmoid
-    np = jnp
-    JAX_AVAILABLE = True
-except ImportError:
-    try:
-        import numpy as np
-        import math
-        
-        def softmax(x, axis=-1):
-            exp_x = np.exp(x - np.max(x, axis=axis, keepdims=True))
-            return exp_x / np.sum(exp_x, axis=axis, keepdims=True)
-        
-        def relu(x):
-            return np.maximum(0, x)
-        
-        def sigmoid(x):
-            return 1 / (1 + np.exp(-np.clip(x, -500, 500)))
-            
-        JAX_AVAILABLE = False
-    except ImportError:
-        import math
-        
-        class DummyArray:
-            def __init__(self, data):
-                self.data = data if isinstance(data, list) else [data]
-            def __getitem__(self, idx): return self.data[idx] if idx < len(self.data) else 0
-            def __len__(self): return len(self.data)
-            
-        class np:
-            @staticmethod
-            def array(data): return DummyArray(data)
-            @staticmethod  
-            def mean(data): return sum(data) / len(data) if data else 0
-            @staticmethod
-            def exp(x): return math.exp(x) if isinstance(x, (int, float)) else DummyArray([math.exp(i) for i in x.data])
-            @staticmethod
-            def maximum(a, b): return max(a, b) if isinstance(a, (int, float)) else DummyArray([max(i, b) for i in a.data])
-        
-        def softmax(x, axis=-1): return x
-        def relu(x): return max(0, x) if isinstance(x, (int, float)) else x
-        def sigmoid(x): return 1 / (1 + math.exp(-max(-500, min(500, x)))) if isinstance(x, (int, float)) else x
-        
-        JAX_AVAILABLE = False
-
-# Import base classes
+from .jax_utils import (
+    np, softmax, relu, sigmoid,
+    JAX_AVAILABLE, ARM_OPTIMIZATIONS_AVAILABLE, ARMAxionInferenceOptimizer
+)
 from .moe_hierarchical_router import (
-    HierarchicalMoERouter, QueryComplexity, ExpertDomain, 
+    HierarchicalMoERouter, QueryComplexity, ExpertDomain,
     QueryAnalysis, RoutingDecision, ModelPerformanceMetrics
 )
-
-# ARM optimizations (optional import)
-try:
-    from capibara.core.arm_optimizations import ARMAxionInferenceOptimizer
-    ARM_OPTIMIZATIONS_AVAILABLE = True
-except ImportError:
-    ARM_OPTIMIZATIONS_AVAILABLE = False
-    
-    class ARMAxionInferenceOptimizer:
-        def __init__(self, *args, **kwargs):
-            pass
-        def optimize_inference(self, *args, **kwargs):
-            return args[0] if args else None
 
 logger = logging.getLogger(__name__)
 

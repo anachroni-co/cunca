@@ -1,83 +1,29 @@
 """
-Branch-Train-MiX (BTX) Training System for Meta-Consensus
+Branch-Train-MiX (BTX) Training System - CapibaraGPT v3
 
-Implementation of the Branch-Train-MiX methodology for efficient expert training:
-- Asynchronous expert training in parallel
+BTX methodology for efficient expert training:
+- Asynchronous parallel expert training
 - Token-level routing optimization
-- MoE finetuning with advanced techniques
-- Integration with hybrid consensus system
+- MoE finetuning with consensus integration
 """
 
 import logging
 import asyncio
 import time
+import json
+import pickle
+import multiprocessing as mp
 from datetime import datetime, timedelta
 from pathlib import Path
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple, Any, Union, Callable
 from enum import Enum
-import json
-import pickle
-import numpy as np
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, as_completed
-import multiprocessing as mp
 
-# JAX imports with fallbacks
-try:
-    import capibara.jax as jax
-    import capibara.jax.numpy as jnp
-    from capibara.jax import random, grad, jit, vmap
-    from capibara.jax.nn import softmax, relu, sigmoid
-    from capibara.jax.tree_util import tree_map
-    import optax
-    JAX_AVAILABLE = True
-except ImportError:
-    try:
-        import numpy as np
-        import math
-        
-        def softmax(x, axis=-1):
-            exp_x = np.exp(x - np.max(x, axis=axis, keepdims=True))
-            return exp_x / np.sum(exp_x, axis=axis, keepdims=True)
-        
-        def relu(x): return np.maximum(0, x)
-        def sigmoid(x): return 1 / (1 + np.exp(-np.clip(x, -500, 500)))
-        def tree_map(func, tree): return func(tree)
-        
-        class optax:
-            @staticmethod
-            def adam(learning_rate): return None
-            @staticmethod
-            def apply_updates(params, updates): return params
-        
-        JAX_AVAILABLE = False
-        jnp = np
-    except ImportError:
-        import math
-        
-        class DummyArray:
-            def __init__(self, data):
-                self.data = data if isinstance(data, list) else [data]
-        
-        class np:
-            @staticmethod
-            def array(data): return DummyArray(data)
-            @staticmethod
-            def mean(data): return sum(data) / len(data) if data else 0
-        
-        def softmax(x, axis=-1): return x
-        def relu(x): return max(0, x) if isinstance(x, (int, float)) else x
-        def sigmoid(x): return 1 / (1 + math.exp(-max(-500, min(500, x)))) if isinstance(x, (int, float)) else x
-        def tree_map(func, tree): return func(tree)
-        
-        class optax:
-            @staticmethod
-            def adam(learning_rate): return None
-            @staticmethod
-            def apply_updates(params, updates): return params
-        
-        JAX_AVAILABLE = False
-        jnp = np
+from .jax_utils import (
+    np, jnp, optax, softmax, relu, sigmoid, tree_map,
+    grad, jit, vmap, random, JAX_AVAILABLE
+)
 
 logger = logging.getLogger(__name__)
 
