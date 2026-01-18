@@ -1,0 +1,40 @@
+# CapibaraGPT - TPU Requirements (JAX/TPU v4-32, v6e-64)
+# Install: pip install -r requirements-tpu.txt
+
+# Core Dependencies
+numpy>=1.24.0
+scipy>=1.10.0
+einops>=0.7.0
+tqdm>=4.65.0
+pyyaml>=6.0
+toml>=0.10.2
+pydantic>=2.0.0
+rich>=13.0.0
+typer>=0.9.0
+httpx>=0.24.0
+aiofiles>=23.0.0
+
+# Logging & Monitoring
+tensorboardX>=2.6
+wandb>=0.15.0
+
+# Data & Tokenization
+datasets>=2.14.0
+tokenizers>=0.15.0
+sentencepiece>=0.1.99
+transformers>=4.35.0
+
+# JAX/TPU Stack
+jax[tpu]>=0.4.20
+flax>=0.8.0
+optax>=0.1.7
+orbax-checkpoint>=0.4.0
+clu>=0.0.9
+
+# TPU-specific optimizations
+grain>=0.1.0  # Google's data loading library for TPU
+tensorflow-datasets>=4.9.0  # For data pipelines
+cloud-tpu-client>=0.10  # TPU cluster management
+
+# SSM/Mamba (JAX implementation)
+# Note: Use custom JAX implementations in jax/ folder

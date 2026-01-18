@@ -1,0 +1,48 @@
+# CapibaraGPT - GPU Requirements (PyTorch/CUDA for NVIDIA A-100)
+# Install: pip install -r requirements-gpu.txt
+
+# Core Dependencies
+numpy>=1.24.0
+scipy>=1.10.0
+einops>=0.7.0
+tqdm>=4.65.0
+pyyaml>=6.0
+toml>=0.10.2
+pydantic>=2.0.0
+rich>=13.0.0
+typer>=0.9.0
+httpx>=0.24.0
+aiofiles>=23.0.0
+
+# Logging & Monitoring
+tensorboardX>=2.6
+wandb>=0.15.0
+
+# Data & Tokenization
+datasets>=2.14.0
+tokenizers>=0.15.0
+sentencepiece>=0.1.99
+transformers>=4.35.0
+
+# PyTorch Stack (CUDA 12.x for A-100)
+--extra-index-url https://download.pytorch.org/whl/cu121
+torch>=2.1.0
+torchvision>=0.16.0
+torchaudio>=2.1.0
+
+# A-100 Optimizations
+flash-attn>=2.4.0  # Flash Attention 2 for A-100
+xformers>=0.0.23   # Memory-efficient attention
+triton>=2.1.0      # GPU kernel compiler
+
+# Distributed Training
+deepspeed>=0.12.0  # ZeRO optimization
+accelerate>=0.25.0 # Hugging Face distributed
+
+# Quantization & PEFT
+bitsandbytes>=0.41.0  # 8-bit/4-bit quantization
+peft>=0.7.0           # Parameter-efficient fine-tuning
+
+# SSM/Mamba (PyTorch implementation)
+mamba-ssm>=1.2.0
+causal-conv1d>=1.1.0
