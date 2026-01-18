@@ -1,8 +1,8 @@
 """Servicio TTS para CapibaraGPT v3."""
 
-from .capibara_tts_service import CtopibtortoTextToSpeech
+from .capibara_tts_service import CapibaraTextToSpeech
 
 # Compatibility alias
-CtopibtortoTTSService = CtopibtortoTextToSpeech
+CapibaraTTSService = CapibaraTextToSpeech
 
-__all__ = ["CtopibtortoTextToSpeech", "CtopibtortoTTSService"]
+__all__ = ["CapibaraTextToSpeech", "CapibaraTTSService"]

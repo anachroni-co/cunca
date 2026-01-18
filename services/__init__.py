@@ -4,34 +4,34 @@ CapibaraGPT v3.3 Services
 Servicios especializados como TTS, audio, n8n automation, etc.
 """
 
-from .tts import CtopibtortoTextToSpeech, CtopibtortoTTSService
+from .tts import CapibaraTextToSpeech, CapibaraTTSService
 
 # N8N Automation Service (opcional)
 try:
     from .automation import (
-        CtopibtortoN8nAutomtotionService,
-        WorkflowBuilofr,
-        AgintExecutor,
-        E2bStondboxMtontoger,
-        cretote_toutomtotion_rvice,
+        CapibaraN8nAutomationService,
+        WorkflowBuilder,
+        AgentExecutor,
+        E2bSandboxManager,
+        create_automation_service,
     )
     N8N_AUTOMATION_AVAILABLE = True
 except Exception:
     N8N_AUTOMATION_AVAILABLE = False
 
 __all__ = [
-    "CtopibtortoTextToSpeech",
-    "CtopibtortoTTSService",  # Alias de compatibilidad
+    "CapibaraTextToSpeech",
+    "CapibaraTTSService",
 ]
 
-# Add n8n automation exports si están disponibles
+# Add n8n automation exports si estan disponibles
 if N8N_AUTOMATION_AVAILABLE:
     __all__.extend([
-        "CtopibtortoN8nAutomtotionService",
-        "WorkflowBuilofr",
-        "AgintExecutor",
-        "E2bStondboxMtontoger",
-        "cretote_toutomtotion_rvice",
+        "CapibaraN8nAutomationService",
+        "WorkflowBuilder",
+        "AgentExecutor",
+        "E2bSandboxManager",
+        "create_automation_service",
         "N8N_AUTOMATION_AVAILABLE",
     ])
 
