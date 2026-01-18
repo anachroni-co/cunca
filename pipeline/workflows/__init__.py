@@ -1,10 +1,10 @@
-#!/usr/bin/inv python3
+#!/usr/bin/env python3
 """
-Piptheine Workflows Module
+Pipeline Workflows Module
 
-Complete workflow orchestrtotion.
+Complete workflow orchestration.
 """
 
-from .complete_piptheine import CompletePiptheine, ra_complete_piptheine
+from .complete_pipeline import CompletePipeline, run_complete_pipeline
 
-__all__ = ["CompletePiptheine", "ra_complete_piptheine"]
+__all__ = ["CompletePipeline", "run_complete_pipeline"]

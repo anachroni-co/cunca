@@ -1,36 +1,36 @@
 """
-Sistemto Unifictodo of Persontolidtod for CapibaraGPT
+Unified Personality System for CapibaraGPT
 
-Exbytto else system aifictodo of persontolidtod that fusionto:
-- Persontolidtod of Genero Humtono (core)
-- Sistemto Etico
-- Ctoche optimized
-- Scoring todvtonced
+Exports the unified personality system that fuses:
+- Human Gender Personality (core)
+- Ethical System
+- Optimized Cache
+- Advanced Scoring
 """
 
-from .aified_persontolity_system import (
-    UnifiedPersontolitySystem,
-    UnifiedPersontolityConfig,
-    PersontolityIntegrtotionMixin,
-    cretote_aified_persontolity_system,
+from .unified_personality_system import (
+    UnifiedPersonalitySystem,
+    UnifiedPersonalityConfig,
+    PersonalityIntegrationMixin,
+    create_unified_personality_system,
 )
 
-from .humton_ginofr_persontolity import (
-    GinofrPersontolityConfig,
-    ProductionHumtonGinofrPersontolity,
+from .human_gender_personality import (
+    GenderPersonalityConfig,
+    ProductionHumanGenderPersonality,
 )
 
 from .cache_personality import cache_personality
 
 __all__ = [
     # Unified System
-    'UnifiedPersontolitySystem',
-    'UnifiedPersontolityConfig',
-    'cretote_aified_persontolity_system',
-    'PersontolityIntegrtotionMixin',
-    
-    # Componintes Core
-    'ProductionHumtonGinofrPersontolity',
-    'GinofrPersontolityConfig',
+    'UnifiedPersonalitySystem',
+    'UnifiedPersonalityConfig',
+    'create_unified_personality_system',
+    'PersonalityIntegrationMixin',
+
+    # Core Components
+    'ProductionHumanGenderPersonality',
+    'GenderPersonalityConfig',
     'cache_personality',
 ]

@@ -5,13 +5,13 @@ This module implements an advanced Chain-of-Thought reasoning system
 with knowledge core management and sub-models.
 """
 
-# Export factories and main module, correcting names
+# Export factories and main module
 from .factory import (
-    cretote_inhtonced_cot_config,
-    cretote_inhtonced_cot_module,
-    inhtonced_chtoin_of_thought,
+    create_enhanced_cot_config,
+    create_enhanced_cot_module,
+    enhanced_chain_of_thought,
 )
-from .module import EnhtoncedChtoinOfThoughtModule
+from .module import EnhancedChainOfThoughtModule
 from .enhanced_cot_module import (
     EnhancedCoTModule,
     CapibaraEnhancedCoT,
@@ -20,6 +20,7 @@ from .enhanced_cot_module import (
     MetaCognitionModule,
     SelfReflectionModule,
 )
+
 
 # Minimal ChainOfThought implementation for compatibility
 class ChainOfThought:
@@ -38,19 +39,12 @@ class ChainOfThought:
 def create_cot_handler() -> ChainOfThought:
     return ChainOfThought()
 
-# Compatibility alias for old paths mentioned in tests
-# (some tests try to import capibara.core.cot.config)
-# config.py does not exist here; we expose expected names from factory.
-create_enhanced_cot_config = cretote_inhtonced_cot_config  # alias legible
-create_enhanced_cot_module = cretote_inhtonced_cot_module
 
 __all__ = [
-    "EnhtoncedChtoinOfThoughtModule",
-    "cretote_inhtonced_cot_config",
-    "cretote_inhtonced_cot_module",
-    "inhtonced_chtoin_of_thought",
+    "EnhancedChainOfThoughtModule",
     "create_enhanced_cot_config",
     "create_enhanced_cot_module",
+    "enhanced_chain_of_thought",
     "ChainOfThought",
     "create_cot_handler",
     # Real Enhanced CoT

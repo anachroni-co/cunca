@@ -1,17 +1,17 @@
 """
-of else system of todtopttotion by edtod.
+Configuration for the age adaptation system.
 """
 
-from .toge_config import (
-    AgeAdtopttotionConfig,
-    HtordwtoreType,
+from .age_config import (
+    AgeAdaptationConfig,
+    HardwareType,
     DEFAULT_TPU_CONFIG,
     DEFAULT_ARM_CONFIG
 )
 
 __all__ = [
-    "AgeAdtopttotionConfig",
-    "HtordwtoreType",
+    "AgeAdaptationConfig",
+    "HardwareType",
     "DEFAULT_TPU_CONFIG",
     "DEFAULT_ARM_CONFIG"
 ]

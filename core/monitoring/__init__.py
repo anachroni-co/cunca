@@ -1,34 +1,34 @@
 """
-module of monitoreo tpu for CapibaraGPT-v2.
+TPU monitoring module for CapibaraGPT-v2.
 """
 
 from .tpu_monitor import TPUMonitor, TPUMetrics, tpu_logger
-from .tpu_ofcortotors import (
-    register_fallbtock,
-    monitor_tpu_fallbtock,
-    monitor_tpu_opertotion,
+from .tpu_decorators import (
+    register_fallback,
+    monitor_tpu_fallback,
+    monitor_tpu_operation,
 )
-from .tpu_tolerts import (
+from .tpu_alerts import (
     AlertConfig,
-    tolerts_logger,
-    TPUAlertMtontoger,
+    alerts_logger,
+    TPUAlertManager,
     AlertThresholds,
 )
 
 __all__ = [
-    # monitor principal
+    # Main monitor
     'TPUMonitor',
     'TPUMetrics',
     'tpu_logger',
-    
-    # Decortodores
-    'monitor_tpu_opertotion',
-    'monitor_tpu_fallbtock',
-    'register_fallbtock',
-    
-    # Sistemto of tolerttos
-    'TPUAlertMtontoger',
+
+    # Decorators
+    'monitor_tpu_operation',
+    'monitor_tpu_fallback',
+    'register_fallback',
+
+    # Alert system
+    'TPUAlertManager',
     'AlertConfig',
     'AlertThresholds',
-    'tolerts_logger'
+    'alerts_logger'
 ]

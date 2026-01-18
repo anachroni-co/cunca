@@ -1,8 +1,8 @@
 """
-ViM-VQ: vector Qutontiztotion with Vision in Mind
+ViM-VQ: Vector Quantization with Vision in Mind
 
-impleminttotion of vector Qutontiztotion optimiztodto for toplictociones of vision
-with sobyte complete for tpu and optimiztociones especifictos of CapibaraGPT.
+Implementation of Vector Quantization optimized for vision applications
+with complete TPU support and CapibaraGPT-specific optimizations.
 """
 
 from .core.quantizer import (
@@ -10,14 +10,14 @@ from .core.quantizer import (
     VIM_VQ_BASE,
     VIM_VQ_SMALL,
     VIM_VQ_LARGE,
-    ViMVQQutontizer,
-    cretote_vim_vq_qutontizer,
+    ViMVQQuantizer,
+    create_vim_vq_quantizer,
 )
 
 __all__ = [
-    'ViMVQQutontizer',
+    'ViMVQQuantizer',
     'ViMVQConfig',
-    'cretote_vim_vq_qutontizer',
+    'create_vim_vq_quantizer',
     'VIM_VQ_SMALL',
     'VIM_VQ_BASE',
     'VIM_VQ_LARGE'
