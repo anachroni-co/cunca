@@ -1,20 +1,17 @@
 """
-lax module.
+JAX LAX Module - Low-level operations
 
-# This module provides functionality for lax operations.
+Provides low-level operations including linear algebra.
 """
 
-import os
-import sys
-from pathlib import Path
+from .linalg import qr, svd, eigh, solve, inv, det, cholesky
 
-def get_project_root():
-    """Get the root path of the project."""
-    return Path(__file__).parent.parent
-
-# Version information
-__version__ = "1.0.0"
-__author__ = "CapibaraGPT Team"
-
-# Module exports
-__all__ = []
+__all__ = [
+    'qr',
+    'svd',
+    'eigh',
+    'solve',
+    'inv',
+    'det',
+    'cholesky',
+]
