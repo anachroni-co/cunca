@@ -70,9 +70,24 @@ except ImportError:
     UltraSSMLayer = None
     create_ssm_layer = None
 
-from .self_attention import TpuOptimizedSelfAttention, TpuSelfAttentionConfig
-from .neurogenesis import TpuOptimizedNeurogenesisModule, TpuNeurogenesisModuleConfig
-from .neuro_adaptive import NeuroAdaptiveLayer, NeuroAdaptiveLayerConfig
+# Safe imports for removed modules
+try:
+    from .self_attention import TpuOptimizedSelfAttention, TpuSelfAttentionConfig
+except ImportError:
+    TpuOptimizedSelfAttention = None
+    TpuSelfAttentionConfig = None
+
+try:
+    from .neurogenesis import TpuOptimizedNeurogenesisModule, TpuNeurogenesisModuleConfig
+except ImportError:
+    TpuOptimizedNeurogenesisModule = None
+    TpuNeurogenesisModuleConfig = None
+
+try:
+    from .neuro_adaptive import NeuroAdaptiveLayer, NeuroAdaptiveLayerConfig
+except ImportError:
+    NeuroAdaptiveLayer = None
+    NeuroAdaptiveLayerConfig = None
 
 logger = logging.getLogger(__name__)
 

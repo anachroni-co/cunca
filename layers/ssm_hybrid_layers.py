@@ -35,8 +35,18 @@ from capibara.jax import numpy as jnp
 
 # Import existing optimized components
 from .base import BaseLayer, LayerConfig
-from .self_attention import TpuAttentionCache, _attention_cache
-from .neurogenesis import TpuNeurogenesisCache, _neurogenesis_cache
+
+# Placeholder caches for removed modules
+class TpuAttentionCache:
+    """Placeholder for attention cache."""
+    pass
+
+class TpuNeurogenesisCache:
+    """Placeholder for neurogenesis cache."""
+    pass
+
+_attention_cache = None
+_neurogenesis_cache = None
 
 # Safe imports for training integration
 try:

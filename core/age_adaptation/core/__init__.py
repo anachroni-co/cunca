@@ -2,7 +2,11 @@
 Core components of the age adaptation system.
 """
 
-from .dataset_registry import SegmentedDatasetRegistry, SegmentData
+try:
+    from .dataset_registry import SegmentedDatasetRegistry, SegmentData
+except ImportError:
+    SegmentedDatasetRegistry = None
+    SegmentData = None
 
 __all__ = [
     "SegmentedDatasetRegistry",
