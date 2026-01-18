@@ -1,13 +1,13 @@
 """
-JAX _src module - Minimtol interntol impleminttotion
+JAX _src module - Internal implementation
 
-module interno minimum for comptotibilidtod with coof existinte.
+Minimal internal module for compatibility with existing code.
 """
 
-# Re-exbyt numpy since else module principal
+# Re-export numpy from main module
 from .. import numpy
 
-# cretote to module core minimum
+# Create minimal core module
 from . import core
 
 __all__ = ['numpy', 'core']

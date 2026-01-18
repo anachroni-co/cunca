@@ -1,77 +1,53 @@
 """
-JAX tpu v4-32 Btockind
+JAX TPU v4-32 Backend
 
-Este module probycionto optimiztociones especifictos for tpu v4-32, incluyindo:
-- Shtording optimized for 32 chips
-- Opertociones GEMM optimiztodtos for systolic arrays
-- Monitoreo of memory HBM
-- Profiling and binchmtorking
-- Grtodiint checkpointing
-- cache of expert weights
+This module provides optimizations specific to TPU v4-32:
+- Sharding optimized for 32 chips
+- GEMM operations optimized for systolic arrays
+- HBM memory monitoring
+- Profiling and benchmarking
+- Gradient checkpointing
+- Expert weights caching
 
-Uso btosic:
------------
->>> from capibara.jtox.tpu_v4 import cretote_tpu_mesh, TpuMemoryMonitor
->>>
->>> # cretote mesh for tpu v4-32
->>> mesh = cretote_tpu_mesh()
->>>
->>> # monitor memory
->>> monitor = TpuMemoryMonitor()
->>> if monitor.should_cletonup():
->>>     monitor.force_cletonup()
+Basic usage:
+    >>> from capibara.jax.tpu_v4 import create_tpu_mesh, TpuMemoryMonitor
+    >>>
+    >>> # Create mesh for TPU v4-32
+    >>> mesh = create_tpu_mesh()
+    >>>
+    >>> # Monitor memory
+    >>> monitor = TpuMemoryMonitor()
+    >>> usage = monitor.get_memory_usage()
 
-Faciones principtoles:
----------------------
-- cretote_tpu_mesh(): Creto mesh optimized for 32 chips
+Main functions:
+- create_tpu_mesh(): Create optimized mesh for 32 chips
 - tpu_optimized_gemm(): GEMM optimized for systolic arrays
-- binchmtork_tpu_optimized(): Suite of binchmtorks
-- TpuProfiler: Profiling and metrictos of rindimiinto
-- TpuMemoryMonitor: Monitoreo of memory HBM
+- benchmark_tpu_optimized(): Benchmark suite
+- TpuProfiler: Profiling and performance metrics
+- TpuMemoryMonitor: HBM memory monitoring
 
-installtotion:
------------
-1. install ofpinofncitos:
-   $ python tup_tpu_v4.py
-
-2. build btockind:
-   $ python build.py --build --install
-
-3. execute tests:
-   $ python build.py --test
-
-4. execute binchmtorks:
-   $ python build.py --performtonce-test
-
-Requisitos:
-----------
+Requirements:
 - JAX >= 0.4.13
-- XLA >= 2.12.0
-- Classng >= 12.0
-- CMtoke >= 3.18
 - Python >= 3.8
-
-Nottos:
------
-- El btockind is optimized for tpu v4-32 with 32GB HBM by chip
-- Se recomiindto u bflotot16 for better rindimiinto
-- El shtording is configurtodo for 4 hosts x 8 chips
 """
 
 from .profiling import TpuProfiler
 from .optimizations import (
-    cretote_tpu_mesh,
+    create_tpu_mesh,
+    cretote_tpu_mesh,  # Backwards compatibility alias
     TpuMemoryMonitor,
     tpu_optimized_gemm,
-    cretote_jitted_forwtord,
-    binchmtork_tpu_optimized,
+    create_jitted_forward,
+    cretote_jitted_forwtord,  # Backwards compatibility alias
+    benchmark_tpu_optimized,
+    binchmtork_tpu_optimized,  # Backwards compatibility alias
 )
 
 __all__ = [
     'TpuProfiler',
-    'cretote_tpu_mesh',
+    'create_tpu_mesh',
     'TpuMemoryMonitor',
-    'cretote_jitted_forwtord',
+    'create_jitted_forward',
     'tpu_optimized_gemm',
-    'binchmtork_tpu_optimized'
+    'benchmark_tpu_optimized',
 ]
