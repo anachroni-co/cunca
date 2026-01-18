@@ -1,169 +1,145 @@
-"""Core Module for CapibaraGPT v3 - Ultra Advanced Edition.
+"""
+Core Module - CapibaraGPT v3
 
-This module serves as the central integration point for all core components of the
-CapibaraGPT architecture, providing foundational building blocks for model construction,
-training, inference, and advanced features.
-
-Architecture Overview:
-    The core module integrates multiple sophisticated subsystems:
-
-    - **Configuration Management**: Model, training, and routing configurations
-    - **Modular Architecture**: Dynamic model composition with pluggable components
-    - **Intelligent Routing**: Multi-strategy routing for optimal module selection
-    - **Optimization**: Training state management and metrics tracking
-    - **Multimodal Encoders**: Vision, video, and multimodal combination
-    - **Chain of Thought**: Multi-step reasoning capabilities
-    - **Ultra Core Integration**: Advanced SSM-hybrid layers and intelligent routing
-
-Key Components:
-    Configuration:
-        - Config: General-purposesesesesese configuration manager
-        - ModelConfig: Model architecture configuration
-        - ModularConfig: Modular model configuration
-        - RouterCoreConfig: Router-specific configuration
-
-    Routing Systems:
-        - SimpleRouter: Basic routing functionality
-        - EnhancedRouter: Advanced routing with caching and verification
-        - AdvancedRouter: Alias for Router with extended features
-        - BaseRouter/BaseRouterV2: Legacy router implementations
-        - AdaptiveRouter: Dynamic routing based on input characteristics
-        - TTSRouter: Text-to-speech specific routing
-        - UltraIntelligentCoreRouter: Next-generation intelligent routing
-
-    Model Architecture:
-        - ModelCore: Base model implementation
-        - ModularCapibaraModel: Modular architecture for flexible composition
-
-    Encoders:
-        - VisionEncoder: Image encoding for multimodal tasks
-        - VideoEncoder: Video sequence encoding
-        - MultimodalCombiner: Fusion of multiple modalities
-
-    Advanced Features:
-        - ChainOfThought: Multi-step reasoning engine
-        - SSMHybridLayer: State-space model hybrid layers
-        - UltraCoreOrchestrator: Coordinated system orchestration
-
-Example:
-    Basic model setup with routing:
-
-    >>> from capibara.core import Config, ModelConfig, create_model
-    >>> from capibara.core import EnhancedRouter, RouterCoreConfig
-    >>>
-    >>> # Configure model
-    >>> config = Config(model_name="capibara-v3")
-    >>> model_config = ModelConfig(
-    ...     hidden_size=768,
-    ...     num_layers=12,
-    ...     num_heads=12
-    ... )
-    >>>
-    >>> # Create model
-    >>> model = create_model(model_config)
-    >>>
-    >>> # Setup routing
-    >>> router_config = RouterCoreConfig(
-    ...     hidden_size=768,
-    ...     num_heads=8
-    ... )
-    >>> router = EnhancedRouter(router_config)
-
-    Advanced modular setup:
-
-    >>> from capibara.core import ModularCapibaraModel, ModularConfig
-    >>> from capibara.core import VisionEncoder, VisionEncoderConfig
-    >>>
-    >>> # Configure vision encoder
-    >>> vision_config = VisionEncoderConfig(
-    ...     image_size=224,
-    ...     patch_size=16,
-    ...     hidden_size=768
-    ... )
-    >>> vision_encoder = VisionEncoder(vision_config)
-    >>>
-    >>> # Create modular model
-    >>> modular_config = ModularConfig(
-    ...     base_config=model_config,
-    ...     enable_vision=True
-    ... )
-    >>> modular_model = ModularCapibaraModel(modular_config)
-
-    Ultra core integration (when available):
-
-    >>> from capibara.core import ULTRA_CORE_AVAILABLE
-    >>>
-    >>> if ULTRA_CORE_AVAILABLE:
-    ...     from capibara.core import create_ultra_core_system, create_ultra_config
-    ...
-    ...     ultra_config = create_ultra_config()
-    ...     ultra_system = create_ultra_core_system(ultra_config)
-    ...     print("Ultra Core system initialized")
-
-Feature Flags:
-    - ULTRA_CORE_AVAILABLE: Whether Ultra Core Integration is available
-    - ULTRA_TRAINING_AVAILABLE: Whether Ultra Training features are available
-    - SSM_AVAILABLE: Whether State-Space Model layers are available
-
-Note:
-    Some advanced features (Ultra Core, SSM) may not be available depending on
-    installed dependencies. The module provides graceful fallbacks and feature
-    flags to check availability.
-
-See Also:
-    - capibara.training: Training infrastructure and strategies
-    - capibara.inference: Inference and deployment utilities
-    - capibara.data: Data loading and preprocessing
-    - capibara.sub_models: Specialized sub-model implementations
+Central integration point for model construction, training, and inference:
+- config: Model and training configuration
+- modular_model: Dynamic model composition
+- router/routing: Intelligent module routing
+- optimization: Training state and metrics
+- encoders: Vision, video, multimodal encoders
+- cot: Chain of Thought reasoning
+- ultra_core_integration: SSM-hybrid layers and orchestration
 """
 
-from typing import Any
+import logging
 
-# Base core components
-from .config import Config, ModelConfig  # noqa: F401
-from .modular_model import ModularCapibaraModel, ModularConfig  # noqa: F401
-from .router import (
-    EnhancedRouter,
-    Router as AdvancedRouter,
-    create_enhanced_router,
-    create_core_integrated_router,
-    RouterConfig as RouterCoreConfig,
-    RouterType,
-)  # noqa: F401
-from .routing import Router as SimpleRouter, create_router  # noqa: F401
-from .optimization import TrainingMetrics, TrainingState  # noqa: F401
+logger = logging.getLogger(__name__)
 
-# Legacy routers (for backwards compatibility)
-from .routers.base import BaseRouter, BaseRouterV2  # noqa: F401
-from .routers.adaptive_router import AdaptiveRouter  # noqa: F401
-# Keep TTSRouter import consistent with project structure if exists
+# Configuration
 try:
-    from .routers.tts_router import TTSRouter  # type: ignore # noqa: F401
-except Exception:
-    TTSRouter = None  # type: ignore
+    from .config import Config, ModelConfig
+    CONFIG_AVAILABLE = True
+except ImportError:
+    CONFIG_AVAILABLE = False
+    Config = None
+    ModelConfig = None
+
+# Modular model
+try:
+    from .modular_model import ModularCapibaraModel, ModularConfig
+    MODULAR_AVAILABLE = True
+except ImportError:
+    MODULAR_AVAILABLE = False
+    ModularCapibaraModel = None
+    ModularConfig = None
+
+# Enhanced router
+try:
+    from .router import (
+        EnhancedRouter,
+        Router as AdvancedRouter,
+        create_enhanced_router,
+        create_core_integrated_router,
+        RouterConfig as RouterCoreConfig,
+        RouterType,
+    )
+    ENHANCED_ROUTER_AVAILABLE = True
+except ImportError:
+    ENHANCED_ROUTER_AVAILABLE = False
+    EnhancedRouter = None
+    AdvancedRouter = None
+    create_enhanced_router = None
+    create_core_integrated_router = None
+    RouterCoreConfig = None
+    RouterType = None
+
+# Simple router
+try:
+    from .routing import Router as SimpleRouter, create_router
+    SIMPLE_ROUTER_AVAILABLE = True
+except ImportError:
+    SIMPLE_ROUTER_AVAILABLE = False
+    SimpleRouter = None
+    create_router = None
+
+# Optimization
+try:
+    from .optimization import TrainingMetrics, TrainingState
+    OPTIMIZATION_AVAILABLE = True
+except ImportError:
+    OPTIMIZATION_AVAILABLE = False
+    TrainingMetrics = None
+    TrainingState = None
+
+# Legacy routers
+try:
+    from .routers.base import BaseRouter, BaseRouterV2
+    from .routers.adaptive_router import AdaptiveRouter
+    LEGACY_ROUTERS_AVAILABLE = True
+except ImportError:
+    LEGACY_ROUTERS_AVAILABLE = False
+    BaseRouter = None
+    BaseRouterV2 = None
+    AdaptiveRouter = None
+
+# TTS Router (optional)
+try:
+    from .routers.tts_router import TTSRouter
+    TTS_ROUTER_AVAILABLE = True
+except ImportError:
+    TTS_ROUTER_AVAILABLE = False
+    TTSRouter = None
 
 # Optimizers
-from .optimizers.optimizer import OptimizerConfig, create_optimizer  # noqa: F401
+try:
+    from .optimizers.optimizer import OptimizerConfig, create_optimizer
+    OPTIMIZER_AVAILABLE = True
+except ImportError:
+    OPTIMIZER_AVAILABLE = False
+    OptimizerConfig = None
+    create_optimizer = None
 
 # Encoders
-from .encoders import (  # noqa: F401
-    VisionEncoder,
-    VisionEncoderConfig,
-    VideoEncoder,
-    VideoEncoderConfig,
-    MultimodalCombiner,
-    CombinerConfig,
-)
+try:
+    from .encoders import (
+        VisionEncoder,
+        VisionEncoderConfig,
+        VideoEncoder,
+        VideoEncoderConfig,
+        MultimodalCombiner,
+        CombinerConfig,
+    )
+    ENCODERS_AVAILABLE = True
+except ImportError:
+    ENCODERS_AVAILABLE = False
+    VisionEncoder = None
+    VisionEncoderConfig = None
+    VideoEncoder = None
+    VideoEncoderConfig = None
+    MultimodalCombiner = None
+    CombinerConfig = None
 
 # Chain of Thought
-from .cot import ChainOfThought, create_cot_handler  # noqa: F401
-
-# Modelo base
-from ._model import ModelCore, create_model  # noqa: F401
-
-# 🌟 ULTRA CORE INTEGRATION - New ultra-advanced components
 try:
-    from .ultra_core_integration import (  # noqa: F401
+    from .cot import ChainOfThought, create_cot_handler
+    COT_AVAILABLE = True
+except ImportError:
+    COT_AVAILABLE = False
+    ChainOfThought = None
+    create_cot_handler = None
+
+# Model core
+try:
+    from ._model import ModelCore, create_model
+    MODEL_AVAILABLE = True
+except ImportError:
+    MODEL_AVAILABLE = False
+    ModelCore = None
+    create_model = None
+
+# Ultra Core Integration (advanced SSM-hybrid components)
+try:
+    from .ultra_core_integration import (
         UltraIntelligentCoreRouter,
         SSMHybridLayer,
         UltraCoreOrchestrator,
@@ -177,64 +153,58 @@ try:
     ULTRA_CORE_AVAILABLE = True
 except ImportError:
     ULTRA_CORE_AVAILABLE = False
-    # Stub implementations for backwards compatibility
-    UltraIntelligentCoreRouter = None  # type: ignore
-    SSMHybridLayer = None  # type: ignore
-    UltraCoreOrchestrator = None  # type: ignore
+    ULTRA_TRAINING_AVAILABLE = False
+    SSM_AVAILABLE = False
+    UltraIntelligentCoreRouter = None
+    SSMHybridLayer = None
+    UltraCoreOrchestrator = None
+    create_ultra_core_system = None
+    create_ultra_config = None
+    integrate_with_training = None
+    validate_ultra_core_system = None
 
-    def create_ultra_core_system(*args, **kwargs) -> Any:  # type: ignore
-        raise ImportError("Ultra Core Integration not available")
-
-    def create_ultra_config(*args, **kwargs) -> Any:  # type: ignore
-        raise ImportError("Ultra Core Integration not available")
-
-    def integrate_with_training(*args, **kwargs) -> Any:  # type: ignore
-        raise ImportError("Ultra Core Integration not available")
-
-    def validate_ultra_core_system(*args, **kwargs) -> Any:  # type: ignore
-        raise ImportError("Ultra Core Integration not available")
-
-    ULTRA_TRAINING_AVAILABLE = False  # type: ignore
-    SSM_AVAILABLE = False  # type: ignore
 
 __all__ = [
-    # config
+    # Config
     "Config",
     "ModelConfig",
     "ModularConfig",
-    # routers
-    "SimpleRouter",
-    "create_router",
+    # Enhanced router
     "EnhancedRouter",
     "AdvancedRouter",
     "create_enhanced_router",
     "create_core_integrated_router",
     "RouterCoreConfig",
     "RouterType",
-    # training/optimization
+    # Simple router
+    "SimpleRouter",
+    "create_router",
+    # Optimization
     "TrainingMetrics",
     "TrainingState",
-    # encoders
+    # Legacy routers
+    "BaseRouter",
+    "BaseRouterV2",
+    "AdaptiveRouter",
+    "TTSRouter",
+    # Optimizers
+    "OptimizerConfig",
+    "create_optimizer",
+    # Encoders
     "VisionEncoder",
     "VisionEncoderConfig",
     "VideoEncoder",
     "VideoEncoderConfig",
     "MultimodalCombiner",
     "CombinerConfig",
-    # CoT
+    # Chain of Thought
     "ChainOfThought",
     "create_cot_handler",
-    # models
+    # Model
     "ModelCore",
     "create_model",
     "ModularCapibaraModel",
-    "ModularConfig",
-    # legacy routers
-    "BaseRouter",
-    "BaseRouterV2",
-    "AdaptiveRouter",
-    "TTSRouter",
-    # Ultra core (if available)
+    # Ultra Core
     "UltraIntelligentCoreRouter",
     "SSMHybridLayer",
     "UltraCoreOrchestrator",
@@ -242,6 +212,18 @@ __all__ = [
     "create_ultra_config",
     "integrate_with_training",
     "validate_ultra_core_system",
+    # Availability flags
+    "CONFIG_AVAILABLE",
+    "MODULAR_AVAILABLE",
+    "ENHANCED_ROUTER_AVAILABLE",
+    "SIMPLE_ROUTER_AVAILABLE",
+    "OPTIMIZATION_AVAILABLE",
+    "LEGACY_ROUTERS_AVAILABLE",
+    "TTS_ROUTER_AVAILABLE",
+    "OPTIMIZER_AVAILABLE",
+    "ENCODERS_AVAILABLE",
+    "COT_AVAILABLE",
+    "MODEL_AVAILABLE",
     "ULTRA_CORE_AVAILABLE",
     "ULTRA_TRAINING_AVAILABLE",
     "SSM_AVAILABLE",

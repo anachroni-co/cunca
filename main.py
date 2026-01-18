@@ -1,525 +1,349 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-Main Module for Capibara6 (75B7e27c)
+CapibaraGPT v3 - Main Entry Point
 
-This module provides the main entry point for the application with enhanced
-router optimization and core-training integration capabilities.
+A modular, experimental AI system supporting both TPU and GPU backends.
+Provides intelligent routing, multi-agent orchestration, and advanced
+neural network architectures (Transformer/Mamba hybrid).
+
+Usage:
+    python main.py                    # Start with default settings
+    python main.py --health           # Run health check
+    python main.py --demo             # Run demonstration
+    python main.py --backend gpu      # Use GPU backend
+    python main.py --backend tpu      # Use TPU backend
 """
 
-import sys
 import argparse
-import logging
-import time
 import asyncio
+import logging
+import sys
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Any, Dict, List, Optional
 
-# Setup logging with proper encoding
+# Configure logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    encoding='utf-8'
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("capibaragpt")
 
-class CapibaraMain:
-    """Main application class with enhanced integration capabilities and mental health safety."""
-    
-    def __init__(self):
-        """Initialize the main application."""
+__version__ = "3.0.0"
+
+
+@dataclass
+class SystemConfig:
+    """Configuration for the CapibaraGPT system."""
+    backend: str = "cpu"  # cpu, gpu, tpu
+    model_type: str = "hybrid"  # transformer, mamba, hybrid
+    enable_routing: bool = True
+    enable_safety: bool = True
+    cache_size: int = 1000
+    log_level: str = "INFO"
+
+
+@dataclass
+class HealthStatus:
+    """Health status of system components."""
+    overall: str = "unknown"
+    components: Dict[str, Dict[str, Any]] = field(default_factory=dict)
+    errors: List[str] = field(default_factory=list)
+
+
+class CapibaraGPT:
+    """
+    Main CapibaraGPT Application.
+
+    Orchestrates the initialization and execution of all system components
+    including backends, routing, and safety systems.
+    """
+
+    def __init__(self, config: Optional[SystemConfig] = None):
+        """
+        Initialize CapibaraGPT.
+
+        Args:
+            config: System configuration. Uses defaults if not provided.
+        """
+        self.config = config or SystemConfig()
+        self.backend = None
         self.router = None
-        self.integration = None
-        self.bridge = None
-        self.safety_manager = None
-        self.config = {}
-        self.safety_enabled = True
-        # Enhanced submodels
-        self.csa_expert = None
-        self.sapir_whorf_adapter = None
-        
-    async def initialize_components(self):
-        """Initialize all main components with proper error handling."""
-        try:
-            # Import enhanced components
-            from capibara.core.router import create_enhanced_router, RouterConfig, RouterType
-            from capibara.core.ultra_core_integration import create_ultra_core_integration, IntegrationConfig
-            from capibara.training.core_training_bridge import create_core_training_bridge, BridgeConfig
-            
-            # Initialize enhanced submodels with corrected imports
-            await self.initialize_enhanced_submodels()
-            
-            logger.info("🔧 Initializing enhanced router...")
-            
-            # Initialize enhanced router
-            router_config = RouterConfig(
-                router_type=RouterType.HYBRID,
-                encoding="utf-8",
-                use_training_integration=True,
-                expert_cores_enabled=True,
-                consensus_enabled=True,
-                cache_size=1000
-            )
-            self.router = create_enhanced_router(router_config)
-            
-            logger.info("🔧 Initializing ultra core integration...")
-            
-            # Initialize ultra core integration
-            integration_config = IntegrationConfig(
-                integration_type="full",
-                encoding="utf-8",
-                enable_caching=True,
-                training_integration_enabled=True
-            )
-            self.integration = create_ultra_core_integration(integration_config)
-            
-            logger.info("🔧 Initializing core training bridge...")
-            
-            # Initialize core training bridge
-            bridge_config = BridgeConfig(
-                mode="full_integration",
-                encoding="utf-8",
-                enable_caching=True,
-                enable_monitoring=True
-            )
-            self.bridge = create_core_training_bridge(bridge_config)
-            
-            # Initialize mental health safety system
-            logger.info("🔒 Initializing mental health safety system...")
-            await self.initialize_safety_system()
-            
-            logger.info("✅ All components initialized successfully")
-            return True
-            
-        except ImportError as e:
-            logger.warning(f"Some components not available: {e}")
-            return await self.initialize_fallback_components()
-            
-        except Exception as e:
-            logger.error(f"Error initializing components: {e}")
-            return await self.initialize_fallback_components()
-    
-    async def initialize_safety_system(self):
-        """Initialize the mental health safety system."""
-        try:
-            from capibara.safety import activate_safety_system, verify_safety_system
-            
-            logger.info("🛡️ Activating mental health protection system...")
-            
-            # Verify safety system components
-            if verify_safety_system():
-                # Activate safety system
-                self.safety_manager = activate_safety_system()
-                
-                if self.safety_manager:
-                    logger.info("✅ Mental health safety system activated successfully")
-                    logger.info("🔍 Active protections:")
-                    logger.info("   - Usage pattern monitoring: ✅")
-                    logger.info("   - Content filtering: ✅") 
-                    logger.info("   - Automatic interventions: ✅")
-                    logger.info("   - Emergency resources: ✅")
-                    
-                    # Log emergency contacts for quick reference
-                    logger.info("🆘 Emergency contacts available:")
-                    logger.info("   - Emergency services: 911")
-                    logger.info("   - Suicide prevention: 988")
-                    logger.info("   - Crisis text line: 741741")
-                    
-                    self.safety_enabled = True
-                else:
-                    logger.warning("⚠️ Safety system components loaded but not fully activated")
-                    self.safety_enabled = False
-            else:
-                logger.error("❌ Safety system verification failed")
-                self.safety_enabled = False
-                
-        except ImportError as e:
-            logger.warning(f"⚠️ Mental health safety system not available: {e}")
-            logger.warning("🚨 SYSTEM RUNNING WITHOUT MENTAL HEALTH PROTECTIONS")
-            logger.warning("📋 Consider installing safety components for production use")
-            self.safety_enabled = False
-            
-        except Exception as e:
-            logger.error(f"❌ Error initializing safety system: {e}")
-            logger.error("🚨 SYSTEM RUNNING WITHOUT MENTAL HEALTH PROTECTIONS")
-            self.safety_enabled = False
-    
-    async def initialize_enhanced_submodels(self):
-        """Initialize enhanced submodels with corrected imports."""
-        try:
-            logger.info("🧠 Initializing enhanced submodels...")
-            
-            # Import CSA Expert
-            try:
-                from capibara.sub_models.csa_expert import CSAExpert
-                logger.info("✅ CSA Expert imported successfully")
-                self.csa_expert = CSAExpert()
-            except ImportError as e:
-                logger.warning(f"⚠️ CSA Expert not available: {e}")
-                self.csa_expert = None
-            
-            # Import SapirWhorfAdapter with correct name
-            try:
-                from capibara.sub_models.semiotic.sapir_whorf_adapter import SapirWhorfAdapter
-                logger.info("✅ SapirWhorfAdapter imported successfully")
-                self.sapir_whorf_adapter = SapirWhorfAdapter()
-                logger.info("🌍 Sapir-Whorf linguistic adaptation system activated")
-            except ImportError as e:
-                logger.warning(f"⚠️ SapirWhorfAdapter not available: {e}")
-                self.sapir_whorf_adapter = None
-            
-            # Store submodels in config
-            self.config['enhanced_submodels'] = {
-                'csa_expert': self.csa_expert,
-                'sapir_whorf_adapter': self.sapir_whorf_adapter
-            }
-            
-            available_submodels = [name for name, module in self.config['enhanced_submodels'].items() if module is not None]
-            if available_submodels:
-                logger.info(f"🎉 Enhanced submodels available: {', '.join(available_submodels)}")
-            else:
-                logger.warning("⚠️ No enhanced submodels available")
-                
-        except Exception as e:
-            logger.error(f"❌ Error initializing enhanced submodels: {e}")
-            self.config['enhanced_submodels'] = {}
-    
-    async def initialize_fallback_components(self):
-        """Initialize fallback components when enhanced ones are not available."""
-        try:
-            logger.info("🔄 Initializing fallback components...")
-            
-            # Try to import basic components
-            try:
-                from capibara.core.router import create_router
-                self.router = create_router()
-                logger.info("✅ Basic router initialized")
-            except ImportError:
-                logger.warning("Basic router not available")
-                
-            try:
-                from capibara.core.routing import create_router as create_core_router
-                self.core_router = create_core_router()
-                logger.info("✅ Core router initialized")
-            except ImportError:
-                logger.warning("Core router not available")
-                
-            return True
-            
-        except Exception as e:
-            logger.error(f"Error initializing fallback components: {e}")
-            return False
-    
-    async def run_health_check(self) -> Dict[str, Any]:
-        """Run comprehensive health check of all components."""
-        health_status = {
-            "overall": "healthy",
-            "components": {},
-            "timestamp": None
-        }
-        
-        try:
-            import time
-            health_status["timestamp"] = time.time()
-            
-            # Check router
-            if self.router:
-                try:
-                    router_info = self.router.get_router_info()
-                    health_status["components"]["router"] = {
-                        "status": "available",
-                        "type": router_info.get("router_type", "unknown"),
-                        "encoding": router_info.get("encoding", "unknown")
-                    }
-                except Exception as e:
-                    health_status["components"]["router"] = {
-                        "status": "error",
-                        "error": str(e)
-                    }
-                    health_status["overall"] = "degraded"
-            else:
-                health_status["components"]["router"] = {"status": "unavailable"}
-                health_status["overall"] = "degraded"
-            
-            # Check integration
-            if self.integration:
-                try:
-                    integration_health = await self.integration.health_check()
-                    health_status["components"]["integration"] = integration_health
-                except Exception as e:
-                    health_status["components"]["integration"] = {
-                        "status": "error",
-                        "error": str(e)
-                    }
-                    health_status["overall"] = "degraded"
-            else:
-                health_status["components"]["integration"] = {"status": "unavailable"}
-                health_status["overall"] = "degraded"
-            
-            # Check bridge
-            if self.bridge:
-                try:
-                    bridge_health = await self.bridge.health_check()
-                    health_status["components"]["bridge"] = bridge_health
-                except Exception as e:
-                    health_status["components"]["bridge"] = {
-                        "status": "error",
-                        "error": str(e)
-                    }
-                    health_status["overall"] = "degraded"
-            else:
-                health_status["components"]["bridge"] = {"status": "unavailable"}
-                health_status["overall"] = "degraded"
-                
-        except Exception as e:
-            logger.error(f"Error during health check: {e}")
-            health_status["overall"] = "error"
-            health_status["error"] = str(e)
-            
-        return health_status
-    
-    async def test_router_functionality(self) -> Dict[str, Any]:
-        """Test router functionality with various inputs."""
-        test_results = {
-            "success": True,
-            "tests": {},
-            "summary": {}
-        }
-        
-        try:
-            if not self.router:
-                test_results["success"] = False
-                test_results["error"] = "Router not available"
-                return test_results
-            
-            # Test with different input types
-            test_inputs = [
-                "Simple test input",
-                "Texto en español con caracteres especiales: áéíóúñ",
-                "Test with numbers: 12345 and symbols: @#$%",
-                {"text": "Structured input", "type": "test"}
-            ]
-            
-            for i, test_input in enumerate(test_inputs):
-                try:
-                    result = await self.router.route_request(test_input)
-                    test_results["tests"][f"test_{i+1}"] = {
-                        "input": str(test_input)[:50] + "..." if len(str(test_input)) > 50 else str(test_input),
-                        "success": result.success,
-                        "selected_module": result.selected_module,
-                        "confidence": result.confidence
-                    }
-                except Exception as e:
-                    test_results["tests"][f"test_{i+1}"] = {
-                        "input": str(test_input)[:50] + "..." if len(str(test_input)) > 50 else str(test_input),
-                        "success": False,
-                        "error": str(e)
-                    }
-                    test_results["success"] = False
-            
-            # Generate summary
-            successful_tests = sum(1 for test in test_results["tests"].values() if test.get("success", False))
-            total_tests = len(test_results["tests"])
-            
-            test_results["summary"] = {
-                "total_tests": total_tests,
-                "successful_tests": successful_tests,
-                "success_rate": (successful_tests / total_tests * 100) if total_tests > 0 else 0
-            }
-            
-        except Exception as e:
-            logger.error(f"Error during router testing: {e}")
-            test_results["success"] = False
-            test_results["error"] = str(e)
-            
-        return test_results
-    
-    async def test_sapir_whorf_functionality(self) -> Dict[str, Any]:
-        """Test SapirWhorfAdapter functionality with various language inputs."""
-        test_results = {
-            "success": True,
-            "tests": {},
-            "summary": {}
-        }
-        
-        try:
-            if not self.sapir_whorf_adapter:
-                test_results["success"] = False
-                test_results["error"] = "SapirWhorfAdapter not available"
-                return test_results
-            
-            # Test with different language inputs
-            test_inputs = [
-                ("Hello, how are you today?", "en"),
-                ("Hola, ¿cómo estás hoy?", "es"),
-                ("你好，你今天怎么样？", "zh"),
-                ("مرحبا، كيف حالك اليوم؟", "ar")
-            ]
-            
-            for i, (text, expected_lang) in enumerate(test_inputs):
-                try:
-                    # Test language detection
-                    from capibara.sub_models.semiotic.sapir_whorf_adapter import detect_language
-                    detected_lang = detect_language(text)
-                    
-                    # Test language profile retrieval
-                    profile = self.sapir_whorf_adapter.get_language_profile(detected_lang)
-                    
-                    test_results["tests"][f"test_{i+1}"] = {
-                        "input": text[:30] + "..." if len(text) > 30 else text,
-                        "expected_language": expected_lang,
-                        "detected_language": detected_lang,
-                        "profile_available": profile is not None,
-                        "success": True
-                    }
-                except Exception as e:
-                    test_results["tests"][f"test_{i+1}"] = {
-                        "input": text[:30] + "..." if len(text) > 30 else text,
-                        "success": False,
-                        "error": str(e)
-                    }
-                    test_results["success"] = False
-            
-            # Test supported languages
-            try:
-                supported_languages = self.sapir_whorf_adapter.list_supported_languages()
-                test_results["supported_languages"] = supported_languages
-                test_results["language_count"] = len(supported_languages)
-            except Exception as e:
-                test_results["supported_languages_error"] = str(e)
-            
-            # Generate summary
-            successful_tests = sum(1 for test in test_results["tests"].values() if test.get("success", False))
-            total_tests = len(test_results["tests"])
-            
-            test_results["summary"] = {
-                "total_tests": total_tests,
-                "successful_tests": successful_tests,
-                "success_rate": (successful_tests / total_tests * 100) if total_tests > 0 else 0
-            }
-            
-        except Exception as e:
-            logger.error(f"Error during SapirWhorf testing: {e}")
-            test_results["success"] = False
-            test_results["error"] = str(e)
-            
-        return test_results
-    
-    async def run_demo(self):
-        """Run a demonstration of the enhanced capabilities."""
-        logger.info("🎬 Starting Capibara6 demonstration...")
-        
-        try:
-            # Health check
-            logger.info("🔍 Running health check...")
-            health = await self.run_health_check()
-            logger.info(f"Health status: {health['overall']}")
-            
-            # Router functionality test
-            logger.info("🧪 Testing router functionality...")
-            router_test = await self.test_router_functionality()
-            logger.info(f"Router test success rate: {router_test['summary'].get('success_rate', 0):.1f}%")
-            
-            # SapirWhorf functionality test
-            logger.info("🌍 Testing SapirWhorf linguistic adaptation...")
-            sapir_test = await self.test_sapir_whorf_functionality()
-            if sapir_test['success']:
-                logger.info(f"SapirWhorf test success rate: {sapir_test['summary'].get('success_rate', 0):.1f}%")
-                if 'language_count' in sapir_test:
-                    logger.info(f"Supported languages: {sapir_test['language_count']}")
-            else:
-                logger.warning(f"SapirWhorf test failed: {sapir_test.get('error', 'Unknown error')}")
-            
-            # Integration test
-            if self.integration:
-                logger.info("🔗 Testing integration capabilities...")
-                try:
-                    integration_result = await self.integration.process_request("Integration test request")
-                    logger.info(f"Integration test: {'Success' if integration_result.success else 'Failed'}")
-                except Exception as e:
-                    logger.warning(f"Integration test failed: {e}")
-            
-            # Bridge test
-            if self.bridge:
-                logger.info("🌉 Testing bridge capabilities...")
-                try:
-                    bridge_result = await self.bridge.process_request("Bridge test request")
-                    logger.info(f"Bridge test: {'Success' if bridge_result.success else 'Failed'}")
-                except Exception as e:
-                    logger.warning(f"Bridge test failed: {e}")
-            
-            logger.info("🎉 Demonstration completed successfully")
-            
-        except Exception as e:
-            logger.error(f"Error during demonstration: {e}")
+        self.initialized = False
 
-async def main():
-    """Main entry point with enhanced capabilities."""
-    logger.info("🚀 Starting Capibara6 (75B7e27c) with enhanced integration...")
-    
-    try:
-        # Parse command line arguments
-        parser = argparse.ArgumentParser(description="Capibara6 Main Application")
-        parser.add_argument("--demo", action="store_true", help="Run demonstration mode")
-        parser.add_argument("--health", action="store_true", help="Run health check only")
-        parser.add_argument("--test", action="store_true", help="Run functionality tests")
-        parser.add_argument("--test-sapir", action="store_true", help="Test SapirWhorf linguistic adaptation")
-        parser.add_argument("--encoding", default="utf-8", help="Set encoding (default: utf-8)")
-        
-        args = parser.parse_args()
-        
-        # Create main application instance
-        app = CapibaraMain()
-        
-        # Initialize components
-        logger.info("🔧 Initializing components...")
-        if not await app.initialize_components():
-            logger.error("❌ Failed to initialize components")
-            return 1
-        
-        # Run requested operations
-        if args.health:
-            logger.info("🔍 Running health check...")
-            health = await app.run_health_check()
-            logger.info(f"Health status: {health}")
-            return 0 if health["overall"] == "healthy" else 1
-            
-        elif args.test:
-            logger.info("🧪 Running functionality tests...")
-            test_results = await app.test_router_functionality()
-            logger.info(f"Test results: {test_results}")
-            return 0 if test_results["success"] else 1
-            
-        elif args.test_sapir:
-            logger.info("🌍 Running SapirWhorf linguistic adaptation tests...")
-            sapir_results = await app.test_sapir_whorf_functionality()
-            logger.info(f"SapirWhorf test results: {sapir_results}")
-            return 0 if sapir_results["success"] else 1
-            
-        elif args.demo:
-            await app.run_demo()
-            return 0
-            
+    async def initialize(self) -> bool:
+        """
+        Initialize all system components.
+
+        Returns:
+            True if initialization successful, False otherwise.
+        """
+        logger.info("Initializing CapibaraGPT v%s...", __version__)
+
+        try:
+            # Initialize backend
+            self.backend = await self._init_backend()
+            if not self.backend:
+                logger.warning("Backend initialization failed, using CPU fallback")
+
+            # Initialize router (optional)
+            if self.config.enable_routing:
+                self.router = await self._init_router()
+
+            self.initialized = True
+            logger.info("CapibaraGPT initialized successfully")
+            return True
+
+        except Exception as e:
+            logger.error("Initialization failed: %s", e)
+            return False
+
+    async def _init_backend(self):
+        """Initialize compute backend based on configuration."""
+        try:
+            from core.backends import get_backend, BackendType
+
+            backend_map = {
+                "cpu": BackendType.CPU,
+                "gpu": BackendType.GPU,
+                "tpu": BackendType.TPU,
+                "auto": BackendType.AUTO,
+            }
+
+            backend_type = backend_map.get(self.config.backend, BackendType.CPU)
+            backend = get_backend(backend_type)
+
+            if backend and backend.is_available:
+                backend.initialize()
+                logger.info("Backend initialized: %s", backend.name.upper())
+                return backend
+
+        except ImportError:
+            logger.warning("Backend system not available")
+        except Exception as e:
+            logger.warning("Backend initialization error: %s", e)
+
+        return None
+
+    async def _init_router(self):
+        """Initialize the semantic router."""
+        try:
+            from core.router import SemanticRouter
+            router = SemanticRouter()
+            logger.info("Semantic router initialized")
+            return router
+        except ImportError:
+            logger.debug("Router module not available")
+        except Exception as e:
+            logger.warning("Router initialization error: %s", e)
+        return None
+
+    async def health_check(self) -> HealthStatus:
+        """
+        Run comprehensive health check.
+
+        Returns:
+            HealthStatus with component status information.
+        """
+        status = HealthStatus()
+
+        # Check backend
+        if self.backend:
+            try:
+                info = self.backend.get_device_info()
+                status.components["backend"] = {
+                    "status": "healthy",
+                    "type": self.backend.name,
+                    "device": info.get("device", "unknown"),
+                }
+            except Exception as e:
+                status.components["backend"] = {"status": "error", "error": str(e)}
+                status.errors.append(f"Backend: {e}")
         else:
-            # Default: run health check and basic info
-            logger.info("📊 System Information:")
-            logger.info(f"   - Encoding: {args.encoding}")
-            logger.info(f"   - Version: 75B7e27c")
-            logger.info(f"   - Enhanced Integration: Enabled")
-            logger.info(f"   - SapirWhorf Adapter: {'✅ Available' if app.sapir_whorf_adapter else '❌ Not Available'}")
-            logger.info(f"   - CSA Expert: {'✅ Available' if app.csa_expert else '❌ Not Available'}")
-            
-            health = await app.run_health_check()
-            logger.info(f"   - Health Status: {health['overall']}")
-            
-            logger.info("🎉 Capibara6 started successfully")
-            return 0
-        
-    except Exception as e:
-        logger.error(f"❌ Error starting Capibara6: {e}")
+            status.components["backend"] = {"status": "unavailable"}
+
+        # Check router
+        if self.router:
+            status.components["router"] = {"status": "healthy"}
+        else:
+            status.components["router"] = {"status": "unavailable"}
+
+        # Determine overall status
+        if status.errors:
+            status.overall = "degraded"
+        elif all(c.get("status") == "healthy" for c in status.components.values()):
+            status.overall = "healthy"
+        else:
+            status.overall = "partial"
+
+        return status
+
+    async def process(self, input_data: Any) -> Dict[str, Any]:
+        """
+        Process input through the system.
+
+        Args:
+            input_data: Input to process (text, structured data, etc.)
+
+        Returns:
+            Processing result dictionary.
+        """
+        if not self.initialized:
+            return {"success": False, "error": "System not initialized"}
+
+        try:
+            # Route input if router available
+            if self.router:
+                route_result = await self.router.route(input_data)
+                return {
+                    "success": True,
+                    "route": route_result,
+                    "backend": self.backend.name if self.backend else "none",
+                }
+
+            return {
+                "success": True,
+                "message": "Processed without routing",
+                "backend": self.backend.name if self.backend else "none",
+            }
+
+        except Exception as e:
+            logger.error("Processing error: %s", e)
+            return {"success": False, "error": str(e)}
+
+    def get_system_info(self) -> Dict[str, Any]:
+        """Get system information."""
+        return {
+            "version": __version__,
+            "backend": self.backend.name if self.backend else "none",
+            "initialized": self.initialized,
+            "config": {
+                "backend": self.config.backend,
+                "model_type": self.config.model_type,
+                "routing_enabled": self.config.enable_routing,
+            },
+        }
+
+
+async def run_demo(app: CapibaraGPT):
+    """Run demonstration of system capabilities."""
+    logger.info("Running CapibaraGPT demonstration...")
+
+    # Health check
+    logger.info("Running health check...")
+    health = await app.health_check()
+    logger.info("Health status: %s", health.overall)
+
+    for name, status in health.components.items():
+        logger.info("  - %s: %s", name, status.get("status", "unknown"))
+
+    # Test processing
+    logger.info("Testing processing pipeline...")
+    test_inputs = [
+        "Hello, how are you?",
+        "Explain quantum computing",
+        {"type": "structured", "query": "test"},
+    ]
+
+    for i, test_input in enumerate(test_inputs, 1):
+        result = await app.process(test_input)
+        status = "OK" if result.get("success") else "FAILED"
+        logger.info("  Test %d: %s", i, status)
+
+    logger.info("Demonstration complete")
+
+
+async def main() -> int:
+    """Main entry point."""
+    parser = argparse.ArgumentParser(
+        description="CapibaraGPT v3 - Modular AI System",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+
+    parser.add_argument(
+        "--backend",
+        choices=["cpu", "gpu", "tpu", "auto"],
+        default="cpu",
+        help="Compute backend (default: cpu)",
+    )
+    parser.add_argument(
+        "--model",
+        choices=["transformer", "mamba", "hybrid"],
+        default="hybrid",
+        help="Model architecture (default: hybrid)",
+    )
+    parser.add_argument(
+        "--health",
+        action="store_true",
+        help="Run health check and exit",
+    )
+    parser.add_argument(
+        "--demo",
+        action="store_true",
+        help="Run demonstration mode",
+    )
+    parser.add_argument(
+        "--info",
+        action="store_true",
+        help="Show system information",
+    )
+    parser.add_argument(
+        "-v", "--verbose",
+        action="store_true",
+        help="Enable verbose logging",
+    )
+
+    args = parser.parse_args()
+
+    # Configure logging level
+    if args.verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
+
+    # Create configuration
+    config = SystemConfig(
+        backend=args.backend,
+        model_type=args.model,
+    )
+
+    # Create and initialize application
+    app = CapibaraGPT(config)
+
+    if not await app.initialize():
+        logger.error("Failed to initialize CapibaraGPT")
         return 1
 
+    # Execute requested action
+    if args.health:
+        health = await app.health_check()
+        logger.info("Health Status: %s", health.overall)
+        for name, status in health.components.items():
+            logger.info("  %s: %s", name, status)
+        return 0 if health.overall in ("healthy", "partial") else 1
+
+    elif args.demo:
+        await run_demo(app)
+        return 0
+
+    elif args.info:
+        info = app.get_system_info()
+        logger.info("System Information:")
+        for key, value in info.items():
+            logger.info("  %s: %s", key, value)
+        return 0
+
+    else:
+        # Default: show info and health
+        info = app.get_system_info()
+        logger.info("CapibaraGPT v%s", __version__)
+        logger.info("Backend: %s", info["backend"])
+        logger.info("Model: %s", config.model_type)
+
+        health = await app.health_check()
+        logger.info("Status: %s", health.overall)
+
+        logger.info("Ready. Use --help for options.")
+        return 0
+
+
 if __name__ == "__main__":
-    # Run the async main function
-    exit_code = asyncio.run(main())
-    sys.exit(exit_code)
+    sys.exit(asyncio.run(main()))
