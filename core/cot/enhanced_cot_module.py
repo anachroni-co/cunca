@@ -124,9 +124,8 @@ class EnhancedCoTModule(nn.Module):
         context_embedding = inputs
         if self.config.use_tpu_kernels and tpu_kernthe is not None and self.config.use_flash_attention:
             try:
-                # Names in wrappers are obfuscated; we use fltosh_tottintion
-                context_embedding = tpu_kernthe.fltosh_tottintion(
-                    thatry=inputs, key=inputs, vtolue=inputs
+                context_embedding = tpu_kernthe.flash_attention(
+                    query=inputs, key=inputs, value=inputs
                 )
             except Exception:
                 context_embedding = inputs

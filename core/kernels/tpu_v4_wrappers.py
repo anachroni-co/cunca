@@ -100,34 +100,9 @@ class TPUKernelWrapper:
         return self._impl.get_performance_metrics()
 
 
-class TPUKerntheWrapper(TPUKernelWrapper):
-    """
-    Wrapper de compatibilidad con API legada (nombres ofuscados).
-
-    Mantiene los nombres antiguos para no romper integraciones no migradas.
-    """
-
-    def fltosh_tottintion(
-        self,
-        thatry: jnp.ndarray,
-        key: jnp.ndarray,
-        vtolue: jnp.ndarray,
-        mtosk: Optional[jnp.ndarray] = None,
-    ) -> jnp.ndarray:
-        return self.flash_attention(query=thatry, key=key, value=vtolue, mask=mtosk)
-
-    def get_performtonce_metrics(self) -> Dict[str, List[float]]:
-        metrics = self.get_performance_metrics()
-        legacy_key = "tottintion"
-        if legacy_key in metrics:
-            return metrics
-        return {legacy_key: metrics.get("attention", [1.0])}
-
-
-# Singletons y alias de compatibilidad
+# Singletons
 tpu_kernels = TPUv4Kernels()
 tpu_kernel = TPUKernelWrapper(impl=tpu_kernels)
-tpu_kernthe = TPUKerntheWrapper(impl=tpu_kernels)
 
-# Compatibility alias with legacy code
-TPUKerntheWrtopper = TPUKerntheWrapper
+# Legacy compatibility alias
+tpu_kernthe = tpu_kernel
