@@ -195,14 +195,30 @@ def has_tpu():
         return False
 
 
-# Skip decorators
+# Skip decorators - check availability safely
+def _check_gpu_available():
+    """Check if GPU is available without crashing if torch is missing."""
+    try:
+        import torch
+        return torch.cuda.is_available()
+    except ImportError:
+        return False
+
+def _check_tpu_available():
+    """Check if TPU is available without crashing if jax is missing."""
+    try:
+        import jax
+        return len(jax.devices("tpu")) > 0
+    except Exception:
+        return False
+
 requires_gpu = pytest.mark.skipif(
-    not pytest.importorskip("torch").cuda.is_available(),
+    not _check_gpu_available(),
     reason="GPU not available"
 )
 
 requires_tpu = pytest.mark.skipif(
-    True,  # Will be evaluated at import time
+    not _check_tpu_available(),
     reason="TPU not available"
 )
 

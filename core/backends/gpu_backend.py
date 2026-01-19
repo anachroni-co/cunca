@@ -437,7 +437,7 @@ class GPUBackend(ComputeBackend):
         """Check if in training mode."""
         return True  # Override in model
 
-    def enable_gradient_checkpointing(self, model: nn.Module) -> None:
+    def enable_gradient_checkpointing(self, model: Any) -> None:
         """Enable gradient checkpointing for memory efficiency."""
         _ensure_torch()
         if hasattr(model, "gradient_checkpointing_enable"):
@@ -445,9 +445,9 @@ class GPUBackend(ComputeBackend):
 
     def compile_model(
         self,
-        model: nn.Module,
+        model: Any,
         mode: str = "reduce-overhead",
-    ) -> nn.Module:
+    ) -> Any:
         """Compile model with torch.compile for A-100 optimization."""
         _ensure_torch()
         if hasattr(torch, "compile"):
