@@ -1,369 +1,259 @@
-# CapibaraGPT v3
+# CapibaraGPT
 
-Advanced conversational AI system with Mixture of Experts architecture, TPU v4/v6 and ARM Axion optimizations, Chain-of-Thought reasoning, and multimodal capabilities.
+**An Experimental Open-Source Foundation Model for Research and Education**
 
-## Overview
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org)
+[![Status](https://img.shields.io/badge/Status-Experimental-yellow.svg)]()
 
-CapibaraGPT v3 is a state-of-the-art AI system that combines multiple advanced technologies to provide exceptional conversational capabilities. Specifically designed for modern hardware (TPU v4/v6, ARM Axion v3.2), it includes expert specialization, advanced reasoning, multimodal processing, and enterprise-level performance optimizations.
+---
 
-## System Architecture
+## Abstract
+
+CapibaraGPT is an experimental open-source foundation model designed for research, education, and community-driven AI development. This project explores modern deep learning architectures including Mixture of Experts (MoE), State Space Models (SSM/Mamba), and multi-backend hardware optimization across CPU, GPU (CUDA), and TPU platforms.
+
+The project aims to provide a transparent, well-documented codebase that serves as both a learning resource and a platform for experimenting with novel AI techniques. CapibaraGPT is not intended to compete with production-grade commercial models, but rather to democratize access to foundation model development practices.
+
+## Project Goals
+
+1. **Educational Resource**: Provide clear, documented implementations of modern AI architectures
+2. **Research Platform**: Enable experimentation with novel techniques in a modular framework
+3. **Hardware Democratization**: Support diverse compute backends (CPU, GPU, TPU) to lower barriers to entry
+4. **Community Development**: Foster open collaboration on foundation model research
+5. **Transparency**: Maintain fully open-source code with no hidden components
+
+## Architecture Overview
+
+CapibaraGPT implements a modular architecture that combines several research directions:
 
 ```
-capibara/
-├── config/              # Advanced configuration system
-├── core/                # Core system modules
-│   ├── activations/     # Contextual activation functions
-│   ├── age_adaptation/  # Age-based content adaptation
-│   ├── arm_optimizations/ # ARM Axion optimizations
-│   ├── cot/            # Chain-of-Thought reasoning
-│   ├── distributed/    # TPU distributed computing
-│   ├── encoders/       # Multimodal encoders
-│   ├── experts/        # MoE expert system
-│   ├── inference_ttc/  # Time-to-completion optimization
-│   ├── kernels/        # Optimized TPU v4 kernels
-│   ├── moe/           # Dynamic Mixture of Experts
-│   ├── monitoring/    # TPU monitoring and alerts
-│   ├── optimizers/    # Advanced optimizers
-│   ├── pipelines/     # RAG and multimodal pipelines
-│   ├── routers/       # Intelligent routing
-│   └── tpu/          # TPU-specific configurations
-└── README.md         # This documentation
+capibaraGPT_v3/
+├── core/                    # Core model components
+│   ├── backends/            # Hardware abstraction (CPU/GPU/TPU)
+│   ├── attention/           # Multi-head and sparse attention variants
+│   ├── moe/                 # Mixture of Experts routing and experts
+│   ├── ssm/                 # State Space Models (Mamba-style)
+│   ├── cot/                 # Chain-of-Thought reasoning modules
+│   ├── encoders/            # Multimodal encoders (vision, audio)
+│   ├── kernels/             # Optimized compute kernels
+│   └── optimizers/          # Training optimizers
+├── data/                    # Data loading and preprocessing
+├── training/                # Training loops and utilities
+├── inference/               # Inference pipelines
+├── tests/                   # Unit and integration tests
+└── configs/                 # Model and training configurations
 ```
 
-## Key Features
+### Key Components
 
-### Mixture of Experts (MoE)
-- **32 specialized experts** with dynamic routing
-- **Automatic specialization** in domains like mathematics, science, creativity
-- **Intelligent load balancing** optimized for TPU v6e-64
-- **Adaptive expert routing** based on content and performance
+#### Multi-Backend Support
+The project implements a unified backend abstraction layer supporting:
+- **CPU**: NumPy-based reference implementation
+- **GPU**: PyTorch/CUDA with Flash Attention support
+- **TPU**: JAX/Flax with XLA optimization
 
-### Chain-of-Thought Reasoning
-- **Step-by-step reasoning** with up to 12 reasoning steps
-- **Advanced meta-cognition** for confidence adjustment
-- **Self-reflection and verification** of reasoning quality
-- **Process reward models** to evaluate step quality
+#### Mixture of Experts (MoE)
+Implementation of sparse MoE layers with:
+- Top-k expert routing with load balancing
+- Auxiliary loss for balanced expert utilization
+- Support for domain-specialized experts
 
-### Multimodal Capabilities
-- **Vision encoder** for image processing (224x224, 16x16 patches)
-- **Video encoder** with temporal support (max 64 frames, 30 FPS)
-- **Multimodal combiner** with attention-based fusion
-- **Text-to-Speech** multimodal with emotional context
+#### State Space Models
+Experimental SSM implementations inspired by Mamba architecture:
+- Linear-time sequence modeling
+- Selective state spaces
+- Hardware-efficient scan operations
 
-### Hardware Optimizations
+#### Chain-of-Thought Reasoning
+Modules for structured reasoning:
+- Step-by-step reasoning decomposition
+- Self-reflection and verification
+- Configurable reasoning depth
 
-#### TPU v4/v6 Optimizations
-- **Mesh TPU v4-32** (8x4 topology, 32 chips)
-- **TPU v6e-64** support with specific optimizations
-- **XLA compilation** and automatic kernel fusion
-- **Mixed precision** (bfloat16) for maximum efficiency
-- **Flash attention** and optimized matrix operations
+## Installation
 
-#### ARM Axion v3.2 Support
-- **Automatic NEON vectorization**
-- **SVE/SVE2 optimizations** (512-bit vectors)
-- **Kleidi AI integration** for additional acceleration
-- **Advanced quantization** (4-bit, 8-bit) with calibration
-- **Memory pool optimization** with intelligent prefetch
+### Requirements
 
-### Advanced RAG 2.0
-- **1M tokens context length** with episodic memory
-- **Semantic chunking** with intelligent overlap (512/64 tokens)
-- **Hypothetical question generation** for better retrieval
-- **Memory compression** and lazy loading
-- **Hybrid search** (dense + sparse) with reranking
+- Python 3.9+
+- NumPy >= 1.21.0
 
-### Monitoring and Observability
-- **Real-time TPU metrics** (TFLOPS, memory, temperature)
-- **Advanced alerting system** with automatic escalation
-- **Integrated dashboard** with Grafana/Prometheus export
-- **Predictive analysis** of performance and anomalies
-- **Auto-optimization** based on metrics
+**Optional dependencies (for accelerated backends):**
+- PyTorch >= 2.0.0 (GPU support)
+- JAX >= 0.4.0 (TPU support)
+- Flax >= 0.7.0
 
-## Use Cases
+### Setup
 
-### 1. Scientific Research Assistant
-```python
-from capibara.core.cot import EnhancedCoTModule
-from capibara.core.moe import DynamicMoE
-from capibara.core.pipelines import AdvancedRAGPipeline
-
-# Scientific system with specialized experts
-scientific_assistant = DynamicMoE(
-    num_experts=32,
-    specialized_experts=["physics", "chemistry", "biology", "mathematics"],
-    reasoning_module=EnhancedCoTModule(max_steps=15),
-    rag_pipeline=AdvancedRAGPipeline(context_length=1_000_000)
-)
-
-result = scientific_assistant.research_query(
-    "Explain the implications of the Higgs boson discovery",
-    reasoning_depth="deep",
-    include_recent_papers=True,
-    cite_sources=True
-)
-```
-
-### 2. Adaptive Educational Tutor
-```python
-from capibara.core.age_adaptation import AdaptationPipeline
-from capibara.core.encoders import MultimodalCombiner
-
-# Tutor that adapts content by age
-adaptive_tutor = AdaptationPipeline(
-    target_ages=[8, 12, 16],
-    multimodal_support=True,
-    educational_standards="common_core"
-)
-
-lesson = adaptive_tutor.create_lesson(
-    topic="photosynthesis",
-    student_age=10,
-    include_visuals=True,
-    interactive_elements=True
-)
-```
-
-### 3. Multimodal Productivity Assistant
-```python
-from capibara.core.encoders import MultimodalPipeline
-from capibara.core.pipelines import MultimodalTTSPipeline
-
-# Assistant that processes text, image and generates audio
-productivity_assistant = MultimodalPipeline(
-    supported_modalities=["text", "image", "audio"],
-    tts_integration=True,
-    real_time_processing=True
-)
-
-response = productivity_assistant.process_multimodal({
-    "text": "Analyze this sales chart",
-    "image": sales_chart_image,
-    "generate_audio_summary": True,
-    "voice_style": "professional"
-})
-```
-
-## Installation and Configuration
-
-### System Requirements
-
-#### Recommended Hardware
-- **TPU v4-32 or v6e-64** for maximum performance
-- **ARM Axion v3.2** (192 cores) for efficient inference
-- **Memory**: Minimum 32GB, recommended 128GB+
-- **Storage**: NVMe SSD for data and checkpoints
-
-#### Software Dependencies
 ```bash
-# Core dependencies
-pip install torch>=2.0.0
-pip install jax[tpu]>=0.4.0
-pip install flax>=0.7.0
-pip install transformers>=4.30.0
+# Clone the repository
+git clone https://github.com/anacronic-io/capibaraGPT_v3.git
+cd capibaraGPT_v3
 
-# ARM optimization (optional)
-pip install onnxruntime-arm64
-pip install torch-ort
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # Linux/macOS
+# or: venv\Scripts\activate  # Windows
 
-# Monitoring and observability
-pip install prometheus-client
-pip install grafana-api
+# Install base package
+pip install -e .
+
+# Install with GPU support
+pip install -e ".[gpu]"
+
+# Install with TPU support
+pip install -e ".[tpu]"
+
+# Install development dependencies
+pip install -e ".[dev]"
 ```
 
-### Quick Configuration
+## Quick Start
+
+### Basic Usage
 
 ```python
-from capibara.config import CapibaraConfig
-from capibara.core.distributed import TPUDistributionConfig
-from capibara.core.arm_optimizations import ARMOptimizer
+from core.backends import get_backend, BackendType
 
-# Automatic configuration based on available hardware
-config = CapibaraConfig.auto_detect_hardware()
+# Automatically select best available backend
+backend = get_backend(BackendType.AUTO)
+print(f"Using backend: {backend.name}")
 
-if config.has_tpu:
-    # Configure for TPU
-    tpu_config = TPUDistributionConfig(
-        mesh_shape=(8, 4, 1),
-        precision="bfloat16",
-        optimization_level="aggressive"
-    )
-elif config.has_arm_axion:
-    # Configure for ARM Axion
-    arm_optimizer = ARMOptimizer(
-        processor="ARM_AXION_V3_2",
-        enable_sve2=True,
-        enable_neon=True
-    )
+# Create tensors
+x = backend.randn((batch_size, seq_len, hidden_dim))
 
-print(f"System configured for: {config.primary_hardware}")
-print(f"Applied optimizations: {config.enabled_optimizations}")
+# Perform operations
+y = backend.layer_norm(x, normalized_shape=(hidden_dim,))
+z = backend.gelu(y)
 ```
 
-## Performance Benchmarks
+### Running Tests
 
-### TPU v4-32 Performance
-```
-Model Size: 7B parameters
-Throughput: 2,847 tokens/sec
-Latency (P95): 180ms
-Memory Usage: 24.3GB HBM
-TFLOPS: 287.5
-```
+```bash
+# Run all tests
+pytest tests/ -v
 
-### ARM Axion v3.2 Performance
-```
-Model Size: 7B parameters (8-bit quantized)
-Throughput: 1,234 tokens/sec
-Latency (P95): 425ms
-Memory Usage: 12.8GB
-Power Consumption: 180W
+# Run only unit tests
+pytest tests/unit/ -v
+
+# Run with coverage
+pytest tests/ --cov=core --cov-report=html
 ```
 
-### MoE Expert Utilization
-```
-Active Experts: 4/32 average
-Load Balance Score: 0.94/1.0
-Specialization Accuracy: 96.3%
-Expert Switching Overhead: 2.1%
-```
+## Current Status
 
-## Security and Compliance
+CapibaraGPT is under active development. Current status of major components:
 
-### Constitutional AI
-- **Automatic bias detection** with configurable thresholds
-- **Harm prevention** with real-time scoring
-- **Self-correction** with up to 3 improvement attempts
-- **Content filtering** by age and context
+| Component | Status | Notes |
+|-----------|--------|-------|
+| CPU Backend | Stable | Full reference implementation |
+| GPU Backend | Beta | Requires PyTorch, Flash Attention optional |
+| TPU Backend | Alpha | Requires JAX, experimental |
+| MoE Routing | Beta | Basic top-k routing implemented |
+| SSM/Mamba | Alpha | Experimental implementation |
+| CoT Reasoning | Alpha | Basic modules available |
+| Multimodal | Planned | Vision encoder in progress |
 
-### Privacy & Data Protection
-- **Differential privacy** in optional training
-- **Configurable data retention policies**
-- **Encryption at rest** for models and data
-- **GDPR/CCPA compliance** tooling included
+## Limitations and Disclaimers
 
-## Monitoring and Observability
+**This is an experimental research project.** Please be aware of the following:
 
-### Key Metrics
-```python
-# Main dashboard
-metrics = {
-    "system_health": {
-        "tpu_utilization": "87.3%",
-        "memory_usage": "24.1GB/32GB",
-        "temperature": "72.4°C",
-        "error_rate": "0.003%"
-    },
-    "model_performance": {
-        "throughput": "2,847 tok/sec",
-        "latency_p95": "180ms",
-        "quality_score": "0.947",
-        "expert_efficiency": "94.2%"
-    },
-    "business_metrics": {
-        "requests_per_day": "1.2M",
-        "user_satisfaction": "4.7/5.0",
-        "cost_per_request": "$0.0023",
-        "uptime": "99.97%"
-    }
-}
-```
-
-### Automatic Alerts
-- **Performance degradation** (>20% baseline latency)
-- **Resource exhaustion** (>85% memory/compute)
-- **Expert imbalance** (<0.7 balance score)
-- **Quality drops** (<0.9 quality score)
-
-## Roadmap and Future Development
-
-### Q1 2026
-- [ ] **TPU v5e integration** with new kernels
-- [ ] **Multimodal RAG** with images and video
-- [ ] **Real-time learning** from interactions
-- [ ] **Advanced prompt engineering** tools
-
-### Q2 2026
-- [ ] **Edge deployment** optimizations
-- [ ] **Federated learning** capabilities
-- [ ] **Multi-language expansion** (100+ languages)
-- [ ] **Enterprise security** enhancements
-
-### Q3 2026
-- [ ] **Reasoning verification** with proof checking
-- [ ] **Causal reasoning** integration
-- [ ] **Long-term memory** systems
-- [ ] **API marketplace** for custom experts
+1. **Not Production Ready**: CapibaraGPT is designed for research and education, not production deployment
+2. **No Pre-trained Weights**: This repository contains architecture code only; no trained model weights are provided
+3. **Performance**: Performance may vary significantly from commercial models
+4. **Correctness**: While we strive for correctness, implementations may contain bugs or diverge from reference papers
+5. **Resource Requirements**: Training foundation models requires significant computational resources
 
 ## Contributing
 
-### Development Setup
-```bash
-# Clone repository
-git clone https://github.com/anacronic-io/CapibaraGPT-v3
-cd CapibaraGPT-v3
+We welcome contributions from the community. Please see our contributing guidelines:
 
-# Setup environment
-python -m venv capibara_env
-source capibara_env/bin/activate
-pip install -e .[dev]
+### How to Contribute
+
+1. **Report Issues**: Use GitHub Issues for bugs and feature requests
+2. **Submit PRs**: Fork the repository and submit pull requests
+3. **Documentation**: Help improve documentation and examples
+4. **Testing**: Add tests for new functionality
+
+### Code Standards
+
+- Follow PEP 8 style guidelines
+- Add type hints to all public functions
+- Write docstrings for modules, classes, and functions
+- Maintain test coverage above 80%
+
+### Development Setup
+
+```bash
+# Install dev dependencies
+pip install -e ".[dev]"
+
+# Run linters
+ruff check .
+mypy core/
 
 # Run tests
-pytest capibara/tests/
+pytest tests/ -v
 ```
 
-### Guidelines
-- **Code quality**: Black formatting, type hints, docstrings
-- **Testing**: >90% coverage required
-- **Performance**: Mandatory benchmarks for optimizations
-- **Documentation**: Updated README for new modules
+## Research References
 
-## References and Papers
+This project draws inspiration from the following research:
 
-### Fundamental Techniques
-- [Attention Is All You Need](https://arxiv.org/abs/1706.03762) - Transformer architecture
-- [Switch Transformer](https://arxiv.org/abs/2101.03961) - Mixture of Experts
-- [Chain-of-Thought Prompting](https://arxiv.org/abs/2201.11903) - Reasoning
-- [RAG: Retrieval-Augmented Generation](https://arxiv.org/abs/2005.11401) - Knowledge integration
+### Transformer Architecture
+- Vaswani et al. (2017). "Attention Is All You Need" [[arXiv:1706.03762](https://arxiv.org/abs/1706.03762)]
 
-### Hardware Optimizations
-- [TPU System Architecture](https://cloud.google.com/tpu/docs/system-architecture-tpu-vm)
-- [ARM Axion Performance Guide](https://aws.amazon.com/ec2/graviton/)
-- [Flash Attention](https://arxiv.org/abs/2205.14135) - Memory efficient attention
-- [Mixed Precision Training](https://arxiv.org/abs/1710.03740)
+### Mixture of Experts
+- Fedus et al. (2021). "Switch Transformers: Scaling to Trillion Parameter Models" [[arXiv:2101.03961](https://arxiv.org/abs/2101.03961)]
+- Lepikhin et al. (2020). "GShard: Scaling Giant Models with Conditional Computation" [[arXiv:2006.16668](https://arxiv.org/abs/2006.16668)]
 
-### Advanced Techniques
-- [Constitutional AI](https://arxiv.org/abs/2212.08073) - AI safety
-- [Process Reward Models](https://arxiv.org/abs/2305.20050) - Reasoning quality
-- [Multimodal Deep Learning](https://arxiv.org/abs/2301.04856)
-- [Efficient Large-Scale Training](https://arxiv.org/abs/2104.04473)
+### State Space Models
+- Gu et al. (2023). "Mamba: Linear-Time Sequence Modeling with Selective State Spaces" [[arXiv:2312.00752](https://arxiv.org/abs/2312.00752)]
+- Gu et al. (2021). "Efficiently Modeling Long Sequences with Structured State Spaces" [[arXiv:2111.00396](https://arxiv.org/abs/2111.00396)]
 
-## Support and Contact
+### Chain-of-Thought Reasoning
+- Wei et al. (2022). "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models" [[arXiv:2201.11903](https://arxiv.org/abs/2201.11903)]
 
-### Community
-- **GitHub Issues**: Report bugs and features
-- **Website**: [www.anachroni.co](https://www.anachroni.co)
-- **Documentation**: [docs.anachroni.co](https://docs.anachroni.co)
+### Efficient Attention
+- Dao et al. (2022). "FlashAttention: Fast and Memory-Efficient Exact Attention" [[arXiv:2205.14135](https://arxiv.org/abs/2205.14135)]
 
-### Enterprise Support
-- **Email**: [info@anachroni.co](mailto:info@anachroni.co)
-- **SLA Options**: 99.9% to 99.99% uptime
-- **Custom Training**: Specialized models
-- **White-glove Deployment**: Professional setup and tuning
+## License
+
+This project is licensed under the Apache License 2.0. See [LICENSE](LICENSE) for details.
+
+```
+Copyright 2024-2026 Anacroni S.Coop.Gal.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
+
+## Acknowledgments
+
+- The open-source AI research community
+- Contributors and maintainers of JAX, PyTorch, and NumPy
+- Research teams whose papers inspired this implementation
+
+## Contact
+
+- **Repository**: [github.com/anacronic-io/capibaraGPT_v3](https://github.com/anacronic-io/capibaraGPT_v3)
+- **Organization**: [Anacroni S.Coop.Gal.](https://www.anachroni.co)
+- **Issues**: [GitHub Issues](https://github.com/anacronic-io/capibaraGPT_v3/issues)
 
 ---
 
 <div align="center">
 
-**CapibaraGPT v3** - Built with ❤️ by [Anacroni S.Coop.Gal.](https://www.anachroni.co)
+**CapibaraGPT** — Open Foundation Model Research
 
-*Democratizing advanced AI for everyone*
-
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org)
-[![TPU](https://img.shields.io/badge/TPU-v4%20%7C%20v6-orange.svg)](https://cloud.google.com/tpu)
-[![ARM](https://img.shields.io/badge/ARM-Axion%20v3.2-green.svg)](https://aws.amazon.com/ec2/graviton/)
+*Building AI transparency through open-source development*
 
 </div>
-
-
