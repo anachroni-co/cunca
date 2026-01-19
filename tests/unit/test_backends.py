@@ -240,7 +240,10 @@ class TestGPUBackend:
     @pytest.fixture
     def backend(self):
         try:
-            return get_backend(BackendType.GPU)
+            backend = get_backend(BackendType.GPU)
+            if backend.name != "gpu":
+                pytest.skip("GPU not available (fallback to CPU)")
+            return backend
         except Exception:
             pytest.skip("GPU not available")
 
@@ -268,7 +271,10 @@ class TestTPUBackend:
     @pytest.fixture
     def backend(self):
         try:
-            return get_backend(BackendType.TPU)
+            backend = get_backend(BackendType.TPU)
+            if backend.name != "tpu":
+                pytest.skip("TPU not available (fallback to CPU)")
+            return backend
         except Exception:
             pytest.skip("TPU not available")
 
