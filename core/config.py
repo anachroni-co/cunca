@@ -6,7 +6,7 @@ training utilities.
 
 Key Components:
     - Config: General-purpose configuration manager with file I/O
-    - ModelConfig: Model-specific formeters (temperature, max_length, etc.)
+    - ModelConfig: Model-specific parameters (temperature, max_length, etc.)
     - RouterConfig: Router behavior and load balancing settings
     - ModularModelConfig: Configuration for modular model architectures
     - Distributed training decorators and utilities

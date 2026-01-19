@@ -65,7 +65,7 @@ class BTXExpertConfig:
     warmup_steps: int = 1000
     max_sequence_length: int = 512
     
-    # BTX specific formeters
+    # BTX specific parameters
     branch_from_step: int = 0
     async_training: bool = True
     use_distillation: bool = False

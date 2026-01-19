@@ -67,7 +67,7 @@ class ExpertLayer:
         self.expert_id = expert_id
         self.expert_type = expert_type
         
-        # Expert-specific formeters
+        # Expert-specific parameters
         self.w1 = jnp.ones((config.hidden_size, config.expert_hidden_size)) * 0.02
         self.w2 = jnp.ones((config.expert_hidden_size, config.hidden_size)) * 0.02
         self.bias1 = jnp.zeros(config.expert_hidden_size)
