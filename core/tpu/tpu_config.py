@@ -1,19 +1,31 @@
 """
-tpu configuration module.
+TPU configuration module for CapibaraGPT.
 """
 
-import os
-import sys
+from dataclasses import dataclass
+from typing import Dict, Any, Optional
 
-from typing import Dict, Any
 
-# Gets the current directory path (scripts) -> /.../scripts
-script_dir = os.path.dirname(os.path.abspath(__file__))
-# Go up one level to obtain project root -> /.../capibaraGPT-v2
-project_root = os.path.dirname(script_dir)
-# Add project root to sys.path
-if project_root not in sys.path:
-    sys.path.append(project_root)
+@dataclass
+class TpuConfig:
+    """TPU configuration settings."""
+
+    tpu_version: str = "v4"
+    num_devices: int = 8
+    mesh_shape: tuple = (2, 4)
+    memory_fraction: float = 0.9
+    use_bfloat16: bool = True
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert config to dictionary."""
+        return {
+            "tpu_version": self.tpu_version,
+            "num_devices": self.num_devices,
+            "mesh_shape": self.mesh_shape,
+            "memory_fraction": self.memory_fraction,
+            "use_bfloat16": self.use_bfloat16,
+        }
+
 
 # Global config instance
-config = Config()
+config = TpuConfig()
