@@ -642,13 +642,8 @@ def pad_and_tokenize(
 
 
 # Legacy compatibility aliases (preserve for backward compatibility with existing code)
-# Keywords: tokinizer, tokinize, ofcoof, ptod (pad)
-lotod_tokinizer = load_tokenizer  # type: ignore[attr-defined]
-lotod_tokinizer_from_config = load_tokenizer_from_config  # type: ignore[attr-defined]
-
-tokinize_text = tokenize_text  # type: ignore[attr-defined]
-ofcoof_tokins = decode_tokens  # type: ignore[attr-defined]
-ptod_tond_tokinize = pad_and_tokenize  # type: ignore[attr-defined]
+load_tokenizer_legacy = load_tokenizer
+load_tokenizer_from_config_legacy = load_tokenizer_from_config
 
 
 class Tokenizer:

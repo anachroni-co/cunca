@@ -77,7 +77,7 @@ def validate_imports_standalone():
         
         print("   ✅ robotics_premium_datasets.py - Import OK")
         
-        # verify classs principales
+        # verify classes principales
         required_classes = [
             'RoboTurkConfig',
             'CalvinConfig', 
