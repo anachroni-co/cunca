@@ -2,9 +2,10 @@
 
 **An Experimental Open-Source Foundation Model for Research and Education**
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![License](https://img.shields.io/badge/License-Dual%20(Open%20%2B%20Commercial)-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org)
 [![Status](https://img.shields.io/badge/Status-Experimental-yellow.svg)]()
+[![Free for Research](https://img.shields.io/badge/Research%20%26%20Education-Free-green.svg)](LICENSE)
 
 ---
 
@@ -218,22 +219,37 @@ This project draws inspiration from the following research:
 
 ## License
 
-This project is licensed under the Apache License 2.0. See [LICENSE](LICENSE) for details.
+This project uses a **Dual License** model. See [LICENSE](LICENSE) for full details.
+
+### Open Source License (Free)
+
+Free for:
+- Scientific research
+- Educational purposes
+- Non-profit organizations
+- Personal projects
+- Open source contributions
+
+**Conditions**: Attribution required, Share-Alike, Non-Commercial only.
+
+### Commercial License
+
+**Required for**: Commercial products, internal business use, SaaS/Cloud services, paid consulting, startups, and any for-profit use.
+
+**Contact for commercial licensing:**
+- **Email**: info@anachroni.co
+- **Website**: https://www.anachroni.co
+
+| Use Case | License |
+|----------|---------|
+| Academic research | Free |
+| Education | Free |
+| Non-profit | Free |
+| Personal projects | Free |
+| Commercial use | Contact us |
 
 ```
-Copyright 2024-2026 Anacroni S.Coop.Gal.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+Copyright (c) 2024-2026 Anacroni S.Coop.Gal. All rights reserved.
 ```
 
 ## Acknowledgments
@@ -246,6 +262,7 @@ limitations under the License.
 
 - **Repository**: [github.com/anacronic-io/capibaraGPT_v3](https://github.com/anacronic-io/capibaraGPT_v3)
 - **Organization**: [Anacroni S.Coop.Gal.](https://www.anachroni.co)
+- **Email**: info@anachroni.co
 - **Issues**: [GitHub Issues](https://github.com/anacronic-io/capibaraGPT_v3/issues)
 
 ---
@@ -254,6 +271,6 @@ limitations under the License.
 
 **CapibaraGPT** — Open Foundation Model Research
 
-*Building AI transparency through open-source development*
+*Free for science, education, and research. Commercial use requires license.*
 
 </div>

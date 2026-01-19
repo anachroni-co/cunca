@@ -1,6 +1,6 @@
 # CapibaraGPT Dual License
 
-Copyright (c) 2024-2025 CapibaraGPT Contributors. All rights reserved.
+Copyright (c) 2024-2026 Anacroni S.Coop.Gal. All rights reserved.
 
 This software is licensed under a **Dual License** model. Please read both licenses carefully to determine which applies to your use case.
 
@@ -20,9 +20,11 @@ This license grants you a free, non-exclusive, worldwide license to use, copy, m
 
 4. **Personal Projects**: Individual hobbyist projects with no commercial intent or revenue generation.
 
+5. **Open Source Contributions**: Contributions to other open-source, non-commercial projects.
+
 ### Conditions
 
-- **Attribution Required**: You must give appropriate credit, provide a link to this license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
+- **Attribution Required**: You must give appropriate credit to CapibaraGPT and Anacroni S.Coop.Gal., provide a link to this license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
 
 - **Share-Alike**: If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.
 
@@ -35,10 +37,11 @@ This license grants you a free, non-exclusive, worldwide license to use, copy, m
 Non-commercial use means use that is NOT primarily intended for or directed toward commercial advantage or monetary compensation. Examples include:
 
 - Academic research published in journals or conferences
-- Student projects and theses
+- Student projects, theses, and dissertations
 - Open-source contributions to other non-commercial projects
 - Prototype development with no intent to commercialize
 - Educational workshops and training (free of charge)
+- Personal learning and experimentation
 
 ---
 
@@ -60,6 +63,8 @@ A Commercial License is **required** for any use that does not fall under Licens
 
 6. **Derivative Commercial Works**: Creating commercial products or services based on or derived from this software.
 
+7. **Startups and Companies**: Any use by for-profit entities, regardless of company size or revenue.
+
 ### Commercial License Terms
 
 Commercial licenses are available under individual agreements. Each commercial license includes:
@@ -72,16 +77,18 @@ Commercial licenses are available under individual agreements. Each commercial l
 
 ### How to Obtain a Commercial License
 
-To obtain a commercial license, please contact us at:
+To obtain a commercial license, please contact:
 
+**Anacroni S.Coop.Gal.**
 - **Email**: info@anachroni.co
-- **Website**: www.anachroni.co
+- **Website**: https://www.anachroni.co
 
 Please include the following information in your inquiry:
 1. Company/Organization name
 2. Intended use case and scope
 3. Expected number of users/deployments
 4. Desired license duration
+5. Technical requirements (if any)
 
 We will respond with a customized licensing proposal within 5 business days.
 
@@ -91,7 +98,7 @@ We will respond with a customized licensing proposal within 5 business days.
 
 ### Intellectual Property
 
-All intellectual property rights in and to this software, including but not limited to patents, copyrights, trademarks, and trade secrets, remain the exclusive property of the copyright holders.
+All intellectual property rights in and to this software, including but not limited to patents, copyrights, trademarks, and trade secrets, remain the exclusive property of Anacroni S.Coop.Gal.
 
 ### Termination
 
@@ -99,7 +106,7 @@ Either license terminates automatically if you fail to comply with its terms. Up
 
 ### Governing Law
 
-This license shall be governed by and construed in accordance with the laws of the jurisdiction in which the primary copyright holder resides, without regard to its conflict of law provisions.
+This license shall be governed by and construed in accordance with the laws of Spain and the European Union, specifically the jurisdiction of Galicia, Spain.
 
 ### Severability
 
@@ -107,7 +114,7 @@ If any provision of this license is held to be unenforceable, such provision sha
 
 ### Entire Agreement
 
-This license constitutes the entire agreement between you and the copyright holders concerning the use of this software and supersedes all prior agreements and understandings.
+This license constitutes the entire agreement between you and Anacroni S.Coop.Gal. concerning the use of this software and supersedes all prior agreements and understandings.
 
 ---
 
@@ -115,21 +122,28 @@ This license constitutes the entire agreement between you and the copyright hold
 
 | Use Case | License Required |
 |----------|------------------|
-| Academic research | Open Source (A) |
-| University coursework | Open Source (A) |
-| Non-profit projects | Open Source (A) |
-| Personal hobby projects | Open Source (A) |
-| Commercial products | Commercial (B) |
-| Internal business tools | Commercial (B) |
-| SaaS offerings | Commercial (B) |
-| Paid consulting | Commercial (B) |
+| Academic research | Open Source (Free) |
+| University coursework | Open Source (Free) |
+| Student projects/theses | Open Source (Free) |
+| Non-profit projects | Open Source (Free) |
+| Personal hobby projects | Open Source (Free) |
+| Open source contributions | Open Source (Free) |
+| Commercial products | **Commercial (Contact us)** |
+| Internal business tools | **Commercial (Contact us)** |
+| SaaS/Cloud offerings | **Commercial (Contact us)** |
+| Paid consulting | **Commercial (Contact us)** |
+| Startup use | **Commercial (Contact us)** |
 
 ---
 
 ## Questions?
 
-If you are unsure which license applies to your use case, please contact us for clarification before using this software.
+If you are unsure which license applies to your use case, please contact us at **info@anachroni.co** for clarification before using this software.
 
 ---
 
-*This dual license model is designed to support open science and education while ensuring sustainable development through commercial partnerships.*
+**Anacroni S.Coop.Gal.**
+Galicia, Spain
+https://www.anachroni.co
+
+*This dual license model supports open science and education while ensuring sustainable development of the project through commercial partnerships.*
