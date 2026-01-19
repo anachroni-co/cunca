@@ -44,6 +44,47 @@ def available_backend():
     return get_backend()
 
 
+@pytest.fixture(scope="session")
+def best_backend():
+    """
+    Get best available backend with explicit fallback: GPU → TPU → CPU.
+
+    This fixture always succeeds and returns the most capable backend available.
+    """
+    from core.backends import get_backend, BackendType
+
+    # Try GPU first
+    try:
+        backend = get_backend(BackendType.GPU)
+        if backend.name == "gpu":
+            return backend
+    except Exception:
+        pass
+
+    # Try TPU second
+    try:
+        backend = get_backend(BackendType.TPU)
+        if backend.name == "tpu":
+            return backend
+    except Exception:
+        pass
+
+    # Fallback to CPU (always available)
+    return get_backend(BackendType.CPU)
+
+
+@pytest.fixture(scope="session")
+def backend_info(best_backend):
+    """Return info about which backend is being used."""
+    return {
+        "name": best_backend.name,
+        "is_gpu": best_backend.name == "gpu",
+        "is_tpu": best_backend.name == "tpu",
+        "is_cpu": best_backend.name == "cpu",
+        "is_accelerated": best_backend.name in ("gpu", "tpu"),
+    }
+
+
 @pytest.fixture
 def backend(request):
     """

@@ -289,6 +289,142 @@ class TestTPUBackend:
         assert count >= 1
 
 
+class TestBestAvailableBackend:
+    """
+    Test operations on the best available backend (GPU → TPU → CPU fallback).
+
+    These tests run on whatever hardware is available, ensuring the core
+    functionality works regardless of the execution environment.
+    """
+
+    def test_backend_info(self, best_backend, backend_info):
+        """Test that we have valid backend info."""
+        assert backend_info["name"] in ["cpu", "gpu", "tpu"]
+        assert best_backend.name == backend_info["name"]
+        print(f"\n  Running tests on: {backend_info['name'].upper()} backend")
+
+    def test_tensor_creation(self, best_backend):
+        """Test tensor creation on best available backend."""
+        data = [[1.0, 2.0], [3.0, 4.0]]
+        tensor = best_backend.create_tensor(data)
+        result = best_backend.to_numpy(tensor)
+        np.testing.assert_array_equal(result, data)
+
+    def test_zeros_ones(self, best_backend):
+        """Test zeros and ones creation."""
+        zeros = best_backend.zeros((3, 3))
+        ones = best_backend.ones((3, 3))
+
+        np.testing.assert_array_equal(best_backend.to_numpy(zeros), np.zeros((3, 3)))
+        np.testing.assert_array_equal(best_backend.to_numpy(ones), np.ones((3, 3)))
+
+    def test_random_tensor(self, best_backend):
+        """Test random tensor generation."""
+        tensor = best_backend.randn((100, 100))
+        result = best_backend.to_numpy(tensor)
+
+        # Check shape
+        assert result.shape == (100, 100)
+        # Check it's actually random (not all zeros or constant)
+        assert np.std(result) > 0.1
+
+    def test_matmul(self, best_backend):
+        """Test matrix multiplication."""
+        a = best_backend.create_tensor([[1, 2], [3, 4]])
+        b = best_backend.create_tensor([[5, 6], [7, 8]])
+        result = best_backend.matmul(a, b)
+
+        expected = np.array([[19, 22], [43, 50]])
+        np.testing.assert_array_equal(best_backend.to_numpy(result), expected)
+
+    def test_element_wise_ops(self, best_backend):
+        """Test element-wise operations."""
+        a = best_backend.create_tensor([1.0, 2.0, 3.0])
+        b = best_backend.create_tensor([4.0, 5.0, 6.0])
+
+        add_result = best_backend.add(a, b)
+        mul_result = best_backend.mul(a, b)
+
+        np.testing.assert_array_equal(best_backend.to_numpy(add_result), [5, 7, 9])
+        np.testing.assert_array_equal(best_backend.to_numpy(mul_result), [4, 10, 18])
+
+    def test_softmax(self, best_backend):
+        """Test softmax activation."""
+        x = best_backend.create_tensor([[1.0, 2.0, 3.0]])
+        result = best_backend.softmax(x, axis=-1)
+        result_np = best_backend.to_numpy(result)
+
+        # Sum should be 1
+        assert abs(result_np.sum() - 1.0) < 1e-5
+        # Should be monotonically increasing
+        assert result_np[0, 0] < result_np[0, 1] < result_np[0, 2]
+
+    def test_layer_norm(self, best_backend):
+        """Test layer normalization."""
+        x = best_backend.randn((2, 10))
+        result = best_backend.layer_norm(x, normalized_shape=(10,))
+        result_np = best_backend.to_numpy(result)
+
+        # Each row should have mean ≈ 0 and std ≈ 1
+        for i in range(2):
+            assert abs(result_np[i].mean()) < 0.1
+            assert abs(result_np[i].std() - 1.0) < 0.1
+
+    def test_activations(self, best_backend):
+        """Test activation functions."""
+        x = best_backend.create_tensor([-1.0, 0.0, 1.0])
+
+        gelu = best_backend.gelu(x)
+        silu = best_backend.silu(x)
+
+        gelu_np = best_backend.to_numpy(gelu)
+        silu_np = best_backend.to_numpy(silu)
+
+        # GELU(0) ≈ 0, GELU(1) > 0
+        assert abs(gelu_np[1]) < 0.01
+        assert gelu_np[2] > 0
+
+        # SiLU(0) = 0, SiLU(1) > 0
+        assert abs(silu_np[1]) < 0.01
+        assert silu_np[2] > 0
+
+    def test_attention(self, best_backend, attention_inputs):
+        """Test scaled dot-product attention."""
+        query, key, value = attention_inputs(batch_size=2, num_heads=4, seq_len=16, head_dim=32)
+
+        q = best_backend.create_tensor(query)
+        k = best_backend.create_tensor(key)
+        v = best_backend.create_tensor(value)
+
+        output = best_backend.scaled_dot_product_attention(q, k, v)
+        result = best_backend.to_numpy(output)
+
+        # Output should have same shape as value
+        assert result.shape == value.shape
+
+    def test_causal_attention(self, best_backend, attention_inputs):
+        """Test causal attention masking."""
+        query, key, value = attention_inputs(batch_size=1, num_heads=2, seq_len=8, head_dim=16)
+
+        q = best_backend.create_tensor(query)
+        k = best_backend.create_tensor(key)
+        v = best_backend.create_tensor(value)
+
+        output = best_backend.scaled_dot_product_attention(q, k, v, is_causal=True)
+        result = best_backend.to_numpy(output)
+
+        assert result.shape == value.shape
+
+    def test_memory_stats(self, best_backend):
+        """Test memory statistics (if available)."""
+        if hasattr(best_backend, "get_memory_stats"):
+            stats = best_backend.get_memory_stats()
+            assert isinstance(stats, dict)
+        else:
+            # CPU backend may not have memory stats - that's OK
+            pytest.skip(f"{best_backend.name} backend doesn't support memory stats")
+
+
 class TestBackendInteroperability:
     """Test operations across different backends."""
 
