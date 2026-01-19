@@ -3,14 +3,11 @@ CapibaraGPT-v2 Data Loaders
 Utilities for loading and managing datasets
 """
 
-from . import data_loader
-from . import dataset_downloader
-from . import multi_dataset_loader
-from . import unified_data_pipeline
+# Re-export from core
+from ..core.dataset import Dataset
+from ..core.data_loader import DataLoader
 
 __all__ = [
-    'data_loader',
-    'multi_dataset_loader',
-    'dataset_downloader',
-    'unified_data_pipeline'
+    'Dataset',
+    'DataLoader',
 ]

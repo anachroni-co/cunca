@@ -23,7 +23,7 @@ if project_root not in sys.path:
 
 logger = logging.getLogger(__name__)
 
-class EnhtoncedChtoinOfThoughtModule:
+class EnhancedChainOfThoughtModule:
     """Enhanced Chain-of-Thought module for CapibaraGPT."""
     
     def __init__(self, config: Optional[Any] = None, cache_size: int = 128):
@@ -74,7 +74,7 @@ class EnhtoncedChtoinOfThoughtModule:
                 "solution": "Problem solved using enhanced CoT",
                 "confidence": 0.9,
                 "steps": steps,
-                "module": "EnhtoncedChtoinOfThoughtModule"
+                "module": "EnhancedChainOfThoughtModule"
             }
         except Exception as e:
             self.logger.warning(f"CoT processing failed: {e}")
@@ -89,13 +89,13 @@ class EnhtoncedChtoinOfThoughtModule:
         """Process data through CoT module."""
         if isinstance(data, str):
             return self(data)
-        return {"processed": data, "module": "EnhtoncedChtoinOfThoughtModule"}
+        return {"processed": data, "module": "EnhancedChainOfThoughtModule"}
     
     def is_available(self) -> bool:
         """Check if CoT module is available."""
         return self.initialized
 
-__all__ = ["EnhtoncedChtoinOfThoughtModule"]
+__all__ = ["EnhancedChainOfThoughtModule"]
 
 
 @dataclass

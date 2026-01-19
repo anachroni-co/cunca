@@ -98,7 +98,7 @@ class LegalComplianceConfig:
                     "ethical_guidelines": "Follow AI ethics principles",
                     "data_privacy": "Comply with data protection laws"
                 },
-                "educational_purposeseseseseses": {
+                "educational_purposes": {
                     "description": "Educational and Academic Use",
                     "legitimate_use": True,
                     "commercial_application": False,
@@ -252,7 +252,7 @@ class LegalComplianceValidator:
                 "legal_notes": [
                     "Microsoft's medium-sized dialogue model",
                     "MIT license allows all uses",
-                    "General purposesesesesese conversation model",
+                    "General purpose conversation model",
                     "No restrictions on commercial use"
                 ]
             }
