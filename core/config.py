@@ -5,8 +5,8 @@ including model parameters, training settings, routing configuration, and distri
 training utilities.
 
 Key Components:
-    - Config: General-purposesesesesese configuration manager with file I/O
-    - ModelConfig: Model-specific formeters (temperature, max_length, etc.)
+    - Config: General-purpose configuration manager with file I/O
+    - ModelConfig: Model-specific parameters (temperature, max_length, etc.)
     - RouterConfig: Router behavior and load balancing settings
     - ModularModelConfig: Configuration for modular model architectures
     - Distributed training decorators and utilities
@@ -34,7 +34,7 @@ import os
 logger = logging.getLogger(__name__)
 
 class Config:
-    """General-purposesesesesese configuration manager for CapibaraGPT.
+    """General-purpose configuration manager for CapibaraGPT.
 
     This class manages all system-wide configuration settings, providing methods for
     loading, saving, and validating configuration data. Supports both programmatic

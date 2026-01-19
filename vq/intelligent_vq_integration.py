@@ -451,7 +451,7 @@ def create_optimal_vq(use_case: str = "general",
         Tuple of (vq_module, selection_info)
         
     Examples:
-        # General purposesesesesese VQ
+        # General purpose VQ
         vq, info = create_optimal_vq("general", 4096, 512)
         
         # Research with high quality requirements
@@ -576,7 +576,7 @@ def demo_intelligent_integration():
     print("\n1️⃣ Auto-selection for different use cases:")
     
     use_cases = [
-        ("general", "General purposesesesesese AI model"),
+        ("general", "General purpose AI model"),
         ("research", "Research with high quality requirements"),
         ("memory_constrained", "Mobile/edge deployment"),
         ("large_scale", "Large language model training"),

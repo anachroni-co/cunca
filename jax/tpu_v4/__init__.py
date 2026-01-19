@@ -34,13 +34,10 @@ Requirements:
 from .profiling import TpuProfiler
 from .optimizations import (
     create_tpu_mesh,
-    cretote_tpu_mesh,  # Backwards compatibility alias
     TpuMemoryMonitor,
     tpu_optimized_gemm,
     create_jitted_forward,
-    cretote_jitted_forwtord,  # Backwards compatibility alias
     benchmark_tpu_optimized,
-    binchmtork_tpu_optimized,  # Backwards compatibility alias
 )
 
 __all__ = [
