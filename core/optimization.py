@@ -410,6 +410,58 @@ if train_state is not None:
             **kwargs
         )
 
+@jax.jit
+def _train_step_jit(
+    state: TrainingState,
+    batch: Dict[str, jnp.ndarray],
+    dropout_rng: jax.random.PRNGKey,
+    apply_gc_flag: bool,
+    gradient_clip_norm: float
+) -> Tuple[TrainingState, jnp.ndarray, jnp.ndarray]:
+    """JIT-compiled core training step computation.
+
+    This is the pure JAX computation that can be efficiently JIT-compiled.
+    Side effects (timing, logging) are handled in the wrapper function.
+
+    Args:
+        state: Current training state
+        batch: Training batch
+        dropout_rng: Random key for dropout
+        apply_gc_flag: Whether to apply gradient centralization this step
+        gradient_clip_norm: Gradient clipping norm value
+
+    Returns:
+        Tuple of (updated_state, loss, grad_norm)
+    """
+    def loss_fn(params):
+        logits = state.apply_fn(
+            params,
+            batch['input_ids'],
+            batch['attention_mask'],
+            rngs={'dropout': dropout_rng},
+            training=True
+        )
+        loss = optax.softmax_cross_entropy_with_integer_labels(
+            logits, batch['labels']
+        ).mean()
+        return loss, logits
+
+    grad_fn = jax.value_and_grad(loss_fn, has_aux=True)
+    (loss, _logits), grads = grad_fn(state.params)
+
+    # Apply gradient clipping using optax.global_norm
+    grad_norm = optax.global_norm(grads)
+    grads = jax.tree_util.tree_map(
+        lambda g: jnp.clip(g, -gradient_clip_norm, gradient_clip_norm),
+        grads
+    )
+
+    # Update training state
+    state = state.apply_gradients(grads=grads)
+
+    return state, loss, grad_norm
+
+
 def train_step(
     state: TrainingState,
     batch: Dict[str, jnp.ndarray],
@@ -454,41 +506,20 @@ def train_step(
         - Step timing includes full forward/backward pass and updates
     """
     start_time = time.time()
-    
-    def loss_fn(params):
-        logits = state.apply_fn(
-            params,
-            batch['input_ids'],
-            batch['attention_mask'],
-            rngs={'dropout': dropout_rng},
-            training=True
-        )
-        loss = optax.softmax_cross_entropy_with_integer_labels(
-            logits, batch['labels']
-        ).mean()
-        return loss, logits
-    
-    grad_fn = jax.value_and_grad(loss_fn, has_aux=True)
-    (loss, logits), grads = grad_fn(state.params)
 
-    # Apply Gradient Centralization according to configuration
-    if state.step % state.config.gc.apply_every == 0:
-        grads = jax.tree_util.tree_map_with_path(
-            lambda path, g: apply_gc(g, '/'.join(str(p) for p in path), state.config.gc),
-            grads
-        )
+    # Determine if GC should be applied this step
+    apply_gc_flag = (state.step % state.config.gc.apply_every == 0)
 
-    # Apply gradient clipping using optax.global_norm
-    grad_norm = optax.global_norm(grads)
-    grads = jax.tree_util.tree_map(
-        lambda g: jnp.clip(g, -state.config.training.gradient_clip_norm, state.config.training.gradient_clip_norm),
-        grads
+    # Call JIT-compiled core computation
+    state, loss, grad_norm = _train_step_jit(
+        state,
+        batch,
+        dropout_rng,
+        apply_gc_flag,
+        state.config.training.gradient_clip_norm
     )
 
-    # Update training state
-    state = state.apply_gradients(grads=grads)
-
-    # Calculate throughput and tokens per second
+    # Calculate throughput and tokens per second (side effects, not JIT-able)
     step_time = time.time() - start_time
     batch_size = batch['input_ids'].shape[0]
     seq_length = batch['input_ids'].shape[1]
@@ -512,7 +543,7 @@ def train_step(
         if state.writer is not None:
             for k, v in metrics.items():
                 state.writer.add_scalar(f'train/{k}', v, state.step)
-    
+
     return state, metrics
 
 @jax.jit

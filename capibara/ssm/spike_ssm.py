@@ -52,36 +52,16 @@ class SpikeSSM(nn.Module):
     Note:
         The surrogate gradient uses a sigmoid derivative approximation,
         which provides smooth gradients through the hard threshold function.
+        For optimal performance, JIT compile the module at the call site:
+        >>> model = SpikeSSM(hidden_size=256)
+        >>> jit_apply = jax.jit(model.apply)
     """
     hidden_size: int
     state_dim: int = 64
     threshold: float = 0.5
     surrogate_scale: float = 10.0
 
-    def setup(self):
-        """Initialize SpikeSSM parameters."""
-        # Input transformation
-        self.linear_in = nn.Dense(
-            self.state_dim,
-            kernel_init=nn.initializers.xavier_uniform(),
-            bias_init=nn.initializers.zeros
-        )
-
-        # Output transformation
-        self.linear_out = nn.Dense(
-            self.hidden_size,
-            kernel_init=nn.initializers.xavier_uniform(),
-            bias_init=nn.initializers.zeros
-        )
-
-        # Learnable decay factor for membrane potential
-        self.decay = self.param(
-            "decay",
-            lambda rng, shape: jnp.ones(shape) * 0.9,
-            (self.state_dim,)
-        )
-
-    def surrogate_spike(self, membrane_potential: jnp.ndarray) -> jnp.ndarray:
+    def _surrogate_spike(self, membrane_potential: jnp.ndarray) -> jnp.ndarray:
         """
         Surrogate gradient spike function.
 
@@ -106,6 +86,7 @@ class SpikeSSM(nn.Module):
         # Straight-through estimator with surrogate gradient
         return spikes + jax.lax.stop_gradient(spikes - surrogate_grad) + surrogate_grad - jax.lax.stop_gradient(surrogate_grad)
 
+    @nn.compact
     def __call__(self, inputs: jnp.ndarray) -> jnp.ndarray:
         """
         Forward pass through the SpikeSSM.
@@ -118,24 +99,43 @@ class SpikeSSM(nn.Module):
         """
         batch_size, seq_len, _ = inputs.shape
 
+        # Define layers inline with @nn.compact
+        linear_in = nn.Dense(
+            self.state_dim,
+            kernel_init=nn.initializers.xavier_uniform(),
+            bias_init=nn.initializers.zeros,
+            name='linear_in'
+        )
+        linear_out = nn.Dense(
+            self.hidden_size,
+            kernel_init=nn.initializers.xavier_uniform(),
+            bias_init=nn.initializers.zeros,
+            name='linear_out'
+        )
+        decay = self.param(
+            "decay",
+            lambda rng, shape: jnp.ones(shape) * 0.9,
+            (self.state_dim,)
+        )
+
         def step(carry: jnp.ndarray, x: jnp.ndarray) -> Tuple[jnp.ndarray, jnp.ndarray]:
             """Single step of the spiking SSM."""
             membrane_potential = carry
 
             # Update membrane potential with input and decay
             membrane_potential = (
-                membrane_potential * self.decay +
-                self.linear_in(x)
+                membrane_potential * decay +
+                linear_in(x)
             )
 
             # Generate spikes using surrogate gradient
-            spikes = self.surrogate_spike(membrane_potential)
+            spikes = self._surrogate_spike(membrane_potential)
 
             # Reset membrane potential where spikes occurred
             membrane_potential = membrane_potential - spikes * self.threshold
 
             # Generate output from spikes
-            y = self.linear_out(spikes)
+            y = linear_out(spikes)
 
             return membrane_potential, y
 
@@ -170,6 +170,9 @@ class AdaptiveSpikeSSM(nn.Module):
     Note:
         Multiple timescales allow the model to capture both fast and slow
         temporal dynamics simultaneously, similar to biological neurons.
+        For optimal performance, JIT compile the module at the call site:
+        >>> model = AdaptiveSpikeSSM(hidden_size=256)
+        >>> jit_apply = jax.jit(model.apply)
     """
     hidden_size: int
     state_dim: int = 64
@@ -177,49 +180,7 @@ class AdaptiveSpikeSSM(nn.Module):
     surrogate_scale: float = 10.0
     num_timescales: int = 3
 
-    def setup(self):
-        """Initialize adaptive SpikeSSM parameters."""
-        self.linear_in = nn.Dense(self.state_dim)
-        self.linear_out = nn.Dense(self.hidden_size)
-
-        # Adaptive threshold parameters
-        self.threshold_adaptation = nn.Dense(self.state_dim, use_bias=False)
-
-        # Multiple decay timescales (from fast to slow)
-        self.decays = self.param(
-            "decays",
-            lambda rng, shape: jnp.linspace(0.7, 0.95, self.num_timescales).reshape(-1, 1),
-            (self.num_timescales, 1)
-        )
-
-        # Lateral inhibition weights
-        self.lateral_weights = self.param(
-            "lateral_weights",
-            lambda rng, shape: jax.random.normal(rng, shape) * 0.1,
-            (self.state_dim, self.state_dim)
-        )
-
-    def adaptive_threshold(
-        self,
-        membrane_potential: jnp.ndarray,
-        spike_history: jnp.ndarray
-    ) -> jnp.ndarray:
-        """
-        Compute adaptive thresholds based on recent activity.
-
-        Higher recent activity leads to higher thresholds, implementing
-        spike-frequency adaptation.
-
-        Args:
-            membrane_potential: Current membrane potential.
-            spike_history: Exponential moving average of recent spikes.
-
-        Returns:
-            Adapted threshold values for each neuron.
-        """
-        adaptation = self.threshold_adaptation(spike_history)
-        return self.base_threshold + 0.1 * jax.nn.tanh(adaptation)
-
+    @nn.compact
     def __call__(self, inputs: jnp.ndarray) -> jnp.ndarray:
         """
         Forward pass with adaptive mechanisms.
@@ -232,13 +193,37 @@ class AdaptiveSpikeSSM(nn.Module):
         """
         batch_size, seq_len, _ = inputs.shape
 
+        # Define layers inline with @nn.compact
+        linear_in = nn.Dense(self.state_dim, name='linear_in')
+        linear_out = nn.Dense(self.hidden_size, name='linear_out')
+        threshold_adaptation = nn.Dense(self.state_dim, use_bias=False, name='threshold_adaptation')
+
+        # Multiple decay timescales (from fast to slow)
+        decays = self.param(
+            "decays",
+            lambda rng, shape: jnp.linspace(0.7, 0.95, self.num_timescales).reshape(-1, 1),
+            (self.num_timescales, 1)
+        )
+
+        # Lateral inhibition weights
+        lateral_weights = self.param(
+            "lateral_weights",
+            lambda rng, shape: jax.random.normal(rng, shape) * 0.1,
+            (self.state_dim, self.state_dim)
+        )
+
+        def adaptive_threshold(spike_history: jnp.ndarray) -> jnp.ndarray:
+            """Compute adaptive thresholds based on recent activity."""
+            adaptation = threshold_adaptation(spike_history)
+            return self.base_threshold + 0.1 * jax.nn.tanh(adaptation)
+
         def step(carry, x):
             membrane_potentials, spike_history = carry
 
             # Multi-timescale integration
             new_potentials = []
-            for i, decay in enumerate(self.decays):
-                mp = membrane_potentials[i] * decay + self.linear_in(x) / self.num_timescales
+            for i in range(self.num_timescales):
+                mp = membrane_potentials[i] * decays[i] + linear_in(x) / self.num_timescales
                 new_potentials.append(mp)
 
             # Combine multi-timescale potentials
@@ -246,11 +231,11 @@ class AdaptiveSpikeSSM(nn.Module):
 
             # Apply lateral inhibition
             inhibited_potential = combined_potential - 0.1 * jnp.dot(
-                spike_history, self.lateral_weights
+                spike_history, lateral_weights
             )
 
             # Adaptive threshold
-            threshold = self.adaptive_threshold(inhibited_potential, spike_history)
+            threshold = adaptive_threshold(spike_history)
 
             # Generate spikes
             spikes = jnp.where(inhibited_potential > threshold, 1.0, 0.0)
@@ -264,7 +249,7 @@ class AdaptiveSpikeSSM(nn.Module):
             new_spike_history = 0.9 * spike_history + 0.1 * spikes
 
             # Output
-            y = self.linear_out(spikes)
+            y = linear_out(spikes)
 
             return (jnp.stack(reset_potentials), new_spike_history), y
 
