@@ -4,18 +4,45 @@ Abstract reasoning Quineana module.
 This module provides advanced abstract reasoning capabilities through the Quineana layer.
 """
 
-import enum
+import logging
 from typing import Dict, Any, Optional, Tuple
 
+logger = logging.getLogger(__name__)
+
+# JAX/Flax import guards
 try:
-    from capibara.jax import jax # type: ignore
-    from capibara.jax import numpy as jnp # type: ignore
-except ImportError:
     import jax
     import jax.numpy as jnp
+    from flax import linen as nn
+    JAX_AVAILABLE = True
+except ImportError:
+    JAX_AVAILABLE = False
+    jax = None
+    jnp = None
 
-from flax import linen as nn # type: ignore
-from capibara.interfaces.ilayer import ILayer
+    # Fallback Module class
+    class _FallbackModule:
+        """Fallback module when JAX/Flax is not available."""
+        def __init__(self, *args, **kwargs):
+            raise ImportError(
+                "JAX and Flax are required for Quineana layer. "
+                "Install with: pip install jax flax"
+            )
+
+    class nn:
+        Module = _FallbackModule
+        Dense = _FallbackModule
+        Dropout = _FallbackModule
+
+        @staticmethod
+        def gelu(x):
+            raise ImportError("JAX/Flax required")
+
+try:
+    from capibara.interfaces.ilayer import ILayer  # type: ignore
+except ImportError:
+    class ILayer:
+        pass
 
 
 class QuineanaConfig:

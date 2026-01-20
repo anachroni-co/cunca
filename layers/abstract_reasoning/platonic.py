@@ -7,30 +7,47 @@ abstract_reasoning platonic module.
 import logging
 from typing import Any, Dict, List, Optional
 
-import os
-import sys
-# Gets the current directory path (scripts) -> /.../scripts
-script_dir = os.path.dirname(os.path.abspath(__file__))
-# Go up one level to obtain project root -> /.../capibaraGPT-v2
-project_root = os.path.dirname(script_dir)
-# Add project root to sys.path
-if project_root not in sys.path:
-    # Fixed: Using proper imports instead of sys.path manipulation
-    pass
-
-import enum
-from capibara.jax import jax # type: ignore
-from capibara.jax import numpy as jnp # type: ignore
-from flax import linen as nn # type: ignore
-
 logger = logging.getLogger(__name__)
 
+# JAX/Flax import guards
 try:
-    from interfaces.ilayer import ILayer # type: ignore
+    import jax
+    import jax.numpy as jnp
+    from flax import linen as nn
+    JAX_AVAILABLE = True
 except ImportError:
-    # Fallback interface
+    JAX_AVAILABLE = False
+    jax = None
+    jnp = None
+
+    # Fallback Module class
+    class _FallbackModule:
+        """Fallback module when JAX/Flax is not available."""
+        def __init__(self, *args, **kwargs):
+            raise ImportError(
+                "JAX and Flax are required for Platonic layer. "
+                "Install with: pip install jax flax"
+            )
+
+    class nn:
+        Module = _FallbackModule
+        Dense = _FallbackModule
+
+    class _FallbackJnp:
+        """Fallback jnp when JAX is not available."""
+        class linalg:
+            @staticmethod
+            def norm(*args, **kwargs):
+                raise ImportError("JAX required")
+
+    jnp = _FallbackJnp()
+
+try:
+    from interfaces.ilayer import ILayer  # type: ignore
+except ImportError:
     class ILayer:
         pass
+
 
 class Platonic(nn.Module):
     """Platonic abstract reasoning layer for ideal form representation."""

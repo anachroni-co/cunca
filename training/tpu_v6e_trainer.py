@@ -21,24 +21,52 @@ import signal
 import pickle
 import asyncio
 import logging
-import jax
-import jax.numpy as jnp
-import optax
-import wandb
 import time
 from pathlib import Path
 from typing import Dict, Any, Optional, Tuple, Union, List, Callable
 from dataclasses import dataclass, field
-from flax.training import train_state, checkpoints
-from flax import core, struct
-import numpy as np
 from contextlib import contextmanager
 
-# Import optimized modules
-from .unified_trainer import UnifiedTrainer, TrainingMetrics
-from .tpu_optimizations import setup_tpu_environment, TPUOptimizer
+import numpy as np
 
 logger = logging.getLogger(__name__)
+
+# JAX/Flax/Optax import guards
+try:
+    import jax
+    import jax.numpy as jnp
+    import optax
+    from flax.training import train_state, checkpoints
+    from flax import core, struct
+    JAX_AVAILABLE = True
+except ImportError:
+    JAX_AVAILABLE = False
+    jax = None
+    jnp = None
+    optax = None
+    train_state = None
+    checkpoints = None
+    core = None
+    struct = None
+    logger.warning("JAX/Flax/Optax not available. TPU trainer will not function.")
+
+# W&B import guard
+try:
+    import wandb
+    WANDB_AVAILABLE = True
+except ImportError:
+    wandb = None
+    WANDB_AVAILABLE = False
+
+# Import optimized modules (with guard)
+try:
+    from .unified_trainer import UnifiedTrainer, TrainingMetrics
+    from .tpu_optimizations import setup_tpu_environment, TPUOptimizer
+except ImportError:
+    UnifiedTrainer = None
+    TrainingMetrics = None
+    setup_tpu_environment = None
+    TPUOptimizer = None
 
 @dataclass
 class TPUv6eConfig:
