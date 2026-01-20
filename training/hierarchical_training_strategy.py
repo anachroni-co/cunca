@@ -16,10 +16,26 @@ Características:
 """
 
 import os
-import torch
 import logging
-import torch.nn as nn
 from enum import Enum
+
+# Lazy imports for PyTorch (GPU backend)
+torch = None
+nn = None
+
+def _ensure_torch():
+    """Lazy import PyTorch modules."""
+    global torch, nn
+    if torch is None:
+        try:
+            import torch as _torch
+            import torch.nn as _nn
+            torch = _torch
+            nn = _nn
+        except ImportError as e:
+            raise ImportError(
+                "PyTorch not installed. Install with: pip install torch"
+            ) from e
 from pathlib import Path
 from datetime import datetime
 from dataclasses import dataclass, field
