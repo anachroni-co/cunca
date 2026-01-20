@@ -5,6 +5,7 @@ Optimized for TPU v6e-64 with advanced routing and load balancing.
 """
 
 import logging
+import functools
 from typing import Dict, Any, Optional, List, Tuple
 from dataclasses import dataclass
 import time
@@ -59,6 +60,19 @@ def create_moe_config(**kwargs) -> MoEConfig:
     return MoEConfig(**kwargs)
 
 
+@functools.lru_cache(maxsize=64)
+def get_specialization_weight(expert_type: str) -> float:
+    """Get specialization weight based on expert type (cached)."""
+    specialization_map = {
+        "reasoning": 1.2, "mathematical": 1.3, "logical": 1.2,
+        "creative": 1.1, "artistic": 1.1, "linguistic": 1.1,
+        "technical": 1.2, "scientific": 1.2, "code": 1.3,
+        "analytical": 1.2, "factual": 1.0, "conversational": 0.9,
+        "general": 1.0
+    }
+    return specialization_map.get(expert_type, 1.0)
+
+
 class ExpertLayer:
     """Individual expert in the MoE system."""
     
@@ -73,27 +87,16 @@ class ExpertLayer:
         self.bias1 = jnp.zeros(config.expert_hidden_size)
         self.bias2 = jnp.zeros(config.hidden_size)
         
-        # Specialization parameters
+        # Specialization parameters (uses cached module-level function)
         if config.use_specialization:
-            self.specialization_weight = self._get_specialization_weight(expert_type)
+            self.specialization_weight = get_specialization_weight(expert_type)
         else:
             self.specialization_weight = 1.0
-            
+
         # Performance tracking
         self.usage_count = 0
         self.total_processing_time = 0.0
         self.last_used = time.time()
-        
-    def _get_specialization_weight(self, expert_type: str) -> float:
-        """Get specialization weight based on expert type."""
-        specialization_map = {
-            "reasoning": 1.2, "mathematical": 1.3, "logical": 1.2,
-            "creative": 1.1, "artistic": 1.1, "linguistic": 1.1,
-            "technical": 1.2, "scientific": 1.2, "code": 1.3,
-            "analytical": 1.2, "factual": 1.0, "conversational": 0.9,
-            "general": 1.0
-        }
-        return specialization_map.get(expert_type, 1.0)
         
     def __call__(self, x: jnp.ndarray, training: bool = False) -> jnp.ndarray:
         """Forward pass through expert."""

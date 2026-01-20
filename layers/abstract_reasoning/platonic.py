@@ -51,19 +51,15 @@ except ImportError:
 
 class Platonic(nn.Module):
     """Platonic abstract reasoning layer for ideal form representation."""
-    
+
     features: int
     name: Optional[str] = None
-    
-    def setup(self):
-        """Setup the Platonic layer components."""
-        self.dense = nn.Dense(features=self.features, name='platonic_projection')
-        logger.info(f"Platonic layer initialized with {self.features} features")
-    
+
+    @nn.compact
     def __call__(self, x):
         """Apply Platonic transformation to input."""
         # Apply abstract reasoning transformation
-        x = self.dense(x)
+        x = nn.Dense(features=self.features, name='platonic_projection')(x)
         # Apply idealization (normalization to unit sphere)
         x = x / (jnp.linalg.norm(x, axis=-1, keepdims=True) + 1e-8)
         return x

@@ -58,27 +58,24 @@ class QuineanaConfig:
 
 class Quineana(nn.Module, ILayer):
     """Advanced abstract reasoning layer using Quineana principles."""
-    
+
     config: QuineanaConfig
-    
-    def setup(self):
-        self.reasoning_layers = [
-            nn.Dense(self.config.hidden_dim, name=f'reasoning_{i}')
-            for i in range(self.config.num_reasoning_steps)
-        ]
-        self.dropout = nn.Dropout(self.config.dropout_rate)
-        self.output_projection = nn.Dense(self.config.hidden_dim)
-    
+
+    @nn.compact
     def __call__(self, x, training: bool = True):
         """Apply abstract reasoning to input."""
         # Multi-step reasoning process
         reasoning_state = x
-        for i, layer in enumerate(self.reasoning_layers):
-            reasoning_state = layer(reasoning_state)
+        for i in range(self.config.num_reasoning_steps):
+            reasoning_state = nn.Dense(
+                self.config.hidden_dim, name=f'reasoning_{i}'
+            )(reasoning_state)
             reasoning_state = nn.gelu(reasoning_state)
             if training:
-                reasoning_state = self.dropout(reasoning_state, deterministic=not training)
-        
+                reasoning_state = nn.Dropout(
+                    self.config.dropout_rate
+                )(reasoning_state, deterministic=not training)
+
         # Combine original input with reasoning output
-        output = self.output_projection(reasoning_state + x)
+        output = nn.Dense(self.config.hidden_dim, name='output_projection')(reasoning_state + x)
         return output
