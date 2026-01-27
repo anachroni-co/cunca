@@ -4,7 +4,7 @@ SSM Hybrid Layers - CapibaraGPT v2024 Ultra Advanced
 
 Capas híbridas SSM que combinan Mamba and S4 with todas las optimizaciones tpu v4-32 existentes:
 - Integration with tpu-optimized caching systems
-- Mixed precision BF16/FP32 support  
+- Mixed precision BF16/FP32 support
 - Fused operations for systolic arrays
 - Memory layout optimization
 - Performance benchmarking integration
@@ -12,6 +12,7 @@ Capas híbridas SSM que combinan Mamba and S4 with todas las optimizaciones tpu 
 
 Esta es la evolución de las capas for arquitecturas or(n) de vanguardia.
 """
+from __future__ import annotations  # Enable string annotations for type hints
 
 import os
 import sys
@@ -26,15 +27,33 @@ from abc import ABC, abstractmethod
 script_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(script_dir)
 if project_root not in sys.path:
-    # Fixed: Using proper imports instead of sys.path manipulation
+    sys.path.insert(0, project_root)
 
-from capibara.jax import jax
-from flax import linen as nn
-from functools import partial, lru_cache
-from capibara.jax import numpy as jnp
+from functools import partial
+
+# JAX/Flax imports (TPU backend)
+try:
+    from capibara.jax import jax
+    from flax import linen as nn
+    from capibara.jax import numpy as jnp
+    JAX_AVAILABLE = True
+except ImportError:
+    jax = None  # type: ignore
+    nn = None  # type: ignore
+    jnp = None  # type: ignore
+    JAX_AVAILABLE = False
+
+logger = logging.getLogger(__name__)
+
+if not JAX_AVAILABLE:
+    logger.warning("JAX/Flax not available. SSM Hybrid Layers will have limited functionality.")
 
 # Import existing optimized components
-from .base import BaseLayer, LayerConfig
+try:
+    from .base import BaseLayer, LayerConfig
+except ImportError:
+    BaseLayer = object
+    LayerConfig = None
 
 # Placeholder caches for removed modules
 class TpuAttentionCache:

@@ -3,8 +3,23 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
-import flax.linen as nn
-import jax.numpy as jnp
+# Lazy imports for JAX/Flax (TPU backend)
+nn = None
+jnp = None
+
+def _ensure_jax():
+    """Lazy import JAX/Flax modules."""
+    global nn, jnp
+    if jnp is None:
+        try:
+            import flax.linen as _nn
+            import jax.numpy as _jnp
+            nn = _nn
+            jnp = _jnp
+        except ImportError as e:
+            raise ImportError(
+                "JAX/Flax not installed. Install with: pip install jax flax"
+            ) from e
 
 try:
     from capibara.core.kernels.tpu_v4_wrappers import tpu_kernthe

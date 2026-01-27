@@ -1,10 +1,8 @@
 """
 Game Theory Module for Abstract Reasoning.
 
-This module provides game-theoretic layers for strategic decision making
-in neural networks, including Nash equilibrium approximation.
-
-Optimized with JIT-compiled kernels for payoff computation.
+This module provides functionality for game_theory using JAX/Flax.
+Requires: pip install jax flax
 """
 
 import functools
@@ -14,60 +12,64 @@ from typing import Any, Dict, List, Optional
 import jax
 import jax.numpy as jnp
 import numpy as np
-import flax.linen as nn
 
 logger = logging.getLogger(__name__)
 
-
-# JIT-compiled game theory computation
-@jax.jit
-def _game_theory_kernel(
-    x: jnp.ndarray,
-    agent_weights: jnp.ndarray
-) -> jnp.ndarray:
-    """
-    JIT-compiled game theory forward pass.
-
-    Args:
-        x: Input tensor (batch, seq, features)
-        agent_weights: Agent weight matrix (num_agents, features)
-
-    Returns:
-        Output tensor with strategic weighting applied
-    """
-    # Compute payoffs using einsum for clarity
-    payoffs = jnp.einsum('bsf,af->bsa', x, agent_weights)
-
-    # Nash equilibrium approximation
-    equilibrium = jax.nn.softmax(payoffs, axis=-1)
-
-    # Weighted combination using einsum
-    return jnp.einsum('bsa,bsf->bsf', equilibrium, x)
+# JAX/Flax imports (TPU backend)
+try:
+    import flax.linen as nn
+    import jax.numpy as jnp
+    JAX_AVAILABLE = True
+except ImportError:
+    nn = None  # type: ignore
+    jnp = None  # type: ignore
+    JAX_AVAILABLE = False
+    logger.warning("JAX/Flax not available. Install with: pip install jax flax")
 
 
-class GameTheory(nn.Module):
-    """
-    Game theory layer for strategic decision making in neural networks.
+def _check_jax():
+    """Check if JAX is available, raise if not."""
+    if not JAX_AVAILABLE:
+        raise ImportError(
+            "JAX/Flax required for this module. Install with: pip install jax flax"
+        )
 
-    Uses JIT-compiled kernel for optimal performance.
-    For best results, JIT compile the module at call site:
-        >>> model = GameTheory(features=768)
-        >>> jit_apply = jax.jit(model.apply)
-    """
 
-    features: int = 768
-    num_agents: int = 2
+# Only define Flax-based class if JAX is available
+if JAX_AVAILABLE:
+    class GameTheory(nn.Module):
+        """Game theory layer for strategic decision making in neural networks."""
 
-    @nn.compact
-    def __call__(self, x):
-        """Apply game theory principles to input."""
-        # Multi-agent decision making
-        agent_weights = self.param('agent_weights',
-                                   nn.initializers.normal(0.02),
-                                   (self.num_agents, self.features))
+        features: int = 768
+        num_agents: int = 2
 
-        # Use JIT-compiled kernel
-        return _game_theory_kernel(x, agent_weights)
+        @nn.compact
+        def __call__(self, x):
+            """Apply game theory principles to input."""
+            batch_size, seq_len, features = x.shape
+
+            # Simple implementation - can be expanded
+            # Multi-agent decision making
+            agent_weights = self.param('agent_weights',
+                                       nn.initializers.normal(0.02),
+                                       (self.num_agents, features))
+
+            # Compute payoff matrix
+            payoffs = jnp.dot(x, agent_weights.T)  # (batch, seq, agents)
+
+            # Nash equilibrium approximation (simplified)
+            equilibrium = nn.softmax(payoffs, axis=-1)
+
+            # Weighted combination based on equilibrium
+            output = jnp.sum(equilibrium[:, :, :, None] * x[:, :, None, :], axis=2)
+
+            return output
+else:
+    # Stub class when JAX not available
+    class GameTheory:  # type: ignore
+        """Stub: JAX/Flax required for full functionality."""
+        def __init__(self, *args, **kwargs):
+            raise ImportError("JAX/Flax required. Install with: pip install jax flax")
 
 class BasicGameTheory:
     """Basic Game Theory implementation for abstract reasoning."""
