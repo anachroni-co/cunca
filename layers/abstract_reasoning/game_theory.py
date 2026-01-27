@@ -1,44 +1,71 @@
 """
 abstract_reasoning game_theory module.
 
-# This module provides functionality for game_theory.
+This module provides functionality for game_theory using JAX/Flax.
+Requires: pip install jax flax
 """
 
 import logging
 from typing import Any, Dict, List, Optional
 import numpy as np
-import flax.linen as nn
-import jax.numpy as jnp
 
 logger = logging.getLogger(__name__)
 
-class GameTheory(nn.Module):
-    """Game theory layer for strategic decision making in neural networks."""
-    
-    features: int = 768
-    num_agents: int = 2
-    
-    @nn.compact
-    def __call__(self, x):
-        """Apply game theory principles to input."""
-        batch_size, seq_len, features = x.shape
-        
-        # Simple implementation - can be expanded
-        # Multi-agent decision making
-        agent_weights = self.param('agent_weights', 
-                                   nn.initializers.normal(0.02), 
-                                   (self.num_agents, features))
-        
-        # Compute payoff matrix
-        payoffs = jnp.dot(x, agent_weights.T)  # (batch, seq, agents)
-        
-        # Nash equilibrium approximation (simplified)
-        equilibrium = nn.softmax(payoffs, axis=-1)
-        
-        # Weighted combination based on equilibrium
-        output = jnp.sum(equilibrium[:, :, :, None] * x[:, :, None, :], axis=2)
-        
-        return output
+# JAX/Flax imports (TPU backend)
+try:
+    import flax.linen as nn
+    import jax.numpy as jnp
+    JAX_AVAILABLE = True
+except ImportError:
+    nn = None  # type: ignore
+    jnp = None  # type: ignore
+    JAX_AVAILABLE = False
+    logger.warning("JAX/Flax not available. Install with: pip install jax flax")
+
+
+def _check_jax():
+    """Check if JAX is available, raise if not."""
+    if not JAX_AVAILABLE:
+        raise ImportError(
+            "JAX/Flax required for this module. Install with: pip install jax flax"
+        )
+
+
+# Only define Flax-based class if JAX is available
+if JAX_AVAILABLE:
+    class GameTheory(nn.Module):
+        """Game theory layer for strategic decision making in neural networks."""
+
+        features: int = 768
+        num_agents: int = 2
+
+        @nn.compact
+        def __call__(self, x):
+            """Apply game theory principles to input."""
+            batch_size, seq_len, features = x.shape
+
+            # Simple implementation - can be expanded
+            # Multi-agent decision making
+            agent_weights = self.param('agent_weights',
+                                       nn.initializers.normal(0.02),
+                                       (self.num_agents, features))
+
+            # Compute payoff matrix
+            payoffs = jnp.dot(x, agent_weights.T)  # (batch, seq, agents)
+
+            # Nash equilibrium approximation (simplified)
+            equilibrium = nn.softmax(payoffs, axis=-1)
+
+            # Weighted combination based on equilibrium
+            output = jnp.sum(equilibrium[:, :, :, None] * x[:, :, None, :], axis=2)
+
+            return output
+else:
+    # Stub class when JAX not available
+    class GameTheory:  # type: ignore
+        """Stub: JAX/Flax required for full functionality."""
+        def __init__(self, *args, **kwargs):
+            raise ImportError("JAX/Flax required. Install with: pip install jax flax")
 
 class BasicGameTheory:
     """Basic Game Theory implementation for abstract reasoning."""
