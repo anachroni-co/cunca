@@ -13,16 +13,96 @@ import time
 # JAX imports with fallbacks
 try:
     # Try to import real JAX first
+    import jax
     import jax.numpy as jnp
     from jax import nn, random
     from jax.sharding import PartitionSpec as P
+    JAX_AVAILABLE = True
 except ImportError:
     # Fall back to capibara.jax
     from capibara.jax import numpy as jnp
     from capibara.jax import nn, random
     from capibara.jax.sharding import PartitionSpec as P
+    JAX_AVAILABLE = False
+    jax = None
 
 logger = logging.getLogger(__name__)
+
+
+# =============================================================================
+# JIT-compiled MoE helper functions for performance
+# =============================================================================
+
+if JAX_AVAILABLE:
+    @jax.jit
+    def _compute_routing_entropy(routing_probs: jnp.ndarray) -> jnp.ndarray:
+        """JIT-compiled routing entropy computation."""
+        return -jnp.sum(routing_probs * jnp.log(routing_probs + 1e-8))
+
+    @jax.jit
+    def _compute_load_balance_loss(expert_loads: jnp.ndarray, num_experts: int) -> jnp.ndarray:
+        """JIT-compiled load balance loss computation."""
+        total_load = jnp.sum(expert_loads)
+        expected_load = total_load / num_experts
+        return jnp.sum(jnp.square(expert_loads - expected_load)) / num_experts
+
+    @functools.partial(jax.jit, static_argnums=(1,))
+    def _compute_moe_metrics_jit(
+        routing_weights: jnp.ndarray,
+        expert_loads: jnp.ndarray,
+        num_experts: int
+    ) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray, jnp.ndarray, jnp.ndarray]:
+        """
+        JIT-compiled MoE metrics computation.
+
+        Returns tuple of (routing_entropy, load_balance_loss, avg_active_experts,
+                         utilization_efficiency, routing_concentration)
+        """
+        # Routing entropy (higher = more diverse routing)
+        routing_probs = jnp.mean(routing_weights, axis=(0, 1))
+        routing_entropy = -jnp.sum(routing_probs * jnp.log(routing_probs + 1e-8))
+
+        # Load balance loss (lower = better balance)
+        total_load = jnp.sum(expert_loads)
+        expected_load = total_load / num_experts
+        load_balance_loss = jnp.sum(jnp.square(expert_loads - expected_load)) / num_experts
+
+        # Active experts per token
+        active_experts_per_token = jnp.sum(routing_weights > 1e-6, axis=-1)
+        avg_active_experts = jnp.mean(active_experts_per_token)
+
+        # Expert utilization efficiency
+        non_zero_loads = jnp.sum(expert_loads > 0)
+        utilization_efficiency = non_zero_loads / num_experts
+
+        # Routing concentration (lower = more distributed)
+        routing_concentration = jnp.max(routing_probs)
+
+        return (routing_entropy, load_balance_loss, avg_active_experts,
+                utilization_efficiency, routing_concentration)
+else:
+    # Fallback implementations without JIT
+    def _compute_routing_entropy(routing_probs):
+        return -jnp.sum(routing_probs * jnp.log(routing_probs + 1e-8))
+
+    def _compute_load_balance_loss(expert_loads, num_experts):
+        total_load = jnp.sum(expert_loads)
+        expected_load = total_load / num_experts
+        return jnp.sum(jnp.square(expert_loads - expected_load)) / num_experts
+
+    def _compute_moe_metrics_jit(routing_weights, expert_loads, num_experts):
+        routing_probs = jnp.mean(routing_weights, axis=(0, 1))
+        routing_entropy = -jnp.sum(routing_probs * jnp.log(routing_probs + 1e-8))
+        total_load = jnp.sum(expert_loads)
+        expected_load = total_load / num_experts
+        load_balance_loss = jnp.sum(jnp.square(expert_loads - expected_load)) / num_experts
+        active_experts_per_token = jnp.sum(routing_weights > 1e-6, axis=-1)
+        avg_active_experts = jnp.mean(active_experts_per_token)
+        non_zero_loads = jnp.sum(expert_loads > 0)
+        utilization_efficiency = non_zero_loads / num_experts
+        routing_concentration = jnp.max(routing_probs)
+        return (routing_entropy, load_balance_loss, avg_active_experts,
+                utilization_efficiency, routing_concentration)
 
 
 @dataclass
@@ -337,30 +417,15 @@ class DynamicMoELayer:
             "expert_stats": [expert.get_stats() for expert in self.experts]
         }
         
-    def _compute_metrics(self, routing_weights: jnp.ndarray, expert_loads: jnp.ndarray, 
+    def _compute_metrics(self, routing_weights: jnp.ndarray, expert_loads: jnp.ndarray,
                         training: bool) -> Dict[str, Any]:
-        """Compute MoE-specific metrics."""
-        
-        # Routing entropy (higher = more diverse routing)
-        routing_probs = jnp.mean(routing_weights, axis=(0, 1))  # Average over batch and sequence
-        routing_entropy = -jnp.sum(routing_probs * jnp.log(routing_probs + 1e-8))
-        
-        # Load balance loss (lower = better balance)
-        total_load = jnp.sum(expert_loads)
-        expected_load = total_load / self.config.num_experts
-        load_balance_loss = jnp.sum(jnp.square(expert_loads - expected_load)) / self.config.num_experts
-        
-        # Active experts per token
-        active_experts_per_token = jnp.sum(routing_weights > 1e-6, axis=-1)
-        avg_active_experts = jnp.mean(active_experts_per_token)
-        
-        # Expert utilization efficiency
-        non_zero_loads = jnp.sum(expert_loads > 0)
-        utilization_efficiency = non_zero_loads / self.config.num_experts
-        
-        # Routing concentration (lower = more distributed)
-        max_routing_weight = jnp.max(routing_probs)
-        routing_concentration = max_routing_weight
+        """Compute MoE-specific metrics using JIT-compiled functions."""
+
+        # Use JIT-compiled computation for all metrics
+        (routing_entropy, load_balance_loss, avg_active_experts,
+         utilization_efficiency, routing_concentration) = _compute_moe_metrics_jit(
+            routing_weights, expert_loads, self.config.num_experts
+        )
         
         return {
             "routing_entropy": routing_entropy,
