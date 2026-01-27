@@ -23,13 +23,8 @@ from typing import Dict, Any, Optional, Tuple, Union, List
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 
-# Path setup
-script_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.dirname(script_dir)
-if project_root not in sys.path:
-    sys.path.insert(0, project_root)
-
-from functools import partial
+# Path setup (using proper imports instead of sys.path manipulation)
+from functools import partial, lru_cache
 
 # JAX/Flax imports (TPU backend)
 try:
