@@ -169,8 +169,8 @@ class CPUBackend(ComputeBackend):
             dropout_mask = self._rng.random(attn_weights.shape) > dropout_p
             attn_weights = attn_weights * dropout_mask / (1 - dropout_p)
 
-        # Compute output
-        return np.einsum("bhqk,bhvd->bhqd", attn_weights, value)
+        # Compute output: contract over k (key/value sequence dimension)
+        return np.einsum("bhqk,bhkd->bhqd", attn_weights, value)
 
     # ==================== Gradient Operations ====================
 
