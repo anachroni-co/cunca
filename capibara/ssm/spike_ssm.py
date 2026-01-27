@@ -25,6 +25,7 @@ Reference:
 
 from __future__ import annotations
 
+import functools
 import logging
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -33,6 +34,33 @@ import jax.numpy as jnp
 from flax import linen as nn
 
 logger = logging.getLogger(__name__)
+
+
+# =============================================================================
+# JIT-compiled spike computation kernels
+# =============================================================================
+
+@jax.jit
+def _surrogate_spike_kernel(
+    membrane_potential: jnp.ndarray,
+    threshold: float,
+    surrogate_scale: float
+) -> jnp.ndarray:
+    """
+    JIT-compiled surrogate gradient spike function.
+
+    Forward pass uses hard threshold (spike or no spike).
+    Backward pass uses smooth sigmoid derivative for gradient flow.
+    """
+    # Forward pass: hard threshold
+    spikes = jnp.where(membrane_potential > threshold, 1.0, 0.0)
+
+    # Surrogate gradient: sigmoid derivative approximation
+    sigmoid_val = jax.nn.sigmoid(surrogate_scale * (membrane_potential - threshold))
+    surrogate_grad = surrogate_scale * sigmoid_val * (1 - sigmoid_val)
+
+    # Straight-through estimator with surrogate gradient
+    return spikes + jax.lax.stop_gradient(spikes - surrogate_grad) + surrogate_grad - jax.lax.stop_gradient(surrogate_grad)
 
 
 class SpikeSSM(nn.Module):
@@ -63,10 +91,7 @@ class SpikeSSM(nn.Module):
 
     def _surrogate_spike(self, membrane_potential: jnp.ndarray) -> jnp.ndarray:
         """
-        Surrogate gradient spike function.
-
-        Forward pass uses hard threshold (spike or no spike).
-        Backward pass uses smooth sigmoid derivative for gradient flow.
+        Surrogate gradient spike function using JIT-compiled kernel.
 
         Args:
             membrane_potential: Membrane potential values.
@@ -74,17 +99,7 @@ class SpikeSSM(nn.Module):
         Returns:
             Binary spike outputs with surrogate gradients attached.
         """
-        # Forward pass: hard threshold
-        spikes = jnp.where(membrane_potential > self.threshold, 1.0, 0.0)
-
-        # Surrogate gradient: sigmoid derivative approximation
-        sigmoid_val = jax.nn.sigmoid(
-            self.surrogate_scale * (membrane_potential - self.threshold)
-        )
-        surrogate_grad = self.surrogate_scale * sigmoid_val * (1 - sigmoid_val)
-
-        # Straight-through estimator with surrogate gradient
-        return spikes + jax.lax.stop_gradient(spikes - surrogate_grad) + surrogate_grad - jax.lax.stop_gradient(surrogate_grad)
+        return _surrogate_spike_kernel(membrane_potential, self.threshold, self.surrogate_scale)
 
     @nn.compact
     def __call__(self, inputs: jnp.ndarray) -> jnp.ndarray:
