@@ -11,6 +11,7 @@ from typing import Any, Callable, Dict, Optional, Sequence, Tuple
 import numpy as np
 
 from .base import BackendConfig, ComputeBackend, DType, TensorLike
+from core.decorators import get_causal_mask
 
 # Dtype mapping
 DTYPE_MAP = {
@@ -148,9 +149,9 @@ class CPUBackend(ComputeBackend):
         # Compute attention scores
         attn_weights = np.einsum("bhqd,bhkd->bhqk", query, key) * scale
 
-        # Apply causal mask
+        # Apply causal mask (uses cached mask for common sequence lengths)
         if is_causal:
-            causal_mask = np.tril(np.ones((seq_len, seq_len)))
+            causal_mask = get_causal_mask(seq_len)
             attn_weights = np.where(
                 causal_mask[None, None, :, :] == 0,
                 -np.inf,
