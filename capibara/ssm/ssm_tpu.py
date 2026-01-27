@@ -67,41 +67,14 @@ class SSMBlock(nn.Module):
     Note:
         The state transition matrix A is initialized to be stable (eigenvalues < 1)
         to prevent gradient explosion during training.
+        For optimal performance, JIT compile the module at the call site:
+        >>> model = SSMBlock(hidden_size=256)
+        >>> jit_apply = jax.jit(model.apply)
     """
     hidden_size: int
     state_dim: int = 64
 
-    def setup(self):
-        """Initialize SSM parameters with proper initialization for stability."""
-        # State transition matrix A - initialized to be stable
-        # Using negative values to ensure eigenvalues < 1
-        self.A = self.param(
-            "A",
-            lambda rng, shape: jax.random.normal(rng, shape) * 0.1 - 0.5,
-            (self.state_dim, self.state_dim)
-        )
-
-        # Input matrix B - projects input to state space
-        self.B = self.param(
-            "B",
-            nn.initializers.xavier_uniform(),
-            (self.state_dim, self.hidden_size)
-        )
-
-        # Output matrix C - projects state to output space
-        self.C = self.param(
-            "C",
-            nn.initializers.xavier_uniform(),
-            (self.hidden_size, self.state_dim)
-        )
-
-        # Skip connection D - direct input-to-output connection
-        self.D = self.param(
-            "D",
-            nn.initializers.zeros,
-            (self.hidden_size,)
-        )
-
+    @nn.compact
     def __call__(self, inputs: jnp.ndarray) -> jnp.ndarray:
         """
         Forward pass through the SSM block.
@@ -118,15 +91,43 @@ class SSMBlock(nn.Module):
         """
         batch_size, seq_len, _ = inputs.shape
 
+        # State transition matrix A - initialized to be stable
+        A = self.param(
+            "A",
+            lambda rng, shape: jax.random.normal(rng, shape) * 0.1 - 0.5,
+            (self.state_dim, self.state_dim)
+        )
+
+        # Input matrix B - projects input to state space
+        B = self.param(
+            "B",
+            nn.initializers.xavier_uniform(),
+            (self.state_dim, self.hidden_size)
+        )
+
+        # Output matrix C - projects state to output space
+        C = self.param(
+            "C",
+            nn.initializers.xavier_uniform(),
+            (self.hidden_size, self.state_dim)
+        )
+
+        # Skip connection D - direct input-to-output connection
+        D = self.param(
+            "D",
+            nn.initializers.zeros,
+            (self.hidden_size,)
+        )
+
         def step(carry: jnp.ndarray, x: jnp.ndarray) -> Tuple[jnp.ndarray, jnp.ndarray]:
             """Single step of the SSM recurrence."""
             h = carry  # Previous hidden state
 
             # State update: h[t+1] = A @ h[t] + B @ x[t]
-            h_next = jnp.dot(h, self.A.T) + jnp.dot(x, self.B.T)
+            h_next = jnp.dot(h, A.T) + jnp.dot(x, B.T)
 
             # Output: y[t] = C @ h[t+1] + D @ x[t]
-            y = jnp.dot(h_next, self.C.T) + self.D * x
+            y = jnp.dot(h_next, C.T) + D * x
 
             return h_next, y
 
@@ -153,22 +154,16 @@ class BidirectionalSSM(nn.Module):
     Attributes:
         hidden_size: Size of input/output hidden dimension.
         state_dim: Size of internal state dimension.
+
+    Note:
+        For optimal performance, JIT compile the module at the call site:
+        >>> model = BidirectionalSSM(hidden_size=256)
+        >>> jit_apply = jax.jit(model.apply)
     """
     hidden_size: int
     state_dim: int = 64
 
-    def setup(self):
-        """Initialize forward and backward SSM blocks."""
-        self.forward_ssm = SSMBlock(
-            hidden_size=self.hidden_size,
-            state_dim=self.state_dim
-        )
-        self.backward_ssm = SSMBlock(
-            hidden_size=self.hidden_size,
-            state_dim=self.state_dim
-        )
-        self.output_proj = nn.Dense(self.hidden_size)
-
+    @nn.compact
     def __call__(self, inputs: jnp.ndarray) -> jnp.ndarray:
         """
         Forward pass through bidirectional SSM.
@@ -179,12 +174,23 @@ class BidirectionalSSM(nn.Module):
         Returns:
             Output tensor of shape [batch, seq_len, hidden_size].
         """
-        forward_out = self.forward_ssm(inputs)
-        backward_out = self.backward_ssm(jnp.flip(inputs, axis=1))
+        forward_ssm = SSMBlock(
+            hidden_size=self.hidden_size,
+            state_dim=self.state_dim,
+            name='forward_ssm'
+        )
+        backward_ssm = SSMBlock(
+            hidden_size=self.hidden_size,
+            state_dim=self.state_dim,
+            name='backward_ssm'
+        )
+
+        forward_out = forward_ssm(inputs)
+        backward_out = backward_ssm(jnp.flip(inputs, axis=1))
         backward_out = jnp.flip(backward_out, axis=1)
 
         combined = jnp.concatenate([forward_out, backward_out], axis=-1)
-        return self.output_proj(combined)
+        return nn.Dense(self.hidden_size, name='output_proj')(combined)
 
 
 def create_ssm_block(
