@@ -81,29 +81,55 @@ class TestAttentionMechanism:
         assert output.shape == (batch_size, num_heads, seq_len, head_dim)
 
     def test_attention_scale_factor(self, cpu_backend):
-        """Test custom scale factor in attention."""
-        batch_size = 2
-        num_heads = 2
-        seq_len = 8
-        head_dim = 16
+        """Test custom scale factor in attention.
 
-        query = cpu_backend.randn((batch_size, num_heads, seq_len, head_dim))
-        key = cpu_backend.randn((batch_size, num_heads, seq_len, head_dim))
-        value = cpu_backend.randn((batch_size, num_heads, seq_len, head_dim))
+        Verifies that the scale parameter affects attention computation.
+        With a very small scale, attention becomes nearly uniform.
+        With a large scale, attention becomes more peaked (one-hot like).
+        """
+        batch_size = 1
+        num_heads = 1
+        seq_len = 3
+        head_dim = 2
 
-        # Default scale
-        output1 = cpu_backend.scaled_dot_product_attention(query, key, value)
+        # Simple inputs: query strongly prefers key[0], weakly matches others
+        query = cpu_backend.create_tensor(
+            np.array([[[[1.0, 0.0],
+                       [1.0, 0.0],
+                       [1.0, 0.0]]]], dtype=np.float32)
+        )
+        # Keys: first key matches query, others don't
+        key = cpu_backend.create_tensor(
+            np.array([[[[1.0, 0.0],    # matches query
+                       [0.0, 1.0],    # orthogonal to query
+                       [-1.0, 0.0]]]], dtype=np.float32)  # negative match
+        )
+        # Values: distinct so we can see the weighting
+        value = cpu_backend.create_tensor(
+            np.array([[[[10.0, 0.0],
+                       [0.0, 10.0],
+                       [5.0, 5.0]]]], dtype=np.float32)
+        )
 
-        # Custom scale
-        output2 = cpu_backend.scaled_dot_product_attention(
+        # Attention scores before softmax: [1, 0, -1] (q·k products)
+        # Small scale (0.1): scores become [0.1, 0, -0.1] -> softmax more uniform
+        # Large scale (10): scores become [10, 0, -10] -> softmax very peaked
+
+        output_small = cpu_backend.scaled_dot_product_attention(
             query, key, value, scale=0.1
         )
-
-        # Outputs should be different with different scales
-        assert not np.allclose(
-            cpu_backend.to_numpy(output1),
-            cpu_backend.to_numpy(output2)
+        output_large = cpu_backend.scaled_dot_product_attention(
+            query, key, value, scale=10.0
         )
+
+        out_small = cpu_backend.to_numpy(output_small)
+        out_large = cpu_backend.to_numpy(output_large)
+
+        # With small scale: more uniform weights, output closer to average of values
+        # With large scale: weights peaked on first key, output closer to [10, 0]
+        # First dimension should show clear difference
+        assert out_large[0, 0, 0, 0] > out_small[0, 0, 0, 0], \
+            f"Large scale should have higher weight on first value: {out_large[0,0,0,0]} vs {out_small[0,0,0,0]}"
 
 
 class TestLayerNormalization:

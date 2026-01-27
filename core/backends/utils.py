@@ -5,16 +5,22 @@ Helper functions for hardware detection, memory management,
 and cross-backend operations.
 """
 
+import functools
 import logging
 import os
 from typing import Any, Dict, List, Optional, Tuple
 
+from core.decorators import cached_computation
+
 logger = logging.getLogger(__name__)
 
 
+@cached_computation(maxsize=1, ttl_seconds=60.0)
 def detect_available_hardware() -> Dict[str, Any]:
     """
     Detect all available compute hardware.
+
+    Cached for 60 seconds since hardware doesn't change frequently.
 
     Returns:
         Dictionary with hardware information:
@@ -69,8 +75,9 @@ def detect_available_hardware() -> Dict[str, Any]:
     return result
 
 
+@functools.lru_cache(maxsize=32)
 def _detect_tpu_topology(num_devices: int) -> str:
-    """Detect TPU topology from device count."""
+    """Detect TPU topology from device count (cached - pure function)."""
     topologies = {
         8: "v4-8",
         32: "v4-32",

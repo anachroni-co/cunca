@@ -264,8 +264,8 @@ class TPUBackend(ComputeBackend):
             dropout_mask = jax.random.bernoulli(dropout_key, keep_prob, attn_weights.shape)
             attn_weights = jnp.where(dropout_mask, attn_weights / keep_prob, 0.0)
 
-        # Compute output
-        output = jnp.einsum("bhqk,bhvd->bhqd", attn_weights, value)
+        # Compute output: contract over k (key/value sequence dimension)
+        output = jnp.einsum("bhqk,bhkd->bhqd", attn_weights, value)
 
         return output
 

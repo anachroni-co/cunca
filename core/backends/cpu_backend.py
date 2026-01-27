@@ -11,6 +11,7 @@ from typing import Any, Callable, Dict, Optional, Sequence, Tuple
 import numpy as np
 
 from .base import BackendConfig, ComputeBackend, DType, TensorLike
+from core.decorators import get_causal_mask
 
 # Dtype mapping
 DTYPE_MAP = {
@@ -148,9 +149,9 @@ class CPUBackend(ComputeBackend):
         # Compute attention scores
         attn_weights = np.einsum("bhqd,bhkd->bhqk", query, key) * scale
 
-        # Apply causal mask
+        # Apply causal mask (uses cached mask for common sequence lengths)
         if is_causal:
-            causal_mask = np.tril(np.ones((seq_len, seq_len)))
+            causal_mask = get_causal_mask(seq_len)
             attn_weights = np.where(
                 causal_mask[None, None, :, :] == 0,
                 -np.inf,
@@ -169,8 +170,8 @@ class CPUBackend(ComputeBackend):
             dropout_mask = self._rng.random(attn_weights.shape) > dropout_p
             attn_weights = attn_weights * dropout_mask / (1 - dropout_p)
 
-        # Compute output
-        return np.einsum("bhqk,bhvd->bhqd", attn_weights, value)
+        # Compute output: contract over k (key/value sequence dimension)
+        return np.einsum("bhqk,bhkd->bhqd", attn_weights, value)
 
     # ==================== Gradient Operations ====================
 
