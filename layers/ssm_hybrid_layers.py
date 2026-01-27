@@ -690,21 +690,25 @@ def create_ssm_layer(
     
     return layer_classes[layer_type](config)
 
+@lru_cache(maxsize=64)
 def create_ssm_config(
     hidden_size: int = 768,
     d_state: int = 16,
-    layer_types: Optional[List[str]] = None,
+    layer_types: Optional[Tuple[str, ...]] = None,
     enable_all_optimizations: bool = True
 ) -> SSMHybridLayerConfig:
-    """Create optimized SSM configuration."""
-    
+    """Create optimized SSM configuration (cached).
+
+    Note: layer_types uses Tuple instead of List for hashability/caching.
+    """
+
     if layer_types is None:
-        layer_types = ["mamba", "s4", "hybrid"]
-    
+        layer_types = ("mamba", "s4", "hybrid")
+
     return SSMHybridLayerConfig(
         hidden_size=hidden_size,
         d_state=d_state,
-        ssm_layers=layer_types,
+        ssm_layers=list(layer_types),
         enable_tpu_optimization=enable_all_optimizations,
         use_mixed_precision=enable_all_optimizations,
         enable_ssm_caching=enable_all_optimizations,

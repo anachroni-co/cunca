@@ -1,12 +1,16 @@
 """
-abstract_reasoning game_theory module.
+Game Theory Module for Abstract Reasoning.
 
 This module provides functionality for game_theory using JAX/Flax.
 Requires: pip install jax flax
 """
 
+import functools
 import logging
 from typing import Any, Dict, List, Optional
+
+import jax
+import jax.numpy as jnp
 import numpy as np
 
 logger = logging.getLogger(__name__)
