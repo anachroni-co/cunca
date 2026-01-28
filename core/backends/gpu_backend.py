@@ -291,11 +291,22 @@ class GPUBackend(ComputeBackend):
         self,
         parameters: Sequence[TensorLike],
         max_norm: float,
+        optimizer: Optional[Any] = None,
     ) -> TensorLike:
-        """Clip gradients with AMP support."""
+        """Clip gradients with AMP support.
+
+        Args:
+            parameters: Model parameters to clip gradients for
+            max_norm: Maximum gradient norm
+            optimizer: Optimizer for AMP unscaling (required when using GradScaler)
+
+        Note:
+            When using mixed precision training with GradScaler, pass the
+            optimizer to properly unscale gradients before clipping.
+        """
         _ensure_torch()
-        if self._scaler:
-            self._scaler.unscale_(parameters)
+        if self._scaler and optimizer is not None:
+            self._scaler.unscale_(optimizer)
         return torch.nn.utils.clip_grad_norm_(parameters, max_norm)
 
     # ==================== JIT Compilation ====================

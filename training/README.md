@@ -658,3 +658,11 @@ For training issues:
 
 **Last updated**: 2025-11-16
 **System version**: v2.0.0
+
+## Ejemplo rápido
+
+Ejemplo (pseudo-comando) para entrenar:
+
+```bash
+capibara-train --config config/configs_toml/training.toml
+```

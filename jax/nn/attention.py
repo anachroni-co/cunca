@@ -178,32 +178,62 @@ except Exception:
             return output
         
         def _block_attention(self, q, k, v, mask=None):
-            """Block-wise attention computation."""
+            """Block-wise attention computation using JAX primitives (no Python loops)."""
             batch_size, seq_len, num_heads, head_dim = q.shape
             kv_seq_len = k.shape[1]
-            
-            output = jnp.zeros_like(q)
-            
-            # Process in blocks (simplified - real Flash Attention is more complex)
-            for i in range(0, seq_len, self.block_size):
-                end_i = min(i + self.block_size, seq_len)
-                q_block = q[:, i:end_i]
-                
-                # Compute attention for this block
-                scores = jnp.einsum('bqhd,bkhd->bhqk', q_block, k) * self.scale
-                
+
+            # Pad sequence length to multiple of block_size for uniform blocks
+            num_blocks = (seq_len + self.block_size - 1) // self.block_size
+            padded_len = num_blocks * self.block_size
+
+            # Pad q if needed
+            if padded_len > seq_len:
+                pad_size = padded_len - seq_len
+                q = jnp.pad(q, ((0, 0), (0, pad_size), (0, 0), (0, 0)))
                 if mask is not None:
-                    mask_block = mask[:, :, i:end_i, :]
+                    mask = jnp.pad(mask, ((0, 0), (0, 0), (0, pad_size), (0, 0)),
+                                   constant_values=False)
+
+            # Reshape q into blocks: (batch, num_blocks, block_size, heads, head_dim)
+            q_blocks = q.reshape(batch_size, num_blocks, self.block_size, num_heads, head_dim)
+
+            # Define single block attention computation
+            def compute_block_attention(q_block, block_idx):
+                """Compute attention for a single query block."""
+                # q_block: (batch, block_size, heads, head_dim)
+                scores = jnp.einsum('bqhd,bkhd->bhqk', q_block, k) * self.scale
+
+                if mask is not None:
+                    # Extract mask for this block
+                    start_idx = block_idx * self.block_size
+                    mask_block = lax.dynamic_slice(
+                        mask,
+                        (0, 0, start_idx, 0),
+                        (batch_size, num_heads, self.block_size, kv_seq_len)
+                    )
                     scores = jnp.where(mask_block, scores, -jnp.inf)
-                
+
                 attention_weights = jnn.softmax(scores, axis=-1)
-                block_output = jnp.einsum('bhqk,bkhd->bqhd', attention_weights, v)
-                
-                # Ensure output is a JAX array before using .at
-                if not hasattr(output, 'at'):
-                    output = jnp.array(output)
-                output = output.at[:, i:end_i].set(block_output)
-            
+                return jnp.einsum('bhqk,bkhd->bqhd', attention_weights, v)
+
+            # Use lax.map to process all blocks in parallel (vectorized)
+            # lax.map applies the function to each element along axis 0
+            def scan_fn(carry, inputs):
+                q_block, block_idx = inputs
+                block_output = compute_block_attention(q_block, block_idx)
+                return carry, block_output
+
+            block_indices = jnp.arange(num_blocks)
+            _, outputs = lax.scan(scan_fn, None, (q_blocks.transpose(1, 0, 2, 3, 4), block_indices))
+
+            # outputs: (num_blocks, batch, block_size, heads, head_dim)
+            # Reshape back: (batch, num_blocks * block_size, heads, head_dim)
+            output = outputs.transpose(1, 0, 2, 3, 4).reshape(batch_size, padded_len, num_heads, head_dim)
+
+            # Remove padding if added
+            if padded_len > seq_len:
+                output = output[:, :seq_len]
+
             return output
     
     class GroupedQueryAttention:

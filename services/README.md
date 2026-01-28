@@ -1059,3 +1059,11 @@ Part of the capibaraGPT-v2 project. See [LICENSE](../../LICENSE) for details.
 
 **Maintained by**: Capibara ML Team
 **Last Updated**: 2025-11-16
+
+## Ejemplo rápido
+
+Ejemplo (pseudo-comando) para levantar un servicio:
+
+```bash
+python services/api_server.py --config config/configs_toml/service.toml
+```

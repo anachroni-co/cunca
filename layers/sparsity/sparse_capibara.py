@@ -49,16 +49,13 @@ if JAX_AVAILABLE:
 
         # Apply sparsity pattern (top-k attention) - only during training
         if apply_sparsity and sparsity_k > 0:
-            seq_len = scores.shape[-1]
             k_sparse = max(1, sparsity_k)
-            # Use jax.lax.top_k for efficiency
-            _, top_k_indices = jax.lax.top_k(scores, k_sparse)
-            sparse_mask = jnp.zeros_like(scores, dtype=bool)
-            # Create mask from top-k indices
-            batch_idx = jnp.arange(scores.shape[0])[:, None, None, None]
-            head_idx = jnp.arange(scores.shape[1])[None, :, None, None]
-            query_idx = jnp.arange(scores.shape[2])[None, None, :, None]
-            sparse_mask = sparse_mask.at[batch_idx, head_idx, query_idx, top_k_indices].set(True)
+            # Get top-k values and indices
+            top_k_values, _ = jax.lax.top_k(scores, k_sparse)
+            # Use the k-th largest value as threshold (vectorized)
+            threshold = top_k_values[..., -1:]  # [..., 1] - minimum of top-k
+            # Create mask directly from threshold comparison (no index arrays needed)
+            sparse_mask = scores >= threshold
             scores = jnp.where(sparse_mask, scores, -jnp.inf)
 
         # Compute attention weights
@@ -104,13 +101,12 @@ if JAX_AVAILABLE:
             # Apply layer normalization
             x_norm = nn.LayerNorm(dtype=self.dtype)(x)
 
-            # Compute Q, K, V with Dense layers
-            q = nn.Dense(self.features, dtype=self.dtype,
-                        kernel_init=nn.initializers.xavier_uniform())(x_norm)
-            k = nn.Dense(self.features, dtype=self.dtype,
-                        kernel_init=nn.initializers.xavier_uniform())(x_norm)
-            v = nn.Dense(self.features, dtype=self.dtype,
-                        kernel_init=nn.initializers.xavier_uniform())(x_norm)
+            # Compute Q, K, V with fused Dense layer (3x features, then split)
+            # This is more efficient than 3 separate Dense calls
+            qkv = nn.Dense(3 * self.features, dtype=self.dtype,
+                          kernel_init=nn.initializers.xavier_uniform(),
+                          name='qkv_proj')(x_norm)
+            q, k, v = jnp.split(qkv, 3, axis=-1)
 
             # Reshape for multi-head attention
             q = q.reshape(batch_size, seq_len, self.num_heads, head_dim)

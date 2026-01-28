@@ -235,14 +235,17 @@ class AdaptiveSpikeSSM(nn.Module):
         def step(carry, x):
             membrane_potentials, spike_history = carry
 
-            # Multi-timescale integration
-            new_potentials = []
-            for i in range(self.num_timescales):
-                mp = membrane_potentials[i] * decays[i] + linear_in(x) / self.num_timescales
-                new_potentials.append(mp)
+            # Multi-timescale integration (vectorized, no Python loops)
+            # Compute linear_in(x) once and broadcast to all timescales
+            input_contribution = linear_in(x) / self.num_timescales  # [batch, state_dim]
 
-            # Combine multi-timescale potentials
-            combined_potential = jnp.mean(jnp.stack(new_potentials), axis=0)
+            # membrane_potentials: [num_timescales, batch, state_dim]
+            # decays: [num_timescales, 1] - broadcasts over batch and state_dim
+            # Vectorized update for all timescales at once
+            new_potentials = membrane_potentials * decays + input_contribution[None, :, :]
+
+            # Combine multi-timescale potentials (already stacked)
+            combined_potential = jnp.mean(new_potentials, axis=0)  # [batch, state_dim]
 
             # Apply lateral inhibition
             inhibited_potential = combined_potential - 0.1 * jnp.dot(
@@ -255,10 +258,9 @@ class AdaptiveSpikeSSM(nn.Module):
             # Generate spikes
             spikes = jnp.where(inhibited_potential > threshold, 1.0, 0.0)
 
-            # Reset potentials where spikes occurred
-            reset_potentials = []
-            for mp in new_potentials:
-                reset_potentials.append(mp - spikes * threshold)
+            # Reset potentials where spikes occurred (vectorized, no Python loop)
+            # Broadcast spikes and threshold to all timescales
+            reset_potentials = new_potentials - spikes[None, :, :] * threshold[None, :, :]
 
             # Update spike history (exponential moving average)
             new_spike_history = 0.9 * spike_history + 0.1 * spikes
@@ -266,7 +268,7 @@ class AdaptiveSpikeSSM(nn.Module):
             # Output
             y = linear_out(spikes)
 
-            return (jnp.stack(reset_potentials), new_spike_history), y
+            return (reset_potentials, new_spike_history), y
 
         # Initialize states
         membrane_0 = jnp.zeros((self.num_timescales, batch_size, self.state_dim))

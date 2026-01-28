@@ -244,3 +244,14 @@ valid_paths = check_data_paths(config.training)
 ## 📖 Configuration Examples
 
 See the `configs_toml/` directory for complete configuration examples in TOML format.
+
+## Ejemplo rápido
+
+Ejemplo (pseudo-código) para cargar una configuración TOML:
+
+```python
+import toml
+
+config = toml.load("config/configs_toml/default.toml")
+print(config["model"]["hidden_size"])
+```
