@@ -271,23 +271,17 @@ class DynamicRouter:
         # Select top-k experts
         top_k_indices = jnp.argsort(routing_probs, axis=-1)[:, -self.config.num_active_experts:]
         
-        # Get routing weights for selected experts
+        # Get routing weights for selected experts (vectorized, no Python loops)
+        # Gather the selected probabilities
+        selected_probs = jnp.take_along_axis(routing_probs, top_k_indices, axis=-1)
+
+        # Create batch indices for scatter operation
+        batch_idx = jnp.arange(batch_size)[:, None]  # [batch_size, 1]
+        batch_idx = jnp.broadcast_to(batch_idx, top_k_indices.shape)  # [batch_size, num_active]
+
+        # Scatter selected probs back to full routing_weights (vectorized)
         routing_weights = jnp.zeros_like(routing_probs)
-        
-        # Handle JAX vs numpy compatibility for .at[] operations
-        try:
-            # JAX version with .at[] syntax
-            for i in range(batch_size):
-                for j in range(self.config.num_active_experts):
-                    expert_idx = top_k_indices[i, j]
-                    routing_weights = routing_weights.at[i, expert_idx].set(routing_probs[i, expert_idx])
-        except AttributeError:
-            # Numpy fallback without .at[] syntax
-            routing_weights = routing_weights.copy()  # Make it writable
-            for i in range(batch_size):
-                for j in range(self.config.num_active_experts):
-                    expert_idx = top_k_indices[i, j]
-                    routing_weights[i, expert_idx] = routing_probs[i, expert_idx]
+        routing_weights = routing_weights.at[batch_idx, top_k_indices].set(selected_probs)
         
         # Normalize routing weights
         routing_weights = routing_weights / (jnp.sum(routing_weights, axis=-1, keepdims=True) + 1e-8)
@@ -363,42 +357,33 @@ class DynamicMoELayer:
         # Route to experts
         routing_weights, expert_indices = self.router(normalized_x, training)
         
-        # Process through experts
+        # Process through experts (optimized: no Python conditionals in hot path)
         expert_outputs = []
-        expert_loads = jnp.zeros(self.config.num_experts)
-        
+
+        # Compute all expert masks at once (vectorized)
+        expert_masks = routing_weights > 1e-6  # [batch, seq, num_experts]
+
+        # Compute expert loads vectorized (sum over batch and seq dims)
+        expert_loads = jnp.sum(expert_masks, axis=(0, 1))  # [num_experts]
+
+        # Process each expert (note: expert calls are sequential but input prep is vectorized)
         for i, expert in enumerate(self.experts):
-            # Check if expert is selected
-            expert_mask = routing_weights[:, :, i] > 1e-6
-            
-            if jnp.any(expert_mask):
-                # Process tokens assigned to this expert
-                expert_input = jnp.where(
-                    jnp.expand_dims(expert_mask, axis=-1),
-                    normalized_x,
-                    jnp.zeros_like(normalized_x)
-                )
-                
-                expert_output = expert(expert_input, training)
-                expert_outputs.append(expert_output)
-                
-                # Track expert load
-                expert_load = jnp.sum(expert_mask)
-                try:
-                    # JAX version with .at[] syntax
-                    expert_loads = expert_loads.at[i].set(expert_load)
-                except AttributeError:
-                    # Numpy fallback without .at[] syntax
-                    expert_loads = expert_loads.copy()
-                    expert_loads[i] = expert_load
-            else:
-                expert_outputs.append(jnp.zeros_like(normalized_x))
-        
-        # Combine expert outputs
-        combined_output = jnp.zeros_like(x)
-        for i, expert_output in enumerate(expert_outputs):
-            weight = jnp.expand_dims(routing_weights[:, :, i], axis=-1)
-            combined_output += weight * expert_output
+            # Mask input for this expert (vectorized, no Python conditional)
+            expert_mask_expanded = expert_masks[:, :, i:i+1]  # [batch, seq, 1]
+            expert_input = normalized_x * expert_mask_expanded
+
+            # Expert forward pass
+            expert_output = expert(expert_input, training)
+            expert_outputs.append(expert_output)
+
+        # Stack all expert outputs: [num_experts, batch, seq, hidden]
+        stacked_outputs = jnp.stack(expert_outputs, axis=0)
+
+        # Combine expert outputs using einsum (vectorized, no Python loop)
+        # routing_weights: [batch, seq, num_experts]
+        # stacked_outputs: [num_experts, batch, seq, hidden]
+        # Result: [batch, seq, hidden]
+        combined_output = jnp.einsum('bse,ebsh->bsh', routing_weights, stacked_outputs)
             
         # Add residual connection
         output = x + combined_output
