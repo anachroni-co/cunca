@@ -122,6 +122,16 @@ for kernel, metrics in kernel_benchmark.items():
     print(f"  Memory efficiency: {metrics['memory_efficiency']:.1%}")
 ```
 
+## Example
+
+```python
+from capibara.core.kernels import TPUKernelManager
+
+kernel_manager = TPUKernelManager()
+matmul_kernel = kernel_manager.get_kernel("optimized_matmul")
+output = matmul_kernel.run(a_matrix, b_matrix)
+```
+
 ## 📚 References
 
 - [TPU v4 Architecture](https://cloud.google.com/tpu/docs/system-architecture-tpu-vm)

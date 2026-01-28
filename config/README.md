@@ -124,6 +124,31 @@ convexity_config = ConvexityConfig(
 )
 ```
 
+### Multimodal Training (Config Example)
+Configuration example for enabling audio/video encoders in a training setup.
+
+```python
+multimodal_training_config = {
+    "modalities": ["text", "image", "audio", "video"],
+    "encoders": {
+        "audio": {
+            "sample_rate": 16000,
+            "n_fft": 512,
+            "output_dim": 256
+        },
+        "video": {
+            "width": 224,
+            "height": 224,
+            "fps": 30,
+            "output_dim": 512
+        }
+    },
+    "fusion": {
+        "weights": {"text": 0.35, "image": 0.25, "audio": 0.2, "video": 0.2}
+    }
+}
+```
+
 ### Scaling (unified)
 Distributed scaling and parallelism are managed from `unified_model_config.py` (e.g., `MemoryOptimizationConfig`, submeshes, and `ModularModelConfig`).
 
