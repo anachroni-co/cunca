@@ -157,50 +157,43 @@ if JAX_AVAILABLE:
             return quantized, indices, metrics
         
         def _product_quantize(self, flat_inputs: jnp.ndarray, training: bool) -> Tuple[jnp.ndarray, jnp.ndarray, Dict[str, Any]]:
-            """Product quantization for memory efficiency."""
+            """Product quantization for memory efficiency (vectorized, no Python loops)."""
             batch_size = flat_inputs.shape[0]
             subspace_dim = self.config.embedding_dim // self.config.num_subspaces
-            
-            # Reshape for product quantization
-            inputs_reshaped = flat_inputs.reshape(batch_size, self.config.num_subspaces, subspace_dim)
-            
-            quantized_subspaces = []
-            indices_subspaces = []
-            total_commitment_loss = 0.0
-            total_codebook_loss = 0.0
-            
-            for i in range(self.config.num_subspaces):
-                subspace_input = inputs_reshaped[:, i, :]
-                subspace_codebook = self.codebook[i]
-                
-                # Quantize subspace
-                distances = jnp.linalg.norm(
-                    subspace_input[:, None, :] - subspace_codebook[None, :, :],
-                    axis=2
-                )
-                subspace_indices = jnp.argmin(distances, axis=1)
-                subspace_quantized = subspace_codebook[subspace_indices]
-                
-                # Compute subspace losses
-                commitment_loss = jnp.mean((jax.lax.stop_gradient(subspace_quantized) - subspace_input) ** 2)
-                codebook_loss = jnp.mean((subspace_quantized - jax.lax.stop_gradient(subspace_input)) ** 2)
-                
-                total_commitment_loss += commitment_loss
-                total_codebook_loss += codebook_loss
-                
-                # Straight-through estimator
-                subspace_quantized = subspace_input + jax.lax.stop_gradient(subspace_quantized - subspace_input)
-                
-                quantized_subspaces.append(subspace_quantized)
-                indices_subspaces.append(subspace_indices)
-            
-            # Combine subspaces
-            quantized = jnp.concatenate(quantized_subspaces, axis=1)
-            indices = jnp.stack(indices_subspaces, axis=1)
-            
-            # Average losses
-            commitment_loss = total_commitment_loss / self.config.num_subspaces
-            codebook_loss = total_codebook_loss / self.config.num_subspaces
+            num_subspaces = self.config.num_subspaces
+
+            # Reshape for product quantization: [batch, num_subspaces, subspace_dim]
+            inputs_reshaped = flat_inputs.reshape(batch_size, num_subspaces, subspace_dim)
+
+            # Compute distances for all subspaces at once (vectorized)
+            # inputs_reshaped: [batch, num_subspaces, subspace_dim]
+            # self.codebook: [num_subspaces, codebook_size, subspace_dim]
+            # Expand dims for broadcasting:
+            # inputs: [batch, num_subspaces, 1, subspace_dim]
+            # codebook: [1, num_subspaces, codebook_size, subspace_dim]
+            distances = jnp.linalg.norm(
+                inputs_reshaped[:, :, None, :] - self.codebook[None, :, :, :],
+                axis=-1
+            )  # [batch, num_subspaces, codebook_size]
+
+            # Get indices for all subspaces at once
+            indices = jnp.argmin(distances, axis=-1)  # [batch, num_subspaces]
+
+            # Gather quantized values (vectorized)
+            # Use advanced indexing: for each (batch, subspace), get codebook[subspace, indices[batch, subspace]]
+            batch_idx = jnp.arange(batch_size)[:, None]  # [batch, 1]
+            subspace_idx = jnp.arange(num_subspaces)[None, :]  # [1, num_subspaces]
+            quantized_subspaces = self.codebook[subspace_idx, indices]  # [batch, num_subspaces, subspace_dim]
+
+            # Compute losses (vectorized over all subspaces)
+            commitment_loss = jnp.mean((jax.lax.stop_gradient(quantized_subspaces) - inputs_reshaped) ** 2)
+            codebook_loss = jnp.mean((quantized_subspaces - jax.lax.stop_gradient(inputs_reshaped)) ** 2)
+
+            # Straight-through estimator
+            quantized_subspaces = inputs_reshaped + jax.lax.stop_gradient(quantized_subspaces - inputs_reshaped)
+
+            # Reshape back: [batch, num_subspaces * subspace_dim]
+            quantized = quantized_subspaces.reshape(batch_size, -1)
             
             # Compute metrics
             metrics = self._compute_metrics(flat_inputs, quantized, indices, commitment_loss, codebook_loss)
@@ -331,54 +324,47 @@ elif TORCH_AVAILABLE:
             return quantized, indices, metrics
         
         def _product_quantize(self, flat_inputs: torch.Tensor, training: bool) -> Tuple[torch.Tensor, torch.Tensor, Dict[str, Any]]:
-            """Product quantization for memory efficiency."""
+            """Product quantization for memory efficiency (vectorized, no Python loops)."""
             batch_size = flat_inputs.shape[0]
             subspace_dim = self.config.embedding_dim // self.config.num_subspaces
-            
-            # Reshape for product quantization
-            inputs_reshaped = flat_inputs.view(batch_size, self.config.num_subspaces, subspace_dim)
-            
-            quantized_subspaces = []
-            indices_subspaces = []
-            total_commitment_loss = 0.0
-            total_codebook_loss = 0.0
-            
-            for i in range(self.config.num_subspaces):
-                subspace_input = inputs_reshaped[:, i, :]
-                subspace_codebook = self.codebook[i]
-                
-                # Quantize subspace
-                distances = torch.norm(
-                    subspace_input.unsqueeze(1) - subspace_codebook.unsqueeze(0),
-                    dim=2
-                )
-                subspace_indices = torch.argmin(distances, dim=1)
-                subspace_quantized = subspace_codebook[subspace_indices]
-                
-                # Compute subspace losses
-                commitment_loss = F.mse_loss(subspace_quantized.detach(), subspace_input)
-                codebook_loss = F.mse_loss(subspace_quantized, subspace_input.detach())
-                
-                total_commitment_loss += commitment_loss
-                total_codebook_loss += codebook_loss
-                
-                # Straight-through estimator
-                subspace_quantized = subspace_input + (subspace_quantized - subspace_input).detach()
-                
-                quantized_subspaces.append(subspace_quantized)
-                indices_subspaces.append(subspace_indices)
-            
-            # Combine subspaces
-            quantized = torch.cat(quantized_subspaces, dim=1)
-            indices = torch.stack(indices_subspaces, dim=1)
-            
-            # Average losses
-            commitment_loss = total_commitment_loss / self.config.num_subspaces
-            codebook_loss = total_codebook_loss / self.config.num_subspaces
-            
+            num_subspaces = self.config.num_subspaces
+
+            # Reshape for product quantization: [batch, num_subspaces, subspace_dim]
+            inputs_reshaped = flat_inputs.view(batch_size, num_subspaces, subspace_dim)
+
+            # Compute distances for all subspaces at once (vectorized)
+            # inputs_reshaped: [batch, num_subspaces, subspace_dim]
+            # self.codebook: [num_subspaces, codebook_size, subspace_dim]
+            # Expand for broadcasting:
+            # inputs: [batch, num_subspaces, 1, subspace_dim]
+            # codebook: [1, num_subspaces, codebook_size, subspace_dim]
+            distances = torch.norm(
+                inputs_reshaped.unsqueeze(2) - self.codebook.unsqueeze(0),
+                dim=-1
+            )  # [batch, num_subspaces, codebook_size]
+
+            # Get indices for all subspaces at once
+            indices = torch.argmin(distances, dim=-1)  # [batch, num_subspaces]
+
+            # Gather quantized values (vectorized)
+            # Use gather: codebook[subspace, indices[batch, subspace]]
+            batch_idx = torch.arange(batch_size, device=flat_inputs.device)[:, None].expand(-1, num_subspaces)
+            subspace_idx = torch.arange(num_subspaces, device=flat_inputs.device)[None, :].expand(batch_size, -1)
+            quantized_subspaces = self.codebook[subspace_idx, indices]  # [batch, num_subspaces, subspace_dim]
+
+            # Compute losses (vectorized over all subspaces)
+            commitment_loss = F.mse_loss(quantized_subspaces.detach(), inputs_reshaped)
+            codebook_loss = F.mse_loss(quantized_subspaces, inputs_reshaped.detach())
+
+            # Straight-through estimator
+            quantized_subspaces = inputs_reshaped + (quantized_subspaces - inputs_reshaped).detach()
+
+            # Reshape back: [batch, num_subspaces * subspace_dim]
+            quantized = quantized_subspaces.view(batch_size, -1)
+
             # Compute metrics
             metrics = self._compute_metrics(flat_inputs, quantized, indices, commitment_loss, codebook_loss)
-            
+
             return quantized, indices, metrics
         
         def _update_ema_stats(self, flat_inputs: torch.Tensor, indices: torch.Tensor):
