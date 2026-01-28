@@ -429,3 +429,11 @@ mcp:
 - [Core Backends](../core/backends/README.md)
 - [Inference Module](../inference/README.md)
 - [Training Module](../training/README.md)
+
+## Ejemplo rápido
+
+Ejemplo (pseudo-comando) para iniciar un servicio MCP:
+
+```bash
+python -m mcp.server --config config/configs_toml/mcp.toml
+```

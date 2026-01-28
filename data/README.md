@@ -676,3 +676,13 @@ print(f"Available datasets: {available}")
 
 **Last updated**: 2025-11-16
 **System version**: v2.0.0
+
+## Ejemplo rápido
+
+Ejemplo (pseudo-flujo) para preparar datos:
+
+```text
+1) Coloca archivos .jsonl en data/raw/
+2) Referencia esos archivos en tu config de entrenamiento
+3) Ejecuta el pipeline de preprocesamiento
+```

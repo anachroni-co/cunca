@@ -1189,3 +1189,12 @@ Part of the capibaraGPT-v2 project. See [LICENSE](../../LICENSE) for details.
 
 **Maintained by**: Capibara ML Team
 **Last Updated**: 2025-11-16
+
+## Ejemplo rápido
+
+Ejemplo (pseudo-código) de uso de una capa:
+
+```python
+# layer = SomeLayer(config)
+# output = layer(inputs)
+```

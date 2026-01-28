@@ -274,3 +274,15 @@ Copyright (c) 2024-2026 Anacroni S.Coop.Gal. All rights reserved.
 *Free for science, education, and research. Commercial use requires license.*
 
 </div>
+
+## Ejemplo rápido
+
+Ejemplo (pseudo-código) de uso básico del backend:
+
+```python
+from core.backends import get_backend
+
+backend = get_backend()
+x = backend.randn((2, 4))
+print(backend.gelu(x))
+```

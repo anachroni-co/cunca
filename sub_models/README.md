@@ -621,3 +621,12 @@ config = ModularConfig(
 
 **Last updated**: 2025-11-16
 **System version**: v2.0.0
+
+## Ejemplo rápido
+
+Ejemplo (pseudo-código) para cargar un sub-modelo:
+
+```python
+# sub_model = load_sub_model("mamba")
+# output = sub_model.forward(tokens)
+```

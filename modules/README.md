@@ -365,3 +365,12 @@ modules:
 - [Core Module](../core/README.md)
 - [MoE System](../core/moe/README.md)
 - [Chain-of-Thought](../core/cot/README.md)
+
+## Ejemplo rápido
+
+Ejemplo (pseudo-código) para activar un módulo:
+
+```python
+# module = SomeModule(config)
+# result = module.run(payload)
+```

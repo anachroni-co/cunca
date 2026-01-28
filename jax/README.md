@@ -586,3 +586,14 @@ tpu_optimization.verify_optimizations()  # Verify they are active
 **Last updated**: 2025-11-16
 **System version**: v2.0.0
 **JAX Version**: 0.4.20+
+
+## Ejemplo rápido
+
+Ejemplo (pseudo-código) para seleccionar backend JAX/TPU:
+
+```python
+from core.backends import get_backend, BackendType
+
+backend = get_backend(BackendType.TPU)
+print(backend.name)
+```

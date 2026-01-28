@@ -585,3 +585,17 @@ if not ULTRA_CORE_AVAILABLE:
 
 **Last updated**: 2025-11-16
 **System version**: v2.0.0
+
+## Ejemplo rápido
+
+Ejemplo (pseudo-código) para usar el backend y una atención básica:
+
+```python
+from core.backends import get_backend
+
+backend = get_backend()
+q = backend.randn((2, 8, 128, 64))
+k = backend.randn((2, 8, 128, 64))
+v = backend.randn((2, 8, 128, 64))
+output = backend.scaled_dot_product_attention(q, k, v)
+```
