@@ -202,28 +202,20 @@ class KVCacheCalibrator:
                     # Process multi-batch data if needed
                     K_processed, V_processed = self._process_kv_tensors(K, V)
                     
-                    # Compute per-head scales
-                    num_heads = K_processed.shape[0]
-                    k_scales = []
-                    v_scales = []
-                    
-                    for head in range(num_heads):
-                        k_scale = self._robust_percentile(
-                            K_processed[head], 
-                            self.config.kv_percentile
-                        )
-                        v_scale = self._robust_percentile(
-                            V_processed[head], 
-                            self.config.kv_percentile
-                        )
-                        
-                        k_scales.append(k_scale)
-                        v_scales.append(v_scale)
-                    
+                    # Compute per-head scales (vectorized, no Python loop)
+                    # K_processed, V_processed: [heads, seq, dim]
+                    # Compute percentile over seq and dim axes for each head
+                    k_scales = self._robust_percentile_vectorized(
+                        K_processed, self.config.kv_percentile
+                    )
+                    v_scales = self._robust_percentile_vectorized(
+                        V_processed, self.config.kv_percentile
+                    )
+
                     # Store scales for this layer
                     layer_scales[layer_id] = {
-                        "sK": np.array(k_scales, dtype=np.float16),
-                        "sV": np.array(v_scales, dtype=np.float16)
+                        "sK": k_scales.astype(np.float16),
+                        "sV": v_scales.astype(np.float16)
                     }
                     
             except Exception as e:
@@ -260,21 +252,31 @@ class KVCacheCalibrator:
         return 0
     
     def _process_kv_tensors(
-        self, 
-        K: np.ndarray, 
+        self,
+        K: np.ndarray,
         V: np.ndarray
     ) -> Tuple[np.ndarray, np.ndarray]:
         """Process K and V tensors to handle batch dimensions."""
         if K.ndim == 4:  # [batch, heads, seq, dim]
-            # Concatenate along sequence dimension
-            K_processed = np.concatenate([K[b] for b in range(K.shape[0])], axis=1)
-            V_processed = np.concatenate([V[b] for b in range(V.shape[0])], axis=1)
+            # Reshape to concatenate batches along sequence (vectorized, no Python loop)
+            # [batch, heads, seq, dim] -> [heads, batch*seq, dim]
+            batch, heads, seq, dim = K.shape
+            K_processed = K.transpose(1, 0, 2, 3).reshape(heads, batch * seq, dim)
+            V_processed = V.transpose(1, 0, 2, 3).reshape(heads, batch * seq, dim)
         else:  # Already in [heads, seq, dim] format
             K_processed = K
             V_processed = V
-        
+
         return K_processed, V_processed
-    
+
+    def _robust_percentile_vectorized(self, tensor: np.ndarray, percentile: float) -> np.ndarray:
+        """Compute robust percentile per head (vectorized over heads)."""
+        # tensor: [heads, seq, dim]
+        # Flatten seq and dim, compute percentile per head
+        num_heads = tensor.shape[0]
+        flat = np.abs(tensor).reshape(num_heads, -1)  # [heads, seq*dim]
+        return np.percentile(flat, percentile, axis=1)  # [heads]
+
     def _robust_percentile(self, tensor: np.ndarray, percentile: float) -> float:
         """Compute robust percentile of absolute values."""
         abs_values = np.abs(tensor).reshape(-1)

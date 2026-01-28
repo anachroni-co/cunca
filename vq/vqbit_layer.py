@@ -10,18 +10,19 @@ from enum import Enum
 # Try to import JAX
 try:
     import jax.numpy as jnp
-    from jax import random, jit, vmap
+    from jax import random, jit, vmap, lax
     HAS_JAX = True
 except ImportError:
     import numpy as jnp
     HAS_JAX = False
-    
+    lax = None
+
     def random(*args, **kwargs):
         return None
-    
+
     def jit(fn):
         return fn
-    
+
     def vmap(fn):
         return fn
 
@@ -204,12 +205,20 @@ class VQbitLayer:
     
     def _hierarchical_compress(self, quantized: Any, target_ratio: float) -> Any:
         """Hierarchical compression with multiple levels."""
-        # Multi-level quantization (mock implementation)
-        compressed = quantized
-        for level in range(self.config.num_levels):
-            level_ratio = target_ratio ** (1 / self.config.num_levels)
-            compressed = self._adaptive_compress(compressed, level_ratio)
-        return compressed
+        # Multi-level quantization using JAX fori_loop for JIT compatibility
+        level_ratio = target_ratio ** (1 / self.config.num_levels)
+
+        if HAS_JAX and lax is not None:
+            # Use lax.fori_loop for JIT compilation
+            def body_fn(_, compressed):
+                return self._adaptive_compress(compressed, level_ratio)
+            return lax.fori_loop(0, self.config.num_levels, body_fn, quantized)
+        else:
+            # Fallback for non-JAX
+            compressed = quantized
+            for _ in range(self.config.num_levels):
+                compressed = self._adaptive_compress(compressed, level_ratio)
+            return compressed
     
     def _residual_compress(self, original: Any, quantized: Any, target_ratio: float) -> Any:
         """Residual compression of quantization error."""
