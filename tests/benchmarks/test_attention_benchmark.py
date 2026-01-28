@@ -11,6 +11,17 @@ import pytest
 import numpy as np
 from typing import Tuple
 
+try:
+    import pytest_benchmark  # noqa: F401
+    BENCHMARK_AVAILABLE = True
+except ImportError:
+    BENCHMARK_AVAILABLE = False
+
+pytestmark = pytest.mark.skipif(
+    not BENCHMARK_AVAILABLE,
+    reason="pytest-benchmark not installed",
+)
+
 
 class TestAttentionBenchmarks:
     """Benchmark attention implementations."""
