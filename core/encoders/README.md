@@ -517,6 +517,17 @@ optimized_video = optimize_for_hardware(video_encoder, "gpu")
 optimized_multimodal = optimize_for_hardware(multimodal_combiner, "auto")
 ```
 
+## Example
+
+```python
+from capibara.core.encoders import VisionEncoder
+import torch
+
+encoder = VisionEncoder(image_size=224, patch_size=16, num_layers=2, hidden_dim=128, num_heads=4, output_dim=64)
+features = encoder.encode(images=torch.randn(1, 3, 224, 224))
+print(features.features.shape)
+```
+
 ## 📚 References
 
 - [Vision Transformer (ViT)](https://arxiv.org/abs/2010.11929)

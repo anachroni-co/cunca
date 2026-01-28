@@ -185,6 +185,17 @@ def test_contextual_activation():
     assert contextual_activation.jnp is not None
 ```
 
+## Example
+
+```python
+from capibara.core.activations import contextual_activation
+import jax.numpy as jnp
+
+inputs = jnp.array([[1.0, -0.5, 0.25]])
+outputs = contextual_activation.apply(inputs)
+print(outputs)
+```
+
 ## 📚 References
 
 - [JAX Documentation](https://jax.readthedocs.io/)

@@ -426,6 +426,16 @@ optimizers_collection = {
 pretraining_opt = optimizers_collection["pretraining_large"]
 ```
 
+## Example
+
+```python
+from capibara.core.optimizers import AdamWOptimizer
+
+optimizer = AdamWOptimizer(learning_rate=3e-4, weight_decay=0.1)
+state = optimizer.init(params)
+updated_params, state = optimizer.update(grads, state, params)
+```
+
 ## 📚 References
 
 - [Adam: A Method for Stochastic Optimization](https://arxiv.org/abs/1412.6980)
