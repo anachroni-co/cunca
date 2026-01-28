@@ -9,13 +9,20 @@ Merges: trainer.py + train_unified.py + train_TPU.py + parts of train_300M_scale
 """
 
 import os
+import time
+import logging
+import asyncio
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple, Union
+
+import numpy as np
 import optax
 import wandb
-import asyncio
-import numpy as np
-from pathlib import Path
 from flax.training import train_state
-from typing import Dict, Any, Optional, Tuple, Union, Listuple, Union, Listuple, Union, Listuple, Union, List
+
+from capibara.jax import jax
+from capibara.jax import numpy as jnp
 
 # Import optimized modules
 from .training_config import ModelScale, TrainingConfigFactory, get_config_for_scale
