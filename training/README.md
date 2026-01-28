@@ -12,6 +12,7 @@ The **training** module implements the advanced training system for capibaraGPT-
 6. [Quick Start](#quick-start)
 7. [Advanced Configuration](#advanced-configuration)
 8. [Optimizations](#optimizations)
+9. [Multimodal Training (Minimal)](#multimodal-training-minimal)
 
 ---
 
@@ -564,6 +565,24 @@ trainer = UnifiedTrainer(
 ```
 
 ---
+
+## Multimodal Training (Minimal)
+
+For a runnable multimodal example that exercises audio/video encoders and the
+fusion processor, use `training/multimodal_minimal_training.py`.
+
+```bash
+python training/multimodal_minimal_training.py
+```
+
+This script:
+- Encodes audio with `AudioEncoder`
+- Encodes video with `VideoEncoder`
+- Combines vision/video features with `MultimodalCombiner`
+- Fuses text/image/audio/video with `MultimodalFusionProcessor`
+
+It is a minimal training-style loop meant for validation and wiring checks,
+not a production trainer.
 
 ## Debugging and Troubleshooting
 
