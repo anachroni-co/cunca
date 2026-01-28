@@ -206,11 +206,12 @@ class CrossNucleusSynthesizer:
         if n <= 1:
             return jnp.ones((n,))
         
-        compatibility_matrix = jnp.zeros((n, n))
-        for i, nucleus1 in enumerate(nuclei):
-            for j, nucleus2 in enumerate(nuclei):
-                compatibility_score = self.nucleus_compatibility.get((nucleus1, nucleus2), 0.3)
-                compatibility_matrix = compatibility_matrix.at[i, j].set(compatibility_score)
+        # Build compatibility matrix vectorized (no Python nested loop with .at[].set())
+        scores = [
+            self.nucleus_compatibility.get((n1, n2), 0.3)
+            for n1 in nuclei for n2 in nuclei
+        ]
+        compatibility_matrix = jnp.array(scores).reshape(n, n)
         
         avg_compatibility = jnp.mean(compatibility_matrix, axis=1)
         weights = avg_compatibility / jnp.sum(avg_compatibility)

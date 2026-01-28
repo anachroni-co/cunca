@@ -175,16 +175,20 @@ class MockModel:
         exp_logits = np.exp(logits_np - max_logits)
         probs = exp_logits / np.sum(exp_logits, axis=-1, keepdims=True)
 
-        # Cross entropy loss
-        loss = 0.0
-        count = 0
-        for b in range(batch_size):
-            for s in range(seq_len):
-                if labels[b, s] >= 0:  # Ignore -100 labels
-                    loss += -np.log(probs[b, s, labels[b, s]] + 1e-10)
-                    count += 1
+        # Cross entropy loss (vectorized, no Python loops)
+        # Mask for valid labels (not -100)
+        valid_mask = labels >= 0
+        # Clamp labels to valid range for indexing
+        safe_labels = np.where(valid_mask, labels, 0)
+        # Gather log-probabilities at label positions
+        batch_idx = np.arange(batch_size)[:, None]
+        seq_idx = np.arange(seq_len)[None, :]
+        label_probs = probs[batch_idx, seq_idx, safe_labels]
+        # Compute cross entropy only for valid positions
+        log_probs = -np.log(label_probs + 1e-10)
+        loss = np.sum(log_probs * valid_mask) / max(np.sum(valid_mask), 1)
 
-        return loss / max(count, 1)
+        return loss
 
 
 def get_lr_scheduler(
