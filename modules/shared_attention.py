@@ -12,7 +12,7 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(script_dir)
 # Añade la raíz del proyecto a sys.path
 if project_root not in sys.path:
-    # Fixed: Using proper imports instead of sys.path manipulation
+    sys.path.append(project_root)
 
 from capibara.jax import jax
 from flax import linen as nn

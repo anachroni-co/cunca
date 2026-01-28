@@ -7,7 +7,7 @@ name = "capibaragpt"
 dynamic = ["version"]
 description = "CapibaraGPT - Advanced Modular AI System with TPU/GPU Support"
 readme = "README.md"
-license = {text = "Apache-2.0"}
+license = {file = "LICENSE"}
 requires-python = ">=3.9"
 authors = [
     {name = "CapibaraGPT Team", email = "team@capibaragpt.io"}
@@ -19,7 +19,7 @@ keywords = [
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: Apache Software License",
+    "License :: Other/Proprietary License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
@@ -140,6 +140,7 @@ addopts = [
 ]
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "benchmark: performance benchmarks (requires pytest-benchmark)",
     "tpu: marks tests that require TPU",
     "gpu: marks tests that require GPU",
     "integration: marks integration tests",

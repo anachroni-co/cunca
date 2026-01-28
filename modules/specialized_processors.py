@@ -546,7 +546,7 @@ class MultimodalFusionProcessor:
     
     def __init__(self, config: ProcessorConfig):
         self.config = config
-        self.modality_weights = {'text': 0.4, 'image': 0.3, 'audio': 0.3}
+        self.modality_weights = {'text': 0.35, 'image': 0.25, 'audio': 0.2, 'video': 0.2}
         
         logger.info("🔀 MultimodalFusionProcessor initialized")
     

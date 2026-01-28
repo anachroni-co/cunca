@@ -426,6 +426,16 @@ integration_metrics = {
 }
 ```
 
+## Example
+
+```python
+from capibara.core.routers import AdaptiveRouter
+
+router = AdaptiveRouter(num_experts=4, routing_strategy="top_k", top_k=2)
+route = router.route(inputs, context={"domain": "math"})
+print(route.selected_experts)
+```
+
 ## 📚 References
 
 - [Load Balancing Algorithms](https://en.wikipedia.org/wiki/Load_balancing_(computing))

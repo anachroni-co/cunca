@@ -441,6 +441,21 @@ print(f"Communication Efficiency: {distributed_metrics['comm_efficiency']:.2%}")
 print(f"Load Balance Score: {distributed_metrics['load_balance']:.3f}")
 ```
 
+## Example
+
+```python
+from capibara.core.distributed import TPUDistributionConfig
+
+tpu_config = TPUDistributionConfig(
+    mesh_shape=(4, 4, 2),
+    mesh_axis_names=("data", "model", "pipeline"),
+    device_type="TPU_V4",
+    num_partitions=32,
+)
+distributed_system = tpu_config.setup_distributed_training({})
+print(distributed_system.mesh_shape)
+```
+
 ## 📚 References
 
 - [JAX Distributed Programming](https://jax.readthedocs.io/en/latest/multi_process.html)
