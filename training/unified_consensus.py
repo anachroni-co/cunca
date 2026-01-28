@@ -1056,10 +1056,11 @@ async def run_integrated_training_example():
     # show resultados finales
     logger.info("🎉 Entrenamiento integrado completado!")
     logger.info(f"📊 Análisis final: {results['final_analysis']['summary']}")
-    logger.info(f"🎯 Evaluación promedio: {np.mean([
+    avg_eval = np.mean([
         np.mean([model['average_score'] for model in phase.values()])
         for phase in evaluation_results.values()
-    ]):.3f}")
+    ])
+    logger.info(f"🎯 Evaluación promedio: {avg_eval:.3f}")
     logger.info(f"📈 Dataset combinado: {len(combined_dataset['input_ids']):,} samples")
     
     return results, evaluation_results, combined_dataset
