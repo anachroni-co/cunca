@@ -920,3 +920,13 @@ Part of the capibaraGPT-v2 project. See [LICENSE](../../LICENSE) for details.
 **Last Updated**: 2025-11-16
 **Version**: 2024.1.0
 **Status**: Production-Ready Ultra
+
+## Ejemplo rápido
+
+Ejemplo (pseudo-código) para vector quantization:
+
+```python
+# vq = VectorQuantizer(config)
+# codes = vq.encode(inputs)
+# reconstructed = vq.decode(codes)
+```

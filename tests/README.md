@@ -519,3 +519,11 @@ pytest tests/benchmarks/ --benchmark-disable-gc
 - [pytest documentation](https://docs.pytest.org/)
 - [pytest-benchmark](https://pytest-benchmark.readthedocs.io/)
 - [Core Backends README](../core/backends/README.md)
+
+## Ejemplo rápido
+
+Ejemplo para ejecutar la suite completa:
+
+```bash
+pytest -v
+```

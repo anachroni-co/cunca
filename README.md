@@ -42,7 +42,7 @@ capibaraGPT_v3/
 ├── training/                # Training loops and utilities
 ├── inference/               # Inference pipelines
 ├── tests/                   # Unit and integration tests
-└── configs/                 # Model and training configurations
+└── config/                  # Model and training configurations
 ```
 
 ### Key Components
@@ -87,7 +87,7 @@ Modules for structured reasoning:
 
 ```bash
 # Clone the repository
-git clone https://github.com/anacronic-io/capibaraGPT_v3.git
+git clone https://github.com/anachroni-co/capibaraGPT_v3.git
 cd capibaraGPT_v3
 
 # Create virtual environment
@@ -260,10 +260,10 @@ Copyright (c) 2024-2026 Anacroni S.Coop.Gal. All rights reserved.
 
 ## Contact
 
-- **Repository**: [github.com/anacronic-io/capibaraGPT_v3](https://github.com/anacronic-io/capibaraGPT_v3)
+- **Repository**: [github.com/anachroni-co/capibaraGPT_v3](https://github.com/anachroni-co/capibaraGPT_v3)
 - **Organization**: [Anacroni S.Coop.Gal.](https://www.anachroni.co)
 - **Email**: info@anachroni.co
-- **Issues**: [GitHub Issues](https://github.com/anacronic-io/capibaraGPT_v3/issues)
+- **Issues**: [GitHub Issues](https://github.com/anachroni-co/capibaraGPT_v3/issues)
 
 ---
 
@@ -274,3 +274,15 @@ Copyright (c) 2024-2026 Anacroni S.Coop.Gal. All rights reserved.
 *Free for science, education, and research. Commercial use requires license.*
 
 </div>
+
+## Ejemplo rápido
+
+Ejemplo (pseudo-código) de uso básico del backend:
+
+```python
+from core.backends import get_backend
+
+backend = get_backend()
+x = backend.randn((2, 4))
+print(backend.gelu(x))
+```

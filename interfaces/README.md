@@ -411,3 +411,15 @@ class IProcessor(ABC):
 - [Sub-Models](../sub_models/README.md)
 - [Core Backends](../core/backends/README.md)
 - [Utils Cache](../utils/README.md#cache-manager)
+
+## Ejemplo rápido
+
+Ejemplo (pseudo-código) para implementar una interfaz:
+
+```python
+from interfaces.base import BaseInterface
+
+class MiInterface(BaseInterface):
+    def run(self, payload):
+        return {"result": payload}
+```
