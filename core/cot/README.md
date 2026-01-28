@@ -489,3 +489,17 @@ from capibara.core.monitoring import TPUMonitor
 with TPUMonitor().context("cot_reasoning"):
     reasoning_result = cot_module.reason(problem)
 ```
+
+## Example
+
+```python
+from capibara.core.cot import CoTFactory, EnhancedCoTModule
+
+config = CoTFactory.create_logical_reasoning_config(
+    reasoning_type="deductive",
+    enable_contradiction_check=True,
+)
+cot = EnhancedCoTModule(**config)
+result = cot.reason(problem="If A implies B and A is true, what follows?")
+print(result.final_answer)
+```
