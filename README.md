@@ -42,7 +42,7 @@ capibaraGPT_v3/
 ├── training/                # Training loops and utilities
 ├── inference/               # Inference pipelines
 ├── tests/                   # Unit and integration tests
-└── configs/                 # Model and training configurations
+└── config/                  # Model and training configurations
 ```
 
 ### Key Components
