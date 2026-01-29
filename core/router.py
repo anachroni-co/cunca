@@ -396,7 +396,34 @@ class EnhancedRouter:
 
 # Legacy compatibility class
 class CoreIntegratedTokenRouter(EnhancedRouter):
-    def __init__(self, hidden_size: int = 768, num_heads: int = 8, dropout_rate: float = 0.1, 
+    def __call__(self, inputs, context=None):
+        """Synchronous call interface for module scoring.
+
+        Returns a dict mapping module names to confidence scores so the
+        modular model can weight outputs without awaiting the full async
+        ``route_request`` pipeline.
+        """
+        import asyncio
+
+        try:
+            loop = asyncio.get_event_loop()
+            if loop.is_running():
+                # Already inside an event loop — run synchronously via coroutine
+                import concurrent.futures
+                with concurrent.futures.ThreadPoolExecutor() as pool:
+                    result = pool.submit(
+                        asyncio.run, self.route_request(inputs, context)
+                    ).result()
+            else:
+                result = loop.run_until_complete(self.route_request(inputs, context))
+        except Exception:
+            return {}
+
+        if hasattr(result, 'confidence') and hasattr(result, 'selected_module'):
+            return {result.selected_module: result.confidence}
+        return {}
+
+    def __init__(self, hidden_size: int = 768, num_heads: int = 8, dropout_rate: float = 0.1,
                  cache_size: int = 1000, dtype=None, use_core_primitives: bool = True):
         config = RouterConfig(
             hidden_size=hidden_size,

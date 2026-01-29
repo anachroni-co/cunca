@@ -63,7 +63,7 @@ except ImportError:
 # Import available layer types
 try:
     from .ssm_hybrid_layers import (
-        UltraSSMLayer, create_ssm_layer, SSM_LAYERS_AVAILABLE
+        UltraSSMLayer, create_ssm_layer, SSM_COMPONENTS_AVAILABLE as SSM_LAYERS_AVAILABLE
     )
 except ImportError:
     SSM_LAYERS_AVAILABLE = False
@@ -469,16 +469,23 @@ class UltraLayerOrchestrator:
             else:
                 raise
     
-    def _create_attention_layer(self, layer_config: Dict[str, Any], layer_idx: int) -> BaseLayer:
+    def _create_attention_layer(self, layer_config: Dict[str, Any], layer_idx: int) -> Optional[BaseLayer]:
         """Create tpu-optimized attention layer."""
-        
+
+        if TpuSelfAttentionConfig is None or TpuOptimizedSelfAttention is None:
+            logger.warning(
+                "self_attention module not available — "
+                "cannot create attention layer (layer %d)", layer_idx
+            )
+            return None
+
         attention_config = TpuSelfAttentionConfig(
             hidden_size=layer_config["hidden_size"],
             num_heads=layer_config["num_heads"],
             enable_tpu_optimization=self.config.enable_tpu_optimization,
             use_mixed_precision=self.config.use_mixed_precision
         )
-        
+
         layer = TpuOptimizedSelfAttention(attention_config)
         
         # Add wrapper components if configured
@@ -537,9 +544,16 @@ class UltraLayerOrchestrator:
             else:
                 raise
     
-    def _create_neuro_adaptive_layer(self, layer_config: Dict[str, Any], layer_idx: int) -> BaseLayer:
+    def _create_neuro_adaptive_layer(self, layer_config: Dict[str, Any], layer_idx: int) -> Optional[BaseLayer]:
         """Create neuro-adaptive layer."""
-        
+
+        if NeuroAdaptiveLayer is None or NeuroAdaptiveLayerConfig is None:
+            logger.warning(
+                "neuro_adaptive module not available — "
+                "falling back to attention (layer %d)", layer_idx
+            )
+            return self._create_attention_layer(layer_config, layer_idx)
+
         neuro_config = NeuroAdaptiveLayerConfig(
             hidden_size=layer_config["hidden_size"],
             num_heads=layer_config["num_heads"],

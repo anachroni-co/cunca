@@ -253,7 +253,7 @@ class ModularCapibaraModel:
         # Router for module selection
         self.router: Router = Router(
             hidden_size=self.config.hidden_size,
-            num_heads=self.config.num_router_experts,
+            num_heads=getattr(self.config, 'num_attention_heads', 12),
             dropout_rate=0.1,
             dtype=self.config.dtype,
         )

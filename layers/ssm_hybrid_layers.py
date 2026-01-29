@@ -242,8 +242,6 @@ class SSMHybridLayerConfig(LayerConfig):
     memory_efficient_mode: bool = True
     
     def __post_init__(self):
-        super().__post_init__()
-        
         # Validate ratios
         if abs(self.mamba_ratio + self.s4_ratio - 1.0) > 1e-6:
             raise ValueError(f"mamba_ratio + s4_ratio must equal 1.0, got {self.mamba_ratio + self.s4_ratio}")
@@ -285,29 +283,40 @@ def fused_mamba_tpu(x: jnp.ndarray,
     
     # Selective state space computation (core Mamba innovation)
     # This is or(n) vs or(n²) for attention
+    # Transpose to (seq_len, batch, ...) for lax.scan
+    x_scan = jnp.swapaxes(x, 0, 1)           # (seq, batch, d_model)
+    B_scan = jnp.swapaxes(B, 0, 1)           # (seq, batch, d_state, d_model)
+    C_scan = jnp.swapaxes(C, 0, 1)           # (seq, batch, d_model, d_state)
+
     def mamba_step(carry, inputs):
-        h = carry
+        h = carry                              # (batch, d_state)
         x_t, B_t, C_t = inputs
-        
-        # State update: h_{t+1} = A * h_t + B_t * x_t
-        h = A * h + B_t * x_t
-        
-        # Output: y_t = C_t * h_t
-        y = C_t * h
-        
+        # x_t: (batch, d_model), B_t: (batch, d_state, d_model), C_t: (batch, d_model, d_state)
+
+        # State update: h_{t+1} = diag(A) * h_t + B_t @ x_t
+        # B_t @ x_t: (batch, d_state, d_model) @ (batch, d_model, 1) -> (batch, d_state)
+        Bx = jnp.einsum('bsd,bd->bs', B_t, x_t)
+        h = A * h + Bx
+
+        # Output: y_t = C_t^T @ h_t -> (batch, d_model)
+        y = jnp.einsum('bds,bs->bd', C_t, h)
+
         return h, y
-    
+
     # Initialize state
     initial_state = jnp.zeros((batch_size, d_state))
-    
+
     # Scan over sequence (vectorized for tpu)
     _, outputs = jax.lax.scan(
         mamba_step,
         initial_state,
-        (x, B, C),
+        (x_scan, B_scan, C_scan),
         length=seq_len
     )
     
+    # outputs: (seq_len, batch, d_model) -> (batch, seq_len, d_model)
+    outputs = jnp.swapaxes(outputs, 0, 1)
+
     # Compute efficiency metrics
     metrics = {
         "complexity": "O(n)",  # vs or(n²) for attention
@@ -316,7 +325,7 @@ def fused_mamba_tpu(x: jnp.ndarray,
         "output_norm": jnp.linalg.norm(outputs),
         "state_norm": jnp.linalg.norm(initial_state)
     }
-    
+
     return outputs, metrics
 
 @partial(jax.jit, static_argnums=(2, 3))
