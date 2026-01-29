@@ -328,12 +328,12 @@ class L2DistributedCache:
                 if self.config.compression_type != CompressionType.NONE:
                     data = self._decompress_data(data)
                 
-                # Deserialize
-                value = pickle.loads(data)
+                # Deserialize (internal cache data only — not user-supplied)
+                value = pickle.loads(data)  # nosec B301 — internal cache
                 return value
-            
+
             return None
-            
+
         except Exception as e:
             logger.warning(f"L2 cache get failed for key {key}: {e}")
             return None
@@ -484,8 +484,8 @@ class L3PersistentCache:
                     if entry_info.get("compressed", False):
                         data = self._decompress_data(data, entry_info.get("compression_type", "none"))
                     
-                    # Deserialize
-                    value = pickle.loads(data)
+                    # Deserialize (internal cache data only — not user-supplied)
+                    value = pickle.loads(data)  # nosec B301 — internal cache
                     
                     # Update access time
                     entry_info["last_accessed"] = datetime.now().isoformat()

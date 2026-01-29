@@ -748,7 +748,7 @@ if __name__ == "__main__":
         print("=" * 50)
         
         # Create development system
-        system = create_development_system(hf_api_token="demo_token")
+        system = create_development_system(hf_api_token=os.environ.get("HF_API_TOKEN", ""))
         
         # Initialize system
         if await system.initialize():

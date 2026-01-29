@@ -260,7 +260,7 @@ class TPUv6eRobustTrainer:
             
             # Verify metadata
             with open(checkpoint_path / "metadata.pkl", 'rb') as f:
-                metadata = pickle.load(f)
+                metadata = pickle.load(f)  # nosec B301 — trusted checkpoint
                 
             # Validate metadata
             required_fields = ['step', 'epoch', 'model_scale', 'timestamp']

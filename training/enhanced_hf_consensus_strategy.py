@@ -891,7 +891,7 @@ if __name__ == "__main__":
             domain_hint="technical",
             quality_preference="quality_first",
             max_experts=5,
-            hf_api_token="your_hf_token_here"
+            hf_api_token=os.environ.get("HF_API_TOKEN", "")
         )
         
         print(f"Prompt: {prompt}")

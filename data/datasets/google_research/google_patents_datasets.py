@@ -195,45 +195,59 @@ class GooglePatentsDatasets:
 
         query = f"SELECT {', '.join(select_fields)} FROM `{base_table}`"
 
-        # Build WHERE clause
+        # Build WHERE clause with parameterized values
         where_conditions = []
+        query_params = []
 
         if "title" in search_params:
-            where_conditions.append(f"LOWER(title) LIKE '%{search_params['title'].lower()}%'")
+            where_conditions.append("LOWER(title) LIKE CONCAT('%', LOWER(@title_param), '%')")
+            query_params.append(("title_param", search_params["title"]))
 
         if "abstract" in search_params:
-            where_conditions.append(f"LOWER(abstract) LIKE '%{search_params['abstract'].lower()}%'")
+            where_conditions.append("LOWER(abstract) LIKE CONCAT('%', LOWER(@abstract_param), '%')")
+            query_params.append(("abstract_param", search_params["abstract"]))
 
         if "assignee" in search_params:
-            where_conditions.append(f"EXISTS(SELECT 1 FROM UNNEST(assignee) AS a WHERE LOWER(a.name) LIKE '%{search_params['assignee'].lower()}%')")
+            where_conditions.append("EXISTS(SELECT 1 FROM UNNEST(assignee) AS a WHERE LOWER(a.name) LIKE CONCAT('%', LOWER(@assignee_param), '%'))")
+            query_params.append(("assignee_param", search_params["assignee"]))
 
         if "inventor" in search_params:
-            where_conditions.append(f"EXISTS(SELECT 1 FROM UNNEST(inventor) AS i WHERE LOWER(i.name) LIKE '%{search_params['inventor'].lower()}%')")
+            where_conditions.append("EXISTS(SELECT 1 FROM UNNEST(inventor) AS i WHERE LOWER(i.name) LIKE CONCAT('%', LOWER(@inventor_param), '%'))")
+            query_params.append(("inventor_param", search_params["inventor"]))
 
         if "cpc_code" in search_params:
-            where_conditions.append(f"EXISTS(SELECT 1 FROM UNNEST(cpc) AS c WHERE c.code LIKE '{search_params['cpc_code']}%')")
+            where_conditions.append("EXISTS(SELECT 1 FROM UNNEST(cpc) AS c WHERE c.code LIKE CONCAT(@cpc_param, '%'))")
+            query_params.append(("cpc_param", search_params["cpc_code"]))
 
         if "filing_date_start" in search_params:
-            where_conditions.append(f"filing_date >= '{search_params['filing_date_start']}'")
+            where_conditions.append("filing_date >= @filing_start_param")
+            query_params.append(("filing_start_param", search_params["filing_date_start"]))
 
         if "filing_date_end" in search_params:
-            where_conditions.append(f"filing_date <= '{search_params['filing_date_end']}'")
+            where_conditions.append("filing_date <= @filing_end_param")
+            query_params.append(("filing_end_param", search_params["filing_date_end"]))
 
         if where_conditions:
             query += " WHERE " + " AND ".join(where_conditions)
 
-        # Add ORDER BY and LIMIT
+        # Add ORDER BY (whitelist allowed columns to prevent injection)
+        _ALLOWED_ORDER_COLUMNS = {"publication_date", "filing_date", "title"}
         if "order_by" in search_params:
-            query += f" ORDER BY {search_params['order_by']}"
+            order_col = search_params["order_by"]
+            if order_col in _ALLOWED_ORDER_COLUMNS:
+                query += f" ORDER BY {order_col}"
+            else:
+                query += " ORDER BY publication_date DESC"
         else:
             query += " ORDER BY publication_date DESC"
 
         if "limit" in search_params:
-            query += f" LIMIT {search_params['limit']}"
+            limit_val = int(search_params["limit"])  # ensure integer
+            query += f" LIMIT {limit_val}"
         else:
             query += " LIMIT 1000"
 
-        return query
+        return query, query_params
 
     def get_patent_landscape_query(self, technology_area: str,
                                   years: Optional[List[int]] = None) -> str:

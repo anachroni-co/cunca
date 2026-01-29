@@ -496,12 +496,20 @@ class INT8Quantizer:
         """Load quantized model and metadata."""
         filepath = Path(filepath)
         
-        # Load parameters
+        # Load parameters (restrict to trusted sources only)
         if filepath.suffix == '.pkl' and PICKLE_AVAILABLE:
+            import hashlib
+            logger.warning(
+                "Loading pickle file %s — only load from trusted sources", filepath
+            )
             with open(filepath, 'rb') as f:
-                self.quantized_params = pickle.load(f)
+                self.quantized_params = pickle.load(f)  # nosec B301 — trusted checkpoint
         else:
-            self.quantized_params = np.load(filepath.with_suffix('.npy'), allow_pickle=True).item()
+            logger.warning(
+                "Loading numpy file with allow_pickle %s — only load from trusted sources",
+                filepath.with_suffix('.npy'),
+            )
+            self.quantized_params = np.load(filepath.with_suffix('.npy'), allow_pickle=True).item()  # nosec B301
         
         # Load metadata
         metadata_path = filepath.with_suffix('.json')

@@ -545,7 +545,7 @@ class MetaConsensusCompBenchmark:
         
         base_config = MetaConsensusConfig(
             system_name=f"Benchmark-{opt_level.value}",
-            hf_api_token="test_token",
+            hf_api_token=os.environ.get("HF_API_TOKEN", ""),
             enable_serverless=True,
             max_concurrent_experts=10
         )

@@ -53,7 +53,9 @@ class ApiConfig:
     port: int = 8000
     reload: bool = False
     log_level: str = "info"
-    cors_origins: list = field(default_factory=lambda: ["*"])
+    cors_origins: list = field(default_factory=lambda: os.environ.get(
+        "CORS_ORIGINS", "http://localhost:3000,http://localhost:8000"
+    ).split(","))
     api_prefix: str = "/api/v1"
     docs_url: str = "/docs"
     redoc_url: str = "/redoc"
@@ -350,7 +352,7 @@ api:
   port: 8000
   reload: false
   log_level: "info"
-  cors_origins: ["*"]
+  cors_origins: ["http://localhost:3000", "http://localhost:8000"]
 
 sessions:
   session_timeout_hours: 24

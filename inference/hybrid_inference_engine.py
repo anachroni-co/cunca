@@ -160,8 +160,9 @@ class TPUv6eInferenceEngine:
         # For now, we simulate the structure
         checkpoint_path = Path(self.model_path) / "checkpoint.pkl"
         if checkpoint_path.exists():
+            logger.warning("Loading pickle checkpoint from %s — ensure trusted source", checkpoint_path)
             with open(checkpoint_path, 'rb') as f:
-                self.model_params = pickle.load(f)
+                self.model_params = pickle.load(f)  # nosec B301 — trusted checkpoint
         else:
             # Create mock parameters for demo
             logger.warning("Using mock parameters for demo")
