@@ -9,38 +9,7 @@ from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
-# JAX/Flax import guards
-try:
-    import jax
-    import jax.numpy as jnp
-    from flax import linen as nn
-    JAX_AVAILABLE = True
-except ImportError:
-    JAX_AVAILABLE = False
-    jax = None
-    jnp = None
-
-    # Fallback Module class
-    class _FallbackModule:
-        """Fallback module when JAX/Flax is not available."""
-        def __init__(self, *args, **kwargs):
-            raise ImportError(
-                "JAX and Flax are required for Platonic layer. "
-                "Install with: pip install jax flax"
-            )
-
-    class nn:
-        Module = _FallbackModule
-        Dense = _FallbackModule
-
-    class _FallbackJnp:
-        """Fallback jnp when JAX is not available."""
-        class linalg:
-            @staticmethod
-            def norm(*args, **kwargs):
-                raise ImportError("JAX required")
-
-    jnp = _FallbackJnp()
+from layers.jax_compat import jax, jnp, nn, JAX_AVAILABLE
 
 try:
     from interfaces.ilayer import ILayer  # type: ignore

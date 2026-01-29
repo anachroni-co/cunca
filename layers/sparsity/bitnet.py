@@ -9,43 +9,7 @@ from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
-# JAX/Flax import guards
-try:
-    import jax
-    import jax.numpy as jnp
-    from flax import linen as nn
-    JAX_AVAILABLE = True
-except ImportError:
-    JAX_AVAILABLE = False
-    jax = None
-    jnp = None
-
-    # Fallback Module class
-    class _FallbackModule:
-        """Fallback module when JAX/Flax is not available."""
-        def __init__(self, *args, **kwargs):
-            raise ImportError(
-                "JAX and Flax are required for BitNet layers. "
-                "Install with: pip install jax flax"
-            )
-
-    class nn:
-        Module = _FallbackModule
-        Dense = _FallbackModule
-        Conv = _FallbackModule
-        LayerNorm = _FallbackModule
-
-        class initializers:
-            @staticmethod
-            def xavier_uniform():
-                return None
-            @staticmethod
-            def zeros():
-                return None
-
-        @staticmethod
-        def gelu(x):
-            raise ImportError("JAX/Flax required")
+from layers.jax_compat import jax, jnp, nn, JAX_AVAILABLE
 
 class BitNet158(nn.Module):
     """

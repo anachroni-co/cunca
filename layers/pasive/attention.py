@@ -8,6 +8,8 @@ multi-expert distributed processing in the PASIVE framework.
 import logging
 import numpy as np
 
+from layers.attention_utils import split_heads, merge_heads
+
 try:
     import flax.linen as nn
     import jax.numpy as jnp
@@ -70,30 +72,18 @@ class DistributedAttention:
         K = c @ self._np_projections['k']
         V = c @ self._np_projections['v']
 
-        # Reshape into (batch, heads, seq, head_dim)
-        def _reshape(t, seq_len):
-            shape = t.shape[:-1] + (self.num_heads, self.head_dim)
-            t = t.reshape(shape)
-            # (..., seq, heads, head_dim) -> (..., heads, seq, head_dim)
-            return np.swapaxes(t, -3, -2)
-
-        Q = _reshape(Q, x.shape[-2])
-        K = _reshape(K, c.shape[-2])
-        V = _reshape(V, c.shape[-2])
+        Q = split_heads(Q, self.num_heads)
+        K = split_heads(K, self.num_heads)
+        V = split_heads(V, self.num_heads)
 
         # Scaled dot-product attention
         scores = np.matmul(Q, np.swapaxes(K, -1, -2)) * self.scale
-        # Softmax (numerically stable)
         scores_max = scores.max(axis=-1, keepdims=True)
         exp_scores = np.exp(scores - scores_max)
         attn_weights = exp_scores / (exp_scores.sum(axis=-1, keepdims=True) + 1e-8)
 
         attn_out = np.matmul(attn_weights, V)
-
-        # Merge heads: (..., heads, seq, head_dim) -> (..., seq, hidden)
-        attn_out = np.swapaxes(attn_out, -3, -2)
-        merge_shape = attn_out.shape[:-2] + (self.hidden_size,)
-        attn_out = attn_out.reshape(merge_shape)
+        attn_out = merge_heads(attn_out, self.hidden_size)
 
         # Output projection
         output = attn_out @ self._np_projections['o']
@@ -128,20 +118,15 @@ class DistributedAttention:
         K = jnp.dot(c, self._np_projections['k'])
         V = jnp.dot(c, self._np_projections['v'])
 
-        def _reshape(t):
-            shape = t.shape[:-1] + (self.num_heads, self.head_dim)
-            t = t.reshape(shape)
-            return jnp.swapaxes(t, -3, -2)
-
-        Q, K, V = _reshape(Q), _reshape(K), _reshape(V)
+        Q = split_heads(Q, self.num_heads)
+        K = split_heads(K, self.num_heads)
+        V = split_heads(V, self.num_heads)
 
         scores = jnp.matmul(Q, jnp.swapaxes(K, -1, -2)) * self.scale
         attn_weights = nn.softmax(scores, axis=-1)
         attn_out = jnp.matmul(attn_weights, V)
 
-        attn_out = jnp.swapaxes(attn_out, -3, -2)
-        merge_shape = attn_out.shape[:-2] + (self.hidden_size,)
-        attn_out = attn_out.reshape(merge_shape)
+        attn_out = merge_heads(attn_out, self.hidden_size)
 
         output = jnp.dot(attn_out, self._np_projections['o'])
         return output

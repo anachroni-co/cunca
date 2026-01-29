@@ -189,85 +189,62 @@ class LayerPerformanceMetrics:
             self.efficiency_score = 0.0
 
 # ============================================================================
-# Composite Layer Wrappers
+# Composite Layer Wrapper (generic, replaces 4 near-identical classes)
 # ============================================================================
 
-class NeurogenesisWrapper(BaseLayer):
-    """Composite layer: base layer + neurogenesis module (pruning/growth)."""
+class CompositeWrapper(BaseLayer):
+    """Generic composite layer: runs *base_layer* then combines with *component*.
 
-    def __init__(self, base_layer: BaseLayer, neuro_module):
-        config = getattr(base_layer, 'config', LayerConfig())
+    Args:
+        base_layer: The primary layer.
+        component: An auxiliary module applied to the base output.
+        label: Human-readable tag for logging / repr.
+        use_residual: When ``True`` (default), output = base + component.
+                      When ``False``, output = component(base).
+        pass_training: Forward the ``training`` flag to *component*.
+    """
+
+    def __init__(
+        self,
+        base_layer: BaseLayer,
+        component,
+        label: str = "Composite",
+        use_residual: bool = True,
+        pass_training: bool = True,
+    ):
+        config = getattr(base_layer, "config", LayerConfig())
         super().__init__(config)
         self.base_layer = base_layer
-        self.neuro_module = neuro_module
-        self.name = f"Neurogenesis({getattr(base_layer, 'name', 'base')})"
+        self.component = component
+        self.use_residual = use_residual
+        self.pass_training = pass_training
+        self.name = f"{label}({getattr(base_layer, 'name', 'base')})"
 
     def __call__(self, inputs, training: bool = False, **kwargs):
         base_out = self.base_layer(inputs, training=training, **kwargs)
-        neuro_out = self.neuro_module(base_out, training=training)
-        return neuro_out
+        comp_kwargs = {"training": training} if self.pass_training else {}
+        comp_out = self.component(base_out, **comp_kwargs)
+        if self.use_residual:
+            return base_out + comp_out
+        return comp_out
 
     def get_output_shape(self, input_shape: tuple) -> tuple:
         return self.base_layer.get_output_shape(input_shape)
 
 
-class ReasoningWrapper(BaseLayer):
-    """Composite layer: base layer + abstract reasoning residual."""
-
-    def __init__(self, base_layer: BaseLayer, reasoning_layer, reasoning_type: str = "generic"):
-        config = getattr(base_layer, 'config', LayerConfig())
-        super().__init__(config)
-        self.base_layer = base_layer
-        self.reasoning_layer = reasoning_layer
-        self.reasoning_type = reasoning_type
-        self.name = f"Reasoning[{reasoning_type}]({getattr(base_layer, 'name', 'base')})"
-
-    def __call__(self, inputs, training: bool = False, **kwargs):
-        base_out = self.base_layer(inputs, training=training, **kwargs)
-        reasoning_out = self.reasoning_layer(base_out)
-        # Residual connection: base output + reasoning signal
-        return base_out + reasoning_out
-
-    def get_output_shape(self, input_shape: tuple) -> tuple:
-        return self.base_layer.get_output_shape(input_shape)
-
-
-class MetaLAWrapper(BaseLayer):
-    """Composite layer: base layer + MetaLA few-shot adaptation residual."""
-
-    def __init__(self, base_layer: BaseLayer, meta_la_layer):
-        config = getattr(base_layer, 'config', LayerConfig())
-        super().__init__(config)
-        self.base_layer = base_layer
-        self.meta_la_layer = meta_la_layer
-        self.name = f"MetaLA({getattr(base_layer, 'name', 'base')})"
-
-    def __call__(self, inputs, training: bool = False, **kwargs):
-        base_out = self.base_layer(inputs, training=training, **kwargs)
-        meta_out = self.meta_la_layer(base_out, training=training)
-        return base_out + meta_out
-
-    def get_output_shape(self, input_shape: tuple) -> tuple:
-        return self.base_layer.get_output_shape(input_shape)
-
-
-class DistributedAttentionWrapper(BaseLayer):
-    """Composite layer: base layer + PASIVE distributed attention residual."""
-
-    def __init__(self, base_layer: BaseLayer, dist_attn):
-        config = getattr(base_layer, 'config', LayerConfig())
-        super().__init__(config)
-        self.base_layer = base_layer
-        self.dist_attn = dist_attn
-        self.name = f"DistAttn({getattr(base_layer, 'name', 'base')})"
-
-    def __call__(self, inputs, training: bool = False, **kwargs):
-        base_out = self.base_layer(inputs, training=training, **kwargs)
-        attn_out = self.dist_attn(base_out, training=training)
-        return base_out + attn_out
-
-    def get_output_shape(self, input_shape: tuple) -> tuple:
-        return self.base_layer.get_output_shape(input_shape)
+# Backwards-compatible aliases
+NeurogenesisWrapper = partial(
+    CompositeWrapper, label="Neurogenesis", use_residual=False, pass_training=True
+)
+ReasoningWrapper = partial(
+    CompositeWrapper, label="Reasoning", use_residual=True, pass_training=False
+)
+MetaLAWrapper = partial(
+    CompositeWrapper, label="MetaLA", use_residual=True, pass_training=True
+)
+DistributedAttentionWrapper = partial(
+    CompositeWrapper, label="DistAttn", use_residual=True, pass_training=True
+)
 
 
 # ============================================================================
@@ -487,21 +464,7 @@ class UltraLayerOrchestrator:
         )
 
         layer = TpuOptimizedSelfAttention(attention_config)
-        
-        # Add wrapper components if configured
-        if layer_config.get("add_neurogenesis"):
-            layer = self._wrap_with_neurogenesis(layer, layer_config)
-
-        if layer_config.get("add_reasoning"):
-            layer = self._wrap_with_reasoning(layer, layer_config)
-
-        if layer_config.get("add_meta_la"):
-            layer = self._wrap_with_meta_la(layer, layer_config)
-
-        if layer_config.get("add_distributed_attention"):
-            layer = self._wrap_with_distributed_attention(layer, layer_config)
-
-        return layer
+        return self._apply_wrappers(layer, layer_config)
 
     def _create_ssm_layer(self, layer_config: Dict[str, Any], layer_idx: int) -> Optional[BaseLayer]:
         """Create SSM hybrid layer."""
@@ -524,18 +487,7 @@ class UltraLayerOrchestrator:
                     setattr(ssm_config, key, value)
             
             layer = create_ssm_layer("ultra", ssm_config)
-            
-            # Add wrapper components if configured
-            if layer_config.get("add_neurogenesis"):
-                layer = self._wrap_with_neurogenesis(layer, layer_config)
-
-            if layer_config.get("add_meta_la"):
-                layer = self._wrap_with_meta_la(layer, layer_config)
-
-            if layer_config.get("add_distributed_attention"):
-                layer = self._wrap_with_distributed_attention(layer, layer_config)
-
-            return layer
+            return self._apply_wrappers(layer, layer_config)
 
         except Exception as e:
             logger.error(f"Failed to create SSM layer: {e}")
@@ -562,6 +514,21 @@ class UltraLayerOrchestrator:
         
         return NeuroAdaptiveLayer(neuro_config)
     
+    # Ordered list of (config_key, wrap_method_name) pairs.
+    _WRAPPER_PIPELINE = [
+        ("add_neurogenesis", "_wrap_with_neurogenesis"),
+        ("add_reasoning", "_wrap_with_reasoning"),
+        ("add_meta_la", "_wrap_with_meta_la"),
+        ("add_distributed_attention", "_wrap_with_distributed_attention"),
+    ]
+
+    def _apply_wrappers(self, layer: BaseLayer, layer_config: Dict[str, Any]) -> BaseLayer:
+        """Apply all configured wrappers to *layer* in pipeline order."""
+        for cfg_key, method_name in self._WRAPPER_PIPELINE:
+            if layer_config.get(cfg_key):
+                layer = getattr(self, method_name)(layer, layer_config)
+        return layer
+
     def _wrap_with_neurogenesis(self, base_layer: BaseLayer, layer_config: Dict[str, Any]) -> BaseLayer:
         """Wrap layer with neurogenesis functionality.
 
@@ -854,6 +821,7 @@ __all__ = [
     'demonstrate_ultra_layer_integration',
     
     # Composite wrappers
+    'CompositeWrapper',
     'NeurogenesisWrapper',
     'ReasoningWrapper',
     'MetaLAWrapper',
