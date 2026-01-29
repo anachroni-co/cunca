@@ -1,1 +1,52 @@
 __pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables and secrets
+.env
+.env.*
+*.pem
+*.key
+*.p12
+credentials.json
+secrets.json
+api_keys.txt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Cache
+*.cache
+.cache/
+.pytest_cache/
+
+# Data and models
+*.db
+*.sqlite
+*.pkl
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+
+# Build
+dist/
+build/
+*.egg-info/
+
+# Virtual environments
+venv/
+.venv/
+env/

@@ -7,6 +7,7 @@ for secure code execution and VM management.
 
 import os
 import logging
+from pathlib import Path
 from typing import Dict, List, Optional, Any
 from dotenv import load_dotenv
 from e2b_code_interpreter import Sandbox
@@ -15,6 +16,20 @@ from e2b_code_interpreter import Sandbox
 load_dotenv()
 
 logger = logging.getLogger(__name__)
+
+# Blocked system path prefixes for path traversal protection
+_BLOCKED_PATH_PREFIXES = ("/etc", "/var/log", "/root", "/proc", "/sys")
+
+
+def _validate_local_path(path: str, operation: str = "access") -> Path:
+    """Validate local path to prevent path traversal attacks."""
+    resolved = Path(path).resolve()
+    for prefix in _BLOCKED_PATH_PREFIXES:
+        if str(resolved).startswith(prefix):
+            raise ValueError(
+                f"Path traversal blocked: {operation} to '{resolved}' is not allowed"
+            )
+    return resolved
 
 
 class E2BSandboxAgent:
@@ -163,12 +178,13 @@ class E2BSandboxAgent:
             raise ValueError(f"Sandbox {sandbox_id} not found")
 
         try:
+            validated_path = _validate_local_path(local_path, "upload")
             sbx = self.active_sandboxes[sandbox_id]
 
-            with open(local_path, 'rb') as f:
+            with open(validated_path, 'rb') as f:
                 sbx.files.write(remote_path, f.read())
 
-            logger.info(f"Uploaded {local_path} to {remote_path} in sandbox {sandbox_id}")
+            logger.info(f"Uploaded {validated_path} to {remote_path} in sandbox {sandbox_id}")
             return True
 
         except Exception as e:
@@ -194,13 +210,14 @@ class E2BSandboxAgent:
             raise ValueError(f"Sandbox {sandbox_id} not found")
 
         try:
+            validated_path = _validate_local_path(local_path, "download")
             sbx = self.active_sandboxes[sandbox_id]
             content = sbx.files.read(remote_path)
 
-            with open(local_path, 'wb') as f:
+            with open(validated_path, 'wb') as f:
                 f.write(content)
 
-            logger.info(f"Downloaded {remote_path} from sandbox {sandbox_id} to {local_path}")
+            logger.info(f"Downloaded {remote_path} from sandbox {sandbox_id} to {validated_path}")
             return True
 
         except Exception as e:

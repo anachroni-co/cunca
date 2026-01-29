@@ -163,8 +163,12 @@ Examples:
     if args.port:
         config.api.port = args.port
     if args.debug:
-        config.debug = True
-        config.logging.level = "DEBUG"
+        environment = os.environ.get("ENVIRONMENT", "development")
+        if environment == "production":
+            print("WARNING: Debug mode requested in production — ignoring for safety")
+        else:
+            config.debug = True
+            config.logging.level = "DEBUG"
     
     # Validate config if requested
     if args.validate_config:

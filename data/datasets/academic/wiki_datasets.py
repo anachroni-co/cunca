@@ -6,12 +6,35 @@ import os
 import logging
 import json
 import requests
+from urllib.parse import urlparse
 from tqdm import tqdm
 from pathlib import Path
 import xml.etree.ElementTree as ET
 from typing import Dict, List, Optional, Union
 
 logger = logging.getLogger(__name__)
+
+# Allowed hosts for dataset downloads (SSRF protection)
+_ALLOWED_DOWNLOAD_HOSTS = frozenset({
+    "dumps.wikimedia.org",
+    "wikipedia2vec.s3.amazonaws.com",
+    "commons.wikimedia.org",
+})
+
+
+def _validated_get(url: str, **kwargs) -> requests.Response:
+    """HTTP GET with URL validation to prevent SSRF."""
+    parsed = urlparse(url)
+    if parsed.scheme not in ("http", "https"):
+        raise ValueError(f"Disallowed URL scheme: {parsed.scheme}")
+    if parsed.hostname and parsed.hostname not in _ALLOWED_DOWNLOAD_HOSTS:
+        raise ValueError(
+            f"Disallowed host: {parsed.hostname}. "
+            f"Allowed: {_ALLOWED_DOWNLOAD_HOSTS}"
+        )
+    response = requests.get(url, timeout=60, **kwargs)
+    response.raise_for_status()
+    return response
 
 class WikiDataManager:
     """Manager for Wikipedia and related resources datasets."""
@@ -58,7 +81,7 @@ class WikiDataManager:
         try:
             if not dump_path.exists():
                 logger.info(f"Downloading Wikipedia dump for {language}...")
-                response = requests.get(dump_url, stream=True)
+                response = _validated_get(dump_url, stream=True)
                 response.raise_for_status()
 
                 total_size = int(response.headers.get('content-length', 0))
@@ -98,7 +121,7 @@ class WikiDataManager:
         try:
             if not model_path.exists():
                 logger.info(f"Downloading Wikipedia2Vec embeddings for {language}...")
-                response = requests.get(model_url, stream=True)
+                response = _validated_get(model_url, stream=True)
                 response.raise_for_status()
 
                 with open(model_path, 'wb') as f:
@@ -136,7 +159,7 @@ class WikiDataManager:
 
                 if not file_path.exists():
                     logger.info(f"Downloading DBpedia dataset {dataset} for {language}...")
-                    response = requests.get(file_url, stream=True)
+                    response = _validated_get(file_url, stream=True)
                     response.raise_for_status()
 
                     with open(file_path, 'wb') as f:
@@ -168,7 +191,7 @@ class WikiDataManager:
         try:
             if not file_path.exists():
                 logger.info(f"Downloading Wikidata dump ({entity_type})...")
-                response = requests.get(file_url, stream=True)
+                response = _validated_get(file_url, stream=True)
                 response.raise_for_status()
 
                 with open(file_path, 'wb') as f:

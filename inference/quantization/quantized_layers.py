@@ -13,6 +13,12 @@ Designed for seamless integration with existing Capibara-6 models.
 
 import logging
 from typing import Any, Callable, Optional, Tuple, Union
+
+try:
+    from core.decorators import get_causal_mask_jax, profile_execution
+except ImportError:
+    get_causal_mask_jax = None
+    profile_execution = None
 from dataclasses import dataclass
 import functools
 
@@ -64,12 +70,12 @@ class QuantizedLayerConfig:
     log_dequantization: bool = False
 
 
-def quantized_dense_kernel(x: jnp.ndarray, 
-                          kernel_q: jnp.ndarray, 
-                          scales: jnp.ndarray,
-                          zero_points: Optional[jnp.ndarray] = None,
-                          bias: Optional[jnp.ndarray] = None,
-                          precision: Any = None) -> jnp.ndarray:
+def _quantized_dense_kernel_impl(x: jnp.ndarray,
+                                 kernel_q: jnp.ndarray,
+                                 scales: jnp.ndarray,
+                                 zero_points: Optional[jnp.ndarray] = None,
+                                 bias: Optional[jnp.ndarray] = None,
+                                 precision: Any = None) -> jnp.ndarray:
     """
     Core quantized dense computation kernel.
     
@@ -109,6 +115,13 @@ def quantized_dense_kernel(x: jnp.ndarray,
         y = y + bias
     
     return y
+
+
+# Apply profiling to quantized kernel
+if profile_execution is not None:
+    quantized_dense_kernel = profile_execution("quantized_dense_kernel")(_quantized_dense_kernel_impl)
+else:
+    quantized_dense_kernel = _quantized_dense_kernel_impl
 
 
 if FLAX_AVAILABLE:
@@ -365,11 +378,14 @@ if FLAX_AVAILABLE:
             if mask is not None:
                 scores = scores + mask
             
-            # Apply causal mask if needed
+            # Apply causal mask if needed (cached)
             if self.causal and not self.decode:
                 seq_len = scores.shape[-1]
-                causal_mask = jnp.tril(jnp.ones((seq_len, seq_len)))
-                causal_mask = jnp.where(causal_mask, 0.0, -jnp.inf)
+                if get_causal_mask_jax is not None:
+                    tril = get_causal_mask_jax(seq_len)
+                else:
+                    tril = jnp.tril(jnp.ones((seq_len, seq_len)))
+                causal_mask = jnp.where(tril, 0.0, -jnp.inf)
                 scores = scores + causal_mask
             
             # Softmax and weighted sum

@@ -4,6 +4,12 @@ from typing import Dict, Tuple
 import numpy as np
 from capibara.jax import numpy as jnp
 
+try:
+    from core.decorators import profile_execution
+except ImportError:
+    profile_execution = None
+
+
 def compute_mse(original: jnp.ndarray, reconstructed: jnp.ndarray) -> float:
     """Calculate mean squared error"""
     return float(jnp.mean((original - reconstructed) ** 2))
@@ -38,7 +44,7 @@ def compute_compression_ratio(original_size: int, compressed_size: int) -> float
     """Calculate compression ratio"""
     return original_size / compressed_size
 
-def evaluate_layer_quantization(
+def _evaluate_layer_quantization_impl(
     original: jnp.ndarray,
     reconstructed: jnp.ndarray,
     codebook_size: int,
@@ -59,6 +65,13 @@ def evaluate_layer_quantization(
         "correlation": compute_correlation(original, reconstructed),
         "compression_ratio": compute_compression_ratio(original_size, int(compressed_size))
     }
+
+
+if profile_execution is not None:
+    evaluate_layer_quantization = profile_execution("evaluate_layer_quantization")(_evaluate_layer_quantization_impl)
+else:
+    evaluate_layer_quantization = _evaluate_layer_quantization_impl
+
 
 def evaluate_model_quantization(
     results: Dict[str, Dict]

@@ -40,6 +40,14 @@ from .utils import (
     sync_device,
     memory_stats,
 )
+from .module_gate import (
+    ModuleGate,
+    ModuleName,
+    BackendCapabilities,
+    CPU_CAPABILITIES,
+    GPU_CAPABILITIES,
+    TPU_CAPABILITIES,
+)
 
 __all__ = [
     # Base classes
@@ -59,4 +67,11 @@ __all__ = [
     "get_device_info",
     "sync_device",
     "memory_stats",
+    # Module gating
+    "ModuleGate",
+    "ModuleName",
+    "BackendCapabilities",
+    "CPU_CAPABILITIES",
+    "GPU_CAPABILITIES",
+    "TPU_CAPABILITIES",
 ]

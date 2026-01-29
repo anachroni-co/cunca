@@ -6,6 +6,7 @@ import os
 import json
 import logging
 import requests
+from urllib.parse import urlparse
 from tqdm import tqdm
 from pathlib import Path
 from dataclasses import dataclass
@@ -13,6 +14,30 @@ from datasets import load_dataset
 from typing import Dict, List, Optional, Union
 
 logger = logging.getLogger(__name__)
+
+# Allowed hosts for institutional dataset downloads (SSRF protection)
+_ALLOWED_INSTITUTIONAL_HOSTS = frozenset({
+    "archive.ics.uci.edu",
+    "data.nasa.gov",
+    "catalog.data.gov",
+    "api.worldbank.org",
+    "data.un.org",
+    "data.uis.unesco.org",
+    "raw.githubusercontent.com",
+})
+
+
+def _validated_get(url: str, **kwargs) -> requests.Response:
+    """HTTP GET with URL validation to prevent SSRF."""
+    parsed = urlparse(url)
+    if parsed.scheme not in ("http", "https"):
+        raise ValueError(f"Disallowed URL scheme: {parsed.scheme}")
+    if parsed.hostname and parsed.hostname not in _ALLOWED_INSTITUTIONAL_HOSTS:
+        raise ValueError(
+            f"Disallowed host: {parsed.hostname}. "
+            f"Allowed: {_ALLOWED_INSTITUTIONAL_HOSTS}"
+        )
+    return requests.get(url, timeout=60, **kwargs)
 
 @dataclass
 class DatasetMetadata:
@@ -80,7 +105,7 @@ class InstitutionalDatasetManager:
         try:
             # Obtain metadata of the dataset
             metadata_url = f"{self.UCI_BASE_URL}{dataset_id}"
-            response = requests.get(metadata_url)
+            response = _validated_get(metadata_url)
             response.raise_for_status()
             metadata = response.json()
 
@@ -96,7 +121,7 @@ class InstitutionalDatasetManager:
 
                 if not file_path.exists():
                     logger.info(f"Downloading {file_name} from UCI...")
-                    response = requests.get(file_url, stream=True)
+                    response = _validated_get(file_url, stream=True)
                     response.raise_for_status()
 
                     with open(file_path, "wb") as f:
@@ -122,7 +147,7 @@ class InstitutionalDatasetManager:
         try:
             # Obtain metadata of the dataset
             metadata_url = f"{self.NASA_BASE_URL}{dataset_id}"
-            response = requests.get(metadata_url)
+            response = _validated_get(metadata_url)
             response.raise_for_status()
             metadata = response.json()
 
@@ -138,7 +163,7 @@ class InstitutionalDatasetManager:
 
                 if not file_path.exists():
                     logger.info(f"Downloading {file_name} from NASA...")
-                    response = requests.get(file_url, stream=True)
+                    response = _validated_get(file_url, stream=True)
                     response.raise_for_status()
 
                     with open(file_path, "wb") as f:
@@ -164,7 +189,7 @@ class InstitutionalDatasetManager:
         try:
             # Obtain metadata of the dataset
             params = {"q": dataset_id}
-            response = requests.get(self.DATAGOV_BASE_URL, params=params)
+            response = _validated_get(self.DATAGOV_BASE_URL, params=params)
             response.raise_for_status()
             metadata = response.json()["result"]["results"][0]
 
@@ -180,7 +205,7 @@ class InstitutionalDatasetManager:
 
                 if not file_path.exists():
                     logger.info(f"Downloading {file_name} from Data.gov...")
-                    response = requests.get(file_url, stream=True)
+                    response = _validated_get(file_url, stream=True)
                     response.raise_for_status()
 
                     with open(file_path, "wb") as f:
@@ -218,7 +243,7 @@ class InstitutionalDatasetManager:
                 params["date"] = f"{start_year}:{end_year or 'latest'}"
 
             # Perform request
-            response = requests.get(url, params=params)
+            response = _validated_get(url, params=params)
             response.raise_for_status()
             data = response.json()[1]  # First element is metadata
 
@@ -251,7 +276,7 @@ class InstitutionalDatasetManager:
             params = {"format": "json"}
 
             # Perform request
-            response = requests.get(url, params=params)
+            response = _validated_get(url, params=params)
             response.raise_for_status()
             data = response.json()
 
@@ -282,7 +307,7 @@ class InstitutionalDatasetManager:
             params = {"format": "json"}
 
             # Perform request
-            response = requests.get(url, params=params)
+            response = _validated_get(url, params=params)
             response.raise_for_status()
             data = response.json()
 
@@ -310,7 +335,7 @@ class InstitutionalDatasetManager:
         try:
             # Build URL for the dataset
             url = f"{self.FIVETHIRTYEIGHT_BASE_URL}data/{dataset_id}/MANIFEST.json"
-            response = requests.get(url)
+            response = _validated_get(url)
             response.raise_for_status()
             manifest = response.json()
 
@@ -326,7 +351,7 @@ class InstitutionalDatasetManager:
 
                 if not file_path.exists():
                     logger.info(f"Downloading {file_name} from FiveThirtyEight...")
-                    response = requests.get(file_url, stream=True)
+                    response = _validated_get(file_url, stream=True)
                     response.raise_for_status()
 
                     with open(file_path, "wb") as f:
@@ -336,7 +361,7 @@ class InstitutionalDatasetManager:
                 # Download README if exists
                 readme_url = f"{self.FIVETHIRTYEIGHT_BASE_URL}data/{dataset_id}/README.md"
                 try:
-                    response = requests.get(readme_url)
+                    response = _validated_get(readme_url)
                     response.raise_for_status()
                     with open(dataset_dir / "README.md", "w", encoding="utf-8") as f:
                         f.write(response.text)

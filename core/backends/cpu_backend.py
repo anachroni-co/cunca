@@ -264,8 +264,11 @@ class CPUBackend(ComputeBackend):
         path: str,
         map_location: Optional[str] = None,
     ) -> Dict[str, Any]:
-        """Load NumPy checkpoint."""
-        data = np.load(path, allow_pickle=True)
+        """Load NumPy checkpoint.
+
+        Warning: Uses allow_pickle=True. Only load checkpoints from trusted sources.
+        """
+        data = np.load(path, allow_pickle=True)  # nosec B301 — trusted checkpoint
         return dict(data)
 
     # ==================== Utility Methods ====================

@@ -23,12 +23,14 @@ F = TypeVar('F', bound=Callable[..., Any])
 _mask_cache: Dict[Tuple, np.ndarray] = {}
 _mask_cache_lock = threading.Lock()
 
-# Try to import JAX
+# Try to import JAX (verify jax.jit exists to avoid project's own jax shim)
 try:
     import jax
     import jax.numpy as jnp
+    if not hasattr(jax, 'jit'):
+        raise ImportError("jax module found but missing jit — likely project shim")
     JAX_AVAILABLE = True
-except ImportError:
+except (ImportError, Exception):
     JAX_AVAILABLE = False
     jax = None
     jnp = None

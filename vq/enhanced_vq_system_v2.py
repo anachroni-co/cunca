@@ -16,6 +16,12 @@ import jax.numpy as jnp
 import flax.linen as nn
 from flax import struct
 
+try:
+    from core.decorators import jit_if_available, profile_execution
+except ImportError:
+    jit_if_available = None
+    profile_execution = None
+
 logger = logging.getLogger(__name__)
 
 # ============================================================================
@@ -94,6 +100,30 @@ class EnhancedVQConfig:
             self.subspace_dim = self.embedding_dim // self.num_subspaces
             if self.embedding_dim % self.num_subspaces != 0:
                 logger.warning(f"embedding_dim ({self.embedding_dim}) not divisible by num_subspaces ({self.num_subspaces})")
+
+# ============================================================================
+# JIT-compiled distance computation (extracted for JIT compatibility)
+# ============================================================================
+
+def _compute_l2_distances(z_flat: jnp.ndarray, embeddings: jnp.ndarray) -> jnp.ndarray:
+    """L2 distance between inputs and embeddings."""
+    return (
+        jnp.sum(z_flat**2, axis=1, keepdims=True) +
+        jnp.sum(embeddings**2, axis=1) -
+        2 * jnp.matmul(z_flat, embeddings.T)
+    )
+
+
+def _compute_cosine_distances(z_flat: jnp.ndarray, embeddings: jnp.ndarray) -> jnp.ndarray:
+    """Cosine distance (negated similarity) between inputs and embeddings."""
+    return -jnp.matmul(z_flat, embeddings.T)
+
+
+# Apply JIT if available
+if jit_if_available is not None:
+    _compute_l2_distances = jit_if_available()(_compute_l2_distances)
+    _compute_cosine_distances = jit_if_available()(_compute_cosine_distances)
+
 
 # ============================================================================
 # Enhanced Vector Quantizer with New Features
@@ -337,16 +367,8 @@ class EnhancedVectorQuantizer(nn.Module):
     def _compute_distances(self, z_flat: jnp.ndarray, embeddings: jnp.ndarray) -> jnp.ndarray:
         """Compute distances between inputs and embeddings."""
         if self.config.use_cosine_sim:
-            # Cosine similarity (higher is better, so negate)
-            distances = -jnp.matmul(z_flat, embeddings.T)
-        else:
-            # L2 distance
-            distances = (
-                jnp.sum(z_flat**2, axis=1, keepdims=True) +
-                jnp.sum(embeddings**2, axis=1) -
-                2 * jnp.matmul(z_flat, embeddings.T)
-            )
-        return distances
+            return _compute_cosine_distances(z_flat, embeddings)
+        return _compute_l2_distances(z_flat, embeddings)
     
     def _compute_losses(self, z: jnp.ndarray, quantized: jnp.ndarray,
                        z_flat: jnp.ndarray, encoding_indices: jnp.ndarray,

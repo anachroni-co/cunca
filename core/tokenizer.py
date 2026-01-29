@@ -85,6 +85,11 @@ from __future__ import annotations
 
 from typing import List, Union, Optional, Dict, Any
 
+try:
+    from core.decorators import cached_computation
+except ImportError:
+    cached_computation = None
+
 # Use project's jax.numpy with internal fallback (no numpy dependency)
 try:
     from capibara.jax import numpy as jnp  # Project native
@@ -322,7 +327,7 @@ class _WhitespaceTokenizer:
         return [self.decode(ids, skip_special_tokens=skip_special_tokens) for ids in batch_ids]
 
 
-def load_tokenizer(model_name: str = "gpt2") -> PreTrainedTokenizerBase:
+def _load_tokenizer_impl(model_name: str = "gpt2") -> PreTrainedTokenizerBase:
     """Load a HuggingFace tokenizer or minimal fallback tokenizer.
 
     Attempts to load the specified tokenizer from HuggingFace's model hub.
@@ -356,6 +361,13 @@ def load_tokenizer(model_name: str = "gpt2") -> PreTrainedTokenizerBase:
     if TRANSFORMERS_AVAILABLE:
         return AutoTokenizer.from_pretrained(model_name)
     return _WhitespaceTokenizer()
+
+
+# Wrap with cache: same model_name → same tokenizer instance
+if cached_computation is not None:
+    load_tokenizer = cached_computation(maxsize=8, ttl_seconds=3600)(_load_tokenizer_impl)
+else:
+    load_tokenizer = _load_tokenizer_impl
 
 
 def load_tokenizer_from_config(

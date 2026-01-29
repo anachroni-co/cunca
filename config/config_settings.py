@@ -58,7 +58,7 @@ class APISettings(BaseModel):
     port: int = Field(8000, ge=1, le=65535)
     workers: int = Field(4, ge=1, le=32)
     timeout: int = Field(30, ge=1)
-    cors_origins: List[str] = Field(["*"])
+    cors_origins: List[str] = Field(["http://localhost:3000", "http://localhost:8000"])
 
 class LoggingSettings(BaseModel):
     """Logging configuration."""

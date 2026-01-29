@@ -15,6 +15,12 @@ try:
 except Exception:
     pass
 
+try:
+    from core.decorators import cached_mask, get_causal_mask_jax
+except ImportError:
+    cached_mask = None
+    get_causal_mask_jax = None
+
 
     
     class MultiHeadAttention:
@@ -349,14 +355,29 @@ except Exception:
     # Utility functions for attention patterns
     
     def causal_mask(seq_len):
-        """Create causal (autoregressive) attention mask."""
+        """Create causal (autoregressive) attention mask (cached)."""
+        if get_causal_mask_jax is not None:
+            base = get_causal_mask_jax(seq_len)
+            return base[None, None, :, :]
         mask = jnp.tril(jnp.ones((seq_len, seq_len)))
-        return mask[None, None, :, :]  # Add batch and head dimensions
-    
+        return mask[None, None, :, :]
+
+    if cached_mask is not None:
+        @cached_mask("padding")
+        def _cached_padding_base(max_len):
+            """Cached arange for padding mask construction."""
+            return jnp.arange(max_len)
+    else:
+        _cached_padding_base = None
+
     def create_padding_mask(lengths, max_len):
         """Create padding mask from sequence lengths."""
-        mask = jnp.arange(max_len)[None, :] < lengths[:, None]
-        return mask[:, None, None, :]  # Add head and query dimensions
+        if _cached_padding_base is not None:
+            arange = _cached_padding_base(max_len)
+        else:
+            arange = jnp.arange(max_len)
+        mask = arange[None, :] < lengths[:, None]
+        return mask[:, None, None, :]
     
     def combine_masks(mask1, mask2):
         """Combine two attention masks."""

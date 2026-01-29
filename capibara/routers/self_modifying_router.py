@@ -222,7 +222,7 @@ class RoutingPolicy:
         probabilities = [e / sum_exp for e in exp_scores]
 
         # Select top-k routes with exploration
-        is_exploring = random.random() < self.config.exploration_rate
+        is_exploring = random.SystemRandom().random() < self.config.exploration_rate
 
         if is_exploring:
             # Exploration: random selection

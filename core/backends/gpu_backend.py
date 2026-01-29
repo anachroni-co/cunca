@@ -418,10 +418,18 @@ class GPUBackend(ComputeBackend):
         path: str,
         map_location: Optional[str] = None,
     ) -> Dict[str, Any]:
-        """Load PyTorch checkpoint."""
+        """Load PyTorch checkpoint.
+
+        Warning: Only load checkpoints from trusted sources.
+        Uses weights_only=True by default for safety.
+        """
         _ensure_torch()
         map_loc = map_location or self._device
-        return torch.load(path, map_location=map_loc)
+        try:
+            return torch.load(path, map_location=map_loc, weights_only=True)
+        except TypeError:
+            # PyTorch < 1.13 doesn't support weights_only
+            return torch.load(path, map_location=map_loc)  # nosec B614
 
     # ==================== GPU-Specific Methods ====================
 

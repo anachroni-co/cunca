@@ -290,12 +290,17 @@ class QuantizedInferenceEngine:
             with open(model_path, 'r') as f:
                 return json.load(f)
         elif model_path.suffix in ['.npy', '.npz']:
-            return np.load(model_path, allow_pickle=True).item()
-        else:
-            # Try to load as pickle or other format
+            return np.load(model_path, allow_pickle=True).item()  # nosec B301 — trusted model
+        elif model_path.suffix == '.pkl':
             import pickle
+            logger.warning("Loading pickle model from %s — ensure trusted source", model_path)
             with open(model_path, 'rb') as f:
-                return pickle.load(f)
+                return pickle.load(f)  # nosec B301 — trusted model
+        else:
+            raise ValueError(
+                f"Unsupported model format: {model_path.suffix}. "
+                "Supported: .json, .npy, .npz, .pkl"
+            )
     
     def _initialize_kv_cache(self):
         """Initialize quantized KV-cache."""

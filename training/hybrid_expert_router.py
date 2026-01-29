@@ -1083,7 +1083,7 @@ if __name__ == "__main__":
     async def main():
         router = create_hybrid_expert_router(
             router_model_path="models/router_2.6B",
-            hf_api_token="your_hf_token_here",
+            hf_api_token=os.environ.get("HF_API_TOKEN", ""),
             enable_serverless=True
         )
         
