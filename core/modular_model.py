@@ -33,6 +33,12 @@ from capibara.core.metrics import MetricsCollector
 from capibara.core.module_registry import ModuleRegistry
 from capibara.core.router import CoreIntegratedTokenRouter as Router
 
+# Backend-aware module gating
+try:
+    from core.backends.module_gate import ModuleGate
+except ImportError:
+    ModuleGate = None
+
 # Configuration and module imports
 from capibara.interfaces.imodules import IModule
 try:
@@ -106,8 +112,8 @@ class CoreIntegrationError(ModularCapibaraError):
 
 class ModularConfig:
     """Configuration for ModularCapibaraModel integrated with core.py."""
-    
-    def __init__(self):
+
+    def __init__(self, backend_name: str = "auto"):
         # Load configurations from TOML files
         try:
             config_root = Path(os.environ.get("CAPIBARA_CONFIG_ROOT", "capibara/config"))
@@ -183,7 +189,18 @@ class ModularConfig:
             self.agent_cleanup_interval: float = agents_config.get("agent_cleanup_interval", 300.0)
             self.memory_pressure_threshold: float = agents_config.get("memory_pressure_threshold", 0.85)
             self.enable_hot_reload: bool = agents_config.get("enable_hot_reload", False)
-            
+
+            # Backend-aware module gating
+            self.backend_name: str = backend_name
+            self.module_gate = None
+            if ModuleGate is not None:
+                resolved = backend_name if backend_name != "auto" else "cpu"
+                try:
+                    self.module_gate = ModuleGate.from_backend(resolved)
+                    logger.info(f"ModuleGate initialized for backend '{resolved}'")
+                except ValueError:
+                    logger.warning(f"Unknown backend '{resolved}', module gate disabled")
+
         except Exception as e:
             # Safe fallback with minimal defaults
             logger.warning(f"Failed loading TOML configuration, using defaults: {e}")
@@ -212,6 +229,15 @@ class ModularConfig:
             self.agent_cleanup_interval = 300.0
             self.memory_pressure_threshold = 0.85
             self.enable_hot_reload = False
+            self.backend_name = backend_name
+            self.module_gate = None
+            if ModuleGate is not None:
+                resolved = backend_name if backend_name != "auto" else "cpu"
+                try:
+                    self.module_gate = ModuleGate.from_backend(resolved)
+                except ValueError:
+                    pass
+
 
 class ModularCapibaraModel:
     """Capibara model with advanced modular capabilities."""
@@ -312,13 +338,31 @@ class ModularCapibaraModel:
                 logger.warning(f"Could not load Mamba/SSM modules: {e}")
                 # Modules remain as None and will be ignored
 
+            # Module name → gate key mapping
+            _gate_map = {
+                "dual_process": "dual_process",
+                "semiotic": "semiotic_module",
+                "semiotic_interaction": "semiotic_module",
+                "mamba": "mamba_ssm",
+                "hybrid_attention": "flash_attention",
+            }
+
             # Dynamic registration and instantiation
+            gate = self.config.module_gate
             for name in active_modules:
                 if name in available_modules and available_modules[name] is not None:
+                    # Check module gate if available
+                    gate_key = _gate_map.get(name)
+                    if gate is not None and gate_key and not gate.is_enabled(gate_key):
+                        logger.info(
+                            f"Module '{name}' disabled by ModuleGate "
+                            f"(backend={gate.get_backend_name()})"
+                        )
+                        continue
                     self.registry.register(name, available_modules[name])
                     self.active_modules.append(
                         self.registry.create_module(
-                            name, 
+                            name,
                             hidden_size=self.config.hidden_size
                         )
                     )
