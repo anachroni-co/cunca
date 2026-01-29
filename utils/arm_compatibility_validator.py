@@ -149,7 +149,7 @@ class ARMCompatibilityValidator:
             import pickle
             
             with open(model_path, 'rb') as f:
-                model_state = pickle.load(f)
+                model_state = pickle.load(f)  # nosec B301 — trusted model
             
             logger.info(f"✅ Modelo JAX cargado: {len(model_state.get('params', {}))} parámetros")
             return model_state

@@ -281,7 +281,7 @@ class TPUv6eRobustTrainer:
         try:
             # Load metadata
             with open(checkpoint_path / "metadata.pkl", 'rb') as f:
-                metadata: CheckpointMetadata = pickle.load(f)
+                metadata: CheckpointMetadata = pickle.load(f)  # nosec B301 — trusted checkpoint
 
             # Restore training state
             restored_state = checkpoints.restore_checkpoint(

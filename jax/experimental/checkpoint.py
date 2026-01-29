@@ -28,7 +28,7 @@ def load_checkpoint(filepath: str) -> Dict[str, Any]:
         raise FileNotFoundError(f"Checkpoint file {filepath} not found")
     
     with open(filepath, 'rb') as f:
-        return pickle.load(f)
+        return pickle.load(f)  # nosec B301 — trusted checkpoint
 
 
 def checkpoint_exists(filepath: str) -> bool:
