@@ -66,6 +66,12 @@ class ModuleName(str, Enum):
     CULTURAL_ANALYSIS = "cultural_analysis"
     NEUROGENESIS = "neurogenesis"
 
+    # Layers integration
+    META_LEARNING_ATTENTION = "meta_learning_attention"
+    DISTRIBUTED_ATTENTION = "distributed_attention"
+    ABSTRACT_REASONING = "abstract_reasoning"
+    SYNAPTIC_PLASTICITY = "synaptic_plasticity"
+
 
 @dataclass(frozen=True)
 class BackendCapabilities:
@@ -187,6 +193,12 @@ _MODULE_REQUIREMENTS: Dict[ModuleName, Set[str]] = {
     ModuleName.DUAL_PROCESS: set(),
     ModuleName.CULTURAL_ANALYSIS: set(),
     ModuleName.NEUROGENESIS: {"supports_jit"},
+
+    # Layers integration
+    ModuleName.META_LEARNING_ATTENTION: {"supports_autograd"},
+    ModuleName.DISTRIBUTED_ATTENTION: set(),            # NumPy fallback available
+    ModuleName.ABSTRACT_REASONING: set(),               # Works on all backends
+    ModuleName.SYNAPTIC_PLASTICITY: {"supports_autograd"},
 }
 
 

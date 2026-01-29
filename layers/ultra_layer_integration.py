@@ -89,6 +89,21 @@ except ImportError:
     NeuroAdaptiveLayer = None
     NeuroAdaptiveLayerConfig = None
 
+try:
+    from .meta_la import MetaLA, MetaLAConfig
+    META_LA_AVAILABLE = True
+except ImportError:
+    META_LA_AVAILABLE = False
+    MetaLA = None
+    MetaLAConfig = None
+
+try:
+    from .pasive.attention import DistributedAttention
+    DISTRIBUTED_ATTENTION_AVAILABLE = True
+except ImportError:
+    DISTRIBUTED_ATTENTION_AVAILABLE = False
+    DistributedAttention = None
+
 logger = logging.getLogger(__name__)
 
 # ============================================================================
@@ -117,11 +132,26 @@ class UltraLayerIntegrationConfig:
     enable_neurogenesis: bool = True
     neurogenesis_sparsity: float = 0.1  # 10% sparsity
     neurogenesis_frequency: int = 2  # Every 2 layers
-    
+
     # Abstract reasoning
     enable_abstract_reasoning: bool = True
     reasoning_layer_frequency: int = 4  # Every 4 layers
     reasoning_types: List[str] = field(default_factory=lambda: ["game_theory", "platonic"])
+
+    # Meta-Learning Attention (MetaLA)
+    enable_meta_la: bool = True
+    meta_la_frequency: int = 3  # Every 3 layers
+    meta_learning_rate: float = 0.01
+    adaptation_steps: int = 5
+
+    # Distributed (PASIVE) attention
+    enable_distributed_attention: bool = True
+    distributed_attention_frequency: int = 4  # Every 4 layers
+
+    # Synaptic plasticity
+    enable_synaptic_plasticity: bool = True
+    plasticity_threshold: float = 0.1
+    adaptation_rate: float = 0.01
     
     # Performance optimizations
     enable_tpu_optimization: bool = True
@@ -197,6 +227,44 @@ class ReasoningWrapper(BaseLayer):
         reasoning_out = self.reasoning_layer(base_out)
         # Residual connection: base output + reasoning signal
         return base_out + reasoning_out
+
+    def get_output_shape(self, input_shape: tuple) -> tuple:
+        return self.base_layer.get_output_shape(input_shape)
+
+
+class MetaLAWrapper(BaseLayer):
+    """Composite layer: base layer + MetaLA few-shot adaptation residual."""
+
+    def __init__(self, base_layer: BaseLayer, meta_la_layer):
+        config = getattr(base_layer, 'config', LayerConfig())
+        super().__init__(config)
+        self.base_layer = base_layer
+        self.meta_la_layer = meta_la_layer
+        self.name = f"MetaLA({getattr(base_layer, 'name', 'base')})"
+
+    def __call__(self, inputs, training: bool = False, **kwargs):
+        base_out = self.base_layer(inputs, training=training, **kwargs)
+        meta_out = self.meta_la_layer(base_out, training=training)
+        return base_out + meta_out
+
+    def get_output_shape(self, input_shape: tuple) -> tuple:
+        return self.base_layer.get_output_shape(input_shape)
+
+
+class DistributedAttentionWrapper(BaseLayer):
+    """Composite layer: base layer + PASIVE distributed attention residual."""
+
+    def __init__(self, base_layer: BaseLayer, dist_attn):
+        config = getattr(base_layer, 'config', LayerConfig())
+        super().__init__(config)
+        self.base_layer = base_layer
+        self.dist_attn = dist_attn
+        self.name = f"DistAttn({getattr(base_layer, 'name', 'base')})"
+
+    def __call__(self, inputs, training: bool = False, **kwargs):
+        base_out = self.base_layer(inputs, training=training, **kwargs)
+        attn_out = self.dist_attn(base_out, training=training)
+        return base_out + attn_out
 
     def get_output_shape(self, input_shape: tuple) -> tuple:
         return self.base_layer.get_output_shape(input_shape)
@@ -316,14 +384,26 @@ class UltraLayerOrchestrator:
             config["neurogenesis_sparsity"] = self.config.neurogenesis_sparsity
         
         # Add abstract reasoning if enabled
-        if (self.config.enable_abstract_reasoning and 
+        if (self.config.enable_abstract_reasoning and
             layer_idx % self.config.reasoning_layer_frequency == 0 and
             layer_idx > 0):  # Not on first layer
             config["add_reasoning"] = True
             config["reasoning_type"] = self.config.reasoning_types[
                 layer_idx // self.config.reasoning_layer_frequency % len(self.config.reasoning_types)
             ]
-        
+
+        # Add meta-learning attention if enabled
+        if (self.config.enable_meta_la and META_LA_AVAILABLE and
+            layer_idx % self.config.meta_la_frequency == 0 and
+            layer_idx > 0):
+            config["add_meta_la"] = True
+
+        # Add distributed attention if enabled
+        if (self.config.enable_distributed_attention and DISTRIBUTED_ATTENTION_AVAILABLE and
+            layer_idx % self.config.distributed_attention_frequency == 0 and
+            layer_idx > 0):
+            config["add_distributed_attention"] = True
+
         return config
     
     def _fixed_layer_pattern(self, layer_idx: int) -> Dict[str, Any]:
@@ -404,12 +484,18 @@ class UltraLayerOrchestrator:
         # Add wrapper components if configured
         if layer_config.get("add_neurogenesis"):
             layer = self._wrap_with_neurogenesis(layer, layer_config)
-        
+
         if layer_config.get("add_reasoning"):
             layer = self._wrap_with_reasoning(layer, layer_config)
-        
+
+        if layer_config.get("add_meta_la"):
+            layer = self._wrap_with_meta_la(layer, layer_config)
+
+        if layer_config.get("add_distributed_attention"):
+            layer = self._wrap_with_distributed_attention(layer, layer_config)
+
         return layer
-    
+
     def _create_ssm_layer(self, layer_config: Dict[str, Any], layer_idx: int) -> Optional[BaseLayer]:
         """Create SSM hybrid layer."""
         
@@ -435,9 +521,15 @@ class UltraLayerOrchestrator:
             # Add wrapper components if configured
             if layer_config.get("add_neurogenesis"):
                 layer = self._wrap_with_neurogenesis(layer, layer_config)
-            
+
+            if layer_config.get("add_meta_la"):
+                layer = self._wrap_with_meta_la(layer, layer_config)
+
+            if layer_config.get("add_distributed_attention"):
+                layer = self._wrap_with_distributed_attention(layer, layer_config)
+
             return layer
-            
+
         except Exception as e:
             logger.error(f"Failed to create SSM layer: {e}")
             if self.config.graceful_degradation:
@@ -512,7 +604,40 @@ class UltraLayerOrchestrator:
         wrapper = ReasoningWrapper(base_layer, reasoning_layer, reasoning_type)
         logger.info(f"Reasoning wrapping applied (type={reasoning_type})")
         return wrapper
-    
+
+    def _wrap_with_meta_la(self, base_layer: BaseLayer, layer_config: Dict[str, Any]) -> BaseLayer:
+        """Wrap layer with MetaLA few-shot adaptation."""
+        if MetaLA is None:
+            logger.warning("MetaLA not available — returning unwrapped layer")
+            return base_layer
+
+        hidden_size = layer_config.get("hidden_size", self.config.hidden_size)
+        meta_config = MetaLAConfig(
+            hidden_size=hidden_size,
+            meta_learning_rate=self.config.meta_learning_rate,
+            adaptation_steps=self.config.adaptation_steps,
+        )
+        meta_layer = MetaLA(meta_config)
+        wrapper = MetaLAWrapper(base_layer, meta_layer)
+        logger.info("MetaLA wrapping applied")
+        return wrapper
+
+    def _wrap_with_distributed_attention(self, base_layer: BaseLayer, layer_config: Dict[str, Any]) -> BaseLayer:
+        """Wrap layer with PASIVE distributed attention."""
+        if DistributedAttention is None:
+            logger.warning("DistributedAttention not available — returning unwrapped layer")
+            return base_layer
+
+        hidden_size = layer_config.get("hidden_size", self.config.hidden_size)
+        num_heads = layer_config.get("num_heads", self.config.num_heads)
+        dist_attn = DistributedAttention({
+            'hidden_size': hidden_size,
+            'num_heads': num_heads,
+        })
+        wrapper = DistributedAttentionWrapper(base_layer, dist_attn)
+        logger.info("DistributedAttention wrapping applied")
+        return wrapper
+
     def _update_global_metrics(self, layer_type: str):
         """Update global metrics for layer creation."""
         
@@ -620,22 +745,44 @@ def create_ultra_layer_config(
     hidden_size: int = 768,
     num_layers: int = 12,
     enable_all_features: bool = True,
-    composition_strategy: str = "adaptive"
+    composition_strategy: str = "adaptive",
+    neuro_adaptive_config=None,
 ) -> UltraLayerIntegrationConfig:
-    """Create optimized layer integration configuration."""
-    
+    """Create optimized layer integration configuration.
+
+    If *neuro_adaptive_config* (a ``NeuroAdaptiveConfig`` instance) is
+    provided, plasticity parameters are forwarded into the layer config so
+    that neurogenesis, meta-learning and synaptic-plasticity layers receive
+    the user-specified thresholds.
+    """
+    extra: Dict[str, Any] = {}
+    if neuro_adaptive_config is not None:
+        extra.update(
+            enable_neurogenesis=getattr(neuro_adaptive_config, 'enable_neurogenesis', enable_all_features),
+            enable_synaptic_plasticity=getattr(neuro_adaptive_config, 'enable_synaptic_plasticity', True),
+            plasticity_threshold=getattr(neuro_adaptive_config, 'plasticity_threshold', 0.1),
+            adaptation_rate=getattr(neuro_adaptive_config, 'adaptation_rate', 0.01),
+            meta_learning_rate=getattr(neuro_adaptive_config, 'adaptation_rate', 0.01),
+        )
+
     return UltraLayerIntegrationConfig(
         hidden_size=hidden_size,
         num_layers=num_layers,
         layer_composition=composition_strategy,
         enable_ssm_layers=enable_all_features and SSM_LAYERS_AVAILABLE,
-        enable_neurogenesis=enable_all_features,
+        enable_neurogenesis=extra.get('enable_neurogenesis', enable_all_features),
         enable_abstract_reasoning=enable_all_features,
+        enable_meta_la=enable_all_features and META_LA_AVAILABLE,
+        enable_distributed_attention=enable_all_features and DISTRIBUTED_ATTENTION_AVAILABLE,
+        enable_synaptic_plasticity=extra.get('enable_synaptic_plasticity', enable_all_features),
+        plasticity_threshold=extra.get('plasticity_threshold', 0.1),
+        adaptation_rate=extra.get('adaptation_rate', 0.01),
+        meta_learning_rate=extra.get('meta_learning_rate', 0.01),
         enable_tpu_optimization=enable_all_features,
         use_mixed_precision=enable_all_features,
         use_expert_soup=enable_all_features and ULTRA_TRAINING_INTEGRATION,
         auto_core_integration=enable_all_features and ULTRA_CORE_AVAILABLE,
-        auto_training_integration=enable_all_features and ULTRA_TRAINING_INTEGRATION
+        auto_training_integration=enable_all_features and ULTRA_TRAINING_INTEGRATION,
     )
 
 def demonstrate_ultra_layer_integration():
@@ -692,8 +839,16 @@ __all__ = [
     'create_ultra_layer_config',
     'demonstrate_ultra_layer_integration',
     
+    # Composite wrappers
+    'NeurogenesisWrapper',
+    'ReasoningWrapper',
+    'MetaLAWrapper',
+    'DistributedAttentionWrapper',
+
     # Status flags
     'ULTRA_CORE_AVAILABLE',
     'ULTRA_TRAINING_INTEGRATION',
-    'SSM_LAYERS_AVAILABLE'
+    'SSM_LAYERS_AVAILABLE',
+    'META_LA_AVAILABLE',
+    'DISTRIBUTED_ATTENTION_AVAILABLE',
 ]

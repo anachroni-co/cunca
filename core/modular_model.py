@@ -345,6 +345,11 @@ class ModularCapibaraModel:
                 "semiotic_interaction": "semiotic_module",
                 "mamba": "mamba_ssm",
                 "hybrid_attention": "flash_attention",
+                "meta_la": "meta_learning_attention",
+                "distributed_attention": "distributed_attention",
+                "abstract_reasoning": "abstract_reasoning",
+                "neurogenesis": "neurogenesis",
+                "synaptic_plasticity": "synaptic_plasticity",
             }
 
             # Dynamic registration and instantiation
