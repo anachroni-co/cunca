@@ -135,7 +135,9 @@ class MixtureOfRookies(nn.Module):
         expert_outputs = jnp.stack(expert_outputs, axis=-1)  # (batch_size, seq_len, features, num_experts)
         
         # Weighted combination of expert outputs
-        output = jnp.einsum('bsf,bse->bsf', expert_outputs, selected_probs)
+        # expert_outputs: (batch, seq, features, num_experts)
+        # selected_probs: (batch, seq, num_experts)
+        output = jnp.einsum('bsfe,bse->bsf', expert_outputs, selected_probs)
         
         return output
 

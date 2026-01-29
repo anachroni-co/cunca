@@ -159,6 +159,50 @@ class LayerPerformanceMetrics:
             self.efficiency_score = 0.0
 
 # ============================================================================
+# Composite Layer Wrappers
+# ============================================================================
+
+class NeurogenesisWrapper(BaseLayer):
+    """Composite layer: base layer + neurogenesis module (pruning/growth)."""
+
+    def __init__(self, base_layer: BaseLayer, neuro_module):
+        config = getattr(base_layer, 'config', LayerConfig())
+        super().__init__(config)
+        self.base_layer = base_layer
+        self.neuro_module = neuro_module
+        self.name = f"Neurogenesis({getattr(base_layer, 'name', 'base')})"
+
+    def __call__(self, inputs, training: bool = False, **kwargs):
+        base_out = self.base_layer(inputs, training=training, **kwargs)
+        neuro_out = self.neuro_module(base_out, training=training)
+        return neuro_out
+
+    def get_output_shape(self, input_shape: tuple) -> tuple:
+        return self.base_layer.get_output_shape(input_shape)
+
+
+class ReasoningWrapper(BaseLayer):
+    """Composite layer: base layer + abstract reasoning residual."""
+
+    def __init__(self, base_layer: BaseLayer, reasoning_layer, reasoning_type: str = "generic"):
+        config = getattr(base_layer, 'config', LayerConfig())
+        super().__init__(config)
+        self.base_layer = base_layer
+        self.reasoning_layer = reasoning_layer
+        self.reasoning_type = reasoning_type
+        self.name = f"Reasoning[{reasoning_type}]({getattr(base_layer, 'name', 'base')})"
+
+    def __call__(self, inputs, training: bool = False, **kwargs):
+        base_out = self.base_layer(inputs, training=training, **kwargs)
+        reasoning_out = self.reasoning_layer(base_out)
+        # Residual connection: base output + reasoning signal
+        return base_out + reasoning_out
+
+    def get_output_shape(self, input_shape: tuple) -> tuple:
+        return self.base_layer.get_output_shape(input_shape)
+
+
+# ============================================================================
 # Ultra Layer Orchestrator
 # ============================================================================
 
@@ -413,20 +457,61 @@ class UltraLayerOrchestrator:
         return NeuroAdaptiveLayer(neuro_config)
     
     def _wrap_with_neurogenesis(self, base_layer: BaseLayer, layer_config: Dict[str, Any]) -> BaseLayer:
-        """Wrap layer with neurogenesis functionality."""
-        
-        # This would create a composite layer with neurogenesis
-        # For now, return the base layer (full implementation would require composite layer class)
-        logger.info(f"Neurogenesis wrapping enabled for layer (placeholder)")
-        return base_layer
-    
+        """Wrap layer with neurogenesis functionality.
+
+        Returns a ``NeurogenesisWrapper`` that runs the base layer and then
+        applies a lightweight neurogenesis module (synaptic pruning + growth)
+        if the dedicated module is available.  Falls back gracefully to the
+        unwrapped layer when the neurogenesis module is not installed.
+        """
+        if TpuOptimizedNeurogenesisModule is None:
+            logger.warning(
+                "Neurogenesis module not available — returning unwrapped layer"
+            )
+            return base_layer
+
+        sparsity = layer_config.get("neurogenesis_sparsity", self.config.neurogenesis_sparsity)
+        neurogenesis_cfg = TpuNeurogenesisModuleConfig(
+            hidden_size=layer_config.get("hidden_size", self.config.hidden_size),
+            sparsity=sparsity,
+        )
+        neuro_module = TpuOptimizedNeurogenesisModule(neurogenesis_cfg)
+        wrapper = NeurogenesisWrapper(base_layer, neuro_module)
+        logger.info(
+            f"Neurogenesis wrapping applied (sparsity={sparsity})"
+        )
+        return wrapper
+
     def _wrap_with_reasoning(self, base_layer: BaseLayer, layer_config: Dict[str, Any]) -> BaseLayer:
-        """Wrap layer with abstract reasoning functionality."""
-        
-        # This would create a composite layer with reasoning
-        # For now, return the base layer (full implementation would require composite layer class)
-        logger.info(f"Reasoning wrapping enabled: {layer_config.get('reasoning_type', 'unknown')}")
-        return base_layer
+        """Wrap layer with abstract reasoning functionality.
+
+        Imports the requested reasoning layer (game_theory or platonic) and
+        creates a ``ReasoningWrapper`` that fuses the base-layer output with
+        the reasoning projection.  Falls back to the unwrapped layer when
+        the reasoning module is unavailable.
+        """
+        reasoning_type = layer_config.get("reasoning_type", "game_theory")
+        hidden_size = layer_config.get("hidden_size", self.config.hidden_size)
+
+        reasoning_layer = None
+        try:
+            if reasoning_type == "game_theory":
+                from .abstract_reasoning.game_theory import GameTheoryLayer
+                reasoning_layer = GameTheoryLayer(hidden_size=hidden_size)
+            elif reasoning_type == "platonic":
+                from .abstract_reasoning.platonic import PlatonicIdealLayer
+                reasoning_layer = PlatonicIdealLayer(hidden_size=hidden_size)
+            else:
+                logger.warning(f"Unknown reasoning type '{reasoning_type}'")
+        except ImportError as exc:
+            logger.warning(f"Reasoning module '{reasoning_type}' unavailable: {exc}")
+
+        if reasoning_layer is None:
+            return base_layer
+
+        wrapper = ReasoningWrapper(base_layer, reasoning_layer, reasoning_type)
+        logger.info(f"Reasoning wrapping applied (type={reasoning_type})")
+        return wrapper
     
     def _update_global_metrics(self, layer_type: str):
         """Update global metrics for layer creation."""
