@@ -185,55 +185,54 @@ class TPUv6eVectorQuantizer(nn.Module):
         else:
             return self._standard_quantize(flat_inputs, input_shape, training)
     
-    def _product_quantize(self, 
-                         flat_inputs: jnp.ndarray, 
+    def _product_quantize(self,
+                         flat_inputs: jnp.ndarray,
                          input_shape: Tuple[int, ...],
                          training: bool) -> Dict[str, jnp.ndarray]:
-        """Product quantization implementation."""
-        
-        # Split input into subspaces
-        subspace_inputs = jnp.split(flat_inputs, self.num_subspaces, axis=-1)
-        
-        quantized_subspaces = []
-        indices_list = []
-        losses = []
-        
-        for i, subspace_input in enumerate(subspace_inputs):
-            codebook = self.codebooks[i]
-            
-            # Compute distances
-            distances = jnp.sum(
-                (subspace_input[..., None, :] - codebook[None, :, :]) ** 2,
-                axis=-1
-            )
-            
-            # Get closest codebook entries
-            indices = jnp.argmin(distances, axis=-1)
-            quantized = codebook[indices]
-            
-            # Straight-through estimator
-            quantized = subspace_input + jax.lax.stop_gradient(quantized - subspace_input)
-            
-            quantized_subspaces.append(quantized)
-            indices_list.append(indices)
-            
-            # Compute commitment loss
-            commitment_loss = jnp.mean((jax.lax.stop_gradient(quantized) - subspace_input) ** 2)
-            losses.append(commitment_loss)
-            
-            # EMA updates during training
-            if training and self.config.use_ema:
-                self._update_ema_subspace(i, subspace_input, indices)
-        
-        # Concatenate quantized subspaces
-        quantized = jnp.concatenate(quantized_subspaces, axis=-1)
-        quantized = quantized.reshape(input_shape)
-        
-        # Combine indices for full quantization index
-        combined_indices = jnp.stack(indices_list, axis=-1)
-        
+        """Product quantization implementation (vectorized)."""
+
+        # Stack all codebooks: [num_subspaces, num_embeddings, subspace_dim]
+        stacked_codebooks = jnp.stack(self.codebooks, axis=0)
+
+        # Reshape inputs: [batch, num_subspaces, subspace_dim]
+        batch_size = flat_inputs.shape[0]
+        all_inputs = flat_inputs.reshape(batch_size, self.num_subspaces, self.subspace_dim)
+
+        # Compute distances for all subspaces at once (vectorized)
+        # all_inputs:          [batch, num_subspaces, subspace_dim]
+        # stacked_codebooks:   [num_subspaces, num_embeddings, subspace_dim]
+        distances = jnp.sum(
+            (all_inputs[:, :, None, :] - stacked_codebooks[None, :, :, :]) ** 2,
+            axis=-1
+        )  # [batch, num_subspaces, num_embeddings]
+
+        # Get closest codebook entries (vectorized)
+        combined_indices = jnp.argmin(distances, axis=-1)  # [batch, num_subspaces]
+
+        # Gather quantized values (vectorized)
+        subspace_idx = jnp.arange(self.num_subspaces)[None, :]
+        all_quantized = stacked_codebooks[subspace_idx, combined_indices]  # [batch, num_subspaces, subspace_dim]
+
+        # Straight-through estimator (vectorized)
+        all_quantized = all_inputs + jax.lax.stop_gradient(all_quantized - all_inputs)
+
+        # Commitment loss (vectorized)
+        total_commitment = jnp.mean((jax.lax.stop_gradient(all_quantized) - all_inputs) ** 2)
+
+        # EMA updates during training (sequential for mutable state)
+        if training and self.config.use_ema:
+            for i in range(self.num_subspaces):
+                self._update_ema_subspace(i, all_inputs[:, i], combined_indices[:, i])
+
+        # Reshape back
+        quantized = all_quantized.reshape(batch_size, -1).reshape(input_shape)
+
+        # For compatibility with entropy/diversity loss, create lists
+        indices_list = [combined_indices[:, i] for i in range(self.num_subspaces)]
+        quantized_subspaces = [all_quantized[:, i] for i in range(self.num_subspaces)]
+
         # Total loss
-        total_loss = sum(losses) * self.config.commitment_cost
+        total_loss = total_commitment * self.config.commitment_cost
         
         # Add entropy regularization
         if self.config.use_entropy_regularization:
