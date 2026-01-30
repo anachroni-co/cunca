@@ -68,4 +68,66 @@ def require_or_none(*module_paths: str) -> bool:
     return True
 
 
-__all__ = ["safe_import", "safe_import_module", "require_or_none"]
+# ── Pre-built bundles for the most common try/except patterns ────
+
+
+class _JAXBundle:
+    """Lazy bundle for the ``try: import jax …`` pattern repeated 190+ times.
+
+    Usage::
+
+        from core.import_utils import jax_bundle
+        jax, jnp, nn, optax, JAX_AVAILABLE = (
+            jax_bundle.jax, jax_bundle.jnp, jax_bundle.nn,
+            jax_bundle.optax, jax_bundle.available,
+        )
+    """
+
+    def __init__(self) -> None:
+        self._loaded = False
+        self.available: bool = False
+        self.jax: Any = None
+        self.jnp: Any = None
+        self.nn: Any = None
+        self.optax: Any = None
+        self.flax: Any = None
+
+    def _load(self) -> None:
+        if self._loaded:
+            return
+        self._loaded = True
+        try:
+            import jax as _jax
+            import jax.numpy as _jnp
+        except ImportError:
+            return
+        self.jax = _jax
+        self.jnp = _jnp
+        self.available = True
+        try:
+            from flax import linen as _nn
+            import flax as _flax
+            self.nn = _nn
+            self.flax = _flax
+        except ImportError:
+            pass
+        try:
+            import optax as _optax
+            self.optax = _optax
+        except ImportError:
+            pass
+
+    def __getattr__(self, name: str) -> Any:
+        # Triggered only for attributes not yet set
+        if name.startswith("_"):
+            raise AttributeError(name)
+        self._load()
+        return self.__dict__.get(name)
+
+
+jax_bundle = _JAXBundle()
+
+
+__all__ = [
+    "safe_import", "safe_import_module", "require_or_none", "jax_bundle",
+]

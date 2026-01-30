@@ -1,285 +1,245 @@
+"""Tests to enforce code factorization standards.
+
+These tests scan source files for patterns that should use the
+centralized utilities instead of inline boilerplate.  They act as
+guardrails so that new code follows the established conventions in:
+
+- ``layers/jax_compat.py``   – JAX/Flax import guard
+- ``core/import_utils.py``   – ``safe_import`` helper
+- ``core/backends/lazy_import.py`` – ``ensure_torch`` / ``ensure_jax``
+- ``layers/attention_utils.py``  – ``split_heads`` / ``merge_heads``
 """
-Ultra Layer Integration - CapibaraGPT v2024
-===========================================
 
-Ultra-advanced orchestration layer connecting:
-- Ultra Core System
-- Training & optimization subsystems
-- Dynamic layer composition
-- Adaptive architecture evolution
-"""
+from __future__ import annotations
 
-import logging
-from typing import Dict, Any, Optional, List
-from dataclasses import dataclass, field
-from functools import partial
+import ast
+import re
+from pathlib import Path
+from typing import List, Tuple
 
-import jax
-import jax.numpy as jnp
+import pytest
 
-from .base import BaseLayer, LayerConfig
+ROOT = Path(__file__).resolve().parents[2]
 
-logger = logging.getLogger(__name__)
+# ── directories that are checked ────────────────────────────────
+LAYER_DIR = ROOT / "layers"
+CORE_DIR = ROOT / "core"
+BACKEND_DIR = CORE_DIR / "backends"
 
-# ============================================================================
-# Optional integrations (safe imports)
-# ============================================================================
+# ── files that are allowed to keep legacy patterns ──────────────
+ALLOWED_JAX_IMPORT_FILES = {
+    str(LAYER_DIR / "jax_compat.py"),
+    str(CORE_DIR / "backends" / "lazy_import.py"),
+    str(CORE_DIR / "backends" / "tpu_backend.py"),
+}
 
-try:
-    from ..core.ultra_core_integration import create_ultra_core_system
-    ULTRA_CORE_AVAILABLE = True
-except Exception:
-    ULTRA_CORE_AVAILABLE = False
-    create_ultra_core_system = None
+ALLOWED_TORCH_IMPORT_FILES = {
+    str(CORE_DIR / "backends" / "lazy_import.py"),
+    str(CORE_DIR / "backends" / "gpu_backend.py"),
+    str(CORE_DIR / "backends" / "utils.py"),
+}
 
-try:
-    from ..training.optimizations import UltraAdvancedTrainer
-    ULTRA_TRAINING_INTEGRATION = True
-except Exception:
-    ULTRA_TRAINING_INTEGRATION = False
-    UltraAdvancedTrainer = None
+ALLOWED_SAFE_IMPORT_FILES = {
+    str(CORE_DIR / "import_utils.py"),
+}
 
-try:
-    from .ssm_hybrid_layers import create_ssm_layer, create_ssm_config
-    SSM_LAYERS_AVAILABLE = True
-except Exception:
-    SSM_LAYERS_AVAILABLE = False
-    create_ssm_layer = None
-    create_ssm_config = None
+ALLOWED_ATTENTION_RESHAPE_FILES = {
+    str(LAYER_DIR / "attention_utils.py"),
+    str(LAYER_DIR / "sparsity" / "sparse_capibara.py"),
+}
 
-try:
-    from .self_attention import TpuOptimizedSelfAttention, TpuSelfAttentionConfig
-except Exception:
-    TpuOptimizedSelfAttention = None
-    TpuSelfAttentionConfig = None
 
-try:
-    from .neurogenesis import (
-        TpuOptimizedNeurogenesisModule,
-        TpuNeurogenesisModuleConfig,
+def _py_files(directory: Path) -> List[Path]:
+    """Yield all .py files under *directory*, excluding __pycache__."""
+    return sorted(
+        p for p in directory.rglob("*.py")
+        if "__pycache__" not in str(p)
     )
-except Exception:
-    TpuOptimizedNeurogenesisModule = None
-    TpuNeurogenesisModuleConfig = None
-
-try:
-    from .meta_la import MetaLA, MetaLAConfig
-    META_LA_AVAILABLE = True
-except Exception:
-    META_LA_AVAILABLE = False
-    MetaLA = None
-    MetaLAConfig = None
-
-try:
-    from .pasive.attention import DistributedAttention
-    DISTRIBUTED_ATTENTION_AVAILABLE = True
-except Exception:
-    DISTRIBUTED_ATTENTION_AVAILABLE = False
-    DistributedAttention = None
-
-# ============================================================================
-# Configuration
-# ============================================================================
-
-@dataclass
-class UltraLayerIntegrationConfig:
-    hidden_size: int = 768
-    num_layers: int = 12
-    num_heads: int = 12
-
-    enable_ssm_layers: bool = True
-    ssm_ratio: float = 0.4
-
-    enable_neurogenesis: bool = True
-    neurogenesis_frequency: int = 2
-    neurogenesis_sparsity: float = 0.1
-
-    enable_meta_la: bool = True
-    meta_la_frequency: int = 3
-    meta_learning_rate: float = 0.01
-    adaptation_steps: int = 5
-
-    enable_distributed_attention: bool = True
-    distributed_attention_frequency: int = 4
-
-    enable_tpu_optimization: bool = True
-    use_mixed_precision: bool = True
-
-    auto_core_integration: bool = True
-    auto_training_integration: bool = True
-
-    graceful_degradation: bool = True
 
 
-# ============================================================================
-# Composite wrapper
-# ============================================================================
-
-class CompositeWrapper(BaseLayer):
-    def __init__(
-        self,
-        base_layer: BaseLayer,
-        component,
-        label: str,
-        use_residual: bool = True,
-        pass_training: bool = True,
-    ):
-        super().__init__(getattr(base_layer, "config", LayerConfig()))
-        self.base_layer = base_layer
-        self.component = component
-        self.use_residual = use_residual
-        self.pass_training = pass_training
-        self.name = f"{label}({type(base_layer).__name__})"
-
-    def __call__(self, x, training: bool = False, **kwargs):
-        y = self.base_layer(x, training=training, **kwargs)
-
-        if not callable(self.component):
-            return y
-
-        kw = {"training": training} if self.pass_training else {}
-        z = self.component(y, **kw)
-
-        return y + z if self.use_residual else z
-
-
-NeurogenesisWrapper = partial(
-    CompositeWrapper, label="Neurogenesis", use_residual=False
-)
-MetaLAWrapper = partial(
-    CompositeWrapper, label="MetaLA", use_residual=True
-)
-DistributedAttentionWrapper = partial(
-    CompositeWrapper, label="DistAttn", use_residual=True
+# ─────────────────────────────────────────────────────────────────
+# 1. No duplicate JAX/Flax import guards in layers/
+# ─────────────────────────────────────────────────────────────────
+_JAX_IMPORT_RE = re.compile(
+    r"try\s*:\s*\n\s+import\s+jax\b"
+    r"|try\s*:\s*\n\s+from\s+jax\b"
+    r"|try\s*:\s*\n\s+import\s+flax\b"
+    r"|try\s*:\s*\n\s+from\s+flax\b",
+    re.MULTILINE,
 )
 
-# ============================================================================
-# Orchestrator
-# ============================================================================
 
-class UltraLayerOrchestrator:
-    def __init__(self, config: UltraLayerIntegrationConfig):
-        self.config = config
-        self.layers: List[BaseLayer] = []
-        self.core_orchestrator = None
-        self.training_integration = None
+class TestNoInlineJAXImportsInLayers:
+    """New layer files must use ``layers.jax_compat`` instead of
+    inline try/except JAX imports."""
 
-        self._initialize()
+    def _violating_files(self) -> List[Tuple[str, int]]:
+        violations = []
+        for path in _py_files(LAYER_DIR):
+            if str(path) in ALLOWED_JAX_IMPORT_FILES:
+                continue
+            text = path.read_text(encoding="utf-8", errors="replace")
+            matches = list(_JAX_IMPORT_RE.finditer(text))
+            if matches:
+                line = text[: matches[0].start()].count("\n") + 1
+                violations.append((str(path.relative_to(ROOT)), line))
+        return violations
 
-    def _initialize(self):
-        if self.config.auto_core_integration and ULTRA_CORE_AVAILABLE:
-            try:
-                self.core_orchestrator = create_ultra_core_system()
-                logger.info("Ultra Core integrated")
-            except Exception as e:
-                logger.warning(f"Ultra Core integration failed: {e}")
+    def test_no_inline_jax_imports(self):
+        """layers/ files should import from jax_compat, not inline try/except."""
+        violations = self._violating_files()
+        if violations:
+            msg = "Found inline JAX try/except imports (use layers.jax_compat):\n"
+            msg += "\n".join(f"  {f}:{line}" for f, line in violations)
+            pytest.fail(msg)
 
-        self._build_layers()
 
-        if self.config.auto_training_integration and ULTRA_TRAINING_INTEGRATION:
-            self.training_integration = True
+# ─────────────────────────────────────────────────────────────────
+# 2. No duplicate torch lazy-import pattern in backends/
+# ─────────────────────────────────────────────────────────────────
+_TORCH_LAZY_RE = re.compile(
+    r"try\s*:\s*\n\s+import\s+torch\b",
+    re.MULTILINE,
+)
 
-    def _build_layers(self):
-        for idx in range(self.config.num_layers):
-            layer = self._create_base_layer(idx)
-            if layer is not None:
-                self.layers.append(layer)
 
-    def _create_base_layer(self, idx: int) -> Optional[BaseLayer]:
+class TestNoInlineTorchImportsInBackends:
+    """Backend files must use ``core.backends.lazy_import.ensure_torch``
+    instead of writing their own try/except for torch."""
+
+    def _violating_files(self) -> List[Tuple[str, int]]:
+        violations = []
+        for path in _py_files(BACKEND_DIR):
+            if str(path) in ALLOWED_TORCH_IMPORT_FILES:
+                continue
+            text = path.read_text(encoding="utf-8", errors="replace")
+            matches = list(_TORCH_LAZY_RE.finditer(text))
+            if matches:
+                line = text[: matches[0].start()].count("\n") + 1
+                violations.append((str(path.relative_to(ROOT)), line))
+        return violations
+
+    def test_no_inline_torch_imports(self):
+        """backends/ files should use ensure_torch(), not inline try/except."""
+        violations = self._violating_files()
+        if violations:
+            msg = "Found inline torch try/except imports (use lazy_import.ensure_torch):\n"
+            msg += "\n".join(f"  {f}:{line}" for f, line in violations)
+            pytest.fail(msg)
+
+
+# ─────────────────────────────────────────────────────────────────
+# 3. No duplicate try/except import blocks in core/__init__.py
+# ─────────────────────────────────────────────────────────────────
+_TRY_IMPORT_RE = re.compile(
+    r"try\s*:\s*\n\s+(from|import)\s+",
+    re.MULTILINE,
+)
+
+
+class TestCoreInitUsesSafeImport:
+    """``core/__init__.py`` should use ``safe_import`` for all optional
+    imports instead of try/except blocks."""
+
+    def test_no_try_except_imports(self):
+        init_path = CORE_DIR / "__init__.py"
+        if not init_path.exists():
+            pytest.skip("core/__init__.py not found")
+        text = init_path.read_text(encoding="utf-8", errors="replace")
+        matches = list(_TRY_IMPORT_RE.finditer(text))
+        if matches:
+            lines = [text[: m.start()].count("\n") + 1 for m in matches]
+            pytest.fail(
+                f"core/__init__.py has {len(matches)} try/except import blocks "
+                f"(lines {lines}). Use safe_import from core.import_utils."
+            )
+
+
+# ─────────────────────────────────────────────────────────────────
+# 4. No hand-rolled split_heads / merge_heads in layers/
+# ─────────────────────────────────────────────────────────────────
+_RESHAPE_HEAD_RE = re.compile(
+    r"\.reshape\([^)]*num_heads[^)]*head_dim"
+    r"|\.reshape\([^)]*head_dim[^)]*num_heads",
+)
+
+
+class TestNoInlineHeadReshapes:
+    """Layer files should use ``attention_utils.split_heads`` /
+    ``merge_heads`` instead of manual reshape with num_heads/head_dim."""
+
+    def _violating_files(self) -> List[Tuple[str, int]]:
+        violations = []
+        for path in _py_files(LAYER_DIR):
+            if str(path) in ALLOWED_ATTENTION_RESHAPE_FILES:
+                continue
+            text = path.read_text(encoding="utf-8", errors="replace")
+            matches = list(_RESHAPE_HEAD_RE.finditer(text))
+            if matches:
+                line = text[: matches[0].start()].count("\n") + 1
+                violations.append((str(path.relative_to(ROOT)), line))
+        return violations
+
+    def test_no_inline_head_reshapes(self):
+        """layers/ should use attention_utils.split_heads/merge_heads."""
+        violations = self._violating_files()
+        if violations:
+            msg = "Found manual head reshape (use attention_utils):\n"
+            msg += "\n".join(f"  {f}:{line}" for f, line in violations)
+            pytest.fail(msg)
+
+
+# ─────────────────────────────────────────────────────────────────
+# 5. No duplicate CompositeWrapper-style classes in layers/
+# ─────────────────────────────────────────────────────────────────
+class TestNoRedundantWrapperClasses:
+    """Wrapper classes in ultra_layer_integration.py should use
+    ``CompositeWrapper`` via ``functools.partial``, not full class defs."""
+
+    def test_no_duplicate_wrapper_pattern(self):
+        target = LAYER_DIR / "ultra_layer_integration.py"
+        if not target.exists():
+            pytest.skip("ultra_layer_integration.py not found")
+
+        text = target.read_text(encoding="utf-8", errors="replace")
         try:
-            if (
-                self.config.enable_ssm_layers
-                and SSM_LAYERS_AVAILABLE
-                and idx < int(self.config.num_layers * self.config.ssm_ratio)
-            ):
-                layer = self._create_ssm_layer()
-            else:
-                layer = self._create_attention_layer()
+            tree = ast.parse(text)
+        except SyntaxError as exc:
+            pytest.fail(f"ultra_layer_integration.py has a syntax error: {exc}")
 
-            return self._apply_wrappers(layer, idx)
+        wrapper_classes = []
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ClassDef):
+                name = node.name
+                if name.endswith("Wrapper") and name != "CompositeWrapper":
+                    wrapper_classes.append(name)
 
-        except Exception as e:
-            logger.error(f"Layer {idx} failed: {e}")
-            if self.config.graceful_degradation:
-                return self._create_attention_layer()
-            raise
-
-    def _create_attention_layer(self) -> Optional[BaseLayer]:
-        if TpuOptimizedSelfAttention is None:
-            return None
-
-        cfg = TpuSelfAttentionConfig(
-            hidden_size=self.config.hidden_size,
-            num_heads=self.config.num_heads,
-            use_mixed_precision=self.config.use_mixed_precision,
-        )
-        return TpuOptimizedSelfAttention(cfg)
-
-    def _create_ssm_layer(self) -> Optional[BaseLayer]:
-        cfg = create_ssm_config(
-            hidden_size=self.config.hidden_size,
-            enable_all_optimizations=self.config.enable_tpu_optimization,
-        )
-        return create_ssm_layer("ultra", cfg)
-
-    def _apply_wrappers(self, layer: BaseLayer, idx: int) -> BaseLayer:
-        if (
-            self.config.enable_neurogenesis
-            and idx % self.config.neurogenesis_frequency == 0
-            and TpuOptimizedNeurogenesisModule is not None
-        ):
-            ng_cfg = TpuNeurogenesisModuleConfig(
-                hidden_size=self.config.hidden_size,
-                sparsity=self.config.neurogenesis_sparsity,
-            )
-            layer = NeurogenesisWrapper(layer, TpuOptimizedNeurogenesisModule(ng_cfg))
-
-        if (
-            self.config.enable_meta_la
-            and META_LA_AVAILABLE
-            and idx % self.config.meta_la_frequency == 0
-        ):
-            ml_cfg = MetaLAConfig(
-                hidden_size=self.config.hidden_size,
-                meta_learning_rate=self.config.meta_learning_rate,
-                adaptation_steps=self.config.adaptation_steps,
-            )
-            layer = MetaLAWrapper(layer, MetaLA(ml_cfg))
-
-        if (
-            self.config.enable_distributed_attention
-            and DISTRIBUTED_ATTENTION_AVAILABLE
-            and idx % self.config.distributed_attention_frequency == 0
-        ):
-            layer = DistributedAttentionWrapper(
-                layer,
-                DistributedAttention(
-                    {
-                        "hidden_size": self.config.hidden_size,
-                        "num_heads": self.config.num_heads,
-                    }
-                ),
+        if wrapper_classes:
+            pytest.fail(
+                f"Found full class definitions for wrappers that should be "
+                f"functools.partial aliases of CompositeWrapper: "
+                f"{wrapper_classes}"
             )
 
-        return layer
 
-    def get_system_status(self) -> Dict[str, Any]:
-        return {
-            "layers": len(self.layers),
-            "ultra_core": self.core_orchestrator is not None,
-            "training_integration": self.training_integration is not None,
-        }
+# ─────────────────────────────────────────────────────────────────
+# 6. Utility modules exist and are importable
+# ─────────────────────────────────────────────────────────────────
+class TestFactorizationUtilitiesExist:
+    """Ensure all centralized utility modules exist and export the
+    expected symbols."""
 
+    def test_jax_compat_importable(self):
+        from layers.jax_compat import jax, jnp, nn, JAX_AVAILABLE  # noqa: F401
 
-# ============================================================================
-# Factory
-# ============================================================================
+    def test_attention_utils_importable(self):
+        from layers.attention_utils import split_heads, merge_heads  # noqa: F401
 
-def create_ultra_layer_system(
-    config: Optional[UltraLayerIntegrationConfig] = None,
-    **kwargs,
-) -> UltraLayerOrchestrator:
-    if config is None:
-        config = UltraLayerIntegrationConfig(**kwargs)
-    return UltraLayerOrchestrator(config)
+    def test_import_utils_importable(self):
+        from core.import_utils import safe_import, safe_import_module, jax_bundle  # noqa: F401
 
+    def test_lazy_import_importable(self):
+        from core.backends.lazy_import import ensure_torch, ensure_jax  # noqa: F401
+
+    def test_field_helpers_importable(self):
+        from utils.field_helpers import dict_field, list_field, set_field  # noqa: F401
