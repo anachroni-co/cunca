@@ -13,7 +13,9 @@ import numpy as np
 
 from .base import BackendConfig, ComputeBackend, DType, TensorLike
 
-# Lazy imports for JAX (may not be installed)
+from .lazy_import import ensure_jax
+
+# Module-level aliases populated on first _ensure_jax() call
 jax = None
 jnp = None
 flax = None
@@ -24,20 +26,7 @@ def _ensure_jax():
     """Lazy import JAX modules."""
     global jax, jnp, flax, optax
     if jax is None:
-        try:
-            import jax as _jax
-            import jax.numpy as _jnp
-            import flax as _flax
-            import optax as _optax
-
-            jax = _jax
-            jnp = _jnp
-            flax = _flax
-            optax = _optax
-        except ImportError as e:
-            raise ImportError(
-                "JAX is not installed. Install with: pip install jax[tpu]"
-            ) from e
+        jax, jnp, flax, optax = ensure_jax()
 
 
 # Dtype mapping

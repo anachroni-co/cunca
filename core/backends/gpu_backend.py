@@ -15,7 +15,9 @@ import numpy as np
 
 from .base import BackendConfig, ComputeBackend, DType, TensorLike
 
-# Lazy imports for PyTorch
+from .lazy_import import ensure_torch
+
+# Module-level aliases populated on first _ensure_torch() call
 torch = None
 nn = None
 F = None
@@ -25,18 +27,7 @@ def _ensure_torch():
     """Lazy import PyTorch modules."""
     global torch, nn, F
     if torch is None:
-        try:
-            import torch as _torch
-            import torch.nn as _nn
-            import torch.nn.functional as _F
-
-            torch = _torch
-            nn = _nn
-            F = _F
-        except ImportError as e:
-            raise ImportError(
-                "PyTorch is not installed. Install with: pip install torch"
-            ) from e
+        torch, nn, F = ensure_torch()
 
 
 # Dtype mapping
