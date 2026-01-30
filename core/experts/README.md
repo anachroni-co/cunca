@@ -354,6 +354,16 @@ expert_coordinator.enable_automatic_coordination(
 )
 ```
 
+## Example
+
+```python
+from capibara.core.experts import MoEControlAPI
+
+control_api = MoEControlAPI(num_experts=4, expert_specializations=["general", "math", "code", "vision"])
+status = control_api.get_expert_status()
+print(status["active_count"])
+```
+
 ## 📚 References
 
 - [Mixture of Experts](https://arxiv.org/abs/1701.06538)

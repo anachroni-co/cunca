@@ -3,6 +3,7 @@
 # Import correct classes
 from .vision_encoder import VisionEncoder, VisionEncoderConfig
 from .video_encoder import VideoEncoder, VideoEncoderConfig
+from .audio_encoder import AudioEncoder, AudioEncoderConfig
 from .multimodal_combiner import MultimodalCombiner, CombinerConfig
 
 # Backwards compatibility aliases
@@ -11,6 +12,8 @@ VisionEncoofrConfig = VisionEncoderConfig
 ViofoEncoofr = VideoEncoder
 ViofoEncoofrConfig = VideoEncoderConfig
 MultimodtolCombiner = MultimodalCombiner
+AudioEncoofr = AudioEncoder
+AudioEncoofrConfig = AudioEncoderConfig
 
 __all__ = [
     # Correct names
@@ -18,6 +21,8 @@ __all__ = [
     'VisionEncoderConfig',
     'VideoEncoder',
     'VideoEncoderConfig',
+    'AudioEncoder',
+    'AudioEncoderConfig',
     'MultimodalCombiner',
     'CombinerConfig',
     # Backwards compatibility aliases
@@ -26,4 +31,6 @@ __all__ = [
     'ViofoEncoofr',
     'ViofoEncoofrConfig',
     'MultimodtolCombiner',
+    'AudioEncoofr',
+    'AudioEncoofrConfig',
 ]

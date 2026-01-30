@@ -348,7 +348,13 @@ class AdvancedFilter:
         """Initialize advanced filtering models."""
         
         # Initialize perplexity model
-        if self.config.use_perplexity_filter and TRANSFORMERS_AVAILABLE:
+        if self.config.use_perplexity_filter:
+            if not TRANSFORMERS_AVAILABLE:
+                logger.warning("Perplexity filtering requested but transformers not available")
+                return
+            if not self.config.perplexity_model:
+                logger.warning("Perplexity filtering requested but no model configured")
+                return
             try:
                 # TODO: Initialize perplexity model (GPT-2 or similar for scoring)
                 logger.info("Perplexity filtering would be initialized here")
@@ -377,6 +383,17 @@ class AdvancedFilter:
         logger.info("Perplexity filtering would be applied here")
         return docs
     
+    def _is_toxic_prediction(self, prediction: Dict[str, Any]) -> bool:
+        label = str(prediction.get('label', '')).strip().lower()
+        score = float(prediction.get('score', 0.0))
+        normalized_label = label.replace(" ", "").replace("_", "-")
+
+        if "non-toxic" in normalized_label or "nontoxic" in normalized_label:
+            return False
+        if "toxic" in normalized_label:
+            return score > self.config.toxicity_threshold
+        return False
+
     def filter_by_toxicity(self, docs: List[Dict]) -> List[Dict]:
         """Filter documents by toxicity score."""
         if not self.config.use_toxicity_filter or not self.toxicity_classifier:
@@ -388,12 +405,10 @@ class AdvancedFilter:
             try:
                 text = doc.get('text_norm', doc.get('text', ''))[:512]  # Limit length
                 result = self.toxicity_classifier(text)
+                if isinstance(result, dict):
+                    result = [result]
                 
-                # Assuming the model returns toxicity score
-                is_toxic = any(
-                    pred['label'] == 'TOXIC' and pred['score'] > self.config.toxicity_threshold
-                    for pred in result
-                )
+                is_toxic = any(self._is_toxic_prediction(pred) for pred in result)
                 
                 if not is_toxic:
                     filtered_docs.append(doc)

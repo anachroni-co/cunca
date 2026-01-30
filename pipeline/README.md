@@ -977,3 +977,13 @@ Part of the capibaraGPT-v2 project. See [LICENSE](../../LICENSE) for details.
 
 **Maintained by**: Capibara ML Team
 **Last Updated**: 2025-11-16
+
+## Ejemplo rápido
+
+Ejemplo (pseudo-flujo) de un pipeline:
+
+```text
+1) Preparar entrada
+2) Ejecutar pipeline multimodal/RAG
+3) Obtener respuesta estructurada
+```

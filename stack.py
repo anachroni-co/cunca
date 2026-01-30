@@ -1,0 +1,30 @@
+import os
+import sys
+import logging
+# Obtiene la path del directory current (scripts) -> /.../scripts
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# Sube un level for obtain la raíz del proyecto -> /.../capibaraGPT-v2
+project_root = os.path.dirname(script_dir)
+# Añade la raíz del proyecto a sys.path
+if project_root not in sys.path:
+    # Fixed: Using proper imports instead of sys.path manipulation
+    pass
+
+import flax.linen as nn # type: ignore
+from capibara.jax import jax # type: ignore
+from capibara.jax import numpy as jnp # type: ignore
+from typing import Optional, Tuple, List, Union, Dict, Any
+from capibara.interfaces.ilayer import ILayer as BaseLayer
+from capibara.config.model_config import NeuroAdaptiveConfig
+from capibara.layers.sparsity.sparse_capibara import SparseCapibara
+from capibara.layers.sparsity.affine_quantizer import AffineQuantizer
+
+logger = logging.getLogger(__name__)
+
+def main():
+    # Main function for this module.
+    logger.info("Module stack.py starting")
+    return True
+
+if __name__ == "__main__":
+    main()

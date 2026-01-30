@@ -362,3 +362,11 @@ This project is licensed under the MIT License - see the [LICENSE.md](../../LICE
 **CapibaraGPT v3.3 - Advanced Multi-Agent System**
 
 *Ultra Agent Orchestrator • 8 Agent Types • Multi-Step Reasoning • Strategic Planning • Premium Dataset Integration*
+
+## Ejemplo rápido
+
+Ejemplo (pseudo-comando) para inspeccionar el orquestador de agentes:
+
+```bash
+python agents/ultra_agent_orchestrator.py --help
+```

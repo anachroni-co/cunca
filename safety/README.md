@@ -482,3 +482,13 @@ MINIMAL_CONFIG = {
 - [Content Filtering Documentation](./content_filter.py)
 - [Intervention System Details](./intervention_system.py)
 - [Mental Health Resources](https://988lifeline.org/)
+
+## Ejemplo rápido
+
+Ejemplo (pseudo-código) de validación de seguridad:
+
+```python
+# result = safety_pipeline.evaluate(text)
+# if result.blocked:
+#     handle_block()
+```
