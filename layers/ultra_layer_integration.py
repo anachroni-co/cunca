@@ -91,6 +91,22 @@ except Exception:
     DistributedAttention = None
     DISTRIBUTED_ATTENTION_AVAILABLE = False
 
+try:
+    from .abstract_reasoning.platonic import Platonic
+    PLATONIC_AVAILABLE = True
+except Exception:
+    Platonic = None
+    PLATONIC_AVAILABLE = False
+
+try:
+    from .abstract_reasoning.game_theory import GameTheory
+    GAME_THEORY_AVAILABLE = True
+except Exception:
+    GameTheory = None
+    GAME_THEORY_AVAILABLE = False
+
+REASONING_AVAILABLE = PLATONIC_AVAILABLE or GAME_THEORY_AVAILABLE
+
 # ============================================================================
 # Configurations
 # ============================================================================
@@ -244,10 +260,74 @@ class UltraLayerOrchestrator:
                 layer = self._create_attention_layer()
                 self.global_metrics["attention_layers"] += 1
 
+            if layer is None:
+                return None
+
+            layer = self._apply_wrappers(layer, idx)
             return layer
         except Exception as e:
             logger.error(f"Layer {idx} failed: {e}")
             return None
+
+    def _apply_wrappers(self, layer: BaseLayer, idx: int) -> BaseLayer:
+        """Apply optional wrappers (neurogenesis, reasoning, meta-la, etc.)."""
+        if (
+            self.config.enable_neurogenesis
+            and TpuOptimizedNeurogenesisModule is not None
+            and idx % self.config.neurogenesis_frequency == 0
+        ):
+            ng_cfg = TpuNeurogenesisModuleConfig(
+                hidden_size=self.config.hidden_size,
+                sparsity=self.config.neurogenesis_sparsity,
+            )
+            layer = NeurogenesisWrapper(layer, TpuOptimizedNeurogenesisModule(ng_cfg))
+            self.global_metrics["neurogenesis_layers"] += 1
+
+        if (
+            self.config.enable_abstract_reasoning
+            and REASONING_AVAILABLE
+            and idx % self.config.reasoning_layer_frequency == 0
+        ):
+            reasoning_component = self._create_reasoning_component()
+            if reasoning_component is not None:
+                layer = ReasoningWrapper(layer, reasoning_component)
+                self.global_metrics["reasoning_layers"] += 1
+
+        if (
+            self.config.enable_meta_la
+            and META_LA_AVAILABLE
+            and idx % self.config.meta_la_frequency == 0
+        ):
+            ml_cfg = MetaLAConfig(
+                hidden_size=self.config.hidden_size,
+                meta_learning_rate=self.config.meta_learning_rate,
+                adaptation_steps=self.config.adaptation_steps,
+            )
+            layer = MetaLAWrapper(layer, MetaLA(ml_cfg))
+
+        if (
+            self.config.enable_distributed_attention
+            and DISTRIBUTED_ATTENTION_AVAILABLE
+            and idx % self.config.distributed_attention_frequency == 0
+        ):
+            layer = DistributedAttentionWrapper(
+                layer,
+                DistributedAttention(
+                    {"hidden_size": self.config.hidden_size, "num_heads": self.config.num_heads}
+                ),
+            )
+
+        return layer
+
+    def _create_reasoning_component(self):
+        """Create an abstract reasoning component from available modules."""
+        reasoning_types = self.config.reasoning_types
+        for rtype in reasoning_types:
+            if rtype == "platonic" and Platonic is not None:
+                return Platonic(features=self.config.hidden_size)
+            if rtype == "game_theory" and GameTheory is not None:
+                return GameTheory(features=self.config.hidden_size)
+        return None
 
     def _create_attention_layer(self) -> Optional[BaseLayer]:
         if TpuOptimizedSelfAttention is None:
