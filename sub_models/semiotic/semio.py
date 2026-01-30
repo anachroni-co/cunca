@@ -22,6 +22,10 @@ example de uso:
 
 import os
 from capibara.jax import jax
+
+import logging
+logger = logging.getLogger(__name__)
+
 # Obtiene la path del directory current (scripts) -> /.../scripts
 script_dir = os.path.dirname(os.path.abspath(__file__))
 # Sube un level for obtain la raíz del proyecto -> /.../capibaraGPT-v2
@@ -255,7 +259,7 @@ if __name__ == "__main__":
     context = jnp.ones((1, 5, 256))
     params = model.init(rng, x, context)
     outputs = model.apply(params, x, context, training=True)
-    print(outputs)
+    logger.info(outputs)
 
 def test_validar_entrada():
     modelo = SemioModule(hidden_size=256)

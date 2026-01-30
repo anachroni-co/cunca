@@ -794,11 +794,11 @@ if __name__ == "__main__":
             }
         )
         
-        print("🧠 Consensus Memory Manager Test")
-        print("=" * 40)
+        logger.info("🧠 Consensus Memory Manager Test")
+        logger.info("=" * 40)
         
         # Test allocations
-        print("\n📦 Testing memory allocations...")
+        logger.info("\n📦 Testing memory allocations...")
         
         # Allocate various arrays
         tensor1 = memory_manager.allocate_tensor((10, 768))
@@ -806,24 +806,24 @@ if __name__ == "__main__":
         response1 = memory_manager.allocate_response_buffer((5, 512))
         
         if tensor1 is not None:
-            print(f"✅ Tensor allocated: {tensor1.shape}")
+            logger.info(f"✅ Tensor allocated: {tensor1.shape}")
         if embedding1 is not None:
-            print(f"✅ Embedding allocated: {embedding1.shape}")
+            logger.info(f"✅ Embedding allocated: {embedding1.shape}")
         if response1 is not None:
-            print(f"✅ Response buffer allocated: {response1.shape}")
+            logger.info(f"✅ Response buffer allocated: {response1.shape}")
         
         # Test managed context
-        print("\n🔧 Testing managed context...")
+        logger.info("\n🔧 Testing managed context...")
         
         with memory_manager.get_memory_context(MemoryPoolType.TEMPORARY_POOL) as context:
             temp_array = context.allocate((100, 100))
             if temp_array is not None:
-                print(f"✅ Temporary array allocated in context: {temp_array.shape}")
+                logger.info(f"✅ Temporary array allocated in context: {temp_array.shape}")
         
-        print("✅ Context automatically cleaned up")
+        logger.info("✅ Context automatically cleaned up")
         
         # Test memory reuse
-        print("\n♻️ Testing memory reuse...")
+        logger.info("\n♻️ Testing memory reuse...")
         
         # Deallocate and reallocate same shape
         if tensor1 is not None:
@@ -831,36 +831,36 @@ if __name__ == "__main__":
         
         tensor2 = memory_manager.allocate_tensor((10, 768))  # Same shape
         if tensor2 is not None:
-            print(f"✅ Memory reused for tensor: {tensor2.shape}")
+            logger.info(f"✅ Memory reused for tensor: {tensor2.shape}")
         
         # Get statistics
-        print("\n📊 Memory Pool Statistics:")
+        logger.info("\n📊 Memory Pool Statistics:")
         stats = memory_manager.get_comprehensive_statistics()
         
-        print(f"Total Memory: {stats['total_memory_mb']}MB")
-        print(f"Overall Usage: {stats['global_metrics']['overall_usage_percentage']:.1f}%")
-        print(f"Memory Efficiency: {stats['global_metrics']['memory_efficiency']:.2f}")
-        print(f"Average Hit Rate: {stats['global_metrics']['avg_hit_rate']:.2%}")
+        logger.info(f"Total Memory: {stats['total_memory_mb']}MB")
+        logger.info(f"Overall Usage: {stats['global_metrics']['overall_usage_percentage']:.1f}%")
+        logger.info(f"Memory Efficiency: {stats['global_metrics']['memory_efficiency']:.2f}")
+        logger.info(f"Average Hit Rate: {stats['global_metrics']['avg_hit_rate']:.2%}")
         
-        print(f"\nPool Breakdown:")
+        logger.info(f"\nPool Breakdown:")
         for pool_name, pool_stats in stats["pools"].items():
             pool_info = pool_stats["pool_info"]
             alloc_stats = pool_stats["allocation_stats"]
             
-            print(f"  {pool_name.upper()}:")
-            print(f"    Used: {pool_info['used_size_mb']:.1f}MB ({pool_info['usage_percentage']:.1f}%)")
-            print(f"    Allocations: {alloc_stats['total_allocations']}")
-            print(f"    Hit Rate: {alloc_stats['hit_rate']:.2%}")
-            print(f"    Avg Alloc Time: {alloc_stats['avg_allocation_time_ms']:.2f}ms")
+            logger.info(f"  {pool_name.upper()}:")
+            logger.info(f"    Used: {pool_info['used_size_mb']:.1f}MB ({pool_info['usage_percentage']:.1f}%)")
+            logger.info(f"    Allocations: {alloc_stats['total_allocations']}")
+            logger.info(f"    Hit Rate: {alloc_stats['hit_rate']:.2%}")
+            logger.info(f"    Avg Alloc Time: {alloc_stats['avg_allocation_time_ms']:.2f}ms")
         
         # Test cleanup
-        print(f"\n🧹 Testing memory cleanup...")
+        logger.info(f"\n🧹 Testing memory cleanup...")
         memory_manager.cleanup_all_pools()
         
         final_stats = memory_manager.get_comprehensive_statistics()
-        print(f"Final Usage: {final_stats['global_metrics']['overall_usage_percentage']:.1f}%")
+        logger.info(f"Final Usage: {final_stats['global_metrics']['overall_usage_percentage']:.1f}%")
         
-        print(f"\n✅ Memory management test completed")
+        logger.info(f"\n✅ Memory management test completed")
     
     import asyncio
     asyncio.run(main())

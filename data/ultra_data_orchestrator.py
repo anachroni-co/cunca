@@ -772,8 +772,8 @@ def create_ultra_data_config(
 def demonstrate_ultra_data_orchestration():
     """Demonstrate the ultra data orchestration system."""
     
-    print("🌟 ULTRA DATA ORCHESTRATION DEMONSTRATION")
-    print("=" * 60)
+    logger.info("🌟 ULTRA DATA ORCHESTRATION DEMONSTRATION")
+    logger.info("=" * 60)
     
     # Create configuration
     config = create_ultra_data_config(
@@ -781,10 +781,10 @@ def demonstrate_ultra_data_orchestration():
         enable_all_features=True
     )
     
-    print(f"📋 Configuration created:")
-    print(f"   - Strategy: {config.orchestration_strategy.value}")
-    print(f"   - Modalities: {len(config.enabled_modalities)}")
-    print(f"   - Ultra features: {config.auto_core_integration}")
+    logger.info(f"📋 Configuration created:")
+    logger.info(f"   - Strategy: {config.orchestration_strategy.value}")
+    logger.info(f"   - Modalities: {len(config.enabled_modalities)}")
+    logger.info(f"   - Ultra features: {config.auto_core_integration}")
     
     # Create orchestrator
     orchestrator = create_ultra_data_system(config)
@@ -792,11 +792,11 @@ def demonstrate_ultra_data_orchestration():
     # Get system status
     status = orchestrator.get_system_status()
     
-    print(f"\n🔍 System Status:")
-    print(f"   - Premium datasets: {status['datasets']['total_premium_datasets']}")
-    print(f"   - Robotics episodes: {status['datasets']['robotics_episodes']:,}")
-    print(f"   - Real-time APIs: {status['datasets']['real_time_apis']}")
-    print(f"   - Average quality: {status['datasets']['average_quality']}/10")
+    logger.info(f"\n🔍 System Status:")
+    logger.info(f"   - Premium datasets: {status['datasets']['total_premium_datasets']}")
+    logger.info(f"   - Robotics episodes: {status['datasets']['robotics_episodes']:,}")
+    logger.info(f"   - Real-time APIs: {status['datasets']['real_time_apis']}")
+    logger.info(f"   - Average quality: {status['datasets']['average_quality']}/10")
     
     # Test intelligent selection
     try:
@@ -809,13 +809,13 @@ def demonstrate_ultra_data_orchestration():
             modality_preferences=[DataModalityType.ROBOTICS, DataModalityType.MULTIMODAL]
         )
         
-        print(f"\n🎯 Intelligent Selection Test:")
-        print(f"   - Selected datasets: {len(selection_result['selected_datasets'])}")
-        print(f"   - Estimated quality: {selection_result['estimated_quality']:.2f}/10")
-        print(f"   - Reasoning: {list(selection_result['selection_reasoning'].keys())}")
+        logger.info(f"\n🎯 Intelligent Selection Test:")
+        logger.info(f"   - Selected datasets: {len(selection_result['selected_datasets'])}")
+        logger.info(f"   - Estimated quality: {selection_result['estimated_quality']:.2f}/10")
+        logger.info(f"   - Reasoning: {list(selection_result['selection_reasoning'].keys())}")
         
     except Exception as e:
-        print(f"\n❌ Selection test failed: {e}")
+        logger.error(f"\n❌ Selection test failed: {e}")
     
     return orchestrator
 

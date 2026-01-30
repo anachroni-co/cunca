@@ -10,6 +10,9 @@ from dataclasses import dataclass
 import json
 from datetime import datetime
 
+import logging
+logger = logging.getLogger(__name__)
+
 @dataclass
 class LegalComplianceConfig:
     """Configurestion for legal compliance of expert models."""
@@ -428,26 +431,26 @@ if __name__ == "__main__":
     # Generate and display legal documentation
     legal_docs = generate_legal_documentation()
     
-    print("=== Legal Compliance Documentation ===")
-    print(f"Overall Compliance: {legal_docs['compliance_validation']['overall_compliance']}")
-    print(f"Total Models: {legal_docs['compliance_validation']['license_summary']['total_models']}")
-    print(f"All Licenses OSI Approved: {legal_docs['compliance_validation']['license_summary']['all_licenses_osi_approved']}")
-    print(f"Commercial Use Allowed: {legal_docs['compliance_validation']['license_summary']['commercial_use_allowed']}")
+    logger.info("=== Legal Compliance Documentation ===")
+    logger.info(f"Overall Compliance: {legal_docs['compliance_validation']['overall_compliance']}")
+    logger.info(f"Total Models: {legal_docs['compliance_validation']['license_summary']['total_models']}")
+    logger.info(f"All Licenses OSI Approved: {legal_docs['compliance_validation']['license_summary']['all_licenses_osi_approved']}")
+    logger.info(f"Commercial Use Allowed: {legal_docs['compliance_validation']['license_summary']['commercial_use_allowed']}")
     
-    print("\n=== License Distribution ===")
+    logger.info("\n=== License Distribution ===")
     for license_type, count in legal_docs['compliance_validation']['license_summary']['license_distribution'].items():
-        print(f"  {license_type}: {count} models")
+        logger.info(f"  {license_type}: {count} models")
     
-    print("\n=== Organizations ===")
+    logger.info("\n=== Organizations ===")
     for org, models in legal_docs['compliance_validation']['license_summary']['organizations'].items():
-        print(f"  {org}: {', '.join(models)}")
+        logger.info(f"  {org}: {', '.join(models)}")
     
-    print("\n=== Attribution Requirements ===")
+    logger.info("\n=== Attribution Requirements ===")
     for expert_type, attribution in legal_docs['attribution_requirements'].items():
-        print(f"  {expert_type}: {attribution['attribution_text']}")
+        logger.info(f"  {expert_type}: {attribution['attribution_text']}")
     
     # Save documentation to file
     with open("legal_compliance_documentation.json", "w", encoding="utf-8") as f:
         json.dump(legal_docs, f, indent=2, ensure_ascii=False)
     
-    print("\n✅ Legal compliance documentation generated and saved to 'legal_compliance_documentation.json'")
+    logger.info("\n✅ Legal compliance documentation generated and saved to 'legal_compliance_documentation.json'")

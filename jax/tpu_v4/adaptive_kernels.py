@@ -282,7 +282,7 @@ if __name__ == "__main__":
     # Validation test
     success = validate_adaptive_kernels()
     if success:
-        print("[OK] Adaptive kernels module loaded successfully")
-        print("[INFO] Kernel info:", get_adaptive_kernel_info())
+        logger.info("[OK] Adaptive kernels module loaded successfully")
+        logger.info("[INFO] Kernel info:", get_adaptive_kernel_info())
     else:
-        print("[ERROR] Adaptive kernels validation failed")
+        logger.error("[ERROR] Adaptive kernels validation failed")

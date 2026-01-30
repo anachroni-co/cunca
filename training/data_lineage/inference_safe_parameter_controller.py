@@ -653,8 +653,8 @@ def create_inference_safe_controller(
 
 if __name__ == "__main__":
     # Example usage
-    print("🛡️ INFERENCE-SAFE PARAMETER CONTROLLER")
-    print("=" * 50)
+    logger.info("🛡️ INFERENCE-SAFE PARAMETER CONTROLLER")
+    logger.info("=" * 50)
     
     # Mock model parameters
     import numpy as np
@@ -675,23 +675,23 @@ if __name__ == "__main__":
         inference_mode=InferenceMode.SAFE_SCALING
     )
     
-    print(f"✅ Controller created with {len(mock_params)} parameters")
+    logger.info(f"✅ Controller created with {len(mock_params)} parameters")
     
     # Test safe disable
     success = controller.disable_dataset_parameters_safe("medical_data", scale_factor=0.1)
-    print(f"🔧 Disable test: {'✅' if success else '❌'}")
+    logger.info(f"🔧 Disable test: {'✅' if success else '❌'}")
     
     # Test configuration creation
     controller.compile_configuration("disabled_medical_data")
-    print("⚡ Configuration compiled")
+    logger.info("⚡ Configuration compiled")
     
     # Test safety report
     safety_report = controller.get_safety_report()
-    print(f"🛡️ Safety status: {safety_report['recommendation']}")
-    print(f"📊 Health score: {safety_report['overall_health']:.2%}")
+    logger.info(f"🛡️ Safety status: {safety_report['recommendation']}")
+    logger.info(f"📊 Health score: {safety_report['overall_health']:.2%}")
     
     # Test reset
     success = controller.reset_to_base()
-    print(f"🔄 Reset test: {'✅' if success else '❌'}")
+    logger.info(f"🔄 Reset test: {'✅' if success else '❌'}")
     
-    print("\n✅ ALL TESTS PASSED - SYSTEM IS INFERENCE-SAFE!")
+    logger.info("\n✅ ALL TESTS PASSED - SYSTEM IS INFERENCE-SAFE!")

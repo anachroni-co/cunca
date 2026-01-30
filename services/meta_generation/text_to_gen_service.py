@@ -741,7 +741,7 @@ from capibara.services.{request.service_name.lower()} import create_{request.ser
 service = create_{request.service_name.lower()}_service()
 request = {request.service_name}Request(description="Your description here")
 result = await service.generate(request)
-print(f"Generated: {{result.output_path}}")
+logger.info(f"Generated: {{result.output_path}}")
 ```
 
 ## Características

@@ -686,7 +686,7 @@ def benchmark_vq_variants():
     results = {}
     
     for name, config_kwargs in configs:
-        print(f"\n🔬 Benchmarking {name}...")
+        logger.info(f"\n🔬 Benchmarking {name}...")
         
         try:
             vq = create_enhanced_vq_layer(
@@ -713,13 +713,13 @@ def benchmark_vq_variants():
                 'mse': metrics['mse']
             }
             
-            print(f"   Time: {elapsed*1000:.2f}ms")
-            print(f"   Perplexity: {metrics['perplexity']:.2f}")
-            print(f"   Usage: {metrics['usage_rate']:.2%}")
-            print(f"   MSE: {metrics['mse']:.6f}")
+            logger.info(f"   Time: {elapsed*1000:.2f}ms")
+            logger.info(f"   Perplexity: {metrics['perplexity']:.2f}")
+            logger.info(f"   Usage: {metrics['usage_rate']:.2%}")
+            logger.info(f"   MSE: {metrics['mse']:.6f}")
             
         except Exception as e:
-            print(f"   ❌ Failed: {e}")
+            logger.error(f"   ❌ Failed: {e}")
             results[name] = {"error": str(e)}
     
     return results
@@ -730,13 +730,13 @@ def benchmark_vq_variants():
 
 def enhanced_example_usage():
     """Demonstrate enhanced VQ system features."""
-    print("🚀 Enhanced VQ System v2.0 Demo")
-    print("=" * 60)
+    logger.info("🚀 Enhanced VQ System v2.0 Demo")
+    logger.info("=" * 60)
     
     key = jax.random.PRNGKey(42)
     
     # 1. Enhanced Standard VQ with new features
-    print("\n1️⃣ Enhanced VQ with Adaptive Commitment:")
+    logger.info("\n1️⃣ Enhanced VQ with Adaptive Commitment:")
     vq = create_enhanced_vq_layer(
         num_embeddings=1024,
         embedding_dim=256,
@@ -750,12 +750,12 @@ def enhanced_example_usage():
     params = vq.init(key, x)
     
     quantized, metrics = vq.apply(params, x, training=True)
-    print(f"   Enhanced metrics: {len(metrics)} tracked")
-    print(f"   Adaptive commitment: {metrics['commitment_cost']:.3f}")
-    print(f"   Total loss: {metrics['total']:.6f}")
+    logger.info(f"   Enhanced metrics: {len(metrics)} tracked")
+    logger.info(f"   Adaptive commitment: {metrics['commitment_cost']:.3f}")
+    logger.info(f"   Total loss: {metrics['total']:.6f}")
     
     # 2. Product Quantization
-    print("\n2️⃣ Product Quantization:")
+    logger.info("\n2️⃣ Product Quantization:")
     pq_vq = create_enhanced_vq_layer(
         num_embeddings=256,
         embedding_dim=256,
@@ -766,14 +766,14 @@ def enhanced_example_usage():
     
     params_pq = pq_vq.init(key, x)
     quantized_pq, metrics_pq = pq_vq.apply(params_pq, x, training=True)
-    print(f"   PQ subspaces: {metrics_pq['num_subspaces']}")
-    print(f"   PQ loss: {metrics_pq['pq_loss']:.6f}")
+    logger.info(f"   PQ subspaces: {metrics_pq['num_subspaces']}")
+    logger.info(f"   PQ loss: {metrics_pq['pq_loss']:.6f}")
     
     # 3. Run benchmarks
-    print("\n3️⃣ Benchmarking VQ variants...")
+    logger.info("\n3️⃣ Benchmarking VQ variants...")
     benchmark_results = benchmark_vq_variants()
     
-    print("\n✅ Enhanced VQ Demo completed!")
+    logger.info("\n✅ Enhanced VQ Demo completed!")
     return benchmark_results
 
 if __name__ == "__main__":

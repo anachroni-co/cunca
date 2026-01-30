@@ -6,6 +6,9 @@ Practical examples showing how to use Flax-specific decorators
 for building modern transformer architectures.
 """
 
+import logging
+logger = logging.getLogger(__name__)
+
 try:
     import flax.linen as nn
     import jax
@@ -250,17 +253,17 @@ try:
         # Forward pass
         logits = model.apply(variables, tokens, training=False)
         
-        print(f"Input shape: {tokens.shape}")
-        print(f"Output shape: {logits.shape}")
-        print(f"Model parameters: {sum(x.size for x in jax.tree_leaves(variables))}")
+        logger.info(f"Input shape: {tokens.shape}")
+        logger.info(f"Output shape: {logits.shape}")
+        logger.info(f"Model parameters: {sum(x.size for x in jax.tree_leaves(variables))}")
         
         return model, variables, logits
 
 except ImportError:
-    print("⚠️  Flax not available - examples are stubs")
+    logger.warning("⚠️  Flax not available - examples are stubs")
     
     def demo_flax_decorators():
-        print("Flax decorators demo requires Flax installation")
+        logger.info("Flax decorators demo requires Flax installation")
         return None, None, None
     
     # Stub classes

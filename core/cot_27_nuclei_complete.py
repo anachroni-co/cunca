@@ -14,6 +14,9 @@ routing jerárquico, execution paralela and síntesis inter-núcleos.
 🎯 Routing Jerárquico Inteligente
 """
 
+import logging
+logger = logging.getLogger(__name__)
+
 # [CÓDIGO BASE IMPORTADO - Continuando since where se cortó]
 
 # =============================================================================
@@ -642,29 +645,29 @@ if __name__ == "__main__":
         enable_synthesis=True
     )
     
-    print("="*80)
-    print("🧠 SISTEMA ULTRA CHAIN-OF-THOUGHT CON 27 NÚCLEOS - DEMO")
-    print("="*80)
-    print(f"Query: {result['query']}")
-    print(f"\n{result['final_reasoning']}")
-    print(f"\nConfianza: {result['confidence_score']:.3f}")
-    print(f"Tiempo Total: {result['total_reasoning_time']:.3f}s")
-    print(f"Complejidad: {result['performance_metrics']['reasoning_complexity']:.3f}")
+    logger.info("="*80)
+    logger.info("🧠 SISTEMA ULTRA CHAIN-OF-THOUGHT CON 27 NÚCLEOS - DEMO")
+    logger.info("="*80)
+    logger.info(f"Query: {result['query']}")
+    logger.info(f"\n{result['final_reasoning']}")
+    logger.info(f"\nConfianza: {result['confidence_score']:.3f}")
+    logger.info(f"Tiempo Total: {result['total_reasoning_time']:.3f}s")
+    logger.info(f"Complejidad: {result['performance_metrics']['reasoning_complexity']:.3f}")
     
     # Reporte del sistema
     system_report = ultra_cot.get_system_report()
-    print(f"\n📊 REPORTE DEL SISTEMA:")
-    print(f"- Núcleos: {system_report['system_info']['total_nuclei']}")
-    print(f"- Dominios: {system_report['system_info']['domains']}")
-    print(f"- Sesiones: {system_report['usage_statistics']['total_sessions']}")
-    print(f"- Confianza promedio: {system_report['usage_statistics']['average_confidence']:.3f}")
+    logger.info(f"\n📊 REPORTE DEL SISTEMA:")
+    logger.info(f"- Núcleos: {system_report['system_info']['total_nuclei']}")
+    logger.info(f"- Dominios: {system_report['system_info']['domains']}")
+    logger.info(f"- Sesiones: {system_report['usage_statistics']['total_sessions']}")
+    logger.info(f"- Confianza promedio: {system_report['usage_statistics']['average_confidence']:.3f}")
     
     # show síntesis if existe
     if result["synthesis_results"]:
-        print(f"\n🔗 SÍNTESIS INTER-NÚCLEOS:")
+        logger.info(f"\n🔗 SÍNTESIS INTER-NÚCLEOS:")
         for level, synthesis in result["synthesis_results"].items():
             quality = synthesis["synthesis_quality"]["overall_quality"]
             nuclei_count = len(synthesis["participating_nuclei"])
-            print(f"- {level}: {nuclei_count} núcleos, calidad {quality:.3f}")
+            logger.info(f"- {level}: {nuclei_count} núcleos, calidad {quality:.3f}")
     
-    print("\n✨ Sistema funcionando correctamente!")
+    logger.info("\n✨ Sistema funcionando correctamente!")

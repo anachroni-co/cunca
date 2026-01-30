@@ -231,37 +231,37 @@ def run_comprehensive_diagnosis():
     validation_results = optimizer.validate_backend_initialization()
     
     # Print results
-    print("\n" + "="*60)
-    print("🦫 CAPIBARA TPU v4-32 DIAGNOSIS RESULTS")
-    print("="*60)
+    logger.info("\n" + "="*60)
+    logger.info("🦫 CAPIBARA TPU v4-32 DIAGNOSIS RESULTS")
+    logger.info("="*60)
     
-    print(f"JAX Available: {'✅' if validation_results['jax_available'] else '❌'}")
-    print(f"TPU Available: {'✅' if validation_results['tpu_available'] else '❌'}")
-    print(f"Optimizations Applied: {'✅' if validation_results['optimization_applied'] else '❌'}")
+    logger.info(f"JAX Available: {'✅' if validation_results['jax_available'] else '❌'}")
+    logger.info(f"TPU Available: {'✅' if validation_results['tpu_available'] else '❌'}")
+    logger.info(f"Optimizations Applied: {'✅' if validation_results['optimization_applied'] else '❌'}")
     
-    print("\n📦 Kernel Modules Status:")
+    logger.info("\n📦 Kernel Modules Status:")
     for kernel, status in validation_results["kernels_status"].items():
-        print(f"  {kernel}: {'✅' if status else '❌'}")
+        logger.info(f"  {kernel}: {'✅' if status else '❌'}")
     
     if validation_results["performance_metrics"]:
-        print("\n⚡ Performance Metrics:")
+        logger.info("\n⚡ Performance Metrics:")
         for metric, value in validation_results["performance_metrics"].items():
-            print(f"  {metric}: {value}")
+            logger.info(f"  {metric}: {value}")
     
     if validation_results["recommendations"]:
-        print("\n💡 Recommendations:")
+        logger.info("\n💡 Recommendations:")
         for i, rec in enumerate(validation_results["recommendations"], 1):
-            print(f"  {i}. {rec}")
+            logger.info(f"  {i}. {rec}")
     
-    print("\n" + "="*60)
+    logger.info("\n" + "="*60)
     
     # Overall status
     all_kernels_ok = all(validation_results["kernels_status"].values())
     if validation_results["jax_available"] and all_kernels_ok:
-        print("🎉 SYSTEM STATUS: ✅ HEALTHY")
+        logger.info("🎉 SYSTEM STATUS: ✅ HEALTHY")
         logger.info("TPU backend diagnosis completed successfully")
     else:
-        print("⚠️  SYSTEM STATUS: ❌ ISSUES DETECTED")
+        logger.info("⚠️  SYSTEM STATUS: ❌ ISSUES DETECTED")
         logger.warning("TPU backend has issues that need attention")
     
     return validation_results
@@ -286,8 +286,8 @@ def quick_fix_kernel_imports():
 
 def main():
     """Main TPU optimizer function."""
-    print("🦫 CapibaraGPT v3.3 - TPU v4-32 Backend Optimizer")
-    print("=" * 50)
+    logger.info("🦫 CapibaraGPT v3.3 - TPU v4-32 Backend Optimizer")
+    logger.info("=" * 50)
     
     # Quick fixes first
     fixes = quick_fix_kernel_imports()

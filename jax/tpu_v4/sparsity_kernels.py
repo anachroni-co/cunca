@@ -288,10 +288,10 @@ def main():
     logger.info("Sparsity kernels module starting")
     success = validate_sparsity_kernels()
     if success:
-        print("[OK] Sparsity kernels module loaded successfully")
-        print("[INFO] Kernel info:", get_sparsity_kernel_info())
+        logger.info("[OK] Sparsity kernels module loaded successfully")
+        logger.info("[INFO] Kernel info:", get_sparsity_kernel_info())
     else:
-        print("[ERROR] Sparsity kernels validation failed")
+        logger.error("[ERROR] Sparsity kernels validation failed")
     return success
 
 def safe_at_set(array, key, value):

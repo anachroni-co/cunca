@@ -901,8 +901,8 @@ def create_ultra_vq_config(
 def demonstrate_ultra_vq():
     """Demonstrate the ultra VQ system."""
     
-    print("🌟 ULTRA VQ ORCHESTRATOR DEMONSTRATION")
-    print("=" * 60)
+    logger.info("🌟 ULTRA VQ ORCHESTRATOR DEMONSTRATION")
+    logger.info("=" * 60)
     
     # Create configuration
     config = create_ultra_vq_config(
@@ -911,10 +911,10 @@ def demonstrate_ultra_vq():
         enable_all_features=True
     )
     
-    print(f"📋 Configuration created:")
-    print(f"   - Technique: {config.vq_technique.value}")
-    print(f"   - Architecture: {config.architecture.value}")
-    print(f"   - Modalities: {len(config.modalities)}")
+    logger.info(f"📋 Configuration created:")
+    logger.info(f"   - Technique: {config.vq_technique.value}")
+    logger.info(f"   - Architecture: {config.architecture.value}")
+    logger.info(f"   - Modalities: {len(config.modalities)}")
     
     # Create orchestrator
     orchestrator = create_ultra_vq_system(config)
@@ -922,10 +922,10 @@ def demonstrate_ultra_vq():
     # Get system status
     status = orchestrator.get_ultra_vq_status()
     
-    print(f"\n🔍 System Status:")
-    print(f"   - VQ techniques: {status['engines']['vq_techniques']}")
-    print(f"   - Adaptive learning: {'✅' if status['capabilities']['adaptive_learning'] else '❌'}")
-    print(f"   - Quantum optimization: {'✅' if status['capabilities']['quantum_optimization'] else '❌'}")
+    logger.info(f"\n🔍 System Status:")
+    logger.info(f"   - VQ techniques: {status['engines']['vq_techniques']}")
+    logger.info(f"   - Adaptive learning: {'✅' if status['capabilities']['adaptive_learning'] else '❌'}")
+    logger.info(f"   - Quantum optimization: {'✅' if status['capabilities']['quantum_optimization'] else '❌'}")
     
     return orchestrator
 

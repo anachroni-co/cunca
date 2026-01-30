@@ -802,34 +802,34 @@ if __name__ == "__main__":
             "You should consider multiple perspectives on this complex issue."
         ]
         
-        print("🛡️ Bias Detection and Safety Filtering Test Results")
-        print("=" * 60)
+        logger.info("🛡️ Bias Detection and Safety Filtering Test Results")
+        logger.info("=" * 60)
         
         for i, content in enumerate(test_contents, 1):
-            print(f"\n📝 Test {i}: {content[:50]}...")
+            logger.info(f"\n📝 Test {i}: {content[:50]}...")
             
             result = filter_system.process_content(content)
             
-            print(f"   Safety Level: {result.safety_assessment.overall_safety_level.value if result.safety_assessment else 'N/A'}")
-            print(f"   Safety Score: {result.safety_assessment.safety_score:.2f if result.safety_assessment else 'N/A'}")
-            print(f"   Bias Detected: {len(result.bias_detections)} types")
+            logger.info(f"   Safety Level: {result.safety_assessment.overall_safety_level.value if result.safety_assessment else 'N/A'}")
+            logger.info(f"   Safety Score: {result.safety_assessment.safety_score:.2f if result.safety_assessment else 'N/A'}")
+            logger.info(f"   Bias Detected: {len(result.bias_detections)} types")
             
             if result.bias_detections:
                 for detection in result.bias_detections:
-                    print(f"     - {detection.bias_type.value}: {detection.confidence:.2f} confidence")
+                    logger.info(f"     - {detection.bias_type.value}: {detection.confidence:.2f} confidence")
             
             if result.filtering_applied:
-                print(f"   Filtering Applied: {', '.join(result.filters_triggered)}")
-                print(f"   Filtered Content: {result.filtered_content[:100]}...")
+                logger.info(f"   Filtering Applied: {', '.join(result.filters_triggered)}")
+                logger.info(f"   Filtered Content: {result.filtered_content[:100]}...")
             
-            print(f"   Overall Confidence: {result.confidence:.2f}")
+            logger.info(f"   Overall Confidence: {result.confidence:.2f}")
         
         # Show system statistics
         stats = filter_system.get_filtering_statistics()
-        print(f"\n📊 System Statistics:")
-        print(f"   Bias Types Supported: {len(stats['supported_bias_types'])}")
-        print(f"   Safety Categories: {len(stats['supported_safety_categories'])}")
-        print(f"   Filtering Enabled: {stats['filtering_enabled']}")
+        logger.info(f"\n📊 System Statistics:")
+        logger.info(f"   Bias Types Supported: {len(stats['supported_bias_types'])}")
+        logger.info(f"   Safety Categories: {len(stats['supported_safety_categories'])}")
+        logger.info(f"   Filtering Enabled: {stats['filtering_enabled']}")
     
     import asyncio
     asyncio.run(main())

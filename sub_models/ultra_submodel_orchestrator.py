@@ -888,8 +888,8 @@ def create_ultra_submodel_config(
 def demonstrate_ultra_submodel_orchestration():
     """Demonstrate the ultra sub-model orchestration system."""
     
-    print("🌟 ULTRA SUBMODEL ORCHESTRATION DEMONSTRATION")
-    print("=" * 60)
+    logger.info("🌟 ULTRA SUBMODEL ORCHESTRATION DEMONSTRATION")
+    logger.info("=" * 60)
     
     # Create configuration
     config = create_ultra_submodel_config(
@@ -897,10 +897,10 @@ def demonstrate_ultra_submodel_orchestration():
         enable_all_features=True
     )
     
-    print(f"📋 Configuration created:")
-    print(f"   - Strategy: {config.orchestration_strategy.value}")
-    print(f"   - Sub-models: {len(config.enabled_submodels)}")
-    print(f"   - Ultra features: {config.auto_core_integration}")
+    logger.info(f"📋 Configuration created:")
+    logger.info(f"   - Strategy: {config.orchestration_strategy.value}")
+    logger.info(f"   - Sub-models: {len(config.enabled_submodels)}")
+    logger.info(f"   - Ultra features: {config.auto_core_integration}")
     
     # Create orchestrator
     orchestrator = create_ultra_submodel_system(config)
@@ -908,11 +908,11 @@ def demonstrate_ultra_submodel_orchestration():
     # Get system status
     status = orchestrator.get_system_status()
     
-    print(f"\n🔍 System Status:")
-    print(f"   - Active sub-models: {len(status['active_submodels'])}")
-    print(f"   - Ultra Core: {'✅' if status['availability']['ultra_core'] else '❌'}")
-    print(f"   - SSM Hybrid: {'✅' if status['availability']['ssm_hybrid'] else '❌'}")
-    print(f"   - Expert Soup: {'✅' if status['integrations']['expert_soup_manager'] else '❌'}")
+    logger.info(f"\n🔍 System Status:")
+    logger.info(f"   - Active sub-models: {len(status['active_submodels'])}")
+    logger.info(f"   - Ultra Core: {'✅' if status['availability']['ultra_core'] else '❌'}")
+    logger.info(f"   - SSM Hybrid: {'✅' if status['availability']['ssm_hybrid'] else '❌'}")
+    logger.info(f"   - Expert Soup: {'✅' if status['integrations']['expert_soup_manager'] else '❌'}")
     
     # Test routing
     try:
@@ -923,20 +923,20 @@ def demonstrate_ultra_submodel_orchestration():
             strategy=OrchestrationStrategy.ULTRA_HYBRID
         )
         
-        print(f"\n🎯 Routing Test:")
-        print(f"   - Strategy: {routing_info['strategy']}")
-        print(f"   - Computation time: {routing_info['performance']['computation_time_ms']:.2f}ms")
-        print(f"   - Success rate: {routing_info['performance']['success_rate']:.2%}")
+        logger.info(f"\n🎯 Routing Test:")
+        logger.info(f"   - Strategy: {routing_info['strategy']}")
+        logger.info(f"   - Computation time: {routing_info['performance']['computation_time_ms']:.2f}ms")
+        logger.info(f"   - Success rate: {routing_info['performance']['success_rate']:.2%}")
         
     except Exception as e:
-        print(f"\n❌ Routing test failed: {e}")
+        logger.error(f"\n❌ Routing test failed: {e}")
     
     # Validate system
     validation = orchestrator.validate_system()
     
-    print(f"\n✅ Validation Results:")
+    logger.info(f"\n✅ Validation Results:")
     for check, result in validation.items():
-        print(f"   - {check}: {'✅' if result else '❌'}")
+        logger.info(f"   - {check}: {'✅' if result else '❌'}")
     
     return orchestrator
 

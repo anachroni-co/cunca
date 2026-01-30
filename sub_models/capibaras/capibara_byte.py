@@ -3,6 +3,8 @@
 import os
 import sys
 
+import logging
+
 # Obtiene la path del directory current (scripts) -> /.../scripts
 script_dir = os.path.dirname(os.path.abspath(__file__))
 # Sube un level for obtain la raíz del proyecto -> /.../capibaraGPT-v2
@@ -160,5 +162,5 @@ final_state, all_states = model.apply(
     initial_state=None,  # or tu estado inicial if lo tienes
     training=True
 )
-print("Final state shape:", final_state.shape)
-print("All states shape:", all_states.shape)
+logger.info("Final state shape:", final_state.shape)
+logger.info("All states shape:", all_states.shape)

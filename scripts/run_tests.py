@@ -16,15 +16,18 @@ import subprocess
 import sys
 from pathlib import Path
 
+import logging
+logger = logging.getLogger(__name__)
+
 PROJECT_ROOT = Path(__file__).parent.parent
 
 
 def run_command(cmd: list, description: str) -> bool:
     """Run a command and return success status."""
-    print(f"\n{'='*60}")
-    print(f"Running: {description}")
-    print(f"Command: {' '.join(cmd)}")
-    print("=" * 60)
+    logger.info(f"\n{'='*60}")
+    logger.info(f"Running: {description}")
+    logger.info(f"Command: {' '.join(cmd)}")
+    logger.info("=" * 60)
 
     result = subprocess.run(cmd, cwd=PROJECT_ROOT)
     return result.returncode == 0
@@ -102,25 +105,25 @@ def main():
             results.append(("Coverage", run_command(cmd, "Coverage report")))
 
     # Summary
-    print("\n" + "=" * 60)
-    print("TEST SUMMARY")
-    print("=" * 60)
+    logger.info("\n" + "=" * 60)
+    logger.info("TEST SUMMARY")
+    logger.info("=" * 60)
 
     all_passed = True
     for name, passed in results:
         status = "PASSED" if passed else "FAILED"
         symbol = "✓" if passed else "✗"
-        print(f"  {symbol} {name}: {status}")
+        logger.info(f"  {symbol} {name}: {status}")
         if not passed:
             all_passed = False
 
-    print("=" * 60)
+    logger.info("=" * 60)
 
     if all_passed:
-        print("All tests passed!")
+        logger.info("All tests passed!")
         return 0
     else:
-        print("Some tests failed!")
+        logger.error("Some tests failed!")
         return 1
 
 

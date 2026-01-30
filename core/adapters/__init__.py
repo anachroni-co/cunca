@@ -38,6 +38,9 @@ from .base_adapter import BaseAdapter, AdapterConfig, AdapterStatus, FallbackAda
 
 # Specific adapter imports
 from .kernel_abstraction_adapter import (
+
+import logging
+
     KernelAbstractionAdapter, 
     KernelOperation, 
     KernelExecutionContext,
@@ -165,17 +168,17 @@ def initialize_all_adapters() -> bool:
         try:
             if adapter.initialize():
                 success_count += 1
-                print(f"✅ {name} Adapter initialized")
+                logger.info(f"✅ {name} Adapter initialized")
             else:
-                print(f"❌ {name} Adapter initialization failed")
+                logger.error(f"❌ {name} Adapter initialization failed")
         except Exception as e:
-            print(f"❌ {name} Adapter error: {e}")
+            logger.error(f"❌ {name} Adapter error: {e}")
     
     # Start metrics collection
     start_metrics_collection()
-    print(f"📊 Metrics collection started")
+    logger.info(f"📊 Metrics collection started")
     
-    print(f"🎯 Initialized {success_count}/{len(adapters)} adapters successfully")
+    logger.info(f"🎯 Initialized {success_count}/{len(adapters)} adapters successfully")
     return success_count == len(adapters)
 
 def get_system_status() -> dict:

@@ -308,8 +308,8 @@ def demo_e2b_sandbox():
     """
     Demonstration of E2B Sandbox Agent capabilities.
     """
-    print("E2B Sandbox Agent Demo")
-    print("=" * 50)
+    logger.info("E2B Sandbox Agent Demo")
+    logger.info("=" * 50)
 
     try:
         # Initialize agent
@@ -317,39 +317,39 @@ def demo_e2b_sandbox():
 
         # Create a sandbox
         sandbox_id = agent.create_sandbox("demo_sandbox")
-        print(f"Created sandbox: {sandbox_id}")
+        logger.info(f"Created sandbox: {sandbox_id}")
 
         # Execute some Python code
         code = """
 import sys
-print(f"Python version: {sys.version}")
-print("Hello from E2B Sandbox!")
+logger.info(f"Python version: {sys.version}")
+logger.info("Hello from E2B Sandbox!")
 
 # Create a simple file
 with open('/tmp/demo.txt', 'w') as f:
     f.write('This is a demo file created in E2B sandbox')
 
-print("Demo file created successfully")
+logger.info("Demo file created successfully")
 """
 
         result = agent.execute_code(sandbox_id, code)
-        print(f"Execution result: {result}")
+        logger.info(f"Execution result: {result}")
 
         # List files in the sandbox
         files = agent.list_files(sandbox_id, "/tmp")
-        print(f"Files in /tmp: {files}")
+        logger.info(f"Files in /tmp: {files}")
 
         # Get sandbox info
         info = agent.get_sandbox_info(sandbox_id)
-        print(f"Sandbox info: {info}")
+        logger.info(f"Sandbox info: {info}")
 
         # Close the sandbox
         agent.close_sandbox(sandbox_id)
-        print("Sandbox closed successfully")
+        logger.info("Sandbox closed successfully")
 
     except Exception as e:
-        print(f"Demo failed: {str(e)}")
-        print("Make sure to set your E2B_API_KEY environment variable")
+        logger.error(f"Demo failed: {str(e)}")
+        logger.info("Make sure to set your E2B_API_KEY environment variable")
 
 
 if __name__ == "__main__":

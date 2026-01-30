@@ -782,16 +782,16 @@ if __name__ == "__main__":
             use_h200_distributed=True
         )
         
-        print("=== TPU v6-64 Results ===")
-        print(f"Response: {result_tpu['consensus_response']}")
-        print(f"Confidence: {result_tpu['confidence']:.2f}")
-        print(f"Method: {result_tpu['consensus_method']}")
-        print(f"TPU Metrics: {result_tpu['tpu_v6_metrics']}")
+        logger.info("=== TPU v6-64 Results ===")
+        logger.info(f"Response: {result_tpu['consensus_response']}")
+        logger.info(f"Confidence: {result_tpu['confidence']:.2f}")
+        logger.info(f"Method: {result_tpu['consensus_method']}")
+        logger.info(f"TPU Metrics: {result_tpu['tpu_v6_metrics']}")
         
-        print("\n=== H200 Distributed Results ===")
-        print(f"Response: {result_h200['consensus_response']}")
-        print(f"Confidence: {result_h200['confidence']:.2f}")
-        print(f"Method: {result_h200['consensus_method']}")
-        print(f"HF Pro Metrics: {result_h200['hf_pro_metrics']}")
+        logger.info("\n=== H200 Distributed Results ===")
+        logger.info(f"Response: {result_h200['consensus_response']}")
+        logger.info(f"Confidence: {result_h200['confidence']:.2f}")
+        logger.info(f"Method: {result_h200['consensus_method']}")
+        logger.info(f"HF Pro Metrics: {result_h200['hf_pro_metrics']}")
     
     asyncio.run(main())

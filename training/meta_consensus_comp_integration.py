@@ -744,22 +744,22 @@ __all__ = [
 if __name__ == "__main__":
     # Example usage and demonstration
     async def main():
-        print("🎭 Meta-Consensus-Comp Integrated System Demo")
-        print("=" * 50)
+        logger.info("🎭 Meta-Consensus-Comp Integrated System Demo")
+        logger.info("=" * 50)
         
         # Create development system
         system = create_development_system(hf_api_token=os.environ.get("HF_API_TOKEN", ""))
         
         # Initialize system
         if await system.initialize():
-            print("✅ System initialized successfully")
+            logger.info("✅ System initialized successfully")
             
             # Get system status
             status = system.get_system_status()
-            print(f"\n📊 System Status:")
-            print(f"  Profile: {status['system_info']['profile']}")
-            print(f"  Optimization: {status['configuration']['optimization_level']}")
-            print(f"  Health: {'✅ Healthy' if status['system_info']['is_healthy'] else '❌ Unhealthy'}")
+            logger.info(f"\n📊 System Status:")
+            logger.info(f"  Profile: {status['system_info']['profile']}")
+            logger.info(f"  Optimization: {status['configuration']['optimization_level']}")
+            logger.info(f"  Health: {'✅ Healthy' if status['system_info']['is_healthy'] else '❌ Unhealthy'}")
             
             # Test queries
             test_queries = [
@@ -770,61 +770,61 @@ if __name__ == "__main__":
                 "What are the benefits of distributed systems?"
             ]
             
-            print(f"\n🔍 Processing {len(test_queries)} test queries...")
+            logger.info(f"\n🔍 Processing {len(test_queries)} test queries...")
             
             results = []
             for i, query in enumerate(test_queries):
-                print(f"\nQuery {i+1}: {query}")
+                logger.info(f"\nQuery {i+1}: {query}")
                 
                 result = await system.process_query(query)
                 results.append(result)
                 
-                print(f"  Response: {result.response[:100]}...")
-                print(f"  Quality: {result.quality_score:.1f}/10")
-                print(f"  Confidence: {result.confidence:.2f}")
-                print(f"  Cost: ${result.total_cost:.4f}")
-                print(f"  Time: {result.response_time_ms:.0f}ms")
-                print(f"  Experts: {len(result.participating_experts)}")
+                logger.info(f"  Response: {result.response[:100]}...")
+                logger.info(f"  Quality: {result.quality_score:.1f}/10")
+                logger.info(f"  Confidence: {result.confidence:.2f}")
+                logger.info(f"  Cost: ${result.total_cost:.4f}")
+                logger.info(f"  Time: {result.response_time_ms:.0f}ms")
+                logger.info(f"  Experts: {len(result.participating_experts)}")
             
             # Run benchmark
             if system.benchmark_system:
-                print(f"\n📊 Running system benchmark...")
+                logger.info(f"\n📊 Running system benchmark...")
                 
                 benchmark_results = await system.run_system_benchmark()
                 
                 if benchmark_results:
-                    print(f"✅ Benchmark completed:")
-                    print(f"  Profile: {benchmark_results['system_profile']}")
+                    logger.info(f"✅ Benchmark completed:")
+                    logger.info(f"  Profile: {benchmark_results['system_profile']}")
                     
                     if benchmark_results.get('latency_improvements'):
-                        print(f"  Latency Improvements:")
+                        logger.info(f"  Latency Improvements:")
                         for level, improvement in benchmark_results['latency_improvements'].items():
-                            print(f"    {level}: {improvement:.1%}")
+                            logger.info(f"    {level}: {improvement:.1%}")
                     
                     if benchmark_results.get('recommendations'):
-                        print(f"  Recommendations:")
+                        logger.info(f"  Recommendations:")
                         for rec in benchmark_results['recommendations'][:3]:
-                            print(f"    • {rec}")
+                            logger.info(f"    • {rec}")
             
             # Final system status
             final_status = system.get_system_status()
-            print(f"\n📈 Final Performance:")
-            print(f"  Queries Processed: {final_status['recent_queries']}")
-            print(f"  Avg Latency: {final_status['performance']['avg_latency_ms']:.0f}ms")
-            print(f"  Avg Quality: {final_status['performance']['avg_quality_score']:.1f}")
-            print(f"  Cache Hit Rate: {final_status['cache']['hit_rate']}")
-            print(f"  Memory Usage: {final_status['resources']['memory_usage_mb']:.0f}MB")
+            logger.info(f"\n📈 Final Performance:")
+            logger.info(f"  Queries Processed: {final_status['recent_queries']}")
+            logger.info(f"  Avg Latency: {final_status['performance']['avg_latency_ms']:.0f}ms")
+            logger.info(f"  Avg Quality: {final_status['performance']['avg_quality_score']:.1f}")
+            logger.info(f"  Cache Hit Rate: {final_status['cache']['hit_rate']}")
+            logger.info(f"  Memory Usage: {final_status['resources']['memory_usage_mb']:.0f}MB")
             
             # Get monitoring URL
             monitoring_url = system.get_monitoring_url()
             if monitoring_url:
-                print(f"\n🖥️ Monitoring Dashboard: {monitoring_url}")
+                logger.info(f"\n🖥️ Monitoring Dashboard: {monitoring_url}")
             
             # Shutdown
             await system.shutdown()
             
         else:
-            print("❌ System initialization failed")
+            logger.error("❌ System initialization failed")
     
     import asyncio
     asyncio.run(main())

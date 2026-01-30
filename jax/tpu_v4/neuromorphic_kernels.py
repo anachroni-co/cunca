@@ -388,10 +388,10 @@ def main():
     logger.info("Neuromorphic kernels module starting")
     success = validate_neuromorphic_kernels()
     if success:
-        print("[OK] Neuromorphic kernels module loaded successfully")
-        print("[INFO] Kernel info:", get_neuromorphic_kernel_info())
+        logger.info("[OK] Neuromorphic kernels module loaded successfully")
+        logger.info("[INFO] Kernel info:", get_neuromorphic_kernel_info())
     else:
-        print("[ERROR] Neuromorphic kernels validation failed")
+        logger.error("[ERROR] Neuromorphic kernels validation failed")
     return success
 
 if __name__ == "__main__":

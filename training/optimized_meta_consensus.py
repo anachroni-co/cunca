@@ -1171,7 +1171,7 @@ if __name__ == "__main__":
         
         # Initialize optimizations
         if await system.initialize_optimizations():
-            print("🚀 Optimized Meta-Consensus System initialized")
+            logger.info("🚀 Optimized Meta-Consensus System initialized")
             
             # Initialize base system
             await system.initialize()
@@ -1185,38 +1185,38 @@ if __name__ == "__main__":
                 "What are the applications of artificial intelligence?"
             ]
             
-            print("\n📊 Running optimization benchmarks...")
+            logger.info("\n📊 Running optimization benchmarks...")
             
             # Benchmark different optimization levels
             benchmark_results = await system.benchmark_optimization_performance(test_queries)
             
-            print("\n🏆 Benchmark Results:")
+            logger.info("\n🏆 Benchmark Results:")
             for level, metrics in benchmark_results.items():
-                print(f"\n{level.upper()}:")
-                print(f"  Response Time: {metrics['avg_response_time_ms']:.0f}ms")
-                print(f"  Quality Score: {metrics['avg_quality_score']:.1f}")
-                print(f"  Cost: ${metrics['avg_cost']:.4f}")
-                print(f"  Throughput: {metrics['throughput_qps']:.1f} QPS")
-                print(f"  Cache Hit Rate: {metrics['cache_hit_rate']:.2%}")
+                logger.info(f"\n{level.upper()}:")
+                logger.info(f"  Response Time: {metrics['avg_response_time_ms']:.0f}ms")
+                logger.info(f"  Quality Score: {metrics['avg_quality_score']:.1f}")
+                logger.info(f"  Cost: ${metrics['avg_cost']:.4f}")
+                logger.info(f"  Throughput: {metrics['throughput_qps']:.1f} QPS")
+                logger.info(f"  Cache Hit Rate: {metrics['cache_hit_rate']:.2%}")
             
             # Get optimization status
             status = system.get_optimization_status()
-            print(f"\n🔧 Optimization Status:")
-            print(f"  Level: {status['optimization_config']['level']}")
-            print(f"  JIT Enabled: {status['optimization_config']['jit_enabled']}")
-            print(f"  GPU Acceleration: {status['optimization_config']['gpu_acceleration']}")
-            print(f"  Memory Pooling: {status['optimization_config']['memory_pooling']}")
-            print(f"  Distributed Caching: {status['optimization_config']['distributed_caching']}")
+            logger.info(f"\n🔧 Optimization Status:")
+            logger.info(f"  Level: {status['optimization_config']['level']}")
+            logger.info(f"  JIT Enabled: {status['optimization_config']['jit_enabled']}")
+            logger.info(f"  GPU Acceleration: {status['optimization_config']['gpu_acceleration']}")
+            logger.info(f"  Memory Pooling: {status['optimization_config']['memory_pooling']}")
+            logger.info(f"  Distributed Caching: {status['optimization_config']['distributed_caching']}")
             
-            print(f"\n⚡ Performance Metrics:")
+            logger.info(f"\n⚡ Performance Metrics:")
             perf = status['performance_metrics']
-            print(f"  Queries/Second: {perf['queries_per_second']}")
-            print(f"  Cache Hit Rate: {perf['cache_hit_rate']}")
-            print(f"  Memory Usage: {perf['memory_usage_mb']}MB")
-            print(f"  GPU Utilization: {perf['gpu_utilization']}")
+            logger.info(f"  Queries/Second: {perf['queries_per_second']}")
+            logger.info(f"  Cache Hit Rate: {perf['cache_hit_rate']}")
+            logger.info(f"  Memory Usage: {perf['memory_usage_mb']}MB")
+            logger.info(f"  GPU Utilization: {perf['gpu_utilization']}")
         
         else:
-            print("❌ Optimization initialization failed")
+            logger.error("❌ Optimization initialization failed")
     
     import asyncio
     asyncio.run(main())

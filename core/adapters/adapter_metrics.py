@@ -625,7 +625,7 @@ def default_alert_callback(alert: Alert):
     }
     
     emoji = level_emoji.get(alert.alert_level, "❓")
-    print(f"{emoji} ALERT: {alert.message}")
+    logger.info(f"{emoji} ALERT: {alert.message}")
 
 # Register default callback
 metrics_collector.add_alert_callback(default_alert_callback)

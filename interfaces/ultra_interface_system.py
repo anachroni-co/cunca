@@ -989,8 +989,8 @@ def create_ultra_interface_config(
 def demonstrate_ultra_interface_system():
     """Demonstrate the ultra interface system."""
     
-    print("🌟 ULTRA INTERFACE SYSTEM DEMONSTRATION")
-    print("=" * 60)
+    logger.info("🌟 ULTRA INTERFACE SYSTEM DEMONSTRATION")
+    logger.info("=" * 60)
     
     # Create configuration
     config = create_ultra_interface_config(
@@ -999,10 +999,10 @@ def demonstrate_ultra_interface_system():
         enable_all_features=True
     )
     
-    print(f"📋 Configuration created:")
-    print(f"   - Validation level: {config.validation_level.value}")
-    print(f"   - Compatibility mode: {config.compatibility_mode.value}")
-    print(f"   - Smart contracts: {config.enable_smart_contracts}")
+    logger.info(f"📋 Configuration created:")
+    logger.info(f"   - Validation level: {config.validation_level.value}")
+    logger.info(f"   - Compatibility mode: {config.compatibility_mode.value}")
+    logger.info(f"   - Smart contracts: {config.enable_smart_contracts}")
     
     # Create interface system
     interface_system = create_ultra_interface_system(config)
@@ -1010,10 +1010,10 @@ def demonstrate_ultra_interface_system():
     # Get system status
     status = interface_system.get_system_status()
     
-    print(f"\n🔍 System Status:")
-    print(f"   - Registered interfaces: {status['interfaces']['total_registered']}")
-    print(f"   - Smart contracts: {status['smart_contracts']['total_contracts']}")
-    print(f"   - Validation success rate: {status['health']['validation_success_rate']:.2%}")
+    logger.info(f"\n🔍 System Status:")
+    logger.info(f"   - Registered interfaces: {status['interfaces']['total_registered']}")
+    logger.info(f"   - Smart contracts: {status['smart_contracts']['total_contracts']}")
+    logger.info(f"   - Validation success rate: {status['health']['validation_success_rate']:.2%}")
     
     # Test compatibility validation
     try:
@@ -1023,13 +1023,13 @@ def demonstrate_ultra_interface_system():
             strict=False
         )
         
-        print(f"\n🎯 Compatibility Test:")
-        print(f"   - Compatible: {compatibility['compatible']}")
-        print(f"   - Score: {compatibility['score']:.2f}")
-        print(f"   - Reasons: {len(compatibility['reasons'])}")
+        logger.info(f"\n🎯 Compatibility Test:")
+        logger.info(f"   - Compatible: {compatibility['compatible']}")
+        logger.info(f"   - Score: {compatibility['score']:.2f}")
+        logger.info(f"   - Reasons: {len(compatibility['reasons'])}")
         
     except Exception as e:
-        print(f"\n❌ Compatibility test failed: {e}")
+        logger.error(f"\n❌ Compatibility test failed: {e}")
     
     return interface_system
 

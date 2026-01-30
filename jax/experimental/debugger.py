@@ -4,9 +4,12 @@ JAX experimental debugger
 Debugging utilities.
 """
 
+import logging
+logger = logging.getLogger(__name__)
+
 def debug_print(msg, *args):
     """Debug print function."""
-    print(f"DEBUG: {msg}", *args)
+    logger.debug(f"DEBUG: {msg}", *args)
 
 def breakpoint():
     """Debugging breakpoint."""

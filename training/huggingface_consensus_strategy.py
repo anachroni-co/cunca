@@ -419,7 +419,7 @@ if __name__ == "__main__":
     async def main():
         prompt = "What is the capital of Spain?"
         result = await get_huggingface_consensus(prompt, domain_hint="spanish", max_responses=3)
-        print(f"Response: {result['consensus_response']}")
-        print(f"Confidence: {result['confidence']:.2f}")
+        logger.info(f"Response: {result['consensus_response']}")
+        logger.info(f"Confidence: {result['confidence']:.2f}")
 
     asyncio.run(main())

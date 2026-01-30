@@ -613,31 +613,31 @@ if __name__ == "__main__":
     # Create trainer
     trainer = create_byte_level_trainer(config)
     
-    print("🔥 BYTE-LEVEL TRAINING SYSTEM DEMO")
-    print("=" * 50)
-    print(f"✅ Tokenizer: {config.tokenizer_type.value}")
-    print(f"📊 Vocab size: {config.extended_vocab_size} (256 bytes + specials)")
-    print(f"🔢 Max length: {config.max_sequence_length}")
-    print(f"💥 Batch size: {config.batch_size}")
+    logger.info("🔥 BYTE-LEVEL TRAINING SYSTEM DEMO")
+    logger.info("=" * 50)
+    logger.info(f"✅ Tokenizer: {config.tokenizer_type.value}")
+    logger.info(f"📊 Vocab size: {config.extended_vocab_size} (256 bytes + specials)")
+    logger.info(f"🔢 Max length: {config.max_sequence_length}")
+    logger.info(f"💥 Batch size: {config.batch_size}")
     
     # Test tokenization
     test_text = "Hello, world! 🌍 This is byte-level encoding."
     tokens = trainer.tokenizer.encode_with_special_tokens(test_text)
     decoded = trainer.tokenizer.decode_to_string(tokens)
     
-    print(f"\n🧪 TOKENIZATION TEST:")
-    print(f"Original: {test_text}")
-    print(f"Tokens: {tokens[:20]}..." if len(tokens) > 20 else f"Tokens: {tokens}")
-    print(f"Decoded: {decoded}")
-    print(f"✅ Tokenization working correctly!")
+    logger.info(f"\n🧪 TOKENIZATION TEST:")
+    logger.info(f"Original: {test_text}")
+    logger.info(f"Tokens: {tokens[:20]}..." if len(tokens) > 20 else f"Tokens: {tokens}")
+    logger.info(f"Decoded: {decoded}")
+    logger.info(f"✅ Tokenization working correctly!")
     
     # Test byte statistics
     byte_stats = trainer.tokenizer.get_byte_statistics()
     if byte_stats.get('total_bytes_processed', 0) > 0:
-        print(f"\n📊 BYTE STATISTICS:")
-        print(f"Bytes processed: {byte_stats['total_bytes_processed']}")
-        print(f"Unique bytes: {byte_stats['unique_bytes_seen']}")
-        print(f"Coverage: {byte_stats['coverage']:.1f}%")
+        logger.info(f"\n📊 BYTE STATISTICS:")
+        logger.info(f"Bytes processed: {byte_stats['total_bytes_processed']}")
+        logger.info(f"Unique bytes: {byte_stats['unique_bytes_seen']}")
+        logger.info(f"Coverage: {byte_stats['coverage']:.1f}%")
     
-    print(f"\n🚀 BYTE-LEVEL TRAINING SYSTEM READY!")
-    print(f"Use trainer.train_on_directory(data_dir) to start training")
+    logger.info(f"\n🚀 BYTE-LEVEL TRAINING SYSTEM READY!")
+    logger.info(f"Use trainer.train_on_directory(data_dir) to start training")

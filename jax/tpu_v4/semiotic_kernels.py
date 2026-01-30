@@ -310,10 +310,10 @@ def main():
     logger.info("Semiotic kernels module starting")
     success = validate_semiotic_kernels()
     if success:
-        print("[OK] Semiotic kernels module loaded successfully")
-        print("[INFO] Kernel info:", get_semiotic_kernel_info())
+        logger.info("[OK] Semiotic kernels module loaded successfully")
+        logger.info("[INFO] Kernel info:", get_semiotic_kernel_info())
     else:
-        print("[ERROR] Semiotic kernels validation failed")
+        logger.error("[ERROR] Semiotic kernels validation failed")
     return success
 
 if __name__ == "__main__":

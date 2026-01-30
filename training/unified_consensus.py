@@ -1214,16 +1214,16 @@ async def main():
     # show resumen
     summary = results["final_analysis"]["summary"]
     
-    print("\n" + "="*60)
-    print("🎉 ENTRENAMIENTO CAPIBARA INTEGRADO COMPLETADO")
-    print("="*60)
-    print(f"🎯 Target Scale: {args.target_scale}")
-    print(f"💰 Costo Total: ${summary['total_cost_usd']:,.0f}")
-    print(f"📊 Samples Generados: {summary['total_samples_generated']:,}")
-    print(f"📈 Tasa de Consenso: {summary['overall_consensus_rate']:.1%}")
-    print(f"🔧 Éxito de Refinamiento: {summary['overall_refinement_success']:.1%}")
-    print(f"💡 Costo por Sample: ${summary['cost_per_sample']:.4f}")
-    print("="*60)
+    logger.info("\n" + "="*60)
+    logger.info("🎉 ENTRENAMIENTO CAPIBARA INTEGRADO COMPLETADO")
+    logger.info("="*60)
+    logger.info(f"🎯 Target Scale: {args.target_scale}")
+    logger.info(f"💰 Costo Total: ${summary['total_cost_usd']:,.0f}")
+    logger.info(f"📊 Samples Generados: {summary['total_samples_generated']:,}")
+    logger.info(f"📈 Tasa de Consenso: {summary['overall_consensus_rate']:.1%}")
+    logger.info(f"🔧 Éxito de Refinamiento: {summary['overall_refinement_success']:.1%}")
+    logger.info(f"💡 Costo por Sample: ${summary['cost_per_sample']:.4f}")
+    logger.info("="*60)
     
     return results
 

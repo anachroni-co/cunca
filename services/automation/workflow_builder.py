@@ -602,7 +602,7 @@ import sys
 
 def main():
     # Your automation logic here
-    print("Processing automation request...")
+    logger.info("Processing automation request...")
     
     # Example processing
     result = {{
@@ -611,7 +611,7 @@ def main():
         "timestamp": "{{}}".format(__import__('datetime').datetime.now().isoformat())
     }}
     
-    print(json.dumps(result))
+    logger.info(json.dumps(result))
     return result
 
 if __name__ == "__main__":

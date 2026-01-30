@@ -793,29 +793,29 @@ def main():
         # Health check
         if args.health:
             health = inference.health_check()
-            print(f"Health Status: {health['status']}")
+            logger.info(f"Health Status: {health['status']}")
             for check, result in health['checks'].items():
-                print(f"  {check}: {result['status']}")
+                logger.info(f"  {check}: {result['status']}")
             return
         
         # System stats
         if args.stats:
             stats = inference.get_system_stats()
-            print("System Statistics:")
+            logger.info("System Statistics:")
             for category, data in stats.items():
-                print(f"  {category}: {data}")
+                logger.info(f"  {category}: {data}")
             return
         
         # Single prompt
         if args.prompt:
-            print(f"Generating response for: {args.prompt}")
+            logger.info(f"Generating response for: {args.prompt}")
             response = inference.generate(args.prompt)
-            print(f"Response: {response}")
+            logger.info(f"Response: {response}")
             return
         
         # Interactive mode
         if args.interactive:
-            print("Interactive mode. Type 'quit' to exit, 'stats' for statistics.")
+            logger.info("Interactive mode. Type 'quit' to exit, 'stats' for statistics.")
             
             while True:
                 try:
@@ -827,12 +827,12 @@ def main():
                     if prompt.lower() == 'stats':
                         stats = inference.get_system_stats()
                         for category, data in stats.items():
-                            print(f"  {category}: {data}")
+                            logger.info(f"  {category}: {data}")
                         continue
                     
                     if prompt.lower() == 'health':
                         health = inference.health_check()
-                        print(f"Status: {health['status']}")
+                        logger.info(f"Status: {health['status']}")
                         continue
                     
                     if not prompt:
@@ -842,17 +842,17 @@ def main():
                     response = inference.generate(prompt)
                     duration = time.time() - start_time
                     
-                    print(f"Response ({duration:.3f}s): {response}")
+                    logger.info(f"Response ({duration:.3f}s): {response}")
                     
                 except KeyboardInterrupt:
-                    print("\nExiting...")
+                    logger.info("\nExiting...")
                     break
                 except Exception as e:
-                    print(f"Error: {e}")
+                    logger.error(f"Error: {e}")
         
         # Default behavior
         if not any([args.prompt, args.interactive, args.stats, args.health]):
-            print("No action specified. Use --help for options.")
+            logger.info("No action specified. Use --help for options.")
 
 
 if __name__ == "__main__":

@@ -921,7 +921,7 @@ def main():
     hierarchy = create_nested_expert_hierarchy()
 
     # Print visualization
-    print(hierarchy.get_hierarchy_visualization())
+    logger.info(hierarchy.get_hierarchy_visualization())
 
     # Simulate some forward passes
     logger.info("\nSimulating forward passes...")
@@ -952,7 +952,7 @@ def main():
     logger.info(f"  Total routing decisions: {routing_stats['total_routing_decisions']}")
 
     # Print updated visualization
-    print("\n" + hierarchy.get_hierarchy_visualization())
+    logger.info("\n" + hierarchy.get_hierarchy_visualization())
 
 
 if __name__ == "__main__":

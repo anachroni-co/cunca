@@ -968,23 +968,23 @@ if __name__ == "__main__":
             algorithm=ConsensusAlgorithm.HYBRID_ENSEMBLE
         )
         
-        print(f"Query: {query}")
-        print(f"Consensus Response: {result.final_response}")
-        print(f"Algorithm Used: {result.algorithm_used.value}")
-        print(f"Confidence: {result.consensus_confidence:.2f}")
-        print(f"Quality Score: {result.overall_quality_score:.1f}")
-        print(f"Reliability: {result.reliability_score:.2f}")
+        logger.info(f"Query: {query}")
+        logger.info(f"Consensus Response: {result.final_response}")
+        logger.info(f"Algorithm Used: {result.algorithm_used.value}")
+        logger.info(f"Confidence: {result.consensus_confidence:.2f}")
+        logger.info(f"Quality Score: {result.overall_quality_score:.1f}")
+        logger.info(f"Reliability: {result.reliability_score:.2f}")
         
         if result.expert_contributions:
-            print("\nExpert Contributions:")
+            logger.info("\nExpert Contributions:")
             for expert_id, contribution in result.expert_contributions.items():
-                print(f"  {expert_id}: {contribution:.3f}")
+                logger.info(f"  {expert_id}: {contribution:.3f}")
         
         if result.bias_analysis:
-            print(f"\nBias Analysis: {result.bias_analysis}")
+            logger.info(f"\nBias Analysis: {result.bias_analysis}")
         
         if result.safety_assessment:
-            print(f"Safety Assessment: {result.safety_assessment}")
+            logger.info(f"Safety Assessment: {result.safety_assessment}")
     
     import asyncio
     asyncio.run(main())

@@ -758,8 +758,8 @@ def create_ultra_module_config(
 def demonstrate_ultra_module_orchestration():
     """Demonstrate the ultra module orchestration system."""
     
-    print("🌟 ULTRA MODULE ORCHESTRATION DEMONSTRATION")
-    print("=" * 60)
+    logger.info("🌟 ULTRA MODULE ORCHESTRATION DEMONSTRATION")
+    logger.info("=" * 60)
     
     # Create configuration
     config = create_ultra_module_config(
@@ -767,10 +767,10 @@ def demonstrate_ultra_module_orchestration():
         enable_all_features=True
     )
     
-    print(f"📋 Configuration created:")
-    print(f"   - Strategy: {config.orchestration_strategy.value}")
-    print(f"   - Module types: {len(config.enabled_modules)}")
-    print(f"   - Ultra features: {config.auto_core_integration}")
+    logger.info(f"📋 Configuration created:")
+    logger.info(f"   - Strategy: {config.orchestration_strategy.value}")
+    logger.info(f"   - Module types: {len(config.enabled_modules)}")
+    logger.info(f"   - Ultra features: {config.auto_core_integration}")
     
     # Create orchestrator
     orchestrator = create_ultra_module_system(config)
@@ -778,15 +778,15 @@ def demonstrate_ultra_module_orchestration():
     # Get system status
     status = orchestrator.get_system_status()
     
-    print(f"\n🔍 System Status:")
-    print(f"   - Total modules: {status['performance']['total_modules']}")
-    print(f"   - Active modules: {status['performance']['active_modules']}")
-    print(f"   - Ultra Core: {'✅' if status['availability']['ultra_core'] else '❌'}")
-    print(f"   - Module types available:")
+    logger.info(f"\n🔍 System Status:")
+    logger.info(f"   - Total modules: {status['performance']['total_modules']}")
+    logger.info(f"   - Active modules: {status['performance']['active_modules']}")
+    logger.info(f"   - Ultra Core: {'✅' if status['availability']['ultra_core'] else '❌'}")
+    logger.info(f"   - Module types available:")
     for module_type, available in status['availability'].items():
         if module_type.endswith('_modules'):
             status_emoji = "✅" if available else "❌"
-            print(f"     {status_emoji} {module_type}")
+            logger.info(f"     {status_emoji} {module_type}")
     
     # Test routing
     try:
@@ -797,13 +797,13 @@ def demonstrate_ultra_module_orchestration():
             strategy=OrchestrationStrategy.ULTRA_HYBRID
         )
         
-        print(f"\n🎯 Routing Test:")
-        print(f"   - Strategy: {routing_info['strategy']}")
-        print(f"   - Computation time: {routing_info['performance']['computation_time_ms']:.2f}ms")
-        print(f"   - Success rate: {routing_info['performance']['success_rate']:.2%}")
+        logger.info(f"\n🎯 Routing Test:")
+        logger.info(f"   - Strategy: {routing_info['strategy']}")
+        logger.info(f"   - Computation time: {routing_info['performance']['computation_time_ms']:.2f}ms")
+        logger.info(f"   - Success rate: {routing_info['performance']['success_rate']:.2%}")
         
     except Exception as e:
-        print(f"\n❌ Routing test failed: {e}")
+        logger.error(f"\n❌ Routing test failed: {e}")
     
     return orchestrator
 

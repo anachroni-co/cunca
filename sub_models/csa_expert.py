@@ -809,8 +809,8 @@ def main():
         flags={"ask_counterfactual": True}
     )
     
-    print(f"Expert supports context: {expert.supports(context)}")
-    print(f"Expert capabilities: {expert.get_capabilities()}")
+    logger.info(f"Expert supports context: {expert.supports(context)}")
+    logger.info(f"Expert capabilities: {expert.get_capabilities()}")
     
     return True
 

@@ -881,7 +881,7 @@ if __name__ == "__main__":
     
     # verify estado
     status = manager.get_global_status()
-    print(f"Estado global: {json.dumps(status, indent=2)}")
+    logger.info(f"Estado global: {json.dumps(status, indent=2)}")
     
     # stop monitoreo
     manager.stop_monitoring()

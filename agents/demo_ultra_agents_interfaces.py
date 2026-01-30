@@ -37,9 +37,9 @@ logger = logging.getLogger(__name__)
 def demo_ultra_agent_orchestration():
     """Demonstrate Ultra Agent Orchestrator capabilities."""
     
-    print("\n" + "="*80)
-    print("🤖 ULTRA AGENT ORCHESTRATOR DEMONSTRATION")
-    print("="*80)
+    logger.info("\n" + "="*80)
+    logger.info("🤖 ULTRA AGENT ORCHESTRATOR DEMONSTRATION")
+    logger.info("="*80)
     
     try:
         from . import (
@@ -50,21 +50,21 @@ def demo_ultra_agent_orchestration():
         )
         
         # System validation
-        print("🔍 Validating agent ecosystem...")
+        logger.info("🔍 Validating agent ecosystem...")
         validation = validate_agent_ecosystem()
         
-        print(f"📊 System Health: {validation['system_health'].upper()}")
-        print(f"🤖 Available Agent Types: {validation['performance_estimates']['agent_types_available']}")
+        logger.info(f"📊 System Health: {validation['system_health'].upper()}")
+        logger.info(f"🤖 Available Agent Types: {validation['performance_estimates']['agent_types_available']}")
         
         # Show unique capabilities
         if validation['unique_capabilities']:
-            print(f"\n🌟 Ultra Agent Capabilities:")
+            logger.info(f"\n🌟 Ultra Agent Capabilities:")
             for i, capability in enumerate(validation['unique_capabilities'][:5], 1):
-                print(f"   {i}. {capability}")
+                logger.info(f"   {i}. {capability}")
         
         # Create ultra ecosystem
         if validation['system_health'] in ['excellent', 'very_good', 'good']:
-            print(f"\n🚀 Creating Ultra Agent Ecosystem...")
+            logger.info(f"\n🚀 Creating Ultra Agent Ecosystem...")
             
             ecosystem = create_ultra_agent_ecosystem(
                 orchestration_strategy="ultra_hybrid",
@@ -72,13 +72,13 @@ def demo_ultra_agent_orchestration():
                 max_agents=20
             )
             
-            print(f"✅ Ecosystem created successfully!")
-            print(f"   🧠 Reasoning depth: {ecosystem['status']['reasoning_depth']} steps")
-            print(f"   📋 Planning horizon: {ecosystem['status']['planning_horizon']} steps")
+            logger.info(f"✅ Ecosystem created successfully!")
+            logger.info(f"   🧠 Reasoning depth: {ecosystem['status']['reasoning_depth']} steps")
+            logger.info(f"   📋 Planning horizon: {ecosystem['status']['planning_horizon']} steps")
             
             # Test intelligent task orchestration
             if ecosystem['orchestrator']:
-                print(f"\n🎯 Testing Intelligent Task Orchestration...")
+                logger.info(f"\n🎯 Testing Intelligent Task Orchestration...")
                 
                 test_tasks = [
                     {
@@ -100,7 +100,7 @@ def demo_ultra_agent_orchestration():
                 
                 results = []
                 for i, task in enumerate(test_tasks, 1):
-                    print(f"\n   Task {i}: {task['description'][:50]}...")
+                    logger.info(f"\n   Task {i}: {task['description'][:50]}...")
                     
                     try:
                         result = ecosystem['orchestrator'].intelligent_task_orchestration(
@@ -109,44 +109,44 @@ def demo_ultra_agent_orchestration():
                             task['priority']
                         )
                         
-                        print(f"      Status: {result['status']}")
-                        print(f"      Agents: {len(result['assigned_agents'])}")
-                        print(f"      Time: {result['metrics']['completion_time_ms']:.1f}ms")
+                        logger.info(f"      Status: {result['status']}")
+                        logger.info(f"      Agents: {len(result['assigned_agents'])}")
+                        logger.info(f"      Time: {result['metrics']['completion_time_ms']:.1f}ms")
                         
                         results.append(result)
                         
                     except Exception as e:
-                        print(f"      Error: {e}")
+                        logger.error(f"      Error: {e}")
                 
                 # Summary
                 if results:
                     total_time = sum(r['metrics']['completion_time_ms'] for r in results)
                     total_agents = sum(len(r['assigned_agents']) for r in results)
                     
-                    print(f"\n📊 Orchestration Summary:")
-                    print(f"   Tasks completed: {len([r for r in results if r['status'] == 'completed'])}/{len(results)}")
-                    print(f"   Total time: {total_time:.1f}ms")
-                    print(f"   Agents utilized: {total_agents}")
+                    logger.info(f"\n📊 Orchestration Summary:")
+                    logger.info(f"   Tasks completed: {len([r for r in results if r['status'] == 'completed'])}/{len(results)}")
+                    logger.info(f"   Total time: {total_time:.1f}ms")
+                    logger.info(f"   Agents utilized: {total_agents}")
             
             return ecosystem
         
         else:
-            print(f"⚠️ System health is {validation['system_health']} - some features may not be available")
+            logger.info(f"⚠️ System health is {validation['system_health']} - some features may not be available")
             return None
     
     except ImportError as e:
-        print(f"❌ Ultra Agent Orchestrator not available: {e}")
+        logger.warning(f"❌ Ultra Agent Orchestrator not available: {e}")
         return None
     except Exception as e:
-        print(f"❌ Demo failed: {e}")
+        logger.error(f"❌ Demo failed: {e}")
         return None
 
 def demo_ultra_interface_system():
     """Demonstrate Ultra Interface System capabilities."""
     
-    print("\n" + "="*80)
-    print("🔗 ULTRA INTERFACE SYSTEM DEMONSTRATION")
-    print("="*80)
+    logger.info("\n" + "="*80)
+    logger.info("🔗 ULTRA INTERFACE SYSTEM DEMONSTRATION")
+    logger.info("="*80)
     
     try:
         from ..interfaces import (
@@ -157,21 +157,21 @@ def demo_ultra_interface_system():
         )
         
         # System validation
-        print("🔍 Validating interface ecosystem...")
+        logger.info("🔍 Validating interface ecosystem...")
         validation = validate_interface_ecosystem()
         
-        print(f"📊 System Health: {validation['system_health'].upper()}")
-        print(f"🔗 Ultra Protocols: {validation['performance_estimates']['ultra_protocols_available']}")
+        logger.info(f"📊 System Health: {validation['system_health'].upper()}")
+        logger.info(f"🔗 Ultra Protocols: {validation['performance_estimates']['ultra_protocols_available']}")
         
         # Show unique capabilities
         if validation['unique_capabilities']:
-            print(f"\n🌟 Ultra Interface Capabilities:")
+            logger.info(f"\n🌟 Ultra Interface Capabilities:")
             for i, capability in enumerate(validation['unique_capabilities'][:5], 1):
-                print(f"   {i}. {capability}")
+                logger.info(f"   {i}. {capability}")
         
         # Create ultra ecosystem
         if validation['system_health'] in ['excellent', 'good']:
-            print(f"\n🚀 Creating Ultra Interface Ecosystem...")
+            logger.info(f"\n🚀 Creating Ultra Interface Ecosystem...")
             
             ecosystem = create_ultra_interface_ecosystem(
                 validation_level="ultra",
@@ -179,13 +179,13 @@ def demo_ultra_interface_system():
                 enable_all_features=True
             )
             
-            print(f"✅ Ecosystem created successfully!")
-            print(f"   📜 Smart contracts: {ecosystem['smart_contracts']['total_contracts']}")
-            print(f"   🔗 Ultra protocols: {ecosystem['status']['total_ultra_protocols']}")
+            logger.info(f"✅ Ecosystem created successfully!")
+            logger.info(f"   📜 Smart contracts: {ecosystem['smart_contracts']['total_contracts']}")
+            logger.info(f"   🔗 Ultra protocols: {ecosystem['status']['total_ultra_protocols']}")
             
             # Test interface compatibility validation
             if ecosystem['interface_system']:
-                print(f"\n🎯 Testing Interface Compatibility...")
+                logger.info(f"\n🎯 Testing Interface Compatibility...")
                 
                 compatibility_tests = [
                     ("IUltraModule", "IUltraAgent"),
@@ -199,16 +199,16 @@ def demo_ultra_interface_system():
                             interface1, interface2, strict=False
                         )
                         
-                        print(f"   {interface1} ↔ {interface2}:")
-                        print(f"      Compatible: {compatibility['compatible']}")
-                        print(f"      Score: {compatibility['score']:.2f}")
-                        print(f"      Reasons: {len(compatibility['reasons'])}")
+                        logger.info(f"   {interface1} ↔ {interface2}:")
+                        logger.info(f"      Compatible: {compatibility['compatible']}")
+                        logger.info(f"      Score: {compatibility['score']:.2f}")
+                        logger.info(f"      Reasons: {len(compatibility['reasons'])}")
                         
                     except Exception as e:
-                        print(f"      Error: {e}")
+                        logger.error(f"      Error: {e}")
                 
                 # Test smart contract execution
-                print(f"\n📜 Testing Smart Contracts...")
+                logger.info(f"\n📜 Testing Smart Contracts...")
                 
                 contract_tests = [
                     {
@@ -227,41 +227,41 @@ def demo_ultra_interface_system():
                             test['contract'], test['context']
                         )
                         
-                        print(f"   {test['contract']}:")
-                        print(f"      Success: {result['success']}")
-                        print(f"      Time: {result['execution_time_ms']:.1f}ms")
+                        logger.info(f"   {test['contract']}:")
+                        logger.info(f"      Success: {result['success']}")
+                        logger.info(f"      Time: {result['execution_time_ms']:.1f}ms")
                         
                     except Exception as e:
-                        print(f"      Error: {e}")
+                        logger.error(f"      Error: {e}")
             
             return ecosystem
         
         else:
-            print(f"⚠️ System health is {validation['system_health']} - some features may not be available")
+            logger.info(f"⚠️ System health is {validation['system_health']} - some features may not be available")
             return None
     
     except ImportError as e:
-        print(f"❌ Ultra Interface System not available: {e}")
+        logger.warning(f"❌ Ultra Interface System not available: {e}")
         return None
     except Exception as e:
-        print(f"❌ Demo failed: {e}")
+        logger.error(f"❌ Demo failed: {e}")
         return None
 
 def demo_integrated_ecosystem():
     """Demonstrate integrated ultra ecosystem working together."""
     
-    print("\n" + "="*80)
-    print("🌈 INTEGRATED ULTRA ECOSYSTEM DEMONSTRATION")
-    print("="*80)
+    logger.info("\n" + "="*80)
+    logger.info("🌈 INTEGRATED ULTRA ECOSYSTEM DEMONSTRATION")
+    logger.info("="*80)
     
     # Create both ecosystems
-    print("🚀 Creating integrated ultra ecosystem...")
+    logger.info("🚀 Creating integrated ultra ecosystem...")
     
     agent_ecosystem = demo_ultra_agent_orchestration()
     interface_ecosystem = demo_ultra_interface_system()
     
     if agent_ecosystem and interface_ecosystem:
-        print(f"\n✅ Both ecosystems created successfully!")
+        logger.info(f"\n✅ Both ecosystems created successfully!")
         
         # Test integration scenarios
         integration_scenarios = [
@@ -288,14 +288,14 @@ def demo_integrated_ecosystem():
             }
         ]
         
-        print(f"\n🎯 Testing Integration Scenarios...")
+        logger.info(f"\n🎯 Testing Integration Scenarios...")
         
         for i, scenario in enumerate(integration_scenarios, 1):
-            print(f"\n   Scenario {i}: {scenario['name']}")
-            print(f"      Description: {scenario['description']}")
-            print(f"      Complexity: {scenario['complexity']}")
-            print(f"      Agents needed: {len(scenario['agents_needed'])}")
-            print(f"      Interfaces needed: {len(scenario['interfaces_needed'])}")
+            logger.info(f"\n   Scenario {i}: {scenario['name']}")
+            logger.info(f"      Description: {scenario['description']}")
+            logger.info(f"      Complexity: {scenario['complexity']}")
+            logger.info(f"      Agents needed: {len(scenario['agents_needed'])}")
+            logger.info(f"      Interfaces needed: {len(scenario['interfaces_needed'])}")
             
             # Simulate scenario execution
             start_time = time.time()
@@ -321,22 +321,22 @@ def demo_integrated_ecosystem():
                 
                 execution_time = (time.time() - start_time) * 1000
                 
-                print(f"      Agent strategy: {agent_config.get('orchestration_strategy', 'intelligent')}")
-                print(f"      Interface validation: {interface_config.get('validation_level', 'strict')}")
-                print(f"      Execution time: {execution_time:.1f}ms")
-                print(f"      Status: ✅ Successfully configured")
+                logger.info(f"      Agent strategy: {agent_config.get('orchestration_strategy', 'intelligent')}")
+                logger.info(f"      Interface validation: {interface_config.get('validation_level', 'strict')}")
+                logger.info(f"      Execution time: {execution_time:.1f}ms")
+                logger.info(f"      Status: ✅ Successfully configured")
                 
             except Exception as e:
-                print(f"      Status: ❌ Configuration failed: {e}")
+                logger.error(f"      Status: ❌ Configuration failed: {e}")
         
         # end ecosystem summary
-        print(f"\n🌟 Ultra Ecosystem Summary:")
-        print(f"   🤖 Agent Types: {agent_ecosystem['status']['total_agent_types']}")
-        print(f"   🧠 Max Reasoning Depth: {agent_ecosystem['status']['reasoning_depth']} steps")
-        print(f"   📋 Max Planning Horizon: {agent_ecosystem['status']['planning_horizon']} steps")
-        print(f"   🔗 Ultra Protocols: {interface_ecosystem['status']['total_ultra_protocols']}")
-        print(f"   📜 Smart Contracts: {interface_ecosystem['smart_contracts']['total_contracts']}")
-        print(f"   🌈 Total Capabilities: {agent_ecosystem['status']['total_capabilities'] + interface_ecosystem['status']['total_capabilities']}")
+        logger.info(f"\n🌟 Ultra Ecosystem Summary:")
+        logger.info(f"   🤖 Agent Types: {agent_ecosystem['status']['total_agent_types']}")
+        logger.info(f"   🧠 Max Reasoning Depth: {agent_ecosystem['status']['reasoning_depth']} steps")
+        logger.info(f"   📋 Max Planning Horizon: {agent_ecosystem['status']['planning_horizon']} steps")
+        logger.info(f"   🔗 Ultra Protocols: {interface_ecosystem['status']['total_ultra_protocols']}")
+        logger.info(f"   📜 Smart Contracts: {interface_ecosystem['smart_contracts']['total_contracts']}")
+        logger.info(f"   🌈 Total Capabilities: {agent_ecosystem['status']['total_capabilities'] + interface_ecosystem['status']['total_capabilities']}")
         
         return {
             "agent_ecosystem": agent_ecosystem,
@@ -345,7 +345,7 @@ def demo_integrated_ecosystem():
         }
     
     else:
-        print(f"⚠️ Integration not possible - one or both ecosystems failed to initialize")
+        logger.error(f"⚠️ Integration not possible - one or both ecosystems failed to initialize")
         return {
             "agent_ecosystem": agent_ecosystem,
             "interface_ecosystem": interface_ecosystem,
@@ -355,9 +355,9 @@ def demo_integrated_ecosystem():
 def demo_performance_benchmarks():
     """Run performance benchmarks for the ultra systems."""
     
-    print("\n" + "="*80)
-    print("⚡ ULTRA ECOSYSTEM PERFORMANCE BENCHMARKS")
-    print("="*80)
+    logger.info("\n" + "="*80)
+    logger.info("⚡ ULTRA ECOSYSTEM PERFORMANCE BENCHMARKS")
+    logger.info("="*80)
     
     benchmarks = {
         "agent_orchestration": {
@@ -389,10 +389,10 @@ def demo_performance_benchmarks():
     results = {}
     
     for benchmark_id, benchmark in benchmarks.items():
-        print(f"\n🔥 {benchmark['name']}")
-        print(f"   Description: {benchmark['description']}")
-        print(f"   Target: {benchmark['target']}")
-        print(f"   Runs: {benchmark['runs']}")
+        logger.info(f"\n🔥 {benchmark['name']}")
+        logger.info(f"   Description: {benchmark['description']}")
+        logger.info(f"   Target: {benchmark['target']}")
+        logger.info(f"   Runs: {benchmark['runs']}")
         
         times = []
         
@@ -430,38 +430,38 @@ def demo_performance_benchmarks():
             "performance_score": min(100, (target_value / avg_time) * 100) if avg_time > 0 else 100
         }
         
-        print(f"   Results:")
-        print(f"      Average: {avg_time:.2f}ms")
-        print(f"      Range: {min_time:.2f}ms - {max_time:.2f}ms")
-        print(f"      Target met: {'✅' if target_met else '❌'}")
-        print(f"      Performance score: {results[benchmark_id]['performance_score']:.1f}%")
+        logger.info(f"   Results:")
+        logger.info(f"      Average: {avg_time:.2f}ms")
+        logger.info(f"      Range: {min_time:.2f}ms - {max_time:.2f}ms")
+        logger.info(f"      Target met: {'✅' if target_met else '❌'}")
+        logger.info(f"      Performance score: {results[benchmark_id]['performance_score']:.1f}%")
     
     # Overall performance summary
     overall_score = sum(r['performance_score'] for r in results.values()) / len(results)
     
-    print(f"\n🏆 Overall Performance Summary:")
-    print(f"   Benchmarks completed: {len(results)}")
-    print(f"   Targets met: {sum(1 for r in results.values() if r['target_met'])}/{len(results)}")
-    print(f"   Overall performance score: {overall_score:.1f}%")
+    logger.info(f"\n🏆 Overall Performance Summary:")
+    logger.info(f"   Benchmarks completed: {len(results)}")
+    logger.info(f"   Targets met: {sum(1 for r in results.values() if r['target_met'])}/{len(results)}")
+    logger.info(f"   Overall performance score: {overall_score:.1f}%")
     
     if overall_score >= 90:
-        print(f"   Rating: 🌟 EXCELLENT - World-class performance!")
+        logger.info(f"   Rating: 🌟 EXCELLENT - World-class performance!")
     elif overall_score >= 75:
-        print(f"   Rating: ✅ VERY GOOD - High performance system")
+        logger.info(f"   Rating: ✅ VERY GOOD - High performance system")
     elif overall_score >= 60:
-        print(f"   Rating: 👍 GOOD - Solid performance")
+        logger.info(f"   Rating: 👍 GOOD - Solid performance")
     else:
-        print(f"   Rating: ⚠️ NEEDS IMPROVEMENT")
+        logger.info(f"   Rating: ⚠️ NEEDS IMPROVEMENT")
     
     return results
 
 def main():
     """Run the complete ultra ecosystem demonstration."""
     
-    print("🌟" * 40)
-    print("   ULTRA-ADVANCED AGENTS & INTERFACES DEMO")
-    print("   CapibaraGPT v2024 - World's Most Advanced AI System")
-    print("🌟" * 40)
+    logger.info("🌟" * 40)
+    logger.info("   ULTRA-ADVANCED AGENTS & INTERFACES DEMO")
+    logger.info("   CapibaraGPT v2024 - World's Most Advanced AI System")
+    logger.info("🌟" * 40)
     
     start_time = time.time()
     
@@ -470,48 +470,48 @@ def main():
         demo_results = {}
         
         # 1. Agent Orchestration demo
-        print("\n🚀 Starting Agent Orchestration Demo...")
+        logger.info("\n🚀 Starting Agent Orchestration Demo...")
         demo_results['agents'] = demo_ultra_agent_orchestration()
         
         # 2. Interface System demo
-        print("\n🚀 Starting Interface System Demo...")
+        logger.info("\n🚀 Starting Interface System Demo...")
         demo_results['interfaces'] = demo_ultra_interface_system()
         
         # 3. Integrated Ecosystem demo
-        print("\n🚀 Starting Integrated Ecosystem Demo...")
+        logger.info("\n🚀 Starting Integrated Ecosystem Demo...")
         demo_results['integration'] = demo_integrated_ecosystem()
         
         # 4. Performance Benchmarks
-        print("\n🚀 Starting Performance Benchmarks...")
+        logger.info("\n🚀 Starting Performance Benchmarks...")
         demo_results['benchmarks'] = demo_performance_benchmarks()
         
         # end summary
         total_time = time.time() - start_time
         
-        print("\n" + "🎉" * 40)
-        print("   DEMO COMPLETED SUCCESSFULLY!")
-        print("🎉" * 40)
+        logger.info("\n" + "🎉" * 40)
+        logger.info("   DEMO COMPLETED SUCCESSFULLY!")
+        logger.info("🎉" * 40)
         
-        print(f"\n📊 Demo Statistics:")
-        print(f"   Total demo time: {total_time:.2f}s")
-        print(f"   Components demonstrated: {len([k for k, v in demo_results.items() if v is not None])}")
-        print(f"   Integration successful: {'✅' if demo_results.get('integration', {}).get('integration_successful') else '❌'}")
+        logger.info(f"\n📊 Demo Statistics:")
+        logger.info(f"   Total demo time: {total_time:.2f}s")
+        logger.info(f"   Components demonstrated: {len([k for k, v in demo_results.items() if v is not None])}")
+        logger.info(f"   Integration successful: {'✅' if demo_results.get('integration', {}).get('integration_successful') else '❌'}")
         
         if demo_results.get('benchmarks'):
             overall_score = sum(r['performance_score'] for r in demo_results['benchmarks'].values()) / len(demo_results['benchmarks'])
-            print(f"   Performance score: {overall_score:.1f}%")
+            logger.info(f"   Performance score: {overall_score:.1f}%")
         
-        print(f"\n🌟 CAPIBARA ULTRA ECOSYSTEM STATUS: OPERATIONAL")
-        print(f"   World's most advanced multi-agent AI system ✅")
-        print(f"   Ultra-intelligent interface management ✅") 
-        print(f"   Smart contract automation ✅")
-        print(f"   Real-time performance optimization ✅")
-        print(f"   Ready for production deployment! 🚀")
+        logger.info(f"\n🌟 CAPIBARA ULTRA ECOSYSTEM STATUS: OPERATIONAL")
+        logger.info(f"   World's most advanced multi-agent AI system ✅")
+        logger.info(f"   Ultra-intelligent interface management ✅")
+        logger.info(f"   Smart contract automation ✅")
+        logger.info(f"   Real-time performance optimization ✅")
+        logger.info(f"   Ready for production deployment! 🚀")
         
         return demo_results
         
     except Exception as e:
-        print(f"\n❌ Demo failed with error: {e}")
+        logger.error(f"\n❌ Demo failed with error: {e}")
         import traceback
         traceback.print_exc()
         return None

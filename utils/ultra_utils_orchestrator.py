@@ -41,7 +41,7 @@ try:
     from .monitoring import setup_monitoring
     from .system_info import get_system_info, check_tpu_availability
 except ImportError as e:
-    print(f"⚠️ Importación fallback en ultra_utils_orchestrator: {e}")
+    logger.warning(f"⚠️ Importación fallback en ultra_utils_orchestrator: {e}")
 
 
 @dataclass
@@ -831,13 +831,13 @@ if __name__ == "__main__":
             'flatten_dict',
             data={'a': {'b': {'c': 1}}}
         )
-        print(f"Resultado: {result}")
+        logger.info(f"Resultado: {result}")
     except Exception as e:
-        print(f"Error: {e}")
+        logger.error(f"Error: {e}")
     
     # obtain estado
     status = orchestrator.get_status()
-    print(f"Estado: {json.dumps(status, indent=2)}")
+    logger.info(f"Estado: {json.dumps(status, indent=2)}")
     
     # close orchestrator
     orchestrator.shutdown()

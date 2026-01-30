@@ -1097,18 +1097,18 @@ if __name__ == "__main__":
             quality_threshold=8.5
         )
         
-        print(f"Query: {query}")
-        print(f"Selected experts: {routing_decision['selected_models']}")
-        print(f"Routing strategy: {routing_decision['routing_strategy']}")
-        print(f"Estimated cost: ${routing_decision['estimated_cost']:.4f}")
-        print(f"Expected quality: {routing_decision['expected_quality']:.1f}/10")
-        print(f"Tier distribution: {routing_decision['tier_distribution']}")
-        print(f"Reasoning: {routing_decision['reasoning']}")
+        logger.info(f"Query: {query}")
+        logger.info(f"Selected experts: {routing_decision['selected_models']}")
+        logger.info(f"Routing strategy: {routing_decision['routing_strategy']}")
+        logger.info(f"Estimated cost: ${routing_decision['estimated_cost']:.4f}")
+        logger.info(f"Expected quality: {routing_decision['expected_quality']:.1f}/10")
+        logger.info(f"Tier distribution: {routing_decision['tier_distribution']}")
+        logger.info(f"Reasoning: {routing_decision['reasoning']}")
         
         # Get statistics
         stats = router.get_hybrid_statistics()
-        print(f"\nRouter Statistics:")
-        print(f"Success rate: {stats['routing_performance']['success_rate']:.2%}")
-        print(f"Cost savings vs premium: {stats['cost_analysis']['cost_savings_vs_premium']}")
+        logger.info(f"\nRouter Statistics:")
+        logger.info(f"Success rate: {stats['routing_performance']['success_rate']:.2%}")
+        logger.info(f"Cost savings vs premium: {stats['cost_analysis']['cost_savings_vs_premium']}")
     
     asyncio.run(main())

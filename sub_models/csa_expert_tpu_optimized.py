@@ -607,10 +607,10 @@ def create_tpu_optimized_csa(tpu_config: Optional[TPUOptimizedConfig] = None,
 def main():
     """Test function for TPU-optimized CSA Expert."""
     if not JAX_AVAILABLE:
-        print("❌ JAX not available for TPU optimization")
+        logger.warning("❌ JAX not available for TPU optimization")
         return
     
-    print("🚀 Testing TPU-optimized CSA Expert")
+    logger.info("🚀 Testing TPU-optimized CSA Expert")
     
     tpu_config = TPUOptimizedConfig(
         use_jit=True,
@@ -623,13 +623,13 @@ def main():
         expert = create_tpu_optimized_csa(tpu_config)
         metrics = expert.get_tpu_metrics()
         
-        print("✅ TPU-optimized CSA Expert created successfully")
-        print(f"📊 TPU Metrics: {metrics}")
+        logger.info("✅ TPU-optimized CSA Expert created successfully")
+        logger.info(f"📊 TPU Metrics: {metrics}")
         
         return True
         
     except Exception as e:
-        print(f"❌ Error creating TPU-optimized CSA Expert: {e}")
+        logger.error(f"❌ Error creating TPU-optimized CSA Expert: {e}")
         return False
 
 if __name__ == "__main__":

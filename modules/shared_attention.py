@@ -6,6 +6,10 @@ Atención multi-cabeza eficiente with fusión de operaciones.
 import os
 import sys
 import math
+
+import logging
+logger = logging.getLogger(__name__)
+
 # Obtiene la path del directory current (scripts) -> /.../scripts
 script_dir = os.path.dirname(os.path.abspath(__file__))
 # Sube un level for obtain la raíz del proyecto -> /.../capibaraGPT-v2
@@ -811,7 +815,7 @@ if __name__ == "__main__":
     # Efficient attention
     eff_attention = create_shared_attention(hidden_size, num_heads, "efficient")
     
-    print("✅ Todos los módulos de attention creados exitosamente")
+    logger.warning("✅ Todos los módulos de attention creados exitosamente")
     
     # Test basic
     rng = jax.random.PRNGKey(42)
@@ -823,5 +827,5 @@ if __name__ == "__main__":
     # Forward pass
     result = std_attention.apply(std_params, x, training=False)
     
-    print(f"Output shape: {result['output'].shape}")
-    print(f"Metrics: {list(result['metrics'].keys())}")
+    logger.info(f"Output shape: {result['output'].shape}")
+    logger.info(f"Metrics: {list(result['metrics'].keys())}")
