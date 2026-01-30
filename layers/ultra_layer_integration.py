@@ -24,7 +24,7 @@ from abc import ABC, abstractmethod
 script_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(script_dir)
 if project_root not in sys.path:
-    # Fixed: Using proper imports instead of sys.path manipulation
+    pass  # Using proper imports instead of sys.path manipulation
 
 from capibara.jax import jax
 from flax import linen as nn

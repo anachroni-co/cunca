@@ -8,16 +8,7 @@ import logging
 from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 
-try:
-    import jax
-    import jax.numpy as jnp
-    import flax.linen as nn
-    JAX_AVAILABLE = True
-except ImportError:
-    JAX_AVAILABLE = False
-    jax = None
-    jnp = None
-    nn = None
+from layers.jax_compat import jax, jnp, nn, JAX_AVAILABLE
 
 logger = logging.getLogger(__name__)
 

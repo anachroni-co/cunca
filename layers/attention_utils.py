@@ -8,12 +8,7 @@ Works with both NumPy and JAX arrays.
 
 import numpy as np
 
-try:
-    import jax.numpy as jnp
-    JAX_AVAILABLE = True
-except ImportError:
-    jnp = None
-    JAX_AVAILABLE = False
+from layers.jax_compat import jnp, JAX_AVAILABLE
 
 
 def split_heads(x, num_heads: int):

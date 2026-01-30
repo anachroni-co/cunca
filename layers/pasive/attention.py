@@ -10,14 +10,7 @@ import numpy as np
 
 from layers.attention_utils import split_heads, merge_heads
 
-try:
-    import flax.linen as nn
-    import jax.numpy as jnp
-    FLAX_AVAILABLE = True
-except ImportError:
-    nn = None
-    jnp = None
-    FLAX_AVAILABLE = False
+from layers.jax_compat import nn, jnp, JAX_AVAILABLE as FLAX_AVAILABLE
 
 logger = logging.getLogger(__name__)
 
