@@ -3,27 +3,27 @@
 🧠 CAPIBARA TEXT-TO-GEN SERVICE
 ==============================
 
-Meta-servicio que genera automáticamente código completo para nuevos servicios text-to-*
-desde descripciones en lenguaje natural.
+Meta-service that automatically generates complete code for new text-to-* services
+from natural language descriptions.
 
-Capacidades:
-- Análisis de requerimientos desde texto natural
-- Generación de código Python completo
-- Integración automática con Capibara5
-- Tests unitarios automáticos
-- Documentación auto-generada
-- API endpoints automáticos
-- Deployment scripts incluidos
+Capabilities:
+- Requirements analysis from natural text
+- Complete Python code generation
+- Automatic integration with Capibara5
+- Automatic unit tests
+- Auto-generated documentation
+- Automatic API endpoints
+- Deployment scripts included
 
-Ejemplos de servicios que puede generar:
-- Text-to-Music: Genera composiciones musicales
-- Text-to-Game: Crea mini-juegos simples
-- Text-to-3D: Modelos 3D para realidad virtual
-- Text-to-Code: Generador de código en cualquier lenguaje
-- Text-to-Presentation: Slides automáticas
-- Text-to-Website: Sitios web completos
-- Text-to-Animation: Animaciones 2D/3D
-- Text-to-Data: Datasets sintéticos
+Examples of services it can generate:
+- Text-to-Music: Generates musical compositions
+- Text-to-Game: Creates simple mini-games
+- Text-to-3D: 3D models for virtual reality
+- Text-to-Code: Code generator in any language
+- Text-to-Presentation: Automatic slides
+- Text-to-Website: Complete websites
+- Text-to-Animation: 2D/3D animations
+- Text-to-Data: Synthetic datasets
 """
 
 import os
@@ -39,98 +39,98 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any, Union
 from pathlib import Path
 
-# Configurar logging
+# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class ServiceType(Enum):
-    """Tipos de servicios que se pueden generar"""
-    CREATIVE = "creative"           # Arte, música, diseño
-    TECHNICAL = "technical"         # CAD, código, circuitos
-    MEDIA = "media"                # Imagen, video, audio
-    DATA = "data"                  # Datasets, APIs, bases de datos
-    INTERACTIVE = "interactive"     # Juegos, interfaces, apps
+    """Types of services that can be generated"""
+    CREATIVE = "creative"           # Art, music, design
+    TECHNICAL = "technical"         # CAD, code, circuits
+    MEDIA = "media"                # Image, video, audio
+    DATA = "data"                  # Datasets, APIs, databases
+    INTERACTIVE = "interactive"     # Games, interfaces, apps
     DOCUMENT = "document"          # Presentations, reports, websites
-    SIMULATION = "simulation"      # Física, química, matemáticas
+    SIMULATION = "simulation"      # Physics, chemistry, mathematics
     BUSINESS = "business"          # Analytics, reports, workflows
 
 class ComplexityLevel(Enum):
-    """Niveles de complejidad del servicio"""
-    SIMPLE = "simple"              # <500 líneas, 1-2 archivos
-    MEDIUM = "medium"              # 500-2000 líneas, 3-5 archivos
-    COMPLEX = "complex"            # 2000-5000 líneas, 5-10 archivos
-    ADVANCED = "advanced"          # >5000 líneas, >10 archivos
+    """Service complexity levels"""
+    SIMPLE = "simple"              # <500 lines, 1-2 files
+    MEDIUM = "medium"              # 500-2000 lines, 3-5 files
+    COMPLEX = "complex"            # 2000-5000 lines, 5-10 files
+    ADVANCED = "advanced"          # >5000 lines, >10 files
 
 class IntegrationType(Enum):
-    """Tipos de integración con el ecosistema"""
-    STANDALONE = "standalone"       # Servicio independiente
-    CAPIBARA_NATIVE = "native"     # Integración completa con Capibara5
-    E2B_INTEGRATION = "e2b"        # Usa E2B sandboxes
-    API_WRAPPER = "api_wrapper"    # Wrapper de API externa
-    HYBRID = "hybrid"              # Combinación de múltiples tipos
+    """Integration types with the ecosystem"""
+    STANDALONE = "standalone"       # Independent service
+    CAPIBARA_NATIVE = "native"     # Full integration with Capibara5
+    E2B_INTEGRATION = "e2b"        # Uses E2B sandboxes
+    API_WRAPPER = "api_wrapper"    # External API wrapper
+    HYBRID = "hybrid"              # Combination of multiple types
 
 @dataclass
 class MetaGenerationConfig:
-    """Configuración para el meta-generador"""
-    # Directorios de salida
+    """Configuration for the meta-generator"""
+    # Output directories
     output_directory: str = "./generated_services"
     template_directory: str = "./templates"
     
-    # Configuración de generación
+    # Generation configuration
     default_complexity: ComplexityLevel = ComplexityLevel.MEDIUM
     default_integration: IntegrationType = IntegrationType.CAPIBARA_NATIVE
     
-    # Características del código generado
+    # Generated code features
     include_tests: bool = True
     include_docs: bool = True
     include_api_endpoints: bool = True
     include_demo_script: bool = True
     include_requirements: bool = True
     
-    # Estilo de código
+    # Code style
     code_style: str = "pep8"
     docstring_style: str = "google"
     type_hints: bool = True
     async_support: bool = True
     
-    # Plantillas de código
+    # Code templates
     use_dataclasses: bool = True
     use_enums: bool = True
     use_logging: bool = True
     error_handling: str = "comprehensive"  # basic, standard, comprehensive
     
-    # Integración con Capibara5
+    # Integration with Capibara5
     auto_register_service: bool = True
     generate_web_interface: bool = True
     create_service_factory: bool = True
     
-    # AI/ML específico
+    # AI/ML specific
     include_mock_mode: bool = True
     default_model_type: str = "transformer"
     include_training_scaffold: bool = True
 
 @dataclass
 class ServiceGenerationRequest:
-    """Request para generar un nuevo servicio"""
+    """Request to generate a new service"""
     description: str
     service_name: str
     service_type: ServiceType
     complexity: ComplexityLevel = ComplexityLevel.MEDIUM
     integration_type: IntegrationType = IntegrationType.CAPIBARA_NATIVE
     
-    # Especificaciones técnicas
+    # Technical specifications
     input_format: Optional[str] = None      # "text", "json", "file"
     output_format: Optional[str] = None     # "file", "json", "stream"
     dependencies: List[str] = field(default_factory=list)
     external_apis: List[str] = field(default_factory=list)
     
-    # Características funcionales
+    # Functional features
     supports_batch: bool = False
     supports_streaming: bool = False
     requires_gpu: bool = False
     requires_internet: bool = False
     
-    # Metadatos
+    # Metadata
     author: Optional[str] = None
     license: str = "MIT"
     version: str = "1.0.0"
@@ -138,32 +138,32 @@ class ServiceGenerationRequest:
 
 @dataclass
 class ServiceGenerationResult:
-    """Resultado de la generación de servicio"""
+    """Service generation result"""
     success: bool
     service_name: str
     service_path: str = ""
     
-    # Archivos generados
+    # Generated files
     generated_files: List[str] = field(default_factory=list)
     main_service_file: str = ""
     test_files: List[str] = field(default_factory=list)
     documentation_files: List[str] = field(default_factory=list)
     
-    # Métricas de código
+    # Code metrics
     total_lines: int = 0
     files_count: int = 0
     complexity_score: float = 0.0
     
-    # Información de integración
+    # Integration information
     api_endpoints: List[str] = field(default_factory=list)
     dependencies_added: List[str] = field(default_factory=list)
     
-    # Instrucciones para el usuario
+    # Instructions for the user
     installation_instructions: str = ""
     usage_examples: List[str] = field(default_factory=list)
     next_steps: List[str] = field(default_factory=list)
     
-    # Información de desarrollo
+    # Development information
     generation_time_seconds: float = 0.0
     templates_used: List[str] = field(default_factory=list)
     error: Optional[str] = None
@@ -177,7 +177,7 @@ except ImportError:
     CODE_GENERATION_AVAILABLE = False
 
 class ServiceRequirementAnalyzer:
-    """Analizador de requerimientos desde descripción natural"""
+    """Requirements analyzer from natural language description"""
     
     def __init__(self):
         self.service_keywords = {
@@ -206,22 +206,22 @@ class ServiceRequirementAnalyzer:
         }
     
     def analyze_description(self, description: str) -> Dict[str, Any]:
-        """Analiza descripción y extrae requerimientos"""
+        """Analyzes description and extracts requirements"""
         description_lower = description.lower()
         
-        # Detectar tipo de servicio
+        # Detect service type
         service_type = self._detect_service_type(description_lower)
-        
-        # Detectar complejidad
+
+        # Detect complexity
         complexity = self._detect_complexity(description_lower)
-        
-        # Detectar tipo de integración
+
+        # Detect integration type
         integration = self._detect_integration_type(description_lower)
-        
-        # Extraer características técnicas
+
+        # Extract technical specifications
         technical_specs = self._extract_technical_specs(description_lower)
-        
-        # Extraer dependencias
+
+        # Extract dependencies
         dependencies = self._extract_dependencies(description_lower)
         
         return {
@@ -234,7 +234,7 @@ class ServiceRequirementAnalyzer:
         }
     
     def _detect_service_type(self, description: str) -> ServiceType:
-        """Detecta el tipo de servicio desde la descripción"""
+        """Detects the service type from the description"""
         scores = {}
         
         for service_type, keywords in self.service_keywords.items():
@@ -248,12 +248,12 @@ class ServiceRequirementAnalyzer:
         return ServiceType.CREATIVE  # Default
     
     def _detect_complexity(self, description: str) -> ComplexityLevel:
-        """Detecta el nivel de complejidad"""
+        """Detects the complexity level"""
         for complexity, indicators in self.complexity_indicators.items():
             if any(indicator in description for indicator in indicators):
                 return complexity
         
-        # Heurísticas adicionales basadas en longitud y características
+        # Additional heuristics based on length and features
         if len(description.split()) > 50:
             return ComplexityLevel.COMPLEX
         elif len(description.split()) > 20:
@@ -262,7 +262,7 @@ class ServiceRequirementAnalyzer:
             return ComplexityLevel.SIMPLE
     
     def _detect_integration_type(self, description: str) -> IntegrationType:
-        """Detecta el tipo de integración requerido"""
+        """Detects the required integration type"""
         for integration, indicators in self.integration_indicators.items():
             if any(indicator in description for indicator in indicators):
                 return integration
@@ -270,10 +270,10 @@ class ServiceRequirementAnalyzer:
         return IntegrationType.CAPIBARA_NATIVE  # Default
     
     def _extract_technical_specs(self, description: str) -> Dict[str, Any]:
-        """Extrae especificaciones técnicas"""
+        """Extracts technical specifications"""
         specs = {}
         
-        # Detectar formatos de entrada/salida
+        # Detect input/output formats
         if any(word in description for word in ["file", "upload", "document"]):
             specs["input_format"] = "file"
         elif any(word in description for word in ["json", "api", "data"]):
@@ -281,25 +281,25 @@ class ServiceRequirementAnalyzer:
         else:
             specs["input_format"] = "text"
         
-        # Detectar requerimientos de GPU
+        # Detect GPU requirements
         if any(word in description for word in ["ai", "ml", "neural", "model", "training"]):
             specs["requires_gpu"] = True
         
-        # Detectar necesidad de internet
+        # Detect internet requirement
         if any(word in description for word in ["api", "download", "fetch", "online"]):
             specs["requires_internet"] = True
         
-        # Detectar soporte para lotes
+        # Detect batch support
         if any(word in description for word in ["batch", "multiple", "bulk", "many"]):
             specs["supports_batch"] = True
         
         return specs
     
     def _extract_dependencies(self, description: str) -> List[str]:
-        """Extrae dependencias probables"""
+        """Extracts probable dependencies"""
         dependencies = []
         
-        # Mapeo de palabras clave a dependencias
+        # Keyword to dependency mapping
         dependency_map = {
             "image": ["Pillow", "opencv-python"],
             "video": ["opencv-python", "moviepy"],
@@ -323,12 +323,12 @@ class ServiceRequirementAnalyzer:
         return list(set(dependencies))  # Remove duplicates
     
     def _generate_service_name(self, description: str) -> str:
-        """Genera nombre sugerido para el servicio"""
+        """Generates a suggested name for the service"""
         words = description.split()
         
-        # Buscar palabras clave importantes
+        # Search for important keywords
         key_words = []
-        for word in words[:10]:  # Primeras 10 palabras
+        for word in words[:10]:  # First 10 words
             clean_word = word.strip('.,!?').lower()
             if len(clean_word) > 3 and clean_word not in ['that', 'will', 'can', 'should', 'would']:
                 key_words.append(clean_word.capitalize())
@@ -339,21 +339,21 @@ class ServiceRequirementAnalyzer:
             return "TextToCustom"
 
 class MockCodeGenerator:
-    """Generador de código mock cuando los componentes no están disponibles"""
+    """Mock code generator when components are not available"""
     
     def __init__(self, config: MetaGenerationConfig):
         self.config = config
     
     async def generate_service_code(self, request: ServiceGenerationRequest) -> Dict[str, Any]:
-        """Genera código mock para el servicio"""
+        """Generates mock code for the service"""
         logger.info(f"🔧 Generating mock service: {request.service_name}")
         
-        # Simular tiempo de generación
+        # Simulate generation time
         await asyncio.sleep(2.0)
         
         service_dir = f"{self.config.output_directory}/{request.service_name.lower()}"
         
-        # Archivos que se generarían
+        # Files that would be generated
         generated_files = [
             f"{service_dir}/__init__.py",
             f"{service_dir}/{request.service_name.lower()}_service.py",
@@ -373,7 +373,7 @@ class MockCodeGenerator:
         if self.config.include_demo_script:
             generated_files.append(f"demo_{request.service_name.lower()}.py")
         
-        # Código de ejemplo que se generaría
+        # Example code that would be generated
         mock_code = self._generate_mock_service_code(request)
         
         return {
@@ -388,7 +388,7 @@ class MockCodeGenerator:
         }
     
     def _generate_mock_service_code(self, request: ServiceGenerationRequest) -> str:
-        """Genera código de ejemplo para el servicio"""
+        """Generates example code for the service"""
         service_class = f"Capibara{request.service_name}"
         
         return f'''#!/usr/bin/env python3
@@ -398,7 +398,7 @@ class MockCodeGenerator:
 
 {request.description}
 
-Generado automáticamente por Text-to-Gen.
+Automatically generated by Text-to-Gen.
 """
 
 import os
@@ -410,13 +410,13 @@ from enum import Enum
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Any
 
-# Configurar logging
+# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 @dataclass
 class {request.service_name}Config:
-    """Configuración para {request.service_name}"""
+    """Configuration for {request.service_name}"""
     output_directory: str = "./generated_{request.service_name.lower()}"
     default_quality: str = "high"
     enable_caching: bool = True
@@ -424,14 +424,14 @@ class {request.service_name}Config:
 
 @dataclass
 class {request.service_name}Request:
-    """Request para {request.service_name}"""
+    """Request for {request.service_name}"""
     description: str
     parameters: Optional[Dict[str, Any]] = None
     user_id: Optional[str] = None
 
 @dataclass
 class {request.service_name}Result:
-    """Resultado de {request.service_name}"""
+    """Result of {request.service_name}"""
     success: bool
     output_path: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
@@ -439,23 +439,23 @@ class {request.service_name}Result:
     error: Optional[str] = None
 
 class {service_class}:
-    """Servicio principal de {request.service_name}"""
+    """Main service for {request.service_name}"""
     
     def __init__(self, config: Optional[{request.service_name}Config] = None):
         self.config = config or {request.service_name}Config()
         logger.info(f"✅ {service_class} initialized")
     
     async def generate(self, request: {request.service_name}Request) -> {request.service_name}Result:
-        """Genera resultado desde descripción natural"""
+        """Generates result from natural language description"""
         start_time = datetime.now()
         
         try:
             logger.info(f"🎯 Generating {{request.service_name}}: {{request.description[:100]}}...")
             
-            # Simular procesamiento
+            # Simulate processing
             await asyncio.sleep(1.0)
             
-            # Aquí iría la lógica específica del servicio
+            # Service-specific logic would go here
             result = await self._process_request(request)
             
             generation_time = (datetime.now() - start_time).total_seconds()
@@ -478,8 +478,8 @@ class {service_class}:
             )
     
     async def _process_request(self, request: {request.service_name}Request) -> Dict[str, Any]:
-        """Procesa el request específico del servicio"""
-        # TODO: Implementar lógica específica del servicio
+        """Processes the service-specific request"""
+        # TODO: Implement service-specific logic
         
         return {{
             "output_path": f"./generated_{{request.service_name.lower()}}/output.txt",
@@ -490,11 +490,11 @@ class {service_class}:
         }}
     
     def is_available(self) -> bool:
-        """Verifica si el servicio está disponible"""
+        """Checks if the service is available"""
         return True
-    
+
     async def test_functionality(self) -> Dict[str, Any]:
-        """Prueba la funcionalidad del servicio"""
+        """Tests the service functionality"""
         test_request = {request.service_name}Request(
             description="Test generation request"
         )
@@ -509,12 +509,12 @@ class {service_class}:
 
 # Factory function
 def create_{request.service_name.lower()}_service(config=None):
-    """Crea instancia del servicio {request.service_name}"""
+    """Creates an instance of the {request.service_name} service"""
     return {service_class}(config)
 '''
     
     def _estimate_lines_of_code(self, request: ServiceGenerationRequest) -> int:
-        """Estima líneas de código que se generarían"""
+        """Estimates lines of code that would be generated"""
         base_lines = {
             ComplexityLevel.SIMPLE: 300,
             ComplexityLevel.MEDIUM: 800,
@@ -524,7 +524,7 @@ def create_{request.service_name.lower()}_service(config=None):
         
         lines = base_lines[request.complexity]
         
-        # Ajustes basados en características
+        # Adjustments based on features
         if request.supports_batch:
             lines += 200
         if request.supports_streaming:
@@ -535,24 +535,24 @@ def create_{request.service_name.lower()}_service(config=None):
         return lines
     
     def _generate_installation_instructions(self, request: ServiceGenerationRequest) -> str:
-        """Genera instrucciones de instalación"""
-        return f"""# Instalación de {request.service_name}
+        """Generates installation instructions"""
+        return f"""# Installation of {request.service_name}
 
-1. Instalar dependencias:
+1. Install dependencies:
    pip install -r requirements.txt
 
-2. Configurar servicio:
+2. Configure service:
    from capibara.services.{request.service_name.lower()} import create_{request.service_name.lower()}_service
    
-3. Usar servicio:
+3. Use service:
    service = create_{request.service_name.lower()}_service()
    result = await service.generate(request)
 """
     
     def _generate_usage_examples(self, request: ServiceGenerationRequest) -> List[str]:
-        """Genera ejemplos de uso"""
+        """Generates usage examples"""
         return [
-            f"# Ejemplo básico de {request.service_name}",
+            f"# Basic example of {request.service_name}",
             f"request = {request.service_name}Request(description='Your description here')",
             f"result = await service.generate(request)",
             f"print(f'Generated: {{result.output_path}}')"

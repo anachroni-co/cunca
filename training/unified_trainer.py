@@ -58,14 +58,14 @@ class TrainingMetrics:
 
 class UnifiedTrainer:
     """
-    Trainer unificado e inteligente for CapibaraGPT-v2.
-    
-    Características:
-    - Auto-detección de escala de model
-    - Consensus distilling automático for modelos 3B+
-    - Optimizaciones tpu v4-32 automáticas
-    - Entrenamiento distribuido
-    - Monitoreo en tiempo real
+    Unified and intelligent trainer for CapibaraGPT-v2.
+
+    Features:
+    - Auto-detection of model scale
+    - Automatic consensus distilling for 3B+ models
+    - Automatic TPU v4-32 optimizations
+    - Distributed training
+    - Real-time monitoring
     """
     
     def __init__(
@@ -76,13 +76,13 @@ class UnifiedTrainer:
         output_dir: str = "checkpoints",
         use_wandb: bool = True
     ):
-        # Normalizar escala del model
+        # Normalize model scale
         if isinstance(model_scale, str):
             self.model_scale_name = model_scale
             try:
                 self.model_scale = ModelScale(model_scale)
             except ValueError:
-                logger.warning(f"Escala desconocida: {model_scale}, usando 3B por defecto")
+                logger.warning(f"Unknown scale: {model_scale}, using 3B by default")
                 self.model_scale = ModelScale.SMALL_3B
                 self.model_scale_name = "3B"
         else:
@@ -94,86 +94,86 @@ class UnifiedTrainer:
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
         
-        # Auto-setup basada en escala
+        # Auto-setup based on scale
         self._setup_auto_configuration()
-        
-        # Inicializar componentes
+
+        # Initialize components
         self.state = None
         self.tpu_optimizer = None
         self.consensus_system = None
         self.distillation_manager = None
         self.wandb_run = None
         
-        # Métricas
+        # Metrics
         self.metrics_history = []
         self.current_metrics = TrainingMetrics()
-        
+
         # configure logging
         self._setup_logging()
-        
-        # Inicializar componentes automáticamente
+
+        # Initialize components automatically
         self._initialize_components(use_wandb)
     
     def _setup_auto_configuration(self):
-        """configure automáticamente basado en escala del model."""
-        # obtain setup automática
+        """Automatically configure based on model scale."""
+        # Obtain automatic configuration
         auto_config = get_config_for_scale(self.model_scale)
-        
-        # determine if use consensus distilling automáticamente
+
+        # Determine whether to use consensus distilling automatically
         self.use_consensus = auto_config["use_consensus_distilling"]
         
         if self.use_consensus:
-            logger.info(f"🧠 CONSENSUS DISTILLING ACTIVADO AUTOMÁTICAMENTE para modelo {self.model_scale_name}")
-            logger.info("   ✅ Peer voting habilitado")
-            logger.info("   ✅ Critic arbitration habilitado") 
-            logger.info("   ✅ Progressive distillation habilitado")
+            logger.info(f"🧠 CONSENSUS DISTILLING AUTOMATICALLY ACTIVATED for model {self.model_scale_name}")
+            logger.info("   ✅ Peer voting enabled")
+            logger.info("   ✅ Critic arbitration enabled")
+            logger.info("   ✅ Progressive distillation enabled")
         else:
-            logger.info(f"📝 Entrenamiento estándar para modelo {self.model_scale_name}")
+            logger.info(f"📝 Standard training for model {self.model_scale_name}")
         
         # Auto-detect hardware
         self.hardware_info = verify_tpu_setup()
         if self.hardware_info.get('tpu_available', False):
-            logger.info("🚀 TPU detectado - Optimizaciones TPU activadas")
+            logger.info("🚀 TPU detected - TPU optimizations activated")
             self.use_tpu = True
         else:
-            logger.info("💻 GPU/CPU detectado - Entrenamiento estándar")
+            logger.info("💻 GPU/CPU detected - Standard training")
             self.use_tpu = False
     
     def _setup_logging(self):
-        """configure logging detallado."""
+        """Configure detailed logging."""
         logging.basicConfig(
             level=logging.INFO,
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
         )
         
         logger.info("="*80)
-        logger.info(f"🦙 CAPIBARAGPT-V2 UNIFIED TRAINER INICIALIZADO")
-        logger.info(f"📊 Escala del modelo: {self.model_scale_name}")
-        logger.info(f"🧠 Consensus distilling: {'✅ ACTIVO' if self.use_consensus else '❌ INACTIVO'}")
+        logger.info(f"🦙 CAPIBARAGPT-V2 UNIFIED TRAINER INITIALIZED")
+        logger.info(f"📊 Model scale: {self.model_scale_name}")
+        logger.info(f"🧠 Consensus distilling: {'✅ ACTIVE' if self.use_consensus else '❌ INACTIVE'}")
         logger.info(f"🚀 Hardware: {'TPU' if self.use_tpu else 'GPU/CPU'}")
         logger.info("="*80)
     
     def _initialize_components(self, use_wandb: bool):
-        """Inicializar todos los componentes necesarios."""
-        # Inicializar optimizador tpu if está available
+        """Initialize all necessary components."""
+        # Initialize TPU optimizer if available
         if self.use_tpu:
             self.tpu_optimizer = setup_tpu_environment()
-            logger.info("✅ TPU Optimizer inicializado")
-        
-        # Inicializar consensus system if es necessary
+            logger.info("✅ TPU Optimizer initialized")
+
+        # Initialize consensus system if necessary
         if self.use_consensus:
             self.consensus_system = create_consensus_system_for_scale(self.model_scale_name)
             if self.consensus_system:
-                logger.info(f"✅ Consensus System inicializado - {self.consensus_system.n_teachers} teachers, {self.consensus_system.n_critics} critics")
-            
-            # Inicializar distillation manager
+                logger.info(f"✅ Consensus System initialized - {self.consensus_system.n_teachers} teachers, {self.consensus_system.n_critics} critics")
+
+            # Initialize distillation manager
             self.distillation_manager = DistillationManager(
                 temperature=4.0,
                 alpha=0.3 if self.model_scale_name in ["3B", "7B", "13B"] else 0.5
             )
-            logger.info("✅ Distillation Manager inicializado")
-        
-        # Inicializar W&B if está habilitado
+            logger.info("✅ Distillation Manager initialized")
+
+        # Initialize W&B if enabled
         if use_wandb:
             self._setup_wandb()
     
@@ -198,9 +198,9 @@ class UnifiedTrainer:
                     "trainer_version": "unified-v2.0"
                 }
             )
-            logger.info("✅ W&B inicializado")
+            logger.info("✅ W&B initialized")
         except Exception as e:
-            logger.warning(f"Error inicializando W&B: {e}")
+            logger.warning(f"Error initializing W&B: {e}")
             self.wandb_run = None
     
     async def train(
@@ -213,64 +213,64 @@ class UnifiedTrainer:
         resume_from: Optional[str] = None
     ) -> Dict[str, Any]:
         """
-        Entrenamiento principal unificado.
-        
+        Main unified training.
+
         Args:
-            train_dataset: Dataset de entrenamiento
-            val_dataset: Dataset de validation (optional)
-            num_epochs: number of épocas
-            eval_every: evaluate each N pasos
-            save_every: save checkpoint each N pasos
-            resume_from: Checkpoint for resumir (optional)
-            
+            train_dataset: Training dataset
+            val_dataset: Validation dataset (optional)
+            num_epochs: Number of epochs
+            eval_every: Evaluate every N steps
+            save_every: Save checkpoint every N steps
+            resume_from: Checkpoint to resume from (optional)
+
         Returns:
-            Resultados del entrenamiento
+            Training results
         """
-        logger.info("🚀 INICIANDO ENTRENAMIENTO UNIFICADO")
-        
-        # Inicializar estado de entrenamiento
+        logger.info("🚀 STARTING UNIFIED TRAINING")
+
+        # Initialize training state
         await self._initialize_training_state(resume_from)
         
-        # configure funciones de entrenamiento
+        # Configure training functions
         train_step_fn = self._create_train_step_function()
         eval_step_fn = self._create_eval_step_function() if val_dataset else None
         
-        # Métricas de start
+        # Start metrics
         start_time = time.time()
         total_steps = 0
         
         try:
             for epoch in range(num_epochs):
-                logger.info(f"📊 Iniciando época {epoch + 1}/{num_epochs}")
+                logger.info(f"📊 Starting epoch {epoch + 1}/{num_epochs}")
                 epoch_start = time.time()
-                
-                # Entrenamiento by época
+
+                # Training per epoch
                 async for batch in self._get_training_batches(train_dataset):
                     step_start = time.time()
                     
-                    # Paso de entrenamiento
+                    # Training step
                     if self.use_consensus and self.consensus_system:
-                        # Entrenamiento with consensus distilling
+                        # Training with consensus distilling
                         self.state, step_metrics = await self._consensus_train_step(
                             self.state, batch, train_step_fn
                         )
                     else:
-                        # Entrenamiento estándar
+                        # Standard training
                         self.state, step_metrics = train_step_fn(self.state, batch)
                     
-                    # update métricas
+                    # Update metrics
                     self._update_metrics(step_metrics, time.time() - step_start)
                     
                     total_steps += 1
                     self.current_metrics.step = total_steps
                     self.current_metrics.epoch = epoch
                     
-                    # Evaluación periódica
+                    # Periodic evaluation
                     if val_dataset and total_steps % eval_every == 0:
                         eval_metrics = await self._evaluate(val_dataset, eval_step_fn)
                         self._log_evaluation(eval_metrics)
                     
-                    # Checkpoint periódico
+                    # Periodic checkpoint
                     if total_steps % save_every == 0:
                         await self._save_checkpoint(total_steps)
                     
@@ -278,72 +278,72 @@ class UnifiedTrainer:
                     if total_steps % 100 == 0:
                         self._log_training_progress(total_steps)
                 
-                # Fin de época
+                # End of epoch
                 epoch_time = time.time() - epoch_start
-                logger.info(f"✅ Época {epoch + 1} completada en {epoch_time:.2f}s")
-                
-                # Evaluación al end de época
+                logger.info(f"✅ Epoch {epoch + 1} completed in {epoch_time:.2f}s")
+
+                # Evaluation at end of epoch
                 if val_dataset:
                     eval_metrics = await self._evaluate(val_dataset, eval_step_fn)
                     self._log_evaluation(eval_metrics)
                 
-                # Checkpoint al end de época
+                # Checkpoint at end of epoch
                 await self._save_checkpoint(f"epoch_{epoch + 1}")
         
         except Exception as e:
-            logger.error(f"❌ Error durante entrenamiento: {e}")
+            logger.error(f"❌ Error during training: {e}")
             raise
         
         finally:
-            # Limpieza and resultados finales
+            # Cleanup and final results
             total_time = time.time() - start_time
             final_results = self._generate_final_results(total_steps, total_time)
             
             if self.wandb_run:
                 wandb.finish()
             
-            logger.info("🎉 ENTRENAMIENTO COMPLETADO")
+            logger.info("🎉 TRAINING COMPLETED")
             return final_results
     
     async def _initialize_training_state(self, resume_from: Optional[str]):
-        """Inicializar estado de entrenamiento."""
-        # create optimizador
+        """Initialize training state."""
+        # Create optimizer
         optimizer = optax.adamw(learning_rate=3e-4)
         
-        # Inicializar parámetros del model
+        # Initialize model parameters
         rng = jax.random.PRNGKey(42)
         dummy_input = jnp.ones((1, 2048), dtype=jnp.int32)
         variables = self.model.init(rng, dummy_input, training=True)
         
-        # create estado de entrenamiento
+        # Create training state
         self.state = train_state.TrainState.create(
             apply_fn=self.model.apply,
             params=variables['params'],
             tx=optimizer
         )
         
-        # apply optimizaciones tpu if está available
+        # Apply TPU optimizations if available
         if self.tpu_optimizer:
-            # optimize parámetros for tpu
-            logger.info("🚀 Aplicando optimizaciones TPU a parámetros")
-        
-        # Restaurar checkpoint if se especifica
+            # Optimize parameters for TPU
+            logger.info("🚀 Applying TPU optimizations to parameters")
+
+        # Restore checkpoint if specified
         if resume_from:
-            logger.info(f"📂 Restaurando checkpoint desde: {resume_from}")
-            # here iría la lógica de restauración
-        
-        logger.info("✅ Estado de entrenamiento inicializado")
+            logger.info(f"📂 Restoring checkpoint from: {resume_from}")
+            # Restoration logic would go here
+
+        logger.info("✅ Training state initialized")
     
     def _create_train_step_function(self):
-        """create function de paso de entrenamiento optimizada."""
+        """Create optimized training step function."""
         def loss_fn(outputs, targets):
             return optax.softmax_cross_entropy_with_integer_labels(outputs, targets).mean()
         
         if self.tpu_optimizer:
-            # use function tpu optimizada
+            # Use TPU-optimized function
             return self.tpu_optimizer.create_distributed_train_step(loss_fn)
         else:
-            # function estándar
+            # Standard function
             @jax.jit
             def train_step(state, batch):
                 def step_fn(params):
@@ -364,7 +364,7 @@ class UnifiedTrainer:
             return train_step
     
     def _create_eval_step_function(self):
-        """create function de evaluación."""
+        """Create evaluation function."""
         def loss_fn(outputs, targets):
             return optax.softmax_cross_entropy_with_integer_labels(outputs, targets).mean()
         
@@ -381,24 +381,24 @@ class UnifiedTrainer:
         return eval_step
     
     async def _consensus_train_step(self, state, batch, train_step_fn):
-        """Paso de entrenamiento with consensus distilling."""
+        """Training step with consensus distilling."""
         if not self.consensus_system or not self.distillation_manager:
             return train_step_fn(state, batch)
         
-        # Simular outputs de teachers (en implementation real serían modelos reales)
+        # Simulate teacher outputs (in real implementation these would be actual models)
         teacher_outputs = [
             jnp.ones((batch['inputs'].shape[0], 50257)) * 0.1  # Placeholder
             for _ in range(self.consensus_system.n_teachers)
         ]
         
-        # obtain output del estudiante
+        # Obtain student output
         student_output = state.apply_fn(
             {'params': state.params},
             batch['inputs'],
             training=True
         )
         
-        # perform consensus voting (simulado)
+        # Perform consensus voting (simulated)
         consensus_result = await self.consensus_system.enhanced_peer_vote(
             prompt="training_prompt",
             outputs=[f"output_{i}" for i in range(len(teacher_outputs))],
@@ -406,18 +406,18 @@ class UnifiedTrainer:
             latencies=[0.1] * len(teacher_outputs)
         )
         
-        # apply distillation progresiva
+        # Apply progressive distillation
         distill_loss, distill_metrics = await self.distillation_manager.progressive_distillation(
             teacher_outputs=teacher_outputs,
             student_output=student_output,
             targets=batch['targets']
         )
         
-        # update parámetros usando pérdida de distillation
+        # Update parameters using distillation loss
         grads = jax.grad(lambda params: distill_loss)(state.params)
         new_state = state.apply_gradients(grads=grads)
         
-        # combine métricas
+        # Combine metrics
         metrics = {
             'loss': float(distill_loss),
             'consensus_confidence': consensus_result[2].get('consensus_confidence', 0.0),
@@ -428,32 +428,32 @@ class UnifiedTrainer:
         return new_state, metrics
     
     async def _get_training_batches(self, dataset):
-        """Generador de batches de entrenamiento."""
+        """Training batch generator."""
         for batch in dataset:
             yield batch
     
     def _update_metrics(self, step_metrics: Dict[str, Any], batch_time: float):
-        """update métricas de entrenamiento."""
+        """Update training metrics."""
         self.current_metrics.loss = step_metrics.get('loss', 0.0)
         self.current_metrics.perplexity = jnp.exp(self.current_metrics.loss)
         self.current_metrics.batch_time = batch_time
         self.current_metrics.grad_norm = step_metrics.get('grad_norm', 0.0)
         
-        # Métricas de consensus if están disponibles
+        # Consensus metrics if available
         if 'consensus_confidence' in step_metrics:
             self.current_metrics.consensus_confidence = step_metrics['consensus_confidence']
         if 'distillation_loss' in step_metrics:
             self.current_metrics.distillation_loss = step_metrics['distillation_loss']
         
-        # add a historial
+        # Add to history
         self.metrics_history.append(dict(self.current_metrics.__dict__))
-        
-        # maintain only las últimas 1000 métricas en memory
+
+        # Keep only the last 1000 metrics in memory
         if len(self.metrics_history) > 1000:
             self.metrics_history.pop(0)
     
     async def _evaluate(self, val_dataset, eval_step_fn) -> Dict[str, float]:
-        """perform evaluación en dataset de validation."""
+        """Perform evaluation on validation dataset."""
         total_loss = 0.0
         total_batches = 0
         
@@ -462,7 +462,7 @@ class UnifiedTrainer:
             total_loss += eval_metrics['eval_loss']
             total_batches += 1
             
-            # Limitar evaluación for evitar que tome demasiado tiempo
+            # Limit evaluation to avoid taking too long
             if total_batches >= 100:
                 break
         

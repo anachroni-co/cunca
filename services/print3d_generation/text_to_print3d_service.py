@@ -273,10 +273,10 @@ class Print3DDescriptionParser:
                 detected_material = material
                 break
         
-        # Extraer dimensiones
+        # Extract dimensions
         dimensions = self._extract_dimensions(description)
         
-        # Determinar configuraciones automáticas
+        # Determine automatic configurations
         auto_config = self._determine_auto_config(object_type, complexity)
         
         return {
@@ -289,12 +289,12 @@ class Print3DDescriptionParser:
         }
     
     def _extract_dimensions(self, description: str) -> Dict[str, float]:
-        """Extrae dimensiones de la descripción"""
+        """Extract dimensions from the description."""
         import re
         
         dimensions = {}
         
-        # Patterns para dimensiones
+        # Dimension patterns
         size_patterns = [
             r"(\d+(?:\.\d+)?)\s*(?:mm|millimeter|centimeter|cm)",
             r"(\d+(?:\.\d+)?)\s*x\s*(\d+(?:\.\d+)?)\s*(?:mm|cm)",
@@ -325,10 +325,10 @@ class Print3DDescriptionParser:
         return dimensions
     
     def _determine_auto_config(self, object_type: str, complexity: str) -> Dict[str, Any]:
-        """Determina configuración automática basada en tipo y complejidad"""
+        """Determine automatic configuration based on type and complexity."""
         config = {}
         
-        # Configuración por tipo de objeto
+        # Configuration by object type
         if object_type == "miniature":
             config.update({
                 "quality": PrintQuality.HIGH,
@@ -354,7 +354,7 @@ class Print3DDescriptionParser:
                 "material": MaterialType.PETG
             })
         
-        # Ajustar por complejidad
+        # Adjust by complexity
         if complexity == "simple":
             config["quality"] = PrintQuality.DRAFT
             config["supports"] = False
@@ -365,47 +365,47 @@ class Print3DDescriptionParser:
         return config
 
 class MockPrint3DGenerator:
-    """Generador mock para modelos Print3D cuando E2B no está disponible"""
+    """Mock generator for Print3D models when E2B is not available."""
     
     def __init__(self, config: Print3DGenerationConfig):
         self.config = config
         
     async def generate_print3d_mock(self, request: Print3DRequest) -> Print3DResult:
-        """Genera un modelo 3D mock optimizado para impresión"""
+        """Generate a mock 3D model optimized for printing."""
         logger.info(f"🖨️ Generating mock Print3D model: {request.description[:100]}...")
         
-        # Simular tiempo de generación
+        # Simulate generation time
         await asyncio.sleep(2.0)
         
-        # Generar nombres de archivos
+        # Generate file names
         project_name = request.project_name or "print3d_model"
         stl_file = f"{project_name}.stl"
         obj_file = f"{project_name}.obj"
         
-        # Simular análisis de impresión
+        # Simulate print analysis
         volume = self._calculate_mock_volume(request)
-        surface_area = volume ** (2/3) * 6  # Aproximación
+        surface_area = volume ** (2/3) * 6  # Approximation
         
-        # Propiedades del material
+        # Material properties
         material_props = self.config.material_properties.get(
             request.material, 
             self.config.material_properties[MaterialType.PLA]
         )
         
-        material_weight = volume * material_props["density"] / 1000  # gramos
+        material_weight = volume * material_props["density"] / 1000  # grams
         material_cost = material_weight / 1000 * self.config.material_cost_per_kg.get(
             request.material.value, 25.0
         )
         
-        # Tiempo de impresión estimado
+        # Estimated print time
         layer_height = self.config.layer_heights[request.quality]
         estimated_height = request.dimensions.get("height", 50) if request.dimensions else 50
         layer_count = int(estimated_height / layer_height)
-        print_time = layer_count * 2.5 / 60  # horas estimadas
+        print_time = layer_count * 2.5 / 60  # estimated hours
         
         total_cost = material_cost + (print_time * self.config.print_time_cost_per_hour)
         
-        # Análisis de imprimibilidad
+        # Printability analysis
         printability_score = self._calculate_printability_score(request)
         overhangs_detected = "overhang" in request.description.lower() or printability_score < 0.7
         supports_needed = overhangs_detected or request.supports_required
@@ -484,16 +484,16 @@ class MockPrint3DGenerator:
         return max(0.0, min(1.0, score))
 
 class CapibaraTextToPrint3D:
-    """Servicio principal de generación Text-to-Print3D"""
+    """Main Text-to-Print3D generation service."""
     
     def __init__(self, config: Optional[Print3DGenerationConfig] = None):
         self.config = config or Print3DGenerationConfig()
         
-        # Inicializar parser y generador mock
+        # Initialize parser and mock generator
         self.description_parser = Print3DDescriptionParser()
         self.mock_generator = MockPrint3DGenerator(self.config)
         
-        # Inicializar generadores E2B
+        # Initialize E2B generators
         self.openscad_generator = None
         self.blender_generator = None
         self.freecad_generator = None
@@ -669,19 +669,19 @@ class CapibaraTextToPrint3D:
             )
     
     def _select_optimal_tool(self, object_type: str, complexity: str, request: Print3DRequest) -> str:
-        """Selecciona la herramienta óptima para el tipo de objeto"""
+        """Select the optimal tool for the object type."""
         if self.config.preferred_tool and self.config.preferred_tool != "auto":
             return self.config.preferred_tool
         
-        # Selección inteligente basada en tipo de objeto
+        # Smart selection based on object type
         if object_type in ["tool", "container", "functional"]:
-            return "freecad"  # Mejor para objetos funcionales y paramétricos
+            return "freecad"  # Best for functional and parametric objects
         elif object_type in ["decorative", "toy", "miniature"]:
-            return "blender"  # Mejor para objetos artísticos y detallados
+            return "blender"  # Best for artistic and detailed objects
         elif complexity == "simple" or object_type == "prototype":
-            return "openscad"  # Mejor para objetos simples y procedurales
+            return "openscad"  # Best for simple and procedural objects
         
-        # Default: FreeCAD para casos generales
+        # Default: FreeCAD for general cases
         return "freecad"
     
     def _convert_e2b_result_to_print3d_result(self, e2b_result: Dict[str, Any], 

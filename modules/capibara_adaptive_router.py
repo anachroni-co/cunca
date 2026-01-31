@@ -1,15 +1,15 @@
 """
-Router Cuántico Optimizado for CapibaraGPT - tpu v4-32
-Versión optimizada with JAX JIT, diferenciabilidad completa and eficiencia tpu.
+Optimized Quantum Router for CapibaraGPT - TPU v4-32
+Optimized version with JAX JIT, full differentiability and TPU efficiency.
 """
 
 import os
 import sys
-# Obtiene la path del directory current (scripts) -> /.../scripts
+# Get the path of the current directory (scripts) -> /.../scripts
 script_dir = os.path.dirname(os.path.abspath(__file__))
-# Sube un level for obtain la raíz del proyecto -> /.../capibaraGPT-v2
+# Go up one level to obtain the project root -> /.../capibaraGPT-v2
 project_root = os.path.dirname(script_dir)
-# Añade la raíz del proyecto a sys.path
+# Add the project root to sys.path
 if project_root not in sys.path:
     sys.path.append(project_root)
 
@@ -20,11 +20,11 @@ import jax.numpy as jnp
 from jax import partial
 from typing import Dict, List, Optional, Any, Tuple
 
-# Imports relativos with fallbacks
+# Relative imports with fallbacks
 try:
     from .contextual_activation import ContextualActivation
 except ImportError:
-    # Fallback if not existe
+    # Fallback if not available
     class ContextualActivation(nn.Module):
         def __call__(self, x, **kwargs):
             return x
@@ -32,14 +32,14 @@ except ImportError:
 try:
     from .personality.conversation_manager import ConversationManager
 except ImportError:
-    # Fallback if not existe
+    # Fallback if not available
     class ConversationManager:
         pass
 
 logger = logging.getLogger(__name__)
 
 class OptimizedAdaptiveRouter(nn.Module):
-    """Router cuántico optimizado for tpu v4-32 with procesamiento diferenciable."""
+    """Optimized quantum router for TPU v4-32 with differentiable processing."""
     
     hidden_size: int
     num_virtual_qubits: int
@@ -49,9 +49,9 @@ class OptimizedAdaptiveRouter(nn.Module):
     router_capacity_factor: float = 1.25
     
     def setup(self):
-        """initialization optimizada for tpu."""
+        """Optimized initialization for TPU."""
         
-        # 1. Context encoder diferenciable
+        # 1. Differentiable context encoder
         self.context_embedding = nn.Embed(
             num_embeddings=self.vocab_size,
             features=self.hidden_size,
@@ -66,7 +66,7 @@ class OptimizedAdaptiveRouter(nn.Module):
             nn.Dense(2),  # [dynamic_weight, pretrained_weight]
         ])
         
-        # 3. VQbit layers optimizados
+        # 3. Optimized VQbit layers
         self.dynamic_vq_codes = VQbitLayerOptimized(
             codebook_size=self.num_virtual_qubits,
             embedding_dim=self.hidden_size,
@@ -93,13 +93,13 @@ class OptimizedAdaptiveRouter(nn.Module):
         self, 
         context_tokens: jnp.ndarray
     ) -> jnp.ndarray:
-        """Codificación eficiente de contexto for tpu."""
+        """Efficient context encoding for TPU."""
         # Shape: [batch_size, seq_len] -> [batch_size, hidden_size]
         
         # 1. Embed tokens
         embedded = self.context_embedding(context_tokens)  # [B, L, H]
         
-        # 2. Attention pooling (more eficiente que mean pooling)
+        # 2. Attention pooling (more efficient than mean pooling)
         attention_weights = nn.Dense(1)(embedded)  # [B, L, 1]
         attention_weights = nn.softmax(attention_weights, axis=1)
         
@@ -114,16 +114,16 @@ class OptimizedAdaptiveRouter(nn.Module):
         context_features: jnp.ndarray,
         training: bool = False
     ) -> Tuple[jnp.ndarray, Dict[str, jnp.ndarray]]:
-        """Computa pesos de router de forma diferenciable."""
+        """Compute router weights in a differentiable manner."""
         
         # 1. Router logits
         router_logits = self.router_gate(context_features)  # [B, 2]
         
         # 2. Soft routing with temperature
-        temperature = 1.0 if training else 0.1  # more determinístico en inferencia
+        temperature = 1.0 if training else 0.1  # More deterministic at inference
         router_weights = nn.softmax(router_logits / temperature, axis=-1)
         
-        # 3. Métricas de routing
+        # 3. Routing metrics
         routing_metrics = {
             "dynamic_usage": jnp.mean(router_weights[:, 0]),
             "pretrained_usage": jnp.mean(router_weights[:, 1]),
@@ -141,7 +141,7 @@ class OptimizedAdaptiveRouter(nn.Module):
         context_features: jnp.ndarray,
         training: bool = False
     ) -> Tuple[jnp.ndarray, Dict[str, jnp.ndarray]]:
-        """Routing by expertos optimizado for tpu."""
+        """Optimized expert routing for TPU."""
         batch_size, seq_len, hidden_size = x.shape
         
         # 1. Expert gate
@@ -152,13 +152,13 @@ class OptimizedAdaptiveRouter(nn.Module):
         top_k_logits, top_k_indices = jax.lax.top_k(gate_logits, k)
         top_k_weights = nn.softmax(top_k_logits, axis=-1)
         
-        # 3. process with expertos seleccionados
+        # 3. Process with selected experts
         expert_outputs = []
         for i in range(k):
             expert_idx = top_k_indices[:, i]  # [B]
             expert_weight = top_k_weights[:, i:i+1]  # [B, 1]
             
-            # select experto dinámicamente
+            # Dynamically select expert
             expert_output = jnp.zeros_like(x)
             for j in range(self.num_router_experts):
                 mask = (expert_idx == j).astype(jnp.float32)[:, None, None]
@@ -167,10 +167,10 @@ class OptimizedAdaptiveRouter(nn.Module):
             
             expert_outputs.append(expert_weight[:, :, None] * expert_output)
         
-        # 4. combine salidas
+        # 4. Combine outputs
         final_output = sum(expert_outputs)
         
-        # 5. Métricas de expertos
+        # 5. Expert metrics
         expert_metrics = {
             "expert_usage": jnp.mean(nn.one_hot(top_k_indices, self.num_router_experts), axis=(0, 1)),
             "expert_load_balance": jnp.std(jnp.mean(nn.softmax(gate_logits), axis=0)),
@@ -186,9 +186,9 @@ class OptimizedAdaptiveRouter(nn.Module):
         context_tokens: jnp.ndarray,
         training: bool = False
     ) -> Dict[str, jnp.ndarray]:
-        """Forward pass optimizado for tpu v4-32."""
+        """Optimized forward pass for TPU v4-32."""
         
-        # 1. Codificar contexto
+        # 1. Encode context
         context_features = self._encode_context_efficiently(context_tokens)
         
         # 2. Compute router weights
@@ -196,25 +196,25 @@ class OptimizedAdaptiveRouter(nn.Module):
             context_features, training
         )
         
-        # 3. process with ambos tipos de VQ codes en paralelo
+        # 3. Process with both types of VQ codes in parallel
         dynamic_output = self.dynamic_vq_codes(x, training=training)
         pretrained_output = self.pretrained_vq_codes(x, training=training)
         
-        # 4. Mezcla diferenciable
+        # 4. Differentiable mixing
         vqbit_mixed = (
             router_weights[:, 0:1, None] * dynamic_output +
             router_weights[:, 1:2, None] * pretrained_output
         )
         
-        # 5. Expert routing adicional
+        # 5. Additional expert routing
         expert_output, expert_metrics = self._expert_routing(
             vqbit_mixed, context_features, training
         )
         
-        # 6. Proyección end
+        # 6. Final projection
         final_output = self.output_projection(expert_output)
         
-        # 7. combine métricas
+        # 7. Combine metrics
         all_metrics = {
             **routing_metrics,
             **expert_metrics,
@@ -232,7 +232,7 @@ class OptimizedAdaptiveRouter(nn.Module):
 
 
 class VQbitLayerOptimized(nn.Module):
-    """VQbit layer optimizado for tpu."""
+    """Optimized VQbit layer for TPU."""
     
     codebook_size: int
     embedding_dim: int
@@ -248,8 +248,8 @@ class VQbitLayerOptimized(nn.Module):
     
     @nn.compact
     def __call__(self, x: jnp.ndarray, training: bool = False) -> jnp.ndarray:
-        """Forward pass optimizado."""
-        
+        """Optimized forward pass."""
+
         # 1. Compute distances
         distances = jnp.linalg.norm(
             x[..., None, :] - self.codebook[None, None, :, :], 
@@ -275,7 +275,7 @@ class VQbitLayerOptimized(nn.Module):
 
 
 class ExpertLayer(nn.Module):
-    """Capa de experto optimizada."""
+    """Optimized expert layer."""
     
     hidden_size: int
     name: str
@@ -283,7 +283,7 @@ class ExpertLayer(nn.Module):
     
     @nn.compact
     def __call__(self, x: jnp.ndarray) -> jnp.ndarray:
-        """FFN expert optimizado."""
+        """Optimized FFN expert."""
         
         # 1. Expand
         expanded = nn.Dense(
@@ -302,7 +302,7 @@ class ExpertLayer(nn.Module):
 
 
 class ContextualRouterOptimized(nn.Module):
-    """Router contextual optimizado que combina activation and routing cuántico."""
+    """Optimized contextual router that combines activation and quantum routing."""
     
     hidden_size: int
     num_virtual_qubits: int
@@ -310,7 +310,7 @@ class ContextualRouterOptimized(nn.Module):
     activation_threshold: float = 0.5
     
     def setup(self):
-        # 1. Módulo de activation contextual
+        # 1. Contextual activation module
         self.activation_gate = nn.Sequential([
             nn.Dense(self.hidden_size),
             nn.LayerNorm(),
@@ -319,14 +319,14 @@ class ContextualRouterOptimized(nn.Module):
             lambda x: nn.sigmoid(x)
         ])
         
-        # 2. Router cuántico optimizado
+        # 2. Optimized quantum router
         self.adaptive_router = OptimizedAdaptiveRouter(
             hidden_size=self.hidden_size,
             num_virtual_qubits=self.num_virtual_qubits,
             vocab_size=self.vocab_size
         )
         
-        # 3. path clásica (bypass)
+        # 3. Classical path (bypass)
         self.classical_path = nn.Dense(self.hidden_size)
 
     @nn.compact
@@ -336,7 +336,7 @@ class ContextualRouterOptimized(nn.Module):
         context_tokens: jnp.ndarray,
         training: bool = False
     ) -> Dict[str, jnp.ndarray]:
-        """Forward pass optimizado with routing soft."""
+        """Optimized forward pass with soft routing."""
         
         # 1. Compute activation gate
         context_repr = jnp.mean(
@@ -345,12 +345,12 @@ class ContextualRouterOptimized(nn.Module):
         )
         activation_gate = self.activation_gate(context_repr)  # [B, 1]
         
-        # 2. process ambas rutas en paralelo
+        # 2. Process both paths in parallel
         classical_output = self.classical_path(x)
         adaptive_result = self.adaptive_router(x, context_tokens, training=training)
         adaptive_output = adaptive_result["output"]
         
-        # 3. Soft routing basado en gate
+        # 3. Soft routing based on gate
         final_output = (
             activation_gate[..., None] * adaptive_output +
             (1 - activation_gate[..., None]) * classical_output
@@ -365,7 +365,7 @@ class ContextualRouterOptimized(nn.Module):
         }
 
 
-# Funciones de utilidad for tpu
+# Utility functions for TPU
 @partial(jax.pmap, axis_name='batch')
 def distributed_router_forward(
     router: ContextualRouterOptimized,
@@ -374,11 +374,11 @@ def distributed_router_forward(
     context_tokens: jnp.ndarray,
     training: bool = False
 ) -> Dict[str, jnp.ndarray]:
-    """Forward pass distribuido for tpu v4-32."""
+    """Distributed forward pass for TPU v4-32."""
     
     result = router.apply(params, x, context_tokens, training=training)
     
-    # synchronize métricas across devices
+    # Synchronize metrics across devices
     for key in result["adaptive_metrics"]:
         if isinstance(result["adaptive_metrics"][key], jnp.ndarray):
             result["adaptive_metrics"][key] = jax.lax.pmean(
@@ -393,7 +393,7 @@ def create_router_for_tpu_v4_32(
     num_virtual_qubits: int = 512,
     vocab_size: int = 50257
 ) -> ContextualRouterOptimized:
-    """Crea router optimizado for tpu v4-32."""
+    """Create optimized router for TPU v4-32."""
     
     return ContextualRouterOptimized(
         hidden_size=hidden_size,

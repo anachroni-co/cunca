@@ -30,21 +30,21 @@ class ModelRouter:
         self.request_history: List[Dict[str, Any]] = []
 
     async def route_request(self, request: ModelRequest) -> Dict[str, Any]:
-        """Enruta una solicitud a un model específico."""
+        """Route a request to a specific model."""
         try:
-            # verify versión
+            # Verify version
             if request.version is None:
                 request.version = await self.version_manager.get_active_version(request.model_id)
                 if request.version is None:
-                    raise ValueError(f"No hay versión activa para el modelo {request.model_id}")
+                    raise ValueError(f"No active version for model {request.model_id}")
 
-            # verify recursos
+            # Verify resources
             await self.resource_manager.update_usage(request.model_id)
 
-            # process solicitud
+            # Process request
             result = await self._process_request(request)
 
-            # Registrar en historial
+            # Record in history
             self.request_history.append({
                 "model_id": request.model_id,
                 "version": request.version,
@@ -55,7 +55,7 @@ class ModelRouter:
             return result
 
         except Exception as e:
-            logger.error(f"Error al procesar solicitud: {str(e)}")
+            logger.error(f"Error processing request: {str(e)}")
             self.request_history.append({
                 "model_id": request.model_id,
                 "version": request.version,
@@ -66,45 +66,45 @@ class ModelRouter:
             raise
 
     async def _process_request(self, request: ModelRequest) -> Dict[str, Any]:
-        """Procesa una solicitud de model."""
-        # here se implementaría la lógica real de procesamiento
-        # by now, simulamos una answer
-        await asyncio.sleep(0.1)  # Simular procesamiento
+        """Process a model request."""
+        # Here the actual processing logic would be implemented
+        # For now, we simulate a response
+        await asyncio.sleep(0.1)  # Simulate processing
         return {
             "status": "success",
             "model_id": request.model_id,
             "version": request.version,
-            "result": "Respuesta simulada"
+            "result": "Simulated response"
         }
 
     async def get_request_history(self, model_id: Optional[str] = None) -> List[Dict[str, Any]]:
-        """Obtiene el historial de solicitudes."""
+        """Get request history."""
         if model_id:
             return [req for req in self.request_history if req["model_id"] == model_id]
         return self.request_history
 
     async def get_active_requests(self) -> Dict[str, ModelRequest]:
-        """Obtiene las solicitudes activas."""
+        """Get active requests."""
         return self.active_requests
 
     async def cancel_request(self, request_id: str) -> None:
-        """Cancela una solicitud activa."""
+        """Cancel an active request."""
         if request_id in self.active_requests:
             del self.active_requests[request_id]
-            logger.info(f"Solicitud {request_id} cancelada")
+            logger.info(f"Request {request_id} cancelled")
 
     async def monitor_requests(self, interval: int = 60) -> None:
-        """Monitorea las solicitudes activas."""
+        """Monitor active requests."""
         while True:
             active_count = len(self.active_requests)
             if active_count > 0:
-                logger.info(f"Solicitudes activas: {active_count}")
+                logger.info(f"Active requests: {active_count}")
             
-            # verify timeouts
+            # Check timeouts
             current_time = datetime.now()
             for request_id, request in list(self.active_requests.items()):
                 if (current_time - request.timestamp).total_seconds() > request.timeout:
                     await self.cancel_request(request_id)
-                    logger.warning(f"Solicitud {request_id} cancelada por timeout")
+                    logger.warning(f"Request {request_id} cancelled due to timeout")
 
             await asyncio.sleep(interval)

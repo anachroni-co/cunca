@@ -142,8 +142,8 @@ class OptimizedMoodState(NamedTuple):
     empathy_level: float
     cultural_openness: float
     steps_in_mood: int
-    stability_score: float  # new: score de estabilidad
-    last_major_change: int  # new: timestamp del last change mayor
+    stability_score: float  # new: stability score
+    last_major_change: int  # new: timestamp of the last major change
 
 class WorkingMemoryEvent(NamedTuple):
     """Evento en working memory optimizado."""
@@ -297,11 +297,11 @@ class EnhancedMemorySystem:
         return jnp.zeros(3)
     
     def _get_semantic_influence(self, topic_type: str) -> jnp.ndarray:
-        """Calcula influencia de patrones semánticos."""
+        """Compute influence from semantic patterns."""
         if not self.semantic_patterns:
             return jnp.zeros(3)
         
-        # Filtrar patrones relevantes
+        # Filter relevant patterns
         relevant_patterns = {
             k: v for k, v in self.semantic_patterns.items()
             if topic_type.lower() in k.lower()
@@ -488,7 +488,7 @@ class SafetyMechanism(nn.Module):
         )
     
     def check_activation_safety(self, activations: Dict[str, float]) -> Tuple[bool, str]:
-        """Verifica if las activaciones están inside de límites seguros."""
+        """Verify if activations are within safe bounds."""
         values = jnp.array(list(activations.values()))
         
         # Check bounds
@@ -496,7 +496,7 @@ class SafetyMechanism(nn.Module):
         if jnp.any(values < lower_bound) or jnp.any(values > upper_bound):
             return False, "activation_bounds_violation"
         
-        # Check variance (estabilidad)
+        # Check variance (stability)
         variance = float(jnp.var(values))
         if variance > self.config.mood_stability_threshold:
             return False, "high_variance_warning"
@@ -538,17 +538,17 @@ class SafetyMechanism(nn.Module):
     
     @partial(jax.jit, static_argnums=(0,))
     def adaptive_mood_reset(self, mood_vector: jnp.ndarray, context_features: jnp.ndarray) -> jnp.ndarray:
-        """Reset adaptativo del estado de ánimo basado en contexto."""
+        """Adaptive mood reset based on context."""
         combined_features = jnp.concatenate([mood_vector, context_features])
         reset_factors = self.reset_controller(combined_features)
         
-        # Reset towards valores more estables
-        stable_mood = jnp.array([0.6, 0.6, 0.3, 0.7, 0.6, 0.6, 0.5])  # Valores estables by defect
+        # Reset towards more stable values
+        stable_mood = jnp.array([0.6, 0.6, 0.3, 0.7, 0.6, 0.6, 0.5])  # Default stable values
         
         return mood_vector * (1 - reset_factors * 0.3) + stable_mood * (reset_factors * 0.3)
     
     def update_safety_metrics(self, violation_type: str, severity: float):
-        """Actualiza métricas de seguridad."""
+        """Update safety metrics."""
         if violation_type == "activation_bounds_violation":
             self.safety_metrics = self.safety_metrics._replace(
                 bounds_violations=self.safety_metrics.bounds_violations + 1
@@ -769,25 +769,25 @@ class ProductionHumanGenderPersonality(nn.Module):
         )
 
     def __call__(self, x: jnp.ndarray, context: Optional[Dict] = None, training: bool = False) -> Dict[str, Any]:
-        """Forward pass optimizado and secure."""
+        """Optimized and secure forward pass."""
         start_time = time.time() if self.config.performance_monitoring else None
         
         try:
-            # 1. Pre-procesamiento secure
+            # 1. Secure pre-processing
             x = self._safe_preprocess(x)
             
-            # 2. analysis contextual with caché
+            # 2. Contextual analysis with cache
             cultural_context = self._get_cultural_context_cached(x)
             
-            # 3. analysis de input
+            # 3. Input analysis
             context_features = self._analyze_context(x, cultural_context)
             base_activations = jax.nn.softmax(context_features[:3])
             modifiers = jax.nn.sigmoid(context_features[3:])
             
-            # 4. Proyección de aspectos
+            # 4. Aspect projection
             aspect_features = self._project_aspects(x, training)
             
-            # 5. apply influencias de memory
+            # 5. Apply memory influences
             long_term_influence = self.memory_system.get_long_term_influence(
                 context.get('topic_type', 'general') if context else 'general'
             )
@@ -795,13 +795,13 @@ class ProductionHumanGenderPersonality(nn.Module):
             adjusted_activations = base_activations + long_term_influence * 0.2
             adjusted_activations = jax.nn.softmax(adjusted_activations)
             
-            # 6. combine aspectos
+            # 6. Combine aspects
             final_features = self._blend_aspects(aspect_features, adjusted_activations)
             
-            # 7. transformation end
+            # 7. Final transformation
             output_tensor = jnp.dot(final_features, self.output_transform)
             
-            # 8. verification de seguridad
+            # 8. Safety verification
             activations_dict = {
                 'masculine': float(adjusted_activations[0]),
                 'feminine': float(adjusted_activations[1]),
@@ -820,11 +820,11 @@ class ProductionHumanGenderPersonality(nn.Module):
                 }
                 self.safety_system.update_safety_metrics(safety_msg, 0.5)
             
-            # 9. update estados
+            # 9. Update states
             self._update_relationship_state(context, activations_dict)
             self._update_mood_state(context, activations_dict, modifiers)
             
-            # 10. add a memory
+            # 10. Add to memory
             if context:
                 self.memory_system.add_interaction(
                     features=jnp.mean(x, axis=(0, 1)),
