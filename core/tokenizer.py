@@ -252,8 +252,7 @@ class _WhitespaceTokenizer:
                 ids = ids + [self.vocab["<pad>"]] * pad_len
                 mask = [1] * min(len(tokens), max_length or len(tokens)) + [0] * pad_len
             elif padding == "longest":
-                # Adjusted after determining max length
-                pass
+                mask = [1] * len(ids)
             else:
                 mask = [1] * len(ids)
 

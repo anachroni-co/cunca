@@ -333,11 +333,6 @@ class MetricsCollector:
         out.update(self._last_non_numeric)
         return out
 
-    # Legacy alias methods with intentional typos for backward compatibility with tests
-    def get_stats(self, name: str) -> Dict[str, float]:  # pragma: no cover
-        """Legacy alias for get_stats with typo. Use get_stats() in new code."""
-        return self.get_stats(name)
-
     def get_all_stats(self) -> Dict[str, Dict[str, float]]:  # pragma: no cover
         """Legacy alias for getting all metric stats. Use get_all() in new code."""
         return {name: self.get_stats(name) for name in self.metrics}
