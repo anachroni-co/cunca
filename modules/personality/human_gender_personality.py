@@ -1,95 +1,95 @@
 """
-Módulo de Personalidad de Género Humano - VERSIÓN PRODUCTION-READY
-=================================================================
+Human Gender Personality Module - PRODUCTION-READY VERSION
+==========================================================
 
-La implementation more avanzada, segura and optimizada de expresión de género 
-auténticamente humana. list for uso en producción with:
+The most advanced, secure, and optimized implementation of authentically
+human gender expression. Ready for production use with:
 
-🚀 Rendimiento Optimizado: Caché inteligente + JIT compilado
-🛡️ Seguridad Robusta: Límites automáticos + reset suave
-🧠 memory Avanzada: Working memory + consolidación a largo plazo
-📊 Visualización: Debug tools + métricas en tiempo real
-⚡ API Simplificada: initialization automática + manejo de errores
+🚀 Optimized Performance: Intelligent cache + JIT compiled
+🛡️ Robust Safety: Automatic limits + soft reset
+🧠 Advanced Memory: Working memory + long-term consolidation
+📊 Visualization: Debug tools + real-time metrics
+⚡ Simplified API: Automatic initialization + error handling
 """
 
 import os
-import os
 from functools import partial
-from collections import ng import Dict, Any, Optional, Tuple, NamedTuple, List, Union
+from typing import Dict, Any, Optional, Tuple, NamedTuple, List, Union
 
-# setup de rutas for capibara
+# Path setup for capibara
 script_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(script_dir)
 if project_root not in sys.path:
     # Fixed: Using proper imports instead of sys.path manipulation
+    pass
 
-# Imports de capibara nativo
+# Native capibara imports
 from flax import linen as nn
 from capibara.jax import numpy as jnp
 
 logger = logging.getLogger(__name__)
 
-# ==================== setup PRODUCTION-READY ====================
+# ==================== PRODUCTION-READY SETUP ====================
 
 @dataclass
 class ProductionHumanGenderConfig:
-    """setup production-ready with optimizaciones and seguridad."""
+    """Production-ready setup with optimizations and safety."""
     
-    # Parámetros base
+    # Base parameters
     hidden_size: int = 256
     dropout_rate: float = 0.1
     blend_temperature: float = 0.6
     
-    # Control de humanidad
+    # Humanity control
     emotional_volatility: float = 0.3
     contradiction_tolerance: float = 0.4
     familiarity_adaptation: float = 0.5
     microexpression_intensity: float = 0.2
     
-    # Estados emocionales
+    # Emotional states
     mood_persistence: int = 8
     stress_sensitivity: float = 0.4
     comfort_threshold: float = 0.6
     
-    # memory optimizada
+    # Optimized memory
     working_memory_size: int = 5
     episodic_memory_size: int = 15
     long_term_consolidation_rate: float = 0.1
     memory_consolidation_frequency: int = 10
     
-    # Aprendizaje adaptativo
+    # Adaptive learning
     adaptation_rate: float = 0.05
     volatility_learning_rate: float = 0.02
     sensitivity_learning_rate: float = 0.03
     
-    # synchronization emocional
+    # Emotional synchronization
     empathy_strength: float = 0.4
     mirroring_intensity: float = 0.3
     emotional_inertia: float = 0.7
     
-    # Cultural optimizado
+    # Optimized cultural
     cultural_sensitivity: float = 0.3
     cultural_adaptation_speed: float = 0.1
     cultural_cache_size: int = 100
     
-    # Seguridad and límites
+    # Safety and limits
     safety_bounds: Tuple[float, float] = (0.15, 0.85)
     activation_clip_range: Tuple[float, float] = (-3.0, 3.0)
     mood_stability_threshold: float = 0.2
     emergency_reset_threshold: float = 0.95
     
-    # Optimizaciones de rendimiento
+    # Performance optimizations
     cache_enabled: bool = True
     batch_processing: bool = True
     jit_compilation: bool = True
     memory_efficient_mode: bool = True
     
-    # Debug and visualización
+    # Debug and visualization
     debug_visualization: bool = False
     metrics_collection: bool = True
     performance_monitoring: bool = True
     
-    # Temas sensibles (optimizados)
+    # Sensitive topics (optimized)
     sensitive_topics: List[str] = field(default_factory=lambda: [
         "gender", "feminism", "masculinity", "relationships", 
         "parenting", "career", "appearance", "emotions",
@@ -99,7 +99,7 @@ class ProductionHumanGenderConfig:
     
     @classmethod
     def for_production(cls):
-        """setup optimizada for producción."""
+        """Optimized setup for production."""
         return cls(
             cache_enabled=True,
             debug_visualization=False,
@@ -110,7 +110,7 @@ class ProductionHumanGenderConfig:
     
     @classmethod
     def for_development(cls):
-        """setup for development e research."""
+        """Setup for development and research."""
         return cls(
             debug_visualization=True,
             working_memory_size=10,
@@ -121,7 +121,7 @@ class ProductionHumanGenderConfig:
     
     @classmethod
     def for_maximum_safety(cls):
-        """setup with máxima seguridad."""
+        """Setup with maximum safety."""
         return cls(
             safety_bounds=(0.3, 0.7),
             emotional_volatility=0.2,
@@ -130,10 +130,10 @@ class ProductionHumanGenderConfig:
             mood_stability_threshold=0.15
         ) 
 
-# ==================== ESTADOS and ESTRUCTURAS ====================
+# ==================== STATES AND STRUCTURES ====================
 
 class OptimizedMoodState(NamedTuple):
-    """Estado emocional optimizado for performance."""
+    """Optimized emotional state for performance."""
     energy_level: float
     openness: float
     defensiveness: float
@@ -146,7 +146,7 @@ class OptimizedMoodState(NamedTuple):
     last_major_change: int  # new: timestamp of the last major change
 
 class WorkingMemoryEvent(NamedTuple):
-    """Evento en working memory optimizado."""
+    """Optimized working memory event."""
     features: jnp.ndarray
     description: str
     intensity: float
@@ -154,40 +154,40 @@ class WorkingMemoryEvent(NamedTuple):
     importance_score: float
 
 class SafetyMetrics(NamedTuple):
-    """Métricas de seguridad."""
+    """Safety metrics."""
     bounds_violations: int
     stability_warnings: int
     emergency_resets: int
     avg_activation_variance: float
 
-# ==================== SISTEMA DE memory MEJORADO ====================
+# ==================== ENHANCED MEMORY SYSTEM ====================
 
 class EnhancedMemorySystem:
-    """Sistema de memory jerárquico optimizado."""
+    """Optimized hierarchical memory system."""
     
     def __init__(self, config: ProductionHumanGenderConfig):
         self.config = config
         
-        # Working memory (corto plazo)
+        # Working memory (short term)
         self.working_memory = WorkingMemory(
             max_size=config.working_memory_size,
             decay_rate=0.1
         )
         
-        # memory episódica (middle plazo)
+        # Episodic memory (medium term)
         self.episodic_events = []
         self.episodic_importance = []
         
-        # memory semántica (largo plazo)
+        # Semantic memory (long term)
         self.semantic_patterns = defaultdict(float)
         
-        # Contadores and métricas
+        # Counters and metrics
         self.consolidation_counter = 0
         self.total_events_processed = 0
         
     def add_interaction(self, features: jnp.ndarray, context: Dict[str, Any],
                        activations: Dict[str, float], intensity: float):
-        """Añade interacción a memory with consolidación inteligente."""
+        """Adds interaction to memory with intelligent consolidation."""
         # 1. add a working memory
         event = WorkingMemoryEvent(
             features=features,
@@ -198,27 +198,27 @@ class EnhancedMemorySystem:
         )
         self.working_memory.add_event(event)
         
-        # 2. Consolidación episódica
+        # 2. Episodic consolidation
         self.consolidation_counter += 1
         if self.consolidation_counter >= self.config.memory_consolidation_frequency:
             self._consolidate_to_episodic()
             self.consolidation_counter = 0
         
-        # 3. update semántica
-        if intensity > 0.5:  # only patrones significativos
+        # 3. Semantic update
+        if intensity > 0.5:  # only significant patterns
             pattern_key = self._extract_pattern_key(context, activations)
             self.semantic_patterns[pattern_key] += intensity * 0.1
         
         self.total_events_processed += 1
     
     def get_long_term_influence(self, topic_type: str) -> jnp.ndarray:
-        """Obtiene influencia de memory a largo plazo."""
-        # combine influencias de diferentes niveles
+        """Gets long-term memory influence."""
+        # Combine influences from different levels
         working_influence = self.working_memory.get_current_influence()
         episodic_influence = self._get_episodic_influence(topic_type)
         semantic_influence = self._get_semantic_influence(topic_type)
         
-        # Pesos de combinación
+        # Combination weights
         w_working = 0.5
         w_episodic = 0.3
         w_semantic = 0.2
@@ -237,10 +237,10 @@ class EnhancedMemorySystem:
     
     def _compute_importance(self, context: Dict[str, Any], 
                           activations: Dict[str, float]) -> float:
-        """Calcula importancia del evento for memory."""
+        """Computes event importance for memory."""
         base_importance = context.get('emotional_intensity', 0.3)
         
-        # Factores de importancia
+        # Importance factors
         activation_strength = max(activations.values())
         topic_relevance = 1.0 if context.get('topic_type') in ['gender', 'identity'] else 0.5
         emotional_impact = context.get('emotional_impact', 0.3)
@@ -255,12 +255,12 @@ class EnhancedMemorySystem:
         return float(importance)
     
     def _consolidate_to_episodic(self):
-        """Consolida eventos de working memory a episódica."""
+        """Consolidates events from working memory to episodic."""
         events = self.working_memory.get_important_events(threshold=0.6)
         
         for event in events:
             if len(self.episodic_events) >= self.config.episodic_memory_size:
-                # Reemplazar evento except important
+                # Replace least important event
                 min_idx = jnp.argmin(jnp.array(self.episodic_importance))
                 if event.importance_score > self.episodic_importance[min_idx]:
                     self.episodic_events[min_idx] = event
@@ -270,7 +270,7 @@ class EnhancedMemorySystem:
                 self.episodic_importance.append(event.importance_score)
     
     def _get_episodic_influence(self, topic_type: str) -> jnp.ndarray:
-        """Calcula influencia de memory episódica."""
+        """Computes episodic memory influence."""
         if not self.episodic_events:
             return jnp.zeros(3)
         
@@ -282,10 +282,10 @@ class EnhancedMemorySystem:
         if not relevant_events:
             return jnp.zeros(3)
         
-        # average ponderado by importancia
+        # Weighted average by importance
         total_influence = jnp.zeros(3)
         total_weight = 0.0
-        
+
         for event, importance in zip(relevant_events, self.episodic_importance):
             decay = math.exp(-0.1 * (self.total_events_processed - event.timestamp))
             weight = importance * decay
@@ -310,7 +310,7 @@ class EnhancedMemorySystem:
         if not relevant_patterns:
             return jnp.zeros(3)
         
-        # average ponderado by fuerza del pattern
+        # Weighted average by pattern strength
         total_influence = jnp.zeros(3)
         total_weight = 0.0
         
@@ -325,7 +325,7 @@ class EnhancedMemorySystem:
     
     def _extract_pattern_key(self, context: Dict[str, Any], 
                            activations: Dict[str, float]) -> str:
-        """Extrae key de pattern for memory semántica."""
+        """Extracts pattern key for semantic memory."""
         topic = context.get('topic_type', 'general').lower()
         dominant_aspect = max(activations.items(), key=lambda x: x[1])[0]
         intensity = context.get('emotional_intensity', 0.3)
@@ -333,7 +333,7 @@ class EnhancedMemorySystem:
         return f"{topic}_{dominant_aspect}_{intensity:.1f}"
     
     def _pattern_to_vector(self, pattern_key: str) -> jnp.ndarray:
-        """Convierte pattern semántico a vector de activation."""
+        """Converts semantic pattern to activation vector."""
         parts = pattern_key.split('_')
         if len(parts) != 3:
             return jnp.array([0.33, 0.33, 0.34])
@@ -349,7 +349,7 @@ class EnhancedMemorySystem:
             return jnp.array([0.2, 0.2, 0.6]) * intensity
 
 class WorkingMemory:
-    """memory de job optimizada with decay automático."""
+    """Optimized working memory with automatic decay."""
     
     def __init__(self, max_size: int = 5, decay_rate: float = 0.1):
         self.events = []
@@ -357,9 +357,9 @@ class WorkingMemory:
         self.decay_rate = decay_rate
     
     def add_event(self, event: WorkingMemoryEvent):
-        """Añade evento with manejo automático de capacidad."""
+        """Adds event with automatic capacity management."""
         if len(self.events) >= self.max_size:
-            # eliminate evento except important
+            # Remove least important event
             min_idx = min(range(len(self.events)), 
                         key=lambda i: self.events[i].importance_score)
             self.events.pop(min_idx)
@@ -367,12 +367,12 @@ class WorkingMemory:
         self.events.append(event)
     
     def get_important_events(self, threshold: float = 0.5) -> List[WorkingMemoryEvent]:
-        """Obtiene eventos importantes for consolidación."""
+        """Gets important events for consolidation."""
         return [event for event in self.events 
                 if event.importance_score > threshold]
     
     def get_current_influence(self) -> jnp.ndarray:
-        """Calcula influencia current de working memory."""
+        """Computes current working memory influence."""
         if not self.events:
             return jnp.zeros(3)
         
@@ -380,7 +380,7 @@ class WorkingMemory:
         total_weight = 0.0
         
         for event in self.events:
-            # Decay exponencial
+            # Exponential decay
             age = len(self.events) - self.events.index(event)
             decay = math.exp(-self.decay_rate * age)
             
@@ -392,10 +392,10 @@ class WorkingMemory:
             return total_influence / total_weight
         return jnp.zeros(3)
 
-# ==================== CACHÉ CULTURAL INTELIGENTE ====================
+# ==================== INTELLIGENT CULTURAL CACHE ====================
 
 class CulturalCache:
-    """Caché inteligente for cálculos culturales recurrentes."""
+    """Intelligent cache for recurring cultural computations."""
     
     def __init__(self, max_size: int = 100):
         self.cache = {}
@@ -405,13 +405,13 @@ class CulturalCache:
         self.misses = 0
         
     def _compute_hash(self, x: jnp.ndarray) -> str:
-        """Computa hash estable for features de input."""
-        # use quantización for increase hit rate
-        quantized = jnp.round(x.flatten()[:20] * 10) / 10  # Redondear a 1 decimal
+        """Computes stable hash for input features."""
+        # Use quantization to increase hit rate
+        quantized = jnp.round(x.flatten()[:20] * 10) / 10  # Round to 1 decimal
         return str(hash(tuple(quantized.tolist())))
     
     def get_cultural_context(self, x: jnp.ndarray, compute_fn: callable) -> jnp.ndarray:
-        """Obtiene contexto cultural with caché inteligente."""
+        """Gets cultural context with intelligent cache."""
         cache_key = self._compute_hash(x)
         
         if cache_key in self.cache:
@@ -423,7 +423,7 @@ class CulturalCache:
         self.misses += 1
         context = compute_fn(x)
         
-        # add al caché
+        # Add to cache
         if len(self.cache) >= self.max_size:
             self._evict_least_frequent()
         

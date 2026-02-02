@@ -1,6 +1,6 @@
 """
-Módulo unificado de consensus distilling and estrategias.
-Fusiona la funcionalidad de consensus_destiling.py and consensus_strategies.py
+Unified module for consensus distilling and strategies.
+Merges the functionality of consensus_destiling.py and consensus_strategies.py
 """
 
 import os
@@ -60,83 +60,83 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
-# Sistema Integrado Capibara
-# Combina tu implementation existente with el entrenamiento tpu refinado
+# Integrated Capibara System
+# Combines existing implementation with refined TPU training
 #
-# architecture:
-# 1. CapibaraConsensusDistiller (tu implementation)
-# 2. CapibaraRefiner (tu implementation)  
-# 3. RefinedCapibaraTrainer (optimizado for tpu)
-# 4. integration completa with W&B, caching and métricas
+# Architecture:
+# 1. CapibaraConsensusDistiller (existing implementation)
+# 2. CapibaraRefiner (existing implementation)
+# 3. RefinedCapibaraTrainer (optimized for TPU)
+# 4. Full integration with W&B, caching, and metrics
 
 # Additional imports with fallbacks
 try:
     from .voting import CapibaraVotingSystem
 except ImportError:
     class CapibaraVotingSystem:
-        """Sistema de votación fallback for consensus learning."""
+        """Fallback voting system for consensus learning."""
         def __init__(self, *args, **kwargs):
             self.consensus_threshold = kwargs.get('consensus_threshold', 0.8)
             self.voting_strategies = ['majority', 'weighted', 'confidence']
-            logger.warning("Usando CapibaraVotingSystem fallback")
-        
+            logger.warning("Using CapibaraVotingSystem fallback")
+
         def vote(self, predictions, weights=None):
-            """implementation básica de votación."""
+            """Basic voting implementation."""
             if not predictions:
                 return None
-            return predictions[0]  # Retorna primera prediction how fallback
+            return predictions[0]  # Return first prediction as fallback
 
 try:
     from .capibara_refinement import CapibaraRefiner, RefinerModel
 except ImportError:
     class CapibaraRefiner:
-        """Refinador fallback for improve predicciones."""
+        """Fallback refiner for improving predictions."""
         def __init__(self, *args, **kwargs):
             self.refinement_steps = kwargs.get('refinement_steps', 3)
             self.improvement_threshold = kwargs.get('improvement_threshold', 0.05)
-            logger.warning("Usando CapibaraRefiner fallback")
-            
+            logger.warning("Using CapibaraRefiner fallback")
+
         def refine(self, prediction, context=None):
-            """implementation básica de refinamiento."""
-            return prediction  # without refinamiento en fallback
+            """Basic refinement implementation."""
+            return prediction  # No refinement in fallback
             
     class RefinerModel:
-        """model refinador fallback."""
+        """Fallback refiner model."""
         def __init__(self, *args, **kwargs):
             self.model_type = "fallback_refiner"
-            logger.warning("Usando RefinerModel fallback")
-            
+            logger.warning("Using RefinerModel fallback")
+
         def __call__(self, inputs):
-            return inputs  # without procesamiento en fallback
+            return inputs  # No processing in fallback
 
 try:
     from .capibara_trainer import CapibaraConsensusDistiller, TeacherModel
 except ImportError:
     class CapibaraConsensusDistiller:
-        """Destilador de consensus fallback."""
+        """Fallback consensus distiller."""
         def __init__(self, *args, **kwargs):
             self.distillation_temp = kwargs.get('distillation_temp', 3.0)
             self.consensus_weight = kwargs.get('consensus_weight', 0.7)
-            logger.warning("Usando CapibaraConsensusDistiller fallback")
-            
+            logger.warning("Using CapibaraConsensusDistiller fallback")
+
         def distill(self, teacher_outputs, student_outputs):
-            """implementation básica de destilación."""
-            return student_outputs  # without destilación en fallback
+            """Basic distillation implementation."""
+            return student_outputs  # No distillation in fallback
             
     class TeacherModel:
-        """model teacher fallback."""
+        """Fallback teacher model."""
         def __init__(self, *args, **kwargs):
             self.knowledge_base = {}
             self.teaching_strategies = ['direct', 'guided', 'discovery']
-            logger.warning("Usando TeacherModel fallback")
-            
+            logger.warning("Using TeacherModel fallback")
+
         def teach(self, student_input):
-            """Enseñanza básica fallback."""
+            """Basic teaching fallback."""
             return {"guidance": "basic_feedback", "confidence": 0.5}
 
 @dataclass
 class IntegratedTrainingConfig:
-    """setup integrada que combina todos los componentes."""
+    """Integrated configuration that combines all components."""
     
     # Model scale progression
     model_scales: List[str] = field(default_factory=lambda: [
@@ -258,7 +258,7 @@ class IntegratedTrainingConfig:
     checkpoint_every: int = 5000
 
 class EnhancedConsensusDistiller(CapibaraConsensusDistiller):
-    """Versión mejorada de tu CapibaraConsensusDistiller with integration tpu."""
+    """Enhanced version of CapibaraConsensusDistiller with TPU integration."""
     
     def __init__(
         self,
@@ -267,7 +267,7 @@ class EnhancedConsensusDistiller(CapibaraConsensusDistiller):
         config: IntegratedTrainingConfig,
         **kwargs
     ):
-        # setup específica de fase
+        # Phase-specific configuration
         phase_config = config.dataset_configs[phase_name]
         
         super().__init__(
@@ -281,7 +281,7 @@ class EnhancedConsensusDistiller(CapibaraConsensusDistiller):
         self.quality_threshold = phase_config["quality_threshold"]
         self.batch_size = phase_config["batch_size"]
         
-        # Métricas extendidas
+        # Extended metrics
         self.phase_metrics = {
             "total_samples_generated": 0,
             "high_quality_samples": 0,
@@ -295,9 +295,9 @@ class EnhancedConsensusDistiller(CapibaraConsensusDistiller):
         prompts: List[str],
         target_size: int
     ) -> Dict[str, Any]:
-        """Genera dataset mejorado with métricas and filtrado de calidad."""
-        
-        logger.info(f"🎯 Generando dataset {self.phase_name} - Target: {target_size:,} samples")
+        """Generate enhanced dataset with metrics and quality filtering."""
+
+        logger.info(f"Generating dataset {self.phase_name} - Target: {target_size:,} samples")
         
         high_quality_samples = []
         all_samples = []
@@ -306,7 +306,7 @@ class EnhancedConsensusDistiller(CapibaraConsensusDistiller):
         
         start_time = time.time()
         
-        # process en batches
+        # Process in batches
         for i in range(0, min(len(prompts), target_size), self.batch_size):
             batch_prompts = prompts[i:i + self.batch_size]
             
@@ -314,33 +314,33 @@ class EnhancedConsensusDistiller(CapibaraConsensusDistiller):
             batch_start = time.time()
             
             for prompt in batch_prompts:
-                # verify cache
+                # Check cache
                 cache_key = self._get_cache_key(0, prompt)  # Use first teacher for cache key
                 if self._load_from_cache(cache_key):
                     cache_hits += 1
                 
-                # generate sample with consenso
+                # Generate sample with consensus
                 sample = self.create_training_pair(prompt)
                 
                 all_samples.append(sample)
                 
-                # Filtrar by calidad
+                # Filter by quality
                 if sample["quality"] >= self.quality_threshold:
                     high_quality_samples.append(sample)
                     
-                    # stop if alcanzamos el target
+                    # Stop if we reached the target
                     if len(high_quality_samples) >= target_size:
                         break
             
             batch_time = time.time() - batch_start
             total_teacher_time += batch_time
             
-            # Log progreso
+            # Log progress
             if i % (self.batch_size * 10) == 0:
                 progress = len(high_quality_samples) / target_size * 100
                 logger.info(
-                    f"📊 Progreso: {progress:.1f}% - "
-                    f"Calidad: {len(high_quality_samples)}/{len(all_samples)} "
+                    f"Progress: {progress:.1f}% - "
+                    f"Quality: {len(high_quality_samples)}/{len(all_samples)} "
                     f"({len(high_quality_samples)/max(len(all_samples), 1):.2%})"
                 )
             
@@ -349,7 +349,7 @@ class EnhancedConsensusDistiller(CapibaraConsensusDistiller):
         
         total_time = time.time() - start_time
         
-        # update métricas
+        # Update metrics
         self.phase_metrics.update({
             "total_samples_generated": len(all_samples),
             "high_quality_samples": len(high_quality_samples),
@@ -359,7 +359,7 @@ class EnhancedConsensusDistiller(CapibaraConsensusDistiller):
             "generation_time_minutes": total_time / 60
         })
         
-        # Tokenizar samples finales
+        # Tokenize final samples
         tokenized_dataset = self.tokenizer(
             [s["input"] for s in high_quality_samples],
             text_target=[s["output"] for s in high_quality_samples],
@@ -371,7 +371,7 @@ class EnhancedConsensusDistiller(CapibaraConsensusDistiller):
         
         tokenized_dataset["quality_scores"] = np.array([s["quality"] for s in high_quality_samples])
         
-        logger.info(f"✅ Dataset {self.phase_name} generado: {len(high_quality_samples):,} samples")
+        logger.info(f"Dataset {self.phase_name} generated: {len(high_quality_samples):,} samples")
         
         return {
             "dataset": tokenized_dataset,
@@ -380,7 +380,7 @@ class EnhancedConsensusDistiller(CapibaraConsensusDistiller):
         }
 
 class EnhancedRefiner(CapibaraRefiner):
-    """Versión mejorada de tu CapibaraRefiner with métricas and caching."""
+    """Enhanced version of CapibaraRefiner with metrics and caching."""
     
     def __init__(
         self,
@@ -399,10 +399,10 @@ class EnhancedRefiner(CapibaraRefiner):
         self.config = config
         self.cache_dir = f"{config.cache_dir}/refinement_cache/{phase_name}"
         
-        # create directory de cache
+        # Create cache directory
         os.makedirs(self.cache_dir, exist_ok=True)
         
-        # Métricas de refinamiento
+        # Refinement metrics
         self.refinement_metrics = {
             "total_refinements": 0,
             "successful_refinements": 0,
@@ -411,12 +411,12 @@ class EnhancedRefiner(CapibaraRefiner):
         }
     
     def _get_refinement_cache_key(self, prompt: str, base_code: str) -> str:
-        """Genera key de cache for refinamiento."""
+        """Generate cache key for refinement."""
         combined = f"{prompt}|||{base_code}"
         return hashlib.sha256(combined.encode()).hexdigest()
     
     def _load_refinement_cache(self, cache_key: str) -> Optional[str]:
-        """load refinamiento since cache."""
+        """Load refinement from cache."""
         cache_path = os.path.join(self.cache_dir, f"{cache_key}.json")
         if os.path.exists(cache_path):
             try:
@@ -428,7 +428,7 @@ class EnhancedRefiner(CapibaraRefiner):
         return None
     
     def _save_refinement_cache(self, cache_key: str, refined_code: str, iterations: int):
-        """Guarda refinamiento en cache."""
+        """Save refinement to cache."""
         cache_path = os.path.join(self.cache_dir, f"{cache_key}.json")
         with open(cache_path, 'w') as f:
             json.dump({
@@ -442,16 +442,16 @@ class EnhancedRefiner(CapibaraRefiner):
         prompt: str, 
         base_code: str
     ) -> Tuple[str, Dict[str, Any]]:
-        """Loop de refinamiento mejorado with cache and métricas."""
-        
-        # verify cache
+        """Enhanced refinement loop with caching and metrics."""
+
+        # Check cache
         cache_key = self._get_refinement_cache_key(prompt, base_code)
         cached_result = self._load_refinement_cache(cache_key)
         
         if cached_result:
             return cached_result, {"iterations": 0, "cached": True}
         
-        # execute refinamiento
+        # Execute refinement
         start_time = time.time()
         current = base_code
         iterations_used = 0
@@ -460,20 +460,20 @@ class EnhancedRefiner(CapibaraRefiner):
         for iteration in range(self.max_iterations):
             refinements = self.generate_refinements(prompt, current)
             
-            # Filtrar refinamientos with diferencias sustanciales
+            # Filter refinements with substantial differences
             filtered = [r for r in refinements if self.is_substantially_different(current, r)]
             
             if not filtered:
                 logger.debug(f"[Refiner] No further improvements at iteration {iteration}")
                 break
             
-            # Scoring de refinamientos (placeholder - reemplazar with model real)
+            # Score refinements (placeholder - replace with real model)
             scored_refinements = []
             for refinement in filtered:
                 score = self._score_refinement(prompt, current, refinement)
                 scored_refinements.append((refinement, score))
             
-            # select better refinamiento
+            # Select best refinement
             if scored_refinements:
                 best_refinement, best_score = max(scored_refinements, key=lambda x: x[1])
                 
@@ -490,10 +490,10 @@ class EnhancedRefiner(CapibaraRefiner):
         
         refinement_time = time.time() - start_time
         
-        # save en cache
+        # Save to cache
         self._save_refinement_cache(cache_key, current, iterations_used)
         
-        # update métricas
+        # Update metrics
         self.refinement_metrics["total_refinements"] += 1
         if iterations_used > 0:
             self.refinement_metrics["successful_refinements"] += 1
@@ -520,30 +520,30 @@ class EnhancedRefiner(CapibaraRefiner):
         return current, metadata
     
     def _score_refinement(self, prompt: str, original: str, refinement: str) -> float:
-        """Scoring de calidad de refinamiento (placeholder)."""
-        
-        # Factores simples (reemplazar with model de scoring real)
+        """Refinement quality scoring (placeholder)."""
+
+        # Simple factors (replace with real scoring model)
         length_improvement = len(refinement) / max(len(original), 1)
         
-        # Penalizar cambios excesivos
+        # Penalize excessive changes
         if length_improvement > 2.0 or length_improvement < 0.5:
             return 0.2
         
-        # Recompensar complejidad moderada
+        # Reward moderate complexity
         complexity_score = min(1.0, len(refinement.split('\n')) / 10.0)
         
-        # Score combinado
+        # Combined score
         return (length_improvement * 0.3 + complexity_score * 0.7) * np.random.uniform(0.8, 1.0)
 
 class IntegratedCapibaraTrainer:
-    """Trainer integrado que combina todos los componentes."""
+    """Integrated trainer that combines all components."""
     
     def __init__(self, config: IntegratedTrainingConfig):
         self.config = config
         self.current_phase = None
         self.phase_results = {}
         
-        # Inicializar W&B
+        # Initialize W&B
         if jax.process_index() == 0:
             wandb.init(
                 project=config.wandb_project,
@@ -556,21 +556,21 @@ class IntegratedCapibaraTrainer:
         target_scale: str = "1T",
         resume_from: Optional[str] = None
     ) -> Dict[str, Any]:
-        """Ejecuta entrenamiento integrado complete."""
-        
-        logger.info(f"🚀 Iniciando Integrated Capibara Training hacia {target_scale}")
+        """Execute complete integrated training."""
+
+        logger.info(f"Starting Integrated Capibara Training towards {target_scale}")
         
         start_time = datetime.now()
         
-        # determine fases a execute
+        # Determine phases to execute
         phases = self._get_phases_for_target(target_scale)
         
         previous_models = None
         
         for phase_name in phases:
-            logger.info(f"\n🔄 Ejecutando {phase_name}")
-            
-            # execute fase integrada
+            logger.info(f"\nExecuting {phase_name}")
+
+            # Execute integrated phase
             phase_result = await self._execute_integrated_phase(
                 phase_name, previous_models
             )
@@ -578,16 +578,16 @@ class IntegratedCapibaraTrainer:
             self.phase_results[phase_name] = phase_result
             previous_models = phase_result.get("trained_models")
             
-            # Log a W&B
+            # Log to W&B
             if jax.process_index() == 0:
                 self._log_phase_to_wandb(phase_name, phase_result)
         
         total_time = datetime.now() - start_time
         
-        # analysis end
+        # Final analysis
         final_analysis = self._analyze_integrated_training()
         
-        logger.info(f"🎉 Integrated Training completado en {total_time}")
+        logger.info(f"Integrated Training completed in {total_time}")
         
         return {
             "phase_results": self.phase_results,
@@ -600,7 +600,7 @@ class IntegratedCapibaraTrainer:
         phase_name: str, 
         previous_models: Optional[List] = None
     ) -> Dict[str, Any]:
-        """Ejecuta una fase integrada completa."""
+        """Execute a complete integrated phase."""
         
         phase_start = datetime.now()
         
@@ -608,7 +608,7 @@ class IntegratedCapibaraTrainer:
         teachers = await self._setup_teachers(phase_name)
         refiners = await self._setup_refiners(phase_name)
         
-        # 2. create distiller and refiner
+        # 2. Create distiller and refiner
         distiller = EnhancedConsensusDistiller(
             teacher_models=teachers,
             phase_name=phase_name,
@@ -621,7 +621,7 @@ class IntegratedCapibaraTrainer:
             config=self.config
         )
         
-        # 3. create sistema de votación
+        # 3. Create voting system
         voting_config = self.config.voting_configs[phase_name]
         voting_system = CapibaraVotingSystem(**voting_config)
         

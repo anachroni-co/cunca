@@ -3,16 +3,16 @@
 🖨️ CAPIBARA TEXT-TO-PRINT3D SERVICE
 ===================================
 
-Servicio principal para la generación de modelos 3D optimizados para impresión 3D
-a partir de descripciones en lenguaje natural.
+Main service for generating 3D models optimized for 3D printing
+from natural language descriptions.
 
-Soporta:
-- Tecnologías: FDM, SLA, SLS, Multi-Jet Fusion
-- Materiales: PLA, ABS, PETG, Resina, Nylon, TPU
-- Formatos: STL, OBJ, 3MF, AMF
-- Optimización automática para impresión
-- Generación de soportes inteligentes
-- Cálculo de tiempo y costos
+Supports:
+- Technologies: FDM, SLA, SLS, Multi-Jet Fusion
+- Materials: PLA, ABS, PETG, Resin, Nylon, TPU
+- Formats: STL, OBJ, 3MF, AMF
+- Automatic print optimization
+- Intelligent support generation
+- Time and cost calculation
 """
 
 import os
@@ -28,7 +28,7 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any, Union, Tuple
 from pathlib import Path
 
-# Configurar logging
+# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -41,7 +41,7 @@ except ImportError:
     logger.warning("⚠️ NumPy not available, using basic STL generation")
 
 class PrintTechnology(Enum):
-    """Tecnologías de impresión 3D soportadas"""
+    """Supported 3D printing technologies"""
     FDM = "fdm"                    # Fused Deposition Modeling
     SLA = "sla"                    # Stereolithography
     SLS = "sls"                    # Selective Laser Sintering
@@ -50,7 +50,7 @@ class PrintTechnology(Enum):
     BINDER_JETTING = "binder_jet"  # Binder Jetting
 
 class MaterialType(Enum):
-    """Tipos de materiales para impresión 3D"""
+    """Material types for 3D printing"""
     PLA = "pla"                    # Polylactic Acid (FDM)
     ABS = "abs"                    # Acrylonitrile Butadiene Styrene (FDM)
     PETG = "petg"                  # Polyethylene Terephthalate Glycol (FDM)
@@ -63,15 +63,15 @@ class MaterialType(Enum):
     CERAMIC = "ceramic"            # Ceramic (Binder Jetting)
 
 class PrintQuality(Enum):
-    """Calidades de impresión"""
-    DRAFT = "draft"                # 0.3mm+ layer height, rápido
-    STANDARD = "standard"          # 0.2mm layer height, equilibrado
-    HIGH = "high"                  # 0.1mm layer height, detallado
-    ULTRA = "ultra"                # 0.05mm layer height, máximo detalle
+    """Print qualities"""
+    DRAFT = "draft"                # 0.3mm+ layer height, fast
+    STANDARD = "standard"          # 0.2mm layer height, balanced
+    HIGH = "high"                  # 0.1mm layer height, detailed
+    ULTRA = "ultra"                # 0.05mm layer height, maximum detail
 
 @dataclass
 class Print3DGenerationConfig:
-    """Configuración para generación de modelos Print3D"""
+    """Configuration for Print3D model generation"""
     # General settings
     output_directory: str = "./generated_print3d"
     default_technology: PrintTechnology = PrintTechnology.FDM
@@ -132,7 +132,7 @@ class Print3DGenerationConfig:
 
 @dataclass
 class Print3DRequest:
-    """Request para generación de modelos Print3D"""
+    """Request for Print3D model generation"""
     description: str
     technology: PrintTechnology = PrintTechnology.FDM
     material: MaterialType = MaterialType.PLA
@@ -147,7 +147,7 @@ class Print3DRequest:
 
 @dataclass
 class Print3DResult:
-    """Resultado de generación de modelos Print3D"""
+    """Print3D model generation result"""
     success: bool
     stl_file_path: Optional[str] = None
     obj_file_path: Optional[str] = None
@@ -207,7 +207,7 @@ except ImportError:
     OPTIMIZER_AVAILABLE = False
 
 class Print3DDescriptionParser:
-    """Parser para extraer especificaciones de impresión 3D desde descripciones naturales"""
+    """Parser to extract 3D printing specifications from natural language descriptions"""
     
     def __init__(self):
         self.object_keywords = {
@@ -242,31 +242,31 @@ class Print3DDescriptionParser:
         }
     
     def parse_description(self, description: str) -> Dict[str, Any]:
-        """Extrae especificaciones de impresión 3D desde la descripción"""
+        """Extract 3D printing specifications from the description"""
         description_lower = description.lower()
         
-        # Detectar tipo de objeto
+        # Detect object type
         object_type = "general"
         for obj_type, keywords in self.object_keywords.items():
             if any(keyword in description_lower for keyword in keywords):
                 object_type = obj_type
                 break
         
-        # Detectar complejidad
+        # Detect complexity
         complexity = "medium"
         for comp_level, keywords in self.complexity_keywords.items():
             if any(keyword in description_lower for keyword in keywords):
                 complexity = comp_level
                 break
         
-        # Detectar tecnología preferida
+        # Detect preferred technology
         detected_tech = PrintTechnology.FDM  # Default
         for tech, keywords in self.technology_keywords.items():
             if any(keyword in description_lower for keyword in keywords):
                 detected_tech = tech
                 break
         
-        # Detectar material preferido
+        # Detect preferred material
         detected_material = MaterialType.PLA  # Default
         for material, keywords in self.material_keywords.items():
             if any(keyword in description_lower for keyword in keywords):
@@ -435,24 +435,24 @@ class MockPrint3DGenerator:
         )
     
     def _calculate_mock_volume(self, request: Print3DRequest) -> float:
-        """Calcula volumen estimado basado en descripción y dimensiones"""
+        """Calculate estimated volume based on description and dimensions"""
         if request.dimensions:
             if "diameter" in request.dimensions and "height" in request.dimensions:
-                # Cilindro
+                # Cylinder
                 r = request.dimensions["diameter"] / 2
                 h = request.dimensions["height"]
                 return math.pi * r * r * h
             elif all(k in request.dimensions for k in ["width", "length", "height"]):
-                # Caja
+                # Box
                 return (request.dimensions["width"] * 
                        request.dimensions["length"] * 
                        request.dimensions["height"])
             elif "size" in request.dimensions:
-                # Cubo
+                # Cube
                 size = request.dimensions["size"]
                 return size ** 3
         
-        # Volumen por defecto basado en descripción
+        # Default volume based on description
         description_lower = request.description.lower()
         if any(word in description_lower for word in ["large", "big", "grande"]):
             return 50000.0  # 50cm³
@@ -462,12 +462,12 @@ class MockPrint3DGenerator:
             return 20000.0  # 20cm³
     
     def _calculate_printability_score(self, request: Print3DRequest) -> float:
-        """Calcula score de imprimibilidad (0-1)"""
+        """Calculate printability score (0-1)"""
         score = 0.8  # Base score
         
         description_lower = request.description.lower()
         
-        # Penalizar características problemáticas
+        # Penalize problematic features
         if any(word in description_lower for word in ["overhang", "bridge", "cantilever"]):
             score -= 0.2
         if any(word in description_lower for word in ["thin", "delicate", "fine"]):
@@ -475,7 +475,7 @@ class MockPrint3DGenerator:
         if any(word in description_lower for word in ["complex", "intricate", "detailed"]):
             score -= 0.1
         
-        # Bonificar características favorables
+        # Bonus for favorable features
         if any(word in description_lower for word in ["solid", "thick", "robust"]):
             score += 0.1
         if request.material in [MaterialType.PLA, MaterialType.PETG]:
@@ -511,13 +511,13 @@ class CapibaraTextToPrint3D:
         if self.config.use_optimizer and OPTIMIZER_AVAILABLE:
             self._init_optimizer()
         
-        # Configurar directorios
+        # Configure directories
         self._setup_directories()
         
         logger.info("✅ CapibaraTextToPrint3D initialized")
     
     def _init_openscad_generator(self):
-        """Inicializa generador OpenSCAD para Print3D"""
+        """Initialize OpenSCAD generator for Print3D"""
         try:
             openscad_config = OpenSCADPrint3DConfig()
             self.openscad_generator = E2BOpenSCADPrint3D(openscad_config)
@@ -527,7 +527,7 @@ class CapibaraTextToPrint3D:
             self.openscad_generator = None
     
     def _init_blender_generator(self):
-        """Inicializa generador Blender para Print3D"""
+        """Initialize Blender generator for Print3D"""
         try:
             blender_config = BlenderPrint3DConfig()
             self.blender_generator = E2BBlenderPrint3D(blender_config)
@@ -537,7 +537,7 @@ class CapibaraTextToPrint3D:
             self.blender_generator = None
     
     def _init_freecad_generator(self):
-        """Inicializa generador FreeCAD para Print3D"""
+        """Initialize FreeCAD generator for Print3D"""
         try:
             freecad_config = FreeCADPrint3DConfig()
             self.freecad_generator = E2BFreeCADPrint3D(freecad_config)
@@ -547,7 +547,7 @@ class CapibaraTextToPrint3D:
             self.freecad_generator = None
     
     def _init_optimizer(self):
-        """Inicializa optimizador Print3D"""
+        """Initialize Print3D optimizer"""
         try:
             optimizer_config = OptimizationConfig()
             self.optimizer = Print3DOptimizer(optimizer_config)
@@ -557,7 +557,7 @@ class CapibaraTextToPrint3D:
             self.optimizer = None
     
     def _setup_directories(self):
-        """Configura directorios de salida"""
+        """Configure output directories"""
         try:
             os.makedirs(self.config.output_directory, exist_ok=True)
             logger.info(f"📁 Print3D output directory: {self.config.output_directory}")
@@ -565,7 +565,7 @@ class CapibaraTextToPrint3D:
             logger.error(f"❌ Error creating directories: {e}")
     
     async def generate_print3d(self, request: Print3DRequest) -> Print3DResult:
-        """Genera modelo 3D optimizado para impresión desde descripción natural"""
+        """Generate 3D model optimized for printing from natural language description"""
         start_time = datetime.now()
         
         try:
@@ -688,7 +688,7 @@ class CapibaraTextToPrint3D:
                                             request: Print3DRequest, 
                                             start_time: datetime, 
                                             tool_used: str) -> Print3DResult:
-        """Convierte resultado E2B a Print3DResult"""
+        """Convert E2B result to Print3DResult"""
         generation_time = (datetime.now() - start_time).total_seconds()
         
         return Print3DResult(
@@ -717,31 +717,31 @@ class CapibaraTextToPrint3D:
     
     # Utility methods
     def is_openscad_available(self) -> bool:
-        """Verifica si OpenSCAD está disponible"""
+        """Check if OpenSCAD is available"""
         return (self.config.use_e2b_openscad and 
                 self.openscad_generator is not None and 
                 self.openscad_generator.is_available())
     
     def is_blender_available(self) -> bool:
-        """Verifica si Blender está disponible"""
+        """Check if Blender is available"""
         return (self.config.use_e2b_blender and 
                 self.blender_generator is not None and 
                 self.blender_generator.is_available())
     
     def is_freecad_available(self) -> bool:
-        """Verifica si FreeCAD está disponible"""
+        """Check if FreeCAD is available"""
         return (self.config.use_e2b_freecad and 
                 self.freecad_generator is not None and 
                 self.freecad_generator.is_available())
     
     def is_optimizer_available(self) -> bool:
-        """Verifica si Optimizer está disponible"""
+        """Check if Optimizer is available"""
         return (self.config.use_optimizer and 
                 self.optimizer is not None and 
                 self.optimizer.is_available())
     
     async def test_all_tools(self) -> Dict[str, Any]:
-        """Prueba disponibilidad de todas las herramientas Print3D"""
+        """Test availability of all Print3D tools"""
         results = {}
         
         if self.openscad_generator:
@@ -769,7 +769,7 @@ class CapibaraTextToPrint3D:
         return results
     
     def get_supported_materials(self, technology: PrintTechnology) -> List[MaterialType]:
-        """Obtiene materiales soportados para una tecnología específica"""
+        """Get supported materials for a specific technology"""
         material_compatibility = {
             PrintTechnology.FDM: [MaterialType.PLA, MaterialType.ABS, MaterialType.PETG, 
                                 MaterialType.TPU, MaterialType.NYLON],
@@ -783,23 +783,23 @@ class CapibaraTextToPrint3D:
     
     def estimate_print_cost(self, volume_mm3: float, material: MaterialType, 
                           print_time_hours: float) -> Dict[str, float]:
-        """Estima costos de impresión"""
-        # Densidad del material (g/cm³)
+        """Estimate printing costs"""
+        # Material density (g/cm3)
         material_density = self.config.material_properties.get(
             material, {"density": 1.24}
         )["density"]
         
-        # Peso del material en gramos
+        # Material weight in grams
         material_weight_g = volume_mm3 * material_density / 1000
         
-        # Costo del material
+        # Material cost
         material_cost_per_kg = self.config.material_cost_per_kg.get(material.value, 25.0)
         material_cost = (material_weight_g / 1000) * material_cost_per_kg
         
-        # Costo de tiempo de impresión
+        # Print time cost
         time_cost = print_time_hours * self.config.print_time_cost_per_hour
         
-        # Costo total
+        # Total cost
         total_cost = material_cost + time_cost
         
         return {

@@ -559,27 +559,27 @@ def create_{request.service_name.lower()}_service(config=None):
         ]
 
 class CapibaraTextToGen:
-    """Servicio principal de Text-to-Gen"""
+    """Main Text-to-Gen service"""
     
     def __init__(self, config: Optional[MetaGenerationConfig] = None):
         self.config = config or MetaGenerationConfig()
         
-        # Inicializar componentes
+        # Initialize components
         self.requirement_analyzer = ServiceRequirementAnalyzer()
         self.mock_generator = MockCodeGenerator(self.config)
-        
-        # Intentar inicializar generador real
+
+        # Try to initialize real generator
         self.code_generator = None
         if CODE_GENERATION_AVAILABLE:
             self._init_real_generator()
-        
-        # Configurar directorios
+
+        # Configure directories
         self._setup_directories()
         
         logger.info("✅ CapibaraTextToGen initialized")
     
     def _init_real_generator(self):
-        """Inicializa el generador de código real"""
+        """Initializes the real code generator"""
         try:
             self.code_generator = CodeGenerator(self.config)
             logger.info("✅ Real code generator initialized")
@@ -588,7 +588,7 @@ class CapibaraTextToGen:
             self.code_generator = None
     
     def _setup_directories(self):
-        """Configura directorios de salida"""
+        """Configures output directories"""
         try:
             os.makedirs(self.config.output_directory, exist_ok=True)
             os.makedirs(self.config.template_directory, exist_ok=True)
@@ -597,18 +597,18 @@ class CapibaraTextToGen:
             logger.error(f"❌ Error creating directories: {e}")
     
     async def generate_service(self, request: ServiceGenerationRequest) -> ServiceGenerationResult:
-        """Genera un nuevo servicio text-to-* desde descripción"""
+        """Generates a new text-to-* service from description"""
         start_time = datetime.now()
         
         try:
             logger.info(f"🧠 Generating service: {request.service_name}")
             logger.info(f"📝 Description: {request.description[:200]}...")
             
-            # Analizar requerimientos si no se especificaron
+            # Analyze requirements if not specified
             if not hasattr(request, 'analyzed'):
                 analysis = self.requirement_analyzer.analyze_description(request.description)
-                
-                # Aplicar análisis si no se especificó explícitamente
+
+                # Apply analysis if not explicitly specified
                 if request.service_type is None:
                     request.service_type = analysis["service_type"]
                 if request.complexity == ComplexityLevel.MEDIUM:  # Default
@@ -616,13 +616,13 @@ class CapibaraTextToGen:
                 if request.integration_type == IntegrationType.CAPIBARA_NATIVE:  # Default
                     request.integration_type = analysis["integration_type"]
                 
-                # Agregar dependencias sugeridas
+                # Add suggested dependencies
                 if not request.dependencies:
                     request.dependencies = analysis["dependencies"]
                 
                 logger.info(f"📊 Analysis: {analysis['service_type'].value}, {analysis['complexity'].value}")
             
-            # Generar código
+            # Generate code
             if self.code_generator:
                 logger.info("⚙️ Using real code generator...")
                 generation_result = await self.code_generator.generate_service_code(request)
@@ -630,11 +630,11 @@ class CapibaraTextToGen:
                 logger.info("🎭 Using mock code generator...")
                 generation_result = await self.mock_generator.generate_service_code(request)
             
-            # Procesar resultado
+            # Process result
             generation_time = (datetime.now() - start_time).total_seconds()
             
             if generation_result["success"]:
-                # Crear estructura de archivos (modo mock)
+                # Create file structure (mock mode)
                 if not self.code_generator:
                     await self._create_mock_files(request, generation_result)
                 
@@ -677,19 +677,19 @@ class CapibaraTextToGen:
             )
     
     async def _create_mock_files(self, request: ServiceGenerationRequest, generation_result: Dict[str, Any]):
-        """Crea archivos mock para demostración"""
+        """Creates mock files for demonstration"""
         try:
             service_dir = generation_result["service_path"]
             os.makedirs(service_dir, exist_ok=True)
             
-            # Crear archivo principal
+            # Create main file
             main_file = generation_result["main_service_file"]
             os.makedirs(os.path.dirname(main_file), exist_ok=True)
             
             with open(main_file, 'w') as f:
                 f.write(generation_result["mock_code_preview"])
             
-            # Crear __init__.py
+            # Create __init__.py
             init_file = f"{service_dir}/__init__.py"
             with open(init_file, 'w') as f:
                 f.write(f'''"""
@@ -697,7 +697,7 @@ class CapibaraTextToGen:
 
 {request.description}
 
-Generado automáticamente por Capibara5 Text-to-Gen.
+Automatically generated by Capibara5 Text-to-Gen.
 """
 
 from .{request.service_name.lower()}_service import (
@@ -719,7 +719,7 @@ __all__ = [
 ]
 ''')
             
-            # Crear README
+            # Create README
             if self.config.include_docs:
                 readme_file = f"{service_dir}/README.md"
                 with open(readme_file, 'w') as f:
@@ -727,7 +727,7 @@ __all__ = [
 
 {request.description}
 
-## Instalación
+## Installation
 
 ```bash
 pip install -r requirements.txt
@@ -744,13 +744,13 @@ result = await service.generate(request)
 logger.info(f"Generated: {{result.output_path}}")
 ```
 
-## Características
+## Features
 
-- Tipo: {request.service_type.value}
-- Complejidad: {request.complexity.value}
-- Integración: {request.integration_type.value}
+- Type: {request.service_type.value}
+- Complexity: {request.complexity.value}
+- Integration: {request.integration_type.value}
 
-Generado automáticamente por Capibara5 Text-to-Gen.
+Automatically generated by Capibara5 Text-to-Gen.
 ''')
             
             logger.info(f"📝 Mock files created in {service_dir}")
@@ -759,7 +759,7 @@ Generado automáticamente por Capibara5 Text-to-Gen.
             logger.error(f"❌ Error creating mock files: {e}")
     
     def _calculate_complexity_score(self, request: ServiceGenerationRequest) -> float:
-        """Calcula score de complejidad del servicio"""
+        """Calculates the complexity score of the service"""
         base_scores = {
             ComplexityLevel.SIMPLE: 0.2,
             ComplexityLevel.MEDIUM: 0.5,
@@ -769,7 +769,7 @@ Generado automáticamente por Capibara5 Text-to-Gen.
         
         score = base_scores[request.complexity]
         
-        # Ajustes por características
+        # Adjustments based on features
         if request.supports_batch:
             score += 0.1
         if request.supports_streaming:
@@ -783,7 +783,7 @@ Generado automáticamente por Capibara5 Text-to-Gen.
     
     # Utility methods
     def list_generated_services(self) -> List[str]:
-        """Lista servicios generados"""
+        """Lists generated services"""
         try:
             if os.path.exists(self.config.output_directory):
                 return [d for d in os.listdir(self.config.output_directory) 
@@ -794,23 +794,23 @@ Generado automáticamente por Capibara5 Text-to-Gen.
             return []
     
     def analyze_description(self, description: str) -> Dict[str, Any]:
-        """Analiza descripción y sugiere configuración"""
+        """Analyzes description and suggests configuration"""
         return self.requirement_analyzer.analyze_description(description)
     
     def is_available(self) -> bool:
-        """Verifica si el servicio está disponible"""
+        """Checks if the service is available"""
         return True
     
     def get_supported_service_types(self) -> List[ServiceType]:
-        """Obtiene tipos de servicios soportados"""
+        """Gets supported service types"""
         return list(ServiceType)
     
     def get_complexity_levels(self) -> List[ComplexityLevel]:
-        """Obtiene niveles de complejidad soportados"""
+        """Gets supported complexity levels"""
         return list(ComplexityLevel)
     
     async def test_generation(self) -> Dict[str, Any]:
-        """Prueba la funcionalidad de generación"""
+        """Tests the generation functionality"""
         test_request = ServiceGenerationRequest(
             description="A simple test service that converts text to uppercase",
             service_name="TextToUppercase",
