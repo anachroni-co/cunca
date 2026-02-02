@@ -304,14 +304,3 @@ European programme supporting HPC access for research
 
 </div>
 
-## Ejemplo rápido
-
-Ejemplo (pseudo-código) de uso básico del backend:
-
-```python
-from core.backends import get_backend
-
-backend = get_backend()
-x = backend.randn((2, 4))
-print(backend.gelu(x))
-```
