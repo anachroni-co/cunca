@@ -8,6 +8,5 @@ Specialized datasets for engineering design including:
 - PCB routing and design
 """
 
-from .cad_design_datasets import *
-from .electronics_datasets import *
-from .fpga_datasets import *
+from .electronics_datasets import ElectronicsDatasets, get_electronics_datasets
+from .fpga_datasets import FPGADatasets, get_fpga_datasets

@@ -19,8 +19,23 @@ Humor Categories:
 - Animating the inanimate
 """
 
-from .spanish_jokes import *
-from .humor_analysis import *
+from .spanish_jokes import (
+    SpanishJokesDataset,
+    load_chistes_spanish_jokes,
+    load_barcenas_humor_negro,
+    load_humor_qa,
+    get_humor_categories,
+    spanish_jokes_datasets,
+)
+from .humor_analysis import (
+    HumorType,
+    HumorAnalysis,
+    HumorAnalyzer,
+    HumorMetrics,
+    analyze_humor_type,
+    get_humor_distribution,
+    humor_analysis_datasets,
+)
 
 __all__ = [
     'spanish_jokes_datasets',
