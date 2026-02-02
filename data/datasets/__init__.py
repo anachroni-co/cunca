@@ -44,10 +44,28 @@ total: 2,074GB de datasets curados para pipeline más avanzado del mundo.
 # from .economics import *
 # from .multimodal import *
 # from .historical import *
-from .mathematics import *
-from .robotics import *
-from .engineering_design import *
-from .humor import *
+from .mathematics import math_datasets
+from .robotics import (
+    RoboticsDatasetLoader,
+    get_robotics_loader,
+    list_available_robotics_datasets,
+    ROBOTICS_DATASETS,
+)
+from .engineering_design import (
+    ElectronicsDatasets,
+    get_electronics_datasets,
+    FPGADatasets,
+    get_fpga_datasets,
+)
+from .humor import (
+    spanish_jokes_datasets,
+    humor_analysis_datasets,
+    load_chistes_spanish_jokes,
+    load_barcenas_humor_negro,
+    load_humor_qa,
+    get_humor_categories,
+    analyze_humor_type,
+)
 
 # 🚀 NEW: Cascade Training System
 from .cascade_dataset_manager import (

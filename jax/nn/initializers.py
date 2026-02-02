@@ -5,30 +5,36 @@ Advanced Weight Initializers for Neural Networks
 State-of-the-art weight initialization schemes for optimal training.
 """
 
+import math
+
+# Pre-computed constants (avoid recomputing on every call)
+_SQRT_2 = math.sqrt(2.0)
+_SQRT_3 = math.sqrt(3.0)
+_SQRT_6 = math.sqrt(6.0)
+
 try:
     import jax.numpy as jnp
     from jax import random
-    import math
     
     def xavier_uniform(key, shape, gain=1.0):
         """Xavier/Glorot uniform initialization."""
         fan_in, fan_out = _calculate_fan_in_fan_out(shape)
-        bound = gain * math.sqrt(6.0 / (fan_in + fan_out))
+        bound = gain * _SQRT_6 / math.sqrt(fan_in + fan_out)
         return random.uniform(key, shape, minval=-bound, maxval=bound)
-    
+
     def xavier_normal(key, shape, gain=1.0):
-        """Xavier/Glorot normal initialization.""" 
+        """Xavier/Glorot normal initialization."""
         fan_in, fan_out = _calculate_fan_in_fan_out(shape)
-        std = gain * math.sqrt(2.0 / (fan_in + fan_out))
+        std = gain * _SQRT_2 / math.sqrt(fan_in + fan_out)
         return random.normal(key, shape) * std
-    
+
     def kaiming_uniform(key, shape, a=0, mode='fan_in', nonlinearity='leaky_relu'):
         """Kaiming/He uniform initialization."""
         fan = _calculate_correct_fan(shape, mode)
         gain = _calculate_gain(nonlinearity, a)
-        bound = gain * math.sqrt(3.0 / fan)
+        bound = gain * _SQRT_3 / math.sqrt(fan)
         return random.uniform(key, shape, minval=-bound, maxval=bound)
-    
+
     def kaiming_normal(key, shape, a=0, mode='fan_in', nonlinearity='leaky_relu'):
         """Kaiming/He normal initialization."""
         fan = _calculate_correct_fan(shape, mode)
@@ -39,13 +45,13 @@ try:
     def lecun_uniform(key, shape):
         """LeCun uniform initialization."""
         fan_in = _calculate_fan_in_fan_out(shape)[0]
-        bound = math.sqrt(3.0 / fan_in)
+        bound = _SQRT_3 / math.sqrt(fan_in)
         return random.uniform(key, shape, minval=-bound, maxval=bound)
-    
+
     def lecun_normal(key, shape):
         """LeCun normal initialization."""
         fan_in = _calculate_fan_in_fan_out(shape)[0]
-        std = math.sqrt(1.0 / fan_in)
+        std = 1.0 / math.sqrt(fan_in)
         return random.normal(key, shape) * std
     
     def truncated_normal(key, shape, stddev=1.0, lower=-2.0, upper=2.0):
@@ -159,8 +165,8 @@ try:
             'conv_transpose3d': 1,
             'sigmoid': 1,
             'tanh': 5.0 / 3,
-            'relu': math.sqrt(2.0),
-            'leaky_relu': math.sqrt(2.0 / (1 + (param or 0.01) ** 2)),
+            'relu': _SQRT_2,
+            'leaky_relu': math.sqrt(2.0 / (1 + (param or 0.01) ** 2)),  # param-dependent
             'selu': 3.0 / 4,
             'silu': 1.054,
             'gelu': 1.7159,
@@ -175,13 +181,13 @@ except ImportError:
     def xavier_uniform(key, shape, gain=1.0):
         np.random.seed(key)
         fan_in, fan_out = _calculate_fan_in_fan_out(shape)
-        bound = gain * math.sqrt(6.0 / (fan_in + fan_out))
+        bound = gain * _SQRT_6 / math.sqrt(fan_in + fan_out)
         return np.random.uniform(-bound, bound, shape)
-    
+
     def xavier_normal(key, shape, gain=1.0):
         np.random.seed(key)
         fan_in, fan_out = _calculate_fan_in_fan_out(shape)
-        std = gain * math.sqrt(2.0 / (fan_in + fan_out))
+        std = gain * _SQRT_2 / math.sqrt(fan_in + fan_out)
         return np.random.normal(0, std, shape)
     
     def kaiming_uniform(key, shape, a=0, mode='fan_in', nonlinearity='leaky_relu'):

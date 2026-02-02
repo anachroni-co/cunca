@@ -9,22 +9,11 @@ import functools
 import logging
 from typing import Any, Dict, List, Optional
 
-import jax
-import jax.numpy as jnp
 import numpy as np
 
 logger = logging.getLogger(__name__)
 
-# JAX/Flax imports (TPU backend)
-try:
-    import flax.linen as nn
-    import jax.numpy as jnp
-    JAX_AVAILABLE = True
-except ImportError:
-    nn = None  # type: ignore
-    jnp = None  # type: ignore
-    JAX_AVAILABLE = False
-    logger.warning("JAX/Flax not available. Install with: pip install jax flax")
+from layers.jax_compat import jax, jnp, nn, JAX_AVAILABLE
 
 
 def _check_jax():

@@ -822,7 +822,7 @@ from capibara.training.config_manager import ConfigManager
 from capibara.training.config_manager import Environment
 config_manager = ConfigManager()
 config = config_manager.get_config(Environment.{environment.value.upper()})
-print('✅ Configuration validated')
+logger.info('✅ Configuration validated')
 "
 
 # Build Docker image
@@ -913,24 +913,24 @@ if __name__ == "__main__":
     config_manager = ConfigManager(args.config_dir)
     
     if args.action == "create":
-        print(f"Creating configuration for {environment.value}...")
+        logger.info(f"Creating configuration for {environment.value}...")
         config = config_manager.create_default_config(environment)
         config_path = config_manager.save_config(config)
-        print(f"✅ Configuration created: {config_path}")
+        logger.info(f"✅ Configuration created: {config_path}")
         
     elif args.action == "validate":
-        print(f"Validating configuration for {environment.value}...")
+        logger.info(f"Validating configuration for {environment.value}...")
         try:
             config = config_manager.get_config(environment)
-            print("✅ Configuration is valid")
-            print(f"System: {config.system_name}")
-            print(f"Version: {config.version}")
-            print(f"Experts: {len(config.experts)}")
+            logger.info("✅ Configuration is valid")
+            logger.info(f"System: {config.system_name}")
+            logger.info(f"Version: {config.version}")
+            logger.info(f"Experts: {len(config.experts)}")
         except Exception as e:
-            print(f"❌ Configuration validation failed: {e}")
+            logger.error(f"❌ Configuration validation failed: {e}")
             
     elif args.action == "deploy":
-        print(f"Generating deployment files for {environment.value}...")
+        logger.info(f"Generating deployment files for {environment.value}...")
         deployment_manager = DeploymentManager(config_manager)
         
         # Generate deployment files
@@ -939,9 +939,9 @@ if __name__ == "__main__":
         k8s_manifest = deployment_manager.generate_kubernetes_manifest(environment)
         deploy_script = deployment_manager.generate_deployment_script(environment)
         
-        print("✅ Deployment files generated:")
-        print(f"  📄 Dockerfile: {dockerfile}")
-        print(f"  🐳 Docker Compose: {compose_file}")
-        print(f"  ☸️ Kubernetes: {k8s_manifest}")
-        print(f"  🚀 Deploy Script: {deploy_script}")
-        print(f"\nTo deploy: ./deployment/deploy-{environment.value}.sh {args.deployment_type}")
+        logger.info("✅ Deployment files generated:")
+        logger.info(f"  📄 Dockerfile: {dockerfile}")
+        logger.info(f"  🐳 Docker Compose: {compose_file}")
+        logger.info(f"  ☸️ Kubernetes: {k8s_manifest}")
+        logger.info(f"  🚀 Deploy Script: {deploy_script}")
+        logger.info(f"\nTo deploy: ./deployment/deploy-{environment.value}.sh {args.deployment_type}")

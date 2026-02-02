@@ -7,6 +7,9 @@ This module provides structured formatting with validation and improved type han
 from typing import List, Optional, Union
 from dataclasses import dataclass, field
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 @dataclass
 class MarkdownSection:
@@ -115,8 +118,8 @@ if __name__ == "__main__":
             }
         )
 
-        print("Formatted Markdown:\n")
-        print(formatted)
+        logger.info("Formatted Markdown:\n")
+        logger.info(formatted)
 
     except DataProcessingError as e:
-        print(f"Error: {e}")
+        logger.error(f"Error: {e}")

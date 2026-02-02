@@ -12,6 +12,10 @@ import numpy as np
 import pytest
 
 from core.backends import (
+
+import logging
+logger = logging.getLogger(__name__)
+
     BackendType,
     ComputeBackend,
     get_backend,
@@ -301,7 +305,7 @@ class TestBestAvailableBackend:
         """Test that we have valid backend info."""
         assert backend_info["name"] in ["cpu", "gpu", "tpu"]
         assert best_backend.name == backend_info["name"]
-        print(f"\n  Running tests on: {backend_info['name'].upper()} backend")
+        logger.info(f"\n  Running tests on: {backend_info['name'].upper()} backend")
 
     def test_tensor_creation(self, best_backend):
         """Test tensor creation on best available backend."""

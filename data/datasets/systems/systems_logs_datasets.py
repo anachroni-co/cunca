@@ -504,19 +504,19 @@ if __name__ == "__main__":
     # Functionality demo
     manager = create_systems_datasets_manager()
 
-    print("Systems & Logs Datasets Manager - CapibaraGPT-v2")
-    print("=" * 60)
+    logger.info("Systems & Logs Datasets Manager - CapibaraGPT-v2")
+    logger.info("=" * 60)
 
     # Show available datasets
-    print(f"Total world-class datasets: {len(manager.dataset_configs)}")
+    logger.info(f"Total world-class datasets: {len(manager.dataset_configs)}")
 
     # Show by category
     categories = manager.get_category_summary()
     for category, info in categories.items():
-        print(f"{category.upper()}: {info['count']} datasets (average quality: {info['avg_quality']:.1f}/10)")
+        logger.info(f"{category.upper()}: {info['count']} datasets (average quality: {info['avg_quality']:.1f}/10)")
 
     # Show top quality
     top_quality = manager.get_top_quality_datasets()
-    print(f"\nMaximum quality datasets (9.0+): {len(top_quality)}")
+    logger.info(f"\nMaximum quality datasets (9.0+): {len(top_quality)}")
     for dataset_id, config in top_quality.items():
-        print(f"   {config.name} ({config.source}) - {config.quality_score}/10")
+        logger.info(f"   {config.name} ({config.source}) - {config.quality_score}/10")

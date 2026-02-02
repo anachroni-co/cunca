@@ -13,6 +13,9 @@ import sys
 from pathlib import Path
 from typing import List, Tuple
 
+import logging
+logger = logging.getLogger(__name__)
+
 PROJECT_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
@@ -163,67 +166,67 @@ def check_core_modules() -> List[Tuple[bool, str]]:
 
 def main():
     """Run all validation checks."""
-    print("=" * 70)
-    print("CapibaraGPT Project Validation")
-    print("=" * 70)
-    print()
+    logger.info("=" * 70)
+    logger.info("CapibaraGPT Project Validation")
+    logger.info("=" * 70)
+    logger.info()
 
     all_results = []
 
     # Configuration files
-    print("Configuration Files:")
-    print("-" * 40)
+    logger.info("Configuration Files:")
+    logger.info("-" * 40)
     for passed, msg in check_config_files():
         symbol = "✓" if passed else "✗"
-        print(f"  {symbol} {msg}")
+        logger.info(f"  {symbol} {msg}")
         all_results.append(passed)
-    print()
+    logger.info()
 
     # Core modules
-    print("Core Module Imports:")
-    print("-" * 40)
+    logger.info("Core Module Imports:")
+    logger.info("-" * 40)
     for passed, msg in check_core_modules():
         symbol = "✓" if passed else "✗"
-        print(f"  {symbol} {msg}")
+        logger.info(f"  {symbol} {msg}")
         all_results.append(passed)
-    print()
+    logger.info()
 
     # Backend availability
-    print("Backend Availability:")
-    print("-" * 40)
+    logger.info("Backend Availability:")
+    logger.info("-" * 40)
     for passed, msg in check_backend_available():
         symbol = "✓" if passed else "✗"
-        print(f"  {symbol} {msg}")
+        logger.info(f"  {symbol} {msg}")
         all_results.append(passed)
-    print()
+    logger.info()
 
     # Test structure
-    print("Test Structure:")
-    print("-" * 40)
+    logger.info("Test Structure:")
+    logger.info("-" * 40)
     for passed, msg in check_tests_structure():
         symbol = "✓" if passed else "✗"
-        print(f"  {symbol} {msg}")
+        logger.info(f"  {symbol} {msg}")
         all_results.append(passed)
-    print()
+    logger.info()
 
     # Summary
     passed = sum(all_results)
     total = len(all_results)
     failed = total - passed
 
-    print("=" * 70)
-    print("VALIDATION SUMMARY")
-    print("=" * 70)
-    print(f"  Total checks: {total}")
-    print(f"  Passed: {passed}")
-    print(f"  Failed: {failed}")
-    print()
+    logger.info("=" * 70)
+    logger.info("VALIDATION SUMMARY")
+    logger.info("=" * 70)
+    logger.info(f"  Total checks: {total}")
+    logger.info(f"  Passed: {passed}")
+    logger.error(f"  Failed: {failed}")
+    logger.info()
 
     if failed == 0:
-        print("✓ All validation checks passed!")
+        logger.info("✓ All validation checks passed!")
         return 0
     else:
-        print(f"✗ {failed} validation checks failed")
+        logger.error(f"✗ {failed} validation checks failed")
         return 1
 
 

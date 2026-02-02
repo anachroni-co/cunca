@@ -11,6 +11,9 @@ from typing import Dict, Any, Optional, List
 from dataclasses import dataclass, field
 from pathlib import Path
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 @dataclass
 class N8nConfig:
@@ -307,14 +310,14 @@ def load_config(config_file: Optional[str] = None) -> AutomationServiceConfig:
             # ... similar for other sections
             
         except Exception as e:
-            print(f"Warning: Failed to load config file {config_file}: {e}")
+            logger.error(f"Warning: Failed to load config file {config_file}: {e}")
     
     # Validate configuration
     errors = config.validate()
     if errors:
-        print("Configuration validation errors:")
+        logger.error("Configuration validation errors:")
         for error in errors:
-            print(f"  - {error}")
+            logger.error(f"  - {error}")
     
     # Create necessary directories
     config.create_directories()

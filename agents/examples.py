@@ -41,7 +41,7 @@ try:
     PATTERNS_AVAILABLE = True
 except ImportError:
     PATTERNS_AVAILABLE = False
-    print("⚠️ Pattern implementations not available. Running in demo mode.")
+    logger.warning("⚠️ Pattern implementations not available. Running in demo mode.")
 
 logger = logging.getLogger(__name__)
 
@@ -51,19 +51,19 @@ def demonstrate_factory_patterns():
     Demostrar el uso del patrón Factory en diferentes escenarios.
     """
     
-    print("🏭 FACTORY PATTERN DEMONSTRATIONS")
-    print("=" * 60)
+    logger.info("🏭 FACTORY PATTERN DEMONSTRATIONS")
+    logger.info("=" * 60)
     
     if not PATTERNS_AVAILABLE:
-        print("❌ Pattern implementations not available")
+        logger.warning("❌ Pattern implementations not available")
         return
     
     # ========================================================================
     # Example 1: Basic Agent Factory Usage
     # ========================================================================
     
-    print("\n1️⃣ Basic Agent Factory Usage")
-    print("-" * 40)
+    logger.info("\n1️⃣ Basic Agent Factory Usage")
+    logger.info("-" * 40)
     
     try:
         # Create factory
@@ -74,56 +74,56 @@ def demonstrate_factory_patterns():
         coding_agent = factory.create_agent(AgentBehaviorType.CODING)
         research_agent = factory.create_agent(AgentBehaviorType.RESEARCH)
         
-        print(f"✅ Created reasoning agent: {reasoning_agent.agent_id}")
-        print(f"✅ Created coding agent: {coding_agent.agent_id}")
-        print(f"✅ Created research agent: {research_agent.agent_id}")
+        logger.info(f"✅ Created reasoning agent: {reasoning_agent.agent_id}")
+        logger.info(f"✅ Created coding agent: {coding_agent.agent_id}")
+        logger.info(f"✅ Created research agent: {research_agent.agent_id}")
         
         # Show agent capabilities
-        print(f"\n📋 Agent Capabilities:")
-        print(f"   Reasoning: {[cap.value for cap in reasoning_agent.capabilities]}")
-        print(f"   Coding: {[cap.value for cap in coding_agent.capabilities]}")
-        print(f"   Research: {[cap.value for cap in research_agent.capabilities]}")
+        logger.info(f"\n📋 Agent Capabilities:")
+        logger.info(f"   Reasoning: {[cap.value for cap in reasoning_agent.capabilities]}")
+        logger.info(f"   Coding: {[cap.value for cap in coding_agent.capabilities]}")
+        logger.info(f"   Research: {[cap.value for cap in research_agent.capabilities]}")
         
     except Exception as e:
-        print(f"❌ Basic factory example failed: {e}")
+        logger.error(f"❌ Basic factory example failed: {e}")
     
     # ========================================================================
     # Example 2: Template-Based Agent Creation
     # ========================================================================
     
-    print("\n2️⃣ Template-Based Agent Creation")
-    print("-" * 40)
+    logger.info("\n2️⃣ Template-Based Agent Creation")
+    logger.info("-" * 40)
     
     try:
         factory = StrategyBasedAgentFactory()
         
         # Get available templates
         templates = factory.get_available_templates()
-        print(f"📋 Available templates: {list(templates.keys())}")
+        logger.info(f"📋 Available templates: {list(templates.keys())}")
         
         # Create agents from templates
         specialist = factory.create_agent_from_template("reasoning_specialist")
         developer = factory.create_agent_from_template("coding_developer")
         assistant = factory.create_agent_from_template("general_assistant")
         
-        print(f"✅ Created specialist: {specialist.agent_id}")
-        print(f"✅ Created developer: {developer.agent_id}")
-        print(f"✅ Created assistant: {assistant.agent_id}")
+        logger.info(f"✅ Created specialist: {specialist.agent_id}")
+        logger.info(f"✅ Created developer: {developer.agent_id}")
+        logger.info(f"✅ Created assistant: {assistant.agent_id}")
         
         # Show template configurations
-        print(f"\n⚙️ Template Features:")
+        logger.info(f"\n⚙️ Template Features:")
         for name, description in templates.items():
-            print(f"   {name}: {description}")
+            logger.info(f"   {name}: {description}")
         
     except Exception as e:
-        print(f"❌ Template example failed: {e}")
+        logger.error(f"❌ Template example failed: {e}")
     
     # ========================================================================
     # Example 3: Specification-Based Creation
     # ========================================================================
     
-    print("\n3️⃣ Specification-Based Creation")
-    print("-" * 40)
+    logger.info("\n3️⃣ Specification-Based Creation")
+    logger.info("-" * 40)
     
     try:
         factory = StrategyBasedAgentFactory()
@@ -143,9 +143,9 @@ def demonstrate_factory_patterns():
         
         custom_agent = factory.create_agent_from_spec(custom_spec)
         
-        print(f"✅ Created custom agent: {custom_agent.agent_id}")
-        print(f"   Type: {custom_agent.agent_type}")
-        print(f"   Capabilities: {len(custom_agent.capabilities)} total")
+        logger.info(f"✅ Created custom agent: {custom_agent.agent_id}")
+        logger.info(f"   Type: {custom_agent.agent_type}")
+        logger.info(f"   Capabilities: {len(custom_agent.capabilities)} total")
         
         # Test the custom agent
         test_context = AgentContext(
@@ -155,17 +155,17 @@ def demonstrate_factory_patterns():
         )
         
         result = custom_agent.execute(test_context)
-        print(f"   Test execution: {result.status} ({result.execution_time_ms:.1f}ms)")
+        logger.info(f"   Test execution: {result.status} ({result.execution_time_ms:.1f}ms)")
         
     except Exception as e:
-        print(f"❌ Specification example failed: {e}")
+        logger.error(f"❌ Specification example failed: {e}")
     
     # ========================================================================
     # Example 4: Behavior Factory Usage
     # ========================================================================
     
-    print("\n4️⃣ Behavior Factory Usage")
-    print("-" * 40)
+    logger.info("\n4️⃣ Behavior Factory Usage")
+    logger.info("-" * 40)
     
     try:
         behavior_factory = BehaviorFactory()
@@ -186,26 +186,26 @@ def demonstrate_factory_patterns():
             {"monitoring_interval": 5, "alert_thresholds": {"response_time_ms": 500}}
         )
         
-        print(f"✅ Created reasoning behavior: {reasoning_behavior.behavior_type}")
-        print(f"✅ Created coding behavior: {coding_behavior.behavior_type}")
-        print(f"✅ Created monitoring behavior: {monitoring_behavior.behavior_type}")
+        logger.info(f"✅ Created reasoning behavior: {reasoning_behavior.behavior_type}")
+        logger.info(f"✅ Created coding behavior: {coding_behavior.behavior_type}")
+        logger.info(f"✅ Created monitoring behavior: {monitoring_behavior.behavior_type}")
         
         # Show behavior factory statistics
         stats = behavior_factory.get_factory_stats()
-        print(f"\n📊 Factory Stats:")
-        print(f"   Behaviors created: {stats['behaviors_created']}")
-        print(f"   Registry size: {stats['registry_size']}")
-        print(f"   Available behaviors: {stats['available_behaviors']}")
+        logger.info(f"\n📊 Factory Stats:")
+        logger.info(f"   Behaviors created: {stats['behaviors_created']}")
+        logger.info(f"   Registry size: {stats['registry_size']}")
+        logger.info(f"   Available behaviors: {stats['available_behaviors']}")
         
     except Exception as e:
-        print(f"❌ Behavior factory example failed: {e}")
+        logger.error(f"❌ Behavior factory example failed: {e}")
     
     # ========================================================================
     # Example 5: Enhanced CapibaraAgentFactory
     # ========================================================================
     
-    print("\n5️⃣ Enhanced CapibaraAgentFactory")
-    print("-" * 40)
+    logger.info("\n5️⃣ Enhanced CapibaraAgentFactory")
+    logger.info("-" * 40)
     
     try:
         # Create enhanced factory (with backward compatibility)
@@ -215,24 +215,24 @@ def demonstrate_factory_patterns():
         legacy_agent = capibara_factory.create_agent("capibara")
         modern_agent = capibara_factory.create_agent("reasoning")
         
-        print(f"✅ Created legacy agent: {getattr(legacy_agent, 'name', 'legacy_capibara')}")
-        print(f"✅ Created modern agent: {modern_agent.agent_id}")
+        logger.info(f"✅ Created legacy agent: {getattr(legacy_agent, 'name', 'legacy_capibara')}")
+        logger.info(f"✅ Created modern agent: {modern_agent.agent_id}")
         
         # Show supported types
         supported_types = capibara_factory.get_supported_types()
-        print(f"\n📋 Supported Types: {len(supported_types)} total")
+        logger.info(f"\n📋 Supported Types: {len(supported_types)} total")
         for agent_type in supported_types[:5]:  # Show first 5
-            print(f"   - {agent_type}")
+            logger.info(f"   - {agent_type}")
         
         # Show factory statistics
         factory_stats = capibara_factory.get_factory_stats()
-        print(f"\n📊 Factory Statistics:")
-        print(f"   Total agents created: {factory_stats['total_agents_created']}")
-        print(f"   Strategy agents: {factory_stats['strategy_agents_created']}")
-        print(f"   Legacy agents: {factory_stats['legacy_agents_created']}")
+        logger.info(f"\n📊 Factory Statistics:")
+        logger.info(f"   Total agents created: {factory_stats['total_agents_created']}")
+        logger.info(f"   Strategy agents: {factory_stats['strategy_agents_created']}")
+        logger.info(f"   Legacy agents: {factory_stats['legacy_agents_created']}")
         
     except Exception as e:
-        print(f"❌ Enhanced factory example failed: {e}")
+        logger.error(f"❌ Enhanced factory example failed: {e}")
 
 
 def demonstrate_strategy_patterns():
@@ -240,19 +240,19 @@ def demonstrate_strategy_patterns():
     Demostrar el uso del patrón Strategy en diferentes escenarios.
     """
     
-    print("\n🎯 STRATEGY PATTERN DEMONSTRATIONS")
-    print("=" * 60)
+    logger.info("\n🎯 STRATEGY PATTERN DEMONSTRATIONS")
+    logger.info("=" * 60)
     
     if not PATTERNS_AVAILABLE:
-        print("❌ Pattern implementations not available")
+        logger.warning("❌ Pattern implementations not available")
         return
     
     # ========================================================================
     # Example 1: Dynamic Behavior Switching
     # ========================================================================
     
-    print("\n1️⃣ Dynamic Behavior Switching")
-    print("-" * 40)
+    logger.info("\n1️⃣ Dynamic Behavior Switching")
+    logger.info("-" * 40)
     
     try:
         factory = StrategyBasedAgentFactory()
@@ -265,8 +265,8 @@ def demonstrate_strategy_patterns():
             "config": {"reasoning_depth": 3}
         })
         
-        print(f"✅ Created adaptive agent: {multi_agent.agent_id}")
-        print(f"   Available behaviors: {len(multi_agent._secondary_behaviors) + 1}")
+        logger.info(f"✅ Created adaptive agent: {multi_agent.agent_id}")
+        logger.info(f"   Available behaviors: {len(multi_agent._secondary_behaviors) + 1}")
         
         # Test different types of tasks to see behavior switching
         test_tasks = [
@@ -284,23 +284,23 @@ def demonstrate_strategy_patterns():
             )
             
             result = multi_agent.execute(context)
-            print(f"   Task: {expected_behavior} -> {result.status} ({result.execution_time_ms:.1f}ms)")
+            logger.info(f"   Task: {expected_behavior} -> {result.status} ({result.execution_time_ms:.1f}ms)")
         
         # Show behavior switching statistics
         agent_stats = multi_agent.get_status()
-        print(f"\n📊 Agent Statistics:")
-        print(f"   Behavior switches: {agent_stats['metrics']['behavior_switches']}")
-        print(f"   Current behavior: {agent_stats['current_behavior']}")
+        logger.info(f"\n📊 Agent Statistics:")
+        logger.info(f"   Behavior switches: {agent_stats['metrics']['behavior_switches']}")
+        logger.info(f"   Current behavior: {agent_stats['current_behavior']}")
         
     except Exception as e:
-        print(f"❌ Dynamic switching example failed: {e}")
+        logger.error(f"❌ Dynamic switching example failed: {e}")
     
     # ========================================================================
     # Example 2: Behavior Composition and Combination
     # ========================================================================
     
-    print("\n2️⃣ Behavior Composition and Combination")
-    print("-" * 40)
+    logger.info("\n2️⃣ Behavior Composition and Combination")
+    logger.info("-" * 40)
     
     try:
         behavior_factory = BehaviorFactory()
@@ -321,10 +321,10 @@ def demonstrate_strategy_patterns():
             {"enable_broadcasting": True}
         )
         
-        print("✅ Created complementary behaviors:")
-        print(f"   Research: {research_behavior.behavior_type}")
-        print(f"   Reasoning: {reasoning_behavior.behavior_type}")
-        print(f"   Communication: {communication_behavior.behavior_type}")
+        logger.info("✅ Created complementary behaviors:")
+        logger.info(f"   Research: {research_behavior.behavior_type}")
+        logger.info(f"   Reasoning: {reasoning_behavior.behavior_type}")
+        logger.info(f"   Communication: {communication_behavior.behavior_type}")
         
         # Create agent that combines these behaviors
         agent_factory = StrategyBasedAgentFactory()
@@ -342,20 +342,20 @@ def demonstrate_strategy_patterns():
         )
         
         result = combined_agent.execute(complex_context)
-        print(f"\n🎯 Complex Task Result:")
-        print(f"   Status: {result.status}")
-        print(f"   Execution time: {result.execution_time_ms:.1f}ms")
-        print(f"   Confidence: {result.confidence:.2f}")
+        logger.info(f"\n🎯 Complex Task Result:")
+        logger.info(f"   Status: {result.status}")
+        logger.info(f"   Execution time: {result.execution_time_ms:.1f}ms")
+        logger.info(f"   Confidence: {result.confidence:.2f}")
         
     except Exception as e:
-        print(f"❌ Behavior composition example failed: {e}")
+        logger.error(f"❌ Behavior composition example failed: {e}")
     
     # ========================================================================
     # Example 3: Context-Aware Strategy Selection
     # ========================================================================
     
-    print("\n3️⃣ Context-Aware Strategy Selection")
-    print("-" * 40)
+    logger.info("\n3️⃣ Context-Aware Strategy Selection")
+    logger.info("-" * 40)
     
     try:
         factory = StrategyBasedAgentFactory()
@@ -385,7 +385,7 @@ def demonstrate_strategy_patterns():
             }
         ]
         
-        print("🧠 Testing Context-Aware Selection:")
+        logger.info("🧠 Testing Context-Aware Selection:")
         
         for i, ctx in enumerate(contexts, 1):
             context = AgentContext(
@@ -399,19 +399,19 @@ def demonstrate_strategy_patterns():
             
             if can_handle:
                 result = smart_agent.execute(context)
-                print(f"   {i}. {ctx['expected']} -> {result.status} ({'✅' if result.status == 'success' else '❌'})")
+                logger.info(f"   {i}. {ctx['expected']} -> {result.status} ({'✅' if result.status == 'success' else '❌'})")
             else:
-                print(f"   {i}. {ctx['expected']} -> Cannot handle")
+                logger.error(f"   {i}. {ctx['expected']} -> Cannot handle")
         
     except Exception as e:
-        print(f"❌ Context-aware selection example failed: {e}")
+        logger.error(f"❌ Context-aware selection example failed: {e}")
     
     # ========================================================================
     # Example 4: Orchestration Strategy Patterns
     # ========================================================================
     
-    print("\n4️⃣ Orchestration Strategy Patterns")
-    print("-" * 40)
+    logger.info("\n4️⃣ Orchestration Strategy Patterns")
+    logger.info("-" * 40)
     
     try:
         # Create multiple agents for orchestration
@@ -423,7 +423,7 @@ def demonstrate_strategy_patterns():
             factory.create_agent(AgentBehaviorType.RESEARCH)
         ]
         
-        print(f"✅ Created agent team: {len(agents)} agents")
+        logger.info(f"✅ Created agent team: {len(agents)} agents")
         
         # Create intelligent orchestration strategy
         orchestration_strategy = IntelligentOrchestrationStrategy()
@@ -440,24 +440,24 @@ def demonstrate_strategy_patterns():
             complex_task, requirements, agents
         )
         
-        print(f"\n📋 Orchestration Plan:")
-        print(f"   Strategy: {orchestration_strategy.strategy_name}")
-        print(f"   Estimated duration: {execution_plan.get('estimated_duration', 0):.1f}s")
-        print(f"   Agent utilization: {execution_plan.get('agent_utilization', 0):.2%}")
-        print(f"   Confidence: {execution_plan.get('confidence', 0):.2f}")
+        logger.info(f"\n📋 Orchestration Plan:")
+        logger.info(f"   Strategy: {orchestration_strategy.strategy_name}")
+        logger.info(f"   Estimated duration: {execution_plan.get('estimated_duration', 0):.1f}s")
+        logger.info(f"   Agent utilization: {execution_plan.get('agent_utilization', 0):.2%}")
+        logger.info(f"   Confidence: {execution_plan.get('confidence', 0):.2f}")
         
         # Execute the orchestrated plan
         coordination_result = orchestration_strategy.coordinate_execution(
             execution_plan, agents
         )
         
-        print(f"\n🎯 Coordination Result:")
-        print(f"   Status: {coordination_result.get('status', 'unknown')}")
-        print(f"   Phases completed: {coordination_result.get('phases_completed', 0)}")
-        print(f"   Agents used: {coordination_result.get('agents_used', 0)}")
+        logger.info(f"\n🎯 Coordination Result:")
+        logger.info(f"   Status: {coordination_result.get('status', 'unknown')}")
+        logger.info(f"   Phases completed: {coordination_result.get('phases_completed', 0)}")
+        logger.info(f"   Agents used: {coordination_result.get('agents_used', 0)}")
         
     except Exception as e:
-        print(f"❌ Orchestration strategy example failed: {e}")
+        logger.error(f"❌ Orchestration strategy example failed: {e}")
 
 
 def demonstrate_advanced_patterns():
@@ -465,19 +465,19 @@ def demonstrate_advanced_patterns():
     Demostrar patrones avanzados combinando Factory y Strategy.
     """
     
-    print("\n🚀 ADVANCED PATTERN COMBINATIONS")
-    print("=" * 60)
+    logger.info("\n🚀 ADVANCED PATTERN COMBINATIONS")
+    logger.info("=" * 60)
     
     if not PATTERNS_AVAILABLE:
-        print("❌ Pattern implementations not available")
+        logger.warning("❌ Pattern implementations not available")
         return
     
     # ========================================================================
     # Example 1: Collaborative Agent System
     # ========================================================================
     
-    print("\n1️⃣ Collaborative Agent System")
-    print("-" * 40)
+    logger.info("\n1️⃣ Collaborative Agent System")
+    logger.info("-" * 40)
     
     try:
         # Create specialized agent team using Factory pattern
@@ -502,7 +502,7 @@ def demonstrate_advanced_patterns():
             })
         }
         
-        print(f"✅ Created collaborative team: {len(team)} specialized agents")
+        logger.info(f"✅ Created collaborative team: {len(team)} specialized agents")
         
         # Simulate collaborative project
         project_task = "Create an AI-powered code review system"
@@ -533,28 +533,28 @@ def demonstrate_advanced_patterns():
                 "confidence": result.confidence
             }
         
-        print(f"\n🤝 Team Contributions:")
+        logger.info(f"\n🤝 Team Contributions:")
         for role, contrib in contributions.items():
             status_icon = "✅" if contrib["status"] == "success" else "❌"
-            print(f"   {role}: {status_icon} {contrib['status']} ({contrib['execution_time']:.1f}ms)")
+            logger.info(f"   {role}: {status_icon} {contrib['status']} ({contrib['execution_time']:.1f}ms)")
         
         # Calculate team performance
         successful = sum(1 for c in contributions.values() if c["status"] == "success")
         avg_confidence = sum(c["confidence"] for c in contributions.values()) / len(contributions)
         
-        print(f"\n📊 Team Performance:")
-        print(f"   Success rate: {successful}/{len(contributions)} ({successful/len(contributions):.1%})")
-        print(f"   Average confidence: {avg_confidence:.2f}")
+        logger.info(f"\n📊 Team Performance:")
+        logger.info(f"   Success rate: {successful}/{len(contributions)} ({successful/len(contributions):.1%})")
+        logger.info(f"   Average confidence: {avg_confidence:.2f}")
         
     except Exception as e:
-        print(f"❌ Collaborative system example failed: {e}")
+        logger.error(f"❌ Collaborative system example failed: {e}")
     
     # ========================================================================
     # Example 2: Adaptive Processing Pipeline
     # ========================================================================
     
-    print("\n2️⃣ Adaptive Processing Pipeline")
-    print("-" * 40)
+    logger.info("\n2️⃣ Adaptive Processing Pipeline")
+    logger.info("-" * 40)
     
     try:
         # Create pipeline with different strategies for different stages
@@ -578,7 +578,7 @@ def demonstrate_advanced_patterns():
             ))
         ]
         
-        print(f"✅ Created adaptive pipeline: {len(pipeline_stages)} stages")
+        logger.info(f"✅ Created adaptive pipeline: {len(pipeline_stages)} stages")
         
         # Create agent that can use different strategies
         agent_factory = StrategyBasedAgentFactory()
@@ -609,26 +609,26 @@ def demonstrate_advanced_patterns():
                 "behavior": behavior.behavior_type.value
             }
         
-        print(f"\n🔄 Pipeline Execution:")
+        logger.info(f"\n🔄 Pipeline Execution:")
         total_time = 0
         for stage, result in pipeline_results.items():
             status_icon = "✅" if result["status"] == "success" else "❌"
-            print(f"   {stage}: {status_icon} {result['behavior']} ({result['time']:.1f}ms)")
+            logger.info(f"   {stage}: {status_icon} {result['behavior']} ({result['time']:.1f}ms)")
             total_time += result["time"]
         
-        print(f"\n⏱️ Pipeline Performance:")
-        print(f"   Total execution time: {total_time:.1f}ms")
-        print(f"   Average stage time: {total_time/len(pipeline_stages):.1f}ms")
+        logger.info(f"\n⏱️ Pipeline Performance:")
+        logger.info(f"   Total execution time: {total_time:.1f}ms")
+        logger.info(f"   Average stage time: {total_time/len(pipeline_stages):.1f}ms")
         
     except Exception as e:
-        print(f"❌ Adaptive pipeline example failed: {e}")
+        logger.error(f"❌ Adaptive pipeline example failed: {e}")
     
     # ========================================================================
     # Example 3: Self-Optimizing System
     # ========================================================================
     
-    print("\n3️⃣ Self-Optimizing System")
-    print("-" * 40)
+    logger.info("\n3️⃣ Self-Optimizing System")
+    logger.info("-" * 40)
     
     try:
         # Create system that adapts its strategies based on performance
@@ -651,9 +651,9 @@ def demonstrate_advanced_patterns():
             "config": {"max_retries": 1}
         })
         
-        print("✅ Created self-optimizing system")
-        print(f"   Monitor: {monitor_agent.agent_id}")
-        print(f"   Worker: {worker_agent.agent_id}")
+        logger.info("✅ Created self-optimizing system")
+        logger.info(f"   Monitor: {monitor_agent.agent_id}")
+        logger.info(f"   Worker: {worker_agent.agent_id}")
         
         # Simulate workload with performance tracking
         workload_tasks = [
@@ -698,31 +698,31 @@ def demonstrate_advanced_patterns():
             
             # Simulate adaptation based on performance
             if execution_time > 200:  # Threshold
-                print(f"   Task {i}: {result.status} ({execution_time:.1f}ms) - Adapting strategy")
+                logger.info(f"   Task {i}: {result.status} ({execution_time:.1f}ms) - Adapting strategy")
                 # In real system, would adjust behavior configuration
             else:
-                print(f"   Task {i}: {result.status} ({execution_time:.1f}ms) - Optimal")
+                logger.info(f"   Task {i}: {result.status} ({execution_time:.1f}ms) - Optimal")
         
         # Calculate system performance
         success_rate = sum(1 for p in performance_history if p["success"]) / len(performance_history)
         avg_time = sum(p["time"] for p in performance_history) / len(performance_history)
         avg_confidence = sum(p["confidence"] for p in performance_history) / len(performance_history)
         
-        print(f"\n📈 System Performance:")
-        print(f"   Success rate: {success_rate:.1%}")
-        print(f"   Average time: {avg_time:.1f}ms")
-        print(f"   Average confidence: {avg_confidence:.2f}")
+        logger.info(f"\n📈 System Performance:")
+        logger.info(f"   Success rate: {success_rate:.1%}")
+        logger.info(f"   Average time: {avg_time:.1f}ms")
+        logger.info(f"   Average confidence: {avg_confidence:.2f}")
         
         # Show adaptation recommendations
         if avg_time > 150:
-            print("   💡 Recommendation: Optimize execution strategy")
+            logger.info("   💡 Recommendation: Optimize execution strategy")
         if success_rate < 0.9:
-            print("   💡 Recommendation: Increase error handling")
+            logger.error("   💡 Recommendation: Increase error handling")
         if avg_confidence < 0.8:
-            print("   💡 Recommendation: Improve reasoning depth")
+            logger.info("   💡 Recommendation: Improve reasoning depth")
         
     except Exception as e:
-        print(f"❌ Self-optimizing system example failed: {e}")
+        logger.error(f"❌ Self-optimizing system example failed: {e}")
 
 
 def run_all_examples():
@@ -730,10 +730,10 @@ def run_all_examples():
     Ejecutar todos los ejemplos de patrones Factory y Strategy.
     """
     
-    print("🌟 CAPIBARA AGENT PATTERNS DEMONSTRATION")
-    print("=" * 70)
-    print("Demostrando el uso de patrones Factory y Strategy en el system de agentes")
-    print()
+    logger.info("🌟 CAPIBARA AGENT PATTERNS DEMONSTRATION")
+    logger.info("=" * 70)
+    logger.info("Demostrando el uso de patrones Factory y Strategy en el system de agentes")
+    logger.info()
     
     try:
         # Run Factory Pattern examples
@@ -745,27 +745,27 @@ def run_all_examples():
         # Run Advanced Pattern combinations
         demonstrate_advanced_patterns()
         
-        print("\n" + "=" * 70)
-        print("✅ ALL PATTERN DEMONSTRATIONS COMPLETED")
-        print("=" * 70)
+        logger.info("\n" + "=" * 70)
+        logger.info("✅ ALL PATTERN DEMONSTRATIONS COMPLETED")
+        logger.info("=" * 70)
         
         # Summary
         if PATTERNS_AVAILABLE:
-            print("\n📋 SUMMARY:")
-            print("✅ Factory Pattern: Flexible agent creation with multiple strategies")
-            print("✅ Strategy Pattern: Dynamic behavior switching and composition")
-            print("✅ Combined Patterns: Advanced collaborative and adaptive systems")
-            print("\n💡 The Factory and Strategy patterns provide:")
-            print("   - Flexible agent creation and configuration")
-            print("   - Dynamic behavior adaptation based on context")
-            print("   - Scalable multi-agent coordination")
-            print("   - Maintainable and extensible architecture")
+            logger.info("\n📋 SUMMARY:")
+            logger.info("✅ Factory Pattern: Flexible agent creation with multiple strategies")
+            logger.info("✅ Strategy Pattern: Dynamic behavior switching and composition")
+            logger.info("✅ Combined Patterns: Advanced collaborative and adaptive systems")
+            logger.info("\n💡 The Factory and Strategy patterns provide:")
+            logger.info("   - Flexible agent creation and configuration")
+            logger.info("   - Dynamic behavior adaptation based on context")
+            logger.info("   - Scalable multi-agent coordination")
+            logger.info("   - Maintainable and extensible architecture")
         else:
-            print("\n⚠️ Pattern implementations not available in this environment")
-            print("   Install the required dependencies to see full demonstrations")
+            logger.warning("\n⚠️ Pattern implementations not available in this environment")
+            logger.info("   Install the required dependencies to see full demonstrations")
         
     except Exception as e:
-        print(f"\n❌ Demonstration failed: {e}")
+        logger.error(f"\n❌ Demonstration failed: {e}")
         logger.error(f"Pattern demonstration error: {e}")
 
 
@@ -792,23 +792,23 @@ def create_example_context(task_description: str, **kwargs) -> 'AgentContext':
 
 def print_agent_info(agent, title: str = "Agent Info"):
     """Print detailed agent information."""
-    print(f"\n{title}:")
+    logger.info(f"\n{title}:")
     
     if hasattr(agent, 'agent_id'):
-        print(f"   ID: {agent.agent_id}")
-        print(f"   Type: {agent.agent_type}")
-        print(f"   Capabilities: {len(agent.capabilities)} total")
+        logger.info(f"   ID: {agent.agent_id}")
+        logger.info(f"   Type: {agent.agent_type}")
+        logger.info(f"   Capabilities: {len(agent.capabilities)} total")
         
         if hasattr(agent, 'get_status'):
             status = agent.get_status()
-            print(f"   Status: {status.get('status', 'unknown')}")
+            logger.info(f"   Status: {status.get('status', 'unknown')}")
             
             if 'metrics' in status:
                 metrics = status['metrics']
-                print(f"   Executions: {metrics.get('tasks_executed', 0)}")
-                print(f"   Success rate: {metrics.get('successful_executions', 0)}/{metrics.get('tasks_executed', 1)}")
+                logger.info(f"   Executions: {metrics.get('tasks_executed', 0)}")
+                logger.info(f"   Success rate: {metrics.get('successful_executions', 0)}/{metrics.get('tasks_executed', 1)}")
     else:
-        print(f"   Legacy agent: {getattr(agent, 'name', 'unknown')}")
+        logger.info(f"   Legacy agent: {getattr(agent, 'name', 'unknown')}")
 
 
 # ============================================================================

@@ -738,5 +738,4 @@ def cache_decorator(
     Returns:
         Decorador de cache
     """
-main
-    return CacheDecorator(cache, key_fn) 
+    return CacheDecorator(cache, key_fn)

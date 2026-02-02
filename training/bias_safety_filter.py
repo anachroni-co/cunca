@@ -57,6 +57,51 @@ class ContentCategory(Enum):
     MISINFORMATION = "misinformation"
     PRIVACY_VIOLATION = "privacy_violation"
     ILLEGAL_CONTENT = "illegal_content"
+
+
+# ── Pre-compiled regex patterns (module-level, compiled once) ────
+
+_BIAS_PATTERNS: Dict[str, List[re.Pattern]] = {
+    "GENDER": [
+        re.compile(r'\b(?:women|girls|females?) (?:are|tend to be|usually) (?:more|less) (\w+)', re.IGNORECASE),
+        re.compile(r'\b(?:men|boys|males?) (?:are|tend to be|usually) (?:more|less) (\w+)', re.IGNORECASE),
+        re.compile(r'\b(?:typical|natural|normal) (?:for )?(?:women|men|girls|boys)', re.IGNORECASE),
+    ],
+    "RACIAL": [
+        re.compile(r'\b(?:black|white|asian|hispanic|latino) people (?:are|tend to)', re.IGNORECASE),
+        re.compile(r'\b(?:all|most|many) (?:blacks|whites|asians|hispanics|latinos)', re.IGNORECASE),
+    ],
+    "CONFIRMATION": [
+        re.compile(r'\bobviously\b', re.IGNORECASE),
+        re.compile(r'\beveryone knows\b', re.IGNORECASE),
+        re.compile(r'\bit\'s clear that\b', re.IGNORECASE),
+        re.compile(r'\bwithout a doubt\b', re.IGNORECASE),
+    ],
+}
+
+_SAFETY_PATTERNS: Dict[str, List[re.Pattern]] = {
+    "VIOLENCE": [
+        re.compile(r'\b(?:how to|ways to|methods to) (?:kill|murder|harm|hurt)', re.IGNORECASE),
+        re.compile(r'\b(?:make|build|create) (?:bomb|weapon|explosive)', re.IGNORECASE),
+    ],
+    "HARASSMENT": [
+        re.compile(r'\b(?:you (?:should|deserve to|will)) (?:die|suffer|fail)', re.IGNORECASE),
+        re.compile(r'\b(?:kill yourself|go die|end your life)', re.IGNORECASE),
+    ],
+    "SELF_HARM": [
+        re.compile(r'\b(?:how to|ways to) (?:commit suicide|kill myself|end (?:my )?life)', re.IGNORECASE),
+        re.compile(r'\b(?:best|easiest) (?:way|method) to (?:die|suicide)', re.IGNORECASE),
+    ],
+}
+
+_PII_PATTERNS: Dict[str, re.Pattern] = {
+    "email": re.compile(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'),
+    "phone": re.compile(r'\b(?:\+?1[-.\s]?)?\(?[0-9]{3}\)?[-.\s]?[0-9]{3}[-.\s]?[0-9]{4}\b'),
+    "ssn": re.compile(r'\b\d{3}-?\d{2}-?\d{4}\b'),
+    "credit_card": re.compile(r'\b(?:\d{4}[-\s]?){3}\d{4}\b'),
+    "ip_address": re.compile(r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b'),
+    "address": re.compile(r'\b\d+\s+[A-Za-z\s]+(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Drive|Dr|Lane|Ln|Court|Ct)\b', re.IGNORECASE),
+}
     SELF_HARM = "self_harm"
     DANGEROUS_ACTIVITIES = "dangerous_activities"
 
@@ -189,32 +234,12 @@ class BiasDetector:
         }
     
     def _compile_bias_patterns(self) -> Dict[BiasType, List[re.Pattern]]:
-        """Compile regex patterns for bias detection."""
-        
-        patterns = {}
-        
-        # Gender bias patterns
-        patterns[BiasType.GENDER] = [
-            re.compile(r'\b(?:women|girls|females?) (?:are|tend to be|usually) (?:more|less) (\w+)', re.IGNORECASE),
-            re.compile(r'\b(?:men|boys|males?) (?:are|tend to be|usually) (?:more|less) (\w+)', re.IGNORECASE),
-            re.compile(r'\b(?:typical|natural|normal) (?:for )?(?:women|men|girls|boys)', re.IGNORECASE)
-        ]
-        
-        # Racial bias patterns
-        patterns[BiasType.RACIAL] = [
-            re.compile(r'\b(?:black|white|asian|hispanic|latino) people (?:are|tend to)', re.IGNORECASE),
-            re.compile(r'\b(?:all|most|many) (?:blacks|whites|asians|hispanics|latinos)', re.IGNORECASE)
-        ]
-        
-        # Confirmation bias patterns
-        patterns[BiasType.CONFIRMATION] = [
-            re.compile(r'\bobviously\b', re.IGNORECASE),
-            re.compile(r'\beveryone knows\b', re.IGNORECASE),
-            re.compile(r'\bit\'s clear that\b', re.IGNORECASE),
-            re.compile(r'\bwithout a doubt\b', re.IGNORECASE)
-        ]
-        
-        return patterns
+        """Return pre-compiled regex patterns for bias detection."""
+        return {
+            BiasType.GENDER: _BIAS_PATTERNS["GENDER"],
+            BiasType.RACIAL: _BIAS_PATTERNS["RACIAL"],
+            BiasType.CONFIRMATION: _BIAS_PATTERNS["CONFIRMATION"],
+        }
     
     def detect_bias(self, text: str, context: str = "") -> List[BiasDetectionResult]:
         """Detect various types of bias in text."""
@@ -400,41 +425,16 @@ class SafetyFilter:
         }
     
     def _compile_safety_patterns(self) -> Dict[ContentCategory, List[re.Pattern]]:
-        """Compile regex patterns for safety detection."""
-        
-        patterns = {}
-        
-        # Violence patterns
-        patterns[ContentCategory.VIOLENCE] = [
-            re.compile(r'\b(?:how to|ways to|methods to) (?:kill|murder|harm|hurt)', re.IGNORECASE),
-            re.compile(r'\b(?:make|build|create) (?:bomb|weapon|explosive)', re.IGNORECASE)
-        ]
-        
-        # Harassment patterns
-        patterns[ContentCategory.HARASSMENT] = [
-            re.compile(r'\b(?:you (?:should|deserve to|will)) (?:die|suffer|fail)', re.IGNORECASE),
-            re.compile(r'\b(?:kill yourself|go die|end your life)', re.IGNORECASE)
-        ]
-        
-        # Self-harm patterns
-        patterns[ContentCategory.SELF_HARM] = [
-            re.compile(r'\b(?:how to|ways to) (?:commit suicide|kill myself|end (?:my )?life)', re.IGNORECASE),
-            re.compile(r'\b(?:best|easiest) (?:way|method) to (?:die|suicide)', re.IGNORECASE)
-        ]
-        
-        return patterns
+        """Return pre-compiled regex patterns for safety detection."""
+        return {
+            ContentCategory.VIOLENCE: _SAFETY_PATTERNS["VIOLENCE"],
+            ContentCategory.HARASSMENT: _SAFETY_PATTERNS["HARASSMENT"],
+            ContentCategory.SELF_HARM: _SAFETY_PATTERNS["SELF_HARM"],
+        }
     
     def _compile_pii_patterns(self) -> Dict[str, re.Pattern]:
-        """Compile patterns for PII detection."""
-        
-        return {
-            "email": re.compile(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'),
-            "phone": re.compile(r'\b(?:\+?1[-.\s]?)?\(?[0-9]{3}\)?[-.\s]?[0-9]{3}[-.\s]?[0-9]{4}\b'),
-            "ssn": re.compile(r'\b\d{3}-?\d{2}-?\d{4}\b'),
-            "credit_card": re.compile(r'\b(?:\d{4}[-\s]?){3}\d{4}\b'),
-            "ip_address": re.compile(r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b'),
-            "address": re.compile(r'\b\d+\s+[A-Za-z\s]+(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Drive|Dr|Lane|Ln|Court|Ct)\b', re.IGNORECASE)
-        }
+        """Return pre-compiled PII detection patterns."""
+        return _PII_PATTERNS
     
     def assess_safety(self, text: str, context: str = "") -> SafetyAssessment:
         """Comprehensive safety assessment of text."""
@@ -802,34 +802,34 @@ if __name__ == "__main__":
             "You should consider multiple perspectives on this complex issue."
         ]
         
-        print("🛡️ Bias Detection and Safety Filtering Test Results")
-        print("=" * 60)
+        logger.info("🛡️ Bias Detection and Safety Filtering Test Results")
+        logger.info("=" * 60)
         
         for i, content in enumerate(test_contents, 1):
-            print(f"\n📝 Test {i}: {content[:50]}...")
+            logger.info(f"\n📝 Test {i}: {content[:50]}...")
             
             result = filter_system.process_content(content)
             
-            print(f"   Safety Level: {result.safety_assessment.overall_safety_level.value if result.safety_assessment else 'N/A'}")
-            print(f"   Safety Score: {result.safety_assessment.safety_score:.2f if result.safety_assessment else 'N/A'}")
-            print(f"   Bias Detected: {len(result.bias_detections)} types")
+            logger.info(f"   Safety Level: {result.safety_assessment.overall_safety_level.value if result.safety_assessment else 'N/A'}")
+            logger.info(f"   Safety Score: {result.safety_assessment.safety_score:.2f if result.safety_assessment else 'N/A'}")
+            logger.info(f"   Bias Detected: {len(result.bias_detections)} types")
             
             if result.bias_detections:
                 for detection in result.bias_detections:
-                    print(f"     - {detection.bias_type.value}: {detection.confidence:.2f} confidence")
+                    logger.info(f"     - {detection.bias_type.value}: {detection.confidence:.2f} confidence")
             
             if result.filtering_applied:
-                print(f"   Filtering Applied: {', '.join(result.filters_triggered)}")
-                print(f"   Filtered Content: {result.filtered_content[:100]}...")
+                logger.info(f"   Filtering Applied: {', '.join(result.filters_triggered)}")
+                logger.info(f"   Filtered Content: {result.filtered_content[:100]}...")
             
-            print(f"   Overall Confidence: {result.confidence:.2f}")
+            logger.info(f"   Overall Confidence: {result.confidence:.2f}")
         
         # Show system statistics
         stats = filter_system.get_filtering_statistics()
-        print(f"\n📊 System Statistics:")
-        print(f"   Bias Types Supported: {len(stats['supported_bias_types'])}")
-        print(f"   Safety Categories: {len(stats['supported_safety_categories'])}")
-        print(f"   Filtering Enabled: {stats['filtering_enabled']}")
+        logger.info(f"\n📊 System Statistics:")
+        logger.info(f"   Bias Types Supported: {len(stats['supported_bias_types'])}")
+        logger.info(f"   Safety Categories: {len(stats['supported_safety_categories'])}")
+        logger.info(f"   Filtering Enabled: {stats['filtering_enabled']}")
     
     import asyncio
     asyncio.run(main())

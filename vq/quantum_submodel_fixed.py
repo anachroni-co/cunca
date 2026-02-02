@@ -10,6 +10,9 @@ from capibara.jax import jax
 from capibara.jax import numpy as jnp
 from typing import Dict, Tuple, Optional, Any
 
+import logging
+logger = logging.getLogger(__name__)
+
 # ============================================================================
 # FIX 1: quantum_submodel.py - Signature Consistency
 # ============================================================================
@@ -370,9 +373,9 @@ def test_quantum_submodel_integration():
         assert metric in metrics, f"Missing metric: {metric}"
         assert isinstance(metrics[metric], (float, int)), f"Metric {metric} should be numeric"
     
-    print("✅ All P0 fixes validated successfully!")
-    print(f"Output shape: {outputs['tokens'].shape}")
-    print(f"Metrics: {list(metrics.keys())}")
+    logger.info("✅ All P0 fixes validated successfully!")
+    logger.info(f"Output shape: {outputs['tokens'].shape}")
+    logger.info(f"Metrics: {list(metrics.keys())}")
     return outputs, metrics
 
 # ============================================================================
@@ -421,4 +424,4 @@ def create_training_step_function(model: QuantumSubmodel):
 if __name__ == "__main__":
     # Run integration test
     outputs, metrics = test_quantum_submodel_integration()
-    print("\n🚀 P0 fixes complete - ready for pilot training!") 
+    logger.info("\n🚀 P0 fixes complete - ready for pilot training!")

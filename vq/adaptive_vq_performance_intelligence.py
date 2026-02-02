@@ -818,8 +818,8 @@ def create_adaptive_performance_config(
 def demonstrate_adaptive_vq_performance_intelligence():
     """Demonstrate the adaptive VQ performance intelligence system."""
     
-    print("⚡ ADAPTIVE VQ PERFORMANCE INTELLIGENCE DEMONSTRATION")
-    print("=" * 60)
+    logger.info("⚡ ADAPTIVE VQ PERFORMANCE INTELLIGENCE DEMONSTRATION")
+    logger.info("=" * 60)
     
     # Create configuration
     config = create_adaptive_performance_config(
@@ -828,10 +828,10 @@ def demonstrate_adaptive_vq_performance_intelligence():
         enable_all_features=True
     )
     
-    print(f"📋 Configuration created:")
-    print(f"   - Strategy: {config.optimization_strategy.value}")
-    print(f"   - Adaptation: {config.adaptation_mode.value}")
-    print(f"   - Objectives: {len(config.performance_objectives)}")
+    logger.info(f"📋 Configuration created:")
+    logger.info(f"   - Strategy: {config.optimization_strategy.value}")
+    logger.info(f"   - Adaptation: {config.adaptation_mode.value}")
+    logger.info(f"   - Objectives: {len(config.performance_objectives)}")
     
     # Create performance intelligence system
     performance_ai = create_adaptive_vq_performance_intelligence(config)
@@ -839,10 +839,10 @@ def demonstrate_adaptive_vq_performance_intelligence():
     # Get system status
     status = performance_ai.get_performance_intelligence_status()
     
-    print(f"\n🔍 Performance Intelligence Status:")
-    print(f"   - Components: {sum(status['components'].values())}/8")
-    print(f"   - Capabilities: {sum(status['capabilities'].values())}/6")
-    print(f"   - Monitoring: {'✅' if status['monitoring']['active'] else '❌'}")
+    logger.info(f"\n🔍 Performance Intelligence Status:")
+    logger.info(f"   - Components: {sum(status['components'].values())}/8")
+    logger.info(f"   - Capabilities: {sum(status['capabilities'].values())}/6")
+    logger.info(f"   - Monitoring: {'✅' if status['monitoring']['active'] else '❌'}")
     
     return performance_ai
 

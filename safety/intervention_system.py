@@ -726,9 +726,9 @@ def example_integration():
     # Process message
     result = safety_manager.process_user_message(user_id, message, session_data)
     
-    print("Análisis de salud mental:", result["mental_health_analysis"])
-    print("Estado de intervenciones:", result["intervention_status"])
-    print("Puede continuar:", result["can_continue"])
+    logger.info("Análisis de salud mental:", result["mental_health_analysis"])
+    logger.info("Estado de intervenciones:", result["intervention_status"])
+    logger.info("Puede continuar:", result["can_continue"])
 
 if __name__ == "__main__":
     example_integration()

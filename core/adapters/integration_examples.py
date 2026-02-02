@@ -40,7 +40,7 @@ class AdapterSystemDemo:
     
     def initialize_system(self) -> bool:
         """Initializes the entire adapter system."""
-        print("🚀 Initializing CapibaraGPT-v2 Adapter System...")
+        logger.info("🚀 Initializing CapibaraGPT-v2 Adapter System...")
         
         try:
             # 1. Initialize main adapters
@@ -52,27 +52,27 @@ class AdapterSystemDemo:
 
             # 2. Initialize each adapter
             for name, adapter in self.adapters.items():
-                print(f"  📦 Initializing {name} adapter...")
+                logger.info(f"  📦 Initializing {name} adapter...")
                 success = adapter.initialize()
                 if success:
-                    print(f"    ✅ {name} adapter initialized successfully")
+                    logger.info(f"    ✅ {name} adapter initialized successfully")
                 else:
-                    print(f"    ❌ Error initializing {name} adapter")
+                    logger.error(f"    ❌ Error initializing {name} adapter")
                     return False
 
             # 3. Start metrics system
-            print("  📊 Starting metrics system...")
+            logger.info("  📊 Starting metrics system...")
             start_metrics_collection()
 
             # 4. Configure automatic monitoring
             self._setup_monitoring()
 
             self.initialized = True
-            print("✅ Adapter system initialized completely\n")
+            logger.info("✅ Adapter system initialized completely\n")
             return True
 
         except Exception as e:
-            print(f"❌ Error initializing system: {e}")
+            logger.error(f"❌ Error initializing system: {e}")
             return False
     
     def _setup_monitoring(self):
@@ -80,26 +80,26 @@ class AdapterSystemDemo:
         def alert_handler(alert):
             level_emoji = {"warning": "⚠️", "error": "❌", "critical": "🚨"}
             emoji = level_emoji.get(alert.alert_level.value, "❓")
-            print(f"{emoji} ALERTA: {alert.message}")
+            logger.info(f"{emoji} ALERTA: {alert.message}")
         
         metrics_collector.add_alert_callback(alert_handler)
     
     def demo_kernel_abstraction(self):
         """Demonstrate the use of the Kernel Abstraction Adapter."""
-        print("🔧 === DEMO: KERNEL ABSTRACTION ADAPTER ===")
+        logger.info("🔧 === DEMO: KERNEL ABSTRACTION ADAPTER ===")
 
         if not self.initialized:
-            print("❌ System not initialized")
+            logger.info("❌ System not initialized")
             return
 
         kernel_adapter = self.adapters['kernel']
 
         # 1. Show available backends
         backends = kernel_adapter.get_available_backends()
-        print(f"📋 Available backends: {list(backends.keys())}")
+        logger.info(f"📋 Available backends: {list(backends.keys())}")
         
         # 2. Flash Attention Demo
-        print("\n🧠 Executing Flash Attention...")
+        logger.warning("\n🧠 Executing Flash Attention...")
         
         # Create test data
         batch_size, seq_len, hidden_dim = 2, 128, 64
@@ -120,14 +120,14 @@ class AdapterSystemDemo:
             result = kernel_adapter.flash_attention(query, key, value, context=context)
             execution_time = (time.time() - start_time) * 1000
             
-            print(f"  ✅ Flash Attention completed in {execution_time:.2f}ms")
-            print(f"  📊 Result shape: {getattr(result, 'shape', 'N/A')}")
+            logger.warning(f"  ✅ Flash Attention completed in {execution_time:.2f}ms")
+            logger.info(f"  📊 Result shape: {getattr(result, 'shape', 'N/A')}")
             
         except Exception as e:
-            print(f"  ❌ Error in Flash Attention: {e}")
+            logger.error(f"  ❌ Error in Flash Attention: {e}")
 
         # 3. Matrix Multiply Demo
-        print("\n🔢 Executing Matrix Multiply...")
+        logger.info("\n🔢 Executing Matrix Multiply...")
         
         a = np.random.randn(256, 512).astype(np.float32)
         b = np.random.randn(512, 256).astype(np.float32)
@@ -137,36 +137,36 @@ class AdapterSystemDemo:
             result = kernel_adapter.matrix_multiply(a, b)
             execution_time = (time.time() - start_time) * 1000
             
-            print(f"  ✅ Matrix Multiply completed in {execution_time:.2f}ms")
-            print(f"  📊 Result shape: {getattr(result, 'shape', 'N/A')}")
+            logger.info(f"  ✅ Matrix Multiply completed in {execution_time:.2f}ms")
+            logger.info(f"  📊 Result shape: {getattr(result, 'shape', 'N/A')}")
             
         except Exception as e:
-            print(f"  ❌ Error in Matrix Multiply: {e}")
+            logger.error(f"  ❌ Error in Matrix Multiply: {e}")
 
         # 4. Show operation statistics
         stats = kernel_adapter.get_operation_stats()
-        print(f"\n📈 Operation statistics:")
-        print(f"  🔄 Cached operations: {stats['cached_operations']}")
-        print(f"  🎯 Total backends: {stats['total_backends']}")
+        logger.info(f"\n📈 Operation statistics:")
+        logger.info(f"  🔄 Cached operations: {stats['cached_operations']}")
+        logger.info(f"  🎯 Total backends: {stats['total_backends']}")
 
-        print("✅ Kernel Abstraction Demo completed\n")
+        logger.info("✅ Kernel Abstraction Demo completed\n")
     
     def demo_performance_optimization(self):
         """Demonstrates the use of the Performance Adapter."""
-        print("⚡ === DEMO: PERFORMANCE ADAPTER ===")
+        logger.info("⚡ === DEMO: PERFORMANCE ADAPTER ===")
 
         if not self.initialized:
-            print("❌ System not initialized")
+            logger.info("❌ System not initialized")
             return
 
         performance_adapter = self.adapters['performance']
 
         # 1. Enable automatic adaptation
-        print("🔄 Enabling automatic adaptation...")
+        logger.info("🔄 Enabling automatic adaptation...")
         performance_adapter.enable_auto_adaptation()
 
         # 2. Simulate workload
-        print("🏋️ Simulating workload...")
+        logger.info("🏋️ Simulating workload...")
         
         @monitor_adapter_performance("DemoWorkload", "intensive_operation")
         def intensive_operation(size: int):
@@ -178,186 +178,186 @@ class AdapterSystemDemo:
 
         # Execute operations with different workloads
         for i, size in enumerate([100, 200, 300, 500], 1):
-            print(f"  🔄 Operation {i}: matrix {size}x{size}")
+            logger.info(f"  🔄 Operation {i}: matrix {size}x{size}")
             try:
                 result = intensive_operation(size)
-                print(f"    ✅ Completed: shape {result.shape}")
+                logger.info(f"    ✅ Completed: shape {result.shape}")
             except Exception as e:
-                print(f"    ❌ Error: {e}")
+                logger.error(f"    ❌ Error: {e}")
 
         # 3. Get performance report
-        print("\n📊 Generating performance report...")
+        logger.info("\n📊 Generating performance report...")
         report = performance_adapter.get_performance_report()
 
-        print(f"📈 Current metrics:")
+        logger.info(f"📈 Current metrics:")
         for metric, value in report['current_metrics'].items():
-            print(f"  {metric}: {value:.3f}")
+            logger.info(f"  {metric}: {value:.3f}")
 
-        print(f"\n📊 Adaptation statistics:")
+        logger.info(f"\n📊 Adaptation statistics:")
         stats = report['adaptation_stats']
-        print(f"  Total adaptations: {stats['total_adaptations']}")
-        print(f"  Successful adaptations: {stats['successful_adaptations']}")
+        logger.info(f"  Total adaptations: {stats['total_adaptations']}")
+        logger.info(f"  Successful adaptations: {stats['successful_adaptations']}")
 
         # 4. Change optimization goal
-        print("\n🎯 Changing goal to MINIMIZE_LATENCY...")
+        logger.info("\n🎯 Changing goal to MINIMIZE_LATENCY...")
         performance_adapter.set_optimization_goal(OptimizationGoal.MINIMIZE_LATENCY)
 
-        print("✅ Performance Adapter Demo completed\n")
+        logger.info("✅ Performance Adapter Demo completed\n")
     
     def demo_hardware_compatibility(self):
         """Demonstrates the use of the Hardware Compatibility Adapter."""
-        print("🖥️ === DEMO: HARDWARE COMPATIBILITY ADAPTER ===")
+        logger.info("🖥️ === DEMO: HARDWARE COMPATIBILITY ADAPTER ===")
 
         if not self.initialized:
-            print("❌ System not initialized")
+            logger.info("❌ System not initialized")
             return
 
         hardware_adapter = self.adapters['hardware']
 
         # 1. Detect system hardware
-        print("🔍 Detecting system hardware...")
+        logger.info("🔍 Detecting system hardware...")
         
         try:
             hardware_profile = hardware_adapter.force_hardware_detection()
 
-            print(f"💻 Detected system: {hardware_profile['system_name']}")
-            print(f"🏗️ Architecture: {hardware_profile['system_architecture']}")
-            print(f"💾 Total memory: {hardware_profile['total_memory_gb']:.1f} GB")
-            print(f"⚡ Total compute: {hardware_profile['total_compute_tflops']:.1f} TFLOPS")
+            logger.info(f"💻 Detected system: {hardware_profile['system_name']}")
+            logger.info(f"🏗️ Architecture: {hardware_profile['system_architecture']}")
+            logger.info(f"💾 Total memory: {hardware_profile['total_memory_gb']:.1f} GB")
+            logger.info(f"⚡ Total compute: {hardware_profile['total_compute_tflops']:.1f} TFLOPS")
 
-            print(f"\n🔧 Detected components ({len(hardware_profile['capabilities'])}):")
+            logger.info(f"\n🔧 Detected components ({len(hardware_profile['capabilities'])}):")
             for cap in hardware_profile['capabilities'][:5]:  # Show first 5
-                print(f"  • {cap['name']}: {cap['hardware_type']}")
+                logger.info(f"  • {cap['name']}: {cap['hardware_type']}")
                 if cap.get('memory_gb', 0) > 0:
-                    print(f"    💾 {cap['memory_gb']:.1f} GB")
+                    logger.info(f"    💾 {cap['memory_gb']:.1f} GB")
                 if cap.get('peak_performance_tflops', 0) > 0:
-                    print(f"    ⚡ {cap['peak_performance_tflops']:.1f} TFLOPS")
+                    logger.info(f"    ⚡ {cap['peak_performance_tflops']:.1f} TFLOPS")
 
         except Exception as e:
-            print(f"❌ Error detecting hardware: {e}")
+            logger.error(f"❌ Error detecting hardware: {e}")
             return
         
         # 2. Apply optimizations
-        print("\n🔧 Applying hardware optimizations...")
+        logger.info("\n🔧 Applying hardware optimizations...")
 
         try:
             optimizations = hardware_adapter.execute("optimize")
             applied = optimizations.get('applied_optimizations', [])
 
             if applied:
-                print(f"✅ {len(applied)} optimizations applied:")
+                logger.info(f"✅ {len(applied)} optimizations applied:")
                 for opt in applied:
-                    print(f"  • {opt['type']}: {opt['parameter']} = {opt['value']}")
-                    print(f"    📈 Expected improvement: {opt['expected_improvement']:.1f}%")
+                    logger.info(f"  • {opt['type']}: {opt['parameter']} = {opt['value']}")
+                    logger.info(f"    📈 Expected improvement: {opt['expected_improvement']:.1f}%")
             else:
-                print("ℹ️ No additional optimizations applied")
+                logger.info("ℹ️ No additional optimizations applied")
 
         except Exception as e:
-            print(f"❌ Error applying optimizations: {e}")
+            logger.error(f"❌ Error applying optimizations: {e}")
         
         # 3. Get system summary
-        print("\n📊 System summary:")
+        logger.info("\n📊 System summary:")
         summary = hardware_adapter.get_hardware_summary()
 
-        print(f"🔧 Total components: {summary['total_components']}")
-        print(f"💾 Available memory: {summary['total_memory_gb']:.1f} GB")
-        print(f"⚡ Compute power: {summary['total_compute_tflops']:.1f} TFLOPS")
-        print(f"🎯 Optimization opportunities: {summary['optimization_opportunities']}")
+        logger.info(f"🔧 Total components: {summary['total_components']}")
+        logger.info(f"💾 Available memory: {summary['total_memory_gb']:.1f} GB")
+        logger.info(f"⚡ Compute power: {summary['total_compute_tflops']:.1f} TFLOPS")
+        logger.info(f"🎯 Optimization opportunities: {summary['optimization_opportunities']}")
 
-        print(f"\n🏷️ Detected hardware types:")
+        logger.info(f"\n🏷️ Detected hardware types:")
         for hw_type, count in summary['hardware_types'].items():
-            print(f"  • {hw_type}: {count}")
+            logger.info(f"  • {hw_type}: {count}")
 
-        print("✅ Hardware Compatibility Demo completed\n")
+        logger.info("✅ Hardware Compatibility Demo completed\n")
     
     def demo_quantization_methods(self):
         """Demonstrates the use of the Quantization Adapter."""
-        print("🗜️ === DEMO: QUANTIZATION ADAPTER ===")
+        logger.info("🗜️ === DEMO: QUANTIZATION ADAPTER ===")
 
         if not self.initialized:
-            print("❌ System not initialized")
+            logger.info("❌ System not initialized")
             return
 
         quantization_adapter = self.adapters['quantization']
 
         # 1. Create test data
-        print("📊 Preparing test data...")
+        logger.info("📊 Preparing test data...")
         test_data = np.random.randn(1000, 512).astype(np.float32)
         original_size = test_data.nbytes / (1024 * 1024)  # MB
-        print(f"  📏 Original size: {original_size:.2f} MB")
+        logger.info(f"  📏 Original size: {original_size:.2f} MB")
 
         # 2. Benchmark available methods
-        print("\n🏃 Running quantization methods benchmark...")
+        logger.info("\n🏃 Running quantization methods benchmark...")
         
         try:
             benchmark_results = quantization_adapter.benchmark(test_data)
 
-            print("📈 Benchmark results:")
+            logger.info("📈 Benchmark results:")
             for method, metrics in benchmark_results['benchmark_results'].items():
                 if metrics.get('success', False):
-                    print(f"\n  🔧 {method.upper()}:")
-                    print(f"    📦 Compression: {metrics['compression_ratio']:.1f}x")
-                    print(f"    🎯 Accuracy: {metrics['accuracy_retention']:.1%}")
-                    print(f"    ⏱️ Time: {metrics['execution_time_ms']:.1f}ms")
-                    print(f"    💾 Savings: {metrics['memory_savings_mb']:.1f}MB")
+                    logger.info(f"\n  🔧 {method.upper()}:")
+                    logger.info(f"    📦 Compression: {metrics['compression_ratio']:.1f}x")
+                    logger.info(f"    🎯 Accuracy: {metrics['accuracy_retention']:.1%}")
+                    logger.info(f"    ⏱️ Time: {metrics['execution_time_ms']:.1f}ms")
+                    logger.info(f"    💾 Savings: {metrics['memory_savings_mb']:.1f}MB")
                 else:
-                    print(f"  ❌ {method}: {metrics.get('error', 'Unknown error')}")
+                    logger.error(f"  ❌ {method}: {metrics.get('error', 'Unknown error')}")
 
         except Exception as e:
-            print(f"❌ Error in benchmark: {e}")
+            logger.error(f"❌ Error in benchmark: {e}")
             return
         
         # 3. Demonstrate automatic selection
-        print("\n🤖 Demonstrating automatic method selection...")
+        logger.info("\n🤖 Demonstrating automatic method selection...")
 
         for quality in [QuantizationQuality.HIGH_QUALITY, QuantizationQuality.BALANCED, QuantizationQuality.MAXIMUM_COMPRESSION]:
-            print(f"\n  🎯 Quality: {quality.value}")
+            logger.info(f"\n  🎯 Quality: {quality.value}")
 
             try:
                 result = quantization_adapter.quantize(test_data, method=None, quality=quality)
 
                 method_used = result.metadata.get('method', 'unknown')
-                print(f"    🔧 Selected method: {method_used}")
-                print(f"    📦 Compression: {result.compression_ratio:.1f}x")
-                print(f"    🎯 Accuracy: {result.accuracy_retention:.1%}")
-                print(f"    ⏱️ Time: {result.quantization_time_ms:.1f}ms")
+                logger.info(f"    🔧 Selected method: {method_used}")
+                logger.info(f"    📦 Compression: {result.compression_ratio:.1f}x")
+                logger.info(f"    🎯 Accuracy: {result.accuracy_retention:.1%}")
+                logger.info(f"    ⏱️ Time: {result.quantization_time_ms:.1f}ms")
 
                 # Dequantization test
                 dequantized = quantization_adapter.dequantize(result.quantized_data)
-                print(f"    ✅ Dequantization: {getattr(dequantized, 'shape', 'OK')}")
+                logger.info(f"    ✅ Dequantization: {getattr(dequantized, 'shape', 'OK')}")
 
             except Exception as e:
-                print(f"    ❌ Error: {e}")
+                logger.error(f"    ❌ Error: {e}")
         
         # 4. Show available methods
-        print("\n📋 Available methods:")
+        logger.info("\n📋 Available methods:")
         methods_info = quantization_adapter.execute("get_methods")
 
         for method, info in methods_info['available_methods'].items():
-            print(f"\n  🔧 {method.upper()}:")
-            print(f"    ✅ Available: {info['available']}")
-            print(f"    🎓 Calibrated: {info['calibrated']}")
+            logger.info(f"\n  🔧 {method.upper()}:")
+            logger.info(f"    ✅ Available: {info['available']}")
+            logger.info(f"    🎓 Calibrated: {info['calibrated']}")
 
             compressions = info['estimated_compression_ratios']
-            print(f"    📦 Estimated compression:")
-            print(f"      Small data: {compressions['small_data']:.1f}x")
-            print(f"      Medium data: {compressions['medium_data']:.1f}x")
-            print(f"      Large data: {compressions['large_data']:.1f}x")
+            logger.info(f"    📦 Estimated compression:")
+            logger.info(f"      Small data: {compressions['small_data']:.1f}x")
+            logger.info(f"      Medium data: {compressions['medium_data']:.1f}x")
+            logger.info(f"      Large data: {compressions['large_data']:.1f}x")
 
-        print("✅ Quantization Adapter Demo completed\n")
+        logger.info("✅ Quantization Adapter Demo completed\n")
     
     def demo_language_processing(self):
         """Demonstrates the use of the Language Processing Adapter."""
-        print("🌐 === DEMO: LANGUAGE PROCESSING ADAPTER ===")
+        logger.info("🌐 === DEMO: LANGUAGE PROCESSING ADAPTER ===")
 
         if not self.initialized:
-            print("❌ System not initialized")
+            logger.info("❌ System not initialized")
             return
 
         language_adapter = self.adapters['language']
 
         # 1. Advanced language detection
-        print("🔍 Demonstrating advanced language detection...")
+        logger.info("🔍 Demonstrating advanced language detection...")
         
         test_texts = [
             "Hello, how are you today?",
@@ -368,27 +368,27 @@ class AdapterSystemDemo:
         ]
         
         for i, text in enumerate(test_texts, 1):
-            print(f"\n  📝 Text {i}: '{text[:50]}...'")
+            logger.info(f"\n  📝 Text {i}: '{text[:50]}...'")
 
             try:
                 detection = language_adapter.detect_language(text)
                 result = detection['detection_result']
 
-                print(f"    🌍 Primary language: {result['primary_language']}")
-                print(f"    🎯 Confidence: {result['confidence']:.2f}")
-                print(f"    🔀 Multilingual: {result['is_multilingual']}")
-                print(f"    🔄 Code-switching: {result['code_switching']}")
+                logger.info(f"    🌍 Primary language: {result['primary_language']}")
+                logger.info(f"    🎯 Confidence: {result['confidence']:.2f}")
+                logger.info(f"    🔀 Multilingual: {result['is_multilingual']}")
+                logger.info(f"    🔄 Code-switching: {result['code_switching']}")
 
                 if result['is_multilingual']:
-                    print(f"    🌐 Detected languages: {result['languages_detected']}")
+                    logger.info(f"    🌐 Detected languages: {result['languages_detected']}")
 
-                print(f"    📊 Complexity: {result['complexity_score']:.2f}")
+                logger.info(f"    📊 Complexity: {result['complexity_score']:.2f}")
 
             except Exception as e:
-                print(f"    ❌ Error: {e}")
+                logger.error(f"    ❌ Error: {e}")
         
         # 2. Cultural adaptation
-        print("\n🏛️ Demonstrating cultural adaptation...")
+        logger.info("\n🏛️ Demonstrating cultural adaptation...")
         
         cultural_examples = [
             {
@@ -404,9 +404,9 @@ class AdapterSystemDemo:
         ]
         
         for example in cultural_examples:
-            print(f"\n  📝 Text: '{example['text']}'")
-            print(f"  🌍 From: {example['source'].value}")
-            print(f"  🎯 To: {example['target'].value}")
+            logger.info(f"\n  📝 Text: '{example['text']}'")
+            logger.info(f"  🌍 From: {example['source'].value}")
+            logger.info(f"  🎯 To: {example['target'].value}")
 
             try:
                 adaptation = language_adapter.adapt_culturally(
@@ -416,17 +416,17 @@ class AdapterSystemDemo:
                 )
 
                 result = adaptation['adaptation_result']
-                print(f"  ✨ Adapted: '{result['adapted_content']}'")
-                print(f"  🔄 Changes: {len(result['changes_made'])}")
+                logger.info(f"  ✨ Adapted: '{result['adapted_content']}'")
+                logger.info(f"  🔄 Changes: {len(result['changes_made'])}")
 
                 for change in result['changes_made'][:2]:  # Show first 2
-                    print(f"    • {change}")
+                    logger.info(f"    • {change}")
 
             except Exception as e:
-                print(f"  ❌ Error: {e}")
+                logger.error(f"  ❌ Error: {e}")
         
         # 3. Complete multilingual processing
-        print("\n🌐 Demonstrating complete multilingual processing...")
+        logger.info("\n🌐 Demonstrating complete multilingual processing...")
         
         multilingual_text = "Hello everyone! Hola a todos! 大家好！"
         
@@ -440,70 +440,70 @@ class AdapterSystemDemo:
         try:
             analysis = language_adapter.process_multilingual(multilingual_text, context)
 
-            print(f"  📝 Text: '{multilingual_text}'")
-            print(f"  🌍 Language analysis:")
+            logger.info(f"  📝 Text: '{multilingual_text}'")
+            logger.info(f"  🌍 Language analysis:")
 
             lang_detection = analysis['language_detection']
-            print(f"    Primary language: {lang_detection['primary_language']}")
-            print(f"    Multilingual: {lang_detection['is_multilingual']}")
+            logger.info(f"    Primary language: {lang_detection['primary_language']}")
+            logger.info(f"    Multilingual: {lang_detection['is_multilingual']}")
 
             if analysis['code_switching_analysis']:
                 cs_analysis = analysis['code_switching_analysis']
-                print(f"    Code-switching detected: {cs_analysis['detected']}")
+                logger.info(f"    Code-switching detected: {cs_analysis['detected']}")
                 if cs_analysis['detected']:
-                    print(f"    Code-switching languages: {cs_analysis['languages']}")
+                    logger.info(f"    Code-switching languages: {cs_analysis['languages']}")
 
-            print(f"  🎯 Processing recommendations:")
+            logger.info(f"  🎯 Processing recommendations:")
             for rec in analysis['recommendations'][:3]:  # Show first 3
-                print(f"    • {rec}")
+                logger.info(f"    • {rec}")
 
         except Exception as e:
-            print(f"  ❌ Error: {e}")
+            logger.error(f"  ❌ Error: {e}")
         
         # 4. Show available language profiles
-        print("\n📚 Available language profiles:")
+        logger.info("\n📚 Available language profiles:")
         profiles = language_adapter.execute("get_profiles")
 
-        print(f"  🌐 Total languages: {profiles['total_languages']}")
-        print(f"  🏛️ Language families: {len(profiles['supported_families'])}")
+        logger.info(f"  🌐 Total languages: {profiles['total_languages']}")
+        logger.info(f"  🏛️ Language families: {len(profiles['supported_families'])}")
 
-        print(f"  📋 Some supported languages:")
+        logger.info(f"  📋 Some supported languages:")
         for lang_code, profile in list(profiles['language_profiles'].items())[:5]:
-            print(f"    • {profile['language_name']} ({lang_code})")
-            print(f"      Family: {profile['family']}")
-            print(f"      Cultural context: {profile['cultural_context']}")
+            logger.info(f"    • {profile['language_name']} ({lang_code})")
+            logger.info(f"      Family: {profile['family']}")
+            logger.info(f"      Cultural context: {profile['cultural_context']}")
 
-        print("✅ Language Processing Demo completed\n")
+        logger.info("✅ Language Processing Demo completed\n")
     
     def demo_metrics_system(self):
         """Demonstrates the automatic metrics system."""
-        print("📊 === DEMO: AUTOMATIC METRICS SYSTEM ===")
+        logger.info("📊 === DEMO: AUTOMATIC METRICS SYSTEM ===")
 
         # 1. Get system overview
-        print("🔍 Getting system overview...")
+        logger.info("🔍 Getting system overview...")
         overview = get_metrics_overview()
 
-        print(f"📊 System status:")
-        print(f"  🔧 Active adapters: {overview['total_adapters']}")
-        print(f"  📈 Average score: {overview['system_performance']['average_system_score']:.2f}")
-        print(f"  ⚠️ Total alerts: {overview['total_alerts']}")
-        print(f"  🚨 Unacknowledged alerts: {overview['unacknowledged_alerts']}")
-        print(f"  🔄 Total operations: {overview['system_performance']['total_operations']}")
+        logger.info(f"📊 System status:")
+        logger.info(f"  🔧 Active adapters: {overview['total_adapters']}")
+        logger.info(f"  📈 Average score: {overview['system_performance']['average_system_score']:.2f}")
+        logger.info(f"  ⚠️ Total alerts: {overview['total_alerts']}")
+        logger.info(f"  🚨 Unacknowledged alerts: {overview['unacknowledged_alerts']}")
+        logger.info(f"  🔄 Total operations: {overview['system_performance']['total_operations']}")
         
         # 2. Status per adapter
-        print(f"\n📋 Status per adapter:")
+        logger.info(f"\n📋 Status per adapter:")
         status_emoji = {"healthy": "✅", "warning": "⚠️", "critical": "❌"}
 
         for name, info in overview['adapters_summary'].items():
             emoji = status_emoji.get(info['status'], "❓")
-            print(f"  {emoji} {name}:")
-            print(f"    📊 Score: {info['performance_score']:.2f}")
-            print(f"    ✅ Success: {info['success_rate']:.1%}")
-            print(f"    ⏱️ Average time: {info['avg_execution_time']:.1f}ms")
-            print(f"    🔄 Operations: {info['total_operations']}")
+            logger.info(f"  {emoji} {name}:")
+            logger.info(f"    📊 Score: {info['performance_score']:.2f}")
+            logger.info(f"    ✅ Success: {info['success_rate']:.1%}")
+            logger.info(f"    ⏱️ Average time: {info['avg_execution_time']:.1f}ms")
+            logger.info(f"    🔄 Operations: {info['total_operations']}")
         
         # 3. Get recent alerts
-        print(f"\n🚨 Recent alerts:")
+        logger.info(f"\n🚨 Recent alerts:")
         alerts = metrics_collector.get_alerts(limit=5)
 
         if alerts:
@@ -511,41 +511,41 @@ class AdapterSystemDemo:
                 level_emoji = {"info": "ℹ️", "warning": "⚠️", "error": "❌", "critical": "🚨"}
                 emoji = level_emoji.get(alert['alert_level'], "❓")
 
-                print(f"  {emoji} {alert['adapter_name']} - {alert['metric_type']}")
-                print(f"    📅 {alert['datetime'][:19]}")
-                print(f"    📊 Value: {alert['current_value']:.3f}")
-                print(f"    ✅ Acknowledged: {'Yes' if alert['acknowledged'] else 'No'}")
+                logger.info(f"  {emoji} {alert['adapter_name']} - {alert['metric_type']}")
+                logger.info(f"    📅 {alert['datetime'][:19]}")
+                logger.info(f"    📊 Value: {alert['current_value']:.3f}")
+                logger.info(f"    ✅ Acknowledged: {'Yes' if alert['acknowledged'] else 'No'}")
         else:
-            print("  ✅ No recent alerts")
+            logger.info("  ✅ No recent alerts")
         
         # 4. Detailed metrics for a specific adapter
         if self.adapters:
             adapter_name = list(self.adapters.keys())[0]
-            print(f"\n🔍 Detailed metrics - {adapter_name}:")
+            logger.debug(f"\n🔍 Detailed metrics - {adapter_name}:")
 
             # Get specific metrics
             adapter_metrics = metrics_collector.get_adapter_metrics(f"{adapter_name.title()}Adapter")
 
             if adapter_metrics:
-                print(f"  ⏰ Uptime: {adapter_metrics['uptime_seconds']:.0f}s")
-                print(f"  📊 Performance score: {adapter_metrics['performance_score']:.2f}")
-                print(f"  🔄 Total operations: {adapter_metrics['total_operations']}")
+                logger.info(f"  ⏰ Uptime: {adapter_metrics['uptime_seconds']:.0f}s")
+                logger.info(f"  📊 Performance score: {adapter_metrics['performance_score']:.2f}")
+                logger.info(f"  🔄 Total operations: {adapter_metrics['total_operations']}")
 
-                print(f"  📈 Current metrics:")
+                logger.info(f"  📈 Current metrics:")
                 for metric, value in adapter_metrics['current_metrics'].items():
-                    print(f"    {metric}: {value:.3f}")
+                    logger.info(f"    {metric}: {value:.3f}")
             else:
-                print("  ℹ️ Metrics not yet available")
+                logger.info("  ℹ️ Metrics not yet available")
 
-        print("✅ Metrics System Demo completed\n")
+        logger.info("✅ Metrics System Demo completed\n")
     
     def run_complete_demo(self):
         """Executes the complete system demonstration."""
-        print("🎬 === COMPLETE ADAPTER SYSTEM DEMONSTRATION ===\n")
+        logger.info("🎬 === COMPLETE ADAPTER SYSTEM DEMONSTRATION ===\n")
 
         # Initialize system
         if not self.initialize_system():
-            print("❌ Could not initialize the system")
+            logger.error("❌ Could not initialize the system")
             return
 
         # Execute all demos
@@ -563,25 +563,25 @@ class AdapterSystemDemo:
                 demo_func()
                 time.sleep(1)  # Pause between demos
             except Exception as e:
-                print(f"❌ Error in demo {demo_name}: {e}\n")
+                logger.error(f"❌ Error in demo {demo_name}: {e}\n")
 
         # Final summary
-        print("🎯 === FINAL SUMMARY ===")
+        logger.info("🎯 === FINAL SUMMARY ===")
 
         final_overview = get_metrics_overview()
-        print(f"✅ System fully operational")
-        print(f"📊 {final_overview['total_adapters']} adapters running")
-        print(f"🎯 System average score: {final_overview['system_performance']['average_system_score']:.2f}")
-        print(f"🔄 {final_overview['system_performance']['total_operations']} operations executed")
+        logger.info(f"✅ System fully operational")
+        logger.info(f"📊 {final_overview['total_adapters']} adapters running")
+        logger.info(f"🎯 System average score: {final_overview['system_performance']['average_system_score']:.2f}")
+        logger.info(f"🔄 {final_overview['system_performance']['total_operations']} operations executed")
 
-        print("\n🚀 The adapter system is ready for production use!")
-        print("📚 Check the README.md for more information and advanced examples.")
+        logger.info("\n🚀 The adapter system is ready for production use!")
+        logger.info("📚 Check the README.md for more information and advanced examples.")
 
 # Specific usage examples
 
 def example_kernel_integration():
     """Example of integration with existing kernels."""
-    print("🔧 Example: Integration with existing kernels")
+    logger.info("🔧 Example: Integration with existing kernels")
 
     # Import the kernel adapter
     from .kernel_abstraction_adapter import kernel_adapter
@@ -597,13 +597,13 @@ def example_kernel_integration():
 
     try:
         result = kernel_adapter.flash_attention(query, key, value)
-        print(f"✅ Flash attention executed: {result.shape}")
+        logger.warning(f"✅ Flash attention executed: {result.shape}")
     except Exception as e:
-        print(f"❌ Error: {e}")
+        logger.error(f"❌ Error: {e}")
 
 def example_performance_monitoring():
     """Performance monitoring example."""
-    print("📊 Example: Performance monitoring")
+    logger.info("📊 Example: Performance monitoring")
 
     # Decorator for automatic monitoring
     @monitor_adapter_performance("ExampleWorkload", "data_processing")
@@ -617,13 +617,13 @@ def example_performance_monitoring():
     for size in [100, 200, 300]:
         try:
             result = process_data(size)
-            print(f"✅ Processed matrix {size}x{size}: {len(result)} singular values")
+            logger.info(f"✅ Processed matrix {size}x{size}: {len(result)} singular values")
         except Exception as e:
-            print(f"❌ Error processing {size}x{size}: {e}")
+            logger.error(f"❌ Error processing {size}x{size}: {e}")
 
 def example_quantization_pipeline():
     """Quantization pipeline example."""
-    print("🗜️ Example: Quantization pipeline")
+    logger.info("🗜️ Example: Quantization pipeline")
 
     from .quantization_adapter import quantization_adapter
 
@@ -633,7 +633,7 @@ def example_quantization_pipeline():
 
     # Simulate model weights
     model_weights = np.random.randn(1000, 768).astype(np.float32)
-    print(f"📊 Original weights: {model_weights.nbytes / (1024*1024):.1f} MB")
+    logger.info(f"📊 Original weights: {model_weights.nbytes / (1024*1024):.1f} MB")
 
     # Automatic quantization
     try:
@@ -642,30 +642,30 @@ def example_quantization_pipeline():
             quality=QuantizationQuality.BALANCED
         )
 
-        print(f"🔧 Method used: {result.metadata.get('method', 'unknown')}")
-        print(f"📦 Compression: {result.compression_ratio:.1f}x")
-        print(f"🎯 Accuracy retained: {result.accuracy_retention:.1%}")
-        print(f"💾 Savings: {result.memory_savings_mb:.1f} MB")
+        logger.info(f"🔧 Method used: {result.metadata.get('method', 'unknown')}")
+        logger.info(f"📦 Compression: {result.compression_ratio:.1f}x")
+        logger.info(f"🎯 Accuracy retained: {result.accuracy_retention:.1%}")
+        logger.info(f"💾 Savings: {result.memory_savings_mb:.1f} MB")
 
         # Dequantize to verify
         dequantized = quantization_adapter.dequantize(result.quantized_data)
-        print(f"✅ Successful dequantization: {dequantized.shape}")
+        logger.info(f"✅ Successful dequantization: {dequantized.shape}")
 
     except Exception as e:
-        print(f"❌ Error in quantization: {e}")
+        logger.error(f"❌ Error in quantization: {e}")
 
 # Main function to execute examples
 def main():
     """Main function to execute the demonstration."""
-    print("🎬 Starting CapibaraGPT-v2 Adapter System demonstration\n")
+    logger.info("🎬 Starting CapibaraGPT-v2 Adapter System demonstration\n")
 
     # Create and run complete demo
     demo = AdapterSystemDemo()
     demo.run_complete_demo()
 
-    print("\n" + "="*80)
-    print("📚 ADDITIONAL EXAMPLES")
-    print("="*80)
+    logger.info("\n" + "="*80)
+    logger.info("📚 ADDITIONAL EXAMPLES")
+    logger.info("="*80)
 
     # Execute specific examples
     examples = [
@@ -675,14 +675,14 @@ def main():
     ]
 
     for example_name, example_func in examples:
-        print(f"\n--- {example_name} ---")
+        logger.info(f"\n--- {example_name} ---")
         try:
             example_func()
         except Exception as e:
-            print(f"❌ Error in example: {e}")
+            logger.error(f"❌ Error in example: {e}")
 
-    print(f"\n🎉 Demonstration completed!")
-    print(f"📖 For more information, check the README.md")
+    logger.info(f"\n🎉 Demonstration completed!")
+    logger.info(f"📖 For more information, check the README.md")
 
 if __name__ == "__main__":
     main()

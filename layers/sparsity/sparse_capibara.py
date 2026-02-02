@@ -11,15 +11,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
-# Check for JAX availability
-try:
-    import jax
-    import jax.numpy as jnp
-    from flax import linen as nn
-    JAX_AVAILABLE = True
-except ImportError:
-    JAX_AVAILABLE = False
-    logger.warning("JAX/Flax not available for SparseCapibara - using fallback implementation")
+from layers.jax_compat import jax, jnp, nn, JAX_AVAILABLE
 
 
 # JIT-compiled attention computation (extracted for optimization)

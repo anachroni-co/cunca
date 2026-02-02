@@ -147,14 +147,14 @@ Examples:
     
     # Show example config if requested
     if args.example_config:
-        print(get_example_config())
+        logger.info(get_example_config())
         return 0
     
     # Load configuration
     try:
         config = load_config(args.config)
     except Exception as e:
-        print(f"Error loading configuration: {e}")
+        logger.error(f"Error loading configuration: {e}")
         return 1
     
     # Apply command line overrides
@@ -165,7 +165,7 @@ Examples:
     if args.debug:
         environment = os.environ.get("ENVIRONMENT", "development")
         if environment == "production":
-            print("WARNING: Debug mode requested in production — ignoring for safety")
+            logger.warning("WARNING: Debug mode requested in production — ignoring for safety")
         else:
             config.debug = True
             config.logging.level = "DEBUG"
@@ -174,12 +174,12 @@ Examples:
     if args.validate_config:
         errors = config.validate()
         if errors:
-            print("Configuration validation errors:")
+            logger.error("Configuration validation errors:")
             for error in errors:
-                print(f"  - {error}")
+                logger.error(f"  - {error}")
             return 1
         else:
-            print("Configuration is valid")
+            logger.info("Configuration is valid")
             return 0
     
     # Setup logging
@@ -189,10 +189,10 @@ Examples:
     try:
         return asyncio.run(run_service(config))
     except KeyboardInterrupt:
-        print("\nShutdown requested by user")
+        logger.info("\nShutdown requested by user")
         return 0
     except Exception as e:
-        print(f"Fatal error: {e}")
+        logger.error(f"Fatal error: {e}")
         return 1
 
 

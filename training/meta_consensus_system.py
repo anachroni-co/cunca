@@ -1119,7 +1119,7 @@ if __name__ == "__main__":
         
         # Initialize system
         if await system.initialize():
-            print("🚀 Meta-Consensus System initialized successfully")
+            logger.info("🚀 Meta-Consensus System initialized successfully")
             
             # Process example queries
             queries = [
@@ -1131,8 +1131,8 @@ if __name__ == "__main__":
             ]
             
             for i, query in enumerate(queries):
-                print(f"\n--- Query {i+1} ---")
-                print(f"Query: {query}")
+                logger.info(f"\n--- Query {i+1} ---")
+                logger.info(f"Query: {query}")
                 
                 # Create query context
                 context = QueryContext(
@@ -1149,24 +1149,24 @@ if __name__ == "__main__":
                     consensus_mode=ConsensusMode.ADAPTIVE
                 )
                 
-                print(f"Response: {result.response[:100]}...")
-                print(f"Confidence: {result.confidence:.2f}")
-                print(f"Quality Score: {result.quality_score:.1f}")
-                print(f"Experts Used: {len(result.participating_experts)}")
-                print(f"Cost: ${result.total_cost:.4f}")
-                print(f"Response Time: {result.response_time_ms:.0f}ms")
+                logger.info(f"Response: {result.response[:100]}...")
+                logger.info(f"Confidence: {result.confidence:.2f}")
+                logger.info(f"Quality Score: {result.quality_score:.1f}")
+                logger.info(f"Experts Used: {len(result.participating_experts)}")
+                logger.info(f"Cost: ${result.total_cost:.4f}")
+                logger.info(f"Response Time: {result.response_time_ms:.0f}ms")
             
             # Get system status
             status = system.get_system_status()
-            print(f"\n🎭 System Status:")
-            print(f"State: {status['system_info']['state']}")
-            print(f"Total Queries: {status['performance_metrics']['total_queries']}")
-            print(f"Success Rate: {status['performance_metrics']['success_rate']}")
-            print(f"Avg Quality: {status['performance_metrics']['avg_quality_score']}")
-            print(f"Avg Cost: {status['performance_metrics']['avg_cost_per_query']}")
-            print(f"Avg Response Time: {status['performance_metrics']['avg_response_time_ms']}ms")
+            logger.info(f"\n🎭 System Status:")
+            logger.info(f"State: {status['system_info']['state']}")
+            logger.info(f"Total Queries: {status['performance_metrics']['total_queries']}")
+            logger.info(f"Success Rate: {status['performance_metrics']['success_rate']}")
+            logger.info(f"Avg Quality: {status['performance_metrics']['avg_quality_score']}")
+            logger.info(f"Avg Cost: {status['performance_metrics']['avg_cost_per_query']}")
+            logger.info(f"Avg Response Time: {status['performance_metrics']['avg_response_time_ms']}ms")
         
         else:
-            print("❌ Meta-Consensus System initialization failed")
+            logger.error("❌ Meta-Consensus System initialization failed")
     
     asyncio.run(main())

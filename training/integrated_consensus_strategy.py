@@ -767,18 +767,18 @@ if __name__ == "__main__":
             use_all_experts=True
         )
         
-        print("=== Integrated Consensus Results ===")
-        print(f"Prompt: {prompt}")
-        print(f"Response: {result['consensus_response']}")
-        print(f"Confidence: {result['confidence']:.2f}")
-        print(f"Method: {result['consensus_method']}")
-        print(f"Experts used: {result['participating_experts']}")
-        print(f"Legal compliance: {result['legal_compliance']['all_models_legal']}")
-        print(f"TPU cores used: {result['tpu_v6_metrics']['total_cores_used']}")
+        logger.info("=== Integrated Consensus Results ===")
+        logger.info(f"Prompt: {prompt}")
+        logger.info(f"Response: {result['consensus_response']}")
+        logger.info(f"Confidence: {result['confidence']:.2f}")
+        logger.info(f"Method: {result['consensus_method']}")
+        logger.info(f"Experts used: {result['participating_experts']}")
+        logger.info(f"Legal compliance: {result['legal_compliance']['all_models_legal']}")
+        logger.info(f"TPU cores used: {result['tpu_v6_metrics']['total_cores_used']}")
         
         # Show expert breakdown
-        print("\n=== Expert Breakdown ===")
+        logger.info("\n=== Expert Breakdown ===")
         for expert in result['expert_breakdown']['experts_used']:
-            print(f"  ✅ {expert}")
+            logger.info(f"  ✅ {expert}")
     
     asyncio.run(main())

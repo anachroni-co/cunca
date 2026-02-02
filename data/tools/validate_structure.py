@@ -9,6 +9,9 @@ import sys
 from pathlib import Path
 from typing import List, Dict, Tuple, Any
 
+import logging
+logger = logging.getLogger(__name__)
+
 def check_directory_structure() -> Tuple[bool, List[str]]:
     """Verify that the directory structure is correct"""
 
@@ -125,20 +128,20 @@ def check_imports() -> Tuple[bool, List[str]]:
         # Try main import
         # Fixed: Using relative imports instead of sys.path manipulation
         import capibara.data
-        print("Main import working")
+        logger.info("Main import working")
     except Exception as e:
         errors.append(f"Error in main import: {e}")
 
     try:
         # Try specific imports
         import capibara.data.datasets
-        print("Datasets import working")
+        logger.info("Datasets import working")
     except Exception as e:
         errors.append(f"Error in datasets import: {e}")
 
     try:
         import capibara.data.loaders
-        print("Loaders import working")
+        logger.info("Loaders import working")
     except Exception as e:
         errors.append(f"Error in loaders import: {e}")
 
@@ -147,8 +150,8 @@ def check_imports() -> Tuple[bool, List[str]]:
 def generate_report() -> Dict[str, Any]:
     """Generate complete validation report"""
 
-    print("VALIDATING CAPIBARA/DATA REORGANIZATION...")
-    print("=" * 50)
+    logger.info("VALIDATING CAPIBARA/DATA REORGANIZATION...")
+    logger.info("=" * 50)
 
     # Execute all validations
     structure_ok, structure_errors = check_directory_structure()
@@ -157,48 +160,48 @@ def generate_report() -> Dict[str, Any]:
     imports_ok, imports_errors = check_imports()
 
     # Show results
-    print("\nDIRECTORY STRUCTURE:")
+    logger.info("\nDIRECTORY STRUCTURE:")
     if structure_ok:
-        print("Structure correct")
+        logger.info("Structure correct")
     else:
         for error in structure_errors:
-            print(error)
+            logger.error(error)
 
-    print("\nFILE MIGRATION:")
+    logger.info("\nFILE MIGRATION:")
     if files_ok:
-        print("Files migrated correctly")
+        logger.info("Files migrated correctly")
     else:
         for error in files_errors:
-            print(error)
+            logger.error(error)
 
-    print("\n__init__.py FILES:")
+    logger.info("\n__init__.py FILES:")
     if inits_ok:
-        print("__init__.py files created correctly")
+        logger.info("__init__.py files created correctly")
     else:
         for error in inits_errors:
-            print(error)
+            logger.error(error)
 
-    print("\nFUNCTIONAL IMPORTS:")
+    logger.info("\nFUNCTIONAL IMPORTS:")
     if imports_ok:
-        print("Imports working perfectly")
+        logger.info("Imports working perfectly")
     else:
         for error in imports_errors:
-            print(error)
+            logger.error(error)
 
     # Final summary
     total_tests = 4
     passed_tests = sum([structure_ok, files_ok, inits_ok, imports_ok])
 
-    print("\n" + "=" * 50)
-    print(f"SUMMARY: {passed_tests}/{total_tests} tests passed")
+    logger.info("\n" + "=" * 50)
+    logger.info(f"SUMMARY: {passed_tests}/{total_tests} tests passed")
 
     if passed_tests == total_tests:
-        print("REORGANIZATION SUCCESSFUL!")
-        print("CapibaraGPT-v2 data structure optimized")
+        logger.info("REORGANIZATION SUCCESSFUL!")
+        logger.info("CapibaraGPT-v2 data structure optimized")
         status = "SUCCESS"
     else:
-        print("Reorganization incomplete")
-        print("Review errors above")
+        logger.info("Reorganization incomplete")
+        logger.error("Review errors above")
         status = "PARTIAL"
 
     return {

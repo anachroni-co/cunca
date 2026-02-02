@@ -376,11 +376,11 @@ def example_usage():
     # Process response
     result = prevention_system.process_ai_response(dangerous_response, "user123", user_context)
 
-    print("Original response:", result["original_response"])
-    print("Filtered response:", result["filtered_response"])
-    print("Risk level:", result["risk_level"])
-    print("Risk factors:", result["risk_factors"])
-    print("Blocked:", result["blocked"])
+    logger.info("Original response:", result["original_response"])
+    logger.info("Filtered response:", result["filtered_response"])
+    logger.info("Risk level:", result["risk_level"])
+    logger.info("Risk factors:", result["risk_factors"])
+    logger.info("Blocked:", result["blocked"])
 
 if __name__ == "__main__":
     example_usage()

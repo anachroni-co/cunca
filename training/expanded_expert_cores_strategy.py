@@ -1002,17 +1002,17 @@ if __name__ == "__main__":
             max_models_per_core=3
         )
         
-        print("=== Expanded Expert Cores Results ===")
-        print(f"Prompt: {prompt}")
-        print(f"Response: {result['consensus_response']}")
-        print(f"Confidence: {result['confidence']:.2f}")
-        print(f"Method: {result['consensus_method']}")
-        print(f"Cores used: {result['participating_cores']}")
-        print(f"Total models: {result['expanded_metrics']['total_models_used']}")
+        logger.info("=== Expanded Expert Cores Results ===")
+        logger.info(f"Prompt: {prompt}")
+        logger.info(f"Response: {result['consensus_response']}")
+        logger.info(f"Confidence: {result['confidence']:.2f}")
+        logger.info(f"Method: {result['consensus_method']}")
+        logger.info(f"Cores used: {result['participating_cores']}")
+        logger.info(f"Total models: {result['expanded_metrics']['total_models_used']}")
         
         # Show core breakdown
-        print("\n=== Core Breakdown ===")
+        logger.info("\n=== Core Breakdown ===")
         for core in result['core_breakdown']:
-            print(f"  {core['core_name']}: {core['confidence']:.2f} confidence")
+            logger.info(f"  {core['core_name']}: {core['confidence']:.2f} confidence")
     
     asyncio.run(main())

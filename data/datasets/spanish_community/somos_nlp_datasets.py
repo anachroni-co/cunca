@@ -507,20 +507,20 @@ class SomosNLPDatasets:
 from datasets import load_dataset
 
 dataset = load_dataset("somosnlp/somos-clean-alpaca-es")
-print(f"Dataset size: {len(dataset['train'])}")
-print(f"Example: {dataset['train'][0]}")
+logger.info(f"Dataset size: {len(dataset['train'])}")
+logger.info(f"Example: {dataset['train'][0]}")
             """,
 
             "filter_by_quality": """
 # Filter by quality validation
 filtered = dataset.filter(lambda x: x['prediction'][0]['label'] == 'ALL GOOD')
-print(f"High quality samples: {len(filtered)}")
+logger.info(f"High quality samples: {len(filtered)}")
             """,
 
             "load_medical_dataset": """
 # Load HEAD-QA medical dataset
 head_qa = load_dataset("head_qa", "es")
-print(f"Medical questions: {len(head_qa['train'])}")
+logger.info(f"Medical questions: {len(head_qa['train'])}")
             """,
 
             "cultural_evaluation": """

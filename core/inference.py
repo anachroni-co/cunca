@@ -1,18 +1,18 @@
-"""Módulo de inferencia optimizado for CapibaraModel v3.0
+"""Optimized inference module for CapibaraModel v3.0
 ================================================================
 
-Sistema de inferencia empresarial with capacidades avanzadas:
-1. **Singleton Configuration Manager** - load configs una sola vez
+Enterprise inference system with advanced capabilities:
+1. **Singleton Configuration Manager** - Load configs once
 2. **Advanced Caching** - TTL, invalidation, memory pressure management
-3. **Resource Management** - Context managers, cleanup automático
+3. **Resource Management** - Context managers, automatic cleanup
 4. **Thread-Safe Operations** - Concurrent inference support
-5. **Model Pool** - Reutilización eficiente de modelos
+5. **Model Pool** - Efficient model reuse
 6. **Async Support** - Non-blocking inference
 7. **Comprehensive Validation** - Input/output validation
 8. **Flexible Configuration** - Environment overrides
-9. **Performance Monitoring** - Métricas detalladas
-10. **Graceful error Recovery** - Fallbacks inteligentes
-11. **ARM Axion Support** - Optimizaciones específicas for ARM Axion
+9. **Performance Monitoring** - Detailed metrics
+10. **Graceful Error Recovery** - Intelligent fallbacks
+11. **ARM Axion Support** - Specific optimizations for ARM Axion
 """
 
 from __future__ import annotations
@@ -61,7 +61,7 @@ logger = logging.getLogger(__name__)
 # =============================================================================
 
 def detect_arm_axion() -> Dict[str, Any]:
-    """Detecta if está ejecutándose en ARM Axion (Google Cloud C4A)."""
+    """Detects if running on ARM Axion (Google Cloud C4A)."""
     detection_result = {
         "is_arm": False,
         "is_axion": False,
@@ -71,17 +71,17 @@ def detect_arm_axion() -> Dict[str, Any]:
     }
     
     try:
-        # detect architecture ARM
+        # Detect ARM architecture
         machine = platform.machine().lower()
         detection_result["is_arm"] = machine in ["aarch64", "arm64"]
         
         if detection_result["is_arm"]:
-            # Leer information de cpu en Linux
+            # Read CPU information on Linux
             try:
                 with open("/proc/cpuinfo", "r") as f:
                     cpuinfo = f.read()
                     
-                # detect Neoverse V2 (Axion)
+                # Detect Neoverse V2 (Axion)
                 if "neoverse" in cpuinfo.lower() or "armv9" in cpuinfo.lower():
                     detection_result["is_axion"] = True
                     detection_result["optimizations_available"].extend([
@@ -89,7 +89,7 @@ def detect_arm_axion() -> Dict[str, Any]:
                         "uma_memory", "titanium_offload"
                     ])
                 
-                # detect Google Cloud C4A through metadata
+                # Detect Google Cloud C4A through metadata
                 try:
                     metadata_cmd = ["curl", "-s", "-H", "Metadata-Flavor: Google",
                                   "http://metadata.google.internal/computeMetadata/v1/instance/machine-type"]
@@ -100,7 +100,7 @@ def detect_arm_axion() -> Dict[str, Any]:
                 except:
                     pass
                 
-                # Extraer information relevante de cpu
+                # Extract relevant CPU information
                 detection_result["cpu_info"] = {
                     "cores": psutil.cpu_count(logical=False),
                     "threads": psutil.cpu_count(logical=True),
@@ -108,15 +108,15 @@ def detect_arm_axion() -> Dict[str, Any]:
                 }
                 
             except Exception as e:
-                logger.warning(f"No se pudo leer /proc/cpuinfo: {e}")
+                logger.warning(f"Could not read /proc/cpuinfo: {e}")
                 
     except Exception as e:
-        logger.error(f"Error detectando ARM Axion: {e}")
+        logger.error(f"Error detecting ARM Axion: {e}")
     
     return detection_result
 
 def setup_arm_optimizations(detection_info: Dict[str, Any]) -> Dict[str, Any]:
-    """Configura optimizaciones específicas for ARM Axion."""
+    """Configures specific optimizations for ARM Axion."""
     optimizations = {
         "jax_platform": "cpu",
         "precision": "bfloat16",
@@ -128,7 +128,7 @@ def setup_arm_optimizations(detection_info: Dict[str, Any]) -> Dict[str, Any]:
     if detection_info["is_arm"]:
         optimizations.update({
             "jax_platform": "cpu",  # JAX cpu backend for ARM
-            "precision": "bfloat16",  # ARM Axion optimizado for bfloat16
+            "precision": "bfloat16",  # ARM Axion optimized for bfloat16
             "memory_layout": "arm_optimized"
         })
         
@@ -140,7 +140,7 @@ def setup_arm_optimizations(detection_info: Dict[str, Any]) -> Dict[str, Any]:
             "use_titanium_offload": detection_info["is_c4a"]
         })
         
-        # configure variables de entorno ARM-específicas
+        # Configure ARM-specific environment variables
         os.environ.setdefault("JAX_PLATFORMS", "cpu")
         os.environ.setdefault("JAX_ENABLE_X64", "true")
         os.environ.setdefault("XLA_FLAGS", "--xla_cpu_use_thunk_runtime=true")
@@ -150,7 +150,7 @@ def setup_arm_optimizations(detection_info: Dict[str, Any]) -> Dict[str, Any]:
             from capibara.core.arm_optimizations import create_arm_optimization_suite, ARM_CAPABILITIES
             
             if ARM_CAPABILITIES['total_features'] > 0:
-                # carry setup ARM específica
+                # Load ARM-specific configuration
                 arm_config = {}
                 try:
                     from capibara.core.arm_optimizations import load_arm_config_from_toml
@@ -158,11 +158,11 @@ def setup_arm_optimizations(detection_info: Dict[str, Any]) -> Dict[str, Any]:
                 except Exception as e:
                     logger.warning(f"Could not load ARM config: {e}")
                 
-                # create suite de optimizaciones
+                # Create optimization suite
                 arm_suite = create_arm_optimization_suite(arm_config)
                 optimizations["arm_optimization_suite"] = arm_suite
                 
-                # activate características específicas
+                # Activate specific features
                 if ARM_CAPABILITIES.get('kleidi_integration'):
                     os.environ.setdefault("ARM_KLEIDI_ENABLE", "1")
                     optimizations["use_arm_kleidi"] = True
@@ -186,15 +186,15 @@ def setup_arm_optimizations(detection_info: Dict[str, Any]) -> Dict[str, Any]:
     
     return optimizations
 
-# detect hardware al import
+# Detect hardware at import
 HARDWARE_INFO = detect_arm_axion()
 ARM_OPTIMIZATIONS = setup_arm_optimizations(HARDWARE_INFO)
 
-logger.info(f"🔍 Hardware detectado: ARM={HARDWARE_INFO['is_arm']}, "
+logger.info(f"Hardware detected: ARM={HARDWARE_INFO['is_arm']}, "
            f"Axion={HARDWARE_INFO['is_axion']}, C4A={HARDWARE_INFO['is_c4a']}")
 
 if HARDWARE_INFO["is_axion"]:
-    logger.info("✅ Optimizaciones ARM Axion habilitadas")
+    logger.info("ARM Axion optimizations enabled")
 
 # =============================================================================
 # Configuration Management
@@ -202,7 +202,7 @@ if HARDWARE_INFO["is_axion"]:
 
 @dataclasses.dataclass
 class InferenceConfig(BaseConfig):
-    """setup optimizada for inferencia."""
+    """Optimized inference configuration."""
     # Model & Tokenizer
     model_path: str
     tokenizer_path: str
@@ -219,7 +219,7 @@ class InferenceConfig(BaseConfig):
     use_tpu: bool = False
     use_arm_axion: bool = HARDWARE_INFO["is_axion"]
     tpu_config: Optional[str] = None
-    batch_size: int = 8 if HARDWARE_INFO["is_axion"] else 1  # ARM Axion optimizado
+    batch_size: int = 8 if HARDWARE_INFO["is_axion"] else 1  # ARM Axion optimized
     max_concurrent_requests: int = 10
     
     # ARM Axion specific settings
@@ -248,21 +248,21 @@ class InferenceConfig(BaseConfig):
         if self.max_length <= 0:
             raise ValueError("max_length must be positive")
             
-        # adjust setup for ARM Axion
+        # Adjust configuration for ARM Axion
         if self.use_arm_axion:
-            logger.info("🚀 Configurando para ARM Axion...")
-            # carry setup específica ARM Axion if existe
+            logger.info("Configuring for ARM Axion...")
+            # Load ARM Axion specific configuration if it exists
             arm_config_path = Path(self.config_root) / "configs_toml" / "specialized" / "arm_axion_inference.toml"
             if arm_config_path.exists():
                 try:
                     arm_config = toml.load(arm_config_path)
                     self._apply_arm_config(arm_config)
-                    logger.info("✅ Configuración ARM Axion cargada exitosamente")
+                    logger.info("ARM Axion configuration loaded successfully")
                 except Exception as e:
-                    logger.warning(f"⚠️ No se pudo cargar configuración ARM Axion: {e}")
+                    logger.warning(f"Could not load ARM Axion configuration: {e}")
     
     def _apply_arm_config(self, arm_config: Dict[str, Any]):
-        """Aplica setup específica de ARM Axion."""
+        """Applies ARM Axion specific configuration."""
         if "inference" in arm_config:
             inference_config = arm_config["inference"]
             self.batch_size = inference_config.get("batch_size", self.batch_size)
@@ -274,7 +274,7 @@ class InferenceConfig(BaseConfig):
 
 
 class ConfigurationManager:
-    """Singleton for gestión centralizada de configuraciones."""
+    """Singleton for centralized configuration management."""
     
     _instance = None
     _lock = threading.Lock()
@@ -296,7 +296,7 @@ class ConfigurationManager:
         self._last_reload = {}
         
     def load_config(self, config_name: str, config_root: str = None) -> Dict[str, Any]:
-        """load setup with cache and validation."""
+        """Load configuration with cache and validation."""
         config_root = config_root or "capibara/config"
         cache_key = f"{config_root}:{config_name}"
         
@@ -327,7 +327,7 @@ class ConfigurationManager:
                 return {}
     
     def get_model_configs(self, config_root: str = None) -> Tuple[ModelConfig, ...]:
-        """Obtiene todas las configuraciones del model de once."""
+        """Gets all model configurations at once."""
         try:
             # Load all config files
             default_config = self.load_config("default", config_root)
@@ -353,7 +353,7 @@ class ConfigurationManager:
             raise InferenceError(f"Configuration loading failed: {e}") from e
     
     def clear_cache(self):
-        """Limpia cache de configuraciones."""
+        """Clears configuration cache."""
         with self._config_lock:
             self._configs_cache.clear()
             self._last_reload.clear()
@@ -365,10 +365,10 @@ class ConfigurationManager:
 # =============================================================================
 
 class CapibaraInference:
-    """Sistema de inferencia optimizado for CapibaraModel."""
+    """Optimized inference system for CapibaraModel."""
     
     def __init__(self, config: InferenceConfig):
-        """Inicializa el sistema de inferencia optimizado."""
+        """Initializes the optimized inference system."""
         self.config = config
         
         # Initialize components
@@ -391,28 +391,28 @@ class CapibaraInference:
         # Validation and setup
         self._validate_setup()
         
-        # detect hardware available
+        # Detect available hardware
         self.use_arm = config.use_arm_axion and HARDWARE_INFO["is_axion"]
         if self.use_arm:
-            logger.info("🚀 Usando ARM Axion para inferencia")
-            # configure optimizaciones ARM
+            logger.info("Using ARM Axion for inference")
+            # Configure ARM optimizations
             self.arm_optimizations = ARM_OPTIMIZATIONS
             if "arm_optimization_suite" in self.arm_optimizations:
-                logger.info("✨ ARM Axion v3.1 features activadas")
+                logger.info("ARM Axion v3.1 features activated")
         else:
-            logger.info("⚠️ Usando CPU estándar para inferencia")
+            logger.info("Using standard CPU for inference")
             
-        # tpu only for training
-        self.use_tpu = False  # tpu not se usa en inferencia
+        # TPU only for training
+        self.use_tpu = False  # TPU not used in inference
         if config.use_tpu and len(jax.devices()) >= 32:
-            logger.warning("⚠️ TPU v4-32 detectada pero no se usará en inferencia (solo training)")
+            logger.warning("TPU v4-32 detected but will not be used in inference (training only)")
         
         self._load_model()
         
         logger.info("CapibaraInference initialized successfully")
     
     def _validate_setup(self) -> None:
-        """Valida la setup inicial."""
+        """Validates the initial setup."""
         # Check paths
         if not Path(self.config.model_path).exists():
             logger.warning(f"Model path does not exist: {self.config.model_path}")
@@ -430,7 +430,7 @@ class CapibaraInference:
                 logger.warning(f"Config file missing: {config_path}")
     
     def _load_model(self) -> None:
-        """load el model and tokenizer."""
+        """Loads the model and tokenizer."""
         try:
             # Load configurations
             model_config, training_config, adaptive_config, semiotic_config = \
@@ -462,7 +462,7 @@ class CapibaraInference:
             raise InferenceError(f"Model loading failed: {e}") from e
     
     def _validate_input(self, prompt: str) -> None:
-        """Valida input del usuario."""
+        """Validates user input."""
         if not isinstance(prompt, str):
             raise ValueError("Prompt must be a string")
         
@@ -474,7 +474,7 @@ class CapibaraInference:
     
     @handle_error(InferenceError)
     def generate(self, prompt: str, **generation_kwargs) -> str:
-        """Genera answer for un prompt."""
+        """Generates response for a prompt."""
         start_time = time.time()
         
         try:
@@ -497,29 +497,29 @@ class CapibaraInference:
             raise InferenceError(f"Generation failed: {e}") from e
     
     def _generate_response(self, prompt: str, generation_config: Dict[str, Any]) -> str:
-        """Genera nueva answer usando el model."""
+        """Generates new response using the model."""
         try:
-            # Tokenizar input
+            # Tokenize input
             input_ids = self.tokenizer.encode(prompt)
             
             if self.use_arm:
-                # use optimizaciones ARM Axion
+                # Use ARM Axion optimizations
                 try:
-                    # obtain embeddings usando ARM optimizations
+                    # Obtain embeddings using ARM optimizations
                     if self.arm_optimizations.get("use_arm_kleidi"):
-                        # use Kleidi for embeddings
+                        # Use Kleidi for embeddings
                         input_embeds = self.arm_optimizations["arm_optimization_suite"].kleidi_forward(
                             input_ids,
                             self.model.get_input_embeddings().weight
                         )
                     else:
-                        # Fallback a matmul estándar
+                        # Fallback to standard matmul
                         input_embeds = jnp.matmul(
                             input_ids,
                             self.model.get_input_embeddings().weight
                         )
                     
-                    # use optimizaciones ARM for atención
+                    # Use ARM optimizations for attention
                     if self.arm_optimizations.get("sve2_vectorization"):
                         # SVE2 vectorized attention
                         hidden_states = self.arm_optimizations["arm_optimization_suite"].sve2_attention(
@@ -527,10 +527,10 @@ class CapibaraInference:
                             causal=True
                         )
                     else:
-                        # Fallback a atención estándar
+                        # Fallback to standard attention
                         hidden_states = self.model.attention(input_embeds)
                     
-                    # Output layer with optimizaciones ARM
+                    # Output layer with ARM optimizations
                     if self.arm_optimizations.get("arm_quantization_available"):
                         # Quantized matmul
                         logits = self.arm_optimizations["arm_optimization_suite"].quantized_matmul(
@@ -538,21 +538,21 @@ class CapibaraInference:
                             self.model.get_output_embeddings().weight.T
                         )
                     else:
-                        # Fallback a matmul estándar
+                        # Fallback to standard matmul
                         logits = jnp.matmul(
                             hidden_states,
                             self.model.get_output_embeddings().weight.T
                         )
                         
                 except Exception as e:
-                    logger.warning(f"Error usando optimizaciones ARM: {e}")
-                    # Fallback a forward pass estándar
+                    logger.warning(f"Error using ARM optimizations: {e}")
+                    # Fallback to standard forward pass
                     logits = self.model(input_ids=input_ids).logits
             else:
-                # cpu estándar without optimizaciones
+                # Standard CPU without optimizations
                 logits = self.model(input_ids=input_ids).logits
             
-            # generate tokens
+            # Generate tokens
             output_ids = self._sample_tokens(logits, generation_config)
             
             # Decode response
@@ -568,7 +568,7 @@ class CapibaraInference:
             raise InferenceError(f"Model inference failed: {e}") from e
     
     async def generate_async(self, prompt: str, **generation_kwargs) -> str:
-        """Genera answer de forma asíncrona."""
+        """Generates response asynchronously."""
         loop = asyncio.get_event_loop()
         
         # Run generation in thread pool
@@ -581,7 +581,7 @@ class CapibaraInference:
         return response
     
     def generate_batch(self, prompts: List[str], **generation_kwargs) -> List[str]:
-        """Genera respuestas for múltiples prompts en paralelo."""
+        """Generates responses for multiple prompts in parallel."""
         if not prompts:
             return []
         
@@ -607,7 +607,7 @@ class CapibaraInference:
         return responses
     
     def get_system_stats(self) -> Dict[str, Any]:
-        """Obtiene estadísticas completas del sistema."""
+        """Gets complete system statistics."""
         avg_inference_time = (
             self._total_inference_time / self._inference_count 
             if self._inference_count > 0 else 0.0
@@ -641,7 +641,7 @@ class CapibaraInference:
         return stats
     
     def health_check(self) -> Dict[str, Any]:
-        """Verifica el estado del sistema."""
+        """Checks the system status."""
         health = {
             "status": "healthy",
             "checks": {},
@@ -687,7 +687,7 @@ class CapibaraInference:
         return health
     
     def cleanup(self) -> None:
-        """Limpia recursos del sistema."""
+        """Cleans up system resources."""
         try:
             # Shutdown executor
             self._executor.shutdown(wait=True)
@@ -733,7 +733,7 @@ def create_inference_engine(
     tokenizer_path: str,
     **config_kwargs
 ) -> CapibaraInference:
-    """Factory function for create engine de inferencia."""
+    """Factory function to create inference engine."""
     config = InferenceConfig(
         model_path=model_path,
         tokenizer_path=tokenizer_path,
@@ -750,13 +750,13 @@ def quick_generate(
     tokenizer_path: str,
     **generation_kwargs
 ) -> str:
-    """function de conveniencia for generación rápida."""
+    """Convenience function for quick generation."""
     with create_inference_engine(model_path, tokenizer_path) as engine:
         return engine.generate(prompt, **generation_kwargs)
 
 
 def main():
-    """function principal for testing and CLI."""
+    """Main function for testing and CLI."""
     import argparse
     
     parser = argparse.ArgumentParser(description="CapibaraModel Inference Engine")
@@ -793,29 +793,29 @@ def main():
         # Health check
         if args.health:
             health = inference.health_check()
-            print(f"Health Status: {health['status']}")
+            logger.info(f"Health Status: {health['status']}")
             for check, result in health['checks'].items():
-                print(f"  {check}: {result['status']}")
+                logger.info(f"  {check}: {result['status']}")
             return
         
         # System stats
         if args.stats:
             stats = inference.get_system_stats()
-            print("System Statistics:")
+            logger.info("System Statistics:")
             for category, data in stats.items():
-                print(f"  {category}: {data}")
+                logger.info(f"  {category}: {data}")
             return
         
         # Single prompt
         if args.prompt:
-            print(f"Generating response for: {args.prompt}")
+            logger.info(f"Generating response for: {args.prompt}")
             response = inference.generate(args.prompt)
-            print(f"Response: {response}")
+            logger.info(f"Response: {response}")
             return
         
         # Interactive mode
         if args.interactive:
-            print("Interactive mode. Type 'quit' to exit, 'stats' for statistics.")
+            logger.info("Interactive mode. Type 'quit' to exit, 'stats' for statistics.")
             
             while True:
                 try:
@@ -827,12 +827,12 @@ def main():
                     if prompt.lower() == 'stats':
                         stats = inference.get_system_stats()
                         for category, data in stats.items():
-                            print(f"  {category}: {data}")
+                            logger.info(f"  {category}: {data}")
                         continue
                     
                     if prompt.lower() == 'health':
                         health = inference.health_check()
-                        print(f"Status: {health['status']}")
+                        logger.info(f"Status: {health['status']}")
                         continue
                     
                     if not prompt:
@@ -842,17 +842,17 @@ def main():
                     response = inference.generate(prompt)
                     duration = time.time() - start_time
                     
-                    print(f"Response ({duration:.3f}s): {response}")
+                    logger.info(f"Response ({duration:.3f}s): {response}")
                     
                 except KeyboardInterrupt:
-                    print("\nExiting...")
+                    logger.info("\nExiting...")
                     break
                 except Exception as e:
-                    print(f"Error: {e}")
+                    logger.error(f"Error: {e}")
         
         # Default behavior
         if not any([args.prompt, args.interactive, args.stats, args.health]):
-            print("No action specified. Use --help for options.")
+            logger.info("No action specified. Use --help for options.")
 
 
 if __name__ == "__main__":

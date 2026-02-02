@@ -13,155 +13,93 @@ Central integration point for model construction, training, and inference:
 
 import logging
 
+from core.import_utils import safe_import
+
 logger = logging.getLogger(__name__)
 
+# ---------------------------------------------------------------------------
+# Safe imports — each returns None when the submodule is unavailable
+# ---------------------------------------------------------------------------
+
 # Configuration
-try:
-    from .config import Config, ModelConfig
-    CONFIG_AVAILABLE = True
-except ImportError:
-    CONFIG_AVAILABLE = False
-    Config = None
-    ModelConfig = None
+Config, ModelConfig = safe_import("core.config", "Config", "ModelConfig")
+CONFIG_AVAILABLE = Config is not None
 
 # Modular model
-try:
-    from .modular_model import ModularCapibaraModel, ModularConfig
-    MODULAR_AVAILABLE = True
-except ImportError:
-    MODULAR_AVAILABLE = False
-    ModularCapibaraModel = None
-    ModularConfig = None
+ModularCapibaraModel, ModularConfig = safe_import(
+    "core.modular_model", "ModularCapibaraModel", "ModularConfig"
+)
+MODULAR_AVAILABLE = ModularCapibaraModel is not None
 
 # Enhanced router
-try:
-    from .router import (
-        EnhancedRouter,
-        Router as AdvancedRouter,
-        create_enhanced_router,
-        create_core_integrated_router,
-        RouterConfig as RouterCoreConfig,
-        RouterType,
-    )
-    ENHANCED_ROUTER_AVAILABLE = True
-except ImportError:
-    ENHANCED_ROUTER_AVAILABLE = False
-    EnhancedRouter = None
-    AdvancedRouter = None
-    create_enhanced_router = None
-    create_core_integrated_router = None
-    RouterCoreConfig = None
-    RouterType = None
+(EnhancedRouter, AdvancedRouter, create_enhanced_router,
+ create_core_integrated_router, RouterCoreConfig, RouterType) = safe_import(
+    "core.router",
+    "EnhancedRouter", "Router", "create_enhanced_router",
+    "create_core_integrated_router", "RouterConfig", "RouterType",
+)
+ENHANCED_ROUTER_AVAILABLE = EnhancedRouter is not None
 
 # Simple router
-try:
-    from .routing import Router as SimpleRouter, create_router
-    SIMPLE_ROUTER_AVAILABLE = True
-except ImportError:
-    SIMPLE_ROUTER_AVAILABLE = False
-    SimpleRouter = None
-    create_router = None
+SimpleRouter, create_router = safe_import("core.routing", "Router", "create_router")
+SIMPLE_ROUTER_AVAILABLE = SimpleRouter is not None
 
 # Optimization
-try:
-    from .optimization import TrainingMetrics, TrainingState
-    OPTIMIZATION_AVAILABLE = True
-except ImportError:
-    OPTIMIZATION_AVAILABLE = False
-    TrainingMetrics = None
-    TrainingState = None
+TrainingMetrics, TrainingState = safe_import(
+    "core.optimization", "TrainingMetrics", "TrainingState"
+)
+OPTIMIZATION_AVAILABLE = TrainingMetrics is not None
 
 # Legacy routers
-try:
-    from .routers.base import BaseRouter, BaseRouterV2
-    from .routers.adaptive_router import AdaptiveRouter
-    LEGACY_ROUTERS_AVAILABLE = True
-except ImportError:
-    LEGACY_ROUTERS_AVAILABLE = False
-    BaseRouter = None
-    BaseRouterV2 = None
-    AdaptiveRouter = None
+BaseRouter, BaseRouterV2 = safe_import("core.routers.base", "BaseRouter", "BaseRouterV2")
+AdaptiveRouter = safe_import("core.routers.adaptive_router", "AdaptiveRouter")
+LEGACY_ROUTERS_AVAILABLE = BaseRouter is not None
 
-# TTS Router (optional)
-try:
-    from .routers.tts_router import TTSRouter
-    TTS_ROUTER_AVAILABLE = True
-except ImportError:
-    TTS_ROUTER_AVAILABLE = False
-    TTSRouter = None
+# TTS Router
+TTSRouter = safe_import("core.routers.tts_router", "TTSRouter")
+TTS_ROUTER_AVAILABLE = TTSRouter is not None
 
 # Optimizers
-try:
-    from .optimizers.optimizer import OptimizerConfig, create_optimizer
-    OPTIMIZER_AVAILABLE = True
-except ImportError:
-    OPTIMIZER_AVAILABLE = False
-    OptimizerConfig = None
-    create_optimizer = None
+OptimizerConfig, create_optimizer = safe_import(
+    "core.optimizers.optimizer", "OptimizerConfig", "create_optimizer"
+)
+OPTIMIZER_AVAILABLE = OptimizerConfig is not None
 
 # Encoders
-try:
-    from .encoders import (
-        VisionEncoder,
-        VisionEncoderConfig,
-        VideoEncoder,
-        VideoEncoderConfig,
-        MultimodalCombiner,
-        CombinerConfig,
-    )
-    ENCODERS_AVAILABLE = True
-except ImportError:
-    ENCODERS_AVAILABLE = False
-    VisionEncoder = None
-    VisionEncoderConfig = None
-    VideoEncoder = None
-    VideoEncoderConfig = None
-    MultimodalCombiner = None
-    CombinerConfig = None
+(VisionEncoder, VisionEncoderConfig, VideoEncoder,
+ VideoEncoderConfig, MultimodalCombiner, CombinerConfig) = safe_import(
+    "core.encoders",
+    "VisionEncoder", "VisionEncoderConfig",
+    "VideoEncoder", "VideoEncoderConfig",
+    "MultimodalCombiner", "CombinerConfig",
+)
+ENCODERS_AVAILABLE = VisionEncoder is not None
 
 # Chain of Thought
-try:
-    from .cot import ChainOfThought, create_cot_handler
-    COT_AVAILABLE = True
-except ImportError:
-    COT_AVAILABLE = False
-    ChainOfThought = None
-    create_cot_handler = None
+ChainOfThought, create_cot_handler = safe_import(
+    "core.cot", "ChainOfThought", "create_cot_handler"
+)
+COT_AVAILABLE = ChainOfThought is not None
 
 # Model core
-try:
-    from ._model import ModelCore, create_model
-    MODEL_AVAILABLE = True
-except ImportError:
-    MODEL_AVAILABLE = False
-    ModelCore = None
-    create_model = None
+ModelCore, create_model = safe_import("core._model", "ModelCore", "create_model")
+MODEL_AVAILABLE = ModelCore is not None
 
-# Ultra Core Integration (advanced SSM-hybrid components)
-try:
-    from .ultra_core_integration import (
-        UltraIntelligentCoreRouter,
-        SSMHybridLayer,
-        UltraCoreOrchestrator,
-        create_ultra_core_system,
-        create_ultra_config,
-        integrate_with_training,
-        validate_ultra_core_system,
-        ULTRA_TRAINING_AVAILABLE,
-        SSM_AVAILABLE,
-    )
-    ULTRA_CORE_AVAILABLE = True
-except ImportError:
-    ULTRA_CORE_AVAILABLE = False
+# Ultra Core Integration
+(UltraIntelligentCoreRouter, SSMHybridLayer, UltraCoreOrchestrator,
+ create_ultra_core_system, create_ultra_config, integrate_with_training,
+ validate_ultra_core_system, ULTRA_TRAINING_AVAILABLE,
+ SSM_AVAILABLE) = safe_import(
+    "core.ultra_core_integration",
+    "UltraIntelligentCoreRouter", "SSMHybridLayer", "UltraCoreOrchestrator",
+    "create_ultra_core_system", "create_ultra_config", "integrate_with_training",
+    "validate_ultra_core_system", "ULTRA_TRAINING_AVAILABLE", "SSM_AVAILABLE",
+)
+ULTRA_CORE_AVAILABLE = UltraIntelligentCoreRouter is not None
+if ULTRA_TRAINING_AVAILABLE is None:
     ULTRA_TRAINING_AVAILABLE = False
+if SSM_AVAILABLE is None:
     SSM_AVAILABLE = False
-    UltraIntelligentCoreRouter = None
-    SSMHybridLayer = None
-    UltraCoreOrchestrator = None
-    create_ultra_core_system = None
-    create_ultra_config = None
-    integrate_with_training = None
-    validate_ultra_core_system = None
 
 
 __all__ = [

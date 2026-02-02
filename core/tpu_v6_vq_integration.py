@@ -596,7 +596,7 @@ def create_tpu_v6_vq_integration(
 
 if __name__ == "__main__":
     # Example usage
-    print("Initializing CapibaraGPT v3.3 TPU v6 Adaptive Integration...")
+    logger.info("Initializing CapibaraGPT v3.3 TPU v6 Adaptive Integration...")
     
     # Create adaptive integration
     adaptive_integration = create_tpu_v6_vq_integration(
@@ -607,28 +607,28 @@ if __name__ == "__main__":
     
     # Get capabilities
     capabilities = adaptive_integration.get_vq_capabilities()
-    print(f"Adaptive Backend: {capabilities['backend']}")
-    print(f"Códigos VQ Available: {capabilities['embedding_dim']}")
-    print(f"Adaptive ML Enabled: {capabilities['adaptive_ml_enabled']}")
-    print(f"Estimated Cost/Hour: ${capabilities['estimated_cost_per_hour']:.2f}")
-    print(f"Adaptive Advantage: {capabilities['adaptive_advantage']}")
+    logger.info(f"Adaptive Backend: {capabilities['backend']}")
+    logger.info(f"Códigos VQ Available: {capabilities['embedding_dim']}")
+    logger.info(f"Adaptive ML Enabled: {capabilities['adaptive_ml_enabled']}")
+    logger.info(f"Estimated Cost/Hour: ${capabilities['estimated_cost_per_hour']:.2f}")
+    logger.info(f"Adaptive Advantage: {capabilities['adaptive_advantage']}")
     
     # Test adaptive forward pass
     test_input = jnp.ones((4, 512, 768))  # Small test batch
-    print(f"\nTesting adaptive forward pass with input shape: {test_input.shape}")
+    logger.info(f"\nTesting adaptive forward pass with input shape: {test_input.shape}")
     
     start_time = time.time()
     output = adaptive_integration.vq_forward(test_input)
     end_time = time.time()
     
-    print(f"Output shape: {output.shape}")
-    print(f"Processing time: {end_time - start_time:.3f} seconds")
+    logger.info(f"Output shape: {output.shape}")
+    logger.info(f"Processing time: {end_time - start_time:.3f} seconds")
     
     # Get cost summary
     cost_summary = adaptive_integration.cost_tracker.get_cost_summary()
-    print(f"\nCost Summary:")
-    print(f"Total operations: {cost_summary['total_operations']}")
-    print(f"Total cost: ${cost_summary['total_cost_usd']:.6f}")
-    print(f"Average cost per operation: ${cost_summary['average_cost_per_operation']:.6f}")
+    logger.info(f"\nCost Summary:")
+    logger.info(f"Total operations: {cost_summary['total_operations']}")
+    logger.info(f"Total cost: ${cost_summary['total_cost_usd']:.6f}")
+    logger.info(f"Average cost per operation: ${cost_summary['average_cost_per_operation']:.6f}")
     
-    print("\n✅ CapibaraGPT v3.3 TPU v6 Adaptive Integration ready for production!") 
+    logger.info("\n✅ CapibaraGPT v3.3 TPU v6 Adaptive Integration ready for production!")

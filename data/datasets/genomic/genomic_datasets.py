@@ -269,19 +269,19 @@ class GenomicDatasetLoader:
 
 def print_dataset_summary():
     """Prints summary of available genomic datasets."""
-    print("🧬 GENOMIC DATASETS SUMMARY")
-    print("=" * 50)
+    logger.info("🧬 GENOMIC DATASETS SUMMARY")
+    logger.info("=" * 50)
     
     for name, info in GENOMIC_DATASETS.items():
-        print(f"\n📊 {name.upper()}")
-        print(f"   Description: {info['description']}")
-        print(f"   Format: {info['format']}")
-        print(f"   Size: {info['size']}")
+        logger.info(f"\n📊 {name.upper()}")
+        logger.info(f"   Description: {info['description']}")
+        logger.info(f"   Format: {info['format']}")
+        logger.info(f"   Size: {info['size']}")
         
         if 'organisms' in info:
-            print(f"   Organisms: {', '.join(info['organisms'])}")
+            logger.info(f"   Organisms: {', '.join(info['organisms'])}")
         if 'conditions' in info:
-            print(f"   Conditions: {', '.join(info['conditions'])}")
+            logger.info(f"   Conditions: {', '.join(info['conditions'])}")
 
 def get_genomic_loader() -> GenomicDatasetLoader:
     """Factory function to get the genomic loader."""

@@ -843,8 +843,8 @@ if __name__ == "__main__":
             "active_connections": 12
         })
         
-        print(f"Dashboard available at: {monitor.get_dashboard_url()}")
-        print("Starting monitoring dashboard server...")
+        logger.info(f"Dashboard available at: {monitor.get_dashboard_url()}")
+        logger.info("Starting monitoring dashboard server...")
         
         # Start dashboard (this will run indefinitely)
         await monitor.start_monitoring()

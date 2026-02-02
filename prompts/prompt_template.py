@@ -357,7 +357,7 @@ if __name__ == "__main__":
     params = {"dummy": "params"}
     
     # Test template validation
-    print("Available templates:", get_available_templates())
+    logger.info("Available templates:", get_available_templates())
     
     # Test format response with different templates
     test_queries = [
@@ -379,10 +379,10 @@ if __name__ == "__main__":
                 top_p=0.95
             )
             
-            print(f"\n--- Template: {template} ---")
-            print(f"Query: {query}")
-            print(f"Response:\n{response}")
-            print("-" * 50)
+            logger.info(f"\n--- Template: {template} ---")
+            logger.info(f"Query: {query}")
+            logger.info(f"Response:\n{response}")
+            logger.info("-" * 50)
             
         except Exception as e:
-            print(f"Error with template {template}: {e}")
+            logger.error(f"Error with template {template}: {e}")

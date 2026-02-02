@@ -960,43 +960,43 @@ if __name__ == "__main__":
         # Create benchmark suite
         benchmark = create_quick_benchmark(num_queries=10)
         
-        print("📊 Meta-Consensus-Comp Benchmark Suite")
-        print("=" * 50)
+        logger.info("📊 Meta-Consensus-Comp Benchmark Suite")
+        logger.info("=" * 50)
         
         # Run comprehensive benchmark
         report = await benchmark.run_comprehensive_benchmark()
         
-        print("\n🏆 Benchmark Results Summary:")
+        logger.info("\n🏆 Benchmark Results Summary:")
         
         # Latency improvements
         if report.latency_improvement:
-            print("\n⚡ Latency Improvements:")
+            logger.info("\n⚡ Latency Improvements:")
             for level, improvement in report.latency_improvement.items():
-                print(f"  {level}: {improvement:.1%} faster")
+                logger.info(f"  {level}: {improvement:.1%} faster")
         
         # Throughput improvements
         if report.throughput_improvement:
-            print("\n🚀 Throughput Improvements:")
+            logger.info("\n🚀 Throughput Improvements:")
             for level, improvement in report.throughput_improvement.items():
-                print(f"  {level}: {improvement:.1%} higher")
+                logger.info(f"  {level}: {improvement:.1%} higher")
         
         # Memory efficiency
         if report.memory_efficiency_gain:
-            print("\n🧠 Memory Efficiency Gains:")
+            logger.info("\n🧠 Memory Efficiency Gains:")
             for level, gain in report.memory_efficiency_gain.items():
-                print(f"  {level}: {gain:.1%} reduction")
+                logger.info(f"  {level}: {gain:.1%} reduction")
         
         # Quality analysis
-        print(f"\n✅ Quality Preservation: {report.quality_preservation_rate:.1%}")
-        print(f"✅ Quality Consistency: {report.quality_consistency:.1%}")
+        logger.info(f"\n✅ Quality Preservation: {report.quality_preservation_rate:.1%}")
+        logger.info(f"✅ Quality Consistency: {report.quality_consistency:.1%}")
         
         # Recommendations
         if report.optimization_recommendations:
-            print(f"\n💡 Recommendations:")
+            logger.info(f"\n💡 Recommendations:")
             for rec in report.optimization_recommendations:
-                print(f"  • {rec}")
+                logger.info(f"  • {rec}")
         
-        print(f"\n📁 Results saved to: {benchmark.output_dir}")
+        logger.info(f"\n📁 Results saved to: {benchmark.output_dir}")
     
     import asyncio
     asyncio.run(main())

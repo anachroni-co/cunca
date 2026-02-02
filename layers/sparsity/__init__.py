@@ -10,13 +10,9 @@ from typing import Any, Dict, List, Optional
 logger = logging.getLogger(__name__)
 
 # Check for dependencies
-try:
-    import jax
-    import jax.numpy as jnp
-    from flax import linen as nn
-    JAX_AVAILABLE = True
-except ImportError:
-    JAX_AVAILABLE = False
+from layers.jax_compat import JAX_AVAILABLE
+
+if not JAX_AVAILABLE:
     logger.warning("JAX/Flax not available - sparsity layers will use fallback implementations")
 
 # Import all sparsity modules

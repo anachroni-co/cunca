@@ -970,11 +970,11 @@ if __name__ == "__main__":
         # Create distributed cache
         cache = DistributedConsensusCache(config)
         
-        print("🌐 Distributed Consensus Cache Test")
-        print("=" * 40)
+        logger.info("🌐 Distributed Consensus Cache Test")
+        logger.info("=" * 40)
         
         # Test basic operations
-        print("\n📦 Testing basic cache operations...")
+        logger.info("\n📦 Testing basic cache operations...")
         
         test_data = {
             "query_1": {"response": "This is a test response", "quality": 8.5},
@@ -985,18 +985,18 @@ if __name__ == "__main__":
         # Set values
         for key, value in test_data.items():
             success = await cache.set(key, value)
-            print(f"✅ Set {key}: {success}")
+            logger.info(f"✅ Set {key}: {success}")
         
         # Get values
         for key in test_data.keys():
             retrieved = await cache.get(key)
             if retrieved is not None:
-                print(f"✅ Retrieved {key}: {type(retrieved)}")
+                logger.info(f"✅ Retrieved {key}: {type(retrieved)}")
             else:
-                print(f"❌ Failed to retrieve {key}")
+                logger.error(f"❌ Failed to retrieve {key}")
         
         # Test cache warming
-        print("\n🔥 Testing cache warming...")
+        logger.info("\n🔥 Testing cache warming...")
         
         warming_data = [
             ("warm_key_1", {"data": "warming test 1"}),
@@ -1010,10 +1010,10 @@ if __name__ == "__main__":
         for key, _ in warming_data:
             value = await cache.get(key)
             if value:
-                print(f"✅ Warmed data retrieved: {key}")
+                logger.info(f"✅ Warmed data retrieved: {key}")
         
         # Test caching decorator
-        print("\n🎭 Testing caching decorators...")
+        logger.info("\n🎭 Testing caching decorators...")
         
         @expert_response_cached(ttl=300)
         async def mock_expert_response(query: str, expert_id: str):
@@ -1035,34 +1035,34 @@ if __name__ == "__main__":
         result2 = await mock_expert_response("test query", "expert_1")
         second_call_time = time.time() - start_time
         
-        print(f"✅ First call (miss): {first_call_time:.3f}s")
-        print(f"✅ Second call (hit): {second_call_time:.3f}s")
-        print(f"✅ Speedup: {first_call_time / second_call_time:.1f}x")
+        logger.info(f"✅ First call (miss): {first_call_time:.3f}s")
+        logger.info(f"✅ Second call (hit): {second_call_time:.3f}s")
+        logger.info(f"✅ Speedup: {first_call_time / second_call_time:.1f}x")
         
         # Get comprehensive statistics
-        print("\n📊 Cache Statistics:")
+        logger.info("\n📊 Cache Statistics:")
         stats = cache.get_comprehensive_stats()
         
-        print(f"Overall Hit Rate: {stats['performance_metrics']['overall_hit_rate']:.2%}")
-        print(f"Avg Get Time: {stats['performance_metrics']['avg_get_time_ms']:.2f}ms")
-        print(f"Avg Set Time: {stats['performance_metrics']['avg_set_time_ms']:.2f}ms")
+        logger.info(f"Overall Hit Rate: {stats['performance_metrics']['overall_hit_rate']:.2%}")
+        logger.info(f"Avg Get Time: {stats['performance_metrics']['avg_get_time_ms']:.2f}ms")
+        logger.info(f"Avg Set Time: {stats['performance_metrics']['avg_set_time_ms']:.2f}ms")
         
         for level, level_stats in stats["cache_levels"].items():
             if level_stats.get("enabled", True):
-                print(f"\n{level.upper()}:")
-                print(f"  Hit Rate: {level_stats['hit_rate']:.2%}")
-                print(f"  Hits: {level_stats['hits']}")
-                print(f"  Misses: {level_stats['misses']}")
+                logger.info(f"\n{level.upper()}:")
+                logger.info(f"  Hit Rate: {level_stats['hit_rate']:.2%}")
+                logger.info(f"  Hits: {level_stats['hits']}")
+                logger.info(f"  Misses: {level_stats['misses']}")
         
         # Test cleanup
-        print(f"\n🧹 Testing cache cleanup...")
+        logger.info(f"\n🧹 Testing cache cleanup...")
         await cache.cleanup_all_levels()
         
         final_stats = cache.get_comprehensive_stats()
-        print(f"Final L1 entries: {final_stats['cache_levels']['l1_memory']['entries']}")
-        print(f"Final L3 entries: {final_stats['cache_levels']['l3_persistent']['entries']}")
+        logger.info(f"Final L1 entries: {final_stats['cache_levels']['l1_memory']['entries']}")
+        logger.info(f"Final L3 entries: {final_stats['cache_levels']['l3_persistent']['entries']}")
         
-        print(f"\n✅ Distributed cache test completed")
+        logger.info(f"\n✅ Distributed cache test completed")
     
     import asyncio
     asyncio.run(main())

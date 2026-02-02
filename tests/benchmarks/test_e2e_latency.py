@@ -20,6 +20,9 @@ import pytest
 import numpy as np
 from typing import Dict, List
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -50,7 +53,7 @@ def _measure_latency(fn, warmup: int = 3, repeats: int = 20) -> Dict[str, float]
 
 
 def _print_latency(name: str, stats: Dict[str, float]):
-    print(
+    logger.info(
         f"\n  {name}:"
         f"\n    mean={stats['mean_ms']:.3f}ms  median={stats['median_ms']:.3f}ms"
         f"  min={stats['min_ms']:.3f}ms  max={stats['max_ms']:.3f}ms"
@@ -421,9 +424,9 @@ class TestManualLatencyReport:
             ("xlarge", 1, 16, 2048, 64),
         ]
 
-        print("\n" + "=" * 60)
-        print("ATTENTION LATENCY REPORT")
-        print("=" * 60)
+        logger.info("\n" + "=" * 60)
+        logger.warning("ATTENTION LATENCY REPORT")
+        logger.info("=" * 60)
 
         for name, bs, nh, sl, hd in configs:
             q = backend.randn((bs, nh, sl, hd))
@@ -437,9 +440,9 @@ class TestManualLatencyReport:
 
     def test_pipeline_latency_report(self, backend):
         """Detailed inference pipeline latency report."""
-        print("\n" + "=" * 60)
-        print("INFERENCE PIPELINE LATENCY REPORT")
-        print("=" * 60)
+        logger.info("\n" + "=" * 60)
+        logger.info("INFERENCE PIPELINE LATENCY REPORT")
+        logger.info("=" * 60)
 
         configs = [
             ("single-token", 1, 1, 256, 8),
@@ -479,9 +482,9 @@ class TestManualLatencyReport:
 
     def test_scaling_latency_report(self, backend):
         """Detailed scaling report: attention vs sequence length."""
-        print("\n" + "=" * 60)
-        print("ATTENTION SCALING REPORT (seq_len)")
-        print("=" * 60)
+        logger.info("\n" + "=" * 60)
+        logger.warning("ATTENTION SCALING REPORT (seq_len)")
+        logger.info("=" * 60)
 
         for sl in [64, 128, 256, 512, 1024, 2048]:
             q = backend.randn((2, 8, sl, 64))

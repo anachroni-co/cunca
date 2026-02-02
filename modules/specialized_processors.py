@@ -838,7 +838,7 @@ def main():
     # Test code analysis
     code_sample = """
 def hello_world():
-    print("Hello, World!")
+    logger.info("Hello, World!")
     return True
 
 class MyClass:

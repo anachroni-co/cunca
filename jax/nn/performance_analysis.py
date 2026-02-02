@@ -10,6 +10,9 @@ import os
 from functools import wraps
 from typing import Dict, List, Tuple
 
+import logging
+logger = logging.getLogger(__name__)
+
 try:
     import jax
     import jax.numpy as jnp
@@ -27,13 +30,13 @@ except ImportError:
 def measure_performance():
     """Comprehensive performance analysis of our improvements."""
 
-    print("QUANTITATIVE PERFORMANCE ANALYSIS")
-    print("=" * 80)
-    print()
+    logger.info("QUANTITATIVE PERFORMANCE ANALYSIS")
+    logger.info("=" * 80)
+    logger.info()
 
     # 1. JIT COMPILATION SPEEDUPS
-    print("1. JIT COMPILATION - SPEEDUP ANALYSIS")
-    print("-" * 50)
+    logger.info("1. JIT COMPILATION - SPEEDUP ANALYSIS")
+    logger.info("-" * 50)
 
     jit_speedups = {
         "Matrix Multiplication": {
@@ -66,18 +69,18 @@ def measure_performance():
     for operation, metrics in jit_speedups.items():
         speedup_val = float(metrics["speedup"].replace("x", ""))
         total_jit_speedup += speedup_val
-        print(f"   {operation:20}: {metrics['speedup']:8} speedup")
-        print(f"      without JIT: {metrics['without_jit']:8} -> with JIT: {metrics['with_jit']:8}")
-        print(f"      Usage: {metrics['usage']}")
-        print()
+        logger.info(f"   {operation:20}: {metrics['speedup']:8} speedup")
+        logger.info(f"      without JIT: {metrics['without_jit']:8} -> with JIT: {metrics['with_jit']:8}")
+        logger.info(f"      Usage: {metrics['usage']}")
+        logger.info()
 
     avg_jit_speedup = total_jit_speedup / len(jit_speedups)
-    print(f"AVERAGE JIT SPEEDUP: {avg_jit_speedup:.1f}x faster")
-    print()
+    logger.info(f"AVERAGE JIT SPEEDUP: {avg_jit_speedup:.1f}x faster")
+    logger.info()
 
     # 2. MEMORY EFFICIENCY GAINS
-    print("2. MEMORY EFFICIENCY - MEMORY SAVINGS")
-    print("-" * 50)
+    logger.info("2. MEMORY EFFICIENCY - MEMORY SAVINGS")
+    logger.info("-" * 50)
 
     memory_savings = {
         "Gradient Checkpointing": {
@@ -116,18 +119,18 @@ def measure_performance():
     for optimization, metrics in memory_savings.items():
         savings_pct = float(metrics["savings"].replace("%", ""))
         total_memory_saved += savings_pct
-        print(f"   {optimization:25}: {metrics['savings']:8} less memory")
-        print(f"      {metrics['traditional']} -> {metrics['optimized']}")
-        print(f"      Benefit: {metrics['benefit']}")
-        print()
+        logger.info(f"   {optimization:25}: {metrics['savings']:8} less memory")
+        logger.info(f"      {metrics['traditional']} -> {metrics['optimized']}")
+        logger.info(f"      Benefit: {metrics['benefit']}")
+        logger.info()
 
     avg_memory_saved = total_memory_saved / len(memory_savings)
-    print(f"AVERAGE MEMORY SAVINGS: {avg_memory_saved:.1f}% less usage")
-    print()
+    logger.info(f"AVERAGE MEMORY SAVINGS: {avg_memory_saved:.1f}% less usage")
+    logger.info()
 
     # 3. TRAINING TIME REDUCTIONS
-    print("3. TRAINING TIME - TIME REDUCTION")
-    print("-" * 50)
+    logger.info("3. TRAINING TIME - TIME REDUCTION")
+    logger.info("-" * 50)
 
     training_improvements = {
         "GPT-2 (1.5B parameters)": {
@@ -160,18 +163,18 @@ def measure_performance():
     for model, metrics in training_improvements.items():
         speedup_val = float(metrics["improvement"].split("x")[0])
         total_speedup += speedup_val
-        print(f"   {model:25}: {metrics['improvement']:15}")
-        print(f"      {metrics['baseline']:12} -> {metrics['optimized']:12}")
-        print(f"      Optimizations: {metrics['components']}")
-        print()
+        logger.info(f"   {model:25}: {metrics['improvement']:15}")
+        logger.info(f"      {metrics['baseline']:12} -> {metrics['optimized']:12}")
+        logger.info(f"      Optimizations: {metrics['components']}")
+        logger.info()
 
     avg_training_speedup = total_speedup / len(training_improvements)
-    print(f"AVERAGE TRAINING SPEEDUP: {avg_training_speedup:.1f}x faster")
-    print()
+    logger.info(f"AVERAGE TRAINING SPEEDUP: {avg_training_speedup:.1f}x faster")
+    logger.info()
 
     # 4. THROUGHPUT IMPROVEMENTS
-    print("4. THROUGHPUT - SAMPLES PER SECOND")
-    print("-" * 50)
+    logger.info("4. THROUGHPUT - SAMPLES PER SECOND")
+    logger.info("-" * 50)
 
     throughput_gains = {
         "Inference GPT-2": {
@@ -195,14 +198,14 @@ def measure_performance():
     }
 
     for metric, data in throughput_gains.items():
-        print(f"   {metric:25}: {data['improvement']:8} more throughput")
-        print(f"      {data['baseline']:16} -> {data['optimized']:16}")
-        print(f"      Via: {data['optimizations']}")
-        print()
+        logger.info(f"   {metric:25}: {data['improvement']:8} more throughput")
+        logger.info(f"      {data['baseline']:16} -> {data['optimized']:16}")
+        logger.info(f"      Via: {data['optimizations']}")
+        logger.info()
 
     # 5. COST SAVINGS (CLOUD COMPUTING)
-    print("5. COST SAVINGS - CLOUD COMPUTING COSTS")
-    print("-" * 50)
+    logger.info("5. COST SAVINGS - CLOUD COMPUTING COSTS")
+    logger.info("-" * 50)
 
     cost_analysis = {
         "AWS p4d.24xlarge (8x A100)": {
@@ -230,17 +233,17 @@ def measure_performance():
         savings = baseline_cost - optimized_cost
         total_savings += savings
 
-        print(f"   {platform:25}: {costs['savings']}")
-        print(f"      Baseline: {costs['cost_baseline']} -> Optimized: {costs['cost_optimized']}")
-        print(f"      Time: {costs['hours_baseline']} -> {costs['hours_optimized']}")
-        print()
+        logger.info(f"   {platform:25}: {costs['savings']}")
+        logger.info(f"      Baseline: {costs['cost_baseline']} -> Optimized: {costs['cost_optimized']}")
+        logger.info(f"      Time: {costs['hours_baseline']} -> {costs['hours_optimized']}")
+        logger.info()
 
-    print(f"TOTAL SAVINGS example: ${total_savings:,} per training run")
-    print()
+    logger.info(f"TOTAL SAVINGS example: ${total_savings:,} per training run")
+    logger.info()
 
     # 6. SCALING BENEFITS
-    print("6. SCALING BENEFITS - SCALABILITY IMPROVEMENTS")
-    print("-" * 50)
+    logger.info("6. SCALING BENEFITS - SCALABILITY IMPROVEMENTS")
+    logger.info("-" * 50)
 
     scaling_benefits = {
         "Multi-GPU Efficiency": {
@@ -266,14 +269,14 @@ def measure_performance():
     }
 
     for benefit, data in scaling_benefits.items():
-        print(f"   {benefit:25}: {data['improvement']}")
-        print(f"      {data['baseline']} -> {data['optimized']}")
-        print()
+        logger.info(f"   {benefit:25}: {data['improvement']}")
+        logger.info(f"      {data['baseline']} -> {data['optimized']}")
+        logger.info()
 
     # 7. SUMMARY
-    print("7. FINAL SUMMARY - TOTAL IMPACT")
-    print("=" * 80)
-    print()
+    logger.info("7. FINAL SUMMARY - TOTAL IMPACT")
+    logger.info("=" * 80)
+    logger.info()
 
     final_summary = {
         "Training Speed": f"{avg_training_speedup:.1f}x faster",
@@ -286,10 +289,10 @@ def measure_performance():
         "Max Context": "512 -> 4096 tokens"
     }
 
-    print("QUANTIFIED BENEFITS:")
+    logger.info("QUANTIFIED BENEFITS:")
     for metric, improvement in final_summary.items():
-        print(f"   {metric:20}: {improvement}")
-    print()
+        logger.info(f"   {metric:20}: {improvement}")
+    logger.info()
 
     # ROI CALCULATION
     roi_analysis = {
@@ -310,20 +313,20 @@ def measure_performance():
         }
     }
 
-    print("ROI ANALYSIS (Return on Investment):")
+    logger.info("ROI ANALYSIS (Return on Investment):")
     for category, data in roi_analysis.items():
-        print(f"   {category}:")
+        logger.info(f"   {category}:")
         for key, value in data.items():
-            print(f"      {key:20}: {value}")
-        print()
+            logger.info(f"      {key:20}: {value}")
+        logger.info()
 
-    print("CONCLUSION:")
-    print("   Decorators and optimizations are not just 'improvements'")
-    print("   They are EFFICIENCY MULTIPLIERS that transform")
-    print("   AI projects from expensive to profitable!")
-    print()
-    print("EVERY DOLLAR INVESTED in optimization")
-    print("   RETURNS $22.50 in SAVINGS!")
+    logger.info("CONCLUSION:")
+    logger.info("   Decorators and optimizations are not just 'improvements'")
+    logger.info("   They are EFFICIENCY MULTIPLIERS that transform")
+    logger.info("   AI projects from expensive to profitable!")
+    logger.info()
+    logger.info("EVERY DOLLAR INVESTED in optimization")
+    logger.info("   RETURNS $22.50 in SAVINGS!")
 
 
 if __name__ == "__main__":

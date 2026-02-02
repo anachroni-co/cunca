@@ -597,12 +597,12 @@ class IntelligentOrchestrationStrategy(BaseOrchestrationStrategy):
         start_time = time.time()
         
         try:
-            # Ejecutar fases secuencialmente
+            # Execute phases sequentially
             for phase in plan.execution_phases:
                 phase_result = self._execute_phase_intelligently(phase, agents)
                 execution_results[f"phase_{phase['phase_number']}"] = phase_result
                 
-                # Registrar evento de coordinación
+                # Record coordination event
                 coordination_events.append(CoordinationEvent(
                     event_id=f"phase_{phase['phase_number']}_completed",
                     event_type="phase_completion",
@@ -612,14 +612,14 @@ class IntelligentOrchestrationStrategy(BaseOrchestrationStrategy):
                     success=phase_result.get("status") == "success"
                 ))
                 
-                # Verificar si la fase falló
+                # Check if the phase failed
                 if phase_result.get("status") != "success":
                     logger.warning(f"Phase {phase['phase_number']} failed, applying recovery strategy")
                     recovery_result = self._apply_recovery_strategy(phase, agents)
                     if recovery_result.get("status") != "success":
                         break
             
-            # Evaluar éxito general
+            # Evaluate overall success
             overall_success = all(
                 result.get("status") == "success" 
                 for result in execution_results.values()
@@ -746,13 +746,13 @@ class IntelligentOrchestrationStrategy(BaseOrchestrationStrategy):
         for subtask_id in sorted_subtasks:
             required_type = task_decomposition.required_agents.get(subtask_id)
             
-            # Encontrar mejores candidatos
+            # Find best candidates
             candidates = self._find_best_agent_candidates(
                 required_type, available_agents, agent_analysis, agent_workload
             )
             
             if candidates:
-                # Seleccionar el mejor candidato
+                # Select the best candidate
                 best_agent = candidates[0]
                 assignments[subtask_id] = best_agent.agent_id
                 agent_workload[best_agent.agent_id] += 1

@@ -559,8 +559,8 @@ def update_legacy_submodels():
 def demonstrate_ultra_integration():
     """Demonstrate the ultra-enhanced integration system."""
     
-    print("🌟 ULTRA ENHANCED INTEGRATION DEMONSTRATION")
-    print("=" * 60)
+    logger.info("🌟 ULTRA ENHANCED INTEGRATION DEMONSTRATION")
+    logger.info("=" * 60)
     
     # Create integration manager
     integration_manager = create_ultra_enhanced_integration()
@@ -568,19 +568,19 @@ def demonstrate_ultra_integration():
     # Get comprehensive status
     status = integration_manager.get_comprehensive_status()
     
-    print(f"📊 Integration Status:")
-    print(f"   - Total models: {status['total_models']}")
-    print(f"   - Ultra Core: {'✅' if status['system_features']['ultra_core'] else '❌'}")
-    print(f"   - Ultra Training: {'✅' if status['system_features']['ultra_training'] else '❌'}")
-    print(f"   - SSM Layers: {'✅' if status['system_features']['ssm_layers'] else '❌'}")
+    logger.info(f"📊 Integration Status:")
+    logger.info(f"   - Total models: {status['total_models']}")
+    logger.info(f"   - Ultra Core: {'✅' if status['system_features']['ultra_core'] else '❌'}")
+    logger.info(f"   - Ultra Training: {'✅' if status['system_features']['ultra_training'] else '❌'}")
+    logger.info(f"   - SSM Layers: {'✅' if status['system_features']['ssm_layers'] else '❌'}")
     
-    print(f"\n🔧 Model Enhancement Status:")
+    logger.info(f"\n🔧 Model Enhancement Status:")
     for model, status_msg in status['integration_status'].items():
-        print(f"   - {model}: {status_msg}")
+        logger.info(f"   - {model}: {status_msg}")
     
-    print(f"\n⚡ Optimization Features:")
+    logger.info(f"\n⚡ Optimization Features:")
     for feature, available in status['optimization_features'].items():
-        print(f"   - {feature}: {'✅' if available else '❌'}")
+        logger.info(f"   - {feature}: {'✅' if available else '❌'}")
     
     # Test enhanced models
     try:
@@ -591,12 +591,12 @@ def demonstrate_ultra_integration():
                 result, metrics = integration_manager.execute_enhanced_model(
                     model_name, dummy_input
                 )
-                print(f"   ✅ {model_name}: Working")
+                logger.info(f"   ✅ {model_name}: Working")
             except Exception as e:
-                print(f"   ❌ {model_name}: {e}")
+                logger.info(f"   ❌ {model_name}: {e}")
                 
     except Exception as e:
-        print(f"❌ Testing failed: {e}")
+        logger.error(f"❌ Testing failed: {e}")
     
     return integration_manager
 

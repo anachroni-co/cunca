@@ -6,12 +6,35 @@ Practical examples showing how to use Flax-specific decorators
 for building modern transformer architectures.
 """
 
+import logging
+logger = logging.getLogger(__name__)
+
 try:
     import flax.linen as nn
     import jax
     import jax.numpy as jnp
     from jax import random
-    from .flax_decorators import *
+    from .flax_decorators import (
+        flax_module,
+        auto_param,
+        with_state,
+        flax_cached,
+        flax_training_step,
+        flax_scan_layer,
+        multihead_attention,
+        causal_attention,
+        layer_norm_wrapper,
+        batch_norm_wrapper,
+        flax_jit,
+        flax_vmap,
+        flax_remat,
+        transformer_block,
+        embedding_layer,
+        stateful_module,
+        flax_init_only,
+        flax_apply_only,
+        flax_conditional,
+    )
     
     # Example 1: simple Module Creation
     
@@ -250,17 +273,17 @@ try:
         # Forward pass
         logits = model.apply(variables, tokens, training=False)
         
-        print(f"Input shape: {tokens.shape}")
-        print(f"Output shape: {logits.shape}")
-        print(f"Model parameters: {sum(x.size for x in jax.tree_leaves(variables))}")
+        logger.info(f"Input shape: {tokens.shape}")
+        logger.info(f"Output shape: {logits.shape}")
+        logger.info(f"Model parameters: {sum(x.size for x in jax.tree_leaves(variables))}")
         
         return model, variables, logits
 
 except ImportError:
-    print("⚠️  Flax not available - examples are stubs")
+    logger.warning("⚠️  Flax not available - examples are stubs")
     
     def demo_flax_decorators():
-        print("Flax decorators demo requires Flax installation")
+        logger.info("Flax decorators demo requires Flax installation")
         return None, None, None
     
     # Stub classes

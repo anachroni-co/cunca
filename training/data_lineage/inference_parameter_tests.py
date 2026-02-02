@@ -539,34 +539,34 @@ def run_parameter_control_tests() -> Dict[str, Any]:
 
 def print_test_results(results: Dict[str, Any]):
     """Print formatted test results."""
-    print("\n" + "="*80)
-    print("🧪 PARAMETER CONTROL TEST RESULTS")
-    print("="*80)
+    logger.info("\n" + "="*80)
+    logger.info("🧪 PARAMETER CONTROL TEST RESULTS")
+    logger.info("="*80)
     
     if "summary" in results:
         summary = results["summary"]
-        print(f"\n📊 SUMMARY:")
-        print(f"   Total Tests: {summary['total_tests']}")
-        print(f"   Passed: {summary['passed_tests']} ✅")
-        print(f"   Failed: {summary['failed_tests']} ❌") 
-        print(f"   Success Rate: {summary['success_rate']:.1%}")
-        print(f"   Overall Success: {'✅' if summary['overall_success'] else '❌'}")
+        logger.info(f"\n📊 SUMMARY:")
+        logger.info(f"   Total Tests: {summary['total_tests']}")
+        logger.info(f"   Passed: {summary['passed_tests']} ✅")
+        logger.error(f"   Failed: {summary['failed_tests']} ❌")
+        logger.info(f"   Success Rate: {summary['success_rate']:.1%}")
+        logger.info(f"   Overall Success: {'✅' if summary['overall_success'] else '❌'}")
         
         if summary['errors']:
-            print(f"\n❌ ERRORS:")
+            logger.error(f"\n❌ ERRORS:")
             for error in summary['errors']:
-                print(f"   - {error}")
+                logger.error(f"   - {error}")
     
-    print("\n📋 DETAILED RESULTS:")
+    logger.debug("\n📋 DETAILED RESULTS:")
     for section, data in results.items():
         if section != "summary":
-            print(f"\n  🔍 {section.upper()}:")
+            logger.info(f"\n  🔍 {section.upper()}:")
             if isinstance(data, dict) and "error" in data:
-                print(f"    ❌ Error: {data['error']}")
+                logger.error(f"    ❌ Error: {data['error']}")
             elif isinstance(data, dict) and "success" in data:
-                print(f"    {'✅' if data['success'] else '❌'} Success: {data['success']}")
+                logger.info(f"    {'✅' if data['success'] else '❌'} Success: {data['success']}")
             else:
-                print(f"    📊 Contains {len(data) if isinstance(data, dict) else 1} test(s)")
+                logger.info(f"    📊 Contains {len(data) if isinstance(data, dict) else 1} test(s)")
 
 if __name__ == "__main__":
     # Configure logging
@@ -597,4 +597,4 @@ if __name__ == "__main__":
         
         json.dump(convert_for_json(test_results), f, indent=2)
     
-    print(f"\n💾 Results saved to: parameter_control_test_results.json")
+    logger.info(f"\n💾 Results saved to: parameter_control_test_results.json")

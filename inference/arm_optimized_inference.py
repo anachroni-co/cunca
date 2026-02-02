@@ -445,21 +445,21 @@ def main():
         # Show model info
         if args.verbose:
             model_info = engine.get_model_info()
-            print("\n📋 Model Information:")
+            logger.info("\n📋 Model Information:")
             for key, value in model_info.items():
-                print(f"   {key}: {value}")
+                logger.info(f"   {key}: {value}")
         
         if args.benchmark:
             # Run benchmark
-            print(f"\n🏁 Running ARM benchmark...")
+            logger.info(f"\n🏁 Running ARM benchmark...")
             results = engine.benchmark(args.iterations, args.prompt)
-            print("\n🏆 Benchmark Results:")
+            logger.info("\n🏆 Benchmark Results:")
             for key, value in results.items():
-                print(f"   {key}: {value}")
+                logger.info(f"   {key}: {value}")
         else:
             # Single generation
-            print(f"\n🤖 Generating response...")
-            print(f"Prompt: {args.prompt}")
+            logger.info(f"\n🤖 Generating response...")
+            logger.info(f"Prompt: {args.prompt}")
             
             start_time = time.time()
             response = engine.generate(
@@ -469,15 +469,15 @@ def main():
             )
             end_time = time.time()
             
-            print(f"\nResponse: {response}")
-            print(f"\n⏱️ Generation time: {(end_time - start_time) * 1000:.1f}ms")
+            logger.info(f"\nResponse: {response}")
+            logger.info(f"\n⏱️ Generation time: {(end_time - start_time) * 1000:.1f}ms")
             
         # Show performance stats
         if args.verbose:
             stats = engine.get_performance_stats()
-            print("\n📊 Performance Stats:")
+            logger.info("\n📊 Performance Stats:")
             for key, value in stats.items():
-                print(f"   {key}: {value}")
+                logger.info(f"   {key}: {value}")
         
     except Exception as e:
         logger.error(f"❌ Error: {e}")

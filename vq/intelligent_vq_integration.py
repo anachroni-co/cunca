@@ -569,11 +569,11 @@ class CapibaraVQIntegration:
 
 def demo_intelligent_integration():
     """Demonstrate the intelligent VQ integration system."""
-    print("🧠 Intelligent VQ Integration Demo")
-    print("=" * 50)
+    logger.info("🧠 Intelligent VQ Integration Demo")
+    logger.info("=" * 50)
     
     # 1. Auto-selection for different use cases
-    print("\n1️⃣ Auto-selection for different use cases:")
+    logger.info("\n1️⃣ Auto-selection for different use cases:")
     
     use_cases = [
         ("general", "General purpose AI model"),
@@ -584,7 +584,7 @@ def demo_intelligent_integration():
     ]
     
     for use_case, description in use_cases:
-        print(f"\n📋 {use_case.upper()}: {description}")
+        logger.info(f"\n📋 {use_case.upper()}: {description}")
         
         try:
             vq, info = create_optimal_vq(
@@ -593,15 +593,15 @@ def demo_intelligent_integration():
                 embedding_dim=256
             )
             
-            print(f"   ✅ Selected: {info['selected_system']}")
-            print(f"   📝 Description: {info['description']}")
-            print(f"   🎯 Candidates: {', '.join(info['candidates'])}")
+            logger.info(f"   ✅ Selected: {info['selected_system']}")
+            logger.info(f"   📝 Description: {info['description']}")
+            logger.info(f"   🎯 Candidates: {', '.join(info['candidates'])}")
             
         except Exception as e:
-            print(f"   ❌ Error: {e}")
+            logger.error(f"   ❌ Error: {e}")
     
     # 2. Performance requirements
-    print(f"\n2️⃣ Performance-constrained selection:")
+    logger.info(f"\n2️⃣ Performance-constrained selection:")
     
     vq, info = create_optimal_vq(
         use_case="general",
@@ -613,23 +613,23 @@ def demo_intelligent_integration():
         }
     )
     
-    print(f"   ✅ Low-latency system: {info['selected_system']}")
+    logger.info(f"   ✅ Low-latency system: {info['selected_system']}")
     
     # 3. Usage statistics
-    print(f"\n3️⃣ Usage statistics:")
+    logger.info(f"\n3️⃣ Usage statistics:")
     stats = get_vq_usage_stats()
-    print(f"   📊 Total VQ creations: {stats['total_creations']}")
-    print(f"   📈 System usage:")
+    logger.info(f"   📊 Total VQ creations: {stats['total_creations']}")
+    logger.info(f"   📈 System usage:")
     for system, percentage in stats['system_percentages'].items():
-        print(f"      {system}: {percentage:.1f}%")
+        logger.info(f"      {system}: {percentage:.1f}%")
     
     # 4. Recommendations
-    print(f"\n4️⃣ System recommendations:")
+    logger.info(f"\n4️⃣ System recommendations:")
     for use_case, _ in use_cases[:3]:
         rec = get_vq_recommendations(use_case)
-        print(f"   {use_case}: {rec['recommended_system']}")
+        logger.info(f"   {use_case}: {rec['recommended_system']}")
     
-    print(f"\n✅ Intelligent VQ Integration Demo completed!")
+    logger.info(f"\n✅ Intelligent VQ Integration Demo completed!")
 
 if __name__ == "__main__":
     demo_intelligent_integration()

@@ -14,39 +14,28 @@ from typing import Any, Callable, Dict, Optional, Sequence, Tuple
 import numpy as np
 
 from .base import BackendConfig, ComputeBackend, DType, TensorLike
+from .lazy_import import ensure_torch
 
-# Lazy imports for PyTorch
+# Module-level aliases populated on first _ensure_torch() call
 torch = None
 nn = None
 F = None
 
 
 def _ensure_torch():
-    """Lazy import PyTorch modules."""
     global torch, nn, F
     if torch is None:
-        try:
-            import torch as _torch
-            import torch.nn as _nn
-            import torch.nn.functional as _F
-
-            torch = _torch
-            nn = _nn
-            F = _F
-        except ImportError as e:
-            raise ImportError(
-                "PyTorch is not installed. Install with: pip install torch"
-            ) from e
+        torch, nn, F = ensure_torch()
 
 
-# Dtype mapping
+# Robust dtype mapping
 DTYPE_MAP = {
-    DType.FLOAT32: "float32",
-    DType.FLOAT16: "float16",
-    DType.BFLOAT16: "bfloat16",
-    DType.INT32: "int32",
-    DType.INT64: "int64",
-    DType.BOOL: "bool",
+    DType.FLOAT32: lambda: torch.float32,
+    DType.FLOAT16: lambda: torch.float16,
+    DType.BFLOAT16: lambda: torch.bfloat16,
+    DType.INT32: lambda: torch.int32,
+    DType.INT64: lambda: torch.int64,
+    DType.BOOL: lambda: torch.bool,
 }
 
 
@@ -55,92 +44,84 @@ class GPUBackend(ComputeBackend):
     GPU Backend using PyTorch/CUDA.
 
     Optimized for NVIDIA A-100:
-    - 80GB HBM2e memory
-    - Tensor Cores for mixed precision
-    - Flash Attention 2 for efficient attention
-    - DeepSpeed ZeRO for distributed training
-
-    Features:
-    - torch.compile for automatic kernel optimization
-    - Flash Attention 2 integration
-    - Automatic mixed precision (AMP)
-    - Gradient checkpointing
+    - Tensor Cores
+    - Flash Attention 2
+    - AMP (BF16 preferred)
     """
 
     def __init__(self, config: Optional[BackendConfig] = None):
         super().__init__(config)
-        self._scaler = None  # For AMP
+        self._scaler = None
         self._flash_attn_available = False
+        self._device = None
+        self._training = True
+
+    # ==================== Properties ====================
 
     @property
     def name(self) -> str:
         return "gpu"
 
     @property
+    def training(self) -> bool:
+        return self._training
+
+    def set_training(self, mode: bool) -> None:
+        self._training = mode
+
+    @property
     def is_available(self) -> bool:
-        """Check if CUDA is available."""
         try:
             _ensure_torch()
             return torch.cuda.is_available()
         except Exception:
             return False
 
+    # ==================== Initialization ====================
+
     def initialize(self) -> None:
-        """Initialize PyTorch for GPU."""
         _ensure_torch()
 
         if not torch.cuda.is_available():
             raise RuntimeError("CUDA is not available")
 
-        # Set device
         device_id = self.config.cuda_device_ids[0] if self.config.cuda_device_ids else 0
         self._device = torch.device(f"cuda:{device_id}")
-        torch.cuda.set_device(self._device)
+        torch.cuda.set_device(device_id)
 
-        # Enable optimizations for A-100
         if self.config.cudnn_benchmark:
             torch.backends.cudnn.benchmark = True
 
         if self.config.tensor_cores:
-            # Enable TF32 for Tensor Cores (A-100 optimization)
             torch.backends.cuda.matmul.allow_tf32 = True
             torch.backends.cudnn.allow_tf32 = True
 
-        # Initialize AMP scaler
-        if self.config.use_mixed_precision:
-            self._scaler = torch.cuda.amp.GradScaler()
+        self._scaler = torch.cuda.amp.GradScaler(
+            enabled=self.config.use_mixed_precision
+        )
 
-        # Check for Flash Attention
         self._flash_attn_available = self._check_flash_attention()
-
         self._initialized = True
 
+    def shutdown(self) -> None:
+        _ensure_torch()
+        torch.cuda.empty_cache()
+        self._initialized = False
+
     def _check_flash_attention(self) -> bool:
-        """Check if Flash Attention is available."""
         try:
-            # Check for PyTorch 2.0+ native Flash Attention
             if hasattr(F, "scaled_dot_product_attention"):
-                # Check if flash attention backend is available
                 return torch.backends.cuda.flash_sdp_enabled()
         except Exception:
             pass
 
         try:
-            # Check for flash-attn package
-            import flash_attn
+            import flash_attn  # noqa: F401
             return True
-        except ImportError:
-            pass
+        except Exception:
+            return False
 
-        return False
-
-    def shutdown(self) -> None:
-        """Clean up CUDA resources."""
-        _ensure_torch()
-        torch.cuda.empty_cache()
-        self._initialized = False
-
-    # ==================== Tensor Operations ====================
+    # ==================== Tensor Creation ====================
 
     def create_tensor(
         self,
@@ -150,24 +131,37 @@ class GPUBackend(ComputeBackend):
         requires_grad: bool = False,
     ) -> TensorLike:
         _ensure_torch()
-        torch_dtype = getattr(torch, DTYPE_MAP.get(dtype, "float32")) if dtype else None
-        device = device or self._device
-        return torch.tensor(data, dtype=torch_dtype, device=device, requires_grad=requires_grad)
+        torch_dtype = DTYPE_MAP[dtype]() if dtype else None
+        return torch.tensor(
+            data,
+            dtype=torch_dtype,
+            device=device or self._device,
+            requires_grad=requires_grad,
+        )
 
     def zeros(self, shape: Tuple[int, ...], dtype: Optional[DType] = None) -> TensorLike:
         _ensure_torch()
-        torch_dtype = getattr(torch, DTYPE_MAP.get(dtype, "float32")) if dtype else None
-        return torch.zeros(shape, dtype=torch_dtype, device=self._device)
+        return torch.zeros(
+            shape,
+            dtype=DTYPE_MAP[dtype]() if dtype else None,
+            device=self._device,
+        )
 
     def ones(self, shape: Tuple[int, ...], dtype: Optional[DType] = None) -> TensorLike:
         _ensure_torch()
-        torch_dtype = getattr(torch, DTYPE_MAP.get(dtype, "float32")) if dtype else None
-        return torch.ones(shape, dtype=torch_dtype, device=self._device)
+        return torch.ones(
+            shape,
+            dtype=DTYPE_MAP[dtype]() if dtype else None,
+            device=self._device,
+        )
 
     def randn(self, shape: Tuple[int, ...], dtype: Optional[DType] = None) -> TensorLike:
         _ensure_torch()
-        torch_dtype = getattr(torch, DTYPE_MAP.get(dtype, "float32")) if dtype else None
-        return torch.randn(shape, dtype=torch_dtype, device=self._device)
+        return torch.randn(
+            shape,
+            dtype=DTYPE_MAP[dtype]() if dtype else None,
+            device=self._device,
+        )
 
     def to_device(self, tensor: TensorLike, device: str) -> TensorLike:
         _ensure_torch()
@@ -177,7 +171,7 @@ class GPUBackend(ComputeBackend):
         _ensure_torch()
         return tensor.detach().cpu().numpy()
 
-    # ==================== Math Operations ====================
+    # ==================== Math ====================
 
     def matmul(self, a: TensorLike, b: TensorLike) -> TensorLike:
         _ensure_torch()
@@ -204,7 +198,7 @@ class GPUBackend(ComputeBackend):
         eps: float = 1e-5,
     ) -> TensorLike:
         _ensure_torch()
-        return F.layer_norm(x, normalized_shape, weight=weight, bias=bias, eps=eps)
+        return F.layer_norm(x, normalized_shape, weight, bias, eps)
 
     def gelu(self, x: TensorLike) -> TensorLike:
         _ensure_torch()
@@ -214,7 +208,7 @@ class GPUBackend(ComputeBackend):
         _ensure_torch()
         return F.silu(x)
 
-    # ==================== Attention Operations ====================
+    # ==================== Attention ====================
 
     def scaled_dot_product_attention(
         self,
@@ -226,16 +220,8 @@ class GPUBackend(ComputeBackend):
         is_causal: bool = False,
         scale: Optional[float] = None,
     ) -> TensorLike:
-        """
-        A-100 optimized attention using Flash Attention 2.
-
-        Uses PyTorch 2.0+ scaled_dot_product_attention with
-        automatic Flash Attention backend selection.
-        """
         _ensure_torch()
 
-        # Use PyTorch 2.0+ native scaled_dot_product_attention
-        # Automatically uses Flash Attention on A-100
         if hasattr(F, "scaled_dot_product_attention"):
             return F.scaled_dot_product_attention(
                 query,
@@ -247,41 +233,39 @@ class GPUBackend(ComputeBackend):
                 scale=scale,
             )
 
-        # Fallback to manual implementation
-        batch_size, num_heads, seq_len, head_dim = query.shape
-        scale = scale or (head_dim ** -0.5)
+        head_dim = query.size(-1)
+        scale = scale or head_dim ** -0.5
 
-        attn_weights = torch.matmul(query, key.transpose(-2, -1)) * scale
+        attn = torch.matmul(query, key.transpose(-2, -1)) * scale
 
         if is_causal:
-            causal_mask = torch.triu(
+            seq_len = query.size(-2)
+            causal = torch.triu(
                 torch.ones(seq_len, seq_len, device=query.device, dtype=torch.bool),
                 diagonal=1,
             )
-            attn_weights.masked_fill_(causal_mask, float("-inf"))
+            attn.masked_fill_(causal, float("-inf"))
 
         if mask is not None:
-            attn_weights.masked_fill_(mask == 0, float("-inf"))
+            attn.masked_fill_(~mask.bool(), float("-inf"))
 
-        attn_weights = F.softmax(attn_weights, dim=-1)
+        attn = F.softmax(attn, dim=-1)
 
-        if dropout_p > 0.0:
-            attn_weights = F.dropout(attn_weights, p=dropout_p)
+        if self.training and dropout_p > 0.0:
+            attn = F.dropout(attn, p=dropout_p)
 
-        return torch.matmul(attn_weights, value)
+        return torch.matmul(attn, value)
 
-    # ==================== Gradient Operations ====================
+    # ==================== Gradients ====================
 
     def backward(self, loss: TensorLike) -> None:
-        """Compute gradients with optional AMP scaling."""
         _ensure_torch()
-        if self._scaler:
+        if self._scaler and self._scaler.is_enabled():
             self._scaler.scale(loss).backward()
         else:
             loss.backward()
 
     def zero_grad(self, parameters: Sequence[TensorLike]) -> None:
-        """Zero out gradients."""
         _ensure_torch()
         for p in parameters:
             if p.grad is not None:
@@ -293,123 +277,92 @@ class GPUBackend(ComputeBackend):
         max_norm: float,
         optimizer: Optional[Any] = None,
     ) -> TensorLike:
-        """Clip gradients with AMP support.
-
-        Args:
-            parameters: Model parameters to clip gradients for
-            max_norm: Maximum gradient norm
-            optimizer: Optimizer for AMP unscaling (required when using GradScaler)
-
-        Note:
-            When using mixed precision training with GradScaler, pass the
-            optimizer to properly unscale gradients before clipping.
-        """
         _ensure_torch()
-        if self._scaler and optimizer is not None:
+        if self._scaler and optimizer is not None and self._scaler.is_enabled():
             self._scaler.unscale_(optimizer)
         return torch.nn.utils.clip_grad_norm_(parameters, max_norm)
 
-    # ==================== JIT Compilation ====================
+    # ==================== JIT ====================
 
-    def jit_compile(
-        self,
-        fn: Callable,
-        static_argnums: Optional[Tuple[int, ...]] = None,
-    ) -> Callable:
-        """JIT compile using torch.compile (PyTorch 2.0+)."""
+    def jit_compile(self, fn: Callable) -> Callable:
         _ensure_torch()
         if hasattr(torch, "compile"):
-            # Use inductor backend for A-100 optimization
             return torch.compile(fn, mode="reduce-overhead", backend="inductor")
-        return fn  # Fallback for older PyTorch
+        return fn
 
-    # ==================== Distributed Operations ====================
+    # ==================== Distributed ====================
 
-    def all_reduce(
-        self,
-        tensor: TensorLike,
-        op: str = "sum",
-    ) -> TensorLike:
-        """All-reduce using torch.distributed."""
+    def all_reduce(self, tensor: TensorLike, op: str = "sum") -> TensorLike:
         _ensure_torch()
         if not torch.distributed.is_initialized():
             return tensor
 
-        op_map = {
+        ops = {
             "sum": torch.distributed.ReduceOp.SUM,
-            "mean": torch.distributed.ReduceOp.SUM,  # Divide after
+            "mean": torch.distributed.ReduceOp.SUM,
             "max": torch.distributed.ReduceOp.MAX,
             "min": torch.distributed.ReduceOp.MIN,
         }
-        reduce_op = op_map.get(op, torch.distributed.ReduceOp.SUM)
 
-        torch.distributed.all_reduce(tensor, op=reduce_op)
+        torch.distributed.all_reduce(tensor, op=ops.get(op, torch.distributed.ReduceOp.SUM))
 
         if op == "mean":
             tensor /= torch.distributed.get_world_size()
 
         return tensor
 
-    def broadcast(
-        self,
-        tensor: TensorLike,
-        src: int = 0,
-    ) -> TensorLike:
-        """Broadcast using torch.distributed."""
+    def broadcast(self, tensor: TensorLike, src: int = 0) -> TensorLike:
         _ensure_torch()
         if torch.distributed.is_initialized():
             torch.distributed.broadcast(tensor, src=src)
         return tensor
 
-    # ==================== Memory Management ====================
+    # ==================== Memory ====================
 
     def memory_allocated(self) -> int:
-        """Return currently allocated CUDA memory in bytes."""
         _ensure_torch()
         return torch.cuda.memory_allocated(self._device)
 
     def memory_reserved(self) -> int:
-        """Return currently reserved CUDA memory in bytes."""
         _ensure_torch()
         return torch.cuda.memory_reserved(self._device)
 
     def empty_cache(self) -> None:
-        """Free cached CUDA memory."""
         _ensure_torch()
         torch.cuda.empty_cache()
 
     def synchronize(self) -> None:
-        """Synchronize CUDA operations."""
         _ensure_torch()
         torch.cuda.synchronize(self._device)
 
-    # ==================== Context Managers ====================
+    # ==================== Contexts ====================
 
     @contextmanager
     def no_grad(self):
-        """Disable gradient computation."""
         _ensure_torch()
         with torch.no_grad():
             yield
 
     @contextmanager
     def autocast(self, dtype: Optional[DType] = None):
-        """Mixed precision context for A-100."""
         _ensure_torch()
-        # A-100 supports both BF16 and FP16
-        # BF16 is preferred for training stability
-        torch_dtype = torch.bfloat16 if dtype == DType.BFLOAT16 else torch.float16
+
+        if not self.config.use_mixed_precision:
+            yield
+            return
+
+        torch_dtype = (
+            torch.bfloat16
+            if dtype in (None, DType.BFLOAT16)
+            else torch.float16
+        )
+
         with torch.cuda.amp.autocast(dtype=torch_dtype):
             yield
 
-    # ==================== Checkpoint Operations ====================
+    # ==================== Checkpoints ====================
 
-    def save_checkpoint(
-        self,
-        state: Dict[str, Any],
-        path: str,
-    ) -> None:
-        """Save PyTorch checkpoint."""
+    def save_checkpoint(self, state: Dict[str, Any], path: str) -> None:
         _ensure_torch()
         torch.save(state, path)
 
@@ -418,57 +371,42 @@ class GPUBackend(ComputeBackend):
         path: str,
         map_location: Optional[str] = None,
     ) -> Dict[str, Any]:
-        """Load PyTorch checkpoint.
-
-        Warning: Only load checkpoints from trusted sources.
-        Uses weights_only=True by default for safety.
-        """
         _ensure_torch()
-        map_loc = map_location or self._device
+        loc = map_location or self._device
         try:
-            return torch.load(path, map_location=map_loc, weights_only=True)
+            return torch.load(path, map_location=loc, weights_only=True)
         except TypeError:
-            # PyTorch < 1.13 doesn't support weights_only
-            return torch.load(path, map_location=map_loc)  # nosec B614
+            return torch.load(path, map_location=loc)
 
-    # ==================== GPU-Specific Methods ====================
+    # ==================== Device Info ====================
 
     def get_device_count(self) -> int:
-        """Get number of GPUs."""
         _ensure_torch()
         return torch.cuda.device_count()
 
     def get_device_properties(self, device_id: int = 0) -> Dict[str, Any]:
-        """Get GPU properties (useful for A-100 detection)."""
         _ensure_torch()
-        props = torch.cuda.get_device_properties(device_id)
+        p = torch.cuda.get_device_properties(device_id)
         return {
-            "name": props.name,
-            "total_memory": props.total_memory,
-            "major": props.major,
-            "minor": props.minor,
-            "multi_processor_count": props.multi_processor_count,
-            "is_a100": "A100" in props.name,
+            "name": p.name,
+            "total_memory": p.total_memory,
+            "major": p.major,
+            "minor": p.minor,
+            "multi_processor_count": p.multi_processor_count,
+            "is_a100": "A100" in p.name,
         }
 
-    @property
-    def training(self) -> bool:
-        """Check if in training mode."""
-        return True  # Override in model
+    # ==================== Model Helpers ====================
 
     def enable_gradient_checkpointing(self, model: Any) -> None:
-        """Enable gradient checkpointing for memory efficiency."""
         _ensure_torch()
         if hasattr(model, "gradient_checkpointing_enable"):
             model.gradient_checkpointing_enable()
 
-    def compile_model(
-        self,
-        model: Any,
-        mode: str = "reduce-overhead",
-    ) -> Any:
-        """Compile model with torch.compile for A-100 optimization."""
+    def compile_model(self, model: Any, mode: str = "reduce-overhead") -> Any:
         _ensure_torch()
         if hasattr(torch, "compile"):
             return torch.compile(model, mode=mode, backend="inductor")
         return model
+
+

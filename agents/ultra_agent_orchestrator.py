@@ -839,8 +839,8 @@ def create_ultra_agent_config(
 def demonstrate_ultra_agent_orchestration():
     """Demonstrate the ultra agent orchestration system."""
     
-    print("🌟 ULTRA AGENT ORCHESTRATION DEMONSTRATION")
-    print("=" * 60)
+    logger.info("🌟 ULTRA AGENT ORCHESTRATION DEMONSTRATION")
+    logger.info("=" * 60)
     
     # Create configuration
     config = create_ultra_agent_config(
@@ -848,10 +848,10 @@ def demonstrate_ultra_agent_orchestration():
         enable_all_features=True
     )
     
-    print(f"📋 Configuration created:")
-    print(f"   - Strategy: {config.orchestration_strategy.value}")
-    print(f"   - Agent types: {len(config.enabled_agent_types)}")
-    print(f"   - Reasoning depth: {config.reasoning_depth}")
+    logger.info(f"📋 Configuration created:")
+    logger.info(f"   - Strategy: {config.orchestration_strategy.value}")
+    logger.info(f"   - Agent types: {len(config.enabled_agent_types)}")
+    logger.info(f"   - Reasoning depth: {config.reasoning_depth}")
     
     # Create orchestrator
     orchestrator = create_ultra_agent_system(config)
@@ -859,10 +859,10 @@ def demonstrate_ultra_agent_orchestration():
     # Get system status
     status = orchestrator.get_orchestrator_status()
     
-    print(f"\n🔍 System Status:")
-    print(f"   - Total agents: {status['agents']['total_agents']}")
-    print(f"   - Specialized pools: {len(status['agents']['specialized_pools'])}")
-    print(f"   - Ultra integrations: {sum([status['capabilities']['ultra_core_integration'], status['capabilities']['ultra_data_integration']])}/2")
+    logger.info(f"\n🔍 System Status:")
+    logger.info(f"   - Total agents: {status['agents']['total_agents']}")
+    logger.info(f"   - Specialized pools: {len(status['agents']['specialized_pools'])}")
+    logger.info(f"   - Ultra integrations: {sum([status['capabilities']['ultra_core_integration'], status['capabilities']['ultra_data_integration']])}/2")
     
     # Test intelligent orchestration
     try:
@@ -875,14 +875,14 @@ def demonstrate_ultra_agent_orchestration():
             priority="high"
         )
         
-        print(f"\n🎯 Task Orchestration Test:")
-        print(f"   - Status: {result['status']}")
-        print(f"   - Agents assigned: {len(result['assigned_agents'])}")
-        print(f"   - Execution phases: {len(result['execution_plan']['phases'])}")
-        print(f"   - Completion time: {result['metrics']['completion_time_ms']:.1f}ms")
+        logger.info(f"\n🎯 Task Orchestration Test:")
+        logger.info(f"   - Status: {result['status']}")
+        logger.info(f"   - Agents assigned: {len(result['assigned_agents'])}")
+        logger.info(f"   - Execution phases: {len(result['execution_plan']['phases'])}")
+        logger.info(f"   - Completion time: {result['metrics']['completion_time_ms']:.1f}ms")
         
     except Exception as e:
-        print(f"\n❌ Orchestration test failed: {e}")
+        logger.error(f"\n❌ Orchestration test failed: {e}")
     
     return orchestrator
 

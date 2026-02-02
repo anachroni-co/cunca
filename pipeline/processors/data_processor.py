@@ -55,27 +55,23 @@ class ProcessingStats:
     average_quality_score: float = 0.0
     processing_time_seconds: float = 0.0
 
+# Pre-compiled text cleaning patterns (compiled once at module load)
+_TEXT_CLEANING_PATTERNS = {
+    "html_tags": re.compile(r'<[^>]+>'),
+    "urls": re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'),
+    "emails": re.compile(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'),
+    "whitespace": re.compile(r'\s+'),
+    "excess_punct": re.compile(r'[.]{3,}|[!]{2,}|[?]{2,}'),
+    "social_artifacts": re.compile(r'#\w+|@\w+|RT\s|via\s@'),
+    "phone_numbers": re.compile(r'(\+34|0034|34)?[\s-]?[6789]\d{2}[\s-]?\d{3}[\s-]?\d{3}'),
+}
+
+
 class TextCleaner:
     """Advanced text cleaning and normalization."""
-    
+
     def __init__(self):
-        # Spanish-specific cleaning patterns
-        self.spanish_patterns = {
-            # Remove HTML tags
-            "html_tags": re.compile(r'<[^>]+>'),
-            # Remove URLs
-            "urls": re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'),
-            # Remove email addresses
-            "emails": re.compile(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'),
-            # Normalize whitespace
-            "whitespace": re.compile(r'\s+'),
-            # Remove excessive punctuation
-            "excess_punct": re.compile(r'[.]{3,}|[!]{2,}|[?]{2,}'),
-            # Social media artifacts
-            "social_artifacts": re.compile(r'#\w+|@\w+|RT\s|via\s@'),
-            # Remove phone numbers
-            "phone_numbers": re.compile(r'(\+34|0034|34)?[\s-]?[6789]\d{2}[\s-]?\d{3}[\s-]?\d{3}'),
-        }
+        self.spanish_patterns = _TEXT_CLEANING_PATTERNS
         
         # Quality indicators
         self.quality_indicators = {

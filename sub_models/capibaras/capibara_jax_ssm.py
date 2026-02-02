@@ -2,6 +2,9 @@
 
 import jax
 import jax.numpy as jnp
+
+import logging
+
 # Obtiene la path del directory current (scripts) -> /.../scripts
 script_dir = os.path.dirname(os.path.abspath(__file__))
 # Sube un level for obtain la raíz del proyecto -> /.../capibaraGPT-v2
@@ -252,4 +255,4 @@ if __name__ == "__main__":
     
     # execution distribuida
     updated_state, loss = train_step_fn(state, batch, None)
-    print(f"Pérdida inicial: {loss}")
+    logger.info(f"Pérdida inicial: {loss}")

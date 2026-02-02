@@ -389,9 +389,9 @@ class InferenceCriticalAnalysis:
 def run_critical_analysis() -> Dict[str, Any]:
     """Run complete critical analysis of parameter control system."""
 
-    print("\n" + "=" * 60)
-    print("CRITICAL ANALYSIS: PARAMETER CONTROL DURING INFERENCE")
-    print("=" * 60)
+    logger.info("\n" + "=" * 60)
+    logger.info("CRITICAL ANALYSIS: PARAMETER CONTROL DURING INFERENCE")
+    logger.info("=" * 60)
 
     analyzer = InferenceCriticalAnalysis()
 
@@ -425,49 +425,49 @@ def print_critical_analysis_results(results: Dict[str, Any]):
 
     exec_summary = results["executive_summary"]
 
-    print(f"\nEXECUTIVE SUMMARY:")
-    print(f"   Overall Assessment: {exec_summary['OVERALL_ASSESSMENT']}")
-    print(f"   Critical Issues: {exec_summary['CRITICAL_ISSUES']}")
-    print(f"   High Priority Issues: {exec_summary['HIGH_PRIORITY_ISSUES']}")
-    print(f"   Blocks Inference: {exec_summary['INFERENCE_BLOCKING_ISSUES']}")
-    print(f"   Immediate Action: {'YES' if exec_summary['IMMEDIATE_ACTION_REQUIRED'] else 'NO'}")
-    print(f"   Fix Timeline: {exec_summary['ESTIMATED_FIX_TIME']}")
-    print(f"   Production Risk: {exec_summary['PRODUCTION_RISK']}")
+    logger.info(f"\nEXECUTIVE SUMMARY:")
+    logger.info(f"   Overall Assessment: {exec_summary['OVERALL_ASSESSMENT']}")
+    logger.info(f"   Critical Issues: {exec_summary['CRITICAL_ISSUES']}")
+    logger.info(f"   High Priority Issues: {exec_summary['HIGH_PRIORITY_ISSUES']}")
+    logger.info(f"   Blocks Inference: {exec_summary['INFERENCE_BLOCKING_ISSUES']}")
+    logger.info(f"   Immediate Action: {'YES' if exec_summary['IMMEDIATE_ACTION_REQUIRED'] else 'NO'}")
+    logger.info(f"   Fix Timeline: {exec_summary['ESTIMATED_FIX_TIME']}")
+    logger.info(f"   Production Risk: {exec_summary['PRODUCTION_RISK']}")
 
-    print(f"\nIMPLEMENTATION ISSUES:")
+    logger.info(f"\nIMPLEMENTATION ISSUES:")
     issues = results["implementation_issues"]["issues"]
     for issue_name, issue_data in issues.items():
         severity_marker = "[CRITICAL]" if issue_data["severity"] == "CRITICAL" else "[HIGH]" if issue_data["severity"] == "HIGH" else "[INFO]"
-        print(f"   {severity_marker} {issue_name}:")
-        print(f"      Problem: {issue_data['problem']}")
-        print(f"      Impact: {issue_data['impact']}")
-        print(f"      Affects Inference: {'YES' if issue_data['affects_inference'] else 'NO'}")
+        logger.info(f"   {severity_marker} {issue_name}:")
+        logger.info(f"      Problem: {issue_data['problem']}")
+        logger.info(f"      Impact: {issue_data['impact']}")
+        logger.info(f"      Affects Inference: {'YES' if issue_data['affects_inference'] else 'NO'}")
 
-    print(f"\nSOLUTIONS AVAILABLE:")
+    logger.info(f"\nSOLUTIONS AVAILABLE:")
     solutions = results["proposed_solutions"]["solutions"]
     for sol_name, sol_data in solutions.items():
         complexity_marker = "[LOW]" if sol_data["implementation_complexity"] == "LOW" else "[MEDIUM]" if sol_data["implementation_complexity"] == "MEDIUM" else "[HIGH]"
-        print(f"   {complexity_marker} {sol_name} ({sol_data['implementation_complexity']} complexity)")
-        print(f"      Addresses: {sol_data['problem_addressed']}")
-        print(f"      Benefits: {', '.join(sol_data['benefits'])}")
+        logger.info(f"   {complexity_marker} {sol_name} ({sol_data['implementation_complexity']} complexity)")
+        logger.info(f"      Addresses: {sol_data['problem_addressed']}")
+        logger.info(f"      Benefits: {', '.join(sol_data['benefits'])}")
 
-    print(f"\nPRODUCTION ROADMAP:")
+    logger.info(f"\nPRODUCTION ROADMAP:")
     roadmap = results["production_roadmap"]["roadmap"]
     for phase_name, phase_data in roadmap.items():
         priority_marker = "[CRITICAL]" if phase_data["priority"] == "CRITICAL" else "[HIGH]" if phase_data["priority"] == "HIGH" else "[INFO]"
-        print(f"   {priority_marker} {phase_name} ({phase_data['timeline']}):")
-        print(f"      Priority: {phase_data['priority']}")
-        print(f"      Effort: {phase_data['estimated_effort']}")
-        print(f"      Success: {phase_data['success_criteria']}")
+        logger.info(f"   {priority_marker} {phase_name} ({phase_data['timeline']}):")
+        logger.info(f"      Priority: {phase_data['priority']}")
+        logger.info(f"      Effort: {phase_data['estimated_effort']}")
+        logger.info(f"      Success: {phase_data['success_criteria']}")
 
-    print(f"\nSCENARIO ANALYSIS:")
+    logger.info(f"\nSCENARIO ANALYSIS:")
     scenarios = results["test_scenarios"]["scenarios"]
     for scenario_name, scenario_data in scenarios.items():
         risk_marker = "[CRITICAL]" if scenario_data["risk_level"] == "CRITICAL" else "[HIGH]" if scenario_data["risk_level"] == "HIGH" else "[INFO]"
-        print(f"   {risk_marker} {scenario_name}:")
-        print(f"      Current: {scenario_data['current_behavior']}")
-        print(f"      Expected: {scenario_data['expected_behavior']}")
-        print(f"      Risk: {scenario_data['risk_level']}")
+        logger.info(f"   {risk_marker} {scenario_name}:")
+        logger.info(f"      Current: {scenario_data['current_behavior']}")
+        logger.info(f"      Expected: {scenario_data['expected_behavior']}")
+        logger.info(f"      Risk: {scenario_data['risk_level']}")
 
 if __name__ == "__main__":
     # Configure logging
@@ -487,6 +487,6 @@ if __name__ == "__main__":
         import json
         with open("critical_analysis_results.json", "w") as f:
             json.dump(results, f, indent=2)
-        print(f"\nAnalysis saved to: critical_analysis_results.json")
+        logger.info(f"\nAnalysis saved to: critical_analysis_results.json")
     except ImportError:
-        print(f"\nCould not save results - JSON module not available")
+        logger.error(f"\nCould not save results - JSON module not available")

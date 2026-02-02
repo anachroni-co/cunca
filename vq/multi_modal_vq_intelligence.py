@@ -775,8 +775,8 @@ def create_multi_modal_vq_config(
 def demonstrate_multi_modal_vq_intelligence():
     """Demonstrate the multi-modal VQ intelligence system."""
     
-    print("🧠 MULTI-MODAL VQ INTELLIGENCE DEMONSTRATION")
-    print("=" * 60)
+    logger.info("🧠 MULTI-MODAL VQ INTELLIGENCE DEMONSTRATION")
+    logger.info("=" * 60)
     
     # Create configuration
     config = create_multi_modal_vq_config(
@@ -785,10 +785,10 @@ def demonstrate_multi_modal_vq_intelligence():
         enable_all_features=True
     )
     
-    print(f"📋 Configuration created:")
-    print(f"   - Fusion: {config.fusion_strategy.value}")
-    print(f"   - Learning: {config.learning_mode.value}")
-    print(f"   - Attention: {config.attention_mechanism.value}")
+    logger.info(f"📋 Configuration created:")
+    logger.info(f"   - Fusion: {config.fusion_strategy.value}")
+    logger.info(f"   - Learning: {config.learning_mode.value}")
+    logger.warning(f"   - Attention: {config.attention_mechanism.value}")
     
     # Create intelligence system
     intelligence = create_multi_modal_vq_intelligence(config)
@@ -796,10 +796,10 @@ def demonstrate_multi_modal_vq_intelligence():
     # Get system status
     status = intelligence.get_intelligence_status()
     
-    print(f"\n🔍 Intelligence Status:")
-    print(f"   - Components: {sum(status['components'].values())}/6")
-    print(f"   - Capabilities: {sum(status['capabilities'].values())}/4")
-    print(f"   - Modalities: {len(status['config']['supported_modalities'])}")
+    logger.info(f"\n🔍 Intelligence Status:")
+    logger.info(f"   - Components: {sum(status['components'].values())}/6")
+    logger.info(f"   - Capabilities: {sum(status['capabilities'].values())}/4")
+    logger.info(f"   - Modalities: {len(status['config']['supported_modalities'])}")
     
     return intelligence
 

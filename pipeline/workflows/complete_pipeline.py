@@ -489,10 +489,10 @@ def main():
     with open(config_path, 'r', encoding='utf-8') as f:
         config = json.load(f)
     
-    print("🚀 Starting CapibaraGPT-v2 Training")
-    print(f"📊 Pipeline ID: {{config['dataset_info']['pipeline_id']}}")
-    print(f"📄 Total records: {{config['dataset_info']['total_records']}}")
-    print(f"🗂️  Data types: {{', '.join(config['dataset_info']['data_types'])}}")
+    logger.info("🚀 Starting CapibaraGPT-v2 Training")
+    logger.info(f"📊 Pipeline ID: {{config['dataset_info']['pipeline_id']}}")
+    logger.info(f"📄 Total records: {{config['dataset_info']['total_records']}}")
+    logger.info(f"🗂️  Data types: {{', '.join(config['dataset_info']['data_types'])}}")
     
     # Import training module
     try:
@@ -504,14 +504,14 @@ def main():
         # Start training
         result = trainer.run_training()
         
-        print("✅ Training completed successfully!")
+        logger.info("✅ Training completed successfully!")
         return result
         
     except ImportError as e:
-        print(f"❌ Training module not available: {{e}}")
-        print("💡 Alternative: Use the generated datasets with your preferred training framework")
-        print(f"   Train data: {{config['data_paths']['train']}}")
-        print(f"   Validation data: {{config['data_paths']['validation']}}")
+        logger.warning(f"❌ Training module not available: {{e}}")
+        logger.info("💡 Alternative: Use the generated datasets with your preferred training framework")
+        logger.info(f"   Train data: {{config['data_paths']['train']}}")
+        logger.info(f"   Validation data: {{config['data_paths']['validation']}}")
         return None
 
 if __name__ == "__main__":

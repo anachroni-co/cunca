@@ -912,7 +912,7 @@ if __name__ == "__main__":
         
         # Initialize optimizations
         if await router.initialize_optimizations():
-            print("🚀 Optimized Consensus Router initialized")
+            logger.info("🚀 Optimized Consensus Router initialized")
             
             # Test queries
             test_queries = [
@@ -923,29 +923,29 @@ if __name__ == "__main__":
                 "Solve complex mathematical equations"
             ]
             
-            print("\n📊 Running routing benchmarks...")
+            logger.info("\n📊 Running routing benchmarks...")
             
             # Benchmark routing performance
             benchmark_results = await router.benchmark_routing_performance(test_queries)
             
-            print("\n🏆 Routing Benchmark Results:")
+            logger.info("\n🏆 Routing Benchmark Results:")
             for mode, metrics in benchmark_results.items():
-                print(f"\n{mode.upper()}:")
-                print(f"  Routing Time: {metrics['avg_routing_time_ms']:.1f}ms")
-                print(f"  Throughput: {metrics['throughput_qps']:.1f} QPS")
-                print(f"  Cache Hit Rate: {metrics['cache_hit_rate']:.2%}")
-                print(f"  Resource Efficiency: {metrics['resource_efficiency']:.2f}")
+                logger.info(f"\n{mode.upper()}:")
+                logger.info(f"  Routing Time: {metrics['avg_routing_time_ms']:.1f}ms")
+                logger.info(f"  Throughput: {metrics['throughput_qps']:.1f} QPS")
+                logger.info(f"  Cache Hit Rate: {metrics['cache_hit_rate']:.2%}")
+                logger.info(f"  Resource Efficiency: {metrics['resource_efficiency']:.2f}")
             
             # Get optimization metrics
             opt_metrics = router.get_optimization_metrics()
-            print(f"\n⚡ Optimization Metrics:")
-            print(f"  JIT Calls: {opt_metrics['routing_performance']['jit_calls']}")
-            print(f"  GPU Operations: {opt_metrics['routing_performance']['gpu_operations']}")
-            print(f"  Cache Hit Rate: {opt_metrics['cache_performance']['hit_rate']:.2%}")
-            print(f"  JIT Usage Rate: {opt_metrics['optimization_effectiveness']['jit_usage_rate']:.2%}")
+            logger.info(f"\n⚡ Optimization Metrics:")
+            logger.info(f"  JIT Calls: {opt_metrics['routing_performance']['jit_calls']}")
+            logger.info(f"  GPU Operations: {opt_metrics['routing_performance']['gpu_operations']}")
+            logger.info(f"  Cache Hit Rate: {opt_metrics['cache_performance']['hit_rate']:.2%}")
+            logger.info(f"  JIT Usage Rate: {opt_metrics['optimization_effectiveness']['jit_usage_rate']:.2%}")
         
         else:
-            print("❌ Router optimization initialization failed")
+            logger.error("❌ Router optimization initialization failed")
     
     import asyncio
     asyncio.run(main())

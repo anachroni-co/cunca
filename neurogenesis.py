@@ -10,11 +10,11 @@ import sys
 import logging
 import hashlib
 
-# Obtiene la path del directory current (scripts) -> /.../scripts
+# Get the path of the current directory (scripts) -> /.../scripts
 script_dir = os.path.dirname(os.path.abspath(__file__))
-# Sube un level for obtain la raíz del proyecto -> /.../capibaraGPT-v2
+# Go up one level to obtain the project root -> /.../capibaraGPT-v2
 project_root = os.path.dirname(script_dir)
-# Añade la raíz del proyecto a sys.path
+# Add the project root to sys.path
 if project_root not in sys.path:
     # Fixed: Using proper imports instead of sys.path manipulation
     pass
@@ -25,11 +25,11 @@ from functools import partial
 from capibara.jax import numpy as jnp
 from typing import Optional, Tuple, Dict, Any, Union
 
-# Import correct de configuraciones
+# Import configurations
 try:
     from capibara.interfaces.imodules import Imodule
 except ImportError:
-    # Fallback stubs if not existen
+    # Fallback stubs if not available
     class IModule:
         pass
     class LayerConfig:

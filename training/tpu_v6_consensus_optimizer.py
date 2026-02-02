@@ -844,13 +844,13 @@ if __name__ == "__main__":
             "Optimize neural network performance"
         ]
         
-        print("🚀 TPU v6 Consensus Optimization Test")
-        print("=" * 50)
+        logger.info("🚀 TPU v6 Consensus Optimization Test")
+        logger.info("=" * 50)
         
         if JAX_AVAILABLE:
             # Run consensus optimization
             for i, query in enumerate(test_queries):
-                print(f"\n📝 Query {i+1}: {query}")
+                logger.info(f"\n📝 Query {i+1}: {query}")
                 
                 result = await optimizer.optimize_consensus_for_tpu_v6(
                     query=query,
@@ -858,40 +858,40 @@ if __name__ == "__main__":
                     consensus_mode=TPUConsensusMode.MESH_DISTRIBUTED
                 )
                 
-                print(f"  Consensus Confidence: {result['consensus_confidence']:.2f}")
-                print(f"  Expected Quality: {result['expected_quality']:.1f}")
-                print(f"  Total Cost: ${result['total_cost']:.4f}")
-                print(f"  Processing Time: {result['processing_time_ms']:.1f}ms")
-                print(f"  TPU Cores Used: {result['tpu_cores_used']}")
+                logger.info(f"  Consensus Confidence: {result['consensus_confidence']:.2f}")
+                logger.info(f"  Expected Quality: {result['expected_quality']:.1f}")
+                logger.info(f"  Total Cost: ${result['total_cost']:.4f}")
+                logger.info(f"  Processing Time: {result['processing_time_ms']:.1f}ms")
+                logger.info(f"  TPU Cores Used: {result['tpu_cores_used']}")
             
             # Run benchmarks
-            print(f"\n📊 Running TPU Consensus Benchmarks...")
+            logger.info(f"\n📊 Running TPU Consensus Benchmarks...")
             
             benchmark_results = await optimizer.benchmark_tpu_consensus(
                 test_queries[:3],  # Use subset for benchmarking
                 [expert_pool] * 3
             )
             
-            print(f"\n🏆 TPU Benchmark Results:")
+            logger.info(f"\n🏆 TPU Benchmark Results:")
             for mode, metrics in benchmark_results.items():
-                print(f"\n{mode.upper()}:")
-                print(f"  Consensus Time: {metrics['avg_consensus_time_ms']:.1f}ms")
-                print(f"  Ops/Second: {metrics['consensus_ops_per_second']:.1f}")
-                print(f"  Core Utilization: {metrics['avg_core_utilization']:.1%}")
-                print(f"  Memory Efficiency: {metrics['memory_efficiency']:.1%}")
-                print(f"  Consensus Accuracy: {metrics['consensus_accuracy']:.2f}")
+                logger.info(f"\n{mode.upper()}:")
+                logger.info(f"  Consensus Time: {metrics['avg_consensus_time_ms']:.1f}ms")
+                logger.info(f"  Ops/Second: {metrics['consensus_ops_per_second']:.1f}")
+                logger.info(f"  Core Utilization: {metrics['avg_core_utilization']:.1%}")
+                logger.info(f"  Memory Efficiency: {metrics['memory_efficiency']:.1%}")
+                logger.info(f"  Consensus Accuracy: {metrics['consensus_accuracy']:.2f}")
             
             # Get optimization status
             status = optimizer.get_tpu_optimization_status()
-            print(f"\n🔧 TPU Optimization Status:")
-            print(f"  Mesh Initialized: {status['optimization_features']['mesh_initialized']}")
-            print(f"  Compiled Functions: {status['optimization_features']['compiled_functions']}")
-            print(f"  Performance: {status['performance_status']['consensus_ops_per_sec']:.1f} ops/sec")
-            print(f"  Core Utilization: {status['performance_status']['avg_core_utilization']:.1%}")
+            logger.info(f"\n🔧 TPU Optimization Status:")
+            logger.info(f"  Mesh Initialized: {status['optimization_features']['mesh_initialized']}")
+            logger.info(f"  Compiled Functions: {status['optimization_features']['compiled_functions']}")
+            logger.info(f"  Performance: {status['performance_status']['consensus_ops_per_sec']:.1f} ops/sec")
+            logger.info(f"  Core Utilization: {status['performance_status']['avg_core_utilization']:.1%}")
             
         else:
-            print("❌ JAX not available - TPU v6 optimizations disabled")
-            print("Using fallback implementations")
+            logger.warning("❌ JAX not available - TPU v6 optimizations disabled")
+            logger.warning("Using fallback implementations")
     
     import asyncio
     asyncio.run(main())

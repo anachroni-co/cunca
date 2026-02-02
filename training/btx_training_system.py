@@ -972,21 +972,21 @@ if __name__ == "__main__":
         # Run BTX training
         results = await btx_system.run_btx_training()
         
-        print("🚀 BTX Training Results:")
-        print(f"Status: {results['status']}")
-        print(f"Success Rate: {results['summary']['success_rate']:.2%}")
-        print(f"Average Expert Quality: {results['quality_metrics']['average_expert_quality']:.1f}")
-        print(f"Consensus Quality: {results['quality_metrics']['consensus_quality']:.1f}")
-        print(f"Parallel Efficiency: {results['cost_analysis']['parallel_efficiency']}")
-        print(f"Cost Savings: {results['cost_analysis']['cost_savings_vs_sequential']}")
+        logger.info("🚀 BTX Training Results:")
+        logger.info(f"Status: {results['status']}")
+        logger.info(f"Success Rate: {results['summary']['success_rate']:.2%}")
+        logger.info(f"Average Expert Quality: {results['quality_metrics']['average_expert_quality']:.1f}")
+        logger.info(f"Consensus Quality: {results['quality_metrics']['consensus_quality']:.1f}")
+        logger.info(f"Parallel Efficiency: {results['cost_analysis']['parallel_efficiency']}")
+        logger.info(f"Cost Savings: {results['cost_analysis']['cost_savings_vs_sequential']}")
         
-        print("\nExpert Results:")
+        logger.info("\nExpert Results:")
         for expert_id, expert_result in results['expert_results'].items():
-            print(f"  {expert_id}: {expert_result['status']} (Quality: {expert_result['quality_score']:.1f})")
+            logger.info(f"  {expert_id}: {expert_result['status']} (Quality: {expert_result['quality_score']:.1f})")
         
         if results['recommendations']:
-            print("\nRecommendations:")
+            logger.info("\nRecommendations:")
             for rec in results['recommendations']:
-                print(f"  • {rec}")
+                logger.info(f"  • {rec}")
     
     asyncio.run(main())

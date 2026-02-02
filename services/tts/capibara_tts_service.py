@@ -202,4 +202,4 @@ if __name__ == "__main__":
         tts.start_websocket_server()
     except Exception as e:
         logger.error(f"Error starting TTS server: {e}")
-        print(f"Error starting TTS server: {e}")
+        logger.error(f"Error starting TTS server: {e}")

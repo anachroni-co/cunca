@@ -832,9 +832,9 @@ def ultra_train_model(
                     optimize_soup=True
                 )
                 trainer.expert_soup_integration = ExpertSoupIntegration(trainer, soup_config)
-                print("✅ Expert Soup enabled for training")
+                logger.info("✅ Expert Soup enabled for training")
             except Exception as e:
-                print(f"⚠️ Could not enable Expert Soup: {e}")
+                logger.error(f"⚠️ Could not enable Expert Soup: {e}")
     
     # Run ultra training
     import asyncio

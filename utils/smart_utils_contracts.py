@@ -2,15 +2,15 @@
 🔧 SMART UTILS CONTRACTS SYSTEM
 ===============================
 
-Sistema de contratos inteligentes for utilities with:
-- 🤖 Auto-execution de contratos
-- 📊 validation automática de SLAs  
-- 🔄 Gestión de recursos inteligente
-- ⚡ Performance optimization automático
-- 🛡️ Protección against violaciones
+Smart contracts system for utilities with:
+- 🤖 Auto-execution of contracts
+- 📊 Automatic SLA validation
+- 🔄 Intelligent resource management
+- ⚡ Automatic performance optimization
+- 🛡️ Protection against violations
 
-Autor: CapibaraGPT Ultra Team
-Versión: 3.3.0 Ultra
+Author: CapibaraGPT Ultra Team
+Version: 3.3.0 Ultra
 """
 
 import asyncio
@@ -28,7 +28,7 @@ from pathlib import Path
 
 
 class ContractType(Enum):
-    """Tipos de contratos inteligentes."""
+    """Types of smart contracts."""
     PERFORMANCE = "performance"
     RESOURCE = "resource"
     QUALITY = "quality"
@@ -40,7 +40,7 @@ class ContractType(Enum):
 
 
 class ContractStatus(Enum):
-    """Estados de contratos."""
+    """Contract statuses."""
     ACTIVE = "active"
     PAUSED = "paused"
     VIOLATED = "violated"
@@ -50,7 +50,7 @@ class ContractStatus(Enum):
 
 
 class ViolationSeverity(Enum):
-    """Severidad de violaciones."""
+    """Violation severity."""
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
@@ -60,7 +60,7 @@ class ViolationSeverity(Enum):
 
 @dataclass
 class ContractViolation:
-    """Representación de una violación de contrato."""
+    """Representation of a contract violation."""
     
     contract_id: str
     violation_type: str
@@ -75,7 +75,7 @@ class ContractViolation:
 
 @dataclass
 class ContractMetrics:
-    """Métricas de performance de contratos."""
+    """Contract performance metrics."""
     
     total_executions: int = 0
     successful_executions: int = 0
@@ -89,21 +89,21 @@ class ContractMetrics:
     
     @property
     def success_rate(self) -> float:
-        """Calcula la tasa de éxito."""
+        """Calculates the success rate."""
         if self.total_executions == 0:
             return 0.0
         return (self.successful_executions / self.total_executions) * 100
     
     @property
     def violation_rate(self) -> float:
-        """Calcula la tasa de violaciones."""
+        """Calculates the violation rate."""
         if self.total_executions == 0:
             return 0.0
         return (self.violations_count / self.total_executions) * 100
 
 
 class SmartContract(ABC):
-    """Clase base for contratos inteligentes."""
+    """Base class for smart contracts."""
     
     def __init__(
         self,
@@ -129,65 +129,65 @@ class SmartContract(ABC):
         self.actions: Dict[str, Callable] = {}
         self.triggers: List[str] = []
         
-        # Logger específico del contrato
+        # Contract-specific logger
         self.logger = logging.getLogger(f"SmartContract.{self.contract_id}")
     
     @abstractmethod
     def validate_conditions(self, context: Dict[str, Any]) -> Tuple[bool, List[str]]:
         """
-        Valida las condiciones del contrato.
-        
+        Validates the contract conditions.
+
         Args:
-            context: Contexto de execution
-            
+            context: Execution context
+
         Returns:
-            Tuple de (is_valid, violations_list)
+            Tuple of (is_valid, violations_list)
         """
         pass
     
     @abstractmethod
     def execute_actions(self, context: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Ejecuta las acciones del contrato.
-        
+        Executes the contract actions.
+
         Args:
-            context: Contexto de execution
-            
+            context: Execution context
+
         Returns:
-            result de la execution
+            Execution result
         """
         pass
     
     def activate(self) -> None:
-        """Activa el contrato."""
+        """Activates the contract."""
         self.status = ContractStatus.ACTIVE
-        self.logger.info(f"✅ Contrato {self.contract_id} activado")
+        self.logger.info(f"✅ Contract {self.contract_id} activated")
     
     def pause(self) -> None:
-        """pause el contrato."""
+        """Pauses the contract."""
         self.status = ContractStatus.PAUSED
-        self.logger.info(f"⏸️ Contrato {self.contract_id} pausado")
+        self.logger.info(f"⏸️ Contract {self.contract_id} paused")
     
     def terminate(self) -> None:
-        """Termina el contrato."""
+        """Terminates the contract."""
         self.status = ContractStatus.TERMINATED
-        self.logger.info(f"🔚 Contrato {self.contract_id} terminado")
+        self.logger.info(f"🔚 Contract {self.contract_id} terminated")
     
     def add_violation(self, violation: ContractViolation) -> None:
-        """Añade una violación al contrato."""
+        """Adds a violation to the contract."""
         self.violations.append(violation)
         self.metrics.violations_count += 1
-        
+
         if violation.severity in [ViolationSeverity.CRITICAL, ViolationSeverity.EMERGENCY]:
             self.status = ContractStatus.VIOLATED
-            self.logger.error(f"🚨 Violación {violation.severity.value} en contrato {self.contract_id}")
-        
-        # Auto-healing if está habilitado
+            self.logger.error(f"🚨 {violation.severity.value} violation in contract {self.contract_id}")
+
+        # Auto-healing if enabled
         if self.auto_heal and violation.severity != ViolationSeverity.EMERGENCY:
             self._attempt_auto_healing(violation)
     
     def _attempt_auto_healing(self, violation: ContractViolation) -> bool:
-        """Intenta auto-healing de violaciones."""
+        """Attempts auto-healing of violations."""
         try:
             healing_actions = self._get_healing_actions(violation)
             
@@ -197,22 +197,22 @@ class SmartContract(ABC):
                     if result.get('success', False):
                         violation.auto_resolution_attempted = True
                         violation.resolved = True
-                        violation.resolution_details = result.get('details', 'Auto-healing exitoso')
-                        self.logger.info(f"🔧 Auto-healing exitoso para violación {violation.violation_type}")
+                        violation.resolution_details = result.get('details', 'Auto-healing successful')
+                        self.logger.info(f"🔧 Auto-healing successful for violation {violation.violation_type}")
                         return True
                 except Exception as e:
-                    self.logger.warning(f"Auto-healing falló: {e}")
+                    self.logger.warning(f"Auto-healing failed: {e}")
                     continue
             
             violation.auto_resolution_attempted = True
             return False
             
         except Exception as e:
-            self.logger.error(f"Error en auto-healing: {e}")
+            self.logger.error(f"Error in auto-healing: {e}")
             return False
     
     def _get_healing_actions(self, violation: ContractViolation) -> List[Callable]:
-        """Obtiene acciones de healing basadas en el type de violación."""
+        """Gets healing actions based on the violation type."""
         healing_map = {
             'performance_violation': [self._optimize_performance],
             'memory_violation': [self._cleanup_memory],
@@ -223,29 +223,29 @@ class SmartContract(ABC):
         return healing_map.get(violation.violation_type, [])
     
     def _optimize_performance(self) -> Dict[str, Any]:
-        """Optimiza performance del sistema."""
+        """Optimizes system performance."""
         import gc
         gc.collect()
-        return {'success': True, 'details': 'Garbage collection ejecutado'}
+        return {'success': True, 'details': 'Garbage collection executed'}
     
     def _cleanup_memory(self) -> Dict[str, Any]:
-        """Limpia memory del sistema."""
+        """Cleans up system memory."""
         import gc
         collected = gc.collect()
-        return {'success': True, 'details': f'Liberados {collected} objetos de memoria'}
+        return {'success': True, 'details': f'Freed {collected} memory objects'}
     
     def _free_resources(self) -> Dict[str, Any]:
-        """Libera recursos del sistema."""
-        # implementation básica
-        return {'success': True, 'details': 'Recursos liberados'}
+        """Frees system resources."""
+        # Basic implementation
+        return {'success': True, 'details': 'Resources freed'}
     
     def _improve_quality(self) -> Dict[str, Any]:
-        """improvement la calidad del service."""
-        # implementation básica
-        return {'success': True, 'details': 'Calidad mejorada'}
+        """Improves the service quality."""
+        # Basic implementation
+        return {'success': True, 'details': 'Quality improved'}
     
     def get_status_report(self) -> Dict[str, Any]:
-        """Genera reporte de estado del contrato."""
+        """Generates a contract status report."""
         return {
             'contract_id': self.contract_id,
             'name': self.name,
@@ -265,7 +265,7 @@ class SmartContract(ABC):
 
 
 class PerformanceContract(SmartContract):
-    """Contrato de performance with SLAs automáticos."""
+    """Performance contract with automatic SLAs."""
     
     def __init__(
         self,
@@ -279,7 +279,7 @@ class PerformanceContract(SmartContract):
             contract_id=contract_id,
             contract_type=ContractType.PERFORMANCE,
             name="Performance SLA Contract",
-            description="Garantiza niveles de servicio de performance"
+            description="Guarantees performance service levels"
         )
         
         self.max_execution_time_ms = max_execution_time_ms
@@ -288,40 +288,40 @@ class PerformanceContract(SmartContract):
         self.max_cpu_percent = max_cpu_percent
     
     def validate_conditions(self, context: Dict[str, Any]) -> Tuple[bool, List[str]]:
-        """Valida condiciones de performance."""
+        """Validates performance conditions."""
         violations = []
-        
-        # validate tiempo de execution
+
+        # Validate execution time
         execution_time = context.get('execution_time_ms', 0)
         if execution_time > self.max_execution_time_ms:
-            violations.append(f"Tiempo de ejecución {execution_time}ms > {self.max_execution_time_ms}ms")
-        
-        # validate uso de memory
+            violations.append(f"Execution time {execution_time}ms > {self.max_execution_time_ms}ms")
+
+        # Validate memory usage
         memory_usage = context.get('memory_usage_mb', 0)
         if memory_usage > self.max_memory_mb:
-            violations.append(f"Uso de memoria {memory_usage}MB > {self.max_memory_mb}MB")
-        
-        # validate tasa de éxito
+            violations.append(f"Memory usage {memory_usage}MB > {self.max_memory_mb}MB")
+
+        # Validate success rate
         success_rate = context.get('success_rate', 100)
         if success_rate < self.min_success_rate:
-            violations.append(f"Tasa de éxito {success_rate}% < {self.min_success_rate}%")
-        
-        # validate cpu
+            violations.append(f"Success rate {success_rate}% < {self.min_success_rate}%")
+
+        # Validate CPU
         cpu_usage = context.get('cpu_usage_percent', 0)
         if cpu_usage > self.max_cpu_percent:
-            violations.append(f"Uso de CPU {cpu_usage}% > {self.max_cpu_percent}%")
+            violations.append(f"CPU usage {cpu_usage}% > {self.max_cpu_percent}%")
         
         return len(violations) == 0, violations
     
     def execute_actions(self, context: Dict[str, Any]) -> Dict[str, Any]:
-        """Ejecuta acciones de optimization de performance."""
+        """Executes performance optimization actions."""
         actions_taken = []
-        
-        # optimize caché if hay problemas de tiempo
+
+        # Optimize cache if there are timing issues
         if context.get('execution_time_ms', 0) > self.max_execution_time_ms:
             actions_taken.append("cache_optimization")
-        
-        # free memory if es necessary
+
+        # Free memory if necessary
         if context.get('memory_usage_mb', 0) > self.max_memory_mb:
             actions_taken.append("memory_cleanup")
         
@@ -333,7 +333,7 @@ class PerformanceContract(SmartContract):
 
 
 class ResourceContract(SmartContract):
-    """Contrato de gestión de recursos."""
+    """Resource management contract."""
     
     def __init__(
         self,
@@ -347,7 +347,7 @@ class ResourceContract(SmartContract):
             contract_id=contract_id,
             contract_type=ContractType.RESOURCE,
             name="Resource Management Contract",
-            description="Gestiona límites de recursos del sistema"
+            description="Manages system resource limits"
         )
         
         self.max_memory_allocation_mb = max_memory_allocation_mb
@@ -356,35 +356,35 @@ class ResourceContract(SmartContract):
         self.max_network_bandwidth_mbps = max_network_bandwidth_mbps
     
     def validate_conditions(self, context: Dict[str, Any]) -> Tuple[bool, List[str]]:
-        """Valida límites de recursos."""
+        """Validates resource limits."""
         violations = []
-        
-        # validate memory
+
+        # Validate memory
         memory_used = context.get('memory_allocation_mb', 0)
         if memory_used > self.max_memory_allocation_mb:
-            violations.append(f"Memoria asignada {memory_used}MB > {self.max_memory_allocation_mb}MB")
-        
-        # validate cpu
+            violations.append(f"Allocated memory {memory_used}MB > {self.max_memory_allocation_mb}MB")
+
+        # Validate CPU
         cpu_cores_used = context.get('cpu_cores_used', 0)
         if cpu_cores_used > self.max_cpu_cores:
-            violations.append(f"Cores CPU usados {cpu_cores_used} > {self.max_cpu_cores}")
-        
-        # validate disk
+            violations.append(f"CPU cores used {cpu_cores_used} > {self.max_cpu_cores}")
+
+        # Validate disk
         disk_used = context.get('disk_usage_gb', 0)
         if disk_used > self.max_disk_usage_gb:
-            violations.append(f"Uso de disco {disk_used}GB > {self.max_disk_usage_gb}GB")
+            violations.append(f"Disk usage {disk_used}GB > {self.max_disk_usage_gb}GB")
         
         return len(violations) == 0, violations
     
     def execute_actions(self, context: Dict[str, Any]) -> Dict[str, Any]:
-        """Ejecuta acciones de gestión de recursos."""
+        """Executes resource management actions."""
         actions = []
-        
-        # free memory if es necessary
+
+        # Free memory if necessary
         if context.get('memory_allocation_mb', 0) > self.max_memory_allocation_mb * 0.9:
             actions.append("memory_liberation")
-        
-        # optimize uso de cpu
+
+        # Optimize CPU usage
         if context.get('cpu_cores_used', 0) > self.max_cpu_cores * 0.8:
             actions.append("cpu_optimization")
         
@@ -396,7 +396,7 @@ class ResourceContract(SmartContract):
 
 
 class QualityContract(SmartContract):
-    """Contrato de calidad de service."""
+    """Service quality contract."""
     
     def __init__(
         self,
@@ -410,7 +410,7 @@ class QualityContract(SmartContract):
             contract_id=contract_id,
             contract_type=ContractType.QUALITY,
             name="Quality Assurance Contract",
-            description="Garantiza niveles de calidad de servicio"
+            description="Guarantees service quality levels"
         )
         
         self.min_accuracy = min_accuracy
@@ -419,28 +419,28 @@ class QualityContract(SmartContract):
         self.response_time_sla_ms = response_time_sla_ms
     
     def validate_conditions(self, context: Dict[str, Any]) -> Tuple[bool, List[str]]:
-        """Valida condiciones de calidad."""
+        """Validates quality conditions."""
         violations = []
-        
-        # validate precision
+
+        # Validate accuracy
         accuracy = context.get('accuracy_percent', 100)
         if accuracy < self.min_accuracy:
-            violations.append(f"Precisión {accuracy}% < {self.min_accuracy}%")
-        
-        # validate tasa de error
+            violations.append(f"Accuracy {accuracy}% < {self.min_accuracy}%")
+
+        # Validate error rate
         error_rate = context.get('error_rate_percent', 0)
         if error_rate > self.max_error_rate:
-            violations.append(f"Tasa de error {error_rate}% > {self.max_error_rate}%")
-        
-        # validate disponibilidad
+            violations.append(f"Error rate {error_rate}% > {self.max_error_rate}%")
+
+        # Validate availability
         availability = context.get('availability_percent', 100)
         if availability < self.min_availability:
-            violations.append(f"Disponibilidad {availability}% < {self.min_availability}%")
+            violations.append(f"Availability {availability}% < {self.min_availability}%")
         
         return len(violations) == 0, violations
     
     def execute_actions(self, context: Dict[str, Any]) -> Dict[str, Any]:
-        """Ejecuta acciones de improvement de calidad."""
+        """Executes quality improvement actions."""
         improvements = []
         
         if context.get('accuracy_percent', 100) < self.min_accuracy:
@@ -458,12 +458,12 @@ class QualityContract(SmartContract):
 
 class SmartContractsManager:
     """
-    🔧 GESTOR CENTRAL de contratos inteligentes.
-    
-    Maneja el ciclo de vida complete de contratos with:
-    - Auto-execution periódica
-    - Detección automática de violaciones
-    - Sistema de healing inteligente
+    🔧 CENTRAL MANAGER for smart contracts.
+
+    Manages the complete contract lifecycle with:
+    - Periodic auto-execution
+    - Automatic violation detection
+    - Intelligent healing system
     - Analytics and reporting
     """
     
@@ -474,10 +474,10 @@ class SmartContractsManager:
         self.monitor_thread = None
         self.execution_log: List[Dict[str, Any]] = []
         
-        # Logger del manager
+        # Manager logger
         self.logger = logging.getLogger("SmartContractsManager")
         
-        # Métricas globales
+        # Global metrics
         self.global_metrics = {
             'total_contracts': 0,
             'active_contracts': 0,
@@ -487,17 +487,17 @@ class SmartContractsManager:
         }
     
     def register_contract(self, contract: SmartContract) -> None:
-        """Registra un new contrato."""
+        """Registers a new contract."""
         self.contracts[contract.contract_id] = contract
         self.global_metrics['total_contracts'] += 1
         
         if contract.status == ContractStatus.ACTIVE:
             self.global_metrics['active_contracts'] += 1
         
-        self.logger.info(f"📝 Contrato registrado: {contract.contract_id}")
+        self.logger.info(f"📝 Contract registered: {contract.contract_id}")
     
     def activate_contract(self, contract_id: str) -> bool:
-        """Activa un contrato específico."""
+        """Activates a specific contract."""
         if contract_id in self.contracts:
             self.contracts[contract_id].activate()
             self.global_metrics['active_contracts'] += 1
@@ -505,7 +505,7 @@ class SmartContractsManager:
         return False
     
     def pause_contract(self, contract_id: str) -> bool:
-        """pause un contrato específico."""
+        """Pauses a specific contract."""
         if contract_id in self.contracts:
             self.contracts[contract_id].pause()
             if self.contracts[contract_id].status == ContractStatus.ACTIVE:
@@ -514,7 +514,7 @@ class SmartContractsManager:
         return False
     
     def remove_contract(self, contract_id: str) -> bool:
-        """Elimina un contrato."""
+        """Removes a contract."""
         if contract_id in self.contracts:
             contract = self.contracts[contract_id]
             if contract.status == ContractStatus.ACTIVE:
@@ -522,12 +522,12 @@ class SmartContractsManager:
             
             del self.contracts[contract_id]
             self.global_metrics['total_contracts'] -= 1
-            self.logger.info(f"🗑️ Contrato eliminado: {contract_id}")
+            self.logger.info(f"🗑️ Contract removed: {contract_id}")
             return True
         return False
     
     def check_all_contracts(self, context: Dict[str, Any]) -> Dict[str, Any]:
-        """Verifica todos los contratos activos."""
+        """Checks all active contracts."""
         results = {
             'timestamp': datetime.now().isoformat(),
             'contracts_checked': 0,
@@ -541,12 +541,12 @@ class SmartContractsManager:
                 continue
             
             try:
-                # validate condiciones
+                # Validate conditions
                 start_time = time.time()
                 is_valid, violations = contract.validate_conditions(context)
                 execution_time = (time.time() - start_time) * 1000
                 
-                # update métricas del contrato
+                # Update contract metrics
                 contract.metrics.total_executions += 1
                 contract.metrics.last_execution = datetime.now()
                 contract.last_check = datetime.now()
@@ -556,7 +556,7 @@ class SmartContractsManager:
                 if execution_time > contract.metrics.max_execution_time_ms:
                     contract.metrics.max_execution_time_ms = execution_time
                 
-                # update average
+                # Update average
                 total_time = contract.metrics.avg_execution_time_ms * (contract.metrics.total_executions - 1)
                 contract.metrics.avg_execution_time_ms = (total_time + execution_time) / contract.metrics.total_executions
                 
@@ -567,7 +567,7 @@ class SmartContractsManager:
                         'execution_time_ms': execution_time
                     }
                 else:
-                    # create violaciones
+                    # Create violations
                     for violation_desc in violations:
                         severity = self._determine_violation_severity(violation_desc, contract)
                         violation = ContractViolation(
@@ -583,7 +583,7 @@ class SmartContractsManager:
                         results['violations_found'] += 1
                         self.global_metrics['total_violations'] += 1
                     
-                    # execute acciones if están habilitadas
+                    # Execute actions if enabled
                     if contract.auto_execute:
                         try:
                             action_result = contract.execute_actions(context)
@@ -597,7 +597,7 @@ class SmartContractsManager:
                                 'execution_time_ms': execution_time
                             }
                         except Exception as e:
-                            self.logger.error(f"Error ejecutando acciones para {contract_id}: {e}")
+                            self.logger.error(f"Error executing actions for {contract_id}: {e}")
                             results['contract_results'][contract_id] = {
                                 'status': 'violated_action_failed',
                                 'violations': violations,
@@ -881,7 +881,7 @@ if __name__ == "__main__":
     
     # verify estado
     status = manager.get_global_status()
-    print(f"Estado global: {json.dumps(status, indent=2)}")
+    logger.info(f"Estado global: {json.dumps(status, indent=2)}")
     
     # stop monitoreo
     manager.stop_monitoring()

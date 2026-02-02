@@ -93,21 +93,56 @@ class MetaLA(BaseLayer):
         
         return output
     
-    def fast_adapt(self, support_x, support_y, query_x):
-        """Fast adaptation for few-shot learning."""
-        # Simplified meta-learning adaptation
-        adapted_params = self.adapt_parameters(support_x, support_y)
+    def fast_adapt(self, params, support_x, support_y, query_x, num_steps=None):
+        """Fast adaptation for few-shot learning (MAML-style inner loop).
+
+        Args:
+            params: Current model parameters (from ``self.variables['params']``).
+            support_x: Support set inputs  — (batch, support_len, hidden).
+            support_y: Support set targets — (batch, support_len, hidden).
+            query_x:   Query set inputs    — (batch, query_len, hidden).
+            num_steps: Number of inner-loop gradient steps (default: config value).
+
+        Returns:
+            Predictions on ``query_x`` using adapted parameters.
+        """
+        num_steps = num_steps or self.config.adaptation_steps
+        adapted_params = self.adapt_parameters(
+            params, support_x, support_y, num_steps
+        )
         return self.apply_adapted_params(query_x, adapted_params)
-    
-    def adapt_parameters(self, support_x, support_y):
-        """Adapt parameters based on support set."""
-        # Placeholder for meta-learning parameter adaptation
-        return self.meta_weights
-    
-    def apply_adapted_params(self, query_x, adapted_params):
-        """Apply adapted parameters to query set."""
-        adapted_features = jnp.dot(query_x, adapted_params)
-        return adapted_features
+
+    def adapt_parameters(self, params, support_x, support_y, num_steps=None):
+        """Adapt meta_weights via gradient descent on the support set.
+
+        Performs ``num_steps`` gradient updates using the MSE between the
+        meta-projection of ``support_x`` and ``support_y``.
+        """
+        num_steps = num_steps or self.config.adaptation_steps
+        lr = self.config.meta_learning_rate
+        meta_weights = params['meta_weights']
+
+        def _loss(mw):
+            pred = jnp.dot(support_x, mw)
+            return jnp.mean((pred - support_y) ** 2)
+
+        for _ in range(num_steps):
+            grad = jax.grad(_loss)(meta_weights)
+            meta_weights = meta_weights - lr * grad
+
+        return meta_weights
+
+    def apply_adapted_params(self, query_x, adapted_meta_weights):
+        """Apply adapted meta_weights to the query set.
+
+        Args:
+            query_x: Query inputs — (batch, query_len, hidden).
+            adapted_meta_weights: Meta-weights after inner-loop adaptation.
+
+        Returns:
+            Projected query features — (batch, query_len, hidden).
+        """
+        return jnp.dot(query_x, adapted_meta_weights)
 
 # Alias for backward compatibility
 class MetaLearningAttention(MetaLA):
