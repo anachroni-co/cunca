@@ -11,11 +11,10 @@ Tests the CPU, GPU, and TPU backends for:
 import numpy as np
 import pytest
 
-from core.backends import (
-
 import logging
 logger = logging.getLogger(__name__)
 
+from core.backends import (
     BackendType,
     ComputeBackend,
     get_backend,
