@@ -258,6 +258,35 @@ Copyright (c) 2024-2026 Anacroni S.Coop.Gal. All rights reserved.
 - Contributors and maintainers of JAX, PyTorch, and NumPy
 - Research teams whose papers inspired this implementation
 
+### Compute Partners
+
+This project benefits from supercomputing resources provided through the following institutions and programs:
+
+<div align="center">
+<table>
+<tr>
+<td align="center">
+<a href="https://www.cesga.es">
+<img src="https://www.cesga.es/wp-content/uploads/2024/10/logo_Blanco450x113.png" alt="CESGA" width="220"/>
+</a>
+<br/>
+<b>CESGA</b> — Centro de Supercomputación de Galicia
+<br/>
+Providing access to the <b>Finisterrae III</b> supercomputer
+</td>
+<td align="center">
+<a href="https://eurocc-spain.res.es/">
+<img src="https://eurocc-spain.res.es/wp-content/uploads/2020/12/LOGOTIPO-EURO-CC-RES-SPAIN.png" alt="EuroCC Spain" width="220"/>
+</a>
+<br/>
+<b>EuroCC Spain</b> — European HPC Competence Centre
+<br/>
+European programme supporting HPC access for research
+</td>
+</tr>
+</table>
+</div>
+
 ## Contact
 
 - **Repository**: [github.com/anachroni-co/capibaraGPT_v3](https://github.com/anachroni-co/capibaraGPT_v3)
