@@ -102,8 +102,6 @@ _PII_PATTERNS: Dict[str, re.Pattern] = {
     "ip_address": re.compile(r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b'),
     "address": re.compile(r'\b\d+\s+[A-Za-z\s]+(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Drive|Dr|Lane|Ln|Court|Ct)\b', re.IGNORECASE),
 }
-    SELF_HARM = "self_harm"
-    DANGEROUS_ACTIVITIES = "dangerous_activities"
 
 @dataclass
 class BiasDetectionResult:

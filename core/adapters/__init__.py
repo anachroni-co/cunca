@@ -37,12 +37,11 @@ from .adapter_registry import AdapterRegistry, AdapterType, AdapterSelectionCrit
 from .base_adapter import BaseAdapter, AdapterConfig, AdapterStatus, FallbackAdapter
 
 # Specific adapter imports
-from .kernel_abstraction_adapter import (
-
 import logging
 
-    KernelAbstractionAdapter, 
-    KernelOperation, 
+from .kernel_abstraction_adapter import (
+    KernelAbstractionAdapter,
+    KernelOperation,
     KernelExecutionContext,
     kernel_adapter,
     execute_kernel_operation,
