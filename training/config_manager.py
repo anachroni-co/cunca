@@ -37,14 +37,14 @@ class Environment(Enum):
     PRODUCTION = "production"
 
 class ConfigFormat(Enum):
-    """Configurestion file formats."""
+    """Configuration file formats."""
     JSON = "json"
     YAML = "yaml"
     ENV = "env"
 
 @dataclass
 class ExpertConfig:
-    """Configurestion for individual experts."""
+    """Configuration for individual experts."""
     expert_id: str
     name: str
     model_id: str
@@ -236,7 +236,7 @@ class SecretManager:
         return decrypted_config
 
 class ConfigValidator:
-    """Validatess configuration against schemas and business rules."""
+    """Validates configuration against schemas and business rules."""
     
     def __init__(self):
         self.schema = self._load_config_schema()
