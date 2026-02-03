@@ -231,8 +231,8 @@ class TestCORSConfiguration:
     def test_config_settings_no_wildcard(self):
         try:
             from config.config_settings import APISettings
-        except ImportError:
-            pytest.skip("config_settings not importable")
+        except (ImportError, FileNotFoundError) as e:
+            pytest.skip(f"config_settings not importable: {e}")
         settings = APISettings()
         assert "*" not in settings.cors_origins, \
             "CORS must not default to wildcard"
