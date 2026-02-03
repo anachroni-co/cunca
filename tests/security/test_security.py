@@ -524,7 +524,8 @@ class TestGeneralSecurityScan:
                 stripped = line.strip()
                 if stripped.startswith("#"):
                     continue
-                if "eval(" in stripped and "evaluate" not in stripped.lower():
+                # Skip PyTorch .eval() calls (sets model to evaluation mode, not Python eval())
+                if "eval(" in stripped and "evaluate" not in stripped.lower() and ".eval()" not in stripped:
                     violations.append(f"{py_file.relative_to(PROJECT_ROOT)}:{i}")
         assert not violations, (
             f"eval() found in unexpected locations:\n" + "\n".join(violations[:10])
