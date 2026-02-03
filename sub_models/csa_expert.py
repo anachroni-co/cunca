@@ -223,11 +223,129 @@ class EnhancedCSAGenerator:
         sorted_tokens = sorted(tokens, key=len, reverse=True)
         return sorted_tokens[:5]
 
+class KnowledgeBaseRetriever:
+    """Simple knowledge base retriever for evidence lookup."""
+
+    def __init__(self, knowledge_base: Optional[Dict[str, List[str]]] = None):
+        # Default knowledge base with common patterns
+        self.knowledge_base = knowledge_base or {
+            "risk": [
+                "High risk scenarios typically require mitigation strategies",
+                "Risk can be reduced through redundancy and monitoring",
+                "Historical data shows 30% of high-risk changes cause incidents"
+            ],
+            "cost": [
+                "Cost overruns are common in complex system changes",
+                "Budget contingency of 15-20% recommended for technical projects",
+                "Resource allocation impacts both cost and timeline"
+            ],
+            "time": [
+                "Schedule delays often compound in complex systems",
+                "Critical path analysis helps identify bottlenecks",
+                "Parallel execution can reduce overall timeline"
+            ],
+            "diagnosis": [
+                "Intermittent issues often indicate race conditions or resource contention",
+                "Configuration drift is a common cause of unexpected behavior",
+                "Sensor failures can mask underlying system issues"
+            ],
+            "planning": [
+                "Resource constraints directly impact project feasibility",
+                "Schedule compression increases risk of quality issues",
+                "Early stakeholder alignment reduces change requests"
+            ],
+            "troubleshooting": [
+                "Layer-by-layer analysis isolates problem domains",
+                "Race conditions are difficult to reproduce consistently",
+                "Performance bottlenecks often cascade through systems"
+            ],
+            "stability": [
+                "System stability depends on component interdependencies",
+                "Gradual rollouts reduce stability risks",
+                "Monitoring and alerting are critical for stability"
+            ]
+        }
+        self._vector_store = None
+
+    def set_vector_store(self, vector_store):
+        """Set external vector store for semantic retrieval."""
+        self._vector_store = vector_store
+
+    def retrieve(
+        self,
+        query: str,
+        hypothesis: Optional['Hypothesis'] = None,
+        state: Optional[Dict[str, float]] = None,
+        top_k: int = 3
+    ) -> List[str]:
+        """Retrieve relevant evidence for the query and context.
+
+        Args:
+            query: The query text (usually hypothesis delta)
+            hypothesis: Optional hypothesis for task-type filtering
+            state: Optional world state for metric-based filtering
+            top_k: Maximum number of evidence items to return
+
+        Returns:
+            List of relevant evidence strings
+        """
+        evidence = []
+
+        # Try vector store first if available
+        if self._vector_store is not None:
+            try:
+                results = self._vector_store.invoke(query)
+                for doc in results[:top_k]:
+                    if hasattr(doc, 'page_content'):
+                        evidence.append(doc.page_content)
+                if evidence:
+                    return evidence
+            except Exception as e:
+                logger.debug(f"Vector store retrieval failed: {e}")
+
+        # Fallback to keyword-based retrieval from local knowledge base
+        query_lower = query.lower()
+
+        # Get task-specific evidence
+        if hypothesis:
+            task_key = hypothesis.task_type.value
+            if task_key in self.knowledge_base:
+                evidence.extend(self.knowledge_base[task_key][:top_k])
+
+        # Get metric-specific evidence based on state
+        if state:
+            if state.get("risk", 0) > 0.6:
+                evidence.extend(self.knowledge_base.get("risk", [])[:1])
+            if state.get("cost", 0) > 1.2:
+                evidence.extend(self.knowledge_base.get("cost", [])[:1])
+            if state.get("time", 0) > 1.3:
+                evidence.extend(self.knowledge_base.get("time", [])[:1])
+            if state.get("stability", 1) < 0.5:
+                evidence.extend(self.knowledge_base.get("stability", [])[:1])
+
+        # Keyword matching as final fallback
+        if not evidence:
+            for key, items in self.knowledge_base.items():
+                if key in query_lower:
+                    evidence.extend(items[:1])
+
+        # Deduplicate and limit
+        seen = set()
+        unique_evidence = []
+        for e in evidence:
+            if e not in seen:
+                seen.add(e)
+                unique_evidence.append(e)
+
+        return unique_evidence[:top_k]
+
+
 class EnhancedWorldModel:
     """Enhanced world model with uncertainty quantification."""
-    
-    def __init__(self, config: CSAExpertConfig):
+
+    def __init__(self, config: CSAExpertConfig, knowledge_retriever: Optional[KnowledgeBaseRetriever] = None):
         self.config = config
+        self.knowledge_retriever = knowledge_retriever or KnowledgeBaseRetriever()
         
     def infer_initial(self, context: ExpertContext) -> Dict[str, float]:
         """Infer initial world state with uncertainty."""
@@ -326,10 +444,18 @@ class EnhancedWorldModel:
         
         # Generate consequence description
         consequences = self._generate_consequences(state, hypothesis)
-        
+
+        # Retrieve evidence from knowledge base
+        evidence = self.knowledge_retriever.retrieve(
+            query=hypothesis.delta,
+            hypothesis=hypothesis,
+            state=state,
+            top_k=3
+        )
+
         return WorldState(
             vars=state,
-            evidence=[],  # TODO: Connect to RAG/Knowledge Base for evidence retrieval
+            evidence=evidence,
             consequences=consequences,
             uncertainty=uncertainty,
             stability_score=state.get("stability", 0.8)

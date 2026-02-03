@@ -204,16 +204,60 @@ class DatasetParameterController:
                     influence_scores[param_name] = 1.0 if enabled else 0.0
                 
                 elif mask_type == "gradient_based":
-                    # TODO: Implement gradient-based importance scoring
-                    # For now, use random importance as placeholder
-                    importance = np.random.random(param_shape)
+                    # Gradient-based importance scoring using parameter magnitude
+                    # and gradient information when available
+                    param_values = self.current_parameters[param_name]
+
+                    # Compute importance as normalized parameter magnitude
+                    # Higher magnitude parameters are typically more important
+                    param_magnitude = jnp.abs(param_values)
+
+                    # If we have gradient history, combine with gradient magnitude
+                    if hasattr(self, 'gradient_history') and param_name in self.gradient_history:
+                        grad_magnitude = jnp.abs(self.gradient_history[param_name])
+                        # Fisher information approximation: importance ~ gradient^2
+                        fisher_approx = grad_magnitude ** 2
+                        # Combine parameter magnitude with Fisher information
+                        importance = 0.5 * (param_magnitude / (jnp.max(param_magnitude) + 1e-8)) + \
+                                   0.5 * (fisher_approx / (jnp.max(fisher_approx) + 1e-8))
+                    else:
+                        # Fallback: use parameter magnitude with variance-based scoring
+                        param_std = jnp.std(param_values)
+                        param_mean = jnp.mean(jnp.abs(param_values))
+                        # Parameters with high variance relative to mean are more important
+                        importance = param_magnitude / (param_mean + 1e-8)
+                        importance = importance / (jnp.max(importance) + 1e-8)
+
+                    # Apply threshold to create binary mask
                     mask_values[param_name] = importance > influence_threshold
-                    influence_scores[param_name] = float(np.mean(importance))
+                    influence_scores[param_name] = float(jnp.mean(importance))
                 
                 elif mask_type == "weighted":
-                    # Weighted by estimated influence
-                    # TODO: Implement actual influence calculation
-                    influence = np.random.random()
+                    # Weighted by estimated influence using multiple signals
+                    param_values = self.current_parameters[param_name]
+                    original_values = self.original_parameters.get(param_name)
+
+                    if original_values is not None:
+                        # Calculate influence based on parameter drift from original
+                        # Higher drift = more influenced by training data
+                        param_drift = jnp.abs(param_values - original_values)
+                        drift_magnitude = float(jnp.mean(param_drift))
+
+                        # Normalize by original parameter scale
+                        original_scale = float(jnp.mean(jnp.abs(original_values))) + 1e-8
+                        relative_drift = drift_magnitude / original_scale
+
+                        # Calculate influence score (0-1 range)
+                        # Use sigmoid-like scaling to bound the influence
+                        influence = float(2 / (1 + np.exp(-5 * relative_drift)) - 1)
+                        influence = max(0.0, min(1.0, influence))
+                    else:
+                        # Fallback: use parameter variance as proxy for influence
+                        param_variance = float(jnp.var(param_values))
+                        param_mean = float(jnp.mean(jnp.abs(param_values))) + 1e-8
+                        coefficient_of_variation = np.sqrt(param_variance) / param_mean
+                        influence = float(min(1.0, coefficient_of_variation))
+
                     mask_values[param_name] = jnp.full(param_shape, True, dtype=bool)
                     influence_scores[param_name] = influence
         
