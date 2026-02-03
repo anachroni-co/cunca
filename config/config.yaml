@@ -1,0 +1,188 @@
+# CapibaraGPT v3 - Default Configuration
+# ======================================
+# This is the centralized configuration file for all model, training,
+# and inference settings. Override values by creating config.local.yaml
+
+# Model Architecture
+model:
+  name: "capibara-gpt-v3"
+  hidden_size: 768
+  num_layers: 12
+  num_heads: 12
+  head_dim: 64
+  vocab_size: 50257
+  max_seq_length: 2048
+  dropout: 0.1
+  attention_dropout: 0.1
+  mlp_ratio: 4.0
+  use_bias: true
+  layer_norm_epsilon: 1.0e-5
+
+  # Architecture variants
+  architecture:
+    type: "transformer"  # transformer, ssm, hybrid
+    use_rotary_embeddings: true
+    use_flash_attention: true
+    use_gradient_checkpointing: false
+
+# Training Configuration
+training:
+  # Optimization
+  learning_rate: 3.0e-4
+  min_learning_rate: 1.0e-5
+  weight_decay: 0.1
+  beta1: 0.9
+  beta2: 0.95
+  epsilon: 1.0e-8
+  max_grad_norm: 1.0
+
+  # Schedule
+  warmup_steps: 2000
+  max_steps: 100000
+  lr_scheduler: "cosine"  # cosine, linear, constant
+
+  # Batch settings
+  batch_size: 32
+  gradient_accumulation_steps: 4
+  effective_batch_size: 128  # batch_size * gradient_accumulation_steps
+
+  # Checkpointing
+  save_steps: 1000
+  eval_steps: 500
+  logging_steps: 100
+  checkpoint_dir: "./checkpoints"
+  max_checkpoints: 5
+
+  # Mixed precision
+  mixed_precision: "bf16"  # fp32, fp16, bf16
+
+  # Distributed
+  distributed:
+    enabled: false
+    backend: "nccl"  # nccl, gloo, mpi
+    world_size: 1
+
+# Data Configuration
+data:
+  train_path: "./data/train"
+  eval_path: "./data/eval"
+  max_seq_length: 2048
+  num_workers: 4
+  prefetch_factor: 2
+
+  # Preprocessing
+  preprocessing:
+    tokenizer: "gpt2"
+    add_special_tokens: true
+    padding: "max_length"
+    truncation: true
+
+  # Quality filtering
+  quality_filter:
+    enabled: true
+    min_quality_score: 0.35
+    use_perplexity_filter: false
+    perplexity_model: "gpt2"
+    min_perplexity: 10.0
+    max_perplexity: 1000.0
+
+# Inference Configuration
+inference:
+  max_new_tokens: 512
+  temperature: 0.7
+  top_p: 0.9
+  top_k: 50
+  repetition_penalty: 1.1
+  do_sample: true
+  num_beams: 1
+
+  # Batching
+  batch_size: 1
+  max_batch_size: 32
+
+  # Caching
+  use_kv_cache: true
+  cache_max_length: 4096
+
+# Hardware Configuration
+hardware:
+  # Device selection
+  device: "auto"  # auto, cpu, cuda, tpu
+  device_ids: []  # Empty = use all available
+
+  # TPU settings (when device=tpu)
+  tpu:
+    enabled: false
+    version: "v4"
+    num_cores: 8
+    mesh_shape: [8, 1]
+
+  # Memory optimization
+  memory:
+    optimize_memory: true
+    max_memory_gb: null  # null = no limit
+    offload_to_cpu: false
+
+# Logging Configuration
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+  # Integrations
+  tensorboard:
+    enabled: true
+    log_dir: "./logs/tensorboard"
+
+  wandb:
+    enabled: false
+    project: "capibara-gpt"
+    entity: null
+    run_name: null
+
+# Safety Configuration
+safety:
+  # Content filtering
+  content_filter:
+    enabled: true
+    toxicity_threshold: 0.8
+    bias_filter: true
+
+  # Rate limiting
+  rate_limit:
+    enabled: false
+    requests_per_minute: 60
+    tokens_per_minute: 100000
+
+# API Configuration (for serving)
+api:
+  host: "0.0.0.0"
+  port: 8000
+  workers: 4
+  timeout: 300
+  cors_origins: ["*"]
+
+  # Authentication
+  auth:
+    enabled: false
+    api_key_header: "X-API-Key"
+
+# Experimental Features
+experimental:
+  # State Space Models
+  ssm:
+    enabled: false
+    state_size: 16
+    expand_factor: 2
+
+  # Mixture of Experts
+  moe:
+    enabled: false
+    num_experts: 8
+    num_experts_per_token: 2
+    expert_capacity: 1.25
+
+  # Vector Quantization
+  vq:
+    enabled: false
+    codebook_size: 8192
+    commitment_cost: 0.25
