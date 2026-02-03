@@ -50,3 +50,6 @@ build/
 venv/
 .venv/
 env/
+
+# Cython generated files
+training/cython_kernels/*.c
