@@ -60,17 +60,181 @@ logger = logging.getLogger(__name__)
 TPU_MESH_SHAPE = (32, 8)
 TPU_MEMORY_LIMIT_GB = 32
 
-# Stub for LLM without dependencias externas
-class Ollama:
-    def __init__(self, model):
+# LLM Provider implementations
+class BaseLLMProvider:
+    """Base class for LLM providers."""
+
+    def __init__(self, model: str, **kwargs):
         self.model = model
-    
-    def invoke(self, prompt):
-        # TODO: Implement real LLM integration (OpenAI, Anthropic, local models, etc.)
-        return f"Respuesta generada por {self.model}: {prompt[:50]}..."
+        self.config = kwargs
+
+    def invoke(self, prompt: str) -> str:
+        raise NotImplementedError
+
+
+class OllamaProvider(BaseLLMProvider):
+    """Ollama local LLM provider."""
+
+    def __init__(self, model: str, base_url: str = "http://localhost:11434", **kwargs):
+        super().__init__(model, **kwargs)
+        self.base_url = base_url
+        self._client = None
+
+    def _get_client(self):
+        if self._client is None:
+            try:
+                import requests
+                self._client = requests.Session()
+            except ImportError:
+                logger.warning("requests not available for Ollama")
+        return self._client
+
+    def invoke(self, prompt: str) -> str:
+        client = self._get_client()
+        if client is None:
+            return f"[Ollama stub] {self.model}: {prompt[:50]}..."
+
+        try:
+            response = client.post(
+                f"{self.base_url}/api/generate",
+                json={"model": self.model, "prompt": prompt, "stream": False},
+                timeout=120
+            )
+            response.raise_for_status()
+            return response.json().get("response", "")
+        except Exception as e:
+            logger.warning(f"Ollama call failed: {e}")
+            return f"[Ollama error] {self.model}: {str(e)[:100]}"
+
+
+class OpenAIProvider(BaseLLMProvider):
+    """OpenAI API provider."""
+
+    def __init__(self, model: str = "gpt-3.5-turbo", api_key: str = None, **kwargs):
+        super().__init__(model, **kwargs)
+        self.api_key = api_key or os.environ.get("OPENAI_API_KEY")
+        self._client = None
+
+    def _get_client(self):
+        if self._client is None and self.api_key:
+            try:
+                from openai import OpenAI
+                self._client = OpenAI(api_key=self.api_key)
+            except ImportError:
+                logger.warning("openai package not available")
+        return self._client
+
+    def invoke(self, prompt: str) -> str:
+        client = self._get_client()
+        if client is None:
+            return f"[OpenAI stub] {self.model}: {prompt[:50]}..."
+
+        try:
+            response = client.chat.completions.create(
+                model=self.model,
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=self.config.get("max_tokens", 1024),
+                temperature=self.config.get("temperature", 0.7)
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            logger.warning(f"OpenAI call failed: {e}")
+            return f"[OpenAI error] {self.model}: {str(e)[:100]}"
+
+
+class AnthropicProvider(BaseLLMProvider):
+    """Anthropic Claude API provider."""
+
+    def __init__(self, model: str = "claude-3-haiku-20240307", api_key: str = None, **kwargs):
+        super().__init__(model, **kwargs)
+        self.api_key = api_key or os.environ.get("ANTHROPIC_API_KEY")
+        self._client = None
+
+    def _get_client(self):
+        if self._client is None and self.api_key:
+            try:
+                import anthropic
+                self._client = anthropic.Anthropic(api_key=self.api_key)
+            except ImportError:
+                logger.warning("anthropic package not available")
+        return self._client
+
+    def invoke(self, prompt: str) -> str:
+        client = self._get_client()
+        if client is None:
+            return f"[Anthropic stub] {self.model}: {prompt[:50]}..."
+
+        try:
+            response = client.messages.create(
+                model=self.model,
+                max_tokens=self.config.get("max_tokens", 1024),
+                messages=[{"role": "user", "content": prompt}]
+            )
+            return response.content[0].text
+        except Exception as e:
+            logger.warning(f"Anthropic call failed: {e}")
+            return f"[Anthropic error] {self.model}: {str(e)[:100]}"
+
+
+class HuggingFaceProvider(BaseLLMProvider):
+    """HuggingFace Transformers local provider."""
+
+    def __init__(self, model: str = "mistralai/Mistral-7B-Instruct-v0.2", **kwargs):
+        super().__init__(model, **kwargs)
+        self._pipeline = None
+
+    def _get_pipeline(self):
+        if self._pipeline is None:
+            try:
+                from transformers import pipeline
+                self._pipeline = pipeline(
+                    "text-generation",
+                    model=self.model,
+                    device_map="auto",
+                    max_new_tokens=self.config.get("max_tokens", 512)
+                )
+            except ImportError:
+                logger.warning("transformers not available for HuggingFace provider")
+            except Exception as e:
+                logger.warning(f"Failed to load HuggingFace model: {e}")
+        return self._pipeline
+
+    def invoke(self, prompt: str) -> str:
+        pipe = self._get_pipeline()
+        if pipe is None:
+            return f"[HuggingFace stub] {self.model}: {prompt[:50]}..."
+
+        try:
+            result = pipe(prompt, max_new_tokens=self.config.get("max_tokens", 512))
+            return result[0]["generated_text"][len(prompt):]
+        except Exception as e:
+            logger.warning(f"HuggingFace generation failed: {e}")
+            return f"[HuggingFace error] {self.model}: {str(e)[:100]}"
+
+
+def _create_llm_provider(spec: dict) -> BaseLLMProvider:
+    """Create LLM provider from specification."""
+    llm_type = spec.get("type", "ollama")
+    model = spec.get("model", "llama2")
+
+    if llm_type == "ollama":
+        return OllamaProvider(model=model, base_url=spec.get("base_url", "http://localhost:11434"))
+    elif llm_type == "openai":
+        return OpenAIProvider(model=model, api_key=spec.get("api_key"), **spec)
+    elif llm_type == "anthropic":
+        return AnthropicProvider(model=model, api_key=spec.get("api_key"), **spec)
+    elif llm_type == "huggingface":
+        return HuggingFaceProvider(model=model, **spec)
+    else:
+        logger.warning(f"Unknown LLM type '{llm_type}', using Ollama fallback")
+        return OllamaProvider(model=model)
+
 
 LLM_REGISTRY = {
-    "ollama": lambda spec: CapibaraLLM(Ollama(model=spec["model"]))
+    "ollama": lambda spec: CapibaraLLM(_create_llm_provider(spec)),
+    "openai": lambda spec: CapibaraLLM(_create_llm_provider(spec)),
+    "anthropic": lambda spec: CapibaraLLM(_create_llm_provider(spec)),
+    "huggingface": lambda spec: CapibaraLLM(_create_llm_provider(spec)),
 }
 
 def create_llm(llm_spec: dict) -> CapibaraLLM:
@@ -87,18 +251,192 @@ def create_llm(llm_spec: dict) -> CapibaraLLM:
     except KeyError as e:
         raise ValueError(f"Missing required parameter {e} in spec for LLM type {llm_type}")
 
+class QdrantRetriever:
+    """Qdrant vector database retriever."""
+
+    def __init__(
+        self,
+        collection_name: str,
+        host: str = "localhost",
+        port: int = 6333,
+        embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2",
+        top_k: int = 5
+    ):
+        self.collection_name = collection_name
+        self.host = host
+        self.port = port
+        self.embedding_model = embedding_model
+        self.top_k = top_k
+        self._client = None
+        self._embedder = None
+
+    def _get_client(self):
+        if self._client is None:
+            try:
+                from qdrant_client import QdrantClient
+                self._client = QdrantClient(host=self.host, port=self.port)
+                logger.info(f"Connected to Qdrant at {self.host}:{self.port}")
+            except ImportError:
+                logger.warning("qdrant-client not available")
+            except Exception as e:
+                logger.warning(f"Failed to connect to Qdrant: {e}")
+        return self._client
+
+    def _get_embedder(self):
+        if self._embedder is None:
+            try:
+                from sentence_transformers import SentenceTransformer
+                self._embedder = SentenceTransformer(self.embedding_model)
+                logger.info(f"Loaded embedding model: {self.embedding_model}")
+            except ImportError:
+                logger.warning("sentence-transformers not available")
+            except Exception as e:
+                logger.warning(f"Failed to load embedding model: {e}")
+        return self._embedder
+
+    def invoke(self, query: str) -> List[Any]:
+        """Retrieve relevant documents for a query."""
+        client = self._get_client()
+        embedder = self._get_embedder()
+
+        # Fallback if dependencies not available
+        if client is None or embedder is None:
+            return [type('Doc', (), {'page_content': f"[Qdrant stub] Contexto para: {query}"})()]
+
+        try:
+            # Generate query embedding
+            query_vector = embedder.encode(query).tolist()
+
+            # Search in Qdrant
+            results = client.search(
+                collection_name=self.collection_name,
+                query_vector=query_vector,
+                limit=self.top_k
+            )
+
+            # Convert to document format
+            docs = []
+            for result in results:
+                doc = type('Doc', (), {
+                    'page_content': result.payload.get('text', ''),
+                    'metadata': result.payload,
+                    'score': result.score
+                })()
+                docs.append(doc)
+
+            return docs if docs else [type('Doc', (), {'page_content': f"No results for: {query}"})()]
+
+        except Exception as e:
+            logger.warning(f"Qdrant search failed: {e}")
+            return [type('Doc', (), {'page_content': f"[Qdrant error] {str(e)[:100]}"})()]
+
+
+class ChromaRetriever:
+    """ChromaDB vector database retriever."""
+
+    def __init__(
+        self,
+        collection_name: str,
+        persist_directory: str = "./chroma_db",
+        embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2",
+        top_k: int = 5
+    ):
+        self.collection_name = collection_name
+        self.persist_directory = persist_directory
+        self.embedding_model = embedding_model
+        self.top_k = top_k
+        self._collection = None
+        self._embedder = None
+
+    def _get_collection(self):
+        if self._collection is None:
+            try:
+                import chromadb
+                client = chromadb.PersistentClient(path=self.persist_directory)
+                self._collection = client.get_or_create_collection(name=self.collection_name)
+                logger.info(f"Connected to ChromaDB collection: {self.collection_name}")
+            except ImportError:
+                logger.warning("chromadb not available")
+            except Exception as e:
+                logger.warning(f"Failed to connect to ChromaDB: {e}")
+        return self._collection
+
+    def _get_embedder(self):
+        if self._embedder is None:
+            try:
+                from sentence_transformers import SentenceTransformer
+                self._embedder = SentenceTransformer(self.embedding_model)
+            except ImportError:
+                logger.warning("sentence-transformers not available")
+        return self._embedder
+
+    def invoke(self, query: str) -> List[Any]:
+        """Retrieve relevant documents for a query."""
+        collection = self._get_collection()
+        embedder = self._get_embedder()
+
+        if collection is None or embedder is None:
+            return [type('Doc', (), {'page_content': f"[ChromaDB stub] Contexto para: {query}"})()]
+
+        try:
+            query_vector = embedder.encode(query).tolist()
+            results = collection.query(query_embeddings=[query_vector], n_results=self.top_k)
+
+            docs = []
+            if results['documents'] and results['documents'][0]:
+                for i, doc_text in enumerate(results['documents'][0]):
+                    metadata = results['metadatas'][0][i] if results.get('metadatas') else {}
+                    doc = type('Doc', (), {'page_content': doc_text, 'metadata': metadata})()
+                    docs.append(doc)
+
+            return docs if docs else [type('Doc', (), {'page_content': f"No results for: {query}"})()]
+
+        except Exception as e:
+            logger.warning(f"ChromaDB search failed: {e}")
+            return [type('Doc', (), {'page_content': f"[ChromaDB error] {str(e)[:100]}"})()]
+
+
 def create_vector_db(vectordb_spec: dict) -> Optional[CapibaraVectorDB]:
-    if vectordb_spec.get("type") == "qdrant":
-        # TODO: Implement real Qdrant vector database connection
-        class StubRetriever:
-            def invoke(self, query):
-                return [type('Doc', (), {'page_content': f"Contexto para: {query}"})()]
-        
-        vectordb = CapibaraVectorDB(StubRetriever())
-        # configure tpu v4-32 optimizations
+    """Create vector database from specification.
+
+    Supported types: qdrant, chroma
+
+    Args:
+        vectordb_spec: Dictionary with 'type' and connection parameters
+
+    Returns:
+        CapibaraVectorDB instance or None
+    """
+    db_type = vectordb_spec.get("type")
+
+    if db_type == "qdrant":
+        retriever = QdrantRetriever(
+            collection_name=vectordb_spec.get("collection", "capibara_docs"),
+            host=vectordb_spec.get("host", "localhost"),
+            port=vectordb_spec.get("port", 6333),
+            embedding_model=vectordb_spec.get("embedding_model", "sentence-transformers/all-MiniLM-L6-v2"),
+            top_k=vectordb_spec.get("top_k", 5)
+        )
+        vectordb = CapibaraVectorDB(retriever)
         vectordb.mesh = create_tpu_mesh(TPU_MESH_SHAPE)
         vectordb.memory_monitor = TpuMemoryMonitor(limit_gb=TPU_MEMORY_LIMIT_GB)
         return vectordb
+
+    elif db_type == "chroma":
+        retriever = ChromaRetriever(
+            collection_name=vectordb_spec.get("collection", "capibara_docs"),
+            persist_directory=vectordb_spec.get("persist_directory", "./chroma_db"),
+            embedding_model=vectordb_spec.get("embedding_model", "sentence-transformers/all-MiniLM-L6-v2"),
+            top_k=vectordb_spec.get("top_k", 5)
+        )
+        vectordb = CapibaraVectorDB(retriever)
+        vectordb.mesh = create_tpu_mesh(TPU_MESH_SHAPE)
+        vectordb.memory_monitor = TpuMemoryMonitor(limit_gb=TPU_MEMORY_LIMIT_GB)
+        return vectordb
+
+    elif db_type:
+        logger.warning(f"Unknown vector DB type: {db_type}. Supported: qdrant, chroma")
+
     return None
 
 def create_tools(tool_names: List[str]):
