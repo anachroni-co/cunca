@@ -65,7 +65,11 @@ except ImportError:
                 sum_xy = sum(x[i] * y[i] for i in range(n))
                 sum_xx = sum(x[i] ** 2 for i in range(n))
 
-                slope = (n * sum_xy - sum_x * sum_y) / (n * sum_xx - sum_x ** 2)
+                denominator = n * sum_xx - sum_x ** 2
+                if denominator == 0:
+                    # All x values are identical, slope is undefined
+                    return [0, sum_y / n if n > 0 else 0]
+                slope = (n * sum_xy - sum_x * sum_y) / denominator
                 intercept = (sum_y - slope * sum_x) / n
                 return [slope, intercept]
             return [0, 0]
