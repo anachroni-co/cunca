@@ -7,6 +7,11 @@ import os
 
 # import nore  # Fixed: removed incorrect import
 from datetime import timedelta
+
+try:
+    import yaml
+except ImportError:
+    yaml = None
 from pathlib import Path #type: ignore  
 from typing import Dict, Any, Optional, List
 from pydantic import BaseModel, Field, validator #type: ignore
@@ -113,6 +118,9 @@ def load_yaml_config(config_path: Optional[str] = None) -> Dict[str, Any]:
     if not config_file.exists():
         raise FileNotFoundError(f"Configuration file not found: {config_path}")
     
+    if yaml is None:
+        raise ImportError("PyYAML is required to load YAML config files. Install with: pip install pyyaml")
+
     with open(config_file) as f:
         return yaml.safe_load(f)
 
@@ -129,8 +137,19 @@ def get_settings(config_path: Optional[str] = None) -> Settings:
     config_data = load_yaml_config(config_path)
     return Settings(**config_data)
 
-# Global settings instance
-settings = get_settings()
+# Global settings instance (lazy initialization to avoid import-time failures)
+settings: Optional[Settings] = None
+
+def _get_lazy_settings() -> Optional[Settings]:
+    """Get settings with lazy initialization."""
+    global settings
+    if settings is None:
+        try:
+            settings = get_settings()
+        except (FileNotFoundError, ImportError, Exception):
+            # Config file may not exist or have incompatible format
+            pass
+    return settings
 
 # paths.py content
 """
