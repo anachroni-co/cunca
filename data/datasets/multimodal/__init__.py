@@ -1,14 +1,12 @@
 """
-CapibaraGPT-v2 Multimodal Datasets
-Multimodal datasets: audio, vision, conversation
+CapibaraGPT-v2 Vision Datasets
+Computer vision specific datasets
+Prepared for future expansions
 """
 
-from . import vision_datasets
-from . import emotional_audio_datasets
-from . import multimodal_conversation_datasets
+# Placeholder for future dataset expansions
+# The vision datasets are in multimodal/vision_datasets.py
 
 __all__ = [
-    'multimodal_conversation_datasets',
-    'emotional_audio_datasets',
-    'vision_datasets'
+    # Prepared for future expansions
 ]

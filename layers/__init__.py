@@ -62,6 +62,43 @@ ULTRA_LAYER_INTEGRATION_AVAILABLE = False
 ULTRA_CORE_AVAILABLE = False
 ULTRA_TRAINING_INTEGRATION = False
 
+# Base layers (moved from root)
+try:
+    from .base import BaseLayer, LayerConfig
+    BASE_LAYERS_AVAILABLE = True
+except Exception as e:
+    logger.debug(f"Base layers not available: {e}")
+    BASE_LAYERS_AVAILABLE = False
+    BaseLayer = None
+    LayerConfig = None
+
+# Core layers (moved from root)
+try:
+    from .self_attention import TpuAttentionCache
+    from .embedding import main as embedding_main
+    from .conv1d_block import main as conv1d_main
+    from .stack import main as stack_main
+    from .neuro_adaptive import main as neuro_adaptive_main
+    from .neurogenesis import main as neurogenesis_main
+    from .meta_la import main as meta_la_main
+    from .smb_layer import main as smb_layer_main
+    CORE_LAYERS_AVAILABLE = True
+except Exception as e:
+    logger.debug(f"Core layers not available: {e}")
+    CORE_LAYERS_AVAILABLE = False
+    TpuAttentionCache = None
+
+# SSM/Hybrid layers (moved from root)
+try:
+    from .ssm_hybrid_layers import SSMHybridLayer
+    from .ultra_layer_integration import UltraLayerIntegration
+    SSM_HYBRID_AVAILABLE = True
+except Exception as e:
+    logger.debug(f"SSM/Hybrid layers not available: {e}")
+    SSM_HYBRID_AVAILABLE = False
+    SSMHybridLayer = None
+    UltraLayerIntegration = None
+
 
 __all__ = [
     # Passive layers
@@ -78,6 +115,10 @@ __all__ = [
     "SparseCapibara",
     "AffineQuantizer",
     "MixtureOfRookies",
+    # Base layers
+    "BaseLayer",
+    "LayerConfig",
+    "TpuAttentionCache",
     # Availability flags
     "SSM_LAYERS_AVAILABLE",
     "SSM_COMPONENTS_AVAILABLE",
@@ -85,4 +126,7 @@ __all__ = [
     "ABSTRACT_REASONING_AVAILABLE",
     "SPARSITY_LAYERS_AVAILABLE",
     "ADDITIONAL_LAYERS_AVAILABLE",
+    "BASE_LAYERS_AVAILABLE",
+    "CORE_LAYERS_AVAILABLE",
+    "SSM_HYBRID_AVAILABLE",
 ]

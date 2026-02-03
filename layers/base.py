@@ -11,11 +11,11 @@ from abc import ABC, abstractmethod
 from typing import Any, Dict, Optional
 from dataclasses import dataclass
 
-# Gets the current directory path (scripts) -> /.../scripts
+# Obtiene la path del directory current (scripts) -> /.../scripts
 script_dir = os.path.dirname(os.path.abspath(__file__))
-# Go up one level to obtain project root -> /.../capibaraGPT-v2
+# Sube un level for obtain la raíz del proyecto -> /.../capibaraGPT-v2
 project_root = os.path.dirname(script_dir)
-# Add project root to sys.path
+# Añade la raíz del proyecto a sys.path
 if project_root not in sys.path:
     # Fixed: Using proper imports instead of sys.path manipulation
     pass
