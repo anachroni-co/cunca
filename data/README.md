@@ -24,8 +24,7 @@ The capibaraGPT-v2 data system handles data loading, processing, and preparation
 ```
 capibara/data/
 ├── core/                    # Core components (loaders, base processors)
-├── capibara_datasets/       # Capibara curated datasets
-├── datasets/                # Domain-specific datasets
+├── datasets/                # Domain-specific datasets (academic, legal, etc.)
 ├── loaders/                 # Data loaders (re-exports from core/)
 ├── processors/              # Data processors (re-exports from core/)
 ├── scrapers/                # Web scrapers for datasets
@@ -73,26 +72,7 @@ capibara/data/
 
 ## 📊 Datasets
 
-capibaraGPT-v2 supports multiple dataset categories:
-
-### capibara_datasets/ (Curated Datasets)
-
-Datasets specifically curated for Capibara:
-
-```python
-from capibara.data.capibara_datasets import load_dataset
-
-# Load curated dataset
-dataset = load_dataset("capibara/spanish-literature")
-
-# Available datasets:
-# - capibara/spanish-literature
-# - capibara/academic-papers
-# - capibara/minority-languages
-# - ... (see capibara_datasets/README.md)
-```
-
-See [capibara_datasets/README.md](capibara_datasets/README.md) for complete list.
+capibaraGPT-v2 supports multiple dataset categories organized in `datasets/`:
 
 ### datasets/ (Domain Datasets)
 
@@ -613,14 +593,11 @@ quality:
 The module maintains backwards compatibility:
 
 ```python
-# Legacy imports work
+# Import patterns
 from capibara.data.datasets import load_dataset  # ✅ Works
 from capibara.data.loaders import DataLoader     # ✅ Works
 from capibara.data.processors import Tokenizer   # ✅ Works
-
-# New recommended imports
 from capibara.data.core import DataLoader        # ✅ Recommended
-from capibara.data.capibara_datasets import load_dataset  # ✅ Recommended
 ```
 
 ---
