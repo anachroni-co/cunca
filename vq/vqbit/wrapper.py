@@ -35,7 +35,7 @@ from capibara.jax.sharding import PartitionSpec as P
 script_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(script_dir)
 if project_root not in sys.path:
-    # Fixed: Using proper imports instead of sys.path manipulation
+    pass  # Using proper imports instead of sys.path manipulation
 
 logger = logging.getLogger(__name__)
 

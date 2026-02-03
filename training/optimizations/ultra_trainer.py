@@ -38,8 +38,8 @@ try:
     # Add nn module to path
     nn_path = os.path.join(os.path.dirname(__file__), '..', '..', 'jax', 'nn')
     if nn_path not in sys.path:
-# Fixed: Using relative imports instead of sys.path manipulation
-    
+        pass  # Using relative imports instead of sys.path manipulation
+
     from training_optimizations import (
         GradientAccumulator, create_mixed_precision_step,
         create_lion_optimizer, create_smart_lr_schedule,
