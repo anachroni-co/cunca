@@ -78,16 +78,105 @@ if project_root not in sys.path:
 
 import time
 import logging
-# from flax import struct  # TODO: Use capibara's struct implementation
+import dataclasses
+from dataclasses import field as dataclass_field
+
+
+class CapibaraStruct:
+    """Capibara's native struct implementation compatible with Flax's struct.
+
+    Provides PyTree-compatible dataclasses for use with JAX transformations.
+    This implementation mirrors flax.struct functionality while being
+    self-contained within the Capibara project.
+
+    Features:
+    - @struct.dataclass decorator for creating frozen dataclasses
+    - PyTree registration for JAX compatibility
+    - field() helper for default values
+    - replace() method for immutable updates
+    """
+
+    @staticmethod
+    def dataclass(cls=None, *, frozen: bool = True):
+        """Decorator to create a struct-compatible dataclass.
+
+        Args:
+            cls: The class to decorate
+            frozen: Whether the dataclass should be immutable (default: True)
+
+        Returns:
+            A dataclass with PyTree support and replace() method
+        """
+        def wrapper(cls):
+            # Apply dataclass decorator
+            dc_cls = dataclasses.dataclass(frozen=frozen)(cls)
+
+            # Add replace method for immutable updates
+            def replace(self, **kwargs):
+                """Return a new instance with specified fields replaced."""
+                return dataclasses.replace(self, **kwargs)
+
+            dc_cls.replace = replace
+
+            # Register as PyTree with JAX if available
+            try:
+                from capibara.jax import jax
+                if hasattr(jax, 'tree_util'):
+                    def _flatten(obj):
+                        """Flatten struct to (children, aux_data)."""
+                        children = tuple(getattr(obj, f.name) for f in dataclasses.fields(obj))
+                        aux_data = tuple(f.name for f in dataclasses.fields(obj))
+                        return children, aux_data
+
+                    def _unflatten(aux_data, children):
+                        """Reconstruct struct from (aux_data, children)."""
+                        return dc_cls(**dict(zip(aux_data, children)))
+
+                    jax.tree_util.register_pytree_node(
+                        dc_cls,
+                        _flatten,
+                        _unflatten
+                    )
+            except (ImportError, AttributeError):
+                pass  # JAX not available, skip PyTree registration
+
+            return dc_cls
+
+        if cls is None:
+            return wrapper
+        return wrapper(cls)
+
+    @staticmethod
+    def field(*, pytree_node: bool = True, default=dataclasses.MISSING,
+              default_factory=dataclasses.MISSING):
+        """Create a field with struct-specific options.
+
+        Args:
+            pytree_node: Whether field should be included in PyTree traversal
+            default: Default value for the field
+            default_factory: Factory function for default value
+
+        Returns:
+            A dataclass field descriptor
+        """
+        metadata = {"pytree_node": pytree_node}
+
+        if default is not dataclasses.MISSING:
+            return dataclass_field(default=default, metadata=metadata)
+        elif default_factory is not dataclasses.MISSING:
+            return dataclass_field(default_factory=default_factory, metadata=metadata)
+        else:
+            return dataclass_field(metadata=metadata)
+
+
+# Use Capibara's struct implementation, fall back to flax if available for compatibility
 try:
-    from flax import struct
+    from flax import struct as flax_struct
+    # Prefer flax.struct if available for full JAX integration
+    struct = flax_struct
 except ImportError:
-    # Fallback implementation
-    import dataclasses
-    class struct:
-        @staticmethod
-        def dataclass(cls):
-            return dataclasses.dataclass(cls)
+    # Use Capibara's native implementation
+    struct = CapibaraStruct
 try:
     import ndb #type: ignore
 except ImportError:
