@@ -340,8 +340,10 @@ class AdvancedFilter:
     def __init__(self, config: QualityConfig):
         self.config = config
         self.perplexity_model = None
+        self.perplexity_tokenizer = None
+        self.device = None
         self.toxicity_classifier = None
-        
+
         self._initialize_models()
     
     def _initialize_models(self):
@@ -352,14 +354,24 @@ class AdvancedFilter:
             if not TRANSFORMERS_AVAILABLE:
                 logger.warning("Perplexity filtering requested but transformers not available")
                 return
-            if not self.config.perplexity_model:
-                logger.warning("Perplexity filtering requested but no model configured")
-                return
+
+            model_name = self.config.perplexity_model or "gpt2"
             try:
-                # TODO: Initialize perplexity model (GPT-2 or similar for scoring)
-                logger.info("Perplexity filtering would be initialized here")
+                from transformers import GPT2LMHeadModel, GPT2TokenizerFast
+                import torch
+
+                self.perplexity_tokenizer = GPT2TokenizerFast.from_pretrained(model_name)
+                self.perplexity_model = GPT2LMHeadModel.from_pretrained(model_name)
+                self.perplexity_model.eval()
+
+                # Move to GPU if available
+                self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+                self.perplexity_model.to(self.device)
+
+                logger.info(f"✅ Perplexity model '{model_name}' initialized on {self.device}")
             except Exception as e:
                 logger.warning(f"Failed to initialize perplexity model: {e}")
+                self.perplexity_model = None
         
         # Initialize toxicity classifier
         if self.config.use_toxicity_filter and TRANSFORMERS_AVAILABLE:
@@ -373,15 +385,89 @@ class AdvancedFilter:
             except Exception as e:
                 logger.warning(f"Failed to initialize toxicity classifier: {e}")
     
+    def _calculate_perplexity(self, text: str, max_length: int = 512) -> float:
+        """Calculate perplexity of text using the loaded model.
+
+        Args:
+            text: Input text to score
+            max_length: Maximum sequence length
+
+        Returns:
+            Perplexity score (lower = more fluent/predictable)
+        """
+        import torch
+
+        try:
+            # Tokenize input
+            encodings = self.perplexity_tokenizer(
+                text,
+                return_tensors="pt",
+                truncation=True,
+                max_length=max_length
+            )
+            input_ids = encodings.input_ids.to(self.device)
+
+            # Skip very short sequences
+            if input_ids.size(1) < 4:
+                return float("inf")
+
+            # Calculate loss (negative log likelihood)
+            with torch.no_grad():
+                outputs = self.perplexity_model(input_ids, labels=input_ids)
+                loss = outputs.loss
+
+            # Convert to perplexity
+            perplexity = torch.exp(loss).item()
+            return perplexity
+
+        except Exception as e:
+            logger.debug(f"Perplexity calculation failed: {e}")
+            return float("inf")
+
     def filter_by_perplexity(self, docs: List[Dict]) -> List[Dict]:
-        """Filter documents by perplexity."""
-        if not self.config.use_perplexity_filter or not self.perplexity_model:
+        """Filter documents by perplexity score.
+
+        Documents with perplexity outside the configured range are filtered out.
+        Very low perplexity may indicate repetitive/templated text.
+        Very high perplexity may indicate nonsensical/garbled text.
+
+        Args:
+            docs: List of document dictionaries with 'text' or 'text_norm' field
+
+        Returns:
+            Filtered list of documents within acceptable perplexity range
+        """
+        if not self.config.use_perplexity_filter or self.perplexity_model is None:
             return docs
-        
-        # TODO: Implement perplexity calculation and filtering
-        # Calculate perplexity for each document and filter based on thresholds
-        logger.info("Perplexity filtering would be applied here")
-        return docs
+
+        filtered_docs = []
+        min_ppl = self.config.min_perplexity
+        max_ppl = self.config.max_perplexity
+
+        for doc in docs:
+            text = doc.get("text_norm", doc.get("text", ""))
+
+            # Skip empty documents
+            if not text or len(text.strip()) < 20:
+                doc["filtered_reason"] = "too_short_for_perplexity"
+                continue
+
+            perplexity = self._calculate_perplexity(text)
+            doc["perplexity"] = perplexity
+
+            if min_ppl <= perplexity <= max_ppl:
+                filtered_docs.append(doc)
+            else:
+                if perplexity < min_ppl:
+                    doc["filtered_reason"] = f"perplexity_too_low ({perplexity:.2f} < {min_ppl})"
+                else:
+                    doc["filtered_reason"] = f"perplexity_too_high ({perplexity:.2f} > {max_ppl})"
+
+        logger.info(
+            f"Perplexity filter: {len(filtered_docs)}/{len(docs)} docs passed "
+            f"(range: {min_ppl}-{max_ppl})"
+        )
+        return filtered_docs
     
     def _is_toxic_prediction(self, prediction: Dict[str, Any]) -> bool:
         label = str(prediction.get('label', '')).strip().lower()

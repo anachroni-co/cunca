@@ -46,6 +46,19 @@ __author__ = "CapibaraGPT Team"
 try:
     from .config_validator import ConfigValidator, ValidationError, validate_config_file
 except Exception:
+    import json
+    try:
+        import tomllib
+    except ImportError:
+        try:
+            import toml as tomllib
+        except ImportError:
+            tomllib = None
+    try:
+        import yaml
+    except ImportError:
+        yaml = None
+
     @dataclass
     class ValidationError:
         section: str
@@ -53,18 +66,174 @@ except Exception:
         message: str
         severity: str = "error"
 
+    # Validation rules for known config sections
+    CONFIG_RULES = {
+        "model": {
+            "hidden_size": {"type": int, "min": 64, "max": 65536},
+            "num_layers": {"type": int, "min": 1, "max": 1000},
+            "num_heads": {"type": int, "min": 1, "max": 512},
+            "vocab_size": {"type": int, "min": 100, "max": 1000000},
+            "dropout": {"type": float, "min": 0.0, "max": 1.0},
+        },
+        "training": {
+            "learning_rate": {"type": float, "min": 1e-10, "max": 10.0},
+            "batch_size": {"type": int, "min": 1, "max": 65536},
+            "max_steps": {"type": int, "min": 1},
+            "warmup_steps": {"type": int, "min": 0},
+            "weight_decay": {"type": float, "min": 0.0, "max": 1.0},
+        },
+        "data": {
+            "max_seq_length": {"type": int, "min": 1, "max": 1000000},
+            "num_workers": {"type": int, "min": 0, "max": 128},
+        },
+    }
+
     class ConfigValidator:
-        def __init__(self):
+        """Validates configuration dictionaries against defined rules."""
+
+        def __init__(self, custom_rules: Dict[str, Any] = None):
+            self.errors: List[ValidationError] = []
+            self.warnings: List[ValidationError] = []
+            self.rules = {**CONFIG_RULES, **(custom_rules or {})}
+
+        def validate(self, config: Dict[str, Any]) -> bool:
+            """Validate a configuration dictionary.
+
+            Args:
+                config: Configuration dictionary to validate
+
+            Returns:
+                True if valid (no errors), False otherwise
+            """
             self.errors = []
             self.warnings = []
-        def validate(self, config: Dict[str, Any]) -> bool:
-            # TODO: Implement actual config validation logic
-            return True
+
+            if not isinstance(config, dict):
+                self.errors.append(ValidationError(
+                    section="root",
+                    field="config",
+                    message="Configuration must be a dictionary",
+                    severity="error"
+                ))
+                return False
+
+            # Validate each section
+            for section, fields in config.items():
+                if not isinstance(fields, dict):
+                    continue
+
+                section_rules = self.rules.get(section, {})
+
+                for field, value in fields.items():
+                    rule = section_rules.get(field)
+                    if not rule:
+                        continue
+
+                    # Type validation
+                    expected_type = rule.get("type")
+                    if expected_type and not isinstance(value, expected_type):
+                        # Allow int for float fields
+                        if expected_type == float and isinstance(value, int):
+                            pass
+                        else:
+                            self.errors.append(ValidationError(
+                                section=section,
+                                field=field,
+                                message=f"Expected {expected_type.__name__}, got {type(value).__name__}",
+                                severity="error"
+                            ))
+                            continue
+
+                    # Range validation for numbers
+                    if isinstance(value, (int, float)):
+                        min_val = rule.get("min")
+                        max_val = rule.get("max")
+
+                        if min_val is not None and value < min_val:
+                            self.errors.append(ValidationError(
+                                section=section,
+                                field=field,
+                                message=f"Value {value} is below minimum {min_val}",
+                                severity="error"
+                            ))
+
+                        if max_val is not None and value > max_val:
+                            self.errors.append(ValidationError(
+                                section=section,
+                                field=field,
+                                message=f"Value {value} exceeds maximum {max_val}",
+                                severity="error"
+                            ))
+
+                    # Enum validation
+                    allowed = rule.get("allowed")
+                    if allowed and value not in allowed:
+                        self.errors.append(ValidationError(
+                            section=section,
+                            field=field,
+                            message=f"Value '{value}' not in allowed values: {allowed}",
+                            severity="error"
+                        ))
+
+            return len(self.errors) == 0
+
         def validate_full_config(self, config: Dict[str, Any]) -> Dict[str, Any]:
-            return {"is_valid": True, "errors": [], "warnings": []}
+            """Validate and return detailed results."""
+            is_valid = self.validate(config)
+            return {
+                "is_valid": is_valid,
+                "errors": [
+                    {"section": e.section, "field": e.field, "message": e.message}
+                    for e in self.errors
+                ],
+                "warnings": [
+                    {"section": w.section, "field": w.field, "message": w.message}
+                    for w in self.warnings
+                ]
+            }
+
     def validate_config_file(path: str) -> bool:
-        # TODO: Implement file-based config validation
-        return True
+        """Validate a configuration file (JSON, TOML, or YAML).
+
+        Args:
+            path: Path to the configuration file
+
+        Returns:
+            True if valid, False otherwise
+        """
+        path_obj = Path(path)
+
+        if not path_obj.exists():
+            return False
+
+        try:
+            content = path_obj.read_text(encoding="utf-8")
+            suffix = path_obj.suffix.lower()
+
+            # Parse based on file type
+            if suffix == ".json":
+                config = json.loads(content)
+            elif suffix in (".toml", ".tml"):
+                if tomllib is None:
+                    return False
+                if hasattr(tomllib, "loads"):
+                    config = tomllib.loads(content)
+                else:
+                    config = tomllib.load(path)
+            elif suffix in (".yaml", ".yml"):
+                if yaml is None:
+                    return False
+                config = yaml.safe_load(content)
+            else:
+                # Try JSON as default
+                config = json.loads(content)
+
+            # Validate the parsed config
+            validator = ConfigValidator()
+            return validator.validate(config)
+
+        except (json.JSONDecodeError, Exception):
+            return False
 
 # Legacy aliases (maintain compatibility with outdated tests)
 ConfigValidatetor = ConfigValidator  # type: ignore
