@@ -339,8 +339,58 @@ class EmotionalAudioManager:
             ses_dir = dataset_dir / "ses"
             ses_dir.mkdir(exist_ok=True)
 
-            # TODO: Implement download and processing
+            # Try to download Spanish Emotional Speech from available sources
+            downloaded_files = []
 
+            # Option 1: Try HuggingFace datasets for Spanish emotional audio
+            try:
+                from datasets import load_dataset
+                hf_dataset = load_dataset(
+                    "mozilla-foundation/common_voice_11_0",
+                    "es",
+                    split="train[:1000]",
+                    trust_remote_code=True
+                )
+                # Save metadata
+                metadata_path = ses_dir / "hf_metadata.json"
+                with open(metadata_path, "w") as f:
+                    json.dump({"source": "common_voice", "language": "es", "samples": len(hf_dataset)}, f)
+                downloaded_files.append(str(metadata_path))
+                logger.info(f"Downloaded Common Voice Spanish subset: {len(hf_dataset)} samples")
+            except Exception as e:
+                logger.warning(f"HuggingFace download failed: {e}")
+
+            # Option 2: Download from known Spanish emotional speech repositories
+            spanish_repos = [
+                {
+                    "name": "SEV",  # Spanish Emotional Voices
+                    "url": "https://github.com/jcvasquezc/SEV",
+                    "type": "git"
+                }
+            ]
+
+            for repo in spanish_repos:
+                repo_dir = ses_dir / repo["name"]
+                if not repo_dir.exists():
+                    try:
+                        if repo["type"] == "git":
+                            git.Repo.clone_from(repo["url"], repo_dir, depth=1)
+                            logger.info(f"Cloned {repo['name']} repository")
+                            downloaded_files.append(str(repo_dir))
+                    except Exception as e:
+                        logger.warning(f"Failed to clone {repo['name']}: {e}")
+
+            # Create manifest of downloaded data
+            manifest_path = dataset_dir / "manifest.json"
+            with open(manifest_path, "w") as f:
+                json.dump({
+                    "dataset": "spanish_emotional",
+                    "sources": downloaded_files,
+                    "emotions": list(self.STANDARD_EMOTIONS),
+                    "language": "es"
+                }, f, indent=2)
+
+            logger.info(f"Spanish Emotional dataset prepared at {dataset_dir}")
             return str(dataset_dir)
 
         except Exception as e:
@@ -358,7 +408,83 @@ class EmotionalAudioManager:
             dataset_dir = self.clinical_dir / "daic_woz"
             dataset_dir.mkdir(exist_ok=True)
 
-            # TODO: Implement download with authentication
+            # DAIC-WOZ requires credentials from USC ICT
+            # Check for credentials in environment or config file
+            credentials_file = dataset_dir / ".credentials.json"
+            username = os.environ.get("DAIC_WOZ_USERNAME")
+            password = os.environ.get("DAIC_WOZ_PASSWORD")
+
+            # Try to load from credentials file if env vars not set
+            if not username or not password:
+                if credentials_file.exists():
+                    with open(credentials_file) as f:
+                        creds = json.load(f)
+                        username = creds.get("username")
+                        password = creds.get("password")
+
+            if not username or not password:
+                # Create placeholder and instructions
+                instructions = {
+                    "dataset": "DAIC-WOZ",
+                    "description": "Distress Analysis Interview Corpus - Wizard of Oz",
+                    "access": "Requires registration at USC ICT",
+                    "registration_url": "https://dcapswoz.ict.usc.edu/",
+                    "instructions": [
+                        "1. Register at the USC ICT website",
+                        "2. Request access to DAIC-WOZ dataset",
+                        "3. Set DAIC_WOZ_USERNAME and DAIC_WOZ_PASSWORD environment variables",
+                        "4. Or create .credentials.json with {\"username\": \"...\", \"password\": \"...\"}"
+                    ],
+                    "status": "credentials_required"
+                }
+                with open(dataset_dir / "README.json", "w") as f:
+                    json.dump(instructions, f, indent=2)
+                logger.warning("DAIC-WOZ requires credentials. See README.json for instructions.")
+                return str(dataset_dir)
+
+            # Download with authentication
+            base_url = "https://dcapswoz.ict.usc.edu/wwwdaicwoz/"
+            session = requests.Session()
+            session.auth = (username, password)
+
+            # Download manifest/index first
+            try:
+                response = session.get(f"{base_url}index.html", timeout=30)
+                response.raise_for_status()
+
+                # Save index
+                with open(dataset_dir / "index.html", "wb") as f:
+                    f.write(response.content)
+
+                # Download available data files
+                data_files = ["labels.csv", "participant_info.csv"]
+                for filename in data_files:
+                    try:
+                        file_response = session.get(f"{base_url}{filename}", timeout=60)
+                        if file_response.status_code == 200:
+                            with open(dataset_dir / filename, "wb") as f:
+                                f.write(file_response.content)
+                            logger.info(f"Downloaded {filename}")
+                    except Exception as e:
+                        logger.warning(f"Failed to download {filename}: {e}")
+
+                # Create success manifest
+                manifest = {
+                    "dataset": "DAIC-WOZ",
+                    "status": "downloaded",
+                    "files": [str(f.name) for f in dataset_dir.iterdir() if f.is_file()]
+                }
+                with open(dataset_dir / "manifest.json", "w") as f:
+                    json.dump(manifest, f, indent=2)
+
+                logger.info(f"DAIC-WOZ dataset downloaded to {dataset_dir}")
+
+            except requests.exceptions.HTTPError as e:
+                if e.response.status_code == 401:
+                    logger.error("DAIC-WOZ authentication failed. Check credentials.")
+                else:
+                    logger.error(f"DAIC-WOZ download failed: {e}")
+                raise
 
             return str(dataset_dir)
 

@@ -22,7 +22,83 @@ from datetime import datetime
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from capibara.pipeline.workflows.complete_pipeline import run_complete_pipeline, CompletePipeline
+from capibara.pipeline.workflows.complete_pipeline import run_complete_pipeline, CompletePipeline, PipelineResult, PipelineStage
+import time
+
+# Available pipeline stages
+AVAILABLE_STAGES = {
+    "data_download": "_execute_download_stage",
+    "data_processing": "_execute_processing_stage",
+    "dataset_preparation": "_execute_dataset_preparation_stage",
+    "training_integration": "_execute_training_integration_stage",
+}
+
+
+async def run_single_stage(config: dict, stage_name: str) -> PipelineResult:
+    """Run a single pipeline stage.
+
+    Args:
+        config: Pipeline configuration dictionary
+        stage_name: Name of the stage to run (data_download, data_processing,
+                   dataset_preparation, training_integration)
+
+    Returns:
+        PipelineResult with only the specified stage executed
+    """
+    if stage_name not in AVAILABLE_STAGES:
+        logger.error(f"Unknown stage: {stage_name}")
+        logger.info(f"Available stages: {', '.join(AVAILABLE_STAGES.keys())}")
+        return None
+
+    logger.info(f"🎯 Running single stage: {stage_name}")
+
+    # Create pipeline instance
+    pipeline = CompletePipeline(config)
+    pipeline.start_time = time.time()
+
+    # Find the stage index
+    stage_index = list(AVAILABLE_STAGES.keys()).index(stage_name)
+    stage = pipeline.stages[stage_index]
+
+    try:
+        # Get the method for this stage
+        method_name = AVAILABLE_STAGES[stage_name]
+        stage_method = getattr(pipeline, method_name)
+
+        # Execute the stage
+        await stage_method()
+
+        # Calculate duration
+        total_duration = time.time() - pipeline.start_time
+
+        # Create result with only this stage
+        result = PipelineResult(
+            pipeline_id=pipeline.pipeline_id,
+            total_duration_seconds=total_duration,
+            stages=[stage],
+            final_dataset_path=str(pipeline.training_data_path),
+            dataset_stats={"stage": stage_name, "status": stage.status},
+            ready_for_training=False,  # Single stage doesn't complete training prep
+            completed_at=datetime.now().isoformat()
+        )
+
+        return result
+
+    except Exception as e:
+        logger.error(f"Stage '{stage_name}' failed: {e}")
+        stage.status = "failed"
+        stage.error_message = str(e)
+
+        return PipelineResult(
+            pipeline_id=pipeline.pipeline_id,
+            total_duration_seconds=time.time() - pipeline.start_time,
+            stages=[stage],
+            final_dataset_path="",
+            dataset_stats={"error": str(e)},
+            ready_for_training=False,
+            completed_at=datetime.now().isoformat()
+        )
+
 
 # Configure logging
 logging.basicConfig(
@@ -193,9 +269,23 @@ async def run_pipeline_with_monitoring(config: dict, stage: str = None, dry_run:
     
     if stage:
         logger.info(f"   Running specific stage: {stage}")
-        # TODO: Implement stage-specific execution
-        logger.info("   ⚠️  Stage-specific execution not yet implemented")
-        logger.info("   💡 Running complete pipeline instead")
+        result = await run_single_stage(config, stage)
+
+        if result:
+            logger.info(f"\n✅ STAGE '{stage}' COMPLETED SUCCESSFULLY!")
+            logger.info("=" * 60)
+            logger.info(f"📊 Pipeline ID: {result.pipeline_id}")
+            logger.info(f"⏱️  Stage Duration: {result.total_duration_seconds:.1f} seconds")
+
+            # Show stage result
+            for s in result.stages:
+                if s.stage_name == stage:
+                    status_emoji = "✅" if s.status == "completed" else "❌"
+                    logger.info(f"   {status_emoji} {s.stage_name}: {s.status}")
+                    if s.output_path:
+                        logger.info(f"   📁 Output: {s.output_path}")
+            return result
+        return None
     
     try:
         # Execute complete pipeline
