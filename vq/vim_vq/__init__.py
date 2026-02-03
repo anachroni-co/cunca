@@ -5,7 +5,7 @@ Implementation of Vector Quantization optimized for vision applications
 with complete TPU support and CapibaraGPT-specific optimizations.
 """
 
-from .core.quantizer import (
+from .quantizer import (
     ViMVQConfig,
     VIM_VQ_BASE,
     VIM_VQ_SMALL,
