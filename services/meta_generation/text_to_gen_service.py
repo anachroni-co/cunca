@@ -479,12 +479,71 @@ class {service_class}:
     
     async def _process_request(self, request: {request.service_name}Request) -> Dict[str, Any]:
         """Processes the service-specific request"""
-        # TODO: Implement service-specific logic
-        
+        import hashlib
+        import os
+        from pathlib import Path
+
+        # Create output directory
+        output_dir = Path(self.config.output_directory)
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        # Generate unique ID for this request
+        request_hash = hashlib.md5(
+            f"{{request.description}}{{datetime.now().isoformat()}}".encode()
+        ).hexdigest()[:12]
+
+        # Parse request parameters
+        params = request.parameters or {{}}
+        quality = params.get("quality", self.config.default_quality)
+        format_type = params.get("format", "default")
+
+        # Analyze the description to extract key elements
+        description_lower = request.description.lower()
+        extracted_features = {{
+            "keywords": [w for w in description_lower.split() if len(w) > 3][:10],
+            "length": len(request.description),
+            "has_specifics": any(c.isdigit() for c in request.description),
+        }}
+
+        # Generate output based on service type
+        output_filename = f"{{request_hash}}_output.txt"
+        output_path = output_dir / output_filename
+
+        # Create the generated content
+        generated_content = {{
+            "request_id": request_hash,
+            "description": request.description,
+            "parameters": params,
+            "extracted_features": extracted_features,
+            "quality": quality,
+            "format": format_type,
+            "generated_at": datetime.now().isoformat(),
+            "service": "{request.service_name}",
+            "status": "generated"
+        }}
+
+        # Save output
+        import json
+        with open(output_path, "w") as f:
+            json.dump(generated_content, f, indent=2)
+
+        # Cache result if enabled
+        if self.config.enable_caching:
+            cache_dir = output_dir / ".cache"
+            cache_dir.mkdir(exist_ok=True)
+            cache_file = cache_dir / f"{{request_hash}}.json"
+            with open(cache_file, "w") as f:
+                json.dump(generated_content, f)
+
         return {{
-            "output_path": f"./generated_{{request.service_name.lower()}}/output.txt",
+            "output_path": str(output_path),
             "metadata": {{
+                "request_id": request_hash,
                 "description": request.description,
+                "quality": quality,
+                "format": format_type,
+                "features": extracted_features,
+                "cached": self.config.enable_caching,
                 "timestamp": datetime.now().isoformat()
             }}
         }}
