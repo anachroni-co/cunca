@@ -53,3 +53,9 @@ env/
 
 # Cython generated files
 training/cython_kernels/*.c
+
+# Generated files
+_version.py
+
+# Benchmark outputs
+benchmark_results/
