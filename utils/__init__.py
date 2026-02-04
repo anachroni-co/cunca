@@ -76,6 +76,28 @@ except ImportError:
     setup_logging = None
     get_logger = None
 
+# Memory Profiling
+try:
+    from .memory_profiler import (
+        MemoryProfiler,
+        get_profiler,
+        profile_memory,
+        memory_profile_block,
+        check_for_leaks,
+        print_memory_summary,
+        TrainingMemoryTracker
+    )
+    MEMORY_PROFILER_AVAILABLE = True
+except ImportError:
+    MEMORY_PROFILER_AVAILABLE = False
+    MemoryProfiler = None
+    get_profiler = None
+    profile_memory = None
+    memory_profile_block = None
+    check_for_leaks = None
+    print_memory_summary = None
+    TrainingMemoryTracker = None
+
 
 __all__ = [
     # Cache
@@ -97,6 +119,14 @@ __all__ = [
     # Logging
     "setup_logging",
     "get_logger",
+    # Memory Profiling
+    "MemoryProfiler",
+    "get_profiler",
+    "profile_memory",
+    "memory_profile_block",
+    "check_for_leaks",
+    "print_memory_summary",
+    "TrainingMemoryTracker",
     # Flags
     "CACHE_AVAILABLE",
     "CHECKPOINT_AVAILABLE",
@@ -105,4 +135,5 @@ __all__ = [
     "DATA_AVAILABLE",
     "VALIDATION_AVAILABLE",
     "LOGGING_AVAILABLE",
+    "MEMORY_PROFILER_AVAILABLE",
 ]
