@@ -108,7 +108,7 @@ response = await router.route(
 │  Least Loaded:                                                │
 │  ┌──────────────────────────────────────────────────────────┐ │
 │  │  Model A: 8/10 capacity → Skip                          │ │
-│  │  Model B: 3/10 capacity → SELECT ✓                      │ │
+│  │  Model B: 3/10 capacity → SELECT                       │ │
 │  │  Model C: 7/10 capacity → Skip                          │ │
 │  └──────────────────────────────────────────────────────────┘ │
 │                                                                │
@@ -116,7 +116,7 @@ response = await router.route(
 │  ┌──────────────────────────────────────────────────────────┐ │
 │  │  Request needs: [code, reasoning]                       │ │
 │  │  Model A: [text, code]         → Partial match          │ │
-│  │  Model B: [code, reasoning]    → Full match ✓           │ │
+│  │  Model B: [code, reasoning]    → Full match            │ │
 │  │  Model C: [text]               → No match               │ │
 │  └──────────────────────────────────────────────────────────┘ │
 │                                                                │

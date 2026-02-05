@@ -169,11 +169,11 @@ class FederatedConsensusNode:
         self.log_entries = []
         self.commit_index = 0
         
-        logger.info(f"🌐 Federated consensus node {node_id} initialized (role: {role.value})")
+        logger.info(f" Federated consensus node {node_id} initialized (role: {role.value})")
     
     async def start(self):
         """Start the federated consensus node."""
-        logger.info(f"🚀 Starting federated consensus node {self.node_id}")
+        logger.info(f" Starting federated consensus node {self.node_id}")
         
         try:
             # Start network services
@@ -193,10 +193,10 @@ class FederatedConsensusNode:
             asyncio.create_task(self._maintenance_loop())
             
             self.status = NodeStatus.ACTIVE
-            logger.info(f"✅ Node {self.node_id} is now active")
+            logger.info(f" Node {self.node_id} is now active")
             
         except Exception as e:
-            logger.error(f"❌ Failed to start node {self.node_id}: {e}")
+            logger.error(f" Failed to start node {self.node_id}: {e}")
             self.status = NodeStatus.FAILED
             raise
     
@@ -228,16 +228,16 @@ class FederatedConsensusNode:
         # Broadcast to network
         await self._broadcast_proposal(proposal)
         
-        logger.info(f"📤 Proposed consensus {proposal_id} for query {query_id}")
+        logger.info(f" Proposed consensus {proposal_id} for query {query_id}")
         return proposal_id
     
     async def participate_in_consensus(self, proposal: ConsensusProposal) -> Dict[str, Any]:
         """Participate in consensus for a received proposal."""
-        logger.info(f"🤝 Participating in consensus {proposal.proposal_id}")
+        logger.info(f" Participating in consensus {proposal.proposal_id}")
         
         # Validate proposal
         if not await self._validate_proposal(proposal):
-            logger.warning(f"❌ Invalid proposal {proposal.proposal_id}")
+            logger.warning(f" Invalid proposal {proposal.proposal_id}")
             return {'vote': 'reject', 'reason': 'invalid_proposal'}
         
         # Generate local consensus response
@@ -292,18 +292,18 @@ class FederatedConsensusNode:
             handle_websocket, "localhost", port
         )
         
-        logger.info(f"🌐 WebSocket server started on port {port}")
+        logger.info(f" WebSocket server started on port {port}")
     
     async def _start_mock_services(self):
         """Start mock services when network libraries are not available."""
-        logger.info("🎭 Starting mock network services")
+        logger.info(" Starting mock network services")
         # Mock implementation for testing without network dependencies
         await asyncio.sleep(0.1)
     
     async def _connect_to_coordinator(self):
         """Connect to the coordinator node."""
         if not NETWORK_AVAILABLE:
-            logger.info("🎭 Mock connection to coordinator")
+            logger.info(" Mock connection to coordinator")
             return
         
         try:
@@ -321,10 +321,10 @@ class FederatedConsensusNode:
             }
             
             await self.coordinator_connection.send(json.dumps(registration))
-            logger.info("📡 Connected to coordinator")
+            logger.info(" Connected to coordinator")
             
         except Exception as e:
-            logger.error(f"❌ Failed to connect to coordinator: {e}")
+            logger.error(f" Failed to connect to coordinator: {e}")
             raise
     
     async def _handle_websocket_connection(self, websocket, path):
@@ -334,7 +334,7 @@ class FederatedConsensusNode:
                 data = json.loads(message)
                 await self._process_network_message(data, websocket)
         except Exception as e:
-            logger.error(f"❌ WebSocket connection error: {e}")
+            logger.error(f" WebSocket connection error: {e}")
     
     async def _process_network_message(self, data: Dict[str, Any], websocket):
         """Process incoming network messages."""
@@ -366,7 +366,7 @@ class FederatedConsensusNode:
                 last_heartbeat=datetime.now()
             )
             self.peer_nodes[data['node_id']] = node_info
-            logger.info(f"📝 Registered peer node {data['node_id']}")
+            logger.info(f" Registered peer node {data['node_id']}")
     
     async def _broadcast_proposal(self, proposal: ConsensusProposal):
         """Broadcast proposal to all peer nodes."""
@@ -388,9 +388,9 @@ class FederatedConsensusNode:
             try:
                 await self.coordinator_connection.send(json.dumps(message))
             except Exception as e:
-                logger.error(f"❌ Failed to broadcast proposal: {e}")
+                logger.error(f" Failed to broadcast proposal: {e}")
         else:
-            logger.info(f"🎭 Mock broadcast of proposal {proposal.proposal_id}")
+            logger.info(f" Mock broadcast of proposal {proposal.proposal_id}")
     
     async def _validate_proposal(self, proposal: ConsensusProposal) -> bool:
         """Validates a consensus proposal."""
@@ -488,7 +488,7 @@ class FederatedConsensusNode:
                 await asyncio.sleep(self.config.heartbeat_interval)
                 
             except Exception as e:
-                logger.error(f"❌ Heartbeat error: {e}")
+                logger.error(f" Heartbeat error: {e}")
                 self.status = NodeStatus.DEGRADED
                 await asyncio.sleep(5)  # Retry after 5 seconds
     
@@ -505,7 +505,7 @@ class FederatedConsensusNode:
                 await asyncio.sleep(1)  # Process every second
                 
             except Exception as e:
-                logger.error(f"❌ Consensus loop error: {e}")
+                logger.error(f" Consensus loop error: {e}")
                 await asyncio.sleep(5)
     
     async def _maintenance_loop(self):
@@ -524,7 +524,7 @@ class FederatedConsensusNode:
                 await asyncio.sleep(60)  # Run every minute
                 
             except Exception as e:
-                logger.error(f"❌ Maintenance error: {e}")
+                logger.error(f" Maintenance error: {e}")
                 await asyncio.sleep(30)
     
     async def _update_peer_status(self):
@@ -536,11 +536,11 @@ class FederatedConsensusNode:
             
             if time_since_heartbeat > self.config.node_failure_timeout:
                 if node_info.status != NodeStatus.FAILED:
-                    logger.warning(f"⚠️ Node {node_id} marked as failed (no heartbeat)")
+                    logger.warning(f"️ Node {node_id} marked as failed (no heartbeat)")
                     node_info.status = NodeStatus.FAILED
             elif time_since_heartbeat > self.config.heartbeat_interval * 2:
                 if node_info.status == NodeStatus.ACTIVE:
-                    logger.warning(f"⚠️ Node {node_id} marked as degraded")
+                    logger.warning(f"️ Node {node_id} marked as degraded")
                     node_info.status = NodeStatus.DEGRADED
     
     async def _process_pending_consensus(self):
@@ -561,7 +561,7 @@ class FederatedConsensusNode:
         
         for proposal_id in expired_proposals:
             del self.active_proposals[proposal_id]
-            logger.info(f"🧹 Cleaned up expired proposal {proposal_id}")
+            logger.info(f" Cleaned up expired proposal {proposal_id}")
     
     def _update_performance_metrics(self):
         """Update node performance metrics."""
@@ -580,11 +580,11 @@ class FederatedConsensusNode:
         # Check memory usage, CPU, network connectivity, etc.
         # For now, just ensure we're not in failed state
         if self.status == NodeStatus.FAILED and self.config.auto_recovery:
-            logger.info("🔄 Attempting auto-recovery...")
+            logger.info(" Attempting auto-recovery...")
             try:
                 await self.start()
             except Exception as e:
-                logger.error(f"❌ Auto-recovery failed: {e}")
+                logger.error(f" Auto-recovery failed: {e}")
     
     async def _cleanup_old_data(self):
         """Clean up old consensus history and cached data."""
@@ -640,14 +640,14 @@ class FederatedConsensusCoordinator:
     
     async def start(self):
         """Start the federated consensus coordinator."""
-        logger.info("🎯 Starting federated consensus coordinator")
+        logger.info(" Starting federated consensus coordinator")
         await self.coordinator_node.start()
     
     async def coordinate_consensus(self, query_id: str, proposals: List[ConsensusProposal]) -> ConsensusResult:
         """Coordinate consensus across multiple nodes."""
         consensus_id = f"consensus_{query_id}_{int(time.time())}"
         
-        logger.info(f"🤝 Coordinating consensus {consensus_id} with {len(proposals)} proposals")
+        logger.info(f" Coordinating consensus {consensus_id} with {len(proposals)} proposals")
         
         # Collect responses from participating nodes
         responses = []
@@ -658,7 +658,7 @@ class FederatedConsensusCoordinator:
                         response = await self._request_consensus_participation(node_id, proposal)
                         responses.append(response)
                     except Exception as e:
-                        logger.warning(f"⚠️ Node {node_id} failed to participate: {e}")
+                        logger.warning(f"️ Node {node_id} failed to participate: {e}")
         
         # Calculate consensus result
         consensus_result = await self._calculate_final_consensus(
@@ -667,7 +667,7 @@ class FederatedConsensusCoordinator:
         
         self.consensus_results.append(consensus_result)
         
-        logger.info(f"✅ Consensus {consensus_id} completed with {consensus_result.agreement_level:.2%} agreement")
+        logger.info(f" Consensus {consensus_id} completed with {consensus_result.agreement_level:.2%} agreement")
         
         return consensus_result
     

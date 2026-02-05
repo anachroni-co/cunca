@@ -82,7 +82,7 @@ class CompletePipeline:
     
     async def execute_complete_pipeline(self) -> PipelineResult:
         """Execute the complete pipeline from data acquisition to training preparation."""
-        logger.info(f"🚀 Starting complete pipeline: {self.pipeline_id}")
+        logger.info(f" Starting complete pipeline: {self.pipeline_id}")
         self.start_time = time.time()
         
         try:
@@ -114,7 +114,7 @@ class CompletePipeline:
                 completed_at=datetime.now().isoformat()
             )
             
-            logger.info(f"🎉 Complete pipeline finished!")
+            logger.info(f" Complete pipeline finished!")
             logger.info(f"   Duration: {total_duration:.1f} seconds")
             logger.info(f"   Dataset ready: {result.ready_for_training}")
             logger.info(f"   Final dataset: {result.final_dataset_path}")
@@ -122,7 +122,7 @@ class CompletePipeline:
             return result
             
         except Exception as e:
-            logger.error(f"❌ Pipeline failed: {e}")
+            logger.error(f" Pipeline failed: {e}")
             # Mark current stage as failed
             current_stage = next((s for s in self.stages if s.status == "running"), None)
             if current_stage:
@@ -138,7 +138,7 @@ class CompletePipeline:
         stage.started_at = datetime.now().isoformat()
         stage_start_time = time.time()
         
-        logger.info("📥 Stage 1: Data Download")
+        logger.info(" Stage 1: Data Download")
         
         try:
             # Setup download pipeline
@@ -159,7 +159,7 @@ class CompletePipeline:
                 "success_rate": download_result.get("success_rate", 0)
             }
             
-            logger.info(f"✅ Download stage completed: {stage.metrics['total_downloaded_gb']:.1f}GB downloaded")
+            logger.info(f" Download stage completed: {stage.metrics['total_downloaded_gb']:.1f}GB downloaded")
             
         except Exception as e:
             stage.status = "failed"
@@ -175,7 +175,7 @@ class CompletePipeline:
         stage.started_at = datetime.now().isoformat()
         stage_start_time = time.time()
         
-        logger.info("🔄 Stage 2: Data Processing")
+        logger.info(" Stage 2: Data Processing")
         
         try:
             # Process downloaded data
@@ -194,7 +194,7 @@ class CompletePipeline:
                 "data_reduction_ratio": self._calculate_data_reduction_ratio(processing_result)
             }
             
-            logger.info(f"✅ Processing stage completed: {stage.metrics['records_kept']} records kept")
+            logger.info(f" Processing stage completed: {stage.metrics['records_kept']} records kept")
             
         except Exception as e:
             stage.status = "failed"
@@ -210,7 +210,7 @@ class CompletePipeline:
         stage.started_at = datetime.now().isoformat()
         stage_start_time = time.time()
         
-        logger.info("📊 Stage 3: Dataset Preparation")
+        logger.info(" Stage 3: Dataset Preparation")
         
         try:
             # Prepare training datasets
@@ -223,7 +223,7 @@ class CompletePipeline:
             stage.output_path = str(self.training_data_path)
             stage.metrics = preparation_result
             
-            logger.info(f"✅ Dataset preparation completed: {len(preparation_result.get('datasets', []))} datasets ready")
+            logger.info(f" Dataset preparation completed: {len(preparation_result.get('datasets', []))} datasets ready")
             
         except Exception as e:
             stage.status = "failed"
@@ -239,7 +239,7 @@ class CompletePipeline:
         stage.started_at = datetime.now().isoformat()
         stage_start_time = time.time()
         
-        logger.info("🎯 Stage 4: Training Integration")
+        logger.info(" Stage 4: Training Integration")
         
         try:
             # Integrate with training module
@@ -252,7 +252,7 @@ class CompletePipeline:
             stage.output_path = str(self.training_data_path)
             stage.metrics = integration_result
             
-            logger.info(f"✅ Training integration completed: Ready for model training")
+            logger.info(f" Training integration completed: Ready for model training")
             
         except Exception as e:
             stage.status = "failed"
@@ -263,7 +263,7 @@ class CompletePipeline:
     
     async def _prepare_training_datasets(self) -> Dict[str, Any]:
         """Prepare training-ready datasets from processed data."""
-        logger.info("📋 Preparing training datasets...")
+        logger.info(" Preparing training datasets...")
         
         # Find all processed data files
         processed_files = []
@@ -325,7 +325,7 @@ class CompletePipeline:
                 training_datasets.append(dataset_info)
                 total_training_records += len(combined_records)
                 
-                logger.info(f"   📄 {data_type}: {len(combined_records)} records")
+                logger.info(f"    {data_type}: {len(combined_records)} records")
         
         # Create unified training dataset
         unified_dataset_path = self.training_data_path / "unified_training.jsonl"
@@ -403,7 +403,7 @@ class CompletePipeline:
     
     async def _integrate_with_training(self) -> Dict[str, Any]:
         """Integrate prepared datasets with training module."""
-        logger.info("🔗 Integrating with training module...")
+        logger.info(" Integrating with training module...")
         
         # Create training configuration
         training_config = {
@@ -489,10 +489,10 @@ def main():
     with open(config_path, 'r', encoding='utf-8') as f:
         config = json.load(f)
     
-    logger.info("🚀 Starting CapibaraGPT-v2 Training")
-    logger.info(f"📊 Pipeline ID: {{config['dataset_info']['pipeline_id']}}")
-    logger.info(f"📄 Total records: {{config['dataset_info']['total_records']}}")
-    logger.info(f"🗂️  Data types: {{', '.join(config['dataset_info']['data_types'])}}")
+    logger.info(" Starting CapibaraGPT-v2 Training")
+    logger.info(f" Pipeline ID: {{config['dataset_info']['pipeline_id']}}")
+    logger.info(f" Total records: {{config['dataset_info']['total_records']}}")
+    logger.info(f"️  Data types: {{', '.join(config['dataset_info']['data_types'])}}")
     
     # Import training module
     try:
@@ -504,12 +504,12 @@ def main():
         # Start training
         result = trainer.run_training()
         
-        logger.info("✅ Training completed successfully!")
+        logger.info(" Training completed successfully!")
         return result
         
     except ImportError as e:
-        logger.warning(f"❌ Training module not available: {{e}}")
-        logger.info("💡 Alternative: Use the generated datasets with your preferred training framework")
+        logger.warning(f" Training module not available: {{e}}")
+        logger.info(" Alternative: Use the generated datasets with your preferred training framework")
         logger.info(f"   Train data: {{config['data_paths']['train']}}")
         logger.info(f"   Validation data: {{config['data_paths']['validation']}}")
         return None

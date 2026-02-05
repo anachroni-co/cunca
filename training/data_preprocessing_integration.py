@@ -352,7 +352,7 @@ class CapibaraPreprocessor:
         else:
             logger.warning("Preprocessing components not available - running in passthrough mode")
         
-        logger.info(f"🔄 CapibaraPreprocessor initialized with profile: {self.config.profile_name}")
+        logger.info(f" CapibaraPreprocessor initialized with profile: {self.config.profile_name}")
     
     def _initialize_pipeline(self):
         """Initialize the preprocessing pipeline."""
@@ -367,7 +367,7 @@ class CapibaraPreprocessor:
             }
             
             self.pipeline = DataPreprocessingPipeline(pipeline_config)
-            logger.info("✅ Preprocessing pipeline initialized")
+            logger.info(" Preprocessing pipeline initialized")
             
         except Exception as e:
             logger.error(f"Failed to initialize preprocessing pipeline: {e}")
@@ -385,7 +385,7 @@ class CapibaraPreprocessor:
         Returns:
             Preprocessed documents
         """
-        logger.info(f"🚀 Starting preprocessing of {len(docs)} documents")
+        logger.info(f" Starting preprocessing of {len(docs)} documents")
         
         # Record input metrics
         self.metrics.reset()
@@ -422,7 +422,7 @@ class CapibaraPreprocessor:
             if self.config.save_filtered_docs and self.config.output_path:
                 self._save_results(processed_docs)
             
-            logger.info(f"✅ Preprocessing completed: {len(processed_docs)} documents")
+            logger.info(f" Preprocessing completed: {len(processed_docs)} documents")
             self._log_metrics()
             
             return processed_docs
@@ -460,7 +460,7 @@ class CapibaraPreprocessor:
         """Log preprocessing metrics."""
         summary = self.metrics.get_summary()
         
-        logger.info("📊 Preprocessing Summary:")
+        logger.info(" Preprocessing Summary:")
         logger.info(f"  Input documents: {summary['input']['total_documents']:,}")
         logger.info(f"  Output documents: {summary['output']['total_documents']:,}")
         logger.info(f"  Documents removed: {summary['reduction_summary']['documents_removed']:,}")
@@ -507,7 +507,7 @@ def integrate_with_unified_training(training_system, preprocessor_config: Option
         def create_training_session_with_preprocessing(session_config):
             # Check if preprocessing is requested
             if session_config.get('use_preprocessing', True):
-                logger.info("🔄 Preprocessing enabled for training session")
+                logger.info(" Preprocessing enabled for training session")
                 
                 # Add preprocessor to session config
                 session_config['preprocessor'] = preprocessor
@@ -517,7 +517,7 @@ def integrate_with_unified_training(training_system, preprocessor_config: Option
         training_system.create_training_session = create_training_session_with_preprocessing
         training_system.preprocessor = preprocessor
         
-        logger.info("✅ Preprocessing integrated with UnifiedTrainingSystem")
+        logger.info(" Preprocessing integrated with UnifiedTrainingSystem")
         
     except Exception as e:
         logger.error(f"Failed to integrate preprocessing with training system: {e}")

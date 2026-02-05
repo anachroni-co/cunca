@@ -461,25 +461,25 @@ def main():
         generator = create_small_model_generator(args.api_key, args.output_dir)
         
         # Generate datasets
-        logger.info("🧬 Generating training data for small models...")
+        logger.info(" Generating training data for small models...")
         
         functional_file = generator.generate_functional_prediction_dataset(
             num_samples=args.samples,
             output_format=args.format
         )
         
-        logger.info(f"✅ Generated functional prediction dataset: {functional_file}")
+        logger.info(f" Generated functional prediction dataset: {functional_file}")
         
         variant_file = generator.generate_variant_effect_dataset(
             num_samples=args.samples // 2,
             output_format=args.format
         )
         
-        logger.info(f"✅ Generated variant effect dataset: {variant_file}")
-        logger.info("🎉 Training data generation completed!")
+        logger.info(f" Generated variant effect dataset: {variant_file}")
+        logger.info(" Training data generation completed!")
         
     except Exception as e:
-        logger.error(f"❌ Error generating training data: {e}")
+        logger.error(f" Error generating training data: {e}")
         return 1
     
     return 0

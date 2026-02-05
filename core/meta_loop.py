@@ -78,7 +78,7 @@ class MetaLoopState:
         if performance > self.best_performance:
             self.best_performance = performance
             self.best_configuration = hyperparams.copy()
-            logger.info(f"🎯 New best configuration found: {performance:.4f}")
+            logger.info(f" New best configuration found: {performance:.4f}")
     
     def get_recent_performance(self, window: int = 10) -> List[float]:
         """Gets recent performance."""
@@ -168,12 +168,12 @@ class ArchitectureAdaptor:
             if recent_trend < -0.01:  # Decreasing performance
                 changes['increase_model_capacity'] = True
                 changes['suggested_layer_increase'] = 1
-                logger.warning("📉 Performance declining, suggesting architecture expansion")
+                logger.warning(" Performance declining, suggesting architecture expansion")
 
             elif recent_trend > 0.01 and performance_trend[-1] > 0.95:  # Very high performance
                 changes['regularization_increase'] = True
                 changes['suggested_dropout_increase'] = 0.1
-                logger.info("📈 High performance, suggesting regularization increase")
+                logger.info(" High performance, suggesting regularization increase")
         
         return changes
 
@@ -193,10 +193,10 @@ class MetaLoop:
         self.hyperparameter_callback: Optional[Callable] = None
         self.architecture_callback: Optional[Callable] = None
         
-        logger.info("🔄 Meta-Loop System initialized")
-        logger.info(f"   📊 Evaluation frequency: {self.config.evaluation_frequency}")
-        logger.info(f"   🎯 Performance threshold: {self.config.performance_threshold}")
-        logger.info(f"   🔧 Meta-learning rate: {self.config.meta_learning_rate}")
+        logger.info(" Meta-Loop System initialized")
+        logger.info(f"    Evaluation frequency: {self.config.evaluation_frequency}")
+        logger.info(f"    Performance threshold: {self.config.performance_threshold}")
+        logger.info(f"    Meta-learning rate: {self.config.meta_learning_rate}")
     
     def step(self, current_performance: float, current_hyperparams: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -242,9 +242,9 @@ class MetaLoop:
             if arch_changes:
                 suggestions['architecture'] = arch_changes
             
-            logger.info(f"🔄 Meta-Loop evaluation at step {self.state.current_step}")
-            logger.info(f"   📊 Recent performance: {np.mean(recent_performance):.4f}")
-            logger.info(f"   🎯 Best performance: {self.state.best_performance:.4f}")
+            logger.info(f" Meta-Loop evaluation at step {self.state.current_step}")
+            logger.info(f"    Recent performance: {np.mean(recent_performance):.4f}")
+            logger.info(f"    Best performance: {self.state.best_performance:.4f}")
         
         return suggestions
     
@@ -258,10 +258,10 @@ class MetaLoop:
 
             if performance_improvement < 0.01:  # Insufficient improvement
                 suggestions['meta_strategy'] = 'increase_exploration'
-                logger.warning("⚠️ Insufficient improvement, increasing exploration")
+                logger.warning("️ Insufficient improvement, increasing exploration")
             elif performance_improvement > 0.05:  # Significant improvement
                 suggestions['meta_strategy'] = 'continue_exploitation'
-                logger.info("✅ Good improvement, continuing current strategy")
+                logger.info(" Good improvement, continuing current strategy")
         
         return suggestions
     
@@ -312,7 +312,7 @@ def get_global_meta_loop() -> MetaLoop:
 
 def main():
     """Main function for testing."""
-    logger.info("🔄 Meta-Loop System - Testing Mode")
+    logger.info(" Meta-Loop System - Testing Mode")
 
     # Create meta-loop
     meta_loop = create_meta_loop()

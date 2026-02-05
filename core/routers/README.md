@@ -2,11 +2,11 @@
 
 Advanced routing and load balancing system with fallback mechanisms, TPU v4-32 optimization, and adaptive routing strategies.
 
-## 📋 Description
+##  Description
 
 This module manages intelligent request routing, load balancing, and automatic fallback mechanisms with specific optimizations for TPU and real-time performance monitoring.
 
-## 🏗️ Architecture
+## ️ Architecture
 
 ```
 routers/
@@ -17,7 +17,7 @@ routers/
 └── tts_router.py       # TTS-specific router
 ```
 
-## 🚀 TPU-Optimized Base Router
+##  TPU-Optimized Base Router
 
 ```python
 from capibara.core.routers import BaseRouter
@@ -64,7 +64,7 @@ print(f"Expected latency: {routing_result.estimated_latency_ms}ms")
 print(f"Load balancing score: {routing_result.load_score:.3f}")
 ```
 
-## 🎯 Adaptive Router
+##  Adaptive Router
 
 ```python
 from capibara.core.routers import AdaptiveRouter
@@ -123,7 +123,7 @@ for request in request_stream:
     )
 ```
 
-## ⚡ Best Time Optimization (BTO)
+##  Best Time Optimization (BTO)
 
 ```python
 from capibara.core.routers import BTORouter
@@ -170,7 +170,7 @@ for scheduled_request in optimal_schedule:
     print(f"  Expected completion: {scheduled_request.completion_time}")
 ```
 
-## 🔧 Enhanced Router
+##  Enhanced Router
 
 ```python
 from capibara.core.routers import EnhancedRouter
@@ -223,14 +223,14 @@ advanced_result = enhanced_router.route_with_intelligence(
 )
 
 if advanced_result.circuit_breaker_open:
-    print("⚠️ Circuit breaker activated for endpoint")
+    print("️ Circuit breaker activated for endpoint")
 elif advanced_result.rate_limited:
-    print("🕒 Request rate limited, retry after:", advanced_result.retry_after)
+    print(" Request rate limited, retry after:", advanced_result.retry_after)
 elif advanced_result.cached_response:
-    print("⚡ Response served from cache")
+    print(" Response served from cache")
 ```
 
-## 🎤 Specialized TTS Router
+##  Specialized TTS Router
 
 ```python
 from capibara.core.routers import TTSRouter
@@ -290,7 +290,7 @@ print(f"Expected generation time: {tts_result.generation_time_ms}ms")
 print(f"Quality score: {tts_result.quality_score:.3f}")
 ```
 
-## 📊 Monitoring and Metrics
+##  Monitoring and Metrics
 
 ```python
 # Router monitoring system
@@ -339,13 +339,13 @@ performance_dashboard = {
 # Automatic alerts
 active_alerts = monitor.check_alerts()
 for alert in active_alerts:
-    print(f"🚨 {alert.severity}: {alert.message}")
+    print(f" {alert.severity}: {alert.message}")
     if alert.auto_mitigation_available:
-        print(f"🔧 Applying mitigation: {alert.mitigation_action}")
+        print(f" Applying mitigation: {alert.mitigation_action}")
         monitor.apply_auto_mitigation(alert)
 ```
 
-## 🔄 Advanced Load Balancing
+##  Advanced Load Balancing
 
 ```python
 # Multi-objective load balancing configuration
@@ -382,14 +382,14 @@ balancing_analysis = monitor.analyze_load_balancing_effectiveness(
     include_predictions=True
 )
 
-print("📈 Load Balancing Analysis:")
+print(" Load Balancing Analysis:")
 print(f"Distribution efficiency: {balancing_analysis['distribution_efficiency']:.3f}")
 print(f"Resource utilization: {balancing_analysis['resource_utilization']:.3f}")
 print(f"Response time variance: {balancing_analysis['response_time_variance']:.3f}")
 print(f"Predicted improvements: {balancing_analysis['improvement_potential']:.3f}")
 ```
 
-## 🤝 Modular Integration
+##  Modular Integration
 
 ```python
 # Integration with other CapibaraGPT modules
@@ -436,7 +436,7 @@ route = router.route(inputs, context={"domain": "math"})
 print(route.selected_experts)
 ```
 
-## 📚 References
+##  References
 
 - [Load Balancing Algorithms](https://en.wikipedia.org/wiki/Load_balancing_(computing))
 - [Circuit Breaker Pattern](https://martinfowler.com/bliki/CircuitBreaker.html)

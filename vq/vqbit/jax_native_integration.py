@@ -702,7 +702,7 @@ def integrate_with_tpu_backend():
         # Replace method
         TpuV4AdaptiveOps.vqbit_quantize = enhanced_vqbit_quantize
         
-        logger.info("✅ VQbit native integration with TPU backend successful")
+        logger.info(" VQbit native integration with TPU backend successful")
         return True
         
     except Exception as e:
@@ -714,11 +714,11 @@ try:
     # Only try integration if we have the necessary components
     if CAPIBARA_JAX_AVAILABLE and VQBIT_IMPLEMENTATIONS_AVAILABLE:
         if integrate_with_tpu_backend():
-            logger.info("🚀 VQbit native integration activated")
+            logger.info(" VQbit native integration activated")
         else:
-            logger.info("⚡ VQbit running in standalone mode")
+            logger.info(" VQbit running in standalone mode")
     else:
-        logger.info("🔧 VQbit native integration available but not auto-activated")
+        logger.info(" VQbit native integration available but not auto-activated")
 except Exception as e:
     logger.debug(f"Auto-integration skipped: {e}")
 

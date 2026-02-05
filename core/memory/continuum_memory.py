@@ -132,7 +132,7 @@ class MemoryBank:
         self.total_reads = 0
 
         logger.info(
-            f"📝 Memory Bank '{config.name}' initialized: "
+            f" Memory Bank '{config.name}' initialized: "
             f"capacity={config.capacity}, freq={config.update_freq}"
         )
 
@@ -456,7 +456,7 @@ class ContinuumMemorySystem:
         self.last_consolidation_step = 0
         self.consolidation_history = []
 
-        logger.info("🧠 Continuum Memory System initialized")
+        logger.info(" Continuum Memory System initialized")
         logger.info(f"   Ultra-Short: {self.config.ultra_short_capacity} slots, freq={self.config.ultra_short_freq}")
         logger.info(f"   Short: {self.config.short_capacity} slots, freq={self.config.short_freq}")
         logger.info(f"   Medium: {self.config.medium_capacity} slots, freq={self.config.medium_freq}")
@@ -546,7 +546,7 @@ class ContinuumMemorySystem:
         This implements the key Nested Learning concept of memory consolidation
         across time scales, preventing catastrophic forgetting.
         """
-        logger.info(f"🔄 Consolidating memory at step {self.current_step}")
+        logger.info(f" Consolidating memory at step {self.current_step}")
 
         consolidation_report = {
             'step': self.current_step,
@@ -616,7 +616,7 @@ class ContinuumMemorySystem:
         self.last_consolidation_step = 0
         self.consolidation_history.clear()
 
-        logger.info("🔄 Continuum Memory System reset")
+        logger.info(" Continuum Memory System reset")
 
 
 # Factory function
@@ -640,7 +640,7 @@ def get_global_continuum_memory() -> ContinuumMemorySystem:
 def main():
     """Test the continuum memory system."""
     logging.basicConfig(level=logging.INFO)
-    logger.info("🧠 Continuum Memory System - Testing Mode")
+    logger.info(" Continuum Memory System - Testing Mode")
 
     # Create system
     config = ContinuumMemoryConfig(
@@ -675,7 +675,7 @@ def main():
 
     # Final statistics
     stats = memory_system.get_statistics()
-    logger.info("\n📊 Final Statistics:")
+    logger.info("\n Final Statistics:")
     logger.info(f"  Total memories: {stats['total_memories']}/{stats['total_capacity']}")
     logger.info(f"  Global utilization: {stats['global_utilization']:.1%}")
     logger.info(f"  Consolidations: {stats['consolidations']}")

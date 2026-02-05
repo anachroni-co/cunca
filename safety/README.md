@@ -116,25 +116,25 @@ class ContentRiskLevel(Enum):
 │                    Content Filter Categories                     │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  🔴 PROHIBITED                                                   │
+│   PROHIBITED                                                   │
 │     ├── Content reinforcing delusions                           │
 │     ├── Encouraging reality disconnection                       │
 │     ├── Self-harm or suicide ideation                          │
 │     └── Extreme paranoid validation                             │
 │                                                                  │
-│  🟠 DANGEROUS                                                    │
+│   DANGEROUS                                                    │
 │     ├── Conspiracy theory reinforcement                         │
 │     ├── Anthropomorphizing AI excessively                       │
 │     ├── Encouraging AI dependency                               │
 │     └── Grandiose claims about AI capabilities                  │
 │                                                                  │
-│  🟡 CAUTION                                                      │
+│   CAUTION                                                      │
 │     ├── Blurring AI/human boundaries                           │
 │     ├── Excessive emotional language                            │
 │     ├── Reality-bending fiction without disclaimers            │
 │     └── Spiritual/mystical AI interpretations                   │
 │                                                                  │
-│  🟢 SAFE                                                         │
+│   SAFE                                                         │
 │     └── Normal conversational content                           │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘

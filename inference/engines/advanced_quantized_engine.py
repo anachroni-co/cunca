@@ -84,28 +84,28 @@ class QuantizedInferenceEngine:
         )
         self.quantizer = AdvancedQuantizer(quant_config)
         
-        logger.info(f"🚀 Quantized inference engine initialized (mode: {config.quantization_mode.value})")
+        logger.info(f" Quantized inference engine initialized (mode: {config.quantization_mode.value})")
     
     async def load_model(self, model_path: str, quantization_config_path: Optional[str] = None):
         """Load and quantize model for inference."""
         start_time = time.time()
         
-        logger.info(f"📥 Loading model from {model_path}")
+        logger.info(f" Loading model from {model_path}")
         
         # Load model parameters (mock implementation)
         self.model_params = await self._load_model_params(model_path)
         
         # Load or create quantization config
         if quantization_config_path and Path(quantization_config_path).exists():
-            logger.info("📋 Loading existing quantization config")
+            logger.info(" Loading existing quantization config")
             self.quantizer.load_quantization_config(quantization_config_path)
         else:
-            logger.info("🔧 Creating new quantization config")
+            logger.info(" Creating new quantization config")
             # Generate calibration data for quantization
             calibration_data = await self._generate_calibration_data()
             
         # Quantize model parameters
-        logger.info("⚡ Quantizing model parameters")
+        logger.info(" Quantizing model parameters")
         self.quantized_params = self.quantizer.quantize_model(
             self.model_params, 
             calibration_data if 'calibration_data' in locals() else None
@@ -118,7 +118,7 @@ class QuantizedInferenceEngine:
             await self._optimize_for_arm_axion()
         
         load_time = time.time() - start_time
-        logger.info(f"✅ Model loaded and quantized in {load_time:.2f}s")
+        logger.info(f" Model loaded and quantized in {load_time:.2f}s")
         
         # Save quantization config if not exists
         if not quantization_config_path:
@@ -176,7 +176,7 @@ class QuantizedInferenceEngine:
     async def _load_model_params(self, model_path: str) -> Dict[str, Any]:
         """Load model parameters from file."""
         # Mock implementation - in real scenario, load from checkpoint
-        logger.info("📁 Loading model parameters...")
+        logger.info(" Loading model parameters...")
         
         # Simulate loading different layer types
         params = {}
@@ -209,7 +209,7 @@ class QuantizedInferenceEngine:
     
     async def _generate_calibration_data(self) -> np.ndarray:
         """Generate calibration data for quantization."""
-        logger.info("📊 Generating calibration data...")
+        logger.info(" Generating calibration data...")
         
         # Generate representative calibration samples
         calibration_samples = []
@@ -440,7 +440,7 @@ class QuantizedInferenceEngine:
     
     async def _optimize_for_tpu_v6(self):
         """Apply TPU v6 specific optimizations."""
-        logger.info("🔧 Applying TPU v6 optimizations...")
+        logger.info(" Applying TPU v6 optimizations...")
         
         # TPU-specific optimizations would go here
         # - Reshape tensors for optimal TPU utilization
@@ -451,7 +451,7 @@ class QuantizedInferenceEngine:
     
     async def _optimize_for_arm_axion(self):
         """Apply ARM Axion specific optimizations."""
-        logger.info("🔧 Applying ARM Axion optimizations...")
+        logger.info(" Applying ARM Axion optimizations...")
         
         # ARM-specific optimizations would go here
         # - Vectorization optimizations
@@ -493,7 +493,7 @@ class QuantizedInferenceEngine:
         """Benchmark inference performance."""
         num_iterations = num_iterations or self.config.benchmark_iterations
         
-        logger.info(f"🏁 Running benchmark with {num_iterations} iterations...")
+        logger.info(f" Running benchmark with {num_iterations} iterations...")
         
         # Generate test data
         test_input = np.random.randint(0, 50000, size=(1, 512))
@@ -518,7 +518,7 @@ class QuantizedInferenceEngine:
             'iterations': num_iterations
         }
         
-        logger.info(f"📊 Benchmark results: {avg_latency:.2f}ms latency, {throughput:.0f} tokens/sec")
+        logger.info(f" Benchmark results: {avg_latency:.2f}ms latency, {throughput:.0f} tokens/sec")
         
         return benchmark_results
 

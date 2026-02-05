@@ -120,7 +120,7 @@ class AdvancedQuantizer:
         """Quantize model with advanced INT8/INT4 techniques."""
         start_time = time.time()
         
-        logger.info(f"🔧 Starting advanced quantization (mode: {self.config.mode.value})")
+        logger.info(f" Starting advanced quantization (mode: {self.config.mode.value})")
         
         # Step 1: Analyze model sensitivity
         if calibration_data is not None:
@@ -164,14 +164,14 @@ class AdvancedQuantizer:
         self.performance_stats['memory_saved'] = 1.0 - (quantized_size / original_size)
         self.performance_stats['quantization_time'] = time.time() - start_time
         
-        logger.info(f"✅ Quantization complete - Memory saved: {self.performance_stats['memory_saved']:.2%}")
+        logger.info(f" Quantization complete - Memory saved: {self.performance_stats['memory_saved']:.2%}")
         
         return quantized_params
     
     def analyze_layer_sensitivity(self, model_params: Dict[str, Any], 
                                 calibration_data: np.ndarray) -> Dict[str, float]:
         """Analyze sensitivity of each layer to quantization."""
-        logger.info("🔍 Analyzing layer sensitivity...")
+        logger.info(" Analyzing layer sensitivity...")
         
         sensitivities = {}
         
@@ -547,7 +547,7 @@ class AdvancedQuantizer:
         with open(filepath, 'w') as f:
             json.dump(config_data, f, indent=2, default=str)
         
-        logger.info(f"✅ Quantization config saved to {filepath}")
+        logger.info(f" Quantization config saved to {filepath}")
     
     def load_quantization_config(self, filepath: str):
         """Load quantization configuration and parameters."""
@@ -558,7 +558,7 @@ class AdvancedQuantizer:
         self.layer_sensitivities = config_data.get('layer_sensitivities', {})
         self.performance_stats = config_data.get('performance_stats', {})
         
-        logger.info(f"✅ Quantization config loaded from {filepath}")
+        logger.info(f" Quantization config loaded from {filepath}")
 
 
 def create_advanced_quantizer(mode: QuantizationMode = QuantizationMode.MIXED_PRECISION,

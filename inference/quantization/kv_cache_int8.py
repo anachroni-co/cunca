@@ -351,7 +351,7 @@ class KVCacheINT8:
             'compression_ratio': 0.0
         }
         
-        logger.info(f"💾 KVCacheINT8 initialized for {self.config.target_hardware}")
+        logger.info(f" KVCacheINT8 initialized for {self.config.target_hardware}")
     
     def register_layer(self, layer_id: int, num_heads: int, head_dim: int):
         """Register a layer configuration for cache management."""

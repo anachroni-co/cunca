@@ -2,11 +2,11 @@
 
 Control and training system for Mixture of Experts (MoE) with expert management API and distributed training orchestration.
 
-## 📋 Description
+##  Description
 
 This module manages the specialized expert system, providing control APIs, distributed training, and dynamic expert management with automatic specialization.
 
-## 🏗️ Architecture
+## ️ Architecture
 
 ```
 experts/
@@ -15,7 +15,7 @@ experts/
 └── moe_training.py      # MoE training system
 ```
 
-## 🎯 MoE Control API
+##  MoE Control API
 
 ```python
 from capibara.core.experts import MoEControlAPI
@@ -57,7 +57,7 @@ control_api.optimize_expert_allocation(
 )
 ```
 
-## 🚀 MoE Training System
+##  MoE Training System
 
 ```python
 from capibara.core.experts import MoETraining
@@ -106,7 +106,7 @@ training_results = training_system.train_experts(
     monitor_specialization=True
 )
 
-print("📊 Training Results:")
+print(" Training Results:")
 for expert_name, results in training_results.items():
     print(f"\n{expert_name}:")
     print(f"  Final Loss: {results['final_loss']:.4f}")
@@ -114,7 +114,7 @@ for expert_name, results in training_results.items():
     print(f"  Validation Accuracy: {results['validation_accuracy']:.3f}")
 ```
 
-## 🔧 Dynamic Expert Management
+##  Dynamic Expert Management
 
 ```python
 # Dynamic management system
@@ -163,10 +163,10 @@ for expert_id, analysis in performance_analysis.items():
     print(f"  Efficiency Score: {analysis['efficiency']:.3f}")
 
     if analysis['needs_attention']:
-        print(f"  ⚠️  Recommended Action: {analysis['recommended_action']}")
+        print(f"  ️  Recommended Action: {analysis['recommended_action']}")
 ```
 
-## 📊 Metrics and Evaluation
+##  Metrics and Evaluation
 
 ```python
 # Specialized metrics system
@@ -209,7 +209,7 @@ benchmark_results = metrics_collector.cross_expert_benchmark(
     measure_specialization_overlap=True
 )
 
-print("🏆 Expert Benchmarking Results:")
+print(" Expert Benchmarking Results:")
 for category, results in benchmark_results.items():
     print(f"\n{category.upper()}:")
     expert_rankings = sorted(results.items(), key=lambda x: x[1], reverse=True)
@@ -217,7 +217,7 @@ for category, results in benchmark_results.items():
         print(f"  {rank}. {expert_name}: {score:.3f}")
 ```
 
-## 🔄 Continuous Training
+##  Continuous Training
 
 ```python
 # Continuous training system
@@ -263,14 +263,14 @@ for expert_type, pipeline_config in data_pipelines.items():
 training_monitor = continuous_training.create_monitor()
 training_stats = training_monitor.get_continuous_training_stats()
 
-print("📈 Continuous Training Status:")
+print(" Continuous Training Status:")
 print(f"Active pipelines: {training_stats['active_pipelines']}")
 print(f"Data processed (24h): {training_stats['data_processed_24h']} samples")
 print(f"Average improvement rate: {training_stats['avg_improvement_rate']:.3%}")
 print(f"Expert specialization scores: {training_stats['specialization_scores']}")
 ```
 
-## 🧠 Transfer Learning and Knowledge Sharing
+##  Transfer Learning and Knowledge Sharing
 
 ```python
 # Knowledge transfer system between experts
@@ -309,7 +309,7 @@ transfer_results = knowledge_transfer.execute_transfer(
     preserve_specialization=True
 )
 
-print("🔄 Knowledge Transfer Results:")
+print(" Knowledge Transfer Results:")
 for transfer in transfer_results:
     print(f"Transfer: {transfer['source']} → {transfer['target']}")
     print(f"  Knowledge preserved: {transfer['knowledge_preservation']:.3f}")
@@ -317,7 +317,7 @@ for transfer in transfer_results:
     print(f"  Specialization retention: {transfer['specialization_retention']:.3f}")
 ```
 
-## 🤝 Integration and Coordination
+##  Integration and Coordination
 
 ```python
 # Integration with other system modules
@@ -340,7 +340,7 @@ system_optimization = expert_coordinator.optimize_system_performance(
     optimization_horizon="1h"
 )
 
-print("🎯 System Optimization Results:")
+print(" System Optimization Results:")
 print(f"Expected throughput improvement: {system_optimization['throughput_gain']:.1%}")
 print(f"Quality preservation: {system_optimization['quality_preservation']:.3f}")
 print(f"Resource efficiency gain: {system_optimization['efficiency_gain']:.1%}")
@@ -364,7 +364,7 @@ status = control_api.get_expert_status()
 print(status["active_count"])
 ```
 
-## 📚 References
+##  References
 
 - [Mixture of Experts](https://arxiv.org/abs/1701.06538)
 - [Switch Transformer](https://arxiv.org/abs/2101.03961)

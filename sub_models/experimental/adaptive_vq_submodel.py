@@ -1,6 +1,6 @@
 """"AdaptiveSubmodel v3.0 – CapibaraGPT
 =====================================
-✅ Optimizado for tpu v4-32 with cache inteligente:
+ Optimizado for tpu v4-32 with cache inteligente:
    • VQbit cache-aware integration
    • Adaptive encoding with sharding optimizado
    • Pipeline asíncrono for operaciones cuánticas

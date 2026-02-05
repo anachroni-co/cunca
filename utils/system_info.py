@@ -27,7 +27,7 @@ class SystemMonitor:
         self.cpu_count = psutil.cpu_count()
         self.memory_total = psutil.virtual_memory().total
 
-        logger.info(f"✅ System monitor initialized")
+        logger.info(f" System monitor initialized")
         logger.info(f"System: {self.system}")
         logger.info(f"Python: {self.python_version}")
         logger.info(f"CPUs: {self.cpu_count}")
@@ -70,7 +70,7 @@ class SystemMonitor:
                 }
             }
         except Exception as e:
-            logger.warning(f"⚠️ Error obtaining information: {e}")
+            logger.warning(f"️ Error obtaining information: {e}")
             return {}
 
     def get_process_info(self, pid: Optional[int] = None) -> Dict[str, Any]:
@@ -98,7 +98,7 @@ class SystemMonitor:
                     "io_counters": process.io_counters()._asdict() if process.io_counters() else None
                 }
         except Exception as e:
-            logger.warning(f"⚠️ Error obtaining process information: {e}")
+            logger.warning(f"️ Error obtaining process information: {e}")
             return {}
 
 def get_system_info() -> Dict[str, Any]:
@@ -126,7 +126,7 @@ def check_tpu_availability() -> bool:
     except ImportError:
         return False
     except Exception as e:
-        logger.warning(f"⚠️ Error verifying TPU: {e}")
+        logger.warning(f"️ Error verifying TPU: {e}")
         return False
 
 # Test code moved to capibara/tests/utils/test_utils_comprehensive.py

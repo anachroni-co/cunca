@@ -569,7 +569,7 @@ class CapibaraVQIntegration:
 
 def demo_intelligent_integration():
     """Demonstrate the intelligent VQ integration system."""
-    logger.info("🧠 Intelligent VQ Integration Demo")
+    logger.info(" Intelligent VQ Integration Demo")
     logger.info("=" * 50)
     
     # 1. Auto-selection for different use cases
@@ -584,7 +584,7 @@ def demo_intelligent_integration():
     ]
     
     for use_case, description in use_cases:
-        logger.info(f"\n📋 {use_case.upper()}: {description}")
+        logger.info(f"\n {use_case.upper()}: {description}")
         
         try:
             vq, info = create_optimal_vq(
@@ -593,12 +593,12 @@ def demo_intelligent_integration():
                 embedding_dim=256
             )
             
-            logger.info(f"   ✅ Selected: {info['selected_system']}")
-            logger.info(f"   📝 Description: {info['description']}")
-            logger.info(f"   🎯 Candidates: {', '.join(info['candidates'])}")
+            logger.info(f"    Selected: {info['selected_system']}")
+            logger.info(f"    Description: {info['description']}")
+            logger.info(f"    Candidates: {', '.join(info['candidates'])}")
             
         except Exception as e:
-            logger.error(f"   ❌ Error: {e}")
+            logger.error(f"    Error: {e}")
     
     # 2. Performance requirements
     logger.info(f"\n2️⃣ Performance-constrained selection:")
@@ -613,13 +613,13 @@ def demo_intelligent_integration():
         }
     )
     
-    logger.info(f"   ✅ Low-latency system: {info['selected_system']}")
+    logger.info(f"    Low-latency system: {info['selected_system']}")
     
     # 3. Usage statistics
     logger.info(f"\n3️⃣ Usage statistics:")
     stats = get_vq_usage_stats()
-    logger.info(f"   📊 Total VQ creations: {stats['total_creations']}")
-    logger.info(f"   📈 System usage:")
+    logger.info(f"    Total VQ creations: {stats['total_creations']}")
+    logger.info(f"    System usage:")
     for system, percentage in stats['system_percentages'].items():
         logger.info(f"      {system}: {percentage:.1f}%")
     
@@ -629,7 +629,7 @@ def demo_intelligent_integration():
         rec = get_vq_recommendations(use_case)
         logger.info(f"   {use_case}: {rec['recommended_system']}")
     
-    logger.info(f"\n✅ Intelligent VQ Integration Demo completed!")
+    logger.info(f"\n Intelligent VQ Integration Demo completed!")
 
 if __name__ == "__main__":
     demo_intelligent_integration()

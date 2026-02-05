@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-🎭 Hierarchical Training Strategy - CapibaraGPT-v2
+ Hierarchical Training Strategy - CapibaraGPT-v2
 implementation completa de la estrategia de entrenamiento jerárquica.
 
 Pipeline de Modelos:
@@ -112,7 +112,7 @@ class HierarchicalTrainingPipeline:
             "pipeline_stage": "initialization"
         }
         
-        logger.info("🎭 Hierarchical Training Pipeline initialized")
+        logger.info(" Hierarchical Training Pipeline initialized")
         
     def _initialize_pipeline_config(self) -> Dict[str, ModelConfig]:
         """Inicializa setup del pipeline de modelos"""
@@ -304,20 +304,20 @@ class HierarchicalTrainingPipeline:
                 validation_results["balanced_models"].append({
                     "model": model_name,
                     "ratio": config.target_ratio_tokens_params,
-                    "status": "✅ OPTIMAL"
+                    "status": " OPTIMAL"
                 })
             elif config.target_ratio_tokens_params < 25:
                 validation_results["underbalanced_models"].append({
                     "model": model_name,
                     "ratio": config.target_ratio_tokens_params,
-                    "status": "⚠️ UNDERBALANCED",
+                    "status": "️ UNDERBALANCED",
                     "recommendation": f"Increase data to {config.parameters * 25 // 1e9}GB"
                 })
             else:
                 validation_results["overbalanced_models"].append({
                     "model": model_name,
                     "ratio": config.target_ratio_tokens_params,
-                    "status": "📈 OVERBALANCED",
+                    "status": " OVERBALANCED",
                     "note": "May be inefficient but not harmful"
                 })
         
@@ -384,11 +384,11 @@ def validate_training_strategy() -> Dict[str, Any]:
         "balance_validation": pipeline.validate_pipeline_balance(),
         "cost_estimation": pipeline.estimate_training_costs(),
         "recommendations": [
-            "✅ Pipeline bien estructurado con transfer learning completo",
-            "✅ Equilibrio datos/parámetros optimizado",
-            "✅ Especialización progresiva preservada", 
-            "✅ Destilación automática configurada",
-            "🎯 Ready for implementation"
+            " Pipeline bien estructurado con transfer learning completo",
+            " Equilibrio datos/parámetros optimizado",
+            " Especialización progresiva preservada", 
+            " Destilación automática configurada",
+            " Ready for implementation"
         ]
     }
 

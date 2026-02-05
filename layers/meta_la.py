@@ -154,7 +154,7 @@ def main():
     logger.info("Module meta_la.py starting")
     # Test MetaLA configuration with updated parameter names
     config = MetaLAConfig(hidden_dim=768, num_heads=12)
-    logger.info(f"✅ MetaLA config created: {config}")
+    logger.info(f" MetaLA config created: {config}")
     return True
 
 if __name__ == "__main__":

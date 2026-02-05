@@ -17,7 +17,7 @@ def get_project_root():
 __version__ = "1.0.0"
 __author__ = "CapibaraGPT Team"
 
-# 🌟 SSM HYBRID LAYERS - Ultra-advanced or(n) architectures
+#  SSM HYBRID LAYERS - Ultra-advanced or(n) architectures
 try:
     from .ssm_hybrid_layers import (
         UltraSSMLayer, MambaLayer, S4Layer, HybridSSMLayer,
@@ -95,7 +95,7 @@ except ImportError:
     SMBLayer = None
     ADDITIONAL_LAYERS_AVAILABLE = False
 
-# 🚀 ULTRA LAYER INTEGRATION - Complete ecosystem orchestration
+#  ULTRA LAYER INTEGRATION - Complete ecosystem orchestration
 try:
     from .ultra_layer_integration import (
         UltraLayerOrchestrator, UltraLayerIntegrationConfig,

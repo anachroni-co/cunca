@@ -50,7 +50,7 @@ def main():
             logger.info("\n" + "=" * 60)
             logger.info("Performance test completed successfully!")
         except Exception as e:
-            logger.error(f"❌ Performance tests failed: {e}")
+            logger.error(f" Performance tests failed: {e}")
             success = False
         return
     
@@ -70,13 +70,13 @@ def main():
             success = False
     
     if success:
-        logger.info("\n🎉 JAX TPU v4-32 backend build completed successfully!")
+        logger.info("\n JAX TPU v4-32 backend build completed successfully!")
         logger.info("\nTo use the TPU v4-32 backend:")
         logger.info("  import jax")
         logger.info("  # TPU v4 build completed successfully")
         logger.info("  # Your JAX code will automatically use tpu v4-32 optimizations")
     else:
-        logger.error("\n❌ Build failed. Check the error messages above.")
+        logger.error("\n Build failed. Check the error messages above.")
         sys.exit(1)
 
 if __name__ == "__main__":

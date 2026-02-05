@@ -1,13 +1,13 @@
 """
-🚀 ULTRA UTILS ORCHESTRATOR
+ ULTRA UTILS ORCHESTRATOR
 ============================
 
 El sistema de utilidades more advanced del mundo with:
-- 🧠 Inteligencia Artificial integrada
-- ⚡ Performance ultra-optimizado  
-- 🔄 Auto-healing and self-optimization
-- 📊 Analytics predictivo
-- 🤖 Smart routing automático
+-  Inteligencia Artificial integrada
+-  Performance ultra-optimizado  
+-  Auto-healing and self-optimization
+-  Analytics predictivo
+-  Smart routing automático
 
 Autor: CapibaraGPT Ultra Team
 Versión: 3.3.0 Ultra
@@ -41,7 +41,7 @@ try:
     from .monitoring import setup_monitoring
     from .system_info import get_system_info, check_tpu_availability
 except ImportError as e:
-    logger.warning(f"⚠️ Importación fallback en ultra_utils_orchestrator: {e}")
+    logger.warning(f"️ Importación fallback en ultra_utils_orchestrator: {e}")
 
 
 @dataclass
@@ -271,7 +271,7 @@ class SmartUtilsContract:
 
 class UltraUtilsOrchestrator:
     """
-    🚀 CEREBRO CENTRAL del ecosistema de utilidades.
+     CEREBRO CENTRAL del ecosistema de utilidades.
     
     Sistema ultra-advanced que unifica todas las utilidades with:
     - IA for optimization automática
@@ -312,7 +312,7 @@ class UltraUtilsOrchestrator:
         if self.config.enable_analytics:
             self._start_analytics_thread()
             
-        self.logger.info("🚀 Ultra Utils Orchestrator iniciado correctamente")
+        self.logger.info(" Ultra Utils Orchestrator iniciado correctamente")
     
     def _setup_logger(self) -> logging.Logger:
         """Configura el logger del orchestrator."""
@@ -420,7 +420,7 @@ class UltraUtilsOrchestrator:
     
     def smart_route(self, utility_type: str, operation: str, **kwargs) -> Any:
         """
-        🧠 Smart routing - Auto-selecciona la better utilidad.
+         Smart routing - Auto-selecciona la better utilidad.
         
         Args:
             utility_type: type de utilidad ('data', 'config', etc.)
@@ -506,7 +506,7 @@ class UltraUtilsOrchestrator:
     
     def _attempt_auto_healing(self, utility_type: str, operation: str, error: Exception, **kwargs) -> Any:
         """Intenta auto-healing when falla una operation."""
-        self.logger.warning(f"🔧 Auto-healing activado para {utility_type}.{operation}: {error}")
+        self.logger.warning(f" Auto-healing activado para {utility_type}.{operation}: {error}")
         
         for attempt in range(self.config.max_retry_attempts):
             try:
@@ -516,14 +516,14 @@ class UltraUtilsOrchestrator:
                 func = self.utils_registry[utility_type][operation]
                 result = func(**kwargs)
                 
-                self.logger.info(f"✅ Auto-healing exitoso en intento {attempt + 1}")
+                self.logger.info(f" Auto-healing exitoso en intento {attempt + 1}")
                 return result
                 
             except Exception as retry_error:
                 self.logger.warning(f"Auto-healing intento {attempt + 1} falló: {retry_error}")
                 
                 if attempt == self.config.max_retry_attempts - 1:
-                    self.logger.error(f"❌ Auto-healing agotado para {utility_type}.{operation}")
+                    self.logger.error(f" Auto-healing agotado para {utility_type}.{operation}")
                     raise error
         
         raise error
@@ -583,11 +583,11 @@ class UltraUtilsOrchestrator:
             try:
                 result = func(*args, **kwargs)
                 execution_time = (time.time() - start_time) * 1000
-                self.logger.debug(f"✅ {func.__name__} ejecutado en {execution_time:.2f}ms")
+                self.logger.debug(f" {func.__name__} ejecutado en {execution_time:.2f}ms")
                 return result
             except Exception as e:
                 execution_time = (time.time() - start_time) * 1000
-                self.logger.error(f"❌ {func.__name__} falló en {execution_time:.2f}ms: {e}")
+                self.logger.error(f" {func.__name__} falló en {execution_time:.2f}ms: {e}")
                 raise
         return wrapper
     
@@ -709,7 +709,7 @@ class UltraUtilsOrchestrator:
             'total_violations': sum(len(c.violations) for c in self.contracts.values())
         }
         
-        self.logger.info(f"📊 Analytics Report: {json.dumps(report, indent=2)}")
+        self.logger.info(f" Analytics Report: {json.dumps(report, indent=2)}")
         return report
     
     async def async_smart_route(self, utility_type: str, operation: str, **kwargs) -> Any:
@@ -753,16 +753,16 @@ class UltraUtilsOrchestrator:
     
     def shutdown(self) -> None:
         """Apaga el orchestrator limpiamente."""
-        self.logger.info("🔄 Iniciando shutdown del Ultra Utils Orchestrator...")
+        self.logger.info(" Iniciando shutdown del Ultra Utils Orchestrator...")
         
         # close executor
         self.executor.shutdown(wait=True)
         
         # generate reporte end
         final_report = self._generate_analytics_report()
-        self.logger.info(f"📊 Reporte final: {json.dumps(final_report, indent=2)}")
+        self.logger.info(f" Reporte final: {json.dumps(final_report, indent=2)}")
         
-        self.logger.info("✅ Ultra Utils Orchestrator apagado correctamente")
+        self.logger.info(" Ultra Utils Orchestrator apagado correctamente")
 
 
 # instance global del orchestrator

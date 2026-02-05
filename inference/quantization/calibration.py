@@ -310,7 +310,7 @@ class CalibrationEngine:
             'accuracy_validation': {}
         }
         
-        logger.info(f"⚡ CalibrationEngine initialized for {self.config.target_hardware}")
+        logger.info(f" CalibrationEngine initialized for {self.config.target_hardware}")
     
     def calibrate_model(self, model_params: Dict[str, Any], 
                        calibration_dataset: Optional[List[Any]] = None,
@@ -327,7 +327,7 @@ class CalibrationEngine:
             Dictionary of calibration parameters
         """
         start_time = time.time()
-        logger.info(f"🚀 Starting model calibration with {len(model_params)} layers")
+        logger.info(f" Starting model calibration with {len(model_params)} layers")
         
         calibration_params = {}
         
@@ -364,14 +364,14 @@ class CalibrationEngine:
         
         self.calibration_results = calibration_params
         
-        logger.info(f"✅ Calibration completed in {self.stats['calibration_time']:.2f}s")
-        logger.info(f"📊 Calibrated {self.stats['total_layers_calibrated']} layers")
+        logger.info(f" Calibration completed in {self.stats['calibration_time']:.2f}s")
+        logger.info(f" Calibrated {self.stats['total_layers_calibrated']} layers")
         
         return calibration_params
     
     def _calibrate_weights(self, model_params: Dict[str, Any]) -> Dict[str, Dict[str, np.ndarray]]:
         """Calibrate weight quantization scales."""
-        logger.info("🔧 Calibrating weight quantization scales")
+        logger.info(" Calibrating weight quantization scales")
         
         weight_scales = {}
         
@@ -400,12 +400,12 @@ class CalibrationEngine:
             if layer_scales:
                 weight_scales[layer_name] = layer_scales
         
-        logger.info(f"📊 Calibrated weights for {len(weight_scales)} layers")
+        logger.info(f" Calibrated weights for {len(weight_scales)} layers")
         return weight_scales
     
     def _calibrate_activations(self, calibration_dataset: List[Any]) -> Dict[str, np.ndarray]:
         """Calibrate activation quantization scales."""
-        logger.info("🔧 Calibrating activation quantization scales")
+        logger.info(" Calibrating activation quantization scales")
         
         # Collect activations from dataset
         activation_data = self.dataset_calibrator.collect_calibration_data(calibration_dataset)
@@ -430,13 +430,13 @@ class CalibrationEngine:
             # Collect statistics
             self.statistical_calibrator.collect_layer_statistics(layer_name, activations)
         
-        logger.info(f"📊 Calibrated activations for {len(activation_scales)} layers")
+        logger.info(f" Calibrated activations for {len(activation_scales)} layers")
         return activation_scales
     
     def _calibrate_kv_cache(self, model_params: Dict[str, Any], 
                           calibration_dataset: Optional[List[Any]]) -> Dict[str, Dict[str, np.ndarray]]:
         """Calibrate KV-cache quantization scales."""
-        logger.info("🔧 Calibrating KV-cache quantization scales")
+        logger.info(" Calibrating KV-cache quantization scales")
         
         kv_cache_scales = {}
         
@@ -475,14 +475,14 @@ class CalibrationEngine:
                     'v_scales': v_scales
                 }
         
-        logger.info(f"📊 Calibrated KV-cache for {len(kv_cache_scales)} attention layers")
+        logger.info(f" Calibrated KV-cache for {len(kv_cache_scales)} attention layers")
         return kv_cache_scales
     
     def _validate_calibration(self, model_params: Dict[str, Any], 
                             calibration_params: Dict[str, Any],
                             validation_dataset: Optional[List[Any]]) -> Dict[str, Any]:
         """Validate calibration quality."""
-        logger.info("🔍 Validating calibration quality")
+        logger.info(" Validating calibration quality")
         
         validation_results = {
             'weight_validation': {},
@@ -511,7 +511,7 @@ class CalibrationEngine:
             else:
                 validation_results['overall_quality'] = 'poor'
         
-        logger.info(f"📊 Validation quality: {validation_results['overall_quality']}")
+        logger.info(f" Validation quality: {validation_results['overall_quality']}")
         return validation_results
     
     def _validate_weight_scales(self, model_params: Dict[str, Any], 
@@ -578,7 +578,7 @@ class CalibrationEngine:
             with open(metadata_file, 'w') as f:
                 json.dump(metadata, f, indent=2, default=str)
             
-            logger.info(f"💾 Calibration data saved to {cache_dir}")
+            logger.info(f" Calibration data saved to {cache_dir}")
             
         except Exception as e:
             logger.warning(f"Failed to save calibration data: {e}")
@@ -610,7 +610,7 @@ class CalibrationEngine:
         # Convert lists back to numpy arrays
         calibration_params = self._restore_numpy_arrays(calibration_params)
         
-        logger.info(f"📁 Calibration data loaded from {cache_dir}")
+        logger.info(f" Calibration data loaded from {cache_dir}")
         return calibration_params
     
     def _restore_numpy_arrays(self, obj: Any) -> Any:

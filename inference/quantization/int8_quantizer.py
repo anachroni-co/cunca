@@ -261,7 +261,7 @@ class INT8Quantizer:
             'quantization_time': 0.0
         }
         
-        logger.info(f"⚡ INT8Quantizer initialized for {self.config.target_hardware}")
+        logger.info(f" INT8Quantizer initialized for {self.config.target_hardware}")
     
     def should_quantize_layer(self, layer_name: str, layer_params: Dict[str, Any]) -> bool:
         """Determine if a layer should be quantized."""
@@ -374,7 +374,7 @@ class INT8Quantizer:
         import time
         start_time = time.time()
         
-        logger.info(f"🚀 Starting model quantization with {len(model_params)} layers")
+        logger.info(f" Starting model quantization with {len(model_params)} layers")
         
         quantized_model = {}
         original_size = 0
@@ -387,13 +387,13 @@ class INT8Quantizer:
                 quantized_model[layer_name] = quantized_layer
                 self.stats['layers_quantized'] += 1
                 
-                logger.debug(f"✅ Quantized layer: {layer_name}")
+                logger.debug(f" Quantized layer: {layer_name}")
             else:
                 # Keep layer unchanged
                 quantized_model[layer_name] = layer_params
                 self.stats['layers_skipped'] += 1
                 
-                logger.debug(f"⏭️ Skipped layer: {layer_name}")
+                logger.debug(f"️ Skipped layer: {layer_name}")
             
             # Update size statistics
             layer_size = self._calculate_layer_size(layer_params)
@@ -406,10 +406,10 @@ class INT8Quantizer:
         self.stats['quantized_size_mb'] = quantized_size / (1024 * 1024)
         self.stats['compression_ratio'] = original_size / quantized_size if quantized_size > 0 else 1.0
         
-        logger.info(f"✅ Quantization completed in {self.stats['quantization_time']:.2f}s")
-        logger.info(f"📊 Compression: {self.stats['original_size_mb']:.1f}MB → {self.stats['quantized_size_mb']:.1f}MB")
-        logger.info(f"📈 Ratio: {self.stats['compression_ratio']:.2f}x compression")
-        logger.info(f"🔢 Layers: {self.stats['layers_quantized']} quantized, {self.stats['layers_skipped']} skipped")
+        logger.info(f" Quantization completed in {self.stats['quantization_time']:.2f}s")
+        logger.info(f" Compression: {self.stats['original_size_mb']:.1f}MB → {self.stats['quantized_size_mb']:.1f}MB")
+        logger.info(f" Ratio: {self.stats['compression_ratio']:.2f}x compression")
+        logger.info(f" Layers: {self.stats['layers_quantized']} quantized, {self.stats['layers_skipped']} skipped")
         
         self.quantized_params = quantized_model
         return quantized_model
@@ -490,7 +490,7 @@ class INT8Quantizer:
         with open(filepath.with_suffix('.json'), 'w') as f:
             json.dump(metadata, f, indent=2, default=str)
         
-        logger.info(f"💾 Quantized model saved to {filepath}")
+        logger.info(f" Quantized model saved to {filepath}")
     
     def load_quantized_model(self, filepath: str) -> Dict[str, Any]:
         """Load quantized model and metadata."""
@@ -520,7 +520,7 @@ class INT8Quantizer:
             self.quantization_metadata = metadata.get('quantization_metadata', {})
             self.stats = metadata.get('stats', {})
         
-        logger.info(f"📁 Quantized model loaded from {filepath}")
+        logger.info(f" Quantized model loaded from {filepath}")
         return self.quantized_params
     
     def get_stats(self) -> Dict[str, Any]:

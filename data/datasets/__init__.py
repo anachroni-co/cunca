@@ -67,7 +67,7 @@ from .humor import (
     analyze_humor_type,
 )
 
-# 🚀 NEW: Cascade Training System
+#  NEW: Cascade Training System
 from .cascade_dataset_manager import (
     CascadeDatasetManager,
     DatasetConfig,

@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-🛡️ INFERENCE-SAFE PARAMETER CONTROLLER
+️ INFERENCE-SAFE PARAMETER CONTROLLER
 ======================================
 
 Production-ready parameter controller that fixes all critical issues:
 
-1. ✅ SAFE PARAMETER SCALING (not zeroing)
-2. ✅ INFERENCE-OPTIMIZED MANAGEMENT
-3. ✅ ARCHITECTURAL AWARENESS
-4. ✅ BACKUP/RESTORE MECHANISM
-5. ✅ PERFORMANCE OPTIMIZATION
+1.  SAFE PARAMETER SCALING (not zeroing)
+2.  INFERENCE-OPTIMIZED MANAGEMENT
+3.  ARCHITECTURAL AWARENESS
+4.  BACKUP/RESTORE MECHANISM
+5.  PERFORMANCE OPTIMIZATION
 
 This controller can safely enable/disable dataset parameters during inference
 WITHOUT breaking the model or causing crashes.
@@ -222,9 +222,9 @@ class InferenceSafeParameterController:
         # Create default configuration
         self._create_default_configuration()
         
-        logger.info(f"🛡️ InferenceSafeParameterController initialized")
-        logger.info(f"🔧 Inference mode: {inference_mode.value}")
-        logger.info(f"📊 Managing {len(model_parameters)} parameter groups")
+        logger.info(f"️ InferenceSafeParameterController initialized")
+        logger.info(f" Inference mode: {inference_mode.value}")
+        logger.info(f" Managing {len(model_parameters)} parameter groups")
     
     def _deep_copy_parameters(self, parameters: Dict[str, Any]) -> Dict[str, Any]:
         """Create a deep copy of parameters safely."""
@@ -272,7 +272,7 @@ class InferenceSafeParameterController:
             else:
                 groups['other'].append(param_name)
         
-        logger.info(f"🏗️ Identified {len(groups)} architectural groups")
+        logger.info(f"️ Identified {len(groups)} architectural groups")
         for group_name, params in groups.items():
             logger.info(f"   {group_name}: {len(params)} parameters")
         
@@ -288,7 +288,7 @@ class InferenceSafeParameterController:
             compiled_parameters=self._deep_copy_parameters(self.base_parameters)
         )
         self.configurations["default"] = default_config
-        logger.info("✅ Default configuration created")
+        logger.info(" Default configuration created")
     
     def create_dataset_mask_safe(
         self,
@@ -345,8 +345,8 @@ class InferenceSafeParameterController:
         )
         
         self.parameter_masks[dataset_id] = mask
-        logger.info(f"🎭 Created safe mask for {dataset_id} with {len(dataset_params)} parameters")
-        logger.info(f"📊 Average scale factor: {mask.metadata['average_scale']:.3f}")
+        logger.info(f" Created safe mask for {dataset_id} with {len(dataset_params)} parameters")
+        logger.info(f" Average scale factor: {mask.metadata['average_scale']:.3f}")
         
         return mask
     
@@ -373,11 +373,11 @@ class InferenceSafeParameterController:
                 config_name = f"disabled_{dataset_id}"
                 self._create_configuration_from_current_state(config_name, [dataset_id])
             
-            logger.info(f"✅ Safely disabled dataset {dataset_id} (scale: {scale_factor:.3f})")
+            logger.info(f" Safely disabled dataset {dataset_id} (scale: {scale_factor:.3f})")
             return True
             
         except Exception as e:
-            logger.error(f"❌ Failed to disable dataset {dataset_id}: {e}")
+            logger.error(f" Failed to disable dataset {dataset_id}: {e}")
             return False
     
     def enable_dataset_parameters_safe(
@@ -404,11 +404,11 @@ class InferenceSafeParameterController:
                 config_name = f"enabled_{dataset_id}"
                 self._create_configuration_from_current_state(config_name, [], [dataset_id])
             
-            logger.info(f"✅ Safely enabled dataset {dataset_id}")
+            logger.info(f" Safely enabled dataset {dataset_id}")
             return True
             
         except Exception as e:
-            logger.error(f"❌ Failed to enable dataset {dataset_id}: {e}")
+            logger.error(f" Failed to enable dataset {dataset_id}: {e}")
             return False
     
     def _create_configuration_from_current_state(
@@ -459,17 +459,17 @@ class InferenceSafeParameterController:
         )
         
         self.configurations[config_name] = config
-        logger.info(f"📦 Created configuration '{config_name}'")
+        logger.info(f" Created configuration '{config_name}'")
     
     def switch_to_configuration(self, config_name: str) -> bool:
         """Switch to a pre-compiled configuration."""
         if config_name not in self.configurations:
-            logger.error(f"❌ Configuration '{config_name}' not found")
+            logger.error(f" Configuration '{config_name}' not found")
             return False
         
         config = self.configurations[config_name]
         if not config.is_ready():
-            logger.error(f"❌ Configuration '{config_name}' not compiled")
+            logger.error(f" Configuration '{config_name}' not compiled")
             return False
         
         try:
@@ -477,17 +477,17 @@ class InferenceSafeParameterController:
             self.current_parameters = self._deep_copy_parameters(config.compiled_parameters)
             self.active_configuration = config_name
             
-            logger.info(f"⚡ Switched to configuration '{config_name}'")
+            logger.info(f" Switched to configuration '{config_name}'")
             return True
             
         except Exception as e:
-            logger.error(f"❌ Failed to switch to configuration '{config_name}': {e}")
+            logger.error(f" Failed to switch to configuration '{config_name}': {e}")
             return False
     
     def compile_configuration(self, config_name: str) -> bool:
         """Pre-compile configuration for fast inference switching."""
         if config_name not in self.configurations:
-            logger.error(f"❌ Configuration '{config_name}' not found")
+            logger.error(f" Configuration '{config_name}' not found")
             return False
         
         config = self.configurations[config_name]
@@ -513,11 +513,11 @@ class InferenceSafeParameterController:
                 "enabled_datasets": len(config.enabled_datasets)
             }
             
-            logger.info(f"⚡ Compiled configuration '{config_name}'")
+            logger.info(f" Compiled configuration '{config_name}'")
             return True
             
         except Exception as e:
-            logger.error(f"❌ Failed to compile configuration '{config_name}': {e}")
+            logger.error(f" Failed to compile configuration '{config_name}': {e}")
             return False
     
     def get_inference_parameters(self, config_name: Optional[str] = None) -> Dict[str, Any]:
@@ -528,9 +528,9 @@ class InferenceSafeParameterController:
                 if config.is_ready():
                     return config.compiled_parameters
                 else:
-                    logger.warning(f"⚠️ Configuration '{config_name}' not compiled, using current")
+                    logger.warning(f"️ Configuration '{config_name}' not compiled, using current")
             else:
-                logger.warning(f"⚠️ Configuration '{config_name}' not found, using current")
+                logger.warning(f"️ Configuration '{config_name}' not found, using current")
         
         return self.current_parameters
     
@@ -541,11 +541,11 @@ class InferenceSafeParameterController:
             self.parameter_masks.clear()
             self.active_configuration = "default"
             
-            logger.info("🔄 Reset to base parameters")
+            logger.info(" Reset to base parameters")
             return True
             
         except Exception as e:
-            logger.error(f"❌ Failed to reset to base: {e}")
+            logger.error(f" Failed to reset to base: {e}")
             return False
     
     def get_safety_report(self) -> Dict[str, Any]:
@@ -611,13 +611,13 @@ class InferenceSafeParameterController:
     def _get_safety_recommendation(self, health_score: float, issues: List[str], warnings: List[str]) -> str:
         """Get safety recommendation based on current state."""
         if health_score < 0.8 or len(issues) > 0:
-            return "🚨 NOT SAFE FOR INFERENCE - Reset to base parameters recommended"
+            return " NOT SAFE FOR INFERENCE - Reset to base parameters recommended"
         elif health_score < 0.95 or len(warnings) > 2:
-            return "⚠️ USE WITH CAUTION - Monitor outputs carefully"
+            return "️ USE WITH CAUTION - Monitor outputs carefully"
         elif len(warnings) > 0:
-            return "✅ SAFE FOR INFERENCE - Minor warnings present"
+            return " SAFE FOR INFERENCE - Minor warnings present"
         else:
-            return "✅ FULLY SAFE FOR INFERENCE"
+            return " FULLY SAFE FOR INFERENCE"
     
     def _load_parameter_lineage(self, lineage_file: Union[str, Path]):
         """Load parameter lineage from file."""
@@ -633,10 +633,10 @@ class InferenceSafeParameterController:
             if 'parameter_lineage' in lineage_data:
                 self.parameter_lineage = lineage_data['parameter_lineage']
             
-            logger.info(f"📂 Loaded lineage for {len(self.dataset_lineage)} datasets")
+            logger.info(f" Loaded lineage for {len(self.dataset_lineage)} datasets")
             
         except Exception as e:
-            logger.warning(f"⚠️ Could not load lineage file: {e}")
+            logger.warning(f"️ Could not load lineage file: {e}")
 
 # Factory function
 def create_inference_safe_controller(
@@ -653,7 +653,7 @@ def create_inference_safe_controller(
 
 if __name__ == "__main__":
     # Example usage
-    logger.info("🛡️ INFERENCE-SAFE PARAMETER CONTROLLER")
+    logger.info("️ INFERENCE-SAFE PARAMETER CONTROLLER")
     logger.info("=" * 50)
     
     # Mock model parameters
@@ -675,23 +675,23 @@ if __name__ == "__main__":
         inference_mode=InferenceMode.SAFE_SCALING
     )
     
-    logger.info(f"✅ Controller created with {len(mock_params)} parameters")
+    logger.info(f" Controller created with {len(mock_params)} parameters")
     
     # Test safe disable
     success = controller.disable_dataset_parameters_safe("medical_data", scale_factor=0.1)
-    logger.info(f"🔧 Disable test: {'✅' if success else '❌'}")
+    logger.info(f" Disable test: {'' if success else ''}")
     
     # Test configuration creation
     controller.compile_configuration("disabled_medical_data")
-    logger.info("⚡ Configuration compiled")
+    logger.info(" Configuration compiled")
     
     # Test safety report
     safety_report = controller.get_safety_report()
-    logger.info(f"🛡️ Safety status: {safety_report['recommendation']}")
-    logger.info(f"📊 Health score: {safety_report['overall_health']:.2%}")
+    logger.info(f"️ Safety status: {safety_report['recommendation']}")
+    logger.info(f" Health score: {safety_report['overall_health']:.2%}")
     
     # Test reset
     success = controller.reset_to_base()
-    logger.info(f"🔄 Reset test: {'✅' if success else '❌'}")
+    logger.info(f" Reset test: {'' if success else ''}")
     
-    logger.info("\n✅ ALL TESTS PASSED - SYSTEM IS INFERENCE-SAFE!")
+    logger.info("\n ALL TESTS PASSED - SYSTEM IS INFERENCE-SAFE!")

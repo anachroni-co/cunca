@@ -2,7 +2,7 @@
 
 The **sub_models** directory contains all specialized sub-models that can be combined modularly to build custom architectures.
 
-## 📋 Table of Contents
+##  Table of Contents
 
 1. [Overview](#overview)
 2. [Available Sub-Models](#available-sub-models)
@@ -14,7 +14,7 @@ The **sub_models** directory contains all specialized sub-models that can be com
 
 ---
 
-## 🎯 Overview
+##  Overview
 
 capibaraGPT-v2 uses a **fully modular architecture** where different sub-models can be combined as needed:
 
@@ -49,7 +49,7 @@ capibaraGPT-v2 uses a **fully modular architecture** where different sub-models 
 
 ---
 
-## 🧩 Available Sub-Models
+##  Available Sub-Models
 
 | Sub-Model | Directory | Purpose | Documentation |
 |-----------|-----------|---------|---------------|
@@ -66,7 +66,7 @@ capibaraGPT-v2 uses a **fully modular architecture** where different sub-models 
 
 ---
 
-## 🏗️ Modular Architecture
+## ️ Modular Architecture
 
 ### ModularCapibaraModel
 
@@ -131,7 +131,7 @@ result = orchestrator.process(
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Basic Usage: Mamba
 
@@ -202,7 +202,7 @@ combined = model.combine_modalities(
 
 ---
 
-## 🔧 Detailed Sub-Models
+##  Detailed Sub-Models
 
 ### 1. Mamba (Selective State Space Model)
 
@@ -388,7 +388,7 @@ outputs = byte_model(byte_inputs)
 
 ---
 
-## 🔗 Integration and Composition
+##  Integration and Composition
 
 ### Manual Composition
 
@@ -478,7 +478,7 @@ output = model(
 
 ---
 
-## 📊 Performance Comparison
+##  Performance Comparison
 
 ### Latency (512 tokens, batch_size=1)
 
@@ -514,7 +514,7 @@ output = model(
 
 ---
 
-## 🛠️ Developing New Sub-Models
+## ️ Developing New Sub-Models
 
 ### Template for New Sub-Model
 
@@ -577,7 +577,7 @@ class ModularCapibaraModel(nn.Module):
 
 ---
 
-## 📚 References
+##  References
 
 - [Mamba Module](mamba/README.md) - Complete Mamba documentation
 - [Hybrid Attention](hybrid/README.md) - Hybrid Router documentation

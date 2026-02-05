@@ -90,12 +90,12 @@ class ARMInferenceEngine:
         # Load model
         self._load_model()
         
-        logger.info(f"🤖 ARM Inference Engine initialized")
-        logger.info(f"   📍 Model: {self.model_path}")
-        logger.info(f"   🏗️ Device: {self.device}")
-        logger.info(f"   🧠 Threads: {self.num_threads}")
-        logger.info(f"   💾 Max Memory: {self.max_memory_gb}GB")
-        logger.info(f"   ⚡ ONNX: {self.use_onnx}")
+        logger.info(f" ARM Inference Engine initialized")
+        logger.info(f"    Model: {self.model_path}")
+        logger.info(f"   ️ Device: {self.device}")
+        logger.info(f"    Threads: {self.num_threads}")
+        logger.info(f"    Max Memory: {self.max_memory_gb}GB")
+        logger.info(f"    ONNX: {self.use_onnx}")
     
     def _detect_optimal_threads(self) -> int:
         """Detecta número óptimo de threads for ARM Axion"""
@@ -128,7 +128,7 @@ class ARMInferenceEngine:
         if hasattr(torch.backends, 'mkldnn'):
             torch.backends.mkldnn.enabled = True
         
-        logger.info(f"⚙️ ARM optimizations configured ({self.num_threads} threads)")
+        logger.info(f"️ ARM optimizations configured ({self.num_threads} threads)")
     
     def _load_model(self):
         """load model with optimizaciones ARM"""
@@ -136,7 +136,7 @@ class ARMInferenceEngine:
             start_time = time.time()
             
             # Load tokenizer
-            logger.info("📝 Loading tokenizer...")
+            logger.info(" Loading tokenizer...")
             self.tokenizer = AutoTokenizer.from_pretrained(
                 self.model_path,
                 use_fast=True,
@@ -153,7 +153,7 @@ class ARMInferenceEngine:
             )
             
             # Memory-efficient loading for ARM
-            logger.info("🧠 Loading model with ARM optimizations...")
+            logger.info(" Loading model with ARM optimizations...")
             
             model_kwargs = {
                 "torch_dtype": torch.float32,  # ARM optimized precision
@@ -175,7 +175,7 @@ class ARMInferenceEngine:
             if hasattr(torch, 'compile') and self.device == 'cpu':
                 try:
                     self.model = torch.compile(self.model, mode="reduce-overhead")
-                    logger.info("⚡ Model compiled for ARM optimization")
+                    logger.info(" Model compiled for ARM optimization")
                 except Exception as e:
                     logger.warning(f"Failed to compile model: {e}")
             
@@ -193,15 +193,15 @@ class ARMInferenceEngine:
             load_time = time.time() - start_time
             memory_usage = psutil.Process().memory_info().rss / 1024 / 1024  # MB
             
-            logger.info(f"✅ Model loaded successfully")
-            logger.info(f"   ⏱️ Load time: {load_time:.2f}s")
-            logger.info(f"   💾 Memory usage: {memory_usage:.1f}MB")
+            logger.info(f" Model loaded successfully")
+            logger.info(f"   ️ Load time: {load_time:.2f}s")
+            logger.info(f"    Memory usage: {memory_usage:.1f}MB")
             
             # Store peak memory
             self.stats["memory_peak_mb"] = memory_usage
             
         except Exception as e:
-            logger.error(f"❌ Error loading model: {e}")
+            logger.error(f" Error loading model: {e}")
             raise
     
     def generate(
@@ -271,13 +271,13 @@ class ARMInferenceEngine:
                 (self.stats["total_time_ms"] / 1000)
             )
             
-            logger.info(f"🎯 Generated {tokens_generated} tokens in {generation_time:.1f}ms")
-            logger.info(f"⚡ Speed: {(tokens_generated / (generation_time / 1000)):.1f} tokens/second")
+            logger.info(f" Generated {tokens_generated} tokens in {generation_time:.1f}ms")
+            logger.info(f" Speed: {(tokens_generated / (generation_time / 1000)):.1f} tokens/second")
             
             return response
             
         except Exception as e:
-            logger.error(f"❌ Error during generation: {e}")
+            logger.error(f" Error during generation: {e}")
             raise
     
     def generate_batch(
@@ -338,7 +338,7 @@ class ARMInferenceEngine:
     
     def benchmark(self, num_iterations: int = 10, prompt: str = "Tell me about ARM processors") -> Dict[str, Any]:
         """Ejecuta benchmark de rendimiento en ARM"""
-        logger.info(f"🏁 Starting ARM benchmark ({num_iterations} iterations)")
+        logger.info(f" Starting ARM benchmark ({num_iterations} iterations)")
         
         # Warm up
         self.generate(prompt, max_tokens=50)
@@ -377,7 +377,7 @@ class ARMInferenceEngine:
             "threads_used": self.num_threads
         }
         
-        logger.info(f"🏆 Benchmark completed: {avg_tokens_per_second:.1f} tokens/second avg")
+        logger.info(f" Benchmark completed: {avg_tokens_per_second:.1f} tokens/second avg")
         
         return benchmark_results
     
@@ -394,7 +394,7 @@ class ARMInferenceEngine:
         import gc
         gc.collect()
         
-        logger.info("🧹 ARM Inference Engine cleaned up")
+        logger.info(" ARM Inference Engine cleaned up")
 
 # Convenience function for direct usage
 def run_inference(
@@ -445,20 +445,20 @@ def main():
         # Show model info
         if args.verbose:
             model_info = engine.get_model_info()
-            logger.info("\n📋 Model Information:")
+            logger.info("\n Model Information:")
             for key, value in model_info.items():
                 logger.info(f"   {key}: {value}")
         
         if args.benchmark:
             # Run benchmark
-            logger.info(f"\n🏁 Running ARM benchmark...")
+            logger.info(f"\n Running ARM benchmark...")
             results = engine.benchmark(args.iterations, args.prompt)
-            logger.info("\n🏆 Benchmark Results:")
+            logger.info("\n Benchmark Results:")
             for key, value in results.items():
                 logger.info(f"   {key}: {value}")
         else:
             # Single generation
-            logger.info(f"\n🤖 Generating response...")
+            logger.info(f"\n Generating response...")
             logger.info(f"Prompt: {args.prompt}")
             
             start_time = time.time()
@@ -470,17 +470,17 @@ def main():
             end_time = time.time()
             
             logger.info(f"\nResponse: {response}")
-            logger.info(f"\n⏱️ Generation time: {(end_time - start_time) * 1000:.1f}ms")
+            logger.info(f"\n️ Generation time: {(end_time - start_time) * 1000:.1f}ms")
             
         # Show performance stats
         if args.verbose:
             stats = engine.get_performance_stats()
-            logger.info("\n📊 Performance Stats:")
+            logger.info("\n Performance Stats:")
             for key, value in stats.items():
                 logger.info(f"   {key}: {value}")
         
     except Exception as e:
-        logger.error(f"❌ Error: {e}")
+        logger.error(f" Error: {e}")
         sys.exit(1)
     finally:
         if 'engine' in locals():

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🧬 CAPIBARA TEXT-TO-GENOMIC SERVICE
+ CAPIBARA TEXT-TO-GENOMIC SERVICE
 ==================================
 
 Servicio revolucionario de análisis genómico con IA optimizado para el modelo 60B.
@@ -328,7 +328,7 @@ class MockGenomicAnalyzer:
     """Analizador genómico mock para demostración (mientras se integran herramientas reales)"""
     
     def __init__(self):
-        logger.info("🧬 Mock Genomic Analyzer initialized (60B model simulation)")
+        logger.info(" Mock Genomic Analyzer initialized (60B model simulation)")
         
     async def analyze_variants(self, sequence: str, analysis_type: AnalysisType) -> Dict[str, Any]:
         """Simula análisis de variantes genéticas"""
@@ -470,10 +470,10 @@ class CapibaraTextToGenomic:
         # Optimizaciones para modelo 60B
         self._setup_60b_optimizations()
         
-        logger.info("🧬 CapibaraTextToGenomic initialized for 60B model")
-        logger.info(f"   🔧 TPU Clusters: {self.config.tpu_clusters}")
-        logger.info(f"   💾 Memory: {self.config.memory_gb}GB")
-        logger.info(f"   ⚡ Parallel processes: {self.config.parallel_processes}")
+        logger.info(" CapibaraTextToGenomic initialized for 60B model")
+        logger.info(f"    TPU Clusters: {self.config.tpu_clusters}")
+        logger.info(f"    Memory: {self.config.memory_gb}GB")
+        logger.info(f"    Parallel processes: {self.config.parallel_processes}")
     
     def _setup_60b_optimizations(self):
         """Configura optimizaciones específicas para modelo 60B"""
@@ -483,7 +483,7 @@ class CapibaraTextToGenomic:
             os.environ["TPU_CLUSTERS"] = str(self.config.tpu_clusters)
             os.environ["GENOMIC_MEMORY_GB"] = str(self.config.memory_gb)
             
-            logger.info("✅ 60B model optimizations configured")
+            logger.info(" 60B model optimizations configured")
     
     async def analyze_genomic_data(self, request: GenomicRequest) -> GenomicResult:
         """Análisis genómico principal optimizado para modelo 60B"""
@@ -491,12 +491,12 @@ class CapibaraTextToGenomic:
         request_id = f"genomic_{int(start_time.timestamp())}"
         
         try:
-            logger.info(f"🧬 Starting genomic analysis: {request.analysis_type.value}")
-            logger.info(f"📝 Description: {request.description[:100]}...")
+            logger.info(f" Starting genomic analysis: {request.analysis_type.value}")
+            logger.info(f" Description: {request.description[:100]}...")
             
             # Parse descripción con IA del modelo 60B
             analysis_info = self.parser.parse_description(request.description)
-            logger.info(f"🔍 Analysis suggestions: {analysis_info['suggested_analysis']}")
+            logger.info(f" Analysis suggestions: {analysis_info['suggested_analysis']}")
             
             # Validar secuencias si se proporcionan
             if request.sequence:
@@ -535,14 +535,14 @@ class CapibaraTextToGenomic:
                 reports=reports
             )
             
-            logger.info(f"✅ Genomic analysis completed in {processing_time:.1f}s")
-            logger.info(f"🧬 Results: {len(result.variants_identified)} variants found")
+            logger.info(f" Genomic analysis completed in {processing_time:.1f}s")
+            logger.info(f" Results: {len(result.variants_identified)} variants found")
             
             return result
             
         except Exception as e:
             processing_time = (datetime.now() - start_time).total_seconds()
-            logger.error(f"❌ Genomic analysis failed: {e}")
+            logger.error(f" Genomic analysis failed: {e}")
             
             return GenomicResult(
                 success=False,
@@ -700,7 +700,7 @@ class CapibaraTextToGenomic:
     
     async def test_genomic_analysis(self) -> Dict[str, Any]:
         """Test completo del servicio genomic"""
-        logger.info("🧪 Testing Text-to-Genomic service (60B model)...")
+        logger.info(" Testing Text-to-Genomic service (60B model)...")
         
         # Test análisis de variantes
         variant_request = GenomicRequest(

@@ -60,16 +60,16 @@ def main() -> int:
     total, syntax_errors = validate_syntax(python_files)
 
     if syntax_errors:
-        print(f"\n❌ Found {len(syntax_errors)} syntax errors:\n")
+        print(f"\n Found {len(syntax_errors)} syntax errors:\n")
         for error in syntax_errors:
             print(f"  - {error}")
         print("\n" + "=" * 60)
-        print(f"❌ FAILED: {len(syntax_errors)} syntax errors found")
+        print(f" FAILED: {len(syntax_errors)} syntax errors found")
         return 1
     else:
-        print(f"✅ All {total} files have valid syntax")
+        print(f" All {total} files have valid syntax")
         print("\n" + "=" * 60)
-        print("✅ PASSED: All validations successful")
+        print(" PASSED: All validations successful")
         return 0
 
 

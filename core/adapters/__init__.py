@@ -167,17 +167,17 @@ def initialize_all_adapters() -> bool:
         try:
             if adapter.initialize():
                 success_count += 1
-                logger.info(f"✅ {name} Adapter initialized")
+                logger.info(f" {name} Adapter initialized")
             else:
-                logger.error(f"❌ {name} Adapter initialization failed")
+                logger.error(f" {name} Adapter initialization failed")
         except Exception as e:
-            logger.error(f"❌ {name} Adapter error: {e}")
+            logger.error(f" {name} Adapter error: {e}")
     
     # Start metrics collection
     start_metrics_collection()
-    logger.info(f"📊 Metrics collection started")
+    logger.info(f" Metrics collection started")
     
-    logger.info(f"🎯 Initialized {success_count}/{len(adapters)} adapters successfully")
+    logger.info(f" Initialized {success_count}/{len(adapters)} adapters successfully")
     return success_count == len(adapters)
 
 def get_system_status() -> dict:

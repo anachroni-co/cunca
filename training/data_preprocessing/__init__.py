@@ -67,7 +67,7 @@ class DataPreprocessingPipeline:
         
         self._initialize_components()
         
-        logger.info("🔄 Data Preprocessing Pipeline initialized")
+        logger.info(" Data Preprocessing Pipeline initialized")
         logger.info(f"Available components: {sum(self.available_components.values())}/3")
     
     def _initialize_components(self):
@@ -77,7 +77,7 @@ class DataPreprocessingPipeline:
             try:
                 dedup_config = DedupConfig(**self.config.get('deduplication', {}))
                 self.deduplicator = SemanticDeduplicator(dedup_config)
-                logger.info("✅ Semantic deduplicator initialized")
+                logger.info(" Semantic deduplicator initialized")
             except Exception as e:
                 logger.warning(f"Failed to initialize deduplicator: {e}")
         
@@ -85,7 +85,7 @@ class DataPreprocessingPipeline:
             try:
                 quality_config = QualityConfig(**self.config.get('quality', {}))
                 self.quality_filter = QualityFilter(quality_config)
-                logger.info("✅ Quality filter initialized")
+                logger.info(" Quality filter initialized")
             except Exception as e:
                 logger.warning(f"Failed to initialize quality filter: {e}")
         
@@ -93,7 +93,7 @@ class DataPreprocessingPipeline:
             try:
                 tpu_config = self.config.get('tpu_optimization', {})
                 self.tpu_processor = TPUOptimizedProcessor(tpu_config)
-                logger.info("✅ TPU processor initialized")
+                logger.info(" TPU processor initialized")
             except Exception as e:
                 logger.warning(f"Failed to initialize TPU processor: {e}")
     
@@ -110,24 +110,24 @@ class DataPreprocessingPipeline:
         """
         config = pipeline_config or {}
         
-        logger.info(f"🚀 Starting preprocessing pipeline with {len(docs)} documents")
+        logger.info(f" Starting preprocessing pipeline with {len(docs)} documents")
         
         # Step 1: Quality filtering (if available)
         if self.quality_filter and config.get('use_quality_filter', True):
             docs = self.quality_filter.filter_documents(docs)
-            logger.info(f"📊 After quality filtering: {len(docs)} documents")
+            logger.info(f" After quality filtering: {len(docs)} documents")
         
         # Step 2: Semantic deduplication (if available)
         if self.deduplicator and config.get('use_deduplication', True):
             docs = self.deduplicator.deduplicate_documents(docs)
-            logger.info(f"🔄 After deduplication: {len(docs)} documents")
+            logger.info(f" After deduplication: {len(docs)} documents")
         
         # Step 3: TPU optimization (if available)
         if self.tpu_processor and config.get('use_tpu_optimization', True):
             docs = self.tpu_processor.optimize_for_tpu(docs)
-            logger.info(f"⚡ After TPU optimization: {len(docs)} documents")
+            logger.info(f" After TPU optimization: {len(docs)} documents")
         
-        logger.info(f"✅ Preprocessing completed: {len(docs)} documents ready for training")
+        logger.info(f" Preprocessing completed: {len(docs)} documents ready for training")
         
         return docs
     

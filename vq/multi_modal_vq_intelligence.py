@@ -48,18 +48,18 @@ ML_LIBRARIES_AVAILABLE = True
 try:
     from capibara.jax import jax, jnp
     import flax.linen as nn
-    logger.info("✅ ML libraries available for Multi-Modal VQ")
+    logger.info(" ML libraries available for Multi-Modal VQ")
 except ImportError as e:
-    logger.warning(f"⚠️ ML libraries not available: {e}")
+    logger.warning(f"️ ML libraries not available: {e}")
     ML_LIBRARIES_AVAILABLE = False
 
 # Ultra VQ System integration
 ULTRA_VQ_AVAILABLE = True
 try:
     from .ultra_vq_orchestrator import VQModality, VQTechnique, UltraVQConfig
-    logger.info("✅ Ultra VQ System integration available")
+    logger.info(" Ultra VQ System integration available")
 except ImportError as e:
-    logger.warning(f"⚠️ Ultra VQ System not available: {e}")
+    logger.warning(f"️ Ultra VQ System not available: {e}")
     ULTRA_VQ_AVAILABLE = False
 
 # ============================================================================
@@ -200,7 +200,7 @@ class MultiModalVQIntelligence:
     def _initialize_intelligence_system(self):
         """Initialize the multi-modal VQ intelligence system."""
         
-        logger.info("🧠 Initializing Multi-Modal VQ Intelligence")
+        logger.info(" Initializing Multi-Modal VQ Intelligence")
         
         # Initialize fusion engine
         self._initialize_fusion_engine()
@@ -220,10 +220,10 @@ class MultiModalVQIntelligence:
         # Initialize adaptive controller
         self._initialize_adaptive_controller()
         
-        logger.info(f"✅ Multi-Modal VQ Intelligence initialized")
-        logger.info(f"   🔄 Fusion: {self.config.fusion_strategy.value}")
-        logger.info(f"   🧠 Learning: {self.config.learning_mode.value}")
-        logger.info(f"   👁️ Attention: {self.config.attention_mechanism.value}")
+        logger.info(f" Multi-Modal VQ Intelligence initialized")
+        logger.info(f"    Fusion: {self.config.fusion_strategy.value}")
+        logger.info(f"    Learning: {self.config.learning_mode.value}")
+        logger.info(f"   ️ Attention: {self.config.attention_mechanism.value}")
     
     def _initialize_fusion_engine(self):
         """Initialize modal fusion engine."""
@@ -236,7 +236,7 @@ class MultiModalVQIntelligence:
             dropout=self.config.fusion_dropout
         )
         
-        logger.info("✅ Ultra Modal Fusion Engine initialized")
+        logger.info(" Ultra Modal Fusion Engine initialized")
     
     def _initialize_attention_manager(self):
         """Initialize attention management system."""
@@ -248,7 +248,7 @@ class MultiModalVQIntelligence:
             dropout=self.config.attention_dropout
         )
         
-        logger.info("✅ Ultra Attention Manager initialized")
+        logger.info(" Ultra Attention Manager initialized")
     
     def _initialize_coherence_optimizer(self):
         """Initialize coherence optimization system."""
@@ -259,7 +259,7 @@ class MultiModalVQIntelligence:
                 coherence_weight=self.config.coherence_loss_weight
             )
             
-            logger.info("✅ Modal Coherence Optimizer initialized")
+            logger.info(" Modal Coherence Optimizer initialized")
     
     def _initialize_pattern_detector(self):
         """Initialize emergent pattern detection."""
@@ -270,7 +270,7 @@ class MultiModalVQIntelligence:
                 detection_threshold=0.8
             )
             
-            logger.info("✅ Emergent Pattern Detector initialized")
+            logger.info(" Emergent Pattern Detector initialized")
     
     def _initialize_cross_modal_learner(self):
         """Initialize cross-modal learning system."""
@@ -282,7 +282,7 @@ class MultiModalVQIntelligence:
                 modalities=self.config.supported_modalities
             )
             
-            logger.info("✅ Cross-Modal Learner initialized")
+            logger.info(" Cross-Modal Learner initialized")
     
     def _initialize_adaptive_controller(self):
         """Initialize adaptive modal switching."""
@@ -293,7 +293,7 @@ class MultiModalVQIntelligence:
                 switching_threshold=0.1
             )
             
-            logger.info("✅ Adaptive Modal Controller initialized")
+            logger.info(" Adaptive Modal Controller initialized")
     
     async def process_multi_modal_data(
         self,
@@ -775,7 +775,7 @@ def create_multi_modal_vq_config(
 def demonstrate_multi_modal_vq_intelligence():
     """Demonstrate the multi-modal VQ intelligence system."""
     
-    logger.info("🧠 MULTI-MODAL VQ INTELLIGENCE DEMONSTRATION")
+    logger.info(" MULTI-MODAL VQ INTELLIGENCE DEMONSTRATION")
     logger.info("=" * 60)
     
     # Create configuration
@@ -785,7 +785,7 @@ def demonstrate_multi_modal_vq_intelligence():
         enable_all_features=True
     )
     
-    logger.info(f"📋 Configuration created:")
+    logger.info(f" Configuration created:")
     logger.info(f"   - Fusion: {config.fusion_strategy.value}")
     logger.info(f"   - Learning: {config.learning_mode.value}")
     logger.warning(f"   - Attention: {config.attention_mechanism.value}")
@@ -796,7 +796,7 @@ def demonstrate_multi_modal_vq_intelligence():
     # Get system status
     status = intelligence.get_intelligence_status()
     
-    logger.info(f"\n🔍 Intelligence Status:")
+    logger.info(f"\n Intelligence Status:")
     logger.info(f"   - Components: {sum(status['components'].values())}/6")
     logger.info(f"   - Capabilities: {sum(status['capabilities'].values())}/4")
     logger.info(f"   - Modalities: {len(status['config']['supported_modalities'])}")

@@ -123,20 +123,20 @@ class UnifiedTrainer:
         self.use_consensus = auto_config["use_consensus_distilling"]
         
         if self.use_consensus:
-            logger.info(f"🧠 CONSENSUS DISTILLING AUTOMATICALLY ACTIVATED for model {self.model_scale_name}")
-            logger.info("   ✅ Peer voting enabled")
-            logger.info("   ✅ Critic arbitration enabled")
-            logger.info("   ✅ Progressive distillation enabled")
+            logger.info(f" CONSENSUS DISTILLING AUTOMATICALLY ACTIVATED for model {self.model_scale_name}")
+            logger.info("    Peer voting enabled")
+            logger.info("    Critic arbitration enabled")
+            logger.info("    Progressive distillation enabled")
         else:
-            logger.info(f"📝 Standard training for model {self.model_scale_name}")
+            logger.info(f" Standard training for model {self.model_scale_name}")
         
         # Auto-detect hardware
         self.hardware_info = verify_tpu_setup()
         if self.hardware_info.get('tpu_available', False):
-            logger.info("🚀 TPU detected - TPU optimizations activated")
+            logger.info(" TPU detected - TPU optimizations activated")
             self.use_tpu = True
         else:
-            logger.info("💻 GPU/CPU detected - Standard training")
+            logger.info(" GPU/CPU detected - Standard training")
             self.use_tpu = False
     
     def _setup_logging(self):
@@ -147,10 +147,10 @@ class UnifiedTrainer:
         )
         
         logger.info("="*80)
-        logger.info(f"🦙 CAPIBARAGPT-V2 UNIFIED TRAINER INITIALIZED")
-        logger.info(f"📊 Model scale: {self.model_scale_name}")
-        logger.info(f"🧠 Consensus distilling: {'✅ ACTIVE' if self.use_consensus else '❌ INACTIVE'}")
-        logger.info(f"🚀 Hardware: {'TPU' if self.use_tpu else 'GPU/CPU'}")
+        logger.info(f" CAPIBARAGPT-V2 UNIFIED TRAINER INITIALIZED")
+        logger.info(f" Model scale: {self.model_scale_name}")
+        logger.info(f" Consensus distilling: {' ACTIVE' if self.use_consensus else ' INACTIVE'}")
+        logger.info(f" Hardware: {'TPU' if self.use_tpu else 'GPU/CPU'}")
         logger.info("="*80)
     
     def _initialize_components(self, use_wandb: bool):
@@ -158,20 +158,20 @@ class UnifiedTrainer:
         # Initialize TPU optimizer if available
         if self.use_tpu:
             self.tpu_optimizer = setup_tpu_environment()
-            logger.info("✅ TPU Optimizer initialized")
+            logger.info(" TPU Optimizer initialized")
 
         # Initialize consensus system if necessary
         if self.use_consensus:
             self.consensus_system = create_consensus_system_for_scale(self.model_scale_name)
             if self.consensus_system:
-                logger.info(f"✅ Consensus System initialized - {self.consensus_system.n_teachers} teachers, {self.consensus_system.n_critics} critics")
+                logger.info(f" Consensus System initialized - {self.consensus_system.n_teachers} teachers, {self.consensus_system.n_critics} critics")
 
             # Initialize distillation manager
             self.distillation_manager = DistillationManager(
                 temperature=4.0,
                 alpha=0.3 if self.model_scale_name in ["3B", "7B", "13B"] else 0.5
             )
-            logger.info("✅ Distillation Manager initialized")
+            logger.info(" Distillation Manager initialized")
 
         # Initialize W&B if enabled
         if use_wandb:
@@ -198,7 +198,7 @@ class UnifiedTrainer:
                     "trainer_version": "unified-v2.0"
                 }
             )
-            logger.info("✅ W&B initialized")
+            logger.info(" W&B initialized")
         except Exception as e:
             logger.warning(f"Error initializing W&B: {e}")
             self.wandb_run = None
@@ -226,7 +226,7 @@ class UnifiedTrainer:
         Returns:
             Training results
         """
-        logger.info("🚀 STARTING UNIFIED TRAINING")
+        logger.info(" STARTING UNIFIED TRAINING")
 
         # Initialize training state
         await self._initialize_training_state(resume_from)
@@ -241,7 +241,7 @@ class UnifiedTrainer:
         
         try:
             for epoch in range(num_epochs):
-                logger.info(f"📊 Starting epoch {epoch + 1}/{num_epochs}")
+                logger.info(f" Starting epoch {epoch + 1}/{num_epochs}")
                 epoch_start = time.time()
 
                 # Training per epoch
@@ -280,7 +280,7 @@ class UnifiedTrainer:
                 
                 # End of epoch
                 epoch_time = time.time() - epoch_start
-                logger.info(f"✅ Epoch {epoch + 1} completed in {epoch_time:.2f}s")
+                logger.info(f" Epoch {epoch + 1} completed in {epoch_time:.2f}s")
 
                 # Evaluation at end of epoch
                 if val_dataset:
@@ -291,7 +291,7 @@ class UnifiedTrainer:
                 await self._save_checkpoint(f"epoch_{epoch + 1}")
         
         except Exception as e:
-            logger.error(f"❌ Error during training: {e}")
+            logger.error(f" Error during training: {e}")
             raise
         
         finally:
@@ -302,7 +302,7 @@ class UnifiedTrainer:
             if self.wandb_run:
                 wandb.finish()
             
-            logger.info("🎉 TRAINING COMPLETED")
+            logger.info(" TRAINING COMPLETED")
             return final_results
     
     async def _initialize_training_state(self, resume_from: Optional[str]):
@@ -325,14 +325,14 @@ class UnifiedTrainer:
         # Apply TPU optimizations if available
         if self.tpu_optimizer:
             # Optimize parameters for TPU
-            logger.info("🚀 Applying TPU optimizations to parameters")
+            logger.info(" Applying TPU optimizations to parameters")
 
         # Restore checkpoint if specified
         if resume_from:
-            logger.info(f"📂 Restoring checkpoint from: {resume_from}")
+            logger.info(f" Restoring checkpoint from: {resume_from}")
             # Restoration logic would go here
 
-        logger.info("✅ Training state initialized")
+        logger.info(" Training state initialized")
     
     def _create_train_step_function(self):
         """Create optimized training step function."""
@@ -475,7 +475,7 @@ class UnifiedTrainer:
     
     def _log_evaluation(self, eval_metrics: Dict[str, float]):
         """Logging de métricas de evaluación."""
-        logger.info(f"📊 EVALUACIÓN - Loss: {eval_metrics['eval_loss']:.4f}, "
+        logger.info(f" EVALUACIÓN - Loss: {eval_metrics['eval_loss']:.4f}, "
                    f"Perplexity: {eval_metrics['eval_perplexity']:.2f}")
         
         if self.wandb_run:
@@ -517,7 +517,7 @@ class UnifiedTrainer:
         checkpoint_path = self.output_dir / f"checkpoint_{step_or_name}"
         
         # En implementation real, here se guardaría el estado complete
-        logger.info(f"💾 Guardando checkpoint: {checkpoint_path}")
+        logger.info(f" Guardando checkpoint: {checkpoint_path}")
         
         # save métricas also
         metrics_path = self.output_dir / f"metrics_{step_or_name}.json"
@@ -539,11 +539,11 @@ class UnifiedTrainer:
             consensus_metrics = self.consensus_system.get_comprehensive_metrics()
             results['consensus_metrics'] = consensus_metrics
         
-        logger.info("📊 RESULTADOS FINALES:")
-        logger.info(f"   ✅ Pasos totales: {total_steps}")
-        logger.info(f"   ✅ Tiempo total: {total_time:.2f}s")
-        logger.info(f"   ✅ Pérdida final: {self.current_metrics.loss:.4f}")
-        logger.info(f"   ✅ Perplexity final: {self.current_metrics.perplexity:.2f}")
+        logger.info(" RESULTADOS FINALES:")
+        logger.info(f"    Pasos totales: {total_steps}")
+        logger.info(f"    Tiempo total: {total_time:.2f}s")
+        logger.info(f"    Pérdida final: {self.current_metrics.loss:.4f}")
+        logger.info(f"    Perplexity final: {self.current_metrics.perplexity:.2f}")
         
         return results
 

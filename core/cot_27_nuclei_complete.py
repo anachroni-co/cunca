@@ -7,11 +7,11 @@ Sistema Chain-of-Thought Ultra with 27 Núcleos de Conocimiento - complete
 implementation completa del sistema de razonamiento with 27 núcleos especializados,
 routing jerárquico, execution paralela and síntesis inter-núcleos.
 
-🧠 27 Núcleos Organizados en 6 Dominios
-⚡ execution Paralela de Cores 
-🔗 Síntesis Cross-Disciplinaria
-📊 Métricas Detalladas de Rendimiento
-🎯 Routing Jerárquico Inteligente
+ 27 Núcleos Organizados en 6 Dominios
+ execution Paralela de Cores 
+ Síntesis Cross-Disciplinaria
+ Métricas Detalladas de Rendimiento
+ Routing Jerárquico Inteligente
 """
 
 import logging
@@ -646,7 +646,7 @@ if __name__ == "__main__":
     )
     
     logger.info("="*80)
-    logger.info("🧠 SISTEMA ULTRA CHAIN-OF-THOUGHT CON 27 NÚCLEOS - DEMO")
+    logger.info(" SISTEMA ULTRA CHAIN-OF-THOUGHT CON 27 NÚCLEOS - DEMO")
     logger.info("="*80)
     logger.info(f"Query: {result['query']}")
     logger.info(f"\n{result['final_reasoning']}")
@@ -656,7 +656,7 @@ if __name__ == "__main__":
     
     # Reporte del sistema
     system_report = ultra_cot.get_system_report()
-    logger.info(f"\n📊 REPORTE DEL SISTEMA:")
+    logger.info(f"\n REPORTE DEL SISTEMA:")
     logger.info(f"- Núcleos: {system_report['system_info']['total_nuclei']}")
     logger.info(f"- Dominios: {system_report['system_info']['domains']}")
     logger.info(f"- Sesiones: {system_report['usage_statistics']['total_sessions']}")
@@ -664,10 +664,10 @@ if __name__ == "__main__":
     
     # show síntesis if existe
     if result["synthesis_results"]:
-        logger.info(f"\n🔗 SÍNTESIS INTER-NÚCLEOS:")
+        logger.info(f"\n SÍNTESIS INTER-NÚCLEOS:")
         for level, synthesis in result["synthesis_results"].items():
             quality = synthesis["synthesis_quality"]["overall_quality"]
             nuclei_count = len(synthesis["participating_nuclei"])
             logger.info(f"- {level}: {nuclei_count} núcleos, calidad {quality:.3f}")
     
-    logger.info("\n✨ Sistema funcionando correctamente!")
+    logger.info("\n Sistema funcionando correctamente!")

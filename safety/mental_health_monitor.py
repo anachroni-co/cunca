@@ -512,7 +512,7 @@ class MentalHealthMonitor:
 def create_mental_health_disclaimer() -> str:
     """Create mental health disclaimer"""
     return """
-    ⚠️ IMPORTANT MENTAL HEALTH NOTICE ⚠️
+    ️ IMPORTANT MENTAL HEALTH NOTICE ️
 
     This AI is designed to help, but not to replace professional medical care.
 

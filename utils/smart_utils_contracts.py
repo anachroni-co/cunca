@@ -1,13 +1,13 @@
 """
-🔧 SMART UTILS CONTRACTS SYSTEM
+ SMART UTILS CONTRACTS SYSTEM
 ===============================
 
 Smart contracts system for utilities with:
-- 🤖 Auto-execution of contracts
-- 📊 Automatic SLA validation
-- 🔄 Intelligent resource management
-- ⚡ Automatic performance optimization
-- 🛡️ Protection against violations
+-  Auto-execution of contracts
+-  Automatic SLA validation
+-  Intelligent resource management
+-  Automatic performance optimization
+- ️ Protection against violations
 
 Author: CapibaraGPT Ultra Team
 Version: 3.3.0 Ultra
@@ -161,17 +161,17 @@ class SmartContract(ABC):
     def activate(self) -> None:
         """Activates the contract."""
         self.status = ContractStatus.ACTIVE
-        self.logger.info(f"✅ Contract {self.contract_id} activated")
+        self.logger.info(f" Contract {self.contract_id} activated")
     
     def pause(self) -> None:
         """Pauses the contract."""
         self.status = ContractStatus.PAUSED
-        self.logger.info(f"⏸️ Contract {self.contract_id} paused")
+        self.logger.info(f"️ Contract {self.contract_id} paused")
     
     def terminate(self) -> None:
         """Terminates the contract."""
         self.status = ContractStatus.TERMINATED
-        self.logger.info(f"🔚 Contract {self.contract_id} terminated")
+        self.logger.info(f" Contract {self.contract_id} terminated")
     
     def add_violation(self, violation: ContractViolation) -> None:
         """Adds a violation to the contract."""
@@ -180,7 +180,7 @@ class SmartContract(ABC):
 
         if violation.severity in [ViolationSeverity.CRITICAL, ViolationSeverity.EMERGENCY]:
             self.status = ContractStatus.VIOLATED
-            self.logger.error(f"🚨 {violation.severity.value} violation in contract {self.contract_id}")
+            self.logger.error(f" {violation.severity.value} violation in contract {self.contract_id}")
 
         # Auto-healing if enabled
         if self.auto_heal and violation.severity != ViolationSeverity.EMERGENCY:
@@ -198,7 +198,7 @@ class SmartContract(ABC):
                         violation.auto_resolution_attempted = True
                         violation.resolved = True
                         violation.resolution_details = result.get('details', 'Auto-healing successful')
-                        self.logger.info(f"🔧 Auto-healing successful for violation {violation.violation_type}")
+                        self.logger.info(f" Auto-healing successful for violation {violation.violation_type}")
                         return True
                 except Exception as e:
                     self.logger.warning(f"Auto-healing failed: {e}")
@@ -458,7 +458,7 @@ class QualityContract(SmartContract):
 
 class SmartContractsManager:
     """
-    🔧 CENTRAL MANAGER for smart contracts.
+     CENTRAL MANAGER for smart contracts.
 
     Manages the complete contract lifecycle with:
     - Periodic auto-execution
@@ -494,7 +494,7 @@ class SmartContractsManager:
         if contract.status == ContractStatus.ACTIVE:
             self.global_metrics['active_contracts'] += 1
         
-        self.logger.info(f"📝 Contract registered: {contract.contract_id}")
+        self.logger.info(f" Contract registered: {contract.contract_id}")
     
     def activate_contract(self, contract_id: str) -> bool:
         """Activates a specific contract."""
@@ -522,7 +522,7 @@ class SmartContractsManager:
             
             del self.contracts[contract_id]
             self.global_metrics['total_contracts'] -= 1
-            self.logger.info(f"🗑️ Contract removed: {contract_id}")
+            self.logger.info(f"️ Contract removed: {contract_id}")
             return True
         return False
     
@@ -673,10 +673,10 @@ class SmartContractsManager:
                     
                     # Log de resultados
                     if results['violations_found'] > 0:
-                        self.logger.warning(f"🚨 {results['violations_found']} violaciones encontradas")
+                        self.logger.warning(f" {results['violations_found']} violaciones encontradas")
                     
                     if results['actions_executed'] > 0:
-                        self.logger.info(f"🔧 {results['actions_executed']} acciones ejecutadas")
+                        self.logger.info(f" {results['actions_executed']} acciones ejecutadas")
                     
                     time.sleep(self.check_interval_seconds)
                     
@@ -687,7 +687,7 @@ class SmartContractsManager:
         self.monitor_thread = threading.Thread(target=monitor_worker, daemon=True)
         self.monitor_thread.start()
         
-        self.logger.info(f"🚀 Monitoreo de contratos iniciado (intervalo: {self.check_interval_seconds}s)")
+        self.logger.info(f" Monitoreo de contratos iniciado (intervalo: {self.check_interval_seconds}s)")
     
     def stop_monitoring(self) -> None:
         """Detiene el monitoreo automático."""
@@ -695,7 +695,7 @@ class SmartContractsManager:
         if self.monitor_thread:
             self.monitor_thread.join(timeout=5)
         
-        self.logger.info("🛑 Monitoreo de contratos detenido")
+        self.logger.info(" Monitoreo de contratos detenido")
     
     def _create_monitoring_context(self) -> Dict[str, Any]:
         """Crea contexto basic for monitoreo."""

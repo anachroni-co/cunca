@@ -303,7 +303,7 @@ class MetaBAMDP(MetaBAMDPBase):
             self.meta_parameters = {}
         
         self.setup()
-        logger.info("🧠 Enhanced Meta-BAMDP initialized successfully")
+        logger.info(" Enhanced Meta-BAMDP initialized successfully")
     
     def setup(self):
         self.domain_adapter = BayesianDomainAdapter(self.config)
@@ -527,12 +527,12 @@ def main():
         adaptation_strategy=AdaptationStrategy.MODERATE
     )
     
-    logger.info(f"✅ MetaBAMDP created with config: {config}")
-    logger.info(f"✅ Processing context created: {context.domain.value}")
+    logger.info(f" MetaBAMDP created with config: {config}")
+    logger.info(f" Processing context created: {context.domain.value}")
     
     # 2. Legacy interface test
     legacy_meta_bamdp = MetaBAMDP()
-    logger.info("✅ Legacy MetaBAMDP interface test successful")
+    logger.info(" Legacy MetaBAMDP interface test successful")
     return True
 
 if __name__ == "__main__":

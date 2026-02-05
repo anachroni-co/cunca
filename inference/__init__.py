@@ -74,7 +74,7 @@ class UnifiedInferenceSystem:
         
         self._initialize_engines()
         
-        logger.info("🚀 Unified Inference System initialized")
+        logger.info(" Unified Inference System initialized")
     
     def _detect_available_engines(self) -> Dict[str, bool]:
         """Detect available inference engines."""
@@ -91,7 +91,7 @@ class UnifiedInferenceSystem:
         if ARM_INFERENCE_AVAILABLE:
             try:
                 self.arm_engine = ARMInferenceEngine()
-                logger.info("✅ ARM inference engine initialized")
+                logger.info(" ARM inference engine initialized")
             except Exception as e:
                 logger.warning(f"Failed to initialize ARM engine: {e}")
         
@@ -100,7 +100,7 @@ class UnifiedInferenceSystem:
             try:
                 quant_config = self.config.get('quantization', {})
                 self.quantization_system = get_quantization_system(quant_config)
-                logger.info("✅ Quantization system initialized")
+                logger.info(" Quantization system initialized")
             except Exception as e:
                 logger.warning(f"Failed to initialize quantization system: {e}")
     
@@ -135,7 +135,7 @@ class UnifiedInferenceSystem:
             engine.load_model(model_path)
             
             self.active_engine = engine
-            logger.info(f"✅ Created quantized inference engine for {model_path}")
+            logger.info(f" Created quantized inference engine for {model_path}")
             return engine
         
         elif engine_type == "arm" and ARM_INFERENCE_AVAILABLE:
@@ -144,7 +144,7 @@ class UnifiedInferenceSystem:
             engine.load_model(model_path)
             
             self.active_engine = engine
-            logger.info(f"✅ Created ARM inference engine for {model_path}")
+            logger.info(f" Created ARM inference engine for {model_path}")
             return engine
         
         else:
@@ -284,11 +284,11 @@ logger.info(f"Inference module initialized (v{__version__})")
 logger.info(f"Available inference engines: {sum([ARM_INFERENCE_AVAILABLE, QUANTIZED_INFERENCE_AVAILABLE, QUANTIZATION_SYSTEM_AVAILABLE])}/3")
 
 if sum([ARM_INFERENCE_AVAILABLE, QUANTIZED_INFERENCE_AVAILABLE]) >= 2:
-    logger.info("🚀 Advanced inference capabilities ready")
+    logger.info(" Advanced inference capabilities ready")
 elif any([ARM_INFERENCE_AVAILABLE, QUANTIZED_INFERENCE_AVAILABLE]):
-    logger.info("⚡ Basic inference capabilities available")
+    logger.info(" Basic inference capabilities available")
 else:
-    logger.warning("⚠️ Limited inference capabilities")
+    logger.warning("️ Limited inference capabilities")
 
 # Available components for export
 __all__ = [

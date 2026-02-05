@@ -233,7 +233,7 @@ class SemanticDeduplicator:
         
         self._initialize_components()
         
-        logger.info(f"🔄 SemanticDeduplicator initialized with config: {self.config}")
+        logger.info(f" SemanticDeduplicator initialized with config: {self.config}")
     
     def _initialize_components(self):
         """Initialize deduplication components."""
@@ -245,7 +245,7 @@ class SemanticDeduplicator:
                     threshold=self.config.jaccard_threshold,
                     num_perm=self.config.num_perm
                 )
-                logger.info("✅ LSH MinHash initialized")
+                logger.info(" LSH MinHash initialized")
             except Exception as e:
                 logger.warning(f"Failed to initialize LSH: {e}")
         
@@ -253,7 +253,7 @@ class SemanticDeduplicator:
         if SENTENCE_TRANSFORMERS_AVAILABLE:
             try:
                 self.embedding_model = SentenceTransformer(self.config.embed_model)
-                logger.info(f"✅ Embedding model loaded: {self.config.embed_model}")
+                logger.info(f" Embedding model loaded: {self.config.embed_model}")
             except Exception as e:
                 logger.warning(f"Failed to load embedding model: {e}")
                 self.embedding_model = None
@@ -268,7 +268,7 @@ class SemanticDeduplicator:
         Returns:
             Deduplicated documents
         """
-        logger.info(f"🚀 Starting deduplication of {len(docs)} documents")
+        logger.info(f" Starting deduplication of {len(docs)} documents")
         
         self.stats['total_processed'] = len(docs)
         
@@ -291,7 +291,7 @@ class SemanticDeduplicator:
         
         self.stats['final_count'] = len(docs)
         
-        logger.info(f"✅ Deduplication completed: {len(docs)} documents remaining")
+        logger.info(f" Deduplication completed: {len(docs)} documents remaining")
         self._log_stats()
         
         return docs
@@ -322,7 +322,7 @@ class SemanticDeduplicator:
             
             filtered_docs.append(doc)
         
-        logger.info(f"📊 After normalization and basic filtering: {len(filtered_docs)} documents")
+        logger.info(f" After normalization and basic filtering: {len(filtered_docs)} documents")
         return filtered_docs
     
     def _exact_deduplication(self, docs: List[Dict]) -> List[Dict]:
@@ -338,7 +338,7 @@ class SemanticDeduplicator:
             else:
                 self.stats['exact_duplicates_removed'] += 1
         
-        logger.info(f"🔍 After exact deduplication: {len(unique_docs)} documents")
+        logger.info(f" After exact deduplication: {len(unique_docs)} documents")
         return unique_docs
     
     def _lsh_deduplication(self, docs: List[Dict]) -> List[Dict]:
@@ -380,7 +380,7 @@ class SemanticDeduplicator:
                 deduplicated_docs.append(best_doc)
                 self.stats['near_duplicates_removed'] += len(cluster_docs) - 1
         
-        logger.info(f"🔗 After LSH deduplication: {len(deduplicated_docs)} documents")
+        logger.info(f" After LSH deduplication: {len(deduplicated_docs)} documents")
         return deduplicated_docs
     
     def _semantic_deduplication(self, docs: List[Dict]) -> List[Dict]:
@@ -450,7 +450,7 @@ class SemanticDeduplicator:
         
         deduplicated_docs = [doc for i, doc in enumerate(docs) if keep_mask[i]]
         
-        logger.info(f"🧠 After semantic deduplication: {len(deduplicated_docs)} documents")
+        logger.info(f" After semantic deduplication: {len(deduplicated_docs)} documents")
         return deduplicated_docs
     
     def _final_quality_filter(self, docs: List[Dict]) -> List[Dict]:
@@ -463,7 +463,7 @@ class SemanticDeduplicator:
             else:
                 self.stats['quality_filtered'] += 1
         
-        logger.info(f"✨ After final quality filtering: {len(filtered_docs)} documents")
+        logger.info(f" After final quality filtering: {len(filtered_docs)} documents")
         return filtered_docs
     
     def get_stats(self) -> Dict[str, Any]:
@@ -494,7 +494,7 @@ class SemanticDeduplicator:
         """Log detailed statistics."""
         stats = self.get_stats()
         
-        logger.info("📊 Deduplication Statistics:")
+        logger.info(" Deduplication Statistics:")
         logger.info(f"  Total processed: {stats['total_processed']:,}")
         logger.info(f"  Exact duplicates removed: {stats['exact_duplicates_removed']:,}")
         logger.info(f"  Near duplicates removed: {stats['near_duplicates_removed']:,}")

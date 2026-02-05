@@ -1,5 +1,5 @@
 """
-🏗️ CAPIBARA TEXT-TO-BIM SERVICE
+️ CAPIBARA TEXT-TO-BIM SERVICE
 ===============================
 
 Servicio revolucionario de modelado BIM arquitectónico con IA.

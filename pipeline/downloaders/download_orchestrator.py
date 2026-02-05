@@ -125,7 +125,7 @@ class DownloadOrchestrator:
             self.download_queue.append(task)
             task_ids.append(task.task_id)
         
-        logger.info(f"📰 Added {len(task_ids)} Spanish news download tasks")
+        logger.info(f" Added {len(task_ids)} Spanish news download tasks")
         return task_ids
     
     def add_academic_tasks(self) -> List[str]:
@@ -167,7 +167,7 @@ class DownloadOrchestrator:
             self.download_queue.append(task)
             task_ids.append(task.task_id)
         
-        logger.info(f"📚 Added {len(task_ids)} Spanish academic download tasks")
+        logger.info(f" Added {len(task_ids)} Spanish academic download tasks")
         return task_ids
     
     def add_api_tasks(self) -> List[str]:
@@ -207,7 +207,7 @@ class DownloadOrchestrator:
             self.download_queue.append(task)
             task_ids.append(task.task_id)
         
-        logger.info(f"🔌 Added {len(task_ids)} API download tasks")
+        logger.info(f" Added {len(task_ids)} API download tasks")
         return task_ids
     
     def add_direct_download_tasks(self) -> List[str]:
@@ -242,12 +242,12 @@ class DownloadOrchestrator:
             self.download_queue.append(task)
             task_ids.append(task.task_id)
         
-        logger.info(f"📥 Added {len(task_ids)} direct download tasks")
+        logger.info(f" Added {len(task_ids)} direct download tasks")
         return task_ids
     
     def setup_complete_download_pipeline(self) -> Dict[str, Any]:
         """Set up the complete download pipeline with all sources."""
-        logger.info("🚀 Setting up complete download pipeline...")
+        logger.info(" Setting up complete download pipeline...")
         
         # Add all task types
         news_tasks = self.add_spanish_news_tasks()
@@ -280,7 +280,7 @@ class DownloadOrchestrator:
             "setup_completed_at": datetime.now().isoformat()
         }
         
-        logger.info(f"📊 Pipeline setup complete:")
+        logger.info(f" Pipeline setup complete:")
         logger.info(f"   Total tasks: {total_tasks}")
         logger.info(f"   Estimated size: {total_estimated_size:.1f}GB")
         logger.info(f"   High priority: {pipeline_info['priority_breakdown']['high_priority']} tasks")
@@ -294,7 +294,7 @@ class DownloadOrchestrator:
             task.started_at = datetime.now().isoformat()
             self.active_downloads[task.task_id] = task
             
-            logger.info(f"🚀 Starting download: {task.source_name} ({task.source_type})")
+            logger.info(f" Starting download: {task.source_name} ({task.source_type})")
             
             try:
                 # Simulate download based on source type
@@ -311,7 +311,7 @@ class DownloadOrchestrator:
                     task.status = "completed"
                     task.completed_at = datetime.now().isoformat()
                     self.completed_downloads.append(task)
-                    logger.info(f"✅ Completed: {task.source_name}")
+                    logger.info(f" Completed: {task.source_name}")
                 else:
                     raise Exception("Download failed")
                 
@@ -322,14 +322,14 @@ class DownloadOrchestrator:
                 task.retry_count += 1
                 
                 if task.retry_count <= task.max_retries:
-                    logger.warning(f"⚠️ Retry {task.retry_count}/{task.max_retries}: {task.source_name}")
+                    logger.warning(f"️ Retry {task.retry_count}/{task.max_retries}: {task.source_name}")
                     task.status = "pending"
                     # Add back to queue for retry
                     self.download_queue.insert(0, task)
                 else:
                     task.status = "failed"
                     self.failed_downloads.append(task)
-                    logger.error(f"❌ Failed: {task.source_name} - {e}")
+                    logger.error(f" Failed: {task.source_name} - {e}")
                 
                 return False
                 
@@ -351,7 +351,7 @@ class DownloadOrchestrator:
         with open(data_file, 'w', encoding='utf-8') as f:
             f.write(f'{{"source": "{task.source_name}", "data": "simulated_scraped_content", "timestamp": "{datetime.now().isoformat()}"}}\n')
         
-        logger.info(f"🕷️ Web scraping completed: {task.source_name}")
+        logger.info(f"️ Web scraping completed: {task.source_name}")
         return True
     
     async def _execute_api_download(self, task: DownloadTask) -> bool:
@@ -373,7 +373,7 @@ class DownloadOrchestrator:
                 "size_gb": task.estimated_size_gb
             }, f, indent=2)
         
-        logger.info(f"🔌 API download completed: {task.source_name}")
+        logger.info(f" API download completed: {task.source_name}")
         return True
     
     async def _execute_direct_download(self, task: DownloadTask) -> bool:
@@ -390,7 +390,7 @@ class DownloadOrchestrator:
         with open(data_file, 'w', encoding='utf-8') as f:
             f.write(f"Simulated download content for {task.source_name}")
         
-        logger.info(f"📥 Direct download completed: {task.source_name}")
+        logger.info(f" Direct download completed: {task.source_name}")
         return True
     
     def update_stats(self):
@@ -416,7 +416,7 @@ class DownloadOrchestrator:
     
     async def run_download_pipeline(self) -> Dict[str, Any]:
         """Run the complete download pipeline."""
-        logger.info("🚀 Starting download pipeline execution...")
+        logger.info(" Starting download pipeline execution...")
         self.start_time = time.time()
         
         # Process queue
@@ -433,7 +433,7 @@ class DownloadOrchestrator:
                 self.update_stats()
                 self.last_stats_update = current_time
                 
-                logger.info(f"📊 Progress: {self.stats.completed_tasks}/{self.stats.total_tasks} completed, "
+                logger.info(f" Progress: {self.stats.completed_tasks}/{self.stats.total_tasks} completed, "
                            f"{self.stats.running_tasks} running, {self.stats.pending_tasks} pending")
             
             # Small delay to prevent busy waiting
@@ -453,7 +453,7 @@ class DownloadOrchestrator:
             "completed_at": datetime.now().isoformat()
         }
         
-        logger.info(f"🎉 Download pipeline completed!")
+        logger.info(f" Download pipeline completed!")
         logger.info(f"   Total time: {execution_time:.1f} seconds")
         logger.info(f"   Success rate: {self.stats.success_rate:.1%}")
         logger.info(f"   Data downloaded: {self.stats.total_downloaded_gb:.1f}GB")

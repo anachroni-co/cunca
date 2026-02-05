@@ -6,12 +6,12 @@ Intelligent hybrid module that automatically selects between Transformer (O(n²)
 
 ## Features
 
-- ✅ **Intelligent Routing** automatic between Mamba and Transformer
-- ✅ **Configurable Threshold** for routing decisions
-- ✅ **Detailed Decision Metrics**
-- ✅ **Intelligent Caching** of decisions
-- ✅ **Reason Logging** for debugging
-- ✅ **IModule Compatible**
+-  **Intelligent Routing** automatic between Mamba and Transformer
+-  **Configurable Threshold** for routing decisions
+-  **Detailed Decision Metrics**
+-  **Intelligent Caching** of decisions
+-  **Reason Logging** for debugging
+-  **IModule Compatible**
 
 ## Decision Logic
 
@@ -261,11 +261,11 @@ for threshold in thresholds:
 
 ### Advantages
 
-- ✅ **Best of both worlds**: Transformer precision + Mamba efficiency
-- ✅ **Automatic**: No manual configuration per input
-- ✅ **Adaptive**: Adjusts to data characteristics
-- ✅ **Efficient**: Automatically optimizes resources
-- ✅ **Transparent**: Detailed decision metrics
+-  **Best of both worlds**: Transformer precision + Mamba efficiency
+-  **Automatic**: No manual configuration per input
+-  **Adaptive**: Adjusts to data characteristics
+-  **Efficient**: Automatically optimizes resources
+-  **Transparent**: Detailed decision metrics
 
 ## Troubleshooting
 
@@ -308,13 +308,13 @@ config['transformer_max_length'] = 512
 
 ## Implementation Status
 
-- ✅ Basic intelligent routing
-- ✅ Metrics and monitoring
-- ✅ Decision caching
-- ✅ IModule compatibility
-- ⚠️ Content-based routing (in progress)
-- 🔄 Adaptive thresholds (roadmap)
-- 🔄 Multi-dimensional routing (roadmap)
+-  Basic intelligent routing
+-  Metrics and monitoring
+-  Decision caching
+-  IModule compatibility
+- ️ Content-based routing (in progress)
+-  Adaptive thresholds (roadmap)
+-  Multi-dimensional routing (roadmap)
 
 ---
 

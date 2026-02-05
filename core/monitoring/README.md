@@ -2,11 +2,11 @@
 
 Advanced monitoring and alerts system for TPU with real-time metrics, anomaly detection, and proactive performance management.
 
-## 📋 Description
+##  Description
 
 This module provides comprehensive monitoring capabilities for TPU infrastructure, including performance metrics, configurable alerts, trend analysis, and automatic optimizations based on real-time telemetry.
 
-## 🏗️ Architecture
+## ️ Architecture
 
 ```
 monitoring/
@@ -16,7 +16,7 @@ monitoring/
 └── tpu_decorators.py    # Monitoring decorators
 ```
 
-## 🔍 Main Components
+##  Main Components
 
 ### 1. TPU Alert System (`tpu_alerts.py`)
 
@@ -75,7 +75,7 @@ current_metrics = {
 
 alerts_triggered = alert_manager.process_metrics(current_metrics)
 for alert in alerts_triggered:
-    print(f"🚨 {alert.severity.upper()}: {alert.message}")
+    print(f" {alert.severity.upper()}: {alert.message}")
     print(f"   Threshold: {alert.threshold}, Current: {alert.current_value}")
     print(f"   Suggested Action: {alert.suggested_action}")
 ```
@@ -168,7 +168,7 @@ print(f"Average Latency: {function_metrics['avg_latency_ms']:.1f}ms")
 print(f"Peak Memory: {function_metrics['peak_memory_gb']:.1f}GB")
 ```
 
-## 📊 Detailed Metrics
+##  Detailed Metrics
 
 ### Comprehensive Metrics System
 
@@ -226,7 +226,7 @@ detailed_metrics = {
     }
 }
 
-print("🔍 Hardware Metrics Summary:")
+print(" Hardware Metrics Summary:")
 for category, metrics in detailed_metrics.items():
     print(f"\n{category.upper()}:")
     for metric, value in metrics.items():
@@ -255,14 +255,14 @@ performance_forecast = predictor.predict_performance_trends(
     forecast_metrics=["memory_usage", "latency", "throughput", "temperature"]
 )
 
-print("📈 Performance Predictions (Next Hour):")
+print(" Performance Predictions (Next Hour):")
 for metric, prediction in performance_forecast.items():
     print(f"{metric}:")
     print(f"  Predicted Value: {prediction['value']:.3f}")
     print(f"  Confidence: {prediction['confidence']:.1%}")
     print(f"  Trend: {prediction['trend']}")
     if prediction['alert_probability'] > 0.3:
-        print(f"  ⚠️  Alert Probability: {prediction['alert_probability']:.1%}")
+        print(f"  ️  Alert Probability: {prediction['alert_probability']:.1%}")
 
 # Anomaly detection
 anomaly_detector = predictor.get_anomaly_detector()
@@ -270,12 +270,12 @@ current_state = metrics_collector.get_current_state()
 anomaly_score = anomaly_detector.compute_anomaly_score(current_state)
 
 if anomaly_score > 0.8:
-    print(f"🚨 High Anomaly Score Detected: {anomaly_score:.3f}")
+    print(f" High Anomaly Score Detected: {anomaly_score:.3f}")
     anomaly_details = anomaly_detector.explain_anomaly(current_state)
     print(f"Primary Contributing Factors: {anomaly_details['factors']}")
 ```
 
-## 🎯 Dashboard and Visualization
+##  Dashboard and Visualization
 
 ### Real-Time Dashboard
 
@@ -360,7 +360,7 @@ grafana_config = {
 dashboard.export_grafana_config(grafana_config)
 ```
 
-## 🔧 Advanced Configuration
+##  Advanced Configuration
 
 ### Custom Alert Configuration
 
@@ -454,13 +454,13 @@ optimization_result = auto_optimizer.optimize(
     max_iterations=20
 )
 
-print(f"🚀 Optimization Complete!")
+print(f" Optimization Complete!")
 print(f"Latency Improvement: {optimization_result['latency_improvement']:.1%}")
 print(f"Throughput Improvement: {optimization_result['throughput_improvement']:.1%}")
 print(f"Optimal Parameters: {optimization_result['optimal_params']}")
 ```
 
-## 🔒 Security Monitoring
+##  Security Monitoring
 
 ### Security and Compliance
 
@@ -488,12 +488,12 @@ compliance_status = {
 # Security alerts
 security_alerts = security_monitor.check_security_violations()
 for alert in security_alerts:
-    print(f"🔒 Security Alert: {alert.message}")
+    print(f" Security Alert: {alert.message}")
     print(f"   Severity: {alert.severity}")
     print(f"   Compliance Impact: {alert.compliance_impact}")
 ```
 
-## 📚 Integration and APIs
+##  Integration and APIs
 
 ### Monitoring APIs
 
@@ -533,7 +533,7 @@ api.add_webhook("/webhook/custom", custom_alert_handler)
 api.start()
 ```
 
-## 📈 Benchmarking and Testing
+##  Benchmarking and Testing
 
 ### Benchmark Suite
 
@@ -567,13 +567,13 @@ performance_report = benchmark_suite.generate_performance_report(
     compare_to_baseline=True
 )
 
-print("📊 Benchmark Results:")
+print(" Benchmark Results:")
 print(f"Overall Performance Score: {performance_report['score']:.2f}/100")
 print(f"Regression Detected: {'Yes' if performance_report['regression'] else 'No'}")
 print(f"Recommendations: {len(performance_report['recommendations'])} items")
 ```
 
-## 🤝 References and Documentation
+##  References and Documentation
 
 - [TPU Monitoring Best Practices](https://cloud.google.com/tpu/docs/monitoring)
 - [Prometheus Metrics Design](https://prometheus.io/docs/practices/naming/)

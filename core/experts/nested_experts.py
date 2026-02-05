@@ -586,7 +586,7 @@ class NestedExpertHierarchy:
         self.current_step = 0
         self.update_history = []
 
-        logger.info("🏗️ Nested Expert Hierarchy initialized")
+        logger.info("️ Nested Expert Hierarchy initialized")
         logger.info(f"   Meta-Experts: {len(self.meta_experts)} (freq={self.config.meta_update_freq})")
         logger.info(f"   Domain-Experts: {len(self.domain_experts)} (freq={self.config.domain_update_freq})")
         logger.info(f"   Micro-Experts: {len(self.micro_experts)} (freq={self.config.micro_update_freq})")
@@ -868,14 +868,14 @@ class NestedExpertHierarchy:
         lines.append("=" * 60)
 
         for meta_expert in self.meta_experts:
-            lines.append(f"\n📊 Meta-Expert {meta_expert.config.expert_id}: {meta_expert.config.specialization}")
+            lines.append(f"\n Meta-Expert {meta_expert.config.expert_id}: {meta_expert.config.specialization}")
             lines.append(f"   Usage: {meta_expert.state.usage_count}, Score: {meta_expert.state.specialization_score:.3f}")
 
             # Find domain children
             domain_children = [e for e in self.domain_experts if e.config.parent_id == meta_expert.config.expert_id]
 
             for domain_expert in domain_children:
-                lines.append(f"   ├─ 🎯 Domain {domain_expert.config.expert_id}: {domain_expert.config.specialization}")
+                lines.append(f"   ├─  Domain {domain_expert.config.expert_id}: {domain_expert.config.specialization}")
                 lines.append(f"   │  Usage: {domain_expert.state.usage_count}, Score: {domain_expert.state.specialization_score:.3f}")
 
                 # Find micro children
@@ -884,7 +884,7 @@ class NestedExpertHierarchy:
                 for i, micro_expert in enumerate(micro_children):
                     is_last = i == len(micro_children) - 1
                     connector = "└─" if is_last else "├─"
-                    lines.append(f"   │  {connector} ⚡ Micro {micro_expert.config.expert_id}: {micro_expert.config.specialization}")
+                    lines.append(f"   │  {connector}  Micro {micro_expert.config.expert_id}: {micro_expert.config.specialization}")
                     lines.append(f"   │     Usage: {micro_expert.state.usage_count}")
 
         lines.append("=" * 60)
@@ -915,7 +915,7 @@ def get_global_nested_experts() -> NestedExpertHierarchy:
 def main():
     """Test the nested expert hierarchy."""
     logging.basicConfig(level=logging.INFO)
-    logger.info("🏗️ Nested Expert Hierarchy - Testing Mode")
+    logger.info("️ Nested Expert Hierarchy - Testing Mode")
 
     # Create hierarchy
     hierarchy = create_nested_expert_hierarchy()
@@ -943,12 +943,12 @@ def main():
 
     # Final statistics
     stats = hierarchy.get_statistics()
-    logger.info(f"\n📊 Final Statistics:")
+    logger.info(f"\n Final Statistics:")
     logger.info(f"  Total experts: {stats['hierarchy_structure']['total_experts']}")
     logger.info(f"  Total updates: {stats['total_updates']}")
 
     routing_stats = stats['routing_statistics']
-    logger.info(f"\n🔀 Routing Statistics:")
+    logger.info(f"\n Routing Statistics:")
     logger.info(f"  Total routing decisions: {routing_stats['total_routing_decisions']}")
 
     # Print updated visualization

@@ -194,15 +194,15 @@ class UltraModuleOrchestrator:
     def _initialize_orchestrator(self):
         """Initialize the ultra module orchestrator."""
         
-        logger.info("🚀 Initializing Ultra Module Orchestrator")
+        logger.info(" Initializing Ultra Module Orchestrator")
         
         # Initialize ultra system integrations
         if self.config.auto_core_integration and ULTRA_CORE_AVAILABLE:
             try:
                 self.core_orchestrator = create_ultra_core_system()
-                logger.info("✅ Ultra Core integration initialized")
+                logger.info(" Ultra Core integration initialized")
             except Exception as e:
-                logger.warning(f"⚠️ Core integration failed: {e}")
+                logger.warning(f"️ Core integration failed: {e}")
         
         # Initialize modules
         self._initialize_modules()
@@ -215,10 +215,10 @@ class UltraModuleOrchestrator:
         if self.config.enable_expert_soup and ULTRA_TRAINING_INTEGRATION:
             self._initialize_expert_soup()
         
-        logger.info(f"✅ Ultra Module Orchestrator initialized")
-        logger.info(f"   📊 Available modules: {len(self.modules)}")
-        logger.info(f"   🔥 Ultra Core: {'✅' if self.core_orchestrator else '❌'}")
-        logger.info(f"   🍲 Expert Soup: {'✅' if self.expert_soup_manager else '❌'}")
+        logger.info(f" Ultra Module Orchestrator initialized")
+        logger.info(f"    Available modules: {len(self.modules)}")
+        logger.info(f"    Ultra Core: {'' if self.core_orchestrator else ''}")
+        logger.info(f"    Expert Soup: {'' if self.expert_soup_manager else ''}")
     
     def _initialize_modules(self):
         """Initialize all available modules."""
@@ -229,11 +229,11 @@ class UltraModuleOrchestrator:
                 if modules:
                     self.modules[module_type.value] = modules
                     self.global_metrics["total_modules"] += len(modules)
-                    logger.info(f"✅ {module_type.value}: {len(modules)} modules loaded")
+                    logger.info(f" {module_type.value}: {len(modules)} modules loaded")
                 else:
-                    logger.warning(f"⚠️ {module_type.value} modules not available")
+                    logger.warning(f"️ {module_type.value} modules not available")
             except Exception as e:
-                logger.error(f"❌ Failed to initialize {module_type.value}: {e}")
+                logger.error(f" Failed to initialize {module_type.value}: {e}")
         
         self.global_metrics["active_modules"] = sum(len(mods) for mods in self.modules.values())
     
@@ -682,12 +682,12 @@ class UltraModuleOrchestrator:
     def _initialize_training_integration(self):
         """Initialize training integration for modules."""
         if ULTRA_TRAINING_INTEGRATION:
-            logger.info("🎯 Training integration initialized for modules")
+            logger.info(" Training integration initialized for modules")
     
     def _initialize_expert_soup(self):
         """Initialize Expert Soup for modules."""
         if ULTRA_TRAINING_INTEGRATION:
-            logger.info("🍲 Expert Soup initialized for modules")
+            logger.info(" Expert Soup initialized for modules")
             self.expert_soup_manager = "expert_soup_placeholder"
     
     def get_system_status(self) -> Dict[str, Any]:
@@ -758,7 +758,7 @@ def create_ultra_module_config(
 def demonstrate_ultra_module_orchestration():
     """Demonstrate the ultra module orchestration system."""
     
-    logger.info("🌟 ULTRA MODULE ORCHESTRATION DEMONSTRATION")
+    logger.info(" ULTRA MODULE ORCHESTRATION DEMONSTRATION")
     logger.info("=" * 60)
     
     # Create configuration
@@ -767,7 +767,7 @@ def demonstrate_ultra_module_orchestration():
         enable_all_features=True
     )
     
-    logger.info(f"📋 Configuration created:")
+    logger.info(f" Configuration created:")
     logger.info(f"   - Strategy: {config.orchestration_strategy.value}")
     logger.info(f"   - Module types: {len(config.enabled_modules)}")
     logger.info(f"   - Ultra features: {config.auto_core_integration}")
@@ -778,14 +778,14 @@ def demonstrate_ultra_module_orchestration():
     # Get system status
     status = orchestrator.get_system_status()
     
-    logger.info(f"\n🔍 System Status:")
+    logger.info(f"\n System Status:")
     logger.info(f"   - Total modules: {status['performance']['total_modules']}")
     logger.info(f"   - Active modules: {status['performance']['active_modules']}")
-    logger.info(f"   - Ultra Core: {'✅' if status['availability']['ultra_core'] else '❌'}")
+    logger.info(f"   - Ultra Core: {'' if status['availability']['ultra_core'] else ''}")
     logger.info(f"   - Module types available:")
     for module_type, available in status['availability'].items():
         if module_type.endswith('_modules'):
-            status_emoji = "✅" if available else "❌"
+            status_emoji = "" if available else ""
             logger.info(f"     {status_emoji} {module_type}")
     
     # Test routing
@@ -797,13 +797,13 @@ def demonstrate_ultra_module_orchestration():
             strategy=OrchestrationStrategy.ULTRA_HYBRID
         )
         
-        logger.info(f"\n🎯 Routing Test:")
+        logger.info(f"\n Routing Test:")
         logger.info(f"   - Strategy: {routing_info['strategy']}")
         logger.info(f"   - Computation time: {routing_info['performance']['computation_time_ms']:.2f}ms")
         logger.info(f"   - Success rate: {routing_info['performance']['success_rate']:.2%}")
         
     except Exception as e:
-        logger.error(f"\n❌ Routing test failed: {e}")
+        logger.error(f"\n Routing test failed: {e}")
     
     return orchestrator
 

@@ -2,7 +2,7 @@
 
 **Advanced neural network layer implementations for capibaraGPT-v2**
 
-## 📋 Table of Contents
+##  Table of Contents
 
 1. [Overview](#overview)
 2. [Layer Categories](#layer-categories)
@@ -21,7 +21,7 @@
 
 ---
 
-## 🎯 Overview
+##  Overview
 
 The `capibara/layers` module provides a comprehensive suite of advanced neural network layers built on JAX/Flax. These layers implement cutting-edge ML techniques including:
 
@@ -35,58 +35,58 @@ The `capibara/layers` module provides a comprehensive suite of advanced neural n
 
 ### Key Features
 
-✅ **Modular Architecture**: All layers implement `ILayer` interface
-✅ **JAX/Flax Native**: Fully JIT-compilable and TPU-optimized
-✅ **Flexible Composition**: Mix and match layers for custom architectures
-✅ **Advanced Optimizations**: Gradient checkpointing, mixed precision, sparse ops
-✅ **Graceful Fallbacks**: Automatic fallback when dependencies unavailable
-✅ **Production-Ready**: Battle-tested in training and inference
+ **Modular Architecture**: All layers implement `ILayer` interface
+ **JAX/Flax Native**: Fully JIT-compilable and TPU-optimized
+ **Flexible Composition**: Mix and match layers for custom architectures
+ **Advanced Optimizations**: Gradient checkpointing, mixed precision, sparse ops
+ **Graceful Fallbacks**: Automatic fallback when dependencies unavailable
+ **Production-Ready**: Battle-tested in training and inference
 
 ---
 
-## 🏗️ Layer Categories
+## ️ Layer Categories
 
 ### Layer Taxonomy
 
 ```
 capibara/layers/
-├── 📦 Core Layers
+├──  Core Layers
 │   ├── base.py                     # Abstract base classes
 │   ├── self_attention.py           # Standard self-attention
 │   ├── stack.py                    # Layer stacking utilities
 │   └── conv1d_block.py             # 1D convolution blocks
 │
-├── 🌊 SSM Hybrid Layers (O(n) Attention)
+├──  SSM Hybrid Layers (O(n) Attention)
 │   └── ssm_hybrid_layers.py        # Mamba, S4, Hybrid SSM
 │
-├── 🧠 Meta-Learning
+├──  Meta-Learning
 │   └── meta_la.py                  # Meta-Learning Attention
 │
-├── 🔄 Adaptive Layers
+├──  Adaptive Layers
 │   ├── neuro_adaptive.py           # Neuroadaptive mechanisms
 │   └── neurogenesis.py             # Dynamic layer creation
 │
-├── 🎓 Abstract Reasoning
+├──  Abstract Reasoning
 │   └── abstract_reasoning/
 │       ├── platonic.py             # Platonic ideal representations
 │       ├── quineana.py             # Quine-style self-reference
 │       └── game_theory.py          # Game-theoretic reasoning
 │
-├── 💤 Passive Learning (PASIVE)
+├──  Passive Learning (PASIVE)
 │   └── pasive/
 │       ├── synthetic_embedding.py  # Synthetic embeddings
 │       ├── attention.py            # Distributed attention
 │       ├── embedding.py            # Adaptive embeddings
 │       └── base.py                 # PASIVE base classes
 │
-├── ⚡ Sparsity & Quantization
+├──  Sparsity & Quantization
 │   └── sparsity/
 │       ├── bitnet.py               # BitNet 1.58-bit quantization
 │       ├── sparse_capibara.py      # Sparse model variants
 │       ├── affine_quantizer.py     # Affine quantization
 │       └── mixture_of_rookies.py   # MoR (Mixture of Rookies)
 │
-└── 🚀 Ultra Integration
+└──  Ultra Integration
     └── ultra_layer_integration.py  # Orchestrator for all layers
 ```
 
@@ -110,7 +110,7 @@ print(f"Sparsity layers available: {SPARSITY_LAYERS_AVAILABLE}")
 
 ---
 
-## 🏛️ Architecture
+## ️ Architecture
 
 ### Layer Hierarchy
 
@@ -165,7 +165,7 @@ Input Tensor (B, L, D)
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Basic Usage
 
@@ -243,7 +243,7 @@ quantized_weights = quantizer.quantize(weights)
 
 ---
 
-## 📦 Core Layers
+##  Core Layers
 
 ### BaseLayer
 
@@ -310,7 +310,7 @@ output = attention(x, mask=attention_mask, training=True)
 
 ---
 
-## 🌊 SSM Hybrid Layers
+##  SSM Hybrid Layers
 
 **State Space Models** provide O(n) complexity alternatives to attention mechanisms.
 
@@ -428,7 +428,7 @@ print(f"Hybrid available: {status['hybrid_available']}")
 
 ---
 
-## 🧠 Meta-Learning Layers
+##  Meta-Learning Layers
 
 ### MetaLA (Meta-Learning Attention)
 
@@ -531,7 +531,7 @@ for meta_iteration in range(1000):
 
 ---
 
-## 🎓 Abstract Reasoning
+##  Abstract Reasoning
 
 Advanced layers for abstract and symbolic reasoning.
 
@@ -628,7 +628,7 @@ print(f"Nash equilibrium shape: {equilibrium.shape}")
 
 ---
 
-## 💤 Passive Learning (PASIVE)
+##  Passive Learning (PASIVE)
 
 **PASIVE**: Parameter-Adaptive Sparse Information Vectors Embeddings
 
@@ -696,7 +696,7 @@ output = attention(x, use_sparse=True)
 
 ---
 
-## ⚡ Sparsity & Quantization
+##  Sparsity & Quantization
 
 Layers for model compression and efficiency.
 
@@ -861,7 +861,7 @@ print(f"Active rookies per token: {routing_weights.sum(axis=-1).mean():.1f}")
 
 ---
 
-## 🚀 Ultra Layer Integration
+##  Ultra Layer Integration
 
 ### UltraLayerOrchestrator
 
@@ -941,7 +941,7 @@ def select_layers(seq_length, task_type):
 
 ---
 
-## 📊 Usage Examples
+##  Usage Examples
 
 ### Example 1: Long-Sequence Processing
 
@@ -1057,7 +1057,7 @@ output = orchestrator(x)
 
 ---
 
-## 🚄 Performance Tips
+##  Performance Tips
 
 ### 1. Use Appropriate Layer for Sequence Length
 
@@ -1130,7 +1130,7 @@ output = layer_forward(x)
 
 ---
 
-## 📚 References
+##  References
 
 ### Research Papers
 
@@ -1167,7 +1167,7 @@ output = layer_forward(x)
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions welcome! Priority areas:
 
@@ -1181,7 +1181,7 @@ See [CONTRIBUTING.md](../../CONTRIBUTING.md) for guidelines.
 
 ---
 
-## 📄 License
+##  License
 
 Part of the capibaraGPT-v2 project. See [LICENSE](../../LICENSE) for details.
 

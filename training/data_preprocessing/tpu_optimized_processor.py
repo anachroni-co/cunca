@@ -150,7 +150,7 @@ class BatchProcessor:
         if current_batch:
             batches.append(current_batch)
         
-        logger.info(f"📦 Created {len(batches)} adaptive batches")
+        logger.info(f" Created {len(batches)} adaptive batches")
         return batches
     
     def process_batch_parallel(self, batch: List[Dict], 
@@ -277,7 +277,7 @@ class TPUOptimizedProcessor:
             'memory_stats': {}
         }
         
-        logger.info(f"⚡ TPUOptimizedProcessor initialized")
+        logger.info(f" TPUOptimizedProcessor initialized")
         logger.info(f"TPU cores: {self.config.tpu_cores}, Memory per core: {self.config.memory_per_core_gb}GB")
     
     def optimize_for_tpu(self, docs: List[Dict]) -> List[Dict]:
@@ -290,7 +290,7 @@ class TPUOptimizedProcessor:
         Returns:
             TPU-optimized documents
         """
-        logger.info(f"⚡ Starting TPU optimization for {len(docs)} documents")
+        logger.info(f" Starting TPU optimization for {len(docs)} documents")
         start_time = time.time()
         
         self.stats['total_processed'] = len(docs)
@@ -310,7 +310,7 @@ class TPUOptimizedProcessor:
         self.stats['throughput_docs_per_sec'] = len(docs) / max(processing_time, 0.001)
         self.stats['memory_stats'] = self.batch_processor.memory_manager.get_stats()
         
-        logger.info(f"✅ TPU optimization completed: {len(docs)} documents")
+        logger.info(f" TPU optimization completed: {len(docs)} documents")
         logger.info(f"Throughput: {self.stats['throughput_docs_per_sec']:.1f} docs/sec")
         
         return docs
@@ -323,7 +323,7 @@ class TPUOptimizedProcessor:
             optimized_doc = self.data_optimizer.optimize_document_format(doc)
             optimized_docs.append(optimized_doc)
         
-        logger.info(f"📋 Document format optimization completed")
+        logger.info(f" Document format optimization completed")
         return optimized_docs
     
     def _process_with_batching(self, docs: List[Dict]) -> List[Dict]:
@@ -375,7 +375,7 @@ class TPUOptimizedProcessor:
             if (i + 1) % self.config.clear_cache_interval == 0:
                 self._clear_processing_cache()
         
-        logger.info(f"📦 Batch processing completed: {len(batches)} batches processed")
+        logger.info(f" Batch processing completed: {len(batches)} batches processed")
         return processed_docs
     
     def _process_single_document(self, doc: Dict) -> Dict:
@@ -409,7 +409,7 @@ class TPUOptimizedProcessor:
             
             optimized_docs.append(doc)
         
-        logger.info(f"🎯 Final optimization pass completed")
+        logger.info(f" Final optimization pass completed")
         return optimized_docs
     
     def _get_current_tpu_core(self) -> int:

@@ -1,5 +1,5 @@
 """
-🧬 CAPIBARA TEXT-TO-GENOMIC SERVICE
+ CAPIBARA TEXT-TO-GENOMIC SERVICE
 ==================================
 
 Servicio revolucionario de análisis genómico con IA para el modelo 60B.

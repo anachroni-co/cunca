@@ -161,7 +161,7 @@ class StandaloneCache(Generic[T]):
             self.persist_dir.mkdir(parents=True, exist_ok=True)
             self._load_persisted()
             
-        logger.info(f"✅ Cache inicializado (max_size={max_size}, ttl={ttl})")
+        logger.info(f" Cache inicializado (max_size={max_size}, ttl={ttl})")
     
     def get(self, key: str) -> Optional[T]:
         """
@@ -227,7 +227,7 @@ class StandaloneCache(Generic[T]):
                     try:
                         persist_file.unlink()
                     except Exception as e:
-                        logger.warning(f"⚠️ Error al eliminar {key}: {e}")
+                        logger.warning(f"️ Error al eliminar {key}: {e}")
     
     def clear(self) -> None:
         """clean all el cache."""
@@ -239,7 +239,7 @@ class StandaloneCache(Generic[T]):
                     for file in self.persist_dir.glob("*.json"):
                         file.unlink()
                 except Exception as e:
-                    logger.warning(f"⚠️ Error al limpiar cache persistente: {e}")
+                    logger.warning(f"️ Error al limpiar cache persistente: {e}")
     
     def _cleanup(self) -> None:
         """clean entradas expiradas."""
@@ -277,7 +277,7 @@ class StandaloneCache(Generic[T]):
                 json.dump(data, f, indent=2)
                 
         except Exception as e:
-            logger.warning(f"⚠️ Error al persistir {key}: {e}")
+            logger.warning(f"️ Error al persistir {key}: {e}")
     
     def _load_persisted(self) -> None:
         """carry entradas persistidas."""
@@ -299,10 +299,10 @@ class StandaloneCache(Generic[T]):
                 else:
                     persist_file.unlink()
                     
-            logger.info(f"📂 {len(self.cache)} entradas cargadas de disco")
+            logger.info(f" {len(self.cache)} entradas cargadas de disco")
             
         except Exception as e:
-            logger.warning(f"⚠️ Error al cargar cache persistente: {e}")
+            logger.warning(f"️ Error al cargar cache persistente: {e}")
 
 class CacheDecorator:
     """Decorador for cachear funciones."""
@@ -531,7 +531,7 @@ class StandaloneCache(Generic[T]):
             self.persist_dir.mkdir(parents=True, exist_ok=True)
             self._load_persisted()
             
-        logger.info(f"✅ Cache inicializado (max_size={max_size}, ttl={ttl})")
+        logger.info(f" Cache inicializado (max_size={max_size}, ttl={ttl})")
     
     def get(self, key: str) -> Optional[T]:
         """
@@ -597,7 +597,7 @@ class StandaloneCache(Generic[T]):
                     try:
                         persist_file.unlink()
                     except Exception as e:
-                        logger.warning(f"⚠️ Error al eliminar {key}: {e}")
+                        logger.warning(f"️ Error al eliminar {key}: {e}")
     
     def clear(self) -> None:
         """clean all el cache."""
@@ -609,7 +609,7 @@ class StandaloneCache(Generic[T]):
                     for file in self.persist_dir.glob("*.json"):
                         file.unlink()
                 except Exception as e:
-                    logger.warning(f"⚠️ Error al limpiar cache persistente: {e}")
+                    logger.warning(f"️ Error al limpiar cache persistente: {e}")
     
     def _cleanup(self) -> None:
         """clean entradas expiradas."""
@@ -647,7 +647,7 @@ class StandaloneCache(Generic[T]):
                 json.dump(data, f, indent=2)
                 
         except Exception as e:
-            logger.warning(f"⚠️ Error al persistir {key}: {e}")
+            logger.warning(f"️ Error al persistir {key}: {e}")
     
     def _load_persisted(self) -> None:
         """carry entradas persistidas."""
@@ -669,10 +669,10 @@ class StandaloneCache(Generic[T]):
                 else:
                     persist_file.unlink()
                     
-            logger.info(f"📂 {len(self.cache)} entradas cargadas de disco")
+            logger.info(f" {len(self.cache)} entradas cargadas de disco")
             
         except Exception as e:
-            logger.warning(f"⚠️ Error al cargar cache persistente: {e}")
+            logger.warning(f"️ Error al cargar cache persistente: {e}")
 
 class CacheDecorator:
     """Decorador for cachear funciones."""

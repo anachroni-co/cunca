@@ -567,12 +567,12 @@ class VQMonitor:
         
         # Log alert
         severity_emoji = {
-            'info': 'ℹ️',
-            'warning': '⚠️',
-            'critical': '🚨'
+            'info': '️',
+            'warning': '️',
+            'critical': ''
         }
         
-        emoji = severity_emoji.get(alert['severity'], '📊')
+        emoji = severity_emoji.get(alert['severity'], '')
         logger.warning(f"{emoji} VQ Alert [{alert['severity'].upper()}]: {alert['message']}")
         
         # Call registered callbacks

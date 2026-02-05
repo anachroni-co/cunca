@@ -262,7 +262,7 @@ def fast_quality_assessment(response_lengths, confidence_scores, diversity_score
 
 class OptimizedMetaConsensusSystem(MetaConsensusSystem):
     """
-    🚀 Optimized Meta-Consensus System with Comp-Consensus Integration
+     Optimized Meta-Consensus System with Comp-Consensus Integration
     
     Extends the base meta-consensus system with high-performance optimizations:
     - JIT-compiled routing and consensus algorithms (5-15x speedup)
@@ -288,13 +288,13 @@ class OptimizedMetaConsensusSystem(MetaConsensusSystem):
         self.quantizer = None
         self.batch_sizer = None
         
-        logger.info(f"🚀 Optimized Meta-Consensus System initializing with {config.optimization_level.value} level")
+        logger.info(f" Optimized Meta-Consensus System initializing with {config.optimization_level.value} level")
     
     async def initialize_optimizations(self) -> bool:
         """Initialize all optimization components."""
         
         try:
-            logger.info("🔧 Initializing optimization components...")
+            logger.info(" Initializing optimization components...")
             
             # Initialize optimized integration
             if COMP_OPTIMIZATIONS_AVAILABLE:
@@ -309,11 +309,11 @@ class OptimizedMetaConsensusSystem(MetaConsensusSystem):
             if NUMBA_AVAILABLE and self.optimization_config.enable_jit_compilation:
                 await self._warmup_jit_functions()
             
-            logger.info("✅ Optimization components initialized successfully")
+            logger.info(" Optimization components initialized successfully")
             return True
             
         except Exception as e:
-            logger.error(f"❌ Optimization initialization failed: {e}")
+            logger.error(f" Optimization initialization failed: {e}")
             return False
     
     async def _initialize_optimized_integration(self):
@@ -326,7 +326,7 @@ class OptimizedMetaConsensusSystem(MetaConsensusSystem):
             fallback_on_error=True
         )
         
-        logger.info("✅ Optimized integration initialized")
+        logger.info(" Optimized integration initialized")
     
     async def _initialize_memory_pool(self):
         """Initialize memory pool for efficient memory management."""
@@ -339,7 +339,7 @@ class OptimizedMetaConsensusSystem(MetaConsensusSystem):
             )
             
             self.memory_pool = get_memory_pool(pool_config)
-            logger.info(f"✅ Memory pool initialized ({pool_config.pool_size_mb}MB)")
+            logger.info(f" Memory pool initialized ({pool_config.pool_size_mb}MB)")
     
     async def _initialize_gpu_acceleration(self):
         """Initialize GPU acceleration."""
@@ -348,9 +348,9 @@ class OptimizedMetaConsensusSystem(MetaConsensusSystem):
             self.gpu_accelerator = get_gpu_accelerator()
             
             if self.gpu_accelerator.is_available():
-                logger.info("✅ GPU acceleration initialized")
+                logger.info(" GPU acceleration initialized")
             else:
-                logger.warning("⚠️ GPU acceleration requested but not available")
+                logger.warning("️ GPU acceleration requested but not available")
     
     async def _initialize_distributed_cache(self):
         """Initialize distributed caching system."""
@@ -366,7 +366,7 @@ class OptimizedMetaConsensusSystem(MetaConsensusSystem):
             )
             
             self.distributed_cache = get_distributed_cache(cache_config)
-            logger.info("✅ Distributed cache initialized")
+            logger.info(" Distributed cache initialized")
     
     async def _initialize_quantization(self):
         """Initialize quantization system."""
@@ -381,7 +381,7 @@ class OptimizedMetaConsensusSystem(MetaConsensusSystem):
             )
             
             self.quantizer = get_quantizer(quant_config)
-            logger.info(f"✅ Quantization initialized ({self.optimization_config.quantization_bits}-bit)")
+            logger.info(f" Quantization initialized ({self.optimization_config.quantization_bits}-bit)")
     
     async def _initialize_adaptive_batching(self):
         """Initialize adaptive batch sizing."""
@@ -396,12 +396,12 @@ class OptimizedMetaConsensusSystem(MetaConsensusSystem):
             )
             
             self.batch_sizer = get_batch_sizer(batch_config)
-            logger.info("✅ Adaptive batching initialized")
+            logger.info(" Adaptive batching initialized")
     
     async def _warmup_jit_functions(self):
         """Warmup JIT-compiled functions."""
         
-        logger.info("🔥 Warming up JIT-compiled functions...")
+        logger.info(" Warming up JIT-compiled functions...")
         
         # Warmup expert scoring
         dummy_scores = np.random.random(10).astype(np.float32)
@@ -423,7 +423,7 @@ class OptimizedMetaConsensusSystem(MetaConsensusSystem):
         
         _ = fast_quality_assessment(dummy_lengths, dummy_confidences, dummy_diversity)
         
-        logger.info("✅ JIT functions warmed up")
+        logger.info(" JIT functions warmed up")
     
     @cached(ttl=3600, key_prefix="optimized_consensus")
     async def process_optimized_query(
@@ -484,7 +484,7 @@ class OptimizedMetaConsensusSystem(MetaConsensusSystem):
             logger.error(f"Optimized query processing failed: {e}")
             
             # Fallback to base implementation
-            logger.info("🔄 Falling back to base meta-consensus system")
+            logger.info(" Falling back to base meta-consensus system")
             return await super().process_query(query, context, consensus_mode)
     
     async def _create_optimized_context(self, query: str, opt_level: OptimizationLevel) -> QueryContext:
@@ -1171,7 +1171,7 @@ if __name__ == "__main__":
         
         # Initialize optimizations
         if await system.initialize_optimizations():
-            logger.info("🚀 Optimized Meta-Consensus System initialized")
+            logger.info(" Optimized Meta-Consensus System initialized")
             
             # Initialize base system
             await system.initialize()
@@ -1185,12 +1185,12 @@ if __name__ == "__main__":
                 "What are the applications of artificial intelligence?"
             ]
             
-            logger.info("\n📊 Running optimization benchmarks...")
+            logger.info("\n Running optimization benchmarks...")
             
             # Benchmark different optimization levels
             benchmark_results = await system.benchmark_optimization_performance(test_queries)
             
-            logger.info("\n🏆 Benchmark Results:")
+            logger.info("\n Benchmark Results:")
             for level, metrics in benchmark_results.items():
                 logger.info(f"\n{level.upper()}:")
                 logger.info(f"  Response Time: {metrics['avg_response_time_ms']:.0f}ms")
@@ -1201,14 +1201,14 @@ if __name__ == "__main__":
             
             # Get optimization status
             status = system.get_optimization_status()
-            logger.info(f"\n🔧 Optimization Status:")
+            logger.info(f"\n Optimization Status:")
             logger.info(f"  Level: {status['optimization_config']['level']}")
             logger.info(f"  JIT Enabled: {status['optimization_config']['jit_enabled']}")
             logger.info(f"  GPU Acceleration: {status['optimization_config']['gpu_acceleration']}")
             logger.info(f"  Memory Pooling: {status['optimization_config']['memory_pooling']}")
             logger.info(f"  Distributed Caching: {status['optimization_config']['distributed_caching']}")
             
-            logger.info(f"\n⚡ Performance Metrics:")
+            logger.info(f"\n Performance Metrics:")
             perf = status['performance_metrics']
             logger.info(f"  Queries/Second: {perf['queries_per_second']}")
             logger.info(f"  Cache Hit Rate: {perf['cache_hit_rate']}")
@@ -1216,7 +1216,7 @@ if __name__ == "__main__":
             logger.info(f"  GPU Utilization: {perf['gpu_utilization']}")
         
         else:
-            logger.error("❌ Optimization initialization failed")
+            logger.error(" Optimization initialization failed")
     
     import asyncio
     asyncio.run(main())

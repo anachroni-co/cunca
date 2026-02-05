@@ -242,7 +242,7 @@ class DataProcessor:
             processing_steps=["clean_text", "extract_metadata", "deduplicate", "quality_filter"]
         )
         
-        logger.info(f"📰 Processing Spanish news: {source_path}")
+        logger.info(f" Processing Spanish news: {source_path}")
         task.status = "running"
         task.started_at = datetime.now().isoformat()
         
@@ -310,11 +310,11 @@ class DataProcessor:
             task.status = "completed"
             task.completed_at = datetime.now().isoformat()
             
-            logger.info(f"✅ News processing completed: {records_kept}/{records_processed} records kept")
+            logger.info(f" News processing completed: {records_kept}/{records_processed} records kept")
             
         except Exception as e:
             task.status = "failed"
-            logger.error(f"❌ News processing failed: {e}")
+            logger.error(f" News processing failed: {e}")
             raise
         
         return task
@@ -329,7 +329,7 @@ class DataProcessor:
             processing_steps=["clean_text", "extract_citations", "deduplicate", "quality_filter"]
         )
         
-        logger.info(f"📚 Processing Spanish academic data: {source_path}")
+        logger.info(f" Processing Spanish academic data: {source_path}")
         task.status = "running"
         task.started_at = datetime.now().isoformat()
         
@@ -398,11 +398,11 @@ class DataProcessor:
             task.status = "completed"
             task.completed_at = datetime.now().isoformat()
             
-            logger.info(f"✅ Academic processing completed: {records_kept}/{records_processed} records kept")
+            logger.info(f" Academic processing completed: {records_kept}/{records_processed} records kept")
             
         except Exception as e:
             task.status = "failed"
-            logger.error(f"❌ Academic processing failed: {e}")
+            logger.error(f" Academic processing failed: {e}")
             raise
         
         return task
@@ -445,7 +445,7 @@ class DataProcessor:
     
     async def process_batch(self, raw_data_path: str) -> Dict[str, Any]:
         """Process a batch of raw data files."""
-        logger.info(f"🔄 Starting batch processing: {raw_data_path}")
+        logger.info(f" Starting batch processing: {raw_data_path}")
         
         processing_tasks = []
         raw_path = Path(raw_data_path)
@@ -496,7 +496,7 @@ class DataProcessor:
             "processed_at": datetime.now().isoformat()
         }
         
-        logger.info(f"🎉 Batch processing completed!")
+        logger.info(f" Batch processing completed!")
         logger.info(f"   Tasks: {self.stats.completed_tasks}/{self.stats.total_tasks} completed")
         logger.info(f"   Data: {self.stats.total_input_size_gb:.1f}GB → {self.stats.total_output_size_gb:.1f}GB")
         logger.info(f"   Records: {self.stats.total_records_kept}/{self.stats.total_records_processed} kept")

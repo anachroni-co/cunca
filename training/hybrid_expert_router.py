@@ -110,7 +110,7 @@ class RoutingMetrics:
 
 class HybridExpertRouter(HierarchicalMoERouter):
     """
-    🎭 Hybrid Expert Router with multi-tier routing capabilities.
+     Hybrid Expert Router with multi-tier routing capabilities.
     
     Extends the hierarchical router with:
     - Multi-tier expert management (local, serverless, premium)
@@ -157,7 +157,7 @@ class HybridExpertRouter(HierarchicalMoERouter):
         # Advanced neural components for hybrid routing
         self._initialize_hybrid_neural_components()
         
-        logger.info("🚀 Hybrid Expert Router initialized with multi-tier capabilities")
+        logger.info(" Hybrid Expert Router initialized with multi-tier capabilities")
     
     def _initialize_hybrid_experts(self) -> Dict[ExpertTier, List[HybridExpertConfig]]:
         """Initialize comprehensive hybrid expert pools."""
@@ -400,7 +400,7 @@ class HybridExpertRouter(HierarchicalMoERouter):
         # Adaptive strategy selector
         self.strategy_selector_params = self._init_classifier_params(768 + 8, len(RoutingStrategy))  # +8 for context features
         
-        logger.info("🧠 Hybrid neural components initialized with JAX native")
+        logger.info(" Hybrid neural components initialized with JAX native")
     
     async def route_hybrid_query(
         self,

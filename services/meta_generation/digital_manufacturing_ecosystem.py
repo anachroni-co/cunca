@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🏭 CAPIBARA DIGITAL MANUFACTURING ECOSYSTEM
+ CAPIBARA DIGITAL MANUFACTURING ECOSYSTEM
 ==========================================
 
 Ecosistema completo de fabricación digital que integra con Text-to-Gen.
@@ -193,7 +193,7 @@ class ManufacturingRAG:
             }
         }
         
-        logger.info("✅ Manufacturing RAG initialized")
+        logger.info(" Manufacturing RAG initialized")
     
     def _init_database(self):
         """Inicializa base de datos SQLite"""
@@ -248,11 +248,11 @@ class ManufacturingRAG:
         conn.commit()
         conn.close()
         
-        logger.info("📊 Manufacturing RAG database initialized")
+        logger.info(" Manufacturing RAG database initialized")
     
     async def daily_update(self):
         """Actualización diaria automática del RAG"""
-        logger.info("🔄 Starting daily RAG update...")
+        logger.info(" Starting daily RAG update...")
         
         start_time = datetime.now()
         total_updated = 0
@@ -278,11 +278,11 @@ class ManufacturingRAG:
             self.last_update = datetime.now()
             update_time = (datetime.now() - start_time).total_seconds()
             
-            logger.info(f"✅ Daily RAG update completed in {update_time:.1f}s")
-            logger.info(f"📊 Updated {total_updated} supplier records")
+            logger.info(f" Daily RAG update completed in {update_time:.1f}s")
+            logger.info(f" Updated {total_updated} supplier records")
             
         except Exception as e:
-            logger.error(f"❌ Daily RAG update failed: {e}")
+            logger.error(f" Daily RAG update failed: {e}")
             self._log_update("daily_update", 0, f"failed: {e}")
     
     async def _update_suppliers_by_region(self, region: Region) -> int:
@@ -324,7 +324,7 @@ class ManufacturingRAG:
         conn.commit()
         conn.close()
         
-        logger.info(f"   📍 {region.value}: {updated_count} suppliers updated")
+        logger.info(f"    {region.value}: {updated_count} suppliers updated")
         return updated_count
     
     async def _fetch_regional_suppliers(self, region: Region) -> List[Dict[str, Any]]:
@@ -404,23 +404,23 @@ class ManufacturingRAG:
     
     async def _update_pricing_data(self):
         """Actualiza datos de precios desde APIs"""
-        logger.info("💰 Updating pricing data...")
+        logger.info(" Updating pricing data...")
         
         # En implementación real, consultaría APIs de proveedores
         # Para obtener precios actualizados
         await asyncio.sleep(1.0)  # Simular procesamiento
         
-        logger.info("   💰 Pricing data updated")
+        logger.info("    Pricing data updated")
     
     async def _update_quality_metrics(self):
         """Actualiza métricas de calidad basadas en historial"""
-        logger.info("⭐ Updating quality metrics...")
+        logger.info(" Updating quality metrics...")
         
         # En implementación real, analizaría feedback de clientes,
         # tiempos de entrega reales, calidad de productos, etc.
         await asyncio.sleep(0.5)  # Simular procesamiento
         
-        logger.info("   ⭐ Quality metrics updated")
+        logger.info("    Quality metrics updated")
     
     async def _cleanup_old_data(self):
         """Limpia datos obsoletos"""
@@ -439,7 +439,7 @@ class ManufacturingRAG:
         conn.commit()
         conn.close()
         
-        logger.info(f"   🧹 Cleaned {deleted_quotes} old quote records")
+        logger.info(f"    Cleaned {deleted_quotes} old quote records")
     
     def _log_update(self, update_type: str, records_updated: int, status: str):
         """Registra actualización en la base de datos"""
@@ -522,11 +522,11 @@ class N8nManufacturingAutomation:
             "shipping_coordination": "shipping_coordination_workflow_id"
         }
         
-        logger.info("🤖 N8N Manufacturing Automation initialized")
+        logger.info(" N8N Manufacturing Automation initialized")
     
     async def trigger_auto_quote_workflow(self, order: ManufacturingOrder) -> Dict[str, Any]:
         """Trigger workflow automático de cotización"""
-        logger.info(f"🤖 Triggering auto-quote workflow for order {order.order_id}")
+        logger.info(f" Triggering auto-quote workflow for order {order.order_id}")
         
         workflow_data = {
             "order_id": order.order_id,
@@ -563,16 +563,16 @@ class N8nManufacturingAutomation:
                 "completion_time": datetime.now() + timedelta(minutes=10)
             }
             
-            logger.info(f"   ✅ Auto-quote workflow started: {result['workflow_id']}")
+            logger.info(f"    Auto-quote workflow started: {result['workflow_id']}")
             return result
             
         except Exception as e:
-            logger.error(f"   ❌ Failed to trigger auto-quote workflow: {e}")
+            logger.error(f"    Failed to trigger auto-quote workflow: {e}")
             return {"status": "failed", "error": str(e)}
     
     async def trigger_order_placement_workflow(self, order: ManufacturingOrder, selected_quotes: List[Quote]) -> Dict[str, Any]:
         """Trigger workflow de colocación de órdenes"""
-        logger.info(f"🤖 Triggering order placement workflow for {len(selected_quotes)} suppliers")
+        logger.info(f" Triggering order placement workflow for {len(selected_quotes)} suppliers")
         
         workflow_data = {
             "order_id": order.order_id,
@@ -597,16 +597,16 @@ class N8nManufacturingAutomation:
                 "total_value": sum(q.final_cost for q in selected_quotes)
             }
             
-            logger.info(f"   ✅ Order placement workflow started for ${result['total_value']:.2f}")
+            logger.info(f"    Order placement workflow started for ${result['total_value']:.2f}")
             return result
             
         except Exception as e:
-            logger.error(f"   ❌ Failed to trigger order placement workflow: {e}")
+            logger.error(f"    Failed to trigger order placement workflow: {e}")
             return {"status": "failed", "error": str(e)}
     
     async def setup_status_tracking(self, order: ManufacturingOrder) -> Dict[str, Any]:
         """Configura tracking automático de estado"""
-        logger.info(f"📍 Setting up status tracking for order {order.order_id}")
+        logger.info(f" Setting up status tracking for order {order.order_id}")
         
         try:
             await asyncio.sleep(0.5)  # Simular configuración
@@ -621,11 +621,11 @@ class N8nManufacturingAutomation:
                 "update_frequency": "daily"
             }
             
-            logger.info("   ✅ Status tracking configured")
+            logger.info("    Status tracking configured")
             return result
             
         except Exception as e:
-            logger.error(f"   ❌ Failed to setup status tracking: {e}")
+            logger.error(f"    Failed to setup status tracking: {e}")
             return {"status": "failed", "error": str(e)}
 
 class DigitalManufacturingEcosystem:
@@ -638,7 +638,7 @@ class DigitalManufacturingEcosystem:
         # Configuración de regiones y costes de envío
         self.shipping_costs = self._load_shipping_matrix()
         
-        logger.info("🏭 Digital Manufacturing Ecosystem initialized")
+        logger.info(" Digital Manufacturing Ecosystem initialized")
     
     def _load_shipping_matrix(self) -> Dict[str, Dict[str, float]]:
         """Carga matriz de costes de envío entre regiones"""
@@ -672,7 +672,7 @@ class DigitalManufacturingEcosystem:
     
     async def process_manufacturing_request(self, project_result, customer_region: Region, priority: PriorityLevel = PriorityLevel.STANDARD) -> ManufacturingOrder:
         """Procesa request completo de fabricación desde resultado de Text-to-Gen"""
-        logger.info("🏭 Processing complete manufacturing request...")
+        logger.info(" Processing complete manufacturing request...")
         
         # Extraer requerimientos de fabricación desde resultado de Text-to-Gen
         requirements = self._extract_manufacturing_requirements(project_result)
@@ -686,8 +686,8 @@ class DigitalManufacturingEcosystem:
             requirements=requirements
         )
         
-        logger.info(f"📋 Created manufacturing order: {order.order_id}")
-        logger.info(f"🎯 Requirements: {len(requirements)} items")
+        logger.info(f" Created manufacturing order: {order.order_id}")
+        logger.info(f" Requirements: {len(requirements)} items")
         
         # Procesar automáticamente
         await self._process_order_automatically(order)
@@ -766,26 +766,26 @@ class DigitalManufacturingEcosystem:
     
     async def _process_order_automatically(self, order: ManufacturingOrder):
         """Procesa orden automáticamente usando RAG + N8N"""
-        logger.info(f"⚡ Processing order {order.order_id} automatically...")
+        logger.info(f" Processing order {order.order_id} automatically...")
         
         try:
             # 1. Encontrar proveedores óptimos usando RAG
-            logger.info("🔍 Finding optimal suppliers using RAG...")
+            logger.info(" Finding optimal suppliers using RAG...")
             suppliers = self.rag.find_optimal_suppliers(
                 order.requirements, 
                 order.customer_region, 
                 order.priority
             )
-            logger.info(f"   📊 Found {len(suppliers)} suitable suppliers")
+            logger.info(f"    Found {len(suppliers)} suitable suppliers")
             
             # 2. Trigger workflow N8N para cotizaciones automáticas
-            logger.info("🤖 Triggering N8N auto-quote workflow...")
+            logger.info(" Triggering N8N auto-quote workflow...")
             quote_workflow = await self.n8n.trigger_auto_quote_workflow(order)
             order.workflow_id = quote_workflow.get('workflow_id')
             
             # 3. Simular obtención de cotizaciones
             quotes = await self._get_automated_quotes(order, suppliers)
-            logger.info(f"   💰 Received {len(quotes)} automated quotes")
+            logger.info(f"    Received {len(quotes)} automated quotes")
             
             # 4. Seleccionar mejores cotizaciones automáticamente
             selected_quotes = self._select_optimal_quotes(quotes, order.priority)
@@ -793,25 +793,25 @@ class DigitalManufacturingEcosystem:
             order.total_cost = sum(q.final_cost for q in selected_quotes)
             order.estimated_delivery = max(q.estimated_delivery for q in selected_quotes) if selected_quotes else None
             
-            logger.info(f"   ✅ Selected {len(selected_quotes)} optimal quotes")
-            logger.info(f"   💰 Total cost: ${order.total_cost:.2f}")
+            logger.info(f"    Selected {len(selected_quotes)} optimal quotes")
+            logger.info(f"    Total cost: ${order.total_cost:.2f}")
             
             # 5. Si está habilitada automatización completa, colocar órdenes
             if order.automation_enabled:
-                logger.info("🚀 Placing orders automatically...")
+                logger.info(" Placing orders automatically...")
                 placement_workflow = await self.n8n.trigger_order_placement_workflow(order, selected_quotes)
                 
                 # 6. Configurar tracking automático
                 await self.n8n.setup_status_tracking(order)
                 
                 order.status = "ordered"
-                logger.info("   ✅ Orders placed and tracking configured")
+                logger.info("    Orders placed and tracking configured")
             else:
                 order.status = "quoted"
-                logger.info("   ⏸️ Quotes ready for manual approval")
+                logger.info("   ️ Quotes ready for manual approval")
             
         except Exception as e:
-            logger.error(f"❌ Error processing order automatically: {e}")
+            logger.error(f" Error processing order automatically: {e}")
             order.status = "error"
     
     async def _get_automated_quotes(self, order: ManufacturingOrder, suppliers: List[SupplierInfo]) -> List[Quote]:
@@ -882,7 +882,7 @@ class DigitalManufacturingEcosystem:
             return quote
             
         except Exception as e:
-            logger.error(f"   ❌ Failed to get quote from {supplier.name}: {e}")
+            logger.error(f"    Failed to get quote from {supplier.name}: {e}")
             return None
     
     def _calculate_base_cost(self, requirement: ManufacturingRequirement) -> float:
@@ -950,10 +950,10 @@ def create_manufacturing_ecosystem():
 
 async def setup_daily_rag_updates(ecosystem: DigitalManufacturingEcosystem):
     """Configura actualizaciones diarias automáticas del RAG"""
-    logger.info("⏰ Setting up daily RAG updates...")
+    logger.info(" Setting up daily RAG updates...")
     
     # En implementación real, usarías un scheduler como APScheduler
     # Para demo, ejecutamos una vez
     await ecosystem.rag.daily_update()
     
-    logger.info("✅ Daily RAG updates configured")
+    logger.info(" Daily RAG updates configured")

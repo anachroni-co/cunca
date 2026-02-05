@@ -152,7 +152,7 @@ class ComparisonReport:
 
 class MetaConsensusCompBenchmark:
     """
-    📊 Comprehensive Benchmarking System for Meta-Consensus-Comp
+     Comprehensive Benchmarking System for Meta-Consensus-Comp
     
     Provides extensive benchmarking and analysis capabilities:
     - Performance comparison across optimization levels
@@ -174,7 +174,7 @@ class MetaConsensusCompBenchmark:
         # Test data
         self.test_queries = self._generate_test_queries()
         
-        logger.info(f"📊 Meta-Consensus-Comp Benchmark initialized")
+        logger.info(f" Meta-Consensus-Comp Benchmark initialized")
     
     def _generate_test_queries(self) -> Dict[str, List[str]]:
         """Generates test queries for different complexity levels."""
@@ -221,7 +221,7 @@ class MetaConsensusCompBenchmark:
     async def run_comprehensive_benchmark(self) -> ComparisonReport:
         """Run comprehensive benchmark suite."""
         
-        logger.info("🚀 Starting comprehensive benchmark suite")
+        logger.info(" Starting comprehensive benchmark suite")
         
         # Run all benchmark types
         for benchmark_type in BenchmarkType:
@@ -243,7 +243,7 @@ class MetaConsensusCompBenchmark:
         if self.config.generate_report:
             await self._generate_benchmark_report(report)
         
-        logger.info("✅ Comprehensive benchmark completed")
+        logger.info(" Comprehensive benchmark completed")
         return report
     
     async def _run_benchmark_type(self, benchmark_type: BenchmarkType):
@@ -719,7 +719,7 @@ class MetaConsensusCompBenchmark:
         with open(results_file, 'w') as f:
             json.dump(results_data, f, indent=2)
         
-        logger.info(f"✅ Benchmark results saved to {results_file}")
+        logger.info(f" Benchmark results saved to {results_file}")
     
     async def _generate_benchmark_plots(self):
         """Generates visualization plots for benchmark results."""
@@ -741,7 +741,7 @@ class MetaConsensusCompBenchmark:
             # Quality vs Cost plot
             self._plot_quality_vs_cost(plots_dir)
             
-            logger.info(f"✅ Benchmark plots generated in {plots_dir}")
+            logger.info(f" Benchmark plots generated in {plots_dir}")
             
         except Exception as e:
             logger.error(f"Plot generation failed: {e}")
@@ -915,7 +915,7 @@ class MetaConsensusCompBenchmark:
         with open(report_file, 'w') as f:
             f.write(report_content)
         
-        logger.info(f"✅ Benchmark report generated: {report_file}")
+        logger.info(f" Benchmark report generated: {report_file}")
 
 
 # Factory functions
@@ -960,43 +960,43 @@ if __name__ == "__main__":
         # Create benchmark suite
         benchmark = create_quick_benchmark(num_queries=10)
         
-        logger.info("📊 Meta-Consensus-Comp Benchmark Suite")
+        logger.info(" Meta-Consensus-Comp Benchmark Suite")
         logger.info("=" * 50)
         
         # Run comprehensive benchmark
         report = await benchmark.run_comprehensive_benchmark()
         
-        logger.info("\n🏆 Benchmark Results Summary:")
+        logger.info("\n Benchmark Results Summary:")
         
         # Latency improvements
         if report.latency_improvement:
-            logger.info("\n⚡ Latency Improvements:")
+            logger.info("\n Latency Improvements:")
             for level, improvement in report.latency_improvement.items():
                 logger.info(f"  {level}: {improvement:.1%} faster")
         
         # Throughput improvements
         if report.throughput_improvement:
-            logger.info("\n🚀 Throughput Improvements:")
+            logger.info("\n Throughput Improvements:")
             for level, improvement in report.throughput_improvement.items():
                 logger.info(f"  {level}: {improvement:.1%} higher")
         
         # Memory efficiency
         if report.memory_efficiency_gain:
-            logger.info("\n🧠 Memory Efficiency Gains:")
+            logger.info("\n Memory Efficiency Gains:")
             for level, gain in report.memory_efficiency_gain.items():
                 logger.info(f"  {level}: {gain:.1%} reduction")
         
         # Quality analysis
-        logger.info(f"\n✅ Quality Preservation: {report.quality_preservation_rate:.1%}")
-        logger.info(f"✅ Quality Consistency: {report.quality_consistency:.1%}")
+        logger.info(f"\n Quality Preservation: {report.quality_preservation_rate:.1%}")
+        logger.info(f" Quality Consistency: {report.quality_consistency:.1%}")
         
         # Recommendations
         if report.optimization_recommendations:
-            logger.info(f"\n💡 Recommendations:")
+            logger.info(f"\n Recommendations:")
             for rec in report.optimization_recommendations:
                 logger.info(f"  • {rec}")
         
-        logger.info(f"\n📁 Results saved to: {benchmark.output_dir}")
+        logger.info(f"\n Results saved to: {benchmark.output_dir}")
     
     import asyncio
     asyncio.run(main())

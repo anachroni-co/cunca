@@ -205,15 +205,15 @@ class UltraSubModelOrchestrator:
     def _initialize_orchestrator(self):
         """Initialize the ultra sub-model orchestrator."""
         
-        logger.info("🚀 Initializing Ultra SubModel Orchestrator")
+        logger.info(" Initializing Ultra SubModel Orchestrator")
         
         # Initialize ultra system integrations
         if self.config.auto_core_integration and ULTRA_CORE_AVAILABLE:
             try:
                 self.core_orchestrator = create_ultra_core_system()
-                logger.info("✅ Ultra Core integration initialized")
+                logger.info(" Ultra Core integration initialized")
             except Exception as e:
-                logger.warning(f"⚠️ Core integration failed: {e}")
+                logger.warning(f"️ Core integration failed: {e}")
         
         # Initialize sub-models
         self._initialize_submodels()
@@ -226,10 +226,10 @@ class UltraSubModelOrchestrator:
         if self.config.enable_expert_soup and ULTRA_TRAINING_INTEGRATION:
             self._initialize_expert_soup()
         
-        logger.info(f"✅ Ultra SubModel Orchestrator initialized")
-        logger.info(f"   📊 Available sub-models: {len(self.submodels)}")
-        logger.info(f"   🔥 Ultra Core: {'✅' if self.core_orchestrator else '❌'}")
-        logger.info(f"   🍲 Expert Soup: {'✅' if self.expert_soup_manager else '❌'}")
+        logger.info(f" Ultra SubModel Orchestrator initialized")
+        logger.info(f"    Available sub-models: {len(self.submodels)}")
+        logger.info(f"    Ultra Core: {'' if self.core_orchestrator else ''}")
+        logger.info(f"    Expert Soup: {'' if self.expert_soup_manager else ''}")
     
     def _initialize_submodels(self):
         """Initialize all available sub-models."""
@@ -240,11 +240,11 @@ class UltraSubModelOrchestrator:
                 if submodel is not None:
                     self.submodels[submodel_type.value] = submodel
                     self.global_metrics["total_submodels"] += 1
-                    logger.info(f"✅ {submodel_type.value} initialized")
+                    logger.info(f" {submodel_type.value} initialized")
                 else:
-                    logger.warning(f"⚠️ {submodel_type.value} not available")
+                    logger.warning(f"️ {submodel_type.value} not available")
             except Exception as e:
-                logger.error(f"❌ Failed to initialize {submodel_type.value}: {e}")
+                logger.error(f" Failed to initialize {submodel_type.value}: {e}")
                 if not self.config.graceful_degradation:
                     raise
         
@@ -288,7 +288,7 @@ class UltraSubModelOrchestrator:
         
         # This would create an enhanced version integrated with our systems
         # For now, return basic version (full implementation would enhance it)
-        logger.info("🔬 Creating enhanced AdaptiveVQ submodel")
+        logger.info(" Creating enhanced AdaptiveVQ submodel")
         return "adaptive_vq_placeholder"  # Placeholder for current enhanced model
     
     def _create_spike_ssm_submodel(self) -> Optional[Any]:
@@ -296,7 +296,7 @@ class UltraSubModelOrchestrator:
         if not SPIKE_SSM_AVAILABLE:
             return None
         
-        logger.info("🧠 Creating enhanced SpikeSSM submodel")
+        logger.info(" Creating enhanced SpikeSSM submodel")
         return "spike_ssm_placeholder"  # Placeholder for current enhanced model
     
     def _create_deep_dialog_submodel(self) -> Optional[Any]:
@@ -304,7 +304,7 @@ class UltraSubModelOrchestrator:
         if not DEEP_DIALOG_AVAILABLE:
             return None
         
-        logger.info("💬 Creating enhanced DeepDialog submodel")
+        logger.info(" Creating enhanced DeepDialog submodel")
         return "deep_dialog_placeholder"  # Placeholder for current enhanced model
     
     def _create_ultra_ssm_hybrid_submodel(self) -> Optional[Any]:
@@ -320,7 +320,7 @@ class UltraSubModelOrchestrator:
             }
             
             ultra_ssm = create_ssm_layer("ultra", ssm_config)
-            logger.info("🏗️ Created Ultra SSM Hybrid submodel with O(n) complexity")
+            logger.info("️ Created Ultra SSM Hybrid submodel with O(n) complexity")
             return ultra_ssm
             
         except Exception as e:
@@ -336,10 +336,10 @@ class UltraSubModelOrchestrator:
         try:
             # This would integrate with UltraAdvancedTrainer
             # Implementation depends on trainer interface
-            logger.info("🎯 Training integration initialized for sub-models")
+            logger.info(" Training integration initialized for sub-models")
             
         except Exception as e:
-            logger.warning(f"⚠️ Training integration failed: {e}")
+            logger.warning(f"️ Training integration failed: {e}")
     
     def _initialize_expert_soup(self):
         """Initialize Expert Soup for sub-models."""
@@ -357,11 +357,11 @@ class UltraSubModelOrchestrator:
             )
             
             # This would create ExpertSoupIntegration for sub-models
-            logger.info("🍲 Expert Soup initialized for sub-models")
+            logger.info(" Expert Soup initialized for sub-models")
             self.expert_soup_manager = "expert_soup_placeholder"
             
         except Exception as e:
-            logger.warning(f"⚠️ Expert Soup initialization failed: {e}")
+            logger.warning(f"️ Expert Soup initialization failed: {e}")
     
     def route_to_submodel(
         self,
@@ -888,7 +888,7 @@ def create_ultra_submodel_config(
 def demonstrate_ultra_submodel_orchestration():
     """Demonstrate the ultra sub-model orchestration system."""
     
-    logger.info("🌟 ULTRA SUBMODEL ORCHESTRATION DEMONSTRATION")
+    logger.info(" ULTRA SUBMODEL ORCHESTRATION DEMONSTRATION")
     logger.info("=" * 60)
     
     # Create configuration
@@ -897,7 +897,7 @@ def demonstrate_ultra_submodel_orchestration():
         enable_all_features=True
     )
     
-    logger.info(f"📋 Configuration created:")
+    logger.info(f" Configuration created:")
     logger.info(f"   - Strategy: {config.orchestration_strategy.value}")
     logger.info(f"   - Sub-models: {len(config.enabled_submodels)}")
     logger.info(f"   - Ultra features: {config.auto_core_integration}")
@@ -908,11 +908,11 @@ def demonstrate_ultra_submodel_orchestration():
     # Get system status
     status = orchestrator.get_system_status()
     
-    logger.info(f"\n🔍 System Status:")
+    logger.info(f"\n System Status:")
     logger.info(f"   - Active sub-models: {len(status['active_submodels'])}")
-    logger.info(f"   - Ultra Core: {'✅' if status['availability']['ultra_core'] else '❌'}")
-    logger.info(f"   - SSM Hybrid: {'✅' if status['availability']['ssm_hybrid'] else '❌'}")
-    logger.info(f"   - Expert Soup: {'✅' if status['integrations']['expert_soup_manager'] else '❌'}")
+    logger.info(f"   - Ultra Core: {'' if status['availability']['ultra_core'] else ''}")
+    logger.info(f"   - SSM Hybrid: {'' if status['availability']['ssm_hybrid'] else ''}")
+    logger.info(f"   - Expert Soup: {'' if status['integrations']['expert_soup_manager'] else ''}")
     
     # Test routing
     try:
@@ -923,20 +923,20 @@ def demonstrate_ultra_submodel_orchestration():
             strategy=OrchestrationStrategy.ULTRA_HYBRID
         )
         
-        logger.info(f"\n🎯 Routing Test:")
+        logger.info(f"\n Routing Test:")
         logger.info(f"   - Strategy: {routing_info['strategy']}")
         logger.info(f"   - Computation time: {routing_info['performance']['computation_time_ms']:.2f}ms")
         logger.info(f"   - Success rate: {routing_info['performance']['success_rate']:.2%}")
         
     except Exception as e:
-        logger.error(f"\n❌ Routing test failed: {e}")
+        logger.error(f"\n Routing test failed: {e}")
     
     # Validate system
     validation = orchestrator.validate_system()
     
-    logger.info(f"\n✅ Validation Results:")
+    logger.info(f"\n Validation Results:")
     for check, result in validation.items():
-        logger.info(f"   - {check}: {'✅' if result else '❌'}")
+        logger.info(f"   - {check}: {'' if result else ''}")
     
     return orchestrator
 

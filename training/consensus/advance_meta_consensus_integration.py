@@ -96,11 +96,11 @@ class AdvancedMetaConsensusSystem(MetaConsensusSystem):
         self.federated_node = None
         self.consensus_cache = {}
         
-        logger.info("🚀 Advanced Meta-Consensus System initialized")
+        logger.info(" Advanced Meta-Consensus System initialized")
     
     async def initialize(self):
         """Initialize all advanced components."""
-        logger.info("🔧 Initializing advanced meta-consensus components...")
+        logger.info(" Initializing advanced meta-consensus components...")
         
         # Initialize base system
         await super().initialize()
@@ -121,29 +121,29 @@ class AdvancedMetaConsensusSystem(MetaConsensusSystem):
         if self.advanced_config.benchmark_on_startup:
             await self._run_startup_benchmark()
         
-        logger.info("✅ Advanced meta-consensus system fully initialized")
+        logger.info(" Advanced meta-consensus system fully initialized")
     
     async def _initialize_cython_kernels(self):
         """Initialize Cython kernels for performance acceleration."""
-        logger.info("⚡ Initializing Cython kernels...")
+        logger.info(" Initializing Cython kernels...")
         
         # Check if Cython kernels are available
         if kernel_manager.cython_available:
-            logger.info("✅ Cython kernels loaded successfully - 20x speedup enabled")
+            logger.info(" Cython kernels loaded successfully - 20x speedup enabled")
             self.performance_stats['cython_speedup'] = 20.0
         else:
-            logger.warning("⚠️ Cython kernels not available - using Python fallbacks")
+            logger.warning("️ Cython kernels not available - using Python fallbacks")
             if self.advanced_config.auto_compile_cython:
                 from .cython_kernels.cython_integration import compile_cython_kernels
                 if compile_cython_kernels():
-                    logger.info("✅ Cython kernels compiled successfully")
+                    logger.info(" Cython kernels compiled successfully")
                     self.performance_stats['cython_speedup'] = 20.0
                 else:
-                    logger.warning("❌ Failed to compile Cython kernels")
+                    logger.warning(" Failed to compile Cython kernels")
     
     async def _initialize_quantization(self):
         """Initialize advanced quantization system."""
-        logger.info("🔢 Initializing advanced quantization...")
+        logger.info(" Initializing advanced quantization...")
         
         # Create advanced quantizer
         self.quantizer = create_advanced_quantizer(
@@ -158,11 +158,11 @@ class AdvancedMetaConsensusSystem(MetaConsensusSystem):
             enable_int4=self.advanced_config.enable_int4_quantization
         )
         
-        logger.info("✅ Advanced quantization system initialized")
+        logger.info(" Advanced quantization system initialized")
     
     async def _initialize_federated_consensus(self):
         """Initialize federated consensus system."""
-        logger.info("🌐 Initializing federated consensus...")
+        logger.info(" Initializing federated consensus...")
         
         # Create federated consensus node
         node_id = f"metaconsensus_{int(time.time())}"
@@ -177,15 +177,15 @@ class AdvancedMetaConsensusSystem(MetaConsensusSystem):
         try:
             await self.federated_node.start()
             self.performance_stats['federated_nodes_active'] = 1
-            logger.info("✅ Federated consensus node started successfully")
+            logger.info(" Federated consensus node started successfully")
         except Exception as e:
-            logger.error(f"❌ Failed to start federated consensus: {e}")
+            logger.error(f" Failed to start federated consensus: {e}")
             # Continue without federated consensus
             self.federated_node = None
     
     async def _run_startup_benchmark(self):
         """Run startup benchmark to measure performance improvements."""
-        logger.info("📊 Running startup benchmark...")
+        logger.info(" Running startup benchmark...")
         
         # Generate test data
         test_responses = [
@@ -215,9 +215,9 @@ class AdvancedMetaConsensusSystem(MetaConsensusSystem):
             speedup = python_time / cython_time if cython_time > 0 else 1.0
             self.performance_stats['cython_speedup'] = speedup
             
-            logger.info(f"🚀 Cython kernels provide {speedup:.1f}x speedup")
+            logger.info(f" Cython kernels provide {speedup:.1f}x speedup")
         
-        logger.info("✅ Startup benchmark completed")
+        logger.info(" Startup benchmark completed")
     
     async def get_enhanced_consensus_response(self, query: str, context: QueryContext) -> ConsensusResult:
         """Get consensus response with all advanced features."""
@@ -230,7 +230,7 @@ class AdvancedMetaConsensusSystem(MetaConsensusSystem):
             
             cached_result = self.consensus_cache[cache_key]
             if self._is_cache_valid(cached_result):
-                logger.info("📋 Returning cached consensus result")
+                logger.info(" Returning cached consensus result")
                 return cached_result
         
         # Get expert responses using base system
@@ -263,7 +263,7 @@ class AdvancedMetaConsensusSystem(MetaConsensusSystem):
         consensus_time = time.time() - start_time
         self.performance_stats['total_consensus_time'] += consensus_time
         
-        logger.info(f"✅ Enhanced consensus completed in {consensus_time:.3f}s")
+        logger.info(f" Enhanced consensus completed in {consensus_time:.3f}s")
         
         return enhanced_result
     
@@ -415,7 +415,7 @@ class AdvancedMetaConsensusSystem(MetaConsensusSystem):
     
     async def cleanup(self):
         """Clean up resources."""
-        logger.info("🧹 Cleaning up advanced meta-consensus system...")
+        logger.info(" Cleaning up advanced meta-consensus system...")
         
         # Clean up federated consensus
         if self.federated_node:
@@ -427,7 +427,7 @@ class AdvancedMetaConsensusSystem(MetaConsensusSystem):
         # Clean up base system
         await super().cleanup()
         
-        logger.info("✅ Advanced meta-consensus system cleaned up")
+        logger.info(" Advanced meta-consensus system cleaned up")
 
 
 def create_advanced_meta_consensus_system(

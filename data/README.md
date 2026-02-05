@@ -2,7 +2,7 @@
 
 The **data** module provides the complete data handling system, including loaders, processors, dataset registry, and data pipeline orchestration.
 
-## 📋 Table of Contents
+##  Table of Contents
 
 1. [Overview](#overview)
 2. [Pipeline Architecture](#pipeline-architecture)
@@ -15,7 +15,7 @@ The **data** module provides the complete data handling system, including loader
 
 ---
 
-## 🎯 Overview
+##  Overview
 
 The capibaraGPT-v2 data system handles data loading, processing, and preparation for training and inference.
 
@@ -70,7 +70,7 @@ capibara/data/
 
 ---
 
-## 📊 Datasets
+##  Datasets
 
 capibaraGPT-v2 supports multiple dataset categories organized in `datasets/`:
 
@@ -107,7 +107,7 @@ dataset = academic.load_arxiv_papers(
 
 ---
 
-## 📥 Loaders
+##  Loaders
 
 Loaders load data from different sources:
 
@@ -167,7 +167,7 @@ for batch in loader:
 
 ---
 
-## ⚙️ Processors
+## ️ Processors
 
 Processors transform raw data into training format:
 
@@ -235,7 +235,7 @@ pipeline.save("pipelines/my_pipeline.json")
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Load and Process Dataset
 
@@ -305,7 +305,7 @@ print(f"Datasets used: {metrics['datasets_used']}")
 
 ---
 
-## 📋 Dataset Registry
+##  Dataset Registry
 
 The registry centralizes all available datasets:
 
@@ -358,7 +358,7 @@ print(f"Description: {metadata['description']}")
 
 ---
 
-## 🎼 Data Orchestrator
+##  Data Orchestrator
 
 The Ultra Data Orchestrator handles complex pipelines:
 
@@ -456,7 +456,7 @@ orchestrator.enable_quality_filter(
 
 ---
 
-## 🔧 Scrapers
+##  Scrapers
 
 Scrapers for obtaining data from the web:
 
@@ -494,7 +494,7 @@ reddit_data = reddit_scraper.scrape()
 
 ---
 
-## 🛠️ Tools
+## ️ Tools
 
 Utilities for data handling:
 
@@ -537,7 +537,7 @@ train, val, test = data_splitter.split(
 
 ---
 
-## 📚 Configuration
+##  Configuration
 
 ### Config Files
 
@@ -588,21 +588,21 @@ quality:
 
 ---
 
-## 🔗 Compatibility
+##  Compatibility
 
 The module maintains backwards compatibility:
 
 ```python
 # Import patterns
-from capibara.data.datasets import load_dataset  # ✅ Works
-from capibara.data.loaders import DataLoader     # ✅ Works
-from capibara.data.processors import Tokenizer   # ✅ Works
-from capibara.data.core import DataLoader        # ✅ Recommended
+from capibara.data.datasets import load_dataset  #  Works
+from capibara.data.loaders import DataLoader     #  Works
+from capibara.data.processors import Tokenizer   #  Works
+from capibara.data.core import DataLoader        #  Recommended
 ```
 
 ---
 
-## 📊 Performance
+##  Performance
 
 ### Benchmarks (Loading + Processing)
 

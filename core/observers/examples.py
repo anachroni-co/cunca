@@ -154,19 +154,19 @@ class ObserverPatternDemo:
     
     async def run_comprehensive_demo(self):
         """Run a comprehensive demonstration of all features."""
-        logger.info("🚀 Observer Pattern Comprehensive Demo")
+        logger.info(" Observer Pattern Comprehensive Demo")
         logger.info("=" * 50)
         
         # Test each router configuration
         for router_name, router in self.routers.items():
-            logger.info(f"\n🔧 Testing Router Configuration: {router_name}")
+            logger.info(f"\n Testing Router Configuration: {router_name}")
             logger.info("-" * 40)
             
             await self._test_router_with_requests(router, router_name)
             
             # Show statistics
             stats = router.get_statistics()
-            logger.info(f"\n📊 Router Statistics for {router_name}:")
+            logger.info(f"\n Router Statistics for {router_name}:")
             self._print_router_statistics(stats)
         
         # Run specific feature demonstrations
@@ -174,14 +174,14 @@ class ObserverPatternDemo:
         await self._demo_performance_monitoring()
         await self._demo_custom_observers()
         
-        logger.info("\n✅ Comprehensive demo completed!")
+        logger.info("\n Comprehensive demo completed!")
     
     async def _test_router_with_requests(self, router: ObserverAwareRouter, router_name: str):
         """Test a router with various request types."""
         results = []
         
         for request in self.demo_requests[:6]:  # Test with first 6 requests
-            logger.info(f"\n📝 Processing: {request['id']} ({request['category']})")
+            logger.info(f"\n Processing: {request['id']} ({request['category']})")
             logger.info(f"   Text: {request['text'][:80]}...")
             
             start_time = time.time()
@@ -195,16 +195,16 @@ class ObserverPatternDemo:
             activated_experts = result.experts_activated
             expected_experts = request['expected_experts']
             
-            logger.info(f"   ✓ Experts activated: {activated_experts}")
-            logger.info(f"   ✓ Expected experts: {expected_experts}")
-            logger.info(f"   ✓ Processing time: {processing_time:.3f}s")
-            logger.info(f"   ✓ Confidence: {result.confidence:.2f}")
+            logger.info(f"    Experts activated: {activated_experts}")
+            logger.info(f"    Expected experts: {expected_experts}")
+            logger.info(f"    Processing time: {processing_time:.3f}s")
+            logger.info(f"    Confidence: {result.confidence:.2f}")
             
             # Check if activation was appropriate
             if expected_experts:
                 overlap = set(activated_experts) & set(expected_experts)
                 coverage = len(overlap) / len(expected_experts) if expected_experts else 0
-                logger.info(f"   ✓ Coverage: {coverage:.2f} ({len(overlap)}/{len(expected_experts)})")
+                logger.info(f"    Coverage: {coverage:.2f} ({len(overlap)}/{len(expected_experts)})")
             
             results.append({
                 "request": request,
@@ -227,7 +227,7 @@ class ObserverPatternDemo:
     
     async def _demo_adaptive_learning(self):
         """Demonstrate adaptive learning capabilities."""
-        logger.info(f"\n🧠 Adaptive Learning Demo")
+        logger.info(f"\n Adaptive Learning Demo")
         logger.info("-" * 30)
         
         # Create router with adaptive strategy
@@ -262,11 +262,11 @@ class ObserverPatternDemo:
         activation_manager_stats = stats.get("activation_manager_stats", {})
         
         logger.info(f"   Adaptive weights learned: {len(activation_manager_stats.get('adaptive_weights', {}))}")
-        logger.info("   ✓ Adaptive learning demo completed")
+        logger.info("    Adaptive learning demo completed")
     
     async def _demo_performance_monitoring(self):
         """Demonstrate performance monitoring features."""
-        logger.info(f"\n📈 Performance Monitoring Demo")
+        logger.info(f"\n Performance Monitoring Demo")
         logger.info("-" * 35)
         
         # Create router with performance observer
@@ -308,11 +308,11 @@ class ObserverPatternDemo:
             logger.info(f"     Total experts activated: {total_experts}")
             logger.info(f"     Average processing time: {avg_processing_time:.3f}s")
         
-        logger.info("   ✓ Performance monitoring demo completed")
+        logger.info("    Performance monitoring demo completed")
     
     async def _demo_custom_observers(self):
         """Demonstrate creating and using custom observers."""
-        logger.info(f"\n🔧 Custom Observer Demo")
+        logger.info(f"\n Custom Observer Demo")
         logger.info("-" * 25)
         
         # Create a custom observer
@@ -356,7 +356,7 @@ class ObserverPatternDemo:
             # Note: DataScienceExpert won't actually activate since it's not registered,
             # but the observer would trigger the activation event
         
-        logger.info("   ✓ Custom observer demo completed")
+        logger.info("    Custom observer demo completed")
 
 
 class InteractiveObserverDemo:
@@ -373,7 +373,7 @@ class InteractiveObserverDemo:
     
     async def run_interactive_demo(self):
         """Run interactive demo where users can input their own requests."""
-        logger.info("🎯 Interactive Observer Pattern Demo")
+        logger.info(" Interactive Observer Pattern Demo")
         logger.info("=" * 40)
         logger.info("Enter requests to see how the observer pattern activates experts.")
         logger.info("Type 'quit' to exit, 'stats' to see statistics, 'help' for commands.")
@@ -383,7 +383,7 @@ class InteractiveObserverDemo:
         
         while True:
             try:
-                user_input = input("📝 Enter your request: ").strip()
+                user_input = input(" Enter your request: ").strip()
                 
                 if user_input.lower() == 'quit':
                     break
@@ -400,7 +400,7 @@ class InteractiveObserverDemo:
                 request_count += 1
                 request_id = f"interactive_{request_count}"
                 
-                logger.info(f"\n🔍 Processing request: {request_id}")
+                logger.info(f"\n Processing request: {request_id}")
                 logger.info(f"   Text: {user_input}")
                 
                 start_time = time.time()
@@ -411,7 +411,7 @@ class InteractiveObserverDemo:
                 processing_time = time.time() - start_time
                 
                 # Display results
-                logger.info(f"\n✅ Results:")
+                logger.info(f"\n Results:")
                 logger.info(f"   Experts activated: {result.experts_activated}")
                 logger.info(f"   Observers activated: {result.observers_activated}")
                 logger.info(f"   Confidence: {result.confidence:.2f}")
@@ -424,21 +424,21 @@ class InteractiveObserverDemo:
                 logger.info()
                 
             except KeyboardInterrupt:
-                logger.info("\n👋 Demo interrupted by user")
+                logger.info("\n Demo interrupted by user")
                 break
             except Exception as e:
-                logger.error(f"❌ Error processing request: {e}")
+                logger.error(f" Error processing request: {e}")
                 continue
         
-        logger.info(f"\n📊 Final Statistics:")
+        logger.info(f"\n Final Statistics:")
         self._show_statistics()
-        logger.info("👋 Interactive demo completed!")
+        logger.info(" Interactive demo completed!")
     
     def _show_statistics(self):
         """Show current router statistics."""
         stats = self.router.get_statistics()
         
-        logger.info("\n📊 Current Statistics:")
+        logger.info("\n Current Statistics:")
         logger.info("-" * 20)
         
         integration_metrics = stats.get("integration_metrics", {})
@@ -458,13 +458,13 @@ class InteractiveObserverDemo:
     
     def _show_help(self):
         """Show help information."""
-        logger.info("\n💡 Available Commands:")
+        logger.info("\n Available Commands:")
         logger.info("-" * 20)
         logger.info("   quit     - Exit the demo")
         logger.info("   stats    - Show current statistics")
         logger.info("   help     - Show this help message")
         logger.info()
-        logger.info("💡 Example Requests:")
+        logger.info(" Example Requests:")
         logger.info("   'Calculate the integral of x² from 0 to 5'")
         logger.info("   '¿Qué pasaría si el servidor falla?'")
         logger.info("   'Implement quicksort in Python'")
@@ -476,7 +476,7 @@ class InteractiveObserverDemo:
 
 async def quick_test():
     """Quick test of the observer pattern implementation."""
-    logger.info("🚀 Quick Observer Pattern Test")
+    logger.info(" Quick Observer Pattern Test")
     logger.info("=" * 30)
     
     # Create simple router
@@ -491,22 +491,22 @@ async def quick_test():
     ]
     
     for i, request in enumerate(test_requests):
-        logger.info(f"\n📝 Request {i+1}: {request}")
+        logger.info(f"\n Request {i+1}: {request}")
         
         result = await router.route_request(
             input_data=request,
             request_id=f"test_{i}"
         )
         
-        logger.info(f"   ✓ Experts: {result.experts_activated}")
-        logger.info(f"   ✓ Confidence: {result.confidence:.2f}")
+        logger.info(f"    Experts: {result.experts_activated}")
+        logger.info(f"    Confidence: {result.confidence:.2f}")
     
-    logger.info(f"\n✅ Quick test completed!")
+    logger.info(f"\n Quick test completed!")
 
 
 async def benchmark_observer_performance():
     """Benchmark the performance of the observer pattern."""
-    logger.info("⚡ Observer Pattern Performance Benchmark")
+    logger.info(" Observer Pattern Performance Benchmark")
     logger.info("=" * 45)
     
     # Create different router configurations
@@ -528,7 +528,7 @@ async def benchmark_observer_performance():
     
     # Run benchmarks
     for router_name, router in routers.items():
-        logger.info(f"\n🔧 Benchmarking: {router_name}")
+        logger.info(f"\n Benchmarking: {router_name}")
         
         start_time = time.time()
         
@@ -556,14 +556,14 @@ async def benchmark_observer_performance():
         logger.info(f"   Average confidence: {avg_confidence:.2f}")
         logger.info(f"   Requests per second: {len(benchmark_requests) / total_time:.2f}")
     
-    logger.info(f"\n✅ Performance benchmark completed!")
+    logger.info(f"\n Performance benchmark completed!")
 
 
 # Main execution functions
 
 async def main():
     """Main function to run various demos."""
-    logger.info("🎭 CapibaraGPT Observer Pattern Examples")
+    logger.info(" CapibaraGPT Observer Pattern Examples")
     logger.info("=" * 45)
     
     # Run comprehensive demo

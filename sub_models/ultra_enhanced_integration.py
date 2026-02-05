@@ -78,17 +78,17 @@ class UltraEnhancedSubModelBase(ABC):
         if ULTRA_CORE_AVAILABLE and self.config.get("auto_core_integration", True):
             try:
                 self.ultra_core = UltraCoreOrchestrator(self.config)
-                logger.info("✅ Ultra Core integrated")
+                logger.info(" Ultra Core integrated")
             except Exception as e:
-                logger.warning(f"⚠️ Ultra Core integration failed: {e}")
+                logger.warning(f"️ Ultra Core integration failed: {e}")
         
         # Training integration
         if ULTRA_TRAINING_AVAILABLE and self.config.get("auto_training_integration", True):
             try:
                 self.training_integration = UltraAdvancedTrainer(self.config)
-                logger.info("✅ Ultra Training integrated")
+                logger.info(" Ultra Training integrated")
             except Exception as e:
-                logger.warning(f"⚠️ Training integration failed: {e}")
+                logger.warning(f"️ Training integration failed: {e}")
     
     @abstractmethod
     def forward_ultra(self, x: jnp.ndarray, **kwargs) -> Tuple[Any, Dict[str, Any]]:
@@ -126,9 +126,9 @@ class UltraEnhancedAdaptiveVQ(UltraEnhancedSubModelBase):
             from .experimental.adaptive_vq_submodel import AdaptiveSubmodel
             self.base_model = AdaptiveSubmodel(config)
             self.enhanced = True
-            logger.info("🔬 AdaptiveVQ enhanced with ultra features")
+            logger.info(" AdaptiveVQ enhanced with ultra features")
         except ImportError as e:
-            logger.error(f"❌ AdaptiveVQ not available: {e}")
+            logger.error(f" AdaptiveVQ not available: {e}")
             self.base_model = None
             self.enhanced = False
     
@@ -167,17 +167,17 @@ class UltraEnhancedAdaptiveVQ(UltraEnhancedSubModelBase):
                 ssm_config = {"hidden_size": result.shape[-1]}
                 ultra_ssm = create_ssm_layer("ultra", ssm_config)
                 result = ultra_ssm(result)
-                logger.debug("🏗️ SSM enhancement applied to AdaptiveVQ")
+                logger.debug("️ SSM enhancement applied to AdaptiveVQ")
             except Exception as e:
-                logger.warning(f"⚠️ SSM enhancement failed: {e}")
+                logger.warning(f"️ SSM enhancement failed: {e}")
         
         # Expert soup enhancement
         if self.training_integration and hasattr(self.training_integration, "apply_expert_soup"):
             try:
                 result = self.training_integration.apply_expert_soup(result)
-                logger.debug("🍲 Expert Soup applied to AdaptiveVQ")
+                logger.debug(" Expert Soup applied to AdaptiveVQ")
             except Exception as e:
-                logger.warning(f"⚠️ Expert Soup failed: {e}")
+                logger.warning(f"️ Expert Soup failed: {e}")
         
         return result
 
@@ -199,9 +199,9 @@ class UltraEnhancedSpikeSSM(UltraEnhancedSubModelBase):
             }
             self.base_model = SpikeSSM(**spike_config)
             self.enhanced = True
-            logger.info("🧠 SpikeSSM enhanced with ultra features")
+            logger.info(" SpikeSSM enhanced with ultra features")
         except ImportError as e:
-            logger.error(f"❌ SpikeSSM not available: {e}")
+            logger.error(f" SpikeSSM not available: {e}")
             self.base_model = None
             self.enhanced = False
     
@@ -221,7 +221,7 @@ class UltraEnhancedSpikeSSM(UltraEnhancedSubModelBase):
                 
                 # Apply spiking dynamics on top of SSM output
                 spike_result = self.base_model(ssm_output, **kwargs)
-                logger.debug("🏗️ O(n) SSM + Spiking hybrid applied")
+                logger.debug("️ O(n) SSM + Spiking hybrid applied")
                 
                 ultra_metrics = {
                     "spike_ssm_enhanced": True,
@@ -233,7 +233,7 @@ class UltraEnhancedSpikeSSM(UltraEnhancedSubModelBase):
                 return spike_result, ultra_metrics
                 
             except Exception as e:
-                logger.warning(f"⚠️ Hybrid SSM failed, using base: {e}")
+                logger.warning(f"️ Hybrid SSM failed, using base: {e}")
         
         # Fallback to original SpikeSSM
         result = self.base_model(x, **kwargs)
@@ -266,9 +266,9 @@ class UltraEnhancedDeepDialog(UltraEnhancedSubModelBase):
             )
             self.base_model = DeepDialog(dialog_config)
             self.enhanced = True
-            logger.info("💬 DeepDialog enhanced with ultra features")
+            logger.info(" DeepDialog enhanced with ultra features")
         except ImportError as e:
-            logger.error(f"❌ DeepDialog not available: {e}")
+            logger.error(f" DeepDialog not available: {e}")
             self.base_model = None
             self.enhanced = False
     
@@ -306,9 +306,9 @@ class UltraEnhancedDeepDialog(UltraEnhancedSubModelBase):
         if self.training_integration:
             try:
                 result = self.training_integration.inject_expert_knowledge(result, domain="dialog")
-                logger.debug("🧠 Expert knowledge injected")
+                logger.debug(" Expert knowledge injected")
             except Exception as e:
-                logger.warning(f"⚠️ Knowledge injection failed: {e}")
+                logger.warning(f"️ Knowledge injection failed: {e}")
         
         return result
 
@@ -327,7 +327,7 @@ class UltraEnhancedSSMTPU:
         """Create enhanced SSM with fixes and ultra features."""
         
         if not SSM_LAYERS_AVAILABLE:
-            logger.warning("⚠️ SSM layers not available, using placeholder")
+            logger.warning("️ SSM layers not available, using placeholder")
             return None
         
         try:
@@ -339,11 +339,11 @@ class UltraEnhancedSSMTPU:
             }
             
             enhanced_ssm = create_ssm_layer("ultra", ssm_config)
-            logger.info("🏗️ Enhanced SSM_TPU created with ultra features")
+            logger.info("️ Enhanced SSM_TPU created with ultra features")
             return enhanced_ssm
             
         except Exception as e:
-            logger.error(f"❌ Enhanced SSM creation failed: {e}")
+            logger.error(f" Enhanced SSM creation failed: {e}")
             return None
     
     def __call__(self, x: jnp.ndarray, **kwargs) -> Tuple[Any, Dict[str, Any]]:
@@ -384,10 +384,10 @@ class UltraEnhancedByteTPU:
             
             self.base_model = TPUCapibaraByte(byte_config)
             self.enhanced = True
-            logger.info("📱 Byte_TPU enhanced with ultra features")
+            logger.info(" Byte_TPU enhanced with ultra features")
             
         except ImportError as e:
-            logger.error(f"❌ Byte_TPU not available: {e}")
+            logger.error(f" Byte_TPU not available: {e}")
             self.base_model = None
             self.enhanced = False
     
@@ -425,44 +425,44 @@ class UltraSubModelIntegrationManager:
     def _initialize_enhanced_models(self):
         """Initialize all enhanced sub-models."""
         
-        logger.info("🚀 Initializing Ultra Enhanced Sub-Models")
+        logger.info(" Initializing Ultra Enhanced Sub-Models")
         
         # AdaptiveVQ enhancement
         try:
             self.enhanced_models["adaptive_vq"] = UltraEnhancedAdaptiveVQ(self.config)
-            self.integration_status["adaptive_vq"] = "✅ Enhanced"
+            self.integration_status["adaptive_vq"] = " Enhanced"
         except Exception as e:
-            self.integration_status["adaptive_vq"] = f"❌ Failed: {e}"
+            self.integration_status["adaptive_vq"] = f" Failed: {e}"
         
         # SpikeSSM enhancement
         try:
             self.enhanced_models["spike_ssm"] = UltraEnhancedSpikeSSM(self.config)
-            self.integration_status["spike_ssm"] = "✅ Enhanced"
+            self.integration_status["spike_ssm"] = " Enhanced"
         except Exception as e:
-            self.integration_status["spike_ssm"] = f"❌ Failed: {e}"
+            self.integration_status["spike_ssm"] = f" Failed: {e}"
         
         # DeepDialog enhancement
         try:
             self.enhanced_models["deep_dialog"] = UltraEnhancedDeepDialog(self.config)
-            self.integration_status["deep_dialog"] = "✅ Enhanced"
+            self.integration_status["deep_dialog"] = " Enhanced"
         except Exception as e:
-            self.integration_status["deep_dialog"] = f"❌ Failed: {e}"
+            self.integration_status["deep_dialog"] = f" Failed: {e}"
         
         # SSM_TPU enhancement
         try:
             self.enhanced_models["ssm_tpu"] = UltraEnhancedSSMTPU(self.config)
-            self.integration_status["ssm_tpu"] = "✅ Enhanced"
+            self.integration_status["ssm_tpu"] = " Enhanced"
         except Exception as e:
-            self.integration_status["ssm_tpu"] = f"❌ Failed: {e}"
+            self.integration_status["ssm_tpu"] = f" Failed: {e}"
         
         # Byte_TPU enhancement
         try:
             self.enhanced_models["byte_tpu"] = UltraEnhancedByteTPU(self.config)
-            self.integration_status["byte_tpu"] = "✅ Enhanced"
+            self.integration_status["byte_tpu"] = " Enhanced"
         except Exception as e:
-            self.integration_status["byte_tpu"] = f"❌ Failed: {e}"
+            self.integration_status["byte_tpu"] = f" Failed: {e}"
         
-        logger.info(f"✅ Enhanced {len(self.enhanced_models)} sub-models")
+        logger.info(f" Enhanced {len(self.enhanced_models)} sub-models")
     
     def get_enhanced_model(self, model_name: str):
         """Get enhanced version of a sub-model."""
@@ -532,7 +532,7 @@ def create_ultra_enhanced_integration(config: Optional[Dict[str, Any]] = None) -
 def update_legacy_submodels():
     """Update and fix legacy sub-models with import fixes."""
     
-    logger.info("🔧 Updating legacy sub-models with fixes")
+    logger.info(" Updating legacy sub-models with fixes")
     
     fixes_applied = []
     
@@ -543,7 +543,7 @@ def update_legacy_submodels():
             # Apply import fixes
             fixes_applied.append("SSM_TPU import fixes")
     except Exception as e:
-        logger.warning(f"⚠️ SSM_TPU fix failed: {e}")
+        logger.warning(f"️ SSM_TPU fix failed: {e}")
     
     # Fix deep_dialog imports
     try:
@@ -552,14 +552,14 @@ def update_legacy_submodels():
             # Apply import fixes
             fixes_applied.append("deep_dialog import fixes")
     except Exception as e:
-        logger.warning(f"⚠️ deep_dialog fix failed: {e}")
+        logger.warning(f"️ deep_dialog fix failed: {e}")
     
     return fixes_applied
 
 def demonstrate_ultra_integration():
     """Demonstrate the ultra-enhanced integration system."""
     
-    logger.info("🌟 ULTRA ENHANCED INTEGRATION DEMONSTRATION")
+    logger.info(" ULTRA ENHANCED INTEGRATION DEMONSTRATION")
     logger.info("=" * 60)
     
     # Create integration manager
@@ -568,19 +568,19 @@ def demonstrate_ultra_integration():
     # Get comprehensive status
     status = integration_manager.get_comprehensive_status()
     
-    logger.info(f"📊 Integration Status:")
+    logger.info(f" Integration Status:")
     logger.info(f"   - Total models: {status['total_models']}")
-    logger.info(f"   - Ultra Core: {'✅' if status['system_features']['ultra_core'] else '❌'}")
-    logger.info(f"   - Ultra Training: {'✅' if status['system_features']['ultra_training'] else '❌'}")
-    logger.info(f"   - SSM Layers: {'✅' if status['system_features']['ssm_layers'] else '❌'}")
+    logger.info(f"   - Ultra Core: {'' if status['system_features']['ultra_core'] else ''}")
+    logger.info(f"   - Ultra Training: {'' if status['system_features']['ultra_training'] else ''}")
+    logger.info(f"   - SSM Layers: {'' if status['system_features']['ssm_layers'] else ''}")
     
-    logger.info(f"\n🔧 Model Enhancement Status:")
+    logger.info(f"\n Model Enhancement Status:")
     for model, status_msg in status['integration_status'].items():
         logger.info(f"   - {model}: {status_msg}")
     
-    logger.info(f"\n⚡ Optimization Features:")
+    logger.info(f"\n Optimization Features:")
     for feature, available in status['optimization_features'].items():
-        logger.info(f"   - {feature}: {'✅' if available else '❌'}")
+        logger.info(f"   - {feature}: {'' if available else ''}")
     
     # Test enhanced models
     try:
@@ -591,12 +591,12 @@ def demonstrate_ultra_integration():
                 result, metrics = integration_manager.execute_enhanced_model(
                     model_name, dummy_input
                 )
-                logger.info(f"   ✅ {model_name}: Working")
+                logger.info(f"    {model_name}: Working")
             except Exception as e:
-                logger.info(f"   ❌ {model_name}: {e}")
+                logger.info(f"    {model_name}: {e}")
                 
     except Exception as e:
-        logger.error(f"❌ Testing failed: {e}")
+        logger.error(f" Testing failed: {e}")
     
     return integration_manager
 

@@ -2,7 +2,7 @@
 
 The **tpu** module provides specific configurations and optimizations for Google Cloud TPU v4, v5e, and v6e, including integration with Vector Quantization.
 
-## 📋 Table of Contents
+##  Table of Contents
 
 1. [Overview](#overview)
 2. [TPU Versions Supported](#tpu-versions-supported)
@@ -19,17 +19,17 @@ The **tpu** module provides specific configurations and optimizations for Google
 
 ---
 
-## 🎯 Overview
+##  Overview
 
 This module specializes the system to take full advantage of Google Cloud TPU capabilities, including:
 
-- ⚡ **TPU v4/v5e/v6e Support**: Specific optimizations for each generation
-- 🔧 **Automatic Configuration**: Automatic TPU environment setup
-- 📊 **Mesh Configuration**: Automatic data/model parallelism
-- 🎯 **XLA Optimization**: Optimized XLA compilation
-- 💾 **Memory Management**: Efficient HBM management
-- 📦 **VQ Integration**: Hardware-accelerated Vector Quantization
-- 📈 **Performance Monitoring**: Real-time metrics
+-  **TPU v4/v5e/v6e Support**: Specific optimizations for each generation
+-  **Automatic Configuration**: Automatic TPU environment setup
+-  **Mesh Configuration**: Automatic data/model parallelism
+-  **XLA Optimization**: Optimized XLA compilation
+-  **Memory Management**: Efficient HBM management
+-  **VQ Integration**: Hardware-accelerated Vector Quantization
+-  **Performance Monitoring**: Real-time metrics
 
 ### Architecture
 
@@ -42,7 +42,7 @@ capibara/core/tpu/
 
 ---
 
-## 🖥️ TPU Versions Supported
+## ️ TPU Versions Supported
 
 | TPU Version | Chips | Memory/Chip | BF16 TFLOPS | INT8 TOPS | Recommended For |
 |-------------|-------|-------------|-------------|-----------|-----------------|
@@ -74,7 +74,7 @@ capibara/core/tpu/
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Basic Configuration
 
@@ -121,7 +121,7 @@ trainer.train(
 
 ---
 
-## ⚙️ TPU Configuration
+## ️ TPU Configuration
 
 ### Complete Configuration
 
@@ -189,7 +189,7 @@ export XLA_PYTHON_CLIENT_PREALLOCATE=false
 
 ---
 
-## 🌐 Mesh & Sharding
+##  Mesh & Sharding
 
 ### Mesh Configuration
 
@@ -249,7 +249,7 @@ sharded_model = shard_model(
 
 ---
 
-## ⚡ XLA Optimizations
+##  XLA Optimizations
 
 ### Automatic XLA Optimization
 
@@ -303,7 +303,7 @@ compiled_fn = jax.jit(optimized_forward).lower(params, inputs).compile()
 
 ---
 
-## 💾 Memory Management
+##  Memory Management
 
 ### HBM Optimization
 
@@ -357,7 +357,7 @@ def train_step(params, state, batch):
 
 ---
 
-## 📦 Vector Quantization Integration
+##  Vector Quantization Integration
 
 ### TPU v6 Hardware VQ Acceleration
 
@@ -411,7 +411,7 @@ def quantized_forward(inputs):
 
 ---
 
-## 🎯 Performance Tuning
+##  Performance Tuning
 
 ### Optimal Batch Size
 
@@ -468,7 +468,7 @@ for recommendation in analysis['recommendations']:
 
 ---
 
-## 📊 Monitoring
+##  Monitoring
 
 ### Real-time Metrics
 
@@ -518,20 +518,20 @@ monitor.set_alert(
     metric="utilization",
     condition="<",
     threshold=0.7,
-    action=lambda: print("⚠️ Low TPU utilization!")
+    action=lambda: print("️ Low TPU utilization!")
 )
 
 monitor.set_alert(
     metric="memory_usage_gb",
     condition=">",
     threshold=28,  # 28GB of 32GB
-    action=lambda: print("⚠️ High memory usage!")
+    action=lambda: print("️ High memory usage!")
 )
 ```
 
 ---
 
-## 🔧 Troubleshooting
+##  Troubleshooting
 
 ### Error: "TPU not found"
 
@@ -618,7 +618,7 @@ jax.config.update('jax_log_compiles', True)
 
 ---
 
-## 📈 Benchmarks
+##  Benchmarks
 
 ### Training Performance (Transformer, 1B params)
 
@@ -649,7 +649,7 @@ jax.config.update('jax_log_compiles', True)
 
 ---
 
-## 📚 References
+##  References
 
 ### Google Cloud Documentation
 
@@ -673,7 +673,7 @@ jax.config.update('jax_log_compiles', True)
 
 ---
 
-## 🛠️ Advanced Topics
+## ️ Advanced Topics
 
 ### Custom TPU Kernels
 

@@ -43,34 +43,34 @@ def import_kernel_modules():
     try:
         from . import adaptive_kernels
         kernel_status['adaptive_kernels'] = True
-        logger.info("✅ adaptive_kernels imported successfully")
+        logger.info(" adaptive_kernels imported successfully")
     except ImportError as e:
         kernel_status['adaptive_kernels'] = False
-        logger.warning(f"❌ adaptive_kernels failed: {e}")
+        logger.warning(f" adaptive_kernels failed: {e}")
     
     try:
         from . import sparsity_kernels
         kernel_status['sparsity_kernels'] = True
-        logger.info("✅ sparsity_kernels imported successfully")
+        logger.info(" sparsity_kernels imported successfully")
     except ImportError as e:
         kernel_status['sparsity_kernels'] = False
-        logger.warning(f"❌ sparsity_kernels failed: {e}")
+        logger.warning(f" sparsity_kernels failed: {e}")
     
     try:
         from . import semiotic_kernels
         kernel_status['semiotic_kernels'] = True
-        logger.info("✅ semiotic_kernels imported successfully")
+        logger.info(" semiotic_kernels imported successfully")
     except ImportError as e:
         kernel_status['semiotic_kernels'] = False
-        logger.warning(f"❌ semiotic_kernels failed: {e}")
+        logger.warning(f" semiotic_kernels failed: {e}")
     
     try:
         from . import neuromorphic_kernels
         kernel_status['neuromorphic_kernels'] = True
-        logger.info("✅ neuromorphic_kernels imported successfully")
+        logger.info(" neuromorphic_kernels imported successfully")
     except ImportError as e:
         kernel_status['neuromorphic_kernels'] = False
-        logger.warning(f"❌ neuromorphic_kernels failed: {e}")
+        logger.warning(f" neuromorphic_kernels failed: {e}")
     
     return kernel_status
 
@@ -156,10 +156,10 @@ class TPUOptimizer:
                 end_time = time.time()
                 
                 validation_results["performance_metrics"]["basic_matmul_time"] = end_time - start_time
-                validation_results["performance_metrics"]["basic_operations"] = "✅ Working"
+                validation_results["performance_metrics"]["basic_operations"] = " Working"
                 
             except Exception as e:
-                validation_results["performance_metrics"]["basic_operations"] = f"❌ Failed: {e}"
+                validation_results["performance_metrics"]["basic_operations"] = f" Failed: {e}"
         
         # Generate recommendations
         if not self.tpu_available:
@@ -210,7 +210,7 @@ class TPUOptimizer:
 
 def run_comprehensive_diagnosis():
     """Executes complete TPU system diagnostics."""
-    logger.info("🔍 Starting comprehensive TPU diagnosis...")
+    logger.info(" Starting comprehensive TPU diagnosis...")
     
     optimizer = TPUOptimizer()
     
@@ -232,24 +232,24 @@ def run_comprehensive_diagnosis():
     
     # Print results
     logger.info("\n" + "="*60)
-    logger.info("🦫 CAPIBARA TPU v4-32 DIAGNOSIS RESULTS")
+    logger.info(" CAPIBARA TPU v4-32 DIAGNOSIS RESULTS")
     logger.info("="*60)
     
-    logger.info(f"JAX Available: {'✅' if validation_results['jax_available'] else '❌'}")
-    logger.info(f"TPU Available: {'✅' if validation_results['tpu_available'] else '❌'}")
-    logger.info(f"Optimizations Applied: {'✅' if validation_results['optimization_applied'] else '❌'}")
+    logger.info(f"JAX Available: {'' if validation_results['jax_available'] else ''}")
+    logger.info(f"TPU Available: {'' if validation_results['tpu_available'] else ''}")
+    logger.info(f"Optimizations Applied: {'' if validation_results['optimization_applied'] else ''}")
     
-    logger.info("\n📦 Kernel Modules Status:")
+    logger.info("\n Kernel Modules Status:")
     for kernel, status in validation_results["kernels_status"].items():
-        logger.info(f"  {kernel}: {'✅' if status else '❌'}")
+        logger.info(f"  {kernel}: {'' if status else ''}")
     
     if validation_results["performance_metrics"]:
-        logger.info("\n⚡ Performance Metrics:")
+        logger.info("\n Performance Metrics:")
         for metric, value in validation_results["performance_metrics"].items():
             logger.info(f"  {metric}: {value}")
     
     if validation_results["recommendations"]:
-        logger.info("\n💡 Recommendations:")
+        logger.info("\n Recommendations:")
         for i, rec in enumerate(validation_results["recommendations"], 1):
             logger.info(f"  {i}. {rec}")
     
@@ -258,10 +258,10 @@ def run_comprehensive_diagnosis():
     # Overall status
     all_kernels_ok = all(validation_results["kernels_status"].values())
     if validation_results["jax_available"] and all_kernels_ok:
-        logger.info("🎉 SYSTEM STATUS: ✅ HEALTHY")
+        logger.info(" SYSTEM STATUS:  HEALTHY")
         logger.info("TPU backend diagnosis completed successfully")
     else:
-        logger.info("⚠️  SYSTEM STATUS: ❌ ISSUES DETECTED")
+        logger.info("️  SYSTEM STATUS:  ISSUES DETECTED")
         logger.warning("TPU backend has issues that need attention")
     
     return validation_results
@@ -286,7 +286,7 @@ def quick_fix_kernel_imports():
 
 def main():
     """Main TPU optimizer function."""
-    logger.info("🦫 CapibaraGPT v3.3 - TPU v4-32 Backend Optimizer")
+    logger.info(" CapibaraGPT v3.3 - TPU v4-32 Backend Optimizer")
     logger.info("=" * 50)
     
     # Quick fixes first

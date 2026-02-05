@@ -150,24 +150,24 @@ except ImportError as e:
 
 # Log kernel availability
 if ADAPTIVE_KERNELS_AVAILABLE:
-    logger.info("✓ adaptive_kernels loaded successfully")
+    logger.info(" adaptive_kernels loaded successfully")
 else:
-    logger.warning("⚠ adaptive_kernels not available - using fallback")
+    logger.warning(" adaptive_kernels not available - using fallback")
     
 if SPARSITY_KERNELS_AVAILABLE:
-    logger.info("✓ sparsity_kernels loaded successfully")
+    logger.info(" sparsity_kernels loaded successfully")
 else:
-    logger.warning("⚠ sparsity_kernels not available - using fallback")
+    logger.warning(" sparsity_kernels not available - using fallback")
     
 if SEMIOTIC_KERNELS_AVAILABLE:
-    logger.info("✓ semiotic_kernels loaded successfully")
+    logger.info(" semiotic_kernels loaded successfully")
 else:
-    logger.warning("⚠ semiotic_kernels not available - using fallback")
+    logger.warning(" semiotic_kernels not available - using fallback")
     
 if NEUROMORPHIC_KERNELS_AVAILABLE:
-    logger.info("✓ neuromorphic_kernels loaded successfully")
+    logger.info(" neuromorphic_kernels loaded successfully")
 else:
-    logger.warning("⚠ neuromorphic_kernels not available - using fallback")
+    logger.warning(" neuromorphic_kernels not available - using fallback")
 
 # Verify TPU v4-32 availability
 TPU_V4_AVAILABLE = False

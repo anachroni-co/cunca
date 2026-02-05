@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-🎛️ Dataset Parameter Controller for CapibaraGPT-v2
+️ Dataset Parameter Controller for CapibaraGPT-v2
 ===================================================
 
 Advanced system for granular control of model parameters by dataset.
@@ -147,15 +147,15 @@ class DatasetParameterController:
         # Performance tracking
         self.performance_impact: Dict[str, Dict[str, float]] = {}
         
-        logger.info(f"🎛️ DatasetParameterController initialized")
-        logger.info(f"📊 Managing {len(model_parameters)} parameter groups")
+        logger.info(f"️ DatasetParameterController initialized")
+        logger.info(f" Managing {len(model_parameters)} parameter groups")
     
     def _load_parameter_lineage(self, lineage_file: Union[str, Path]):
         """Load parameter lineage from audit logs."""
         lineage_path = Path(lineage_file)
         
         if not lineage_path.exists():
-            logger.warning(f"⚠️ Lineage file not found: {lineage_path}")
+            logger.warning(f"️ Lineage file not found: {lineage_path}")
             return
         
         with open(lineage_path, 'r') as f:
@@ -174,8 +174,8 @@ class DatasetParameterController:
                 if param_name not in self.dataset_parameters[dataset_id]:
                     self.dataset_parameters[dataset_id].append(param_name)
         
-        logger.info(f"📚 Loaded lineage for {len(self.parameter_lineage)} parameters")
-        logger.info(f"🗂️ Tracking {len(self.dataset_parameters)} datasets")
+        logger.info(f" Loaded lineage for {len(self.parameter_lineage)} parameters")
+        logger.info(f"️ Tracking {len(self.dataset_parameters)} datasets")
     
     def create_dataset_mask(
         self,
@@ -187,7 +187,7 @@ class DatasetParameterController:
         """Create a parameter mask for a specific dataset."""
         
         if dataset_id not in self.dataset_parameters:
-            logger.warning(f"⚠️ No parameters found for dataset {dataset_id}")
+            logger.warning(f"️ No parameters found for dataset {dataset_id}")
             return None
         
         parameter_names = self.dataset_parameters[dataset_id]
@@ -276,8 +276,8 @@ class DatasetParameterController:
         )
         
         self.parameter_masks[dataset_id] = mask
-        logger.info(f"🎭 Created {mask_type} mask for dataset {dataset_id}")
-        logger.info(f"📊 Mask covers {len(parameter_names)} parameter groups")
+        logger.info(f" Created {mask_type} mask for dataset {dataset_id}")
+        logger.info(f" Mask covers {len(parameter_names)} parameter groups")
         
         return mask
     
@@ -291,7 +291,7 @@ class DatasetParameterController:
         
         if mask:
             self._apply_mask(mask)
-            logger.info(f"✅ Enabled parameters for dataset {dataset_id}")
+            logger.info(f" Enabled parameters for dataset {dataset_id}")
             return True
         
         return False
@@ -306,7 +306,7 @@ class DatasetParameterController:
         
         if mask:
             self._apply_mask(mask)
-            logger.info(f"❌ Disabled parameters for dataset {dataset_id}")
+            logger.info(f" Disabled parameters for dataset {dataset_id}")
             return True
         
         return False
@@ -350,14 +350,14 @@ class DatasetParameterController:
         )
         
         self.dataset_policies[policy_name] = policy
-        logger.info(f"📋 Created control policy: {policy_name}")
+        logger.info(f" Created control policy: {policy_name}")
         
         return policy
     
     def apply_control_policy(self, policy_name: str) -> bool:
         """Apply a control policy to manage multiple datasets."""
         if policy_name not in self.dataset_policies:
-            logger.error(f"❌ Policy not found: {policy_name}")
+            logger.error(f" Policy not found: {policy_name}")
             return False
         
         policy = self.dataset_policies[policy_name]
@@ -372,7 +372,7 @@ class DatasetParameterController:
                 if self.disable_dataset_parameters(dataset_id, mask_type="binary"):
                     applied_count += 1
         
-        logger.info(f"✅ Applied policy {policy_name} to {applied_count} datasets")
+        logger.info(f" Applied policy {policy_name} to {applied_count} datasets")
         return True
     
     def reset_parameters(self):
@@ -380,7 +380,7 @@ class DatasetParameterController:
         self.current_parameters = self.original_parameters.copy()
         self.parameter_masks.clear()
         self.performance_impact.clear()
-        logger.info("🔄 Reset all parameters to original state")
+        logger.info(" Reset all parameters to original state")
     
     def get_dataset_influence_report(self, dataset_id: str) -> Dict[str, Any]:
         """Generate influence report for a specific dataset."""
@@ -485,7 +485,7 @@ class DatasetParameterController:
         with open(output_path, 'w') as f:
             json.dump(export_data, f, indent=2, default=str)
         
-        logger.info(f"💾 Control state exported to {output_path}")
+        logger.info(f" Control state exported to {output_path}")
         return export_data
     
     def load_control_state(self, input_path: Union[str, Path]) -> bool:
@@ -493,7 +493,7 @@ class DatasetParameterController:
         input_path = Path(input_path)
         
         if not input_path.exists():
-            logger.error(f"❌ Control state file not found: {input_path}")
+            logger.error(f" Control state file not found: {input_path}")
             return False
         
         try:
@@ -517,11 +517,11 @@ class DatasetParameterController:
                 )
                 self.dataset_policies[name] = policy
             
-            logger.info("✅ Control state loaded successfully")
+            logger.info(" Control state loaded successfully")
             return True
             
         except Exception as e:
-            logger.error(f"❌ Failed to load control state: {e}")
+            logger.error(f" Failed to load control state: {e}")
             return False
 
 # Factory function

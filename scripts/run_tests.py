@@ -112,7 +112,7 @@ def main():
     all_passed = True
     for name, passed in results:
         status = "PASSED" if passed else "FAILED"
-        symbol = "✓" if passed else "✗"
+        symbol = "" if passed else ""
         logger.info(f"  {symbol} {name}: {status}")
         if not passed:
             all_passed = False

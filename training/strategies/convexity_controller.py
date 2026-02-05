@@ -106,7 +106,7 @@ class ConvexityController:
         self._initialized = True
         
         if self.config.enable_logging:
-            logger.info(f"🎯 ConvexityController initialized with config: {self.config}")
+            logger.info(f" ConvexityController initialized with config: {self.config}")
     
     def update(self, loss_value: Union[float, jnp.ndarray]) -> Tuple[float, Dict[str, float]]:
         """
@@ -241,7 +241,7 @@ class ConvexityController:
         self._initialized = True
         
         if self.config.enable_logging:
-            logger.info(f"🔄 ConvexityController state loaded at step {self._step_count}")
+            logger.info(f" ConvexityController state loaded at step {self._step_count}")
     
     def reset(self) -> None:
         """Reset controller to initial state."""
@@ -252,7 +252,7 @@ class ConvexityController:
         self._step_count = 0
         
         if self.config.enable_logging:
-            logger.info("🔄 ConvexityController reset to initial state")
+            logger.info(" ConvexityController reset to initial state")
 
 
 def create_convexity_aware_lr_schedule(

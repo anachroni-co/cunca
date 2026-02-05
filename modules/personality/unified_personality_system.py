@@ -127,7 +127,7 @@ class PersonalityAdapter:
         self.profile = profile
         self.adaptation_cache = {}
         
-        logger.info(f"🎭 PersonalityAdapter initialized: {profile.profile_name}")
+        logger.info(f" PersonalityAdapter initialized: {profile.profile_name}")
     
     def adapt_response(self, base_response: str, context: PersonalityContext = PersonalityContext.GENERAL) -> Dict[str, Any]:
         """Adapts a base response according to the personality."""
@@ -281,7 +281,7 @@ class UnifiedPersonalitySystem:
         # Create default profiles
         self._create_default_profiles()
         
-        logger.info("🎭 Unified Personality System initialized")
+        logger.info(" Unified Personality System initialized")
         logger.info(f"   Default profiles: {len(self.personality_profiles)}")
     
     def _create_default_profiles(self):
@@ -344,16 +344,16 @@ class UnifiedPersonalitySystem:
         evolution = PersonalityEvolution()
         self.evolution_systems[name] = evolution
         
-        logger.info(f"📝 Registered personality profile: {name}")
+        logger.info(f" Registered personality profile: {name}")
     
     def set_active_profile(self, profile_name: str) -> bool:
         """Sets the active personality profile."""
         if profile_name not in self.personality_profiles:
-            logger.error(f"❌ Personality profile not found: {profile_name}")
+            logger.error(f" Personality profile not found: {profile_name}")
             return False
         
         self.active_profile = profile_name
-        logger.info(f"🎭 Active personality profile set to: {profile_name}")
+        logger.info(f" Active personality profile set to: {profile_name}")
         return True
     
     def adapt_response(self, 
@@ -366,11 +366,11 @@ class UnifiedPersonalitySystem:
         target_profile = profile_name or self.active_profile
         
         if not target_profile:
-            logger.warning("⚠️ No personality profile specified or active")
+            logger.warning("️ No personality profile specified or active")
             return {'adapted_response': response, 'warning': 'No personality applied'}
         
         if target_profile not in self.adapters:
-            logger.error(f"❌ Adapter not found for profile: {target_profile}")
+            logger.error(f" Adapter not found for profile: {target_profile}")
             return {'adapted_response': response, 'error': f'Profile {target_profile} not found'}
         
         # Get adapter and apply personality
@@ -411,7 +411,7 @@ class UnifiedPersonalitySystem:
                                    evolution: PersonalityEvolution,
                                    feedback: Dict[str, Any]):
         """Applies evolution to the personality profile."""
-        logger.info(f"🔄 Evolving personality: {profile.profile_name}")
+        logger.info(f" Evolving personality: {profile.profile_name}")
         
         # Analyze recent feedback
         recent_feedback = evolution.feedback_history[-evolution.adaptation_threshold:]
@@ -466,7 +466,7 @@ class UnifiedPersonalitySystem:
         # Update adapter
         self.adapters[profile.profile_name] = PersonalityAdapter(profile)
         
-        logger.info(f"✅ Personality evolution applied to {profile.profile_name}")
+        logger.info(f" Personality evolution applied to {profile.profile_name}")
     
     def _record_interaction(self, profile_name: str, context: PersonalityContext, result: Dict[str, Any]):
         """Records an interaction for analysis."""
@@ -565,11 +565,11 @@ class UnifiedPersonalitySystem:
                     evolution.evolution_history = evolution_data.get('evolution_history', [])
                     evolution.feedback_history = evolution_data.get('recent_feedback', [])
             
-            logger.info("✅ Personality data imported successfully")
+            logger.info(" Personality data imported successfully")
             return True
             
         except Exception as e:
-            logger.error(f"❌ Failed to import personality data: {e}")
+            logger.error(f" Failed to import personality data: {e}")
             return False
 
 # Factory functions
@@ -593,7 +593,7 @@ def get_global_personality_system() -> UnifiedPersonalitySystem:
 
 def main():
     """Main function for testing."""
-    logger.info("🎭 Unified Personality System - Testing Mode")
+    logger.info(" Unified Personality System - Testing Mode")
     
     # Create system
     personality_system = create_unified_personality_system()
@@ -625,7 +625,7 @@ def main():
     analytics = personality_system.get_personality_analytics()
     logger.info(f"Analytics: {analytics}")
     
-    logger.info("✅ Unified personality system testing completed")
+    logger.info(" Unified personality system testing completed")
 
 if __name__ == "__main__":
     main()

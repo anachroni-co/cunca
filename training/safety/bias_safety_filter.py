@@ -800,11 +800,11 @@ if __name__ == "__main__":
             "You should consider multiple perspectives on this complex issue."
         ]
         
-        logger.info("🛡️ Bias Detection and Safety Filtering Test Results")
+        logger.info("️ Bias Detection and Safety Filtering Test Results")
         logger.info("=" * 60)
         
         for i, content in enumerate(test_contents, 1):
-            logger.info(f"\n📝 Test {i}: {content[:50]}...")
+            logger.info(f"\n Test {i}: {content[:50]}...")
             
             result = filter_system.process_content(content)
             
@@ -824,7 +824,7 @@ if __name__ == "__main__":
         
         # Show system statistics
         stats = filter_system.get_filtering_statistics()
-        logger.info(f"\n📊 System Statistics:")
+        logger.info(f"\n System Statistics:")
         logger.info(f"   Bias Types Supported: {len(stats['supported_bias_types'])}")
         logger.info(f"   Safety Categories: {len(stats['supported_safety_categories'])}")
         logger.info(f"   Filtering Enabled: {stats['filtering_enabled']}")

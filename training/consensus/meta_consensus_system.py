@@ -180,7 +180,7 @@ class SystemMetrics:
 
 class MetaConsensusSystem:
     """
-    🎭 Meta-Consensus System Orchestrator
+     Meta-Consensus System Orchestrator
     
     The main orchestrator that integrates all meta-consensus components:
     - Enhanced HuggingFace Consensus Strategy with serverless API
@@ -212,13 +212,13 @@ class MetaConsensusSystem:
         self.cost_tracking: Dict[str, float] = {}
         self.quality_tracking: Dict[str, float] = {}
         
-        logger.info(f"🎭 MetaConsensusSystem '{config.system_name}' initializing...")
+        logger.info(f" MetaConsensusSystem '{config.system_name}' initializing...")
     
     async def initialize(self) -> bool:
         """Initialize all meta-consensus components."""
         
         try:
-            logger.info("🚀 Initializing Meta-Consensus System components...")
+            logger.info(" Initializing Meta-Consensus System components...")
             
             # Initialize Enhanced HF Consensus Strategy
             if self.config.enable_serverless and self.config.hf_api_token:
@@ -242,11 +242,11 @@ class MetaConsensusSystem:
             await self._setup_monitoring()
             
             self.state = SystemState.READY
-            logger.info("✅ Meta-Consensus System initialized successfully")
+            logger.info(" Meta-Consensus System initialized successfully")
             return True
             
         except Exception as e:
-            logger.error(f"❌ Meta-Consensus System initialization failed: {e}")
+            logger.error(f" Meta-Consensus System initialization failed: {e}")
             self.state = SystemState.ERROR
             return False
     
@@ -283,7 +283,7 @@ class MetaConsensusSystem:
         self.metrics.total_queries += 1
         
         try:
-            logger.info(f"🔍 Processing query {context.query_id} in {consensus_mode.value} mode")
+            logger.info(f" Processing query {context.query_id} in {consensus_mode.value} mode")
             
             # Analyze query and determine optimal strategy
             query_analysis = await self._analyze_query_comprehensive(query, context)
@@ -312,12 +312,12 @@ class MetaConsensusSystem:
             self.query_history.append(enhanced_result)
             
             self.metrics.successful_queries += 1
-            logger.info(f"✅ Query {context.query_id} processed successfully")
+            logger.info(f" Query {context.query_id} processed successfully")
             
             return enhanced_result
             
         except Exception as e:
-            logger.error(f"❌ Query {context.query_id} processing failed: {e}")
+            logger.error(f" Query {context.query_id} processing failed: {e}")
             self.metrics.failed_queries += 1
             
             # Create error result
@@ -356,7 +356,7 @@ class MetaConsensusSystem:
         }
         
         self.enhanced_consensus = EnhancedHFConsensusStrategy(hf_config)
-        logger.info("✅ Enhanced HF Consensus Strategy initialized")
+        logger.info(" Enhanced HF Consensus Strategy initialized")
     
     async def _initialize_hybrid_router(self):
         """Initialize Hybrid Expert Router."""
@@ -376,7 +376,7 @@ class MetaConsensusSystem:
             hf_api_token=self.config.hf_api_token
         )
         
-        logger.info("✅ Hybrid Expert Router initialized")
+        logger.info(" Hybrid Expert Router initialized")
     
     async def _initialize_btx_trainer(self):
         """Initialize BTX Training System."""
@@ -395,7 +395,7 @@ class MetaConsensusSystem:
             max_parallel_jobs=4
         )
         
-        logger.info("✅ BTX Training System initialized")
+        logger.info(" BTX Training System initialized")
     
     async def _initialize_unified_consensus(self):
         """Initialize Unified Consensus Strategy (fallback)."""
@@ -410,7 +410,7 @@ class MetaConsensusSystem:
         )
         
         self.unified_consensus = UnifiedConsensusStrategy(consensus_config)
-        logger.info("✅ Unified Consensus Strategy initialized")
+        logger.info(" Unified Consensus Strategy initialized")
     
     async def _initialize_adaptation_system(self):
         """Initialize adaptive learning system."""
@@ -427,7 +427,7 @@ class MetaConsensusSystem:
             "routing_strategy_preferences": {strategy.value: 1.0 for strategy in RoutingStrategy}
         }
         
-        logger.info("✅ Adaptation System initialized")
+        logger.info(" Adaptation System initialized")
     
     async def _setup_monitoring(self):
         """Setup monitoring and metrics collection."""
@@ -447,7 +447,7 @@ class MetaConsensusSystem:
             "disk_percent": 0.0
         }
         
-        logger.info("✅ Monitoring and metrics setup completed")
+        logger.info(" Monitoring and metrics setup completed")
     
     async def _analyze_query_comprehensive(self, query: str, context: QueryContext) -> Dict[str, Any]:
         """Comprehensive query analysis for optimal routing."""
@@ -1119,7 +1119,7 @@ if __name__ == "__main__":
         
         # Initialize system
         if await system.initialize():
-            logger.info("🚀 Meta-Consensus System initialized successfully")
+            logger.info(" Meta-Consensus System initialized successfully")
             
             # Process example queries
             queries = [
@@ -1158,7 +1158,7 @@ if __name__ == "__main__":
             
             # Get system status
             status = system.get_system_status()
-            logger.info(f"\n🎭 System Status:")
+            logger.info(f"\n System Status:")
             logger.info(f"State: {status['system_info']['state']}")
             logger.info(f"Total Queries: {status['performance_metrics']['total_queries']}")
             logger.info(f"Success Rate: {status['performance_metrics']['success_rate']}")
@@ -1167,6 +1167,6 @@ if __name__ == "__main__":
             logger.info(f"Avg Response Time: {status['performance_metrics']['avg_response_time_ms']}ms")
         
         else:
-            logger.error("❌ Meta-Consensus System initialization failed")
+            logger.error(" Meta-Consensus System initialization failed")
     
     asyncio.run(main())

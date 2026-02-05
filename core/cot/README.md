@@ -2,11 +2,11 @@
 
 Advanced Chain-of-Thought reasoning system with dynamic knowledge cores, meta-cognition, and self-reflection, optimized for TPU v4/v6.
 
-## 📋 Description
+##  Description
 
 The CoT module implements advanced step-by-step reasoning capabilities, allowing the model to break down complex problems into sequential logical steps. It includes process reward systems, meta-cognition for confidence adjustment, and self-reflection and verification mechanisms.
 
-## 🏗️ Architecture
+## ️ Architecture
 
 ```
 cot/
@@ -17,7 +17,7 @@ cot/
 └── managers.py              # CoT management utilities
 ```
 
-## 🧠 Main Components
+##  Main Components
 
 ### 1. Enhanced CoT Module (`enhanced_cot_module.py`)
 
@@ -158,7 +158,7 @@ reasoning_memory = cot_manager.get_reasoning_memory(
 )
 ```
 
-## 🎯 Advanced Features
+##  Advanced Features
 
 ### 1. Process Reward Models
 
@@ -258,7 +258,7 @@ if reflection_result.corrections_needed:
     )
 ```
 
-## 🚀 TPU Optimizations
+##  TPU Optimizations
 
 ### 1. Optimized Kernels
 
@@ -308,7 +308,7 @@ synthesized_answer = cot_module.synthesize_parallel_results(
 )
 ```
 
-## 📊 Metrics and Evaluation
+##  Metrics and Evaluation
 
 ### 1. Reasoning Quality Metrics
 
@@ -364,7 +364,7 @@ complexity_analysis = cot_module.analyze_reasoning_complexity(
 )
 ```
 
-## 🔄 Hierarchical Integration
+##  Hierarchical Integration
 
 ### 1. Multi-Level Reasoning
 
@@ -411,7 +411,7 @@ inter_core_communication = {
 }
 ```
 
-## 🧪 Specific Use Cases
+##  Specific Use Cases
 
 ### 1. Mathematical Reasoning
 ```python
@@ -461,7 +461,7 @@ multi_domain_solution = cot_module.complex_problem_solving(
 )
 ```
 
-## 📚 References and Documentation
+##  References and Documentation
 
 - [Chain-of-Thought Prompting](https://arxiv.org/abs/2201.11903)
 - [Process Reward Models](https://arxiv.org/abs/2305.20050)
@@ -469,7 +469,7 @@ multi_domain_solution = cot_module.complex_problem_solving(
 - [TPU Optimization for LLMs](https://cloud.google.com/tpu/docs/training-llm)
 - [JAX Parallel Processing](https://jax.readthedocs.io/en/latest/jax-101/06-parallelism.html)
 
-## 🤝 Integration with Other Modules
+##  Integration with Other Modules
 
 ```python
 # Integration with Mixture of Experts module (MoE)

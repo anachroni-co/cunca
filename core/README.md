@@ -2,7 +2,7 @@
 
 The **core** module is the architectural heart of capibaraGPT-v2, containing all the fundamental components of the system.
 
-## 📋 Table of Contents
+##  Table of Contents
 
 1. [Overview](#overview)
 2. [Core Components](#core-components)
@@ -14,7 +14,7 @@ The **core** module is the architectural heart of capibaraGPT-v2, containing all
 
 ---
 
-## 🎯 Overview
+##  Overview
 
 The `core/` directory contains **19 subdirectories** with the essential components:
 
@@ -50,7 +50,7 @@ Additionally, `core/` contains essential base files:
 
 ---
 
-## 🏗️ Architecture
+## ️ Architecture
 
 ### Component Diagram
 
@@ -112,7 +112,7 @@ Infrastructure Layer:
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Basic Usage of Modular Model
 
@@ -204,7 +204,7 @@ adapted_outputs = adapter_system.apply(outputs)
 
 ---
 
-## 🔧 Detailed Components
+##  Detailed Components
 
 ### 1. MoE (Mixture of Experts)
 
@@ -344,7 +344,7 @@ See [distributed/README.md](distributed/README.md) for details.
 
 ---
 
-## 🔗 Integration Patterns
+##  Integration Patterns
 
 ### Pattern 1: Complete Model with All Components
 
@@ -437,7 +437,7 @@ def rag_cot_infer(query):
 
 ---
 
-## ⚡ Performance Optimization
+##  Performance Optimization
 
 ### TPU Optimizations
 
@@ -496,7 +496,7 @@ print(f"Memory: {metrics['forward_pass']['memory_mb']:.1f}MB")
 
 ---
 
-## 📊 Metrics and Monitoring
+##  Metrics and Monitoring
 
 The core system includes extensive monitoring:
 
@@ -521,7 +521,7 @@ See [monitoring/README.md](monitoring/README.md) for complete dashboard.
 
 ---
 
-## 🔍 Testing and Validation
+##  Testing and Validation
 
 ```python
 from capibara.core.verification import validate_model
@@ -543,7 +543,7 @@ assert validation_result.all_passed()
 
 ---
 
-## 📚 References
+##  References
 
 - [Modular Model](modular_model.py) - Model implementation
 - [Main Router](router.py) - Routing system

@@ -58,9 +58,9 @@ class RoboticsDatasetLoader:
     def __init__(self, base_path: Optional[str] = None):
         self.base_path = Path(base_path) if base_path else Path(__file__).parent
         self.available_datasets = ROBOTICS_DATASETS.copy()
-        logger.info(f"🤖 Robotics dataset loader initialized")
-        logger.info(f"   📁 Base path: {self.base_path}")
-        logger.info(f"   📊 Available datasets: {len(self.available_datasets)}")
+        logger.info(f" Robotics dataset loader initialized")
+        logger.info(f"    Base path: {self.base_path}")
+        logger.info(f"    Available datasets: {len(self.available_datasets)}")
     
     def list_datasets(self) -> List[str]:
         """Lists the available datasets."""
@@ -75,7 +75,7 @@ class RoboticsDatasetLoader:
         if dataset_name not in self.available_datasets:
             raise ValueError(f"Dataset {dataset_name} not available")
         
-        logger.info(f"📥 Loading robotics dataset: {dataset_name}")
+        logger.info(f" Loading robotics dataset: {dataset_name}")
         
         # Simulated loading - in real implementation would load actual data
         dataset_info = self.available_datasets[dataset_name]
@@ -107,4 +107,4 @@ __all__ = [
     'ROBOTICS_DATASETS'
 ]
 
-logger.info("🤖 Robotics datasets module loaded successfully")
+logger.info(" Robotics datasets module loaded successfully")

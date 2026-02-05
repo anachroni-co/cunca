@@ -89,5 +89,5 @@ __all__ = [
     "WorkflowError"
 ]
 
-logger.info(f"📊 {PIPELINE_NAME} v{PIPELINE_VERSION} initialized")
-logger.info("🚀 Complete data-to-training pipeline ready")
+logger.info(f" {PIPELINE_NAME} v{PIPELINE_VERSION} initialized")
+logger.info(" Complete data-to-training pipeline ready")

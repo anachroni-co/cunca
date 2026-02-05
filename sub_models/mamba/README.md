@@ -6,12 +6,12 @@ Mamba (Selective State Space Model) implementation for CapibaraGPT-v2. Provides 
 
 ## Features
 
-- ✅ **O(n) Complexity** for sequence processing
-- ✅ **Selective State Space Model** with adaptive parameters
-- ✅ **IModule Compatible** for modular integration
-- ✅ **TPU Optimizations** with associative scan
-- ✅ **Robust Fallbacks** when JAX is not available
-- ✅ **Detailed Metrics** for complexity and performance
+-  **O(n) Complexity** for sequence processing
+-  **Selective State Space Model** with adaptive parameters
+-  **IModule Compatible** for modular integration
+-  **TPU Optimizations** with associative scan
+-  **Robust Fallbacks** when JAX is not available
+-  **Detailed Metrics** for complexity and performance
 
 ## Dependency Installation
 
@@ -186,13 +186,13 @@ If JAX is not available, the module will use a fallback implementation with nump
 
 ## Implementation Status
 
-- ✅ Core SSM implementation
-- ✅ Selective scan mechanism
-- ✅ IModule interface compatibility
-- ✅ TPU optimizations (associative scan)
-- ✅ Fallback mode (numpy)
-- ⚠️ Complete 1D convolution optimization (in progress)
-- 🔄 Mamba-2 features (roadmap)
+-  Core SSM implementation
+-  Selective scan mechanism
+-  IModule interface compatibility
+-  TPU optimizations (associative scan)
+-  Fallback mode (numpy)
+- ️ Complete 1D convolution optimization (in progress)
+-  Mamba-2 features (roadmap)
 
 ## Contribution
 

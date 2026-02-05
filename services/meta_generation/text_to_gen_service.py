@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🧠 CAPIBARA TEXT-TO-GEN SERVICE
+ CAPIBARA TEXT-TO-GEN SERVICE
 ==============================
 
 Meta-service that automatically generates complete code for new text-to-* services
@@ -346,7 +346,7 @@ class MockCodeGenerator:
     
     async def generate_service_code(self, request: ServiceGenerationRequest) -> Dict[str, Any]:
         """Generates mock code for the service"""
-        logger.info(f"🔧 Generating mock service: {request.service_name}")
+        logger.info(f" Generating mock service: {request.service_name}")
         
         # Simulate generation time
         await asyncio.sleep(2.0)
@@ -393,7 +393,7 @@ class MockCodeGenerator:
         
         return f'''#!/usr/bin/env python3
 """
-🎯 CAPIBARA {request.service_name.upper()} SERVICE
+ CAPIBARA {request.service_name.upper()} SERVICE
 {"=" * (40 + len(request.service_name))}
 
 {request.description}
@@ -443,14 +443,14 @@ class {service_class}:
     
     def __init__(self, config: Optional[{request.service_name}Config] = None):
         self.config = config or {request.service_name}Config()
-        logger.info(f"✅ {service_class} initialized")
+        logger.info(f" {service_class} initialized")
     
     async def generate(self, request: {request.service_name}Request) -> {request.service_name}Result:
         """Generates result from natural language description"""
         start_time = datetime.now()
         
         try:
-            logger.info(f"🎯 Generating {{request.service_name}}: {{request.description[:100]}}...")
+            logger.info(f" Generating {{request.service_name}}: {{request.description[:100]}}...")
             
             # Simulate processing
             await asyncio.sleep(1.0)
@@ -469,7 +469,7 @@ class {service_class}:
             
         except Exception as e:
             generation_time = (datetime.now() - start_time).total_seconds()
-            logger.error(f"❌ {request.service_name} generation error: {{e}}")
+            logger.error(f" {request.service_name} generation error: {{e}}")
             
             return {request.service_name}Result(
                 success=False,
@@ -635,15 +635,15 @@ class CapibaraTextToGen:
         # Configure directories
         self._setup_directories()
         
-        logger.info("✅ CapibaraTextToGen initialized")
+        logger.info(" CapibaraTextToGen initialized")
     
     def _init_real_generator(self):
         """Initializes the real code generator"""
         try:
             self.code_generator = CodeGenerator(self.config)
-            logger.info("✅ Real code generator initialized")
+            logger.info(" Real code generator initialized")
         except Exception as e:
-            logger.error(f"❌ Error initializing real generator: {e}")
+            logger.error(f" Error initializing real generator: {e}")
             self.code_generator = None
     
     def _setup_directories(self):
@@ -651,17 +651,17 @@ class CapibaraTextToGen:
         try:
             os.makedirs(self.config.output_directory, exist_ok=True)
             os.makedirs(self.config.template_directory, exist_ok=True)
-            logger.info(f"📁 Output directory: {self.config.output_directory}")
+            logger.info(f" Output directory: {self.config.output_directory}")
         except Exception as e:
-            logger.error(f"❌ Error creating directories: {e}")
+            logger.error(f" Error creating directories: {e}")
     
     async def generate_service(self, request: ServiceGenerationRequest) -> ServiceGenerationResult:
         """Generates a new text-to-* service from description"""
         start_time = datetime.now()
         
         try:
-            logger.info(f"🧠 Generating service: {request.service_name}")
-            logger.info(f"📝 Description: {request.description[:200]}...")
+            logger.info(f" Generating service: {request.service_name}")
+            logger.info(f" Description: {request.description[:200]}...")
             
             # Analyze requirements if not specified
             if not hasattr(request, 'analyzed'):
@@ -679,14 +679,14 @@ class CapibaraTextToGen:
                 if not request.dependencies:
                     request.dependencies = analysis["dependencies"]
                 
-                logger.info(f"📊 Analysis: {analysis['service_type'].value}, {analysis['complexity'].value}")
+                logger.info(f" Analysis: {analysis['service_type'].value}, {analysis['complexity'].value}")
             
             # Generate code
             if self.code_generator:
-                logger.info("⚙️ Using real code generator...")
+                logger.info("️ Using real code generator...")
                 generation_result = await self.code_generator.generate_service_code(request)
             else:
-                logger.info("🎭 Using mock code generator...")
+                logger.info(" Using mock code generator...")
                 generation_result = await self.mock_generator.generate_service_code(request)
             
             # Process result
@@ -712,8 +712,8 @@ class CapibaraTextToGen:
                     templates_used=["base_service_template", "capibara_integration_template"]
                 )
                 
-                logger.info(f"✅ Service '{request.service_name}' generated successfully!")
-                logger.info(f"📊 Generated {result.files_count} files, {result.total_lines} lines")
+                logger.info(f" Service '{request.service_name}' generated successfully!")
+                logger.info(f" Generated {result.files_count} files, {result.total_lines} lines")
                 
                 return result
             else:
@@ -726,7 +726,7 @@ class CapibaraTextToGen:
                 
         except Exception as e:
             generation_time = (datetime.now() - start_time).total_seconds()
-            logger.error(f"❌ Service generation error: {e}")
+            logger.error(f" Service generation error: {e}")
             
             return ServiceGenerationResult(
                 success=False,
@@ -812,10 +812,10 @@ logger.info(f"Generated: {{result.output_path}}")
 Automatically generated by Capibara5 Text-to-Gen.
 ''')
             
-            logger.info(f"📝 Mock files created in {service_dir}")
+            logger.info(f" Mock files created in {service_dir}")
             
         except Exception as e:
-            logger.error(f"❌ Error creating mock files: {e}")
+            logger.error(f" Error creating mock files: {e}")
     
     def _calculate_complexity_score(self, request: ServiceGenerationRequest) -> float:
         """Calculates the complexity score of the service"""

@@ -450,7 +450,7 @@ class TPUv6eVQSystem:
             'perplexity_history': []
         }
         
-        logger.info("🚀 TPU v6e-64 VQ system initialized")
+        logger.info(" TPU v6e-64 VQ system initialized")
     
     def _initialize_tpu_mesh(self):
         """Initialize TPU v6e mesh for distributed computation."""
@@ -474,7 +474,7 @@ class TPUv6eVQSystem:
         devices_array = np.array(devices[:mesh_shape[0] * mesh_shape[1]]).reshape(mesh_shape)
         self.mesh = Mesh(devices_array, ('batch', 'model'))
         
-        logger.info(f"✅ TPU mesh initialized: {mesh_shape} with {len(devices)} devices")
+        logger.info(f" TPU mesh initialized: {mesh_shape} with {len(devices)} devices")
     
     def create_vq_layer(self, **kwargs) -> TPUv6eVectorQuantizer:
         """Creates TPU v6e optimized VQ layer."""
@@ -664,10 +664,10 @@ def integrate_with_adaptive(vq_system: TPUv6eVQSystem,
 def main():
     """Main function demonstrating TPU v6e VQ system."""
     
-    logger.info("🚀 TPU v6e-64 VQ system starting")
+    logger.info(" TPU v6e-64 VQ system starting")
     
     if not JAX_AVAILABLE:
-        logger.warning("❌ JAX not available - TPU v6e VQ system requires JAX")
+        logger.warning(" JAX not available - TPU v6e VQ system requires JAX")
         return False
     
     try:
@@ -687,7 +687,7 @@ def main():
         
         # Show system info
         metrics = vq_system.get_performance_metrics()
-        logger.info("🔍 TPU v6e VQ System Info:")
+        logger.info(" TPU v6e VQ System Info:")
         logger.info(f"   Embeddings: {metrics['config']['num_embeddings']}")
         logger.info(f"   Dimension: {metrics['config']['embedding_dim']}")
         logger.info(f"   Product Quantization: {metrics['config']['use_product_quantization']}")
@@ -698,22 +698,22 @@ def main():
         # Test MoE integration
         moe_config = {'num_experts': 32, 'expert_capacity': 128}
         moe_integration = integrate_with_moe(vq_system, moe_config)
-        logger.info(f"\n🧠 MoE Integration:")
+        logger.info(f"\n MoE Integration:")
         logger.info(f"   Optimal embeddings: {moe_integration['num_embeddings']}")
         logger.info(f"   Subspaces: {moe_integration['num_subspaces']}")
         
         # Test Adaptive integration
         adaptive_config = {'compute_budget': 1.2}
         adaptive_integration = integrate_with_adaptive(vq_system, adaptive_config)
-        logger.info(f"\n⚡ Adaptive Integration:")
+        logger.info(f"\n Adaptive Integration:")
         logger.info(f"   Embeddings: {adaptive_integration['num_embeddings']}")
         logger.info(f"   Dimension: {adaptive_integration['embedding_dim']}")
         
-        logger.info("\n✅ TPU v6e-64 VQ system demo completed!")
+        logger.info("\n TPU v6e-64 VQ system demo completed!")
         return True
         
     except Exception as e:
-        logger.error(f"❌ Demo failed: {e}")
+        logger.error(f" Demo failed: {e}")
         return False
 
 

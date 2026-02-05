@@ -101,7 +101,7 @@ class ConsensusResult:
 
 class AdvancedConsensusEngine:
     """
-    🧠 Advanced Consensus Engine
+     Advanced Consensus Engine
     
     Implements sophisticated consensus algorithms that consider multiple factors:
     - Expert reliability and historical performance
@@ -148,7 +148,7 @@ class AdvancedConsensusEngine:
             ngram_range=(1, 2)
         )
         
-        logger.info("🧠 Advanced Consensus Engine initialized")
+        logger.info(" Advanced Consensus Engine initialized")
     
     async def generate_consensus(
         self,
