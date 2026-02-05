@@ -1,6 +1,6 @@
 # ============================================================================
-# P0 CRITICAL FIXES - CapibaraHybrid
-# Correcciones bloqueantes for enable entrenamiento piloto
+# CapibaraHybrid – Quantum Submodel (TRAINABLE VERSION)
+# JAX / Flax / JIT safe
 # ============================================================================
 
 import chex
@@ -8,40 +8,40 @@ import flax.linen as nn
 from flax import struct
 from capibara.jax import jax
 from capibara.jax import numpy as jnp
-from typing import Dict, Tuple, Optional, Any
-
-import logging
-logger = logging.getLogger(__name__)
+from typing import Dict, Tuple, Any
 
 # ============================================================================
-# FIX 1: quantum_submodel.py - Signature Consistency
+# CONFIG
 # ============================================================================
 
 @struct.dataclass
 class QuantumSubmodelConfig:
-    """setup validada for QuantumSubmodel."""
+    vocab_size: int
+    embedding_dim: int
     vqbit_config: Dict[str, Any]
     quantum_wrapper_config: Dict[str, Any]
-    enable_metrics: bool = True
     use_manifold_projection: bool = False
     manifold_curvature: float = -1.0
 
+# ============================================================================
+# MAIN SUBMODEL
+# ============================================================================
+
 class QuantumSubmodel(nn.Module):
-    """
-    Submodelo cuántico-inspirado with firmas corregidas.
-    
-    FIXED: input consistente how Dict[str, jnp.ndarray]
-    FIXED: Métricas actualizadas a nombres reales
-    FIXED: validation de tipos explícita
-    """
     config: QuantumSubmodelConfig
-    
+
     def setup(self):
-        self.vqbit_layer = VQbitLayerFixed(self.config.vqbit_config)
-        self.quantum_wrapper = QuantumWrapperFixed(self.config.quantum_wrapper_config)
-        
+        # 🔴 REQUIRED: token → embedding
+        self.embedding = nn.Embed(
+            num_embeddings=self.config.vocab_size,
+            features=self.config.embedding_dim
+        )
+
+        self.vqbit = VQbitLayerFixed(self.config.vqbit_config)
+        self.quantum = QuantumWrapperFixed(self.config.quantum_wrapper_config)
+
         if self.config.use_manifold_projection:
-            self.manifold_projection = ManifoldProjection(
+            self.manifold = ManifoldProjection(
                 curvature=self.config.manifold_curvature
             )
     
@@ -61,22 +61,19 @@ class QuantumSubmodel(nn.Module):
         """
         #  Input validation
         chex.assert_type(x, dict)
-        if 'tokens' not in x:
-            raise ValueError("Input dict must contain 'tokens' key")
-        
-        tokens = x['tokens']
-        
-        # VQbit compression
-        compressed, vqbit_metrics = self.vqbit_layer(
-            tokens, deterministic=deterministic
+        tokens = x["tokens"]
+
+        # (B, S, D)
+        embedded = self.embedding(tokens)
+
+        quantized, vq_metrics = self.vqbit(
+            embedded, deterministic=deterministic
         )
-        
-        # Quantum-inspired operations
-        quantum_out, quantum_metrics = self.quantum_wrapper(
-            compressed, deterministic=deterministic
+
+        out, q_metrics = self.quantum(
+            quantized, deterministic=deterministic
         )
-        
-        # Optional manifold projection
+
         if self.config.use_manifold_projection:
             quantum_out = self.manifold_projection(quantum_out)
         
@@ -102,36 +99,51 @@ class QuantumSubmodel(nn.Module):
             'tokens': quantum_out,
             'attention_mask': x.get('attention_mask', None)
         }
-        
-        return outputs, aggregated_metrics
+
+        return {
+            "tokens": out,
+            "attention_mask": x.get("attention_mask", None)
+        }, metrics
 
 # ============================================================================
-# FIX 2: VQbitLayer - EMA and Metrics Corrections
+# VQBIT (EMA – JIT SAFE)
 # ============================================================================
 
 class VQbitLayerFixed(nn.Module):
-    """VQbit layer with corrected EMA and real metrics."""
-    
     config: Dict[str, Any]
-    
+
     def setup(self):
-        self.codebook_size = self.config.get('codebook_size', 256)
-        self.embedding_dim = self.config.get('embedding_dim', 128)
-        self.commitment_cost = self.config.get('commitment_cost', 0.25)
-        self.ema_decay = self.config.get('ema_decay', 0.99)
-        
-        # Codebook embeddings
-        self.codebook = self.param('codebook',
-            nn.initializers.normal(stddev=0.1),
-            (self.codebook_size, self.embedding_dim)
+        self.codebook_size = self.config["codebook_size"]
+        self.embedding_dim = self.config["embedding_dim"]
+        self.commitment_cost = self.config.get("commitment_cost", 0.25)
+        self.ema_decay = self.config.get("ema_decay", 0.99)
+
+        self.codebook = self.param(
+            "codebook",
+            nn.initializers.normal(0.1),
+            (self.codebook_size, self.embedding_dim),
         )
-        
-        # EMA tracking variables (properly initialized)
-        self.ema_cluster_size = self.variable('ema_state', 'cluster_size',
-            lambda: jnp.ones(self.codebook_size)
+
+        self.ema_cluster_size = self.variable(
+            "ema", "cluster_size", lambda: jnp.zeros(self.codebook_size)
         )
-        self.ema_w = self.variable('ema_state', 'w',
-            lambda: self.codebook.copy()
+        self.ema_w = self.variable(
+            "ema", "w", lambda: jnp.zeros_like(self.codebook)
+        )
+
+    def __call__(
+        self,
+        x: jnp.ndarray,
+        deterministic: bool
+    ) -> Tuple[jnp.ndarray, Dict[str, jnp.ndarray]]:
+
+        B, S, D = x.shape
+        flat = x.reshape(-1, D)
+
+        distances = (
+            jnp.sum(flat ** 2, axis=1, keepdims=True)
+            + jnp.sum(self.codebook ** 2, axis=1)
+            - 2 * flat @ self.codebook.T
         )
     
     def __call__(self, 
@@ -165,155 +177,71 @@ class VQbitLayerFixed(nn.Module):
         
         # Update EMA during training
         if not deterministic:
-            self._update_ema(encoding_indices, flat_x)
-        
-        # Straight-through estimator
-        quantized = flat_x + jnp.stop_gradient(quantized - flat_x)
-        quantized = quantized.reshape(batch_size, seq_len, dim)
-        
-        metrics = {
-            'commitment_loss': float(commitment_loss),
-            'quantization_loss': float(quantization_loss),
-            'usage': float(usage)
+            self._ema_update(indices, flat)
+
+        quantized = flat + jax.lax.stop_gradient(quantized - flat)
+        quantized = quantized.reshape(B, S, D)
+
+        return quantized, {
+            "commitment_loss": commit_loss,
+            "quantization_loss": quant_loss,
+            "usage": usage,
         }
-        
-        return quantized, metrics
-    
-    def _update_ema(self, encoding_indices: jnp.ndarray, flat_x: jnp.ndarray):
-        """Update EMA statistics for codebook learning."""
-        # One-hot encoding for cluster assignments
-        encodings = jnp.eye(self.codebook_size)[encoding_indices]
-        
-        # Update cluster sizes
-        updated_cluster_size = self.ema_decay * self.ema_cluster_size.value + \
-                              (1 - self.ema_decay) * jnp.sum(encodings, axis=0)
-        self.ema_cluster_size.value = updated_cluster_size
-        
-        # Update embeddings
-        dw = jnp.dot(encodings.T, flat_x)
-        updated_w = self.ema_decay * self.ema_w.value + (1 - self.ema_decay) * dw
-        self.ema_w.value = updated_w
+
+    def _ema_update(self, indices, flat):
+        one_hot = jax.nn.one_hot(indices, self.codebook_size)
+
+        cluster_size = (
+            self.ema_decay * self.ema_cluster_size.value
+            + (1 - self.ema_decay) * jnp.sum(one_hot, axis=0)
+        )
+
+        dw = one_hot.T @ flat
+        w = self.ema_decay * self.ema_w.value + (1 - self.ema_decay) * dw
+
+        self.ema_cluster_size.value = cluster_size
+        self.ema_w.value = w
+
+        # 🔴 sync codebook
+        n = cluster_size + 1e-5
+        self.codebook = w / n[:, None]
 
 # ============================================================================
-# FIX 3: QuantumWrapper - Realistic FFT Operations
+# QUANTUM WRAPPER (FFT – SAFE)
 # ============================================================================
 
 class QuantumWrapperFixed(nn.Module):
-    """Quantum-inspired wrapper with realistic FFT operations."""
-    
     config: Dict[str, Any]
-    
+
     def setup(self):
-        self.use_fft = self.config.get('use_fft', True)
-        self.phase_modulation = self.config.get('phase_modulation', True)
-        self.coherence_threshold = self.config.get('coherence_threshold', 0.8)
-    
-    def __call__(self, 
-                 x: jnp.ndarray, 
-                 deterministic: bool = True) -> Tuple[jnp.ndarray, Dict[str, float]]:
-        """
-        Apply quantum-inspired transformations with real metrics.
-        """
-        batch_size, seq_len, dim = x.shape
-        
-        if self.use_fft:
-            # Apply FFT along sequence dimension (quantum-inspired)
-            x_complex = x.astype(jnp.complex64)
-            fft_x = jnp.fft.fft(x_complex, axis=1)
-            
-            if self.phase_modulation:
-                # Soft phase modulation (inspired by quantum phases)
-                phases = jnp.angle(fft_x)
-                magnitudes = jnp.abs(fft_x)
-                
-                # Learnable phase transformation
-                phase_weights = self.param('phase_weights',
-                    nn.initializers.normal(stddev=0.1),
-                    (seq_len, dim)
-                )
-                
-                modulated_phases = phases + 0.1 * phase_weights
-                modulated_fft = magnitudes * jnp.exp(1j * modulated_phases)
-            else:
-                modulated_fft = fft_x
-            
-            # Inverse FFT to get back to real space
-            output = jnp.real(jnp.fft.ifft(modulated_fft, axis=1))
-        else:
-            output = x
-        
-        #  Calculate real metrics
-        coherence = self._calculate_coherence(x, output)
-        fidelity = self._calculate_fidelity(x, output)
-        efficiency = coherence * fidelity
-        
-        metrics = {
-            'coherence': float(coherence),
-            'fidelity': float(fidelity), 
-            'efficiency': float(efficiency)
-        }
-        
-        return output, metrics
-    
-    def _calculate_coherence(self, x_in: jnp.ndarray, x_out: jnp.ndarray) -> float:
-        """Calculate coherence score between input and output."""
-        correlation = jnp.corrcoef(x_in.flatten(), x_out.flatten())[0, 1]
-        return jnp.clip(correlation, 0.0, 1.0)
-    
-    def _calculate_fidelity(self, x_in: jnp.ndarray, x_out: jnp.ndarray) -> float:
-        """Calculate fidelity score (similarity measure)."""
+        self.use_fft = self.config.get("use_fft", True)
+
+    def __call__(self, x, deterministic=True):
+        if not self.use_fft:
+            return x, self._metrics(x, x)
+
+        x_c = x.astype(jnp.complex64)
+        fft = jnp.fft.fft(x_c, axis=-1)
+        out = jnp.real(jnp.fft.ifft(fft, axis=-1))
+
+        return out, self._metrics(x, out)
+
+    def _metrics(self, x_in, x_out):
+        num = jnp.sum(x_in * x_out)
+        den = jnp.linalg.norm(x_in) * jnp.linalg.norm(x_out) + 1e-8
+        coherence = jnp.clip(num / den, 0.0, 1.0)
+
         mse = jnp.mean((x_in - x_out) ** 2)
-        fidelity = jnp.exp(-mse)  # Exponential decay of MSE
-        return jnp.clip(fidelity, 0.0, 1.0)
+        fidelity = jnp.exp(-mse)
 
-# ============================================================================
-# FIX 4: ManifoldProjection - Geometric Embeddings
-# ============================================================================
-
-class ManifoldProjection(nn.Module):
-    """Manifold projection for geometric embeddings."""
-    
-    curvature: float = -1.0  # Hyperbolic by default
-    scale: float = 1.0
-    
-    def __call__(self, x: jnp.ndarray) -> jnp.ndarray:
-        """Project embeddings onto manifold with specified curvature."""
-        norm = jnp.linalg.norm(x, axis=-1, keepdims=True) + 1e-8
-        
-        if self.curvature < 0:  # Hyperbolic (Poincaré model)
-            return x / norm * jnp.tanh(self.scale * norm)
-        elif self.curvature > 0:  # Spherical
-            return x / norm * jnp.sin(self.scale * norm)
-        else:  # Euclidean (not projection)
-            return x
-
-# ============================================================================
-# FIX 5: Updated Test Data Loader
-# ============================================================================
-
-class TestDataLoaderFixed:
-    """Fixed data loader for testing with correct dtypes."""
-    
-    def __init__(self, batch_size: int = 4, seq_len: int = 128, vocab_size: int = 1000):
-        self.batch_size = batch_size
-        self.seq_len = seq_len
-        self.vocab_size = vocab_size
-    
-    def generate_batch(self) -> Dict[str, jnp.ndarray]:
-        """Generate test batch with correct structure."""
-        # Generate random token IDs
-        tokens = jnp.randint(0, self.vocab_size, (self.batch_size, self.seq_len))
-        
-        # Generate attention mask (all 1s for simplicity)
-        attention_mask = jnp.ones((self.batch_size, self.seq_len), dtype=jnp.int32)
-        
         return {
-            'tokens': tokens,
-            'attention_mask': attention_mask
+            "coherence": coherence,
+            "fidelity": fidelity,
+            "efficiency": coherence * fidelity,
         }
 
 # ============================================================================
-# FIX 6: Integration Test
+# MANIFOLD
 # ============================================================================
 
 def test_quantum_submodel_integration():
@@ -379,20 +307,19 @@ def test_quantum_submodel_integration():
     return outputs, metrics
 
 # ============================================================================
-# FIX 7: Training Loop Integration Point
+# TRAIN STEP (OPTAX READY)
 # ============================================================================
 
-def create_training_step_function(model: QuantumSubmodel):
-    """Create training step function with fixed metrics extraction."""
-    
+def create_train_step(model, optimizer):
+    @jax.jit
     def train_step(state, batch):
-        """Single training step with corrected metric handling."""
-        
+
         def loss_fn(params):
-            outputs, metrics = model.apply(
-                {'params': params}, 
-                batch, 
-                deterministic=False
+            (out, metrics) = model.apply(
+                {"params": params, **state.ema},
+                batch,
+                deterministic=False,
+                mutable=["ema"],
             )
             
             #  FIXED: Use real metric names for loss
@@ -401,25 +328,15 @@ def create_training_step_function(model: QuantumSubmodel):
                 metrics['commitment_loss'] + 
                 metrics['quantization_loss'] * 0.1
             )
-            
-            total_loss = primary_loss + regularization
-            
-            return total_loss, {
-                'total_loss': total_loss,
-                'primary_loss': primary_loss,
-                **metrics  # Include all real metrics
-            }
-        
-        (loss_value, metrics), grads = jax.value_and_grad(
+
+            return loss, (metrics)
+
+        (loss, metrics), grads = jax.value_and_grad(
             loss_fn, has_aux=True
         )(state.params)
-        
-        # Update state (simplified, real implementation would use optax)
-        # state = state.apply_gradients(grads=grads)  # Uncomment for real training
-        
+
+        state = state.apply_gradients(grads=grads)
         return state, metrics
-    
-    return jax.jit(train_step)
 
 if __name__ == "__main__":
     # Run integration test
