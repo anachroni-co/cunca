@@ -139,10 +139,10 @@ class EnhancedByteTPUProcessor:
         try:
             self.params = self.layer.init(rng_key, dummy_input, training=False)
             self.initialized = True
-            logger.info(f"✅ Enhanced Byte_TPU processor initialized: {input_shape}")
+            logger.info(f" Enhanced Byte_TPU processor initialized: {input_shape}")
             return True
         except Exception as e:
-            logger.error(f"❌ Byte_TPU initialization failed: {e}")
+            logger.error(f" Byte_TPU initialization failed: {e}")
             return False
     
     def process(self, inputs, training=False, rngs=None):

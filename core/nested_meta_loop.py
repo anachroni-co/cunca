@@ -114,7 +114,7 @@ class NestedMetaLoopState:
         if meta_performance > self.level2_best_performance:
             self.level2_best_performance = meta_performance
             self.level2_best_config = meta_config.copy()
-            logger.info(f"🎯 Level 2: New best meta-configuration: {meta_performance:.4f}")
+            logger.info(f" Level 2: New best meta-configuration: {meta_performance:.4f}")
 
     def detect_catastrophic_forgetting(
         self,
@@ -153,7 +153,7 @@ class NestedMetaLoopState:
             }
             self.forgetting_events.append(forgetting_event)
             logger.warning(
-                f"⚠️ Catastrophic forgetting detected for task '{task_id}': "
+                f"️ Catastrophic forgetting detected for task '{task_id}': "
                 f"{retention:.1%} retention (threshold: {threshold:.1%})"
             )
             return True
@@ -283,11 +283,11 @@ class NestedMetaLoop:
         # Cross-level coordination
         self.cross_level_coordinator = CrossLevelCoordinator(self.config)
 
-        logger.info("🔄 Nested Meta-Loop System initialized")
-        logger.info(f"   📊 Level 0 (Model params): Every {self.config.level0_update_freq} steps")
-        logger.info(f"   📊 Level 1 (Hyperparams): Every {self.config.level1_update_freq} steps")
-        logger.info(f"   📊 Level 2 (Meta-hyperparams): Every {self.config.level2_update_freq} steps")
-        logger.info(f"   🛡️ Catastrophic forgetting threshold: {self.config.catastrophic_forgetting_threshold:.1%}")
+        logger.info(" Nested Meta-Loop System initialized")
+        logger.info(f"    Level 0 (Model params): Every {self.config.level0_update_freq} steps")
+        logger.info(f"    Level 1 (Hyperparams): Every {self.config.level1_update_freq} steps")
+        logger.info(f"    Level 2 (Meta-hyperparams): Every {self.config.level2_update_freq} steps")
+        logger.info(f"   ️ Catastrophic forgetting threshold: {self.config.catastrophic_forgetting_threshold:.1%}")
 
     def step(
         self,
@@ -401,7 +401,7 @@ class NestedMetaLoop:
             suggestions['optimized_meta_config'] = optimized_meta_config
 
             logger.info(
-                f"🔧 Level 2: Meta-loop configuration optimized "
+                f" Level 2: Meta-loop configuration optimized "
                 f"(meta_performance: {meta_performance:.4f})"
             )
 
@@ -521,7 +521,7 @@ class CrossLevelCoordinator:
             if recent_trend < -0.05:  # Declining performance
                 suggestions['level1_struggling'] = True
                 suggestions['recommendation'] = 'trigger_level2_update_early'
-                logger.info("📉 Cross-level: Level 1 struggling, suggesting early Level 2 intervention")
+                logger.info(" Cross-level: Level 1 struggling, suggesting early Level 2 intervention")
 
         # Check if we should consolidate learning
         if self.config.enable_memory_consolidation:
@@ -529,7 +529,7 @@ class CrossLevelCoordinator:
                 consolidation_signal = self._should_consolidate(level1_state, level2_state)
                 if consolidation_signal:
                     suggestions['consolidate_memory'] = True
-                    logger.info("💾 Cross-level: Triggering memory consolidation")
+                    logger.info(" Cross-level: Triggering memory consolidation")
 
         return suggestions
 
@@ -575,7 +575,7 @@ def get_global_nested_meta_loop() -> NestedMetaLoop:
 
 def main():
     """Test the nested meta-loop system."""
-    logger.info("🔄 Nested Meta-Loop System - Testing Mode")
+    logger.info(" Nested Meta-Loop System - Testing Mode")
 
     # Create nested meta-loop
     nested_loop = create_nested_meta_loop()

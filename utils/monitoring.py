@@ -35,7 +35,7 @@ class RealTimeMonitor:
             metric: [] for metric in self.metrics
         }
         
-        logger.info(f"✅ Monitor inicializado (interval={interval}s)")
+        logger.info(f" Monitor inicializado (interval={interval}s)")
     
     def start(self) -> None:
         """start monitoreo."""
@@ -48,7 +48,7 @@ class RealTimeMonitor:
             self._thread.daemon = True
             self._thread.start()
             
-            logger.info("🔄 Monitoreo iniciado")
+            logger.info(" Monitoreo iniciado")
     
     def stop(self) -> None:
         """stop monitoreo."""
@@ -58,7 +58,7 @@ class RealTimeMonitor:
                 self._thread.join()
                 self._thread = None
                 
-            logger.info("⏹️ Monitoreo detenido")
+            logger.info("️ Monitoreo detenido")
     
     def get_metrics(self) -> Dict[str, List[float]]:
         """
@@ -100,14 +100,14 @@ class RealTimeMonitor:
                 time.sleep(self.interval)
                 
             except Exception as e:
-                logger.warning(f"⚠️ Error en monitoreo: {e}")
+                logger.warning(f"️ Error en monitoreo: {e}")
 
 class ResourceMonitor:
     """Monitor de recursos del sistema."""
     
     def __init__(self):
         self.process = psutil.Process()
-        logger.info("✅ Monitor de recursos inicializado")
+        logger.info(" Monitor de recursos inicializado")
     
     def get_memory_usage(self) -> float:
         """
@@ -119,7 +119,7 @@ class ResourceMonitor:
         try:
             return self.process.memory_percent()
         except Exception as e:
-            logger.warning(f"⚠️ Error al obtener memoria: {e}")
+            logger.warning(f"️ Error al obtener memoria: {e}")
             return 0.0
     
     def get_cpu_usage(self) -> float:
@@ -132,7 +132,7 @@ class ResourceMonitor:
         try:
             return self.process.cpu_percent()
         except Exception as e:
-            logger.warning(f"⚠️ Error al obtener CPU: {e}")
+            logger.warning(f"️ Error al obtener CPU: {e}")
             return 0.0
     
     def get_disk_io(self) -> Dict[str, float]:
@@ -149,7 +149,7 @@ class ResourceMonitor:
                 "write_bytes": io.write_bytes
             }
         except Exception as e:
-            logger.warning(f"⚠️ Error al obtener I/O: {e}")
+            logger.warning(f"️ Error al obtener I/O: {e}")
             return {"read_bytes": 0, "write_bytes": 0}
     
     def get_threads(self) -> int:
@@ -162,7 +162,7 @@ class ResourceMonitor:
         try:
             return self.process.num_threads()
         except Exception as e:
-            logger.warning(f"⚠️ Error al obtener threads: {e}")
+            logger.warning(f"️ Error al obtener threads: {e}")
             return 0
 
 class MemoryMonitor:

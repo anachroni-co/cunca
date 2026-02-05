@@ -66,12 +66,12 @@ try:
     
     ULTRA_OPTIMIZATIONS_AVAILABLE = True
     logger = logging.getLogger(__name__)
-    logger.info("✅ Ultra optimizations loaded successfully")
+    logger.info(" Ultra optimizations loaded successfully")
     
 except ImportError as e:
     ULTRA_OPTIMIZATIONS_AVAILABLE = False
     logger = logging.getLogger(__name__)
-    logger.warning(f"⚠️ Ultra optimizations not available: {e}")
+    logger.warning(f"️ Ultra optimizations not available: {e}")
 
 @dataclass
 class UltraTrainingMetrics(TrainingMetrics):
@@ -156,7 +156,7 @@ class UltraAdvancedTrainer(UnifiedTrainer):
     
     def _initialize_ultra_optimizations(self):
         """Initialize all ultra optimization components."""
-        logger.info("🚀 INITIALIZING ULTRA OPTIMIZATIONS")
+        logger.info(" INITIALIZING ULTRA OPTIMIZATIONS")
         
         try:
             # Dynamic scaling manager
@@ -165,7 +165,7 @@ class UltraAdvancedTrainer(UnifiedTrainer):
                 max_batch_size=2048,
                 initial_lr=1e-4
             )
-            logger.info("✅ Dynamic Scaling Manager initialized")
+            logger.info(" Dynamic Scaling Manager initialized")
             
             # Ultra training orchestrator
             ultra_config = {
@@ -181,12 +181,12 @@ class UltraAdvancedTrainer(UnifiedTrainer):
             }
             
             self.ultra_orchestrator = UltraTrainingOrchestrator(ultra_config)
-            logger.info("✅ Ultra Training Orchestrator initialized")
+            logger.info(" Ultra Training Orchestrator initialized")
             
             # Neural Architecture Search
             if self.enable_nas:
                 self.nas_search_space = ArchitectureSearchSpace()
-                logger.info("✅ Neural Architecture Search enabled")
+                logger.info(" Neural Architecture Search enabled")
             
             # Federated learning
             if self.enable_federated:
@@ -194,13 +194,13 @@ class UltraAdvancedTrainer(UnifiedTrainer):
                     num_clients=10,
                     privacy_budget=1.0
                 )
-                logger.info("✅ Federated Learning enabled")
+                logger.info(" Federated Learning enabled")
             
             # Create ultra model if not provided
             if self.model is None and self.enable_ssm_hybrid:
                 rng = jax.random.PRNGKey(42)
                 self.model = self.ultra_orchestrator.create_ultra_model(rng)
-                logger.info("✅ Ultra SSM Hybrid Model created")
+                logger.info(" Ultra SSM Hybrid Model created")
             
             # Initialize Expert Soup Integration
             if self.enable_expert_soup:
@@ -213,39 +213,39 @@ class UltraAdvancedTrainer(UnifiedTrainer):
                     optimize_soup=True
                 )
                 self.expert_soup_integration = ExpertSoupIntegration(self, soup_config)
-                logger.info("✅ Expert Soup Integration initialized")
-                logger.info("   🍲 Will create model soups from top 3 checkpoints")
-                logger.info("   🎯 Using adaptive weighting strategy")
+                logger.info(" Expert Soup Integration initialized")
+                logger.info("    Will create model soups from top 3 checkpoints")
+                logger.info("    Using adaptive weighting strategy")
         
         except Exception as e:
-            logger.error(f"❌ Error initializing ultra optimizations: {e}")
+            logger.error(f" Error initializing ultra optimizations: {e}")
             self.enable_ultra_optimizations = False
     
     def _setup_ultra_logging(self):
         """Enhanced logging for ultra trainer."""
         super()._setup_logging()
         
-        logger.info("🌟 ULTRA ADVANCED TRAINER v2024")
+        logger.info(" ULTRA ADVANCED TRAINER v2024")
         logger.info("=" * 80)
-        logger.info(f"🔥 Ultra Optimizations: {'✅ ENABLED' if self.enable_ultra_optimizations else '❌ DISABLED'}")
-        logger.info(f"🏗️ SSM Hybrid: {'✅ ENABLED' if self.enable_ssm_hybrid else '❌ DISABLED'}")
-        logger.info(f"🧠 Neural Architecture Search: {'✅ ENABLED' if self.enable_nas else '❌ DISABLED'}")
-        logger.info(f"🔒 Federated Learning: {'✅ ENABLED' if self.enable_federated else '❌ DISABLED'}")
+        logger.info(f" Ultra Optimizations: {' ENABLED' if self.enable_ultra_optimizations else ' DISABLED'}")
+        logger.info(f"️ SSM Hybrid: {' ENABLED' if self.enable_ssm_hybrid else ' DISABLED'}")
+        logger.info(f" Neural Architecture Search: {' ENABLED' if self.enable_nas else ' DISABLED'}")
+        logger.info(f" Federated Learning: {' ENABLED' if self.enable_federated else ' DISABLED'}")
         
         if self.enable_ultra_optimizations:
-            logger.info("🚀 EXPECTED PERFORMANCE:")
-            logger.info("   ⚡ Base Layer: 11.2x speedup")
-            logger.info("   🏗️ Architecture Layer: 9.4x speedup") 
-            logger.info("   🧠 Intelligence Layer: 10.4x speedup")
-            logger.info("   🏭 Infrastructure Layer: 3.8x speedup")
-            logger.info("   💎 TOTAL EXPECTED: 4,174x speedup")
+            logger.info(" EXPECTED PERFORMANCE:")
+            logger.info("    Base Layer: 11.2x speedup")
+            logger.info("   ️ Architecture Layer: 9.4x speedup") 
+            logger.info("    Intelligence Layer: 10.4x speedup")
+            logger.info("    Infrastructure Layer: 3.8x speedup")
+            logger.info("    TOTAL EXPECTED: 4,174x speedup")
             
             if self.enable_expert_soup:
-                logger.info("🍲 EXPERT SOUP FEATURES:")
-                logger.info("   📊 Multi-best checkpoint tracking")
-                logger.info("   🎯 Specialization detection (math, coding, language, reasoning)")
-                logger.info("   🔄 Automatic model soup creation")
-                logger.info("   📈 Expected 5-15% improvement from ensembling")
+                logger.info(" EXPERT SOUP FEATURES:")
+                logger.info("    Multi-best checkpoint tracking")
+                logger.info("    Specialization detection (math, coding, language, reasoning)")
+                logger.info("    Automatic model soup creation")
+                logger.info("    Expected 5-15% improvement from ensembling")
         
         logger.info("=" * 80)
     
@@ -262,10 +262,10 @@ class UltraAdvancedTrainer(UnifiedTrainer):
         Ultra-advanced training with all optimizations.
         """
         self._setup_ultra_logging()
-        logger.info("🚀 STARTING ULTRA TRAINING")
+        logger.info(" STARTING ULTRA TRAINING")
         
         if not self.enable_ultra_optimizations:
-            logger.warning("⚠️ Ultra optimizations disabled, falling back to base trainer")
+            logger.warning("️ Ultra optimizations disabled, falling back to base trainer")
             return await super().train(
                 train_dataset, val_dataset, num_epochs, 
                 eval_every, save_every, resume_from
@@ -288,7 +288,7 @@ class UltraAdvancedTrainer(UnifiedTrainer):
         
         try:
             for epoch in range(num_epochs):
-                logger.info(f"🌟 Starting ULTRA epoch {epoch + 1}/{num_epochs}")
+                logger.info(f" Starting ULTRA epoch {epoch + 1}/{num_epochs}")
                 epoch_start = time.time()
                 
                 async for batch in self._get_ultra_training_batches(train_dataset):
@@ -325,7 +325,7 @@ class UltraAdvancedTrainer(UnifiedTrainer):
                         # Check for early stopping
                         current_loss = eval_metrics.get('eval_loss', float('inf'))
                         if early_stopping(current_loss):
-                            logger.info("🛑 Early stopping triggered")
+                            logger.info(" Early stopping triggered")
                             break
                         
                         if current_loss < best_loss:
@@ -346,7 +346,7 @@ class UltraAdvancedTrainer(UnifiedTrainer):
                 
                 # End of epoch processing
                 epoch_time = time.time() - epoch_start
-                logger.info(f"✅ Ultra epoch {epoch + 1} completed in {epoch_time:.2f}s")
+                logger.info(f" Ultra epoch {epoch + 1} completed in {epoch_time:.2f}s")
                 
                 # End of epoch evaluation
                 if val_dataset:
@@ -354,7 +354,7 @@ class UltraAdvancedTrainer(UnifiedTrainer):
                     self._log_ultra_evaluation(eval_metrics)
         
         except Exception as e:
-            logger.error(f"❌ Error during ultra training: {e}")
+            logger.error(f" Error during ultra training: {e}")
             raise
         
         finally:
@@ -366,7 +366,7 @@ class UltraAdvancedTrainer(UnifiedTrainer):
                 # Log end ultra metrics
                 self._log_final_ultra_metrics(ultra_results)
             
-            logger.info("🎉 ULTRA TRAINING COMPLETED")
+            logger.info(" ULTRA TRAINING COMPLETED")
             return ultra_results
     
     async def _initialize_ultra_training_state(self, resume_from: Optional[str]):
@@ -378,7 +378,7 @@ class UltraAdvancedTrainer(UnifiedTrainer):
             return
         
         # Apply ultra optimizations to state
-        logger.info("🚀 Applying ultra optimizations to training state")
+        logger.info(" Applying ultra optimizations to training state")
         
         # Enhanced optimizer with Lion
         enhanced_optimizer = create_lion_optimizer(
@@ -393,7 +393,7 @@ class UltraAdvancedTrainer(UnifiedTrainer):
         self.state = self.state.replace(tx=enhanced_optimizer)
         
         # Apply mixed precision if available
-        logger.info("✅ Ultra training state initialized")
+        logger.info(" Ultra training state initialized")
     
     def _create_ultra_train_step(self):
         """Create ultra-optimized training step function."""
@@ -564,7 +564,7 @@ class UltraAdvancedTrainer(UnifiedTrainer):
         """Enhanced evaluation logging."""
         super()._log_evaluation(eval_metrics)
         
-        logger.info(f"🌟 ULTRA EVAL - Efficiency: {eval_metrics.get('ultra_efficiency_score', 0):.3f}, "
+        logger.info(f" ULTRA EVAL - Efficiency: {eval_metrics.get('ultra_efficiency_score', 0):.3f}, "
                    f"Arch Performance: {eval_metrics.get('architecture_performance', 0):.3f}")
     
     async def _save_ultra_checkpoint(self, step_or_name: Union[int, str]):
@@ -595,15 +595,15 @@ class UltraAdvancedTrainer(UnifiedTrainer):
                 )
                 
                 if soup_result.get('saved_as_best', False):
-                    logger.info(f"🌟 Checkpoint saved as one of the best models!")
-                    logger.info(f"   📊 Total best checkpoints: {soup_result['total_best_checkpoints']}")
+                    logger.info(f" Checkpoint saved as one of the best models!")
+                    logger.info(f"    Total best checkpoints: {soup_result['total_best_checkpoints']}")
                     
                 if soup_result.get('soup_created', False):
                     soup_info = soup_result['soup_info']
-                    logger.info(f"🍲 NEW EXPERT SOUP CREATED!")
-                    logger.info(f"   🎯 Models combined: {soup_info['n_models']}")
-                    logger.info(f"   📈 Expected improvement: {soup_info['expected_improvement']:.2%}")
-                    logger.info(f"   🧠 Strategy: {soup_info['strategy']}")
+                    logger.info(f" NEW EXPERT SOUP CREATED!")
+                    logger.info(f"    Models combined: {soup_info['n_models']}")
+                    logger.info(f"    Expected improvement: {soup_info['expected_improvement']:.2%}")
+                    logger.info(f"    Strategy: {soup_info['strategy']}")
                     
             except Exception as e:
                 logger.warning(f"Expert Soup checkpoint saving failed: {e}")
@@ -622,21 +622,21 @@ class UltraAdvancedTrainer(UnifiedTrainer):
             import pickle
             pickle.dump(ultra_state, f)
         
-        logger.info(f"✅ Ultra checkpoint saved: {ultra_checkpoint_path}")
+        logger.info(f" Ultra checkpoint saved: {ultra_checkpoint_path}")
     
     async def _nas_evolution_step(self, step: int):
         """Perform Neural Architecture Search evolution step."""
         if not self.enable_nas or not self.nas_search_space:
             return
         
-        logger.info(f"🧬 NAS Evolution Step at {step}")
+        logger.info(f" NAS Evolution Step at {step}")
         
         # This would implement current NAS logic
         # For now, just increment generation
         self.ultra_metrics.nas_generation += 1
         self.ultra_metrics.architecture_fitness += 0.01  # Simulated improvement
         
-        logger.info(f"🧬 NAS Generation: {self.ultra_metrics.nas_generation}, "
+        logger.info(f" NAS Generation: {self.ultra_metrics.nas_generation}, "
                    f"Fitness: {self.ultra_metrics.architecture_fitness:.3f}")
     
     def _compute_hardware_utilization(self) -> float:
@@ -762,7 +762,7 @@ class UltraAdvancedTrainer(UnifiedTrainer):
             'final/system_utilization': ultra_results['ultra_performance']['system_utilization']
         })
         
-        logger.info("📊 Final ultra metrics logged to W&B")
+        logger.info(" Final ultra metrics logged to W&B")
 
 # Convenience function for ultra training
 def ultra_train_model(
@@ -832,9 +832,9 @@ def ultra_train_model(
                     optimize_soup=True
                 )
                 trainer.expert_soup_integration = ExpertSoupIntegration(trainer, soup_config)
-                logger.info("✅ Expert Soup enabled for training")
+                logger.info(" Expert Soup enabled for training")
             except Exception as e:
-                logger.error(f"⚠️ Could not enable Expert Soup: {e}")
+                logger.error(f"️ Could not enable Expert Soup: {e}")
     
     # Run ultra training
     import asyncio

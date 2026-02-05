@@ -50,9 +50,9 @@ ML_LIBRARIES_AVAILABLE = True
 try:
     from capibara.jax import jax, jnp
     import flax.linen as nn
-    logger.info("✅ ML libraries available for Adaptive VQ Performance")
+    logger.info(" ML libraries available for Adaptive VQ Performance")
 except ImportError as e:
-    logger.warning(f"⚠️ ML libraries not available: {e}")
+    logger.warning(f"️ ML libraries not available: {e}")
     ML_LIBRARIES_AVAILABLE = False
 
 # Ultra VQ System integration
@@ -60,9 +60,9 @@ ULTRA_VQ_AVAILABLE = True
 try:
     from .ultra_vq_orchestrator import VQModality, VQTechnique, UltraVQConfig
     from .multi_modal_vq_intelligence import ModalFusionStrategy
-    logger.info("✅ Ultra VQ System integration available")
+    logger.info(" Ultra VQ System integration available")
 except ImportError as e:
-    logger.warning(f"⚠️ Ultra VQ System not available: {e}")
+    logger.warning(f"️ Ultra VQ System not available: {e}")
     ULTRA_VQ_AVAILABLE = False
 
 # ============================================================================
@@ -235,7 +235,7 @@ class AdaptiveVQPerformanceIntelligence:
     def _initialize_performance_intelligence(self):
         """Initialize the adaptive performance intelligence system."""
         
-        logger.info("🚀 Initializing Adaptive VQ Performance Intelligence")
+        logger.info(" Initializing Adaptive VQ Performance Intelligence")
         
         # Initialize auto-optimization engine
         self._initialize_auto_optimizer()
@@ -258,10 +258,10 @@ class AdaptiveVQPerformanceIntelligence:
         # Start monitoring loops
         self._start_monitoring_loops()
         
-        logger.info(f"✅ Adaptive VQ Performance Intelligence initialized")
-        logger.info(f"   ⚡ Strategy: {self.config.optimization_strategy.value}")
-        logger.info(f"   🎯 Objectives: {len(self.config.performance_objectives)}")
-        logger.info(f"   🔄 Adaptation: {self.config.adaptation_mode.value}")
+        logger.info(f" Adaptive VQ Performance Intelligence initialized")
+        logger.info(f"    Strategy: {self.config.optimization_strategy.value}")
+        logger.info(f"    Objectives: {len(self.config.performance_objectives)}")
+        logger.info(f"    Adaptation: {self.config.adaptation_mode.value}")
     
     def _initialize_auto_optimizer(self):
         """Initialize auto-optimization engine."""
@@ -273,7 +273,7 @@ class AdaptiveVQPerformanceIntelligence:
                 learning_rate=self.config.learning_rate
             )
             
-            logger.info("✅ Ultra Auto-Optimizer initialized")
+            logger.info(" Ultra Auto-Optimizer initialized")
     
     def _initialize_performance_predictor(self):
         """Initialize performance prediction system."""
@@ -284,7 +284,7 @@ class AdaptiveVQPerformanceIntelligence:
                 monitored_resources=self.config.monitored_resources
             )
             
-            logger.info("✅ Performance Predictor initialized")
+            logger.info(" Performance Predictor initialized")
     
     def _initialize_resource_manager(self):
         """Initialize intelligent resource manager."""
@@ -295,7 +295,7 @@ class AdaptiveVQPerformanceIntelligence:
             enable_dynamic_balancing=self.config.enable_dynamic_load_balancing
         )
         
-        logger.info("✅ Intelligent Resource Manager initialized")
+        logger.info(" Intelligent Resource Manager initialized")
     
     def _initialize_pattern_learner(self):
         """Initialize pattern learning system."""
@@ -306,7 +306,7 @@ class AdaptiveVQPerformanceIntelligence:
                 learning_rate=self.config.learning_rate
             )
             
-            logger.info("✅ Performance Pattern Learner initialized")
+            logger.info(" Performance Pattern Learner initialized")
     
     def _initialize_anomaly_detector(self):
         """Initialize anomaly detection system."""
@@ -317,7 +317,7 @@ class AdaptiveVQPerformanceIntelligence:
                 detection_sensitivity=0.8
             )
             
-            logger.info("✅ Performance Anomaly Detector initialized")
+            logger.info(" Performance Anomaly Detector initialized")
     
     def _initialize_optimization_engines(self):
         """Initialize optimization engines."""
@@ -343,7 +343,7 @@ class AdaptiveVQPerformanceIntelligence:
                 adaptation_threshold=0.1
             )
         
-        logger.info("✅ Optimization engines initialized")
+        logger.info(" Optimization engines initialized")
     
     def _start_monitoring_loops(self):
         """Start background monitoring loops."""
@@ -359,7 +359,7 @@ class AdaptiveVQPerformanceIntelligence:
         # Start adaptation loop
         asyncio.create_task(self._adaptation_loop())
         
-        logger.info("✅ Monitoring loops started")
+        logger.info(" Monitoring loops started")
     
     async def optimize_vq_performance(
         self,
@@ -818,7 +818,7 @@ def create_adaptive_performance_config(
 def demonstrate_adaptive_vq_performance_intelligence():
     """Demonstrate the adaptive VQ performance intelligence system."""
     
-    logger.info("⚡ ADAPTIVE VQ PERFORMANCE INTELLIGENCE DEMONSTRATION")
+    logger.info(" ADAPTIVE VQ PERFORMANCE INTELLIGENCE DEMONSTRATION")
     logger.info("=" * 60)
     
     # Create configuration
@@ -828,7 +828,7 @@ def demonstrate_adaptive_vq_performance_intelligence():
         enable_all_features=True
     )
     
-    logger.info(f"📋 Configuration created:")
+    logger.info(f" Configuration created:")
     logger.info(f"   - Strategy: {config.optimization_strategy.value}")
     logger.info(f"   - Adaptation: {config.adaptation_mode.value}")
     logger.info(f"   - Objectives: {len(config.performance_objectives)}")
@@ -839,10 +839,10 @@ def demonstrate_adaptive_vq_performance_intelligence():
     # Get system status
     status = performance_ai.get_performance_intelligence_status()
     
-    logger.info(f"\n🔍 Performance Intelligence Status:")
+    logger.info(f"\n Performance Intelligence Status:")
     logger.info(f"   - Components: {sum(status['components'].values())}/8")
     logger.info(f"   - Capabilities: {sum(status['capabilities'].values())}/6")
-    logger.info(f"   - Monitoring: {'✅' if status['monitoring']['active'] else '❌'}")
+    logger.info(f"   - Monitoring: {'' if status['monitoring']['active'] else ''}")
     
     return performance_ai
 

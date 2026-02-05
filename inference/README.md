@@ -2,7 +2,7 @@
 
 The **inference** module provides optimized engines for production inference, including quantization, ARM optimizations, and deployment patterns.
 
-## 📋 Table of Contents
+##  Table of Contents
 
 1. [Overview](#overview)
 2. [Inference Engines](#inference-engines)
@@ -15,19 +15,19 @@ The **inference** module provides optimized engines for production inference, in
 
 ---
 
-## 🎯 Overview
+##  Overview
 
 The capibaraGPT-v2 inference system is optimized for low latency and high throughput in production:
 
 ### Key Features
 
-- ⚡ **Low Latency**: < 50ms for 512 token sequences
-- 🎯 **High Throughput**: > 1000 requests/second
-- 📦 **Quantization**: INT8/INT4 reduces model size 4-8x
-- 🔧 **ARM Optimized**: SVE, NEON, Kleidi optimizations
-- 🌐 **Hybrid Engine**: Automatic Mamba + Transformer routing
-- 💾 **KV-Cache**: Efficient caching for generation
-- 🔄 **Batching**: Dynamic batching for better utilization
+-  **Low Latency**: < 50ms for 512 token sequences
+-  **High Throughput**: > 1000 requests/second
+-  **Quantization**: INT8/INT4 reduces model size 4-8x
+-  **ARM Optimized**: SVE, NEON, Kleidi optimizations
+-  **Hybrid Engine**: Automatic Mamba + Transformer routing
+-  **KV-Cache**: Efficient caching for generation
+-  **Batching**: Dynamic batching for better utilization
 
 ### Components
 
@@ -43,7 +43,7 @@ The capibaraGPT-v2 inference system is optimized for low latency and high throug
 
 ---
 
-## 🚀 Inference Engines
+##  Inference Engines
 
 ### Hybrid Inference Engine
 
@@ -99,7 +99,7 @@ print(f"Avg latency: {metrics['avg_latency_ms']:.2f}ms")
 
 ---
 
-## 📦 Quantization
+##  Quantization
 
 Quantization reduces model size and accelerates inference:
 
@@ -204,7 +204,7 @@ quantized_model = quantizer.quantize(model)
 
 ---
 
-## 💪 ARM Optimizations
+##  ARM Optimizations
 
 Optimizations for ARM CPUs (M1/M2/M3, Graviton, etc.):
 
@@ -244,7 +244,7 @@ output = engine.generate(
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Basic Inference
 
@@ -305,7 +305,7 @@ for prompt, response in zip(prompts, responses):
 
 ---
 
-## 🏗️ Deployment Patterns
+## ️ Deployment Patterns
 
 ### Pattern 1: REST API with FastAPI
 
@@ -404,7 +404,7 @@ spec:
 
 ---
 
-## ⚡ Performance Optimization
+##  Performance Optimization
 
 ### 1. Dynamic Batching
 
@@ -475,7 +475,7 @@ engine = MultiGPUEngine(
 
 ---
 
-## 🏭 Production Deployment
+##  Production Deployment
 
 ### Monitoring
 
@@ -576,7 +576,7 @@ print(f"Model B satisfaction: {results['model_b']['satisfaction']:.2f}")
 
 ---
 
-## 📊 Benchmarks
+##  Benchmarks
 
 ### Latency (512 tokens, T4 GPU)
 
@@ -597,7 +597,7 @@ print(f"Model B satisfaction: {results['model_b']['satisfaction']:.2f}")
 
 ---
 
-## 🔧 Advanced Configuration
+##  Advanced Configuration
 
 ```python
 from capibara.inference import HybridInferenceEngine, InferenceConfig
@@ -641,7 +641,7 @@ engine = HybridInferenceEngine(config)
 
 ---
 
-## 📚 References
+##  References
 
 - [Hybrid Inference Engine](hybrid_inference_engine.py) - Main engine
 - [Quantization](quantization.py) - Quantization

@@ -78,7 +78,7 @@ python scripts/train_synthetic.py --quick --num_steps 100
 │  ████████████████████████████████████████  100%              │
 │  Loss: 1.543 | LR: 8.10e-05 | Time: 5m 21s                  │
 │                                                              │
-│  ✓ Training complete! Checkpoint saved to ./outputs/final   │
+│   Training complete! Checkpoint saved to ./outputs/final   │
 │                                                              │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -158,25 +158,25 @@ python scripts/validate_project.py --fix
 │                  Project Validation                          │
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
-│  ✓ Project Structure                                        │
+│   Project Structure                                        │
 │    • All required directories present                       │
 │    • __init__.py files in place                            │
 │    • Configuration files valid                              │
 │                                                              │
-│  ✓ Import Analysis                                          │
+│   Import Analysis                                          │
 │    • No circular imports                                    │
 │    • All imports resolvable                                 │
 │    • No unused imports (with --strict)                      │
 │                                                              │
-│  ✓ Type Checking                                            │
+│   Type Checking                                            │
 │    • Type hints present                                     │
 │    • No type errors (mypy)                                  │
 │                                                              │
-│  ✓ Code Style                                               │
+│   Code Style                                               │
 │    • PEP 8 compliance                                       │
 │    • Consistent formatting                                  │
 │                                                              │
-│  ⚠ Warnings                                                  │
+│   Warnings                                                  │
 │    • 3 TODO comments found                                  │
 │    • 2 deprecated function usages                           │
 │                                                              │

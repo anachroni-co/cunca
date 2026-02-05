@@ -50,7 +50,7 @@ async def run_single_stage(config: dict, stage_name: str) -> PipelineResult:
         logger.info(f"Available stages: {', '.join(AVAILABLE_STAGES.keys())}")
         return None
 
-    logger.info(f"🎯 Running single stage: {stage_name}")
+    logger.info(f" Running single stage: {stage_name}")
 
     # Create pipeline instance
     pipeline = CompletePipeline(config)
@@ -204,67 +204,67 @@ def print_pipeline_banner():
     """Print pipeline banner."""
     banner = """
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                    🦙 CapibaraGPT-v2 Complete Pipeline 🦙                    ║
+║                     CapibaraGPT-v2 Complete Pipeline                     ║
 ║                                                                              ║
-║  📊 Data Acquisition → 🔄 Processing → 📋 Dataset Prep → 🎯 Training Ready   ║
+║   Data Acquisition →  Processing →  Dataset Prep →  Training Ready   ║
 ║                                                                              ║
-║  🕷️  Web Scraping     🧹 Text Cleaning    📚 Dataset Creation                ║
-║  🔌 API Downloads    🔍 Deduplication    🎛️  Training Integration            ║
-║  📥 Direct Downloads  ⚡ Quality Filter   🚀 Ready for Training               ║
+║  ️  Web Scraping      Text Cleaning     Dataset Creation                ║
+║   API Downloads     Deduplication    ️  Training Integration            ║
+║   Direct Downloads   Quality Filter    Ready for Training               ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
     """
     logger.info(banner)
 
 def print_pipeline_summary(config: dict):
     """Print pipeline configuration summary."""
-    logger.info("\n📋 PIPELINE CONFIGURATION SUMMARY")
+    logger.info("\n PIPELINE CONFIGURATION SUMMARY")
     logger.info("=" * 60)
     
     # Data sources
-    logger.info("\n📊 DATA SOURCES:")
+    logger.info("\n DATA SOURCES:")
     download_config = config.get("download", {})
     
     if download_config.get("spanish_news", {}).get("enabled", False):
         news_sources = download_config["spanish_news"]["sources"]
-        logger.info(f"   📰 Spanish News: {len(news_sources)} sources ({', '.join(news_sources)})")
+        logger.info(f"    Spanish News: {len(news_sources)} sources ({', '.join(news_sources)})")
     
     if download_config.get("spanish_academic", {}).get("enabled", False):
         academic_sources = download_config["spanish_academic"]["sources"]
-        logger.info(f"   📚 Spanish Academic: {len(academic_sources)} sources ({', '.join(academic_sources)})")
+        logger.info(f"    Spanish Academic: {len(academic_sources)} sources ({', '.join(academic_sources)})")
     
     if download_config.get("api_data", {}).get("enabled", False):
         api_sources = download_config["api_data"]["sources"]
-        logger.info(f"   🔌 API Data: {len(api_sources)} sources ({', '.join(api_sources)})")
+        logger.info(f"    API Data: {len(api_sources)} sources ({', '.join(api_sources)})")
     
     if download_config.get("direct_downloads", {}).get("enabled", False):
         direct_sources = download_config["direct_downloads"]["sources"]
-        logger.info(f"   📥 Direct Downloads: {len(direct_sources)} sources ({', '.join(direct_sources)})")
+        logger.info(f"    Direct Downloads: {len(direct_sources)} sources ({', '.join(direct_sources)})")
     
     # Processing settings
-    logger.info("\n🔄 PROCESSING SETTINGS:")
+    logger.info("\n PROCESSING SETTINGS:")
     proc_config = config.get("processing", {})
-    logger.info(f"   🧹 Min Quality Score: {proc_config.get('min_quality_score', 0.6)}")
-    logger.info(f"   🔍 Deduplication: {'Enabled' if proc_config.get('enable_deduplication', True) else 'Disabled'}")
-    logger.info(f"   ⚡ Max Workers: {proc_config.get('max_workers', 4)}")
-    logger.info(f"   📦 Batch Size: {proc_config.get('batch_size', 1000)}")
+    logger.info(f"    Min Quality Score: {proc_config.get('min_quality_score', 0.6)}")
+    logger.info(f"    Deduplication: {'Enabled' if proc_config.get('enable_deduplication', True) else 'Disabled'}")
+    logger.info(f"    Max Workers: {proc_config.get('max_workers', 4)}")
+    logger.info(f"    Batch Size: {proc_config.get('batch_size', 1000)}")
     
     # Storage paths
-    logger.info("\n💾 STORAGE PATHS:")
+    logger.info("\n STORAGE PATHS:")
     storage_config = config.get("storage", {})
     for path_type, path in storage_config.items():
-        logger.info(f"   📁 {path_type}: {path}")
+        logger.info(f"    {path_type}: {path}")
 
 async def run_pipeline_with_monitoring(config: dict, stage: str = None, dry_run: bool = False):
     """Run pipeline with monitoring and progress tracking."""
     
     if dry_run:
-        logger.info("\n🔍 DRY RUN MODE - Configuration validation only")
-        logger.info("✅ Configuration is valid")
-        logger.info("✅ All storage paths can be created")
-        logger.info("✅ Pipeline ready to execute")
+        logger.info("\n DRY RUN MODE - Configuration validation only")
+        logger.info(" Configuration is valid")
+        logger.info(" All storage paths can be created")
+        logger.info(" Pipeline ready to execute")
         return
     
-    logger.info(f"\n🚀 STARTING COMPLETE PIPELINE")
+    logger.info(f"\n STARTING COMPLETE PIPELINE")
     logger.info(f"   Start time: {datetime.now().isoformat()}")
     
     if stage:
@@ -272,18 +272,18 @@ async def run_pipeline_with_monitoring(config: dict, stage: str = None, dry_run:
         result = await run_single_stage(config, stage)
 
         if result:
-            logger.info(f"\n✅ STAGE '{stage}' COMPLETED SUCCESSFULLY!")
+            logger.info(f"\n STAGE '{stage}' COMPLETED SUCCESSFULLY!")
             logger.info("=" * 60)
-            logger.info(f"📊 Pipeline ID: {result.pipeline_id}")
-            logger.info(f"⏱️  Stage Duration: {result.total_duration_seconds:.1f} seconds")
+            logger.info(f" Pipeline ID: {result.pipeline_id}")
+            logger.info(f"️  Stage Duration: {result.total_duration_seconds:.1f} seconds")
 
             # Show stage result
             for s in result.stages:
                 if s.stage_name == stage:
-                    status_emoji = "✅" if s.status == "completed" else "❌"
+                    status_emoji = "" if s.status == "completed" else ""
                     logger.info(f"   {status_emoji} {s.stage_name}: {s.status}")
                     if s.output_path:
-                        logger.info(f"   📁 Output: {s.output_path}")
+                        logger.info(f"    Output: {s.output_path}")
             return result
         return None
     
@@ -292,30 +292,30 @@ async def run_pipeline_with_monitoring(config: dict, stage: str = None, dry_run:
         result = await run_complete_pipeline(config)
         
         # Print results
-        logger.info(f"\n🎉 PIPELINE COMPLETED SUCCESSFULLY!")
+        logger.info(f"\n PIPELINE COMPLETED SUCCESSFULLY!")
         logger.info("=" * 60)
-        logger.info(f"📊 Pipeline ID: {result.pipeline_id}")
-        logger.info(f"⏱️  Total Duration: {result.total_duration_seconds:.1f} seconds")
-        logger.info(f"📁 Final Dataset: {result.final_dataset_path}")
-        logger.info(f"🎯 Ready for Training: {'Yes' if result.ready_for_training else 'No'}")
+        logger.info(f" Pipeline ID: {result.pipeline_id}")
+        logger.info(f"️  Total Duration: {result.total_duration_seconds:.1f} seconds")
+        logger.info(f" Final Dataset: {result.final_dataset_path}")
+        logger.info(f" Ready for Training: {'Yes' if result.ready_for_training else 'No'}")
         
         # Stage results
-        logger.info(f"\n📋 STAGE RESULTS:")
+        logger.info(f"\n STAGE RESULTS:")
         for stage in result.stages:
-            status_emoji = "✅" if stage.status == "completed" else "❌" if stage.status == "failed" else "⏳"
+            status_emoji = "" if stage.status == "completed" else "" if stage.status == "failed" else ""
             logger.info(f"   {status_emoji} {stage.stage_name}: {stage.status} ({stage.duration_seconds:.1f}s)")
         
         # Dataset statistics
         if result.dataset_stats:
             stats = result.dataset_stats
-            logger.info(f"\n📊 DATASET STATISTICS:")
-            logger.info(f"   📄 Total Files: {stats.get('total_files', 0)}")
-            logger.info(f"   💾 Total Size: {stats.get('total_size_gb', 0):.1f}GB")
-            logger.info(f"   📝 Total Records: {stats.get('total_records', 0):,}")
-            logger.info(f"   🗂️  Data Types: {', '.join(stats.get('data_types', []))}")
+            logger.info(f"\n DATASET STATISTICS:")
+            logger.info(f"    Total Files: {stats.get('total_files', 0)}")
+            logger.info(f"    Total Size: {stats.get('total_size_gb', 0):.1f}GB")
+            logger.info(f"    Total Records: {stats.get('total_records', 0):,}")
+            logger.info(f"   ️  Data Types: {', '.join(stats.get('data_types', []))}")
         
         # Next steps
-        logger.info(f"\n🎯 NEXT STEPS:")
+        logger.info(f"\n NEXT STEPS:")
         logger.info(f"   1. Navigate to: {result.final_dataset_path}")
         logger.info(f"   2. Review generated datasets and configuration")
         logger.info(f"   3. Run training: python run_training.py")
@@ -325,8 +325,8 @@ async def run_pipeline_with_monitoring(config: dict, stage: str = None, dry_run:
         
     except Exception as e:
         logger.error(f"Pipeline failed: {e}")
-        logger.error(f"\n❌ PIPELINE FAILED: {e}")
-        logger.error(f"📝 Check logs for detailed error information")
+        logger.error(f"\n PIPELINE FAILED: {e}")
+        logger.error(f" Check logs for detailed error information")
         raise
 
 def main():
@@ -398,11 +398,11 @@ Examples:
         ))
         
     except KeyboardInterrupt:
-        logger.info("\n⏹️  Pipeline interrupted by user")
+        logger.info("\n️  Pipeline interrupted by user")
         sys.exit(1)
     except Exception as e:
         logger.error(f"Pipeline execution failed: {e}")
-        logger.error(f"\n❌ PIPELINE EXECUTION FAILED: {e}")
+        logger.error(f"\n PIPELINE EXECUTION FAILED: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":

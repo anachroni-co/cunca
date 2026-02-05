@@ -2,18 +2,18 @@
 
 Distributed computing system optimized for TPU v4-32 with mesh configurations, sharding, and distributed operations.
 
-## 📋 Description
+##  Description
 
 This module manages the configuration and optimization of distributed computing for the CapibaraGPT system, providing specific configurations for TPU v4-32 mesh, optimized sharding specifications, and JAX experimental maps.
 
-## 🏗️ Architecture
+## ️ Architecture
 
 ```
 distributed/
 └── distribution_config.py    # TPU mesh and sharding configuration
 ```
 
-## 🚀 TPU v4-32 Mesh Configuration
+##  TPU v4-32 Mesh Configuration
 
 ### Main Mesh Configuration
 
@@ -108,7 +108,7 @@ def apply_partition_specs(model_params, specs):
 partitioned_model = apply_partition_specs(model_parameters, partition_specs)
 ```
 
-## ⚡ Performance Optimizations
+##  Performance Optimizations
 
 ### Precision and Memory Configuration
 
@@ -192,7 +192,7 @@ specialized_sharding = tpu_config.configure_specialized_sharding(
 )
 ```
 
-## 🔄 JAX Experimental Maps
+##  JAX Experimental Maps
 
 ### Parallel Maps Configuration
 
@@ -277,7 +277,7 @@ communication_config = {
 comm_optimized_system = tpu_config.setup_communication(communication_config)
 ```
 
-## 📊 Distributed Monitoring
+##  Distributed Monitoring
 
 ### Distributed Performance Metrics
 
@@ -322,12 +322,12 @@ current_metrics = get_distributed_metrics()
 for metric, threshold in performance_thresholds.items():
     current_value = current_metrics.get(metric.replace("min_", "").replace("max_", ""))
     if metric.startswith("min_") and current_value < threshold:
-        print(f"⚠️  {metric}: {current_value:.3f} below threshold {threshold}")
+        print(f"️  {metric}: {current_value:.3f} below threshold {threshold}")
     elif metric.startswith("max_") and current_value > threshold:
-        print(f"⚠️  {metric}: {current_value:.3f} above threshold {threshold}")
+        print(f"️  {metric}: {current_value:.3f} above threshold {threshold}")
 ```
 
-## 🔧 Advanced Configuration
+##  Advanced Configuration
 
 ### Distributed Configuration Auto-tuning
 
@@ -355,7 +355,7 @@ optimal_config = auto_tuner.find_optimal_configuration(
     stability_threshold=0.95
 )
 
-print("🎯 Optimal Distributed Configuration:")
+print(" Optimal Distributed Configuration:")
 print(f"Mesh Shape: {optimal_config['mesh_shape']}")
 print(f"Sharding Strategy: {optimal_config['sharding_strategy']}")
 print(f"Micro Batch Size: {optimal_config['micro_batch_size']}")
@@ -403,16 +403,16 @@ def resilient_training_loop(model, dataset, num_steps):
             if step % 100 == 0:
                 system_health = fault_tolerant_system.check_system_health()
                 if not system_health.is_healthy:
-                    print(f"🔄 Recovering from: {system_health.issues}")
+                    print(f" Recovering from: {system_health.issues}")
                     fault_tolerant_system.recover_from_failure()
 
     except Exception as e:
-        print(f"🚨 Training interrupted: {e}")
+        print(f" Training interrupted: {e}")
         fault_tolerant_system.emergency_checkpoint()
         raise
 ```
 
-## 🤝 Integration with Other Modules
+##  Integration with Other Modules
 
 ```python
 # Integration with distributed MoE
@@ -456,7 +456,7 @@ distributed_system = tpu_config.setup_distributed_training({})
 print(distributed_system.mesh_shape)
 ```
 
-## 📚 References
+##  References
 
 - [JAX Distributed Programming](https://jax.readthedocs.io/en/latest/multi_process.html)
 - [TPU System Architecture](https://cloud.google.com/tpu/docs/system-architecture-tpu-vm)

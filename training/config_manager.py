@@ -813,31 +813,31 @@ CMD ["python", "-m", "capibara.training.meta_consensus_system"]
 # Meta-Consensus Deployment Script for {environment.value}
 set -e
 
-echo "🚀 Deploying Meta-Consensus System ({environment.value})"
+echo " Deploying Meta-Consensus System ({environment.value})"
 
 # Configuration validation
-echo "📋 Validating configuration..."
+echo " Validating configuration..."
 python -c "
 from capibara.training.config_manager import ConfigManager
 from capibara.training.config_manager import Environment
 config_manager = ConfigManager()
 config = config_manager.get_config(Environment.{environment.value.upper()})
-logger.info('✅ Configuration validated')
+logger.info(' Configuration validated')
 "
 
 # Build Docker image
-echo "🏗️ Building Docker image..."
+echo "️ Building Docker image..."
 docker build -t metaconsensus:{environment.value} .
 
 # Run deployment
 if [ "$1" = "docker" ]; then
-    echo "🐳 Deploying with Docker Compose..."
+    echo " Deploying with Docker Compose..."
     docker-compose -f deployment/docker-compose.{environment.value}.yml up -d
 elif [ "$1" = "k8s" ]; then
-    echo "☸️ Deploying to Kubernetes..."
+    echo "️ Deploying to Kubernetes..."
     kubectl apply -f deployment/k8s-deployment.{environment.value}.yaml
 else
-    echo "🖥️ Running standalone..."
+    echo "️ Running standalone..."
     docker run -d \\
         --name metaconsensus-{environment.value} \\
         -p 8000:8000 \\
@@ -848,9 +848,9 @@ else
         metaconsensus:{environment.value}
 fi
 
-echo "✅ Deployment completed!"
-echo "📊 Dashboard: http://localhost:8080"
-echo "🔗 API: http://localhost:8000"
+echo " Deployment completed!"
+echo " Dashboard: http://localhost:8080"
+echo " API: http://localhost:8000"
 '''
         
         script_path = self.deployment_dir / f"deploy-{environment.value}.sh"
@@ -916,18 +916,18 @@ if __name__ == "__main__":
         logger.info(f"Creating configuration for {environment.value}...")
         config = config_manager.create_default_config(environment)
         config_path = config_manager.save_config(config)
-        logger.info(f"✅ Configuration created: {config_path}")
+        logger.info(f" Configuration created: {config_path}")
         
     elif args.action == "validate":
         logger.info(f"Validating configuration for {environment.value}...")
         try:
             config = config_manager.get_config(environment)
-            logger.info("✅ Configuration is valid")
+            logger.info(" Configuration is valid")
             logger.info(f"System: {config.system_name}")
             logger.info(f"Version: {config.version}")
             logger.info(f"Experts: {len(config.experts)}")
         except Exception as e:
-            logger.error(f"❌ Configuration validation failed: {e}")
+            logger.error(f" Configuration validation failed: {e}")
             
     elif args.action == "deploy":
         logger.info(f"Generating deployment files for {environment.value}...")
@@ -939,9 +939,9 @@ if __name__ == "__main__":
         k8s_manifest = deployment_manager.generate_kubernetes_manifest(environment)
         deploy_script = deployment_manager.generate_deployment_script(environment)
         
-        logger.info("✅ Deployment files generated:")
-        logger.info(f"  📄 Dockerfile: {dockerfile}")
-        logger.info(f"  🐳 Docker Compose: {compose_file}")
-        logger.info(f"  ☸️ Kubernetes: {k8s_manifest}")
-        logger.info(f"  🚀 Deploy Script: {deploy_script}")
+        logger.info(" Deployment files generated:")
+        logger.info(f"   Dockerfile: {dockerfile}")
+        logger.info(f"   Docker Compose: {compose_file}")
+        logger.info(f"  ️ Kubernetes: {k8s_manifest}")
+        logger.info(f"   Deploy Script: {deploy_script}")
         logger.info(f"\nTo deploy: ./deployment/deploy-{environment.value}.sh {args.deployment_type}")

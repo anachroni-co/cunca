@@ -146,7 +146,7 @@ class BTXExpertResult:
 
 class BTXTrainingSystem:
     """
-    🚀 Branch-Train-MiX (BTX) Training System
+     Branch-Train-MiX (BTX) Training System
     
     Implements the BTX methodology for efficient expert training:
     1. Seed model preparation and branching
@@ -192,7 +192,7 @@ class BTXTrainingSystem:
         (self.output_base_path / "checkpoints").mkdir(exist_ok=True)
         (self.output_base_path / "logs").mkdir(exist_ok=True)
         
-        logger.info(f"🎭 BTX Training System initialized with {len(expert_configs)} experts")
+        logger.info(f" BTX Training System initialized with {len(expert_configs)} experts")
     
     async def run_btx_training(self) -> Dict[str, Any]:
         """
@@ -202,7 +202,7 @@ class BTXTrainingSystem:
             Comprehensive training results and metrics
         """
         
-        logger.info("🚀 Starting BTX Training Pipeline")
+        logger.info(" Starting BTX Training Pipeline")
         self.metrics.start_time = datetime.now()
         self.metrics.experts_total = len(self.expert_configs)
         
@@ -228,17 +228,17 @@ class BTXTrainingSystem:
             # Generate final report
             final_results = await self._generate_final_report()
             
-            logger.info("✅ BTX Training Pipeline completed successfully")
+            logger.info(" BTX Training Pipeline completed successfully")
             return final_results
             
         except Exception as e:
-            logger.error(f"❌ BTX Training Pipeline failed: {e}")
+            logger.error(f" BTX Training Pipeline failed: {e}")
             return {"status": "failed", "error": str(e), "metrics": self.metrics}
     
     async def _stage_1_seed_preparation(self):
         """Stage 1: Prepare seed model for branching."""
         
-        logger.info("🌱 Stage 1: Seed Model Preparation")
+        logger.info(" Stage 1: Seed Model Preparation")
         self.current_stage = BTXStage.SEED_MODEL_PREPARATION
         
         # Validate seed model
@@ -262,12 +262,12 @@ class BTXTrainingSystem:
                 status=ExpertTrainingStatus.PENDING
             )
         
-        logger.info(f"✅ Created {len(self.expert_configs)} expert branches")
+        logger.info(f" Created {len(self.expert_configs)} expert branches")
     
     async def _stage_2_parallel_training(self):
         """Stage 2: Parallel asynchronous expert training."""
         
-        logger.info("🔄 Stage 2: Parallel Expert Training")
+        logger.info(" Stage 2: Parallel Expert Training")
         self.current_stage = BTXStage.PARALLEL_EXPERT_TRAINING
         
         # Prepare training tasks
@@ -302,12 +302,12 @@ class BTXTrainingSystem:
         # Calculate parallel training metrics
         self._calculate_parallel_metrics()
         
-        logger.info(f"✅ Parallel training completed: {self.metrics.experts_completed} successful, {self.metrics.experts_failed} failed")
+        logger.info(f" Parallel training completed: {self.metrics.experts_completed} successful, {self.metrics.experts_failed} failed")
     
     async def _stage_3_expert_integration(self):
         """Stage 3: Integrate trained experts into MoE architecture."""
         
-        logger.info("🔗 Stage 3: Expert Integration")
+        logger.info(" Stage 3: Expert Integration")
         self.current_stage = BTXStage.EXPERT_INTEGRATION
         
         successful_experts = [
@@ -329,12 +329,12 @@ class BTXTrainingSystem:
         
         self.metrics.integration_success_rate = validation_results["success_rate"]
         
-        logger.info(f"✅ Expert integration completed with {validation_results['success_rate']:.2%} success rate")
+        logger.info(f" Expert integration completed with {validation_results['success_rate']:.2%} success rate")
     
     async def _stage_4_moe_finetuning(self):
         """Stage 4: MoE finetuning with token-level routing."""
         
-        logger.info("🎯 Stage 4: MoE Finetuning")
+        logger.info(" Stage 4: MoE Finetuning")
         self.current_stage = BTXStage.MOE_FINETUNING
         
         # Prepare MoE finetuning data
@@ -353,12 +353,12 @@ class BTXTrainingSystem:
         
         self.metrics.moe_finetuning_loss = finetuning_results["final_loss"]
         
-        logger.info(f"✅ MoE finetuning completed with loss: {finetuning_results['final_loss']:.4f}")
+        logger.info(f" MoE finetuning completed with loss: {finetuning_results['final_loss']:.4f}")
     
     async def _stage_5_routing_optimization(self):
         """Stage 5: Optimize token-level routing."""
         
-        logger.info("🎛️ Stage 5: Routing Optimization")
+        logger.info("️ Stage 5: Routing Optimization")
         self.current_stage = BTXStage.ROUTING_OPTIMIZATION
         
         # Prepare routing optimization data
@@ -373,12 +373,12 @@ class BTXTrainingSystem:
         
         self.metrics.routing_optimization_score = optimization_results[best_strategy]["accuracy"]
         
-        logger.info(f"✅ Routing optimization completed. Best strategy: {best_strategy} ({optimization_results[best_strategy]['accuracy']:.2%})")
+        logger.info(f" Routing optimization completed. Best strategy: {best_strategy} ({optimization_results[best_strategy]['accuracy']:.2%})")
     
     async def _stage_6_consensus_validation(self):
         """Stage 6: Validate consensus quality."""
         
-        logger.info("✅ Stage 6: Consensus Validation")
+        logger.info(" Stage 6: Consensus Validation")
         self.current_stage = BTXStage.CONSENSUS_VALIDATION
         
         # Prepare validation dataset
@@ -390,7 +390,7 @@ class BTXTrainingSystem:
         self.metrics.consensus_quality = validation_results["average_quality"]
         self.metrics.routing_accuracy = validation_results["routing_accuracy"]
         
-        logger.info(f"✅ Consensus validation completed. Quality: {validation_results['average_quality']:.2f}, Accuracy: {validation_results['routing_accuracy']:.2%}")
+        logger.info(f" Consensus validation completed. Quality: {validation_results['average_quality']:.2f}, Accuracy: {validation_results['routing_accuracy']:.2%}")
     
     async def _train_expert_async(self, expert_id: str, config: BTXExpertConfig) -> BTXExpertResult:
         """Train a single expert asynchronously."""
@@ -401,7 +401,7 @@ class BTXTrainingSystem:
         start_time = time.time()
         
         try:
-            logger.info(f"🎯 Training expert {expert_id} ({config.name})")
+            logger.info(f" Training expert {expert_id} ({config.name})")
             
             # Prepare training environment
             training_env = await self._prepare_expert_training_env(expert_id, config)
@@ -434,12 +434,12 @@ class BTXTrainingSystem:
             result.total_steps = training_metrics["total_steps"]
             result.parameter_count = training_metrics["parameter_count"]
             
-            logger.info(f"✅ Expert {expert_id} training completed successfully")
+            logger.info(f" Expert {expert_id} training completed successfully")
             
         except Exception as e:
             result.status = ExpertTrainingStatus.FAILED
             result.error_message = str(e)
-            logger.error(f"❌ Expert {expert_id} training failed: {e}")
+            logger.error(f" Expert {expert_id} training failed: {e}")
         
         return result
     
@@ -972,7 +972,7 @@ if __name__ == "__main__":
         # Run BTX training
         results = await btx_system.run_btx_training()
         
-        logger.info("🚀 BTX Training Results:")
+        logger.info(" BTX Training Results:")
         logger.info(f"Status: {results['status']}")
         logger.info(f"Success Rate: {results['summary']['success_rate']:.2%}")
         logger.info(f"Average Expert Quality: {results['quality_metrics']['average_expert_quality']:.1f}")

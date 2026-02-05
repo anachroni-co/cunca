@@ -582,7 +582,7 @@ class SelfModifyingRouter:
         self.total_routing_decisions = 0
         self.meta_updates_performed = 0
 
-        logger.info("🔀 Self-Modifying Router initialized")
+        logger.info(" Self-Modifying Router initialized")
         logger.info(f"   Level 1 (Routing): Updates every {self.config.routing_policy_config.update_freq} steps")
         logger.info(f"   Level 2 (Meta-Routing): Updates every {self.config.meta_routing_policy_config.meta_update_freq} steps")
 
@@ -706,7 +706,7 @@ def get_global_self_modifying_router() -> SelfModifyingRouter:
 def main():
     """Test the self-modifying router."""
     logging.basicConfig(level=logging.INFO)
-    logger.info("🔀 Self-Modifying Router - Testing Mode")
+    logger.info(" Self-Modifying Router - Testing Mode")
 
     # Create router
     router = create_self_modifying_router()
@@ -740,13 +740,13 @@ def main():
 
     # Final statistics
     final_stats = router.get_statistics()
-    logger.info(f"\n📊 Final Statistics:")
+    logger.info(f"\n Final Statistics:")
     logger.info(f"  Total routing decisions: {final_stats['total_routing_decisions']}")
     logger.info(f"  Total meta-updates: {final_stats['meta_updates_performed']}")
 
     # Modification history
     modifications = router.get_modification_history()
-    logger.info(f"\n🔧 Modification History ({len(modifications)} modifications):")
+    logger.info(f"\n Modification History ({len(modifications)} modifications):")
     for mod in modifications[-5:]:
         logger.info(f"  Step {mod['step']}: {', '.join(mod['modifications'])}")
 

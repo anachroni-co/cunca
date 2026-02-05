@@ -481,11 +481,11 @@ class IncrementalSoupStrategy:
 
         # Suggested optimizations
         validation["optimizations"].extend([
-            "✅ 5 main checkpoints optimize precision",
-            "✅ 3 distilled checkpoints balance efficiency",
-            "✅ Dual inheritance maximizes transferred knowledge",
-            "✅ Hierarchical system enables specialization",
-            "🎯 Optimal configuration for 23.6x ROI"
+            " 5 main checkpoints optimize precision",
+            " 3 distilled checkpoints balance efficiency",
+            " Dual inheritance maximizes transferred knowledge",
+            " Hierarchical system enables specialization",
+            " Optimal configuration for 23.6x ROI"
         ])
         
         return validation
@@ -529,12 +529,12 @@ def analyze_incremental_soup_benefits() -> Dict[str, Any]:
         "soup_details": strategy.get_soup_configuration_details(),
         "validation": strategy.validate_soup_strategy(),
         "key_benefits": [
-            "🍲 Expert Soup increases precision 45-70%",
-            "🚀 Incremental training 2.15x faster",
-            "💰 Only +$46 overhead for massive improvements",
-            "🧠 Dual inheritance preserves all knowledge",
-            "🎯 23.6x ROI with minimal risk",
-            "🔄 Self-adaptive and scalable system"
+            " Expert Soup increases precision 45-70%",
+            " Incremental training 2.15x faster",
+            " Only +$46 overhead for massive improvements",
+            " Dual inheritance preserves all knowledge",
+            " 23.6x ROI with minimal risk",
+            " Self-adaptive and scalable system"
         ],
         "implementation_ready": True
     }

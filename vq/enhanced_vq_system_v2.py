@@ -686,7 +686,7 @@ def benchmark_vq_variants():
     results = {}
     
     for name, config_kwargs in configs:
-        logger.info(f"\n🔬 Benchmarking {name}...")
+        logger.info(f"\n Benchmarking {name}...")
         
         try:
             vq = create_enhanced_vq_layer(
@@ -719,7 +719,7 @@ def benchmark_vq_variants():
             logger.info(f"   MSE: {metrics['mse']:.6f}")
             
         except Exception as e:
-            logger.error(f"   ❌ Failed: {e}")
+            logger.error(f"    Failed: {e}")
             results[name] = {"error": str(e)}
     
     return results
@@ -730,7 +730,7 @@ def benchmark_vq_variants():
 
 def enhanced_example_usage():
     """Demonstrate enhanced VQ system features."""
-    logger.info("🚀 Enhanced VQ System v2.0 Demo")
+    logger.info(" Enhanced VQ System v2.0 Demo")
     logger.info("=" * 60)
     
     key = jax.random.PRNGKey(42)
@@ -773,7 +773,7 @@ def enhanced_example_usage():
     logger.info("\n3️⃣ Benchmarking VQ variants...")
     benchmark_results = benchmark_vq_variants()
     
-    logger.info("\n✅ Enhanced VQ Demo completed!")
+    logger.info("\n Enhanced VQ Demo completed!")
     return benchmark_results
 
 if __name__ == "__main__":

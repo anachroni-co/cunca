@@ -100,7 +100,7 @@ def activate_safety_system(app=None, config: Optional[Dict[str, Any]] = None):
         # Import and initialize components
         from capibara.safety.intervention_system import SafetyIntegrationManager
 
-        logger.info("🔒 Starting mental health protection system...")
+        logger.info(" Starting mental health protection system...")
 
         # Create safety manager
         safety_manager = SafetyIntegrationManager()
@@ -112,21 +112,21 @@ def activate_safety_system(app=None, config: Optional[Dict[str, Any]] = None):
         if app is not None:
             _integrate_with_web_app(app, safety_manager, config)
 
-        logger.info("✅ Mental health protection system activated successfully")
-        logger.info("📋 Active features:")
-        logger.info("   - Usage pattern monitoring: ✅")
-        logger.info("   - Dangerous content filtering: ✅")
-        logger.info("   - Automatic interventions: ✅")
-        logger.info("   - Emergency resources: ✅")
+        logger.info(" Mental health protection system activated successfully")
+        logger.info(" Active features:")
+        logger.info("   - Usage pattern monitoring: ")
+        logger.info("   - Dangerous content filtering: ")
+        logger.info("   - Automatic interventions: ")
+        logger.info("   - Emergency resources: ")
 
         return safety_manager
 
     except ImportError as e:
-        logger.error(f"❌ Error importing safety components: {e}")
-        logger.error("⚠️  SYSTEM RUNNING WITHOUT MENTAL HEALTH PROTECTIONS")
+        logger.error(f" Error importing safety components: {e}")
+        logger.error("️  SYSTEM RUNNING WITHOUT MENTAL HEALTH PROTECTIONS")
         return None
     except Exception as e:
-        logger.error(f"❌ Error activating safety system: {e}")
+        logger.error(f" Error activating safety system: {e}")
         return None
 
 def _setup_safety_logging(logging_config: Dict[str, Any]):
@@ -150,7 +150,7 @@ def _setup_safety_logging(logging_config: Dict[str, Any]):
     # Console handler (only for critical errors)
     console_handler = logging.StreamHandler()
     console_handler.setLevel(logging.ERROR)
-    console_formatter = logging.Formatter('🚨 SAFETY ALERT: %(message)s')
+    console_formatter = logging.Formatter(' SAFETY ALERT: %(message)s')
     console_handler.setFormatter(console_formatter)
     safety_logger.addHandler(console_handler)
 
@@ -201,27 +201,27 @@ def _integrate_with_web_app(app, safety_manager, config: Dict[str, Any]):
             # Middleware handles disclaimer automatically
             pass
 
-        logger.info("🌐 Web integration activated successfully")
+        logger.info(" Web integration activated successfully")
 
     except ImportError:
-        logger.warning("⚠️  Web middleware not available, continuing without web integration")
+        logger.warning("️  Web middleware not available, continuing without web integration")
 
 def create_safety_summary() -> Dict[str, Any]:
     """Create summary of security system status"""
     return {
         "version": __version__,
         "components": {
-            "mental_health_monitor": "✅ Active",
-            "content_filter": "✅ Active",
-            "intervention_system": "✅ Active",
-            "web_middleware": "✅ Active"
+            "mental_health_monitor": " Active",
+            "content_filter": " Active",
+            "intervention_system": " Active",
+            "web_middleware": " Active"
         },
         "protections": {
-            "psychosis_prevention": "✅ Enabled",
-            "usage_monitoring": "✅ Enabled",
-            "content_filtering": "✅ Enabled",
-            "emergency_interventions": "✅ Enabled",
-            "professional_resources": "✅ Available"
+            "psychosis_prevention": " Enabled",
+            "usage_monitoring": " Enabled",
+            "content_filtering": " Enabled",
+            "emergency_interventions": " Enabled",
+            "professional_resources": " Available"
         },
         "emergency_contacts": {
             "suicide_prevention": "988 (US)",
@@ -248,11 +248,11 @@ def verify_safety_system() -> bool:
         test_scores = monitor.analyze_message_content(test_message)
         test_analysis = content_filter.analyze_content(test_message)
 
-        logger.info("✅ Safety system verification completed successfully")
+        logger.info(" Safety system verification completed successfully")
         return True
 
     except Exception as e:
-        logger.error(f"❌ Safety system verification failed: {e}")
+        logger.error(f" Safety system verification failed: {e}")
         return False
 
 # Utility functions for developers
@@ -349,6 +349,6 @@ __all__ = [
 
 # Safety message on import
 if __name__ != "__main__":
-    logger.info("🔒 Mental health safety module loaded")
-    logger.info("📖 Documentation: docs/MENTAL_HEALTH_SAFETY_GUIDE.md")
+    logger.info(" Mental health safety module loaded")
+    logger.info(" Documentation: docs/MENTAL_HEALTH_SAFETY_GUIDE.md")
     logger.info("🆘 Emergencies: 911 | Suicide prevention: 988")

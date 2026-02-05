@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-🎭 Hierarchical Training Pipeline - CapibaraGPT-v2
+ Hierarchical Training Pipeline - CapibaraGPT-v2
 Pipeline complete de entrenamiento with transfer learning progresivo.
 
 Pipeline: 300M LinuxCore → 600M Laptop → 1.2B Humanoid → 3B CodeMaster → 7B PolicyExpert → 13B OmniGenomic
@@ -74,7 +74,7 @@ class HierarchicalTrainingPipeline:
         self.models_config = self._initialize_pipeline_config()
         self.distillation_configs = self._initialize_distillation_configs()
         
-        logger.info("🎭 Hierarchical Training Pipeline initialized")
+        logger.info(" Hierarchical Training Pipeline initialized")
         
     def _initialize_pipeline_config(self) -> Dict[str, ModelConfig]:
         """setup completa del pipeline"""
@@ -247,13 +247,13 @@ class HierarchicalTrainingPipeline:
                 validation["balanced_models"].append({
                     "model": model_name,
                     "ratio": config.target_ratio_tokens_params,
-                    "status": "✅ OPTIMAL"
+                    "status": " OPTIMAL"
                 })
             else:
                 validation["needs_adjustment"].append({
                     "model": model_name,
                     "ratio": config.target_ratio_tokens_params,
-                    "status": "⚠️ NEEDS REVIEW"
+                    "status": "️ NEEDS REVIEW"
                 })
         
         if validation["needs_adjustment"]:
@@ -272,7 +272,7 @@ def validate_training_strategy() -> Dict[str, Any]:
     return {
         "pipeline_overview": pipeline.get_pipeline_overview(),
         "balance_validation": pipeline.validate_pipeline_balance(),
-        "status": "✅ Ready for implementation"
+        "status": " Ready for implementation"
     }
 
 __all__ = [

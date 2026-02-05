@@ -1,26 +1,26 @@
 # Experimental Sub-Models
 
-⚠️ **WARNING**: This directory contains experimental modules that are under active development. They may have incomplete implementations, unstable APIs, or missing tests.
+️ **WARNING**: This directory contains experimental modules that are under active development. They may have incomplete implementations, unstable APIs, or missing tests.
 
 ## Status Legend
 
 | Status | Meaning |
 |--------|---------|
-| 🔬 Research | Early research phase, not ready for use |
-| 🚧 Development | Active development, API may change |
-| 🧪 Testing | Feature complete, needs more testing |
-| ✅ Stable | Production ready |
+|  Research | Early research phase, not ready for use |
+|  Development | Active development, API may change |
+|  Testing | Feature complete, needs more testing |
+|  Stable | Production ready |
 
 ## Module Status
 
 | Module | Status | Description |
 |--------|--------|-------------|
-| `dual_process.py` | 🚧 Development | Dual-process thinking (System 1/2) |
-| `liquid.py` | 🔬 Research | Liquid neural networks |
-| `snns_LiCell.py` | 🔬 Research | Spiking neural networks with LiCell |
-| `spike_ssm.py` | 🔬 Research | Spike-based state space models |
-| `meta_bamdp.py` | 🔬 Research | Meta-learning with BAMDPs |
-| `adaptive_vq_submodel.py` | 🚧 Development | Adaptive vector quantization |
+| `dual_process.py` |  Development | Dual-process thinking (System 1/2) |
+| `liquid.py` |  Research | Liquid neural networks |
+| `snns_LiCell.py` |  Research | Spiking neural networks with LiCell |
+| `spike_ssm.py` |  Research | Spike-based state space models |
+| `meta_bamdp.py` |  Research | Meta-learning with BAMDPs |
+| `adaptive_vq_submodel.py` |  Development | Adaptive vector quantization |
 
 ## Usage Guidelines
 

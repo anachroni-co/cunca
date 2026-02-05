@@ -354,7 +354,7 @@ def process_with_cache(cache: ICache, data: Any) -> Any:
 
 # Type checker will verify interface compliance
 cache = MemoryCache()
-result = process_with_cache(cache, input_data)  # ✓ Valid
+result = process_with_cache(cache, input_data)  #  Valid
 
 # Runtime check with protocols
 if isinstance(component, Configurable):

@@ -135,7 +135,7 @@ class ModelQuantizer:
         
         self.calibration_engine = CalibrationEngine(calib_config)
         
-        logger.info("✅ Model quantizer initialized")
+        logger.info(" Model quantizer initialized")
     
     def quantize_model(self, model_params: Dict[str, Any], 
                       calibration_data: Optional[List[Any]] = None) -> Dict[str, Any]:
@@ -144,21 +144,21 @@ class ModelQuantizer:
             logger.warning("Quantization not available - returning original model")
             return model_params
         
-        logger.info("🔧 Quantizing model for inference")
+        logger.info(" Quantizing model for inference")
         
         # Calibrate quantization parameters
         if calibration_data and self.calibration_engine:
             calibration_params = self.calibration_engine.calibrate_model(
                 model_params, calibration_data
             )
-            logger.info("✅ Model calibration completed")
+            logger.info(" Model calibration completed")
         
         # Quantize weights
         quantized_params = self.quantizer.quantize_weights(model_params)
         
         # Get quantization statistics
         stats = self.quantizer.get_stats()
-        logger.info(f"📊 Quantization stats: {stats['compression_ratio']:.2f}x compression")
+        logger.info(f" Quantization stats: {stats['compression_ratio']:.2f}x compression")
         
         return quantized_params
     
@@ -195,7 +195,7 @@ class QuantizedInferenceEngine:
         if ARM_ENGINE_AVAILABLE and config.enable_arm_optimizations:
             try:
                 self.base_engine = ARMInferenceEngine()
-                logger.info("✅ ARM inference engine initialized")
+                logger.info(" ARM inference engine initialized")
             except Exception as e:
                 logger.warning(f"Failed to initialize ARM engine: {e}")
         
@@ -231,11 +231,11 @@ class QuantizedInferenceEngine:
             'accuracy_metrics': {}
         }
         
-        logger.info(f"⚡ QuantizedInferenceEngine initialized for {config.target_hardware}")
+        logger.info(f" QuantizedInferenceEngine initialized for {config.target_hardware}")
     
     def load_model(self, model_path: str, quantized_model_path: Optional[str] = None):
         """Load model with optional quantization."""
-        logger.info(f"📁 Loading model from {model_path}")
+        logger.info(f" Loading model from {model_path}")
         
         # Load base model
         try:
@@ -247,7 +247,7 @@ class QuantizedInferenceEngine:
                 # Load model parameters directly
                 self.model_params = self._load_model_params(model_path)
             
-            logger.info("✅ Base model loaded")
+            logger.info(" Base model loaded")
         except Exception as e:
             logger.error(f"Failed to load base model: {e}")
             raise
@@ -256,14 +256,14 @@ class QuantizedInferenceEngine:
         if self.config.use_quantization and QUANTIZATION_AVAILABLE:
             if quantized_model_path and Path(quantized_model_path).exists():
                 # Load pre-quantized model
-                logger.info(f"📁 Loading quantized model from {quantized_model_path}")
+                logger.info(f" Loading quantized model from {quantized_model_path}")
                 self.quantized_params = self.model_quantizer.load_quantized_model(quantized_model_path)
                 self.quantization_enabled = True
-                logger.info("✅ Quantized model loaded")
+                logger.info(" Quantized model loaded")
             
             elif self.model_params:
                 # Quantize model on-the-fly
-                logger.info("🔧 Quantizing model on-the-fly")
+                logger.info(" Quantizing model on-the-fly")
                 self.quantized_params = self.model_quantizer.quantize_model(self.model_params)
                 self.quantization_enabled = True
                 
@@ -273,14 +273,14 @@ class QuantizedInferenceEngine:
                         self.quantized_params, quantized_model_path
                     )
                 
-                logger.info("✅ On-the-fly quantization completed")
+                logger.info(" On-the-fly quantization completed")
         
         # Initialize KV-cache if quantization is enabled
         if self.quantization_enabled and self.config.quantize_kv_cache:
             self._initialize_kv_cache()
         
         self.model_loaded = True
-        logger.info("🎯 Model loading completed")
+        logger.info(" Model loading completed")
     
     def _load_model_params(self, model_path: str) -> Dict[str, Any]:
         """Load model parameters from file."""
@@ -319,7 +319,7 @@ class QuantizedInferenceEngine:
             # Register attention layers (this would need model introspection)
             self._register_attention_layers()
             
-            logger.info("✅ Quantized KV-cache initialized")
+            logger.info(" Quantized KV-cache initialized")
             
         except Exception as e:
             logger.warning(f"Failed to initialize KV-cache: {e}")
@@ -383,7 +383,7 @@ class QuantizedInferenceEngine:
     def _quantized_inference(self, input_tokens: np.ndarray, 
                            max_length: int, **kwargs) -> Dict[str, Any]:
         """Perform inference using quantized model."""
-        logger.debug(f"🔧 Running quantized inference on {len(input_tokens)} input tokens")
+        logger.debug(f" Running quantized inference on {len(input_tokens)} input tokens")
         
         generated_tokens = []
         current_tokens = input_tokens.copy()
@@ -421,7 +421,7 @@ class QuantizedInferenceEngine:
     def _fallback_inference(self, input_tokens: np.ndarray, 
                           max_length: int, **kwargs) -> Dict[str, Any]:
         """Fallback to base inference engine."""
-        logger.debug("🔄 Using fallback inference (FP16/BF16)")
+        logger.debug(" Using fallback inference (FP16/BF16)")
         
         if self.base_engine:
             # Use base engine's inference method
@@ -472,7 +472,7 @@ class QuantizedInferenceEngine:
         if not self.model_loaded:
             raise RuntimeError("Model not loaded for benchmarking")
         
-        logger.info(f"🚀 Running benchmark with {len(test_inputs)} inputs, {num_runs} runs each")
+        logger.info(f" Running benchmark with {len(test_inputs)} inputs, {num_runs} runs each")
         
         benchmark_results = {
             'quantized_results': [],
@@ -521,7 +521,7 @@ class QuantizedInferenceEngine:
             fallback_avg_time = np.mean([r['avg_time_ms'] for r in benchmark_results['fallback_results']])
             benchmark_results['speedup_ratio'] = fallback_avg_time / max(quant_avg_time, 0.001)
         
-        logger.info(f"📊 Benchmark completed. Speedup: {benchmark_results['speedup_ratio']:.2f}x")
+        logger.info(f" Benchmark completed. Speedup: {benchmark_results['speedup_ratio']:.2f}x")
         return benchmark_results
     
     def get_stats(self) -> Dict[str, Any]:
@@ -590,7 +590,7 @@ class QuantizedInferenceEngine:
         if self.kv_cache:
             self.kv_cache.clear_cache()
         
-        logger.debug("🧹 Cache cleared")
+        logger.debug(" Cache cleared")
     
     def save_engine_state(self, filepath: str):
         """Save engine state for later restoration."""
@@ -607,7 +607,7 @@ class QuantizedInferenceEngine:
         with open(filepath, 'w') as f:
             json.dump(state, f, indent=2, default=str)
         
-        logger.info(f"💾 Engine state saved to {filepath}")
+        logger.info(f" Engine state saved to {filepath}")
     
     def load_engine_state(self, filepath: str):
         """Load previously saved engine state."""
@@ -618,7 +618,7 @@ class QuantizedInferenceEngine:
         self.quantization_enabled = state.get('quantization_enabled', False)
         self.model_loaded = state.get('model_loaded', False)
         
-        logger.info(f"📁 Engine state loaded from {filepath}")
+        logger.info(f" Engine state loaded from {filepath}")
 
 
 # Utility functions

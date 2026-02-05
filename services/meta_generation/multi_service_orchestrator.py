@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🎭 CAPIBARA TEXT-TO-GEN MULTI-SERVICE ORCHESTRATOR
+ CAPIBARA TEXT-TO-GEN MULTI-SERVICE ORCHESTRATOR
 =================================================
 
 Orquestador avanzado que combina múltiples servicios text-to-* para crear
@@ -303,21 +303,21 @@ class MultiServiceOrchestrator:
             "api": self._mock_api_service
         }
         
-        logger.info("✅ MultiServiceOrchestrator initialized")
+        logger.info(" MultiServiceOrchestrator initialized")
     
     async def execute_multi_service_project(self, request: MultiServiceRequest) -> MultiServiceResult:
         """Ejecuta proyecto multi-servicio completo"""
         start_time = datetime.now()
         
         try:
-            logger.info(f"🎭 Starting multi-service project: {request.project_name}")
-            logger.info(f"📝 Description: {request.project_description[:200]}...")
+            logger.info(f" Starting multi-service project: {request.project_name}")
+            logger.info(f" Description: {request.project_description[:200]}...")
             
             # Análisis del proyecto
             analysis = self.analyzer.analyze_project(request.project_description)
-            logger.info(f"📊 Services required: {analysis['required_services']}")
-            logger.info(f"🎯 Project type: {analysis['project_type'].value}")
-            logger.info(f"⏱️ Estimated time: {analysis['estimated_time']}s")
+            logger.info(f" Services required: {analysis['required_services']}")
+            logger.info(f" Project type: {analysis['project_type'].value}")
+            logger.info(f"️ Estimated time: {analysis['estimated_time']}s")
             
             # Crear directorio del proyecto
             project_path = self.project_dir / request.project_name
@@ -364,15 +364,15 @@ class MultiServiceOrchestrator:
             # Guardar resultado del proyecto
             await self._save_project_result(result, project_path)
             
-            logger.info(f"✅ Multi-service project completed: {request.project_name}")
-            logger.info(f"📊 Services executed: {len(service_results)}")
-            logger.info(f"⏱️ Total time: {execution_time:.1f}s")
+            logger.info(f" Multi-service project completed: {request.project_name}")
+            logger.info(f" Services executed: {len(service_results)}")
+            logger.info(f"️ Total time: {execution_time:.1f}s")
             
             return result
             
         except Exception as e:
             execution_time = (datetime.now() - start_time).total_seconds()
-            logger.error(f"❌ Multi-service project failed: {e}")
+            logger.error(f" Multi-service project failed: {e}")
             
             return MultiServiceResult(
                 success=False,
@@ -391,7 +391,7 @@ class MultiServiceOrchestrator:
         
         # Ejecutar servicios paralelos primero
         if parallel_services:
-            logger.info(f"⚡ Executing {len(parallel_services)} parallel services...")
+            logger.info(f" Executing {len(parallel_services)} parallel services...")
             parallel_tasks = []
             
             for step in parallel_services:
@@ -407,14 +407,14 @@ class MultiServiceOrchestrator:
                 try:
                     result = await task
                     service_results[service_name] = result
-                    logger.info(f"   ✅ {service_name} completed")
+                    logger.info(f"    {service_name} completed")
                 except Exception as e:
-                    logger.error(f"   ❌ {service_name} failed: {e}")
+                    logger.error(f"    {service_name} failed: {e}")
                     service_results[service_name] = {"success": False, "error": str(e)}
         
         # Ejecutar servicios secuenciales
         if sequential_services:
-            logger.info(f"🔄 Executing {len(sequential_services)} sequential services...")
+            logger.info(f" Executing {len(sequential_services)} sequential services...")
             
             for step in sequential_services:
                 service_name = step["service"]
@@ -424,9 +424,9 @@ class MultiServiceOrchestrator:
                             service_name, request, project_path, step
                         )
                         service_results[service_name] = result
-                        logger.info(f"   ✅ {service_name} completed")
+                        logger.info(f"    {service_name} completed")
                     except Exception as e:
-                        logger.error(f"   ❌ {service_name} failed: {e}")
+                        logger.error(f"    {service_name} failed: {e}")
                         service_results[service_name] = {"success": False, "error": str(e)}
         
         return service_results
@@ -645,7 +645,7 @@ class MultiServiceOrchestrator:
 
 ### Compatibilidad
 - Verificaciones realizadas: {len(integration.get('compatibility_checks', {}))}
-- Estado: {'✅ Exitosa' if integration.get('integration_success') else '❌ Con problemas'}
+- Estado: {' Exitosa' if integration.get('integration_success') else ' Con problemas'}
 
 ### Sugerencias de Optimización
 """

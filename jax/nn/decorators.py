@@ -153,7 +153,7 @@ try:
                             item.block_until_ready()
                 
                 end_time = time.time()
-                logger.info(f"⏱️  {func_name}: {(end_time - start_time) * 1000:.2f}ms")
+                logger.info(f"️  {func_name}: {(end_time - start_time) * 1000:.2f}ms")
                 
                 return result
             return wrapper
@@ -176,7 +176,7 @@ try:
                 
                 # Rough estimate: assume 1 FLOP per input element
                 estimated_flops = total_elements
-                logger.info(f"🔢 {func_name}: ~{estimated_flops:,} FLOPs")
+                logger.info(f" {func_name}: ~{estimated_flops:,} FLOPs")
                 
                 return result
             return wrapper
@@ -236,7 +236,7 @@ try:
                     if output.shape == original_x.shape:
                         output = output + original_x
                     else:
-                        logger.warning(f"⚠️  Residual skip: shape mismatch {output.shape} vs {original_x.shape}")
+                        logger.warning(f"️  Residual skip: shape mismatch {output.shape} vs {original_x.shape}")
                 
                 return output
             return wrapper
@@ -357,7 +357,7 @@ except ImportError:
                 start_time = time.time()
                 result = func(*args, **kwargs)
                 end_time = time.time()
-                logger.info(f"⏱️  {func_name}: {(end_time - start_time) * 1000:.2f}ms")
+                logger.info(f"️  {func_name}: {(end_time - start_time) * 1000:.2f}ms")
                 return result
             return wrapper
         return decorator

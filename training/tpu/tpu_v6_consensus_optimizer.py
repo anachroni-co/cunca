@@ -119,7 +119,7 @@ class TPUConsensusMetrics:
 
 class TPUv6ConsensusOptimizer:
     """
-    🚀 TPU v6 Consensus Optimizer
+     TPU v6 Consensus Optimizer
     
     Implements TPU v6-64 specific optimizations for meta-consensus:
     - Mesh parallelism across 64 cores
@@ -147,7 +147,7 @@ class TPUv6ConsensusOptimizer:
             self._initialize_tpu_mesh()
             self._compile_consensus_functions()
         
-        logger.info(f"🚀 TPU v6 Consensus Optimizer initialized for {config.tpu_cores} cores")
+        logger.info(f" TPU v6 Consensus Optimizer initialized for {config.tpu_cores} cores")
     
     def _initialize_tpu_mesh(self):
         """Initialize TPU v6 mesh for distributed consensus."""
@@ -160,12 +160,12 @@ class TPUv6ConsensusOptimizer:
                 mesh_devices = np.array(devices[:self.config.tpu_cores]).reshape(self.config.mesh_shape)
                 self.mesh = Mesh(mesh_devices, axis_names=('x', 'y'))
                 
-                logger.info(f"✅ TPU v6 mesh initialized: {self.config.mesh_shape} ({self.config.tpu_cores} cores)")
+                logger.info(f" TPU v6 mesh initialized: {self.config.mesh_shape} ({self.config.tpu_cores} cores)")
             else:
-                logger.warning(f"⚠️ Only {len(devices)} TPU devices available, need {self.config.tpu_cores}")
+                logger.warning(f"️ Only {len(devices)} TPU devices available, need {self.config.tpu_cores}")
                 
         except Exception as e:
-            logger.error(f"❌ TPU mesh initialization failed: {e}")
+            logger.error(f" TPU mesh initialization failed: {e}")
     
     def _compile_consensus_functions(self):
         """Compile JAX functions for TPU optimization."""
@@ -187,7 +187,7 @@ class TPUv6ConsensusOptimizer:
             vmap(self._compute_expert_similarity, in_axes=(None, 0, 0))
         )
         
-        logger.info("✅ JAX functions compiled for TPU v6")
+        logger.info(" JAX functions compiled for TPU v6")
     
     @jit
     def _process_experts_on_mesh(self, query_embedding, expert_embeddings, num_experts):
@@ -844,13 +844,13 @@ if __name__ == "__main__":
             "Optimize neural network performance"
         ]
         
-        logger.info("🚀 TPU v6 Consensus Optimization Test")
+        logger.info(" TPU v6 Consensus Optimization Test")
         logger.info("=" * 50)
         
         if JAX_AVAILABLE:
             # Run consensus optimization
             for i, query in enumerate(test_queries):
-                logger.info(f"\n📝 Query {i+1}: {query}")
+                logger.info(f"\n Query {i+1}: {query}")
                 
                 result = await optimizer.optimize_consensus_for_tpu_v6(
                     query=query,
@@ -865,14 +865,14 @@ if __name__ == "__main__":
                 logger.info(f"  TPU Cores Used: {result['tpu_cores_used']}")
             
             # Run benchmarks
-            logger.info(f"\n📊 Running TPU Consensus Benchmarks...")
+            logger.info(f"\n Running TPU Consensus Benchmarks...")
             
             benchmark_results = await optimizer.benchmark_tpu_consensus(
                 test_queries[:3],  # Use subset for benchmarking
                 [expert_pool] * 3
             )
             
-            logger.info(f"\n🏆 TPU Benchmark Results:")
+            logger.info(f"\n TPU Benchmark Results:")
             for mode, metrics in benchmark_results.items():
                 logger.info(f"\n{mode.upper()}:")
                 logger.info(f"  Consensus Time: {metrics['avg_consensus_time_ms']:.1f}ms")
@@ -883,14 +883,14 @@ if __name__ == "__main__":
             
             # Get optimization status
             status = optimizer.get_tpu_optimization_status()
-            logger.info(f"\n🔧 TPU Optimization Status:")
+            logger.info(f"\n TPU Optimization Status:")
             logger.info(f"  Mesh Initialized: {status['optimization_features']['mesh_initialized']}")
             logger.info(f"  Compiled Functions: {status['optimization_features']['compiled_functions']}")
             logger.info(f"  Performance: {status['performance_status']['consensus_ops_per_sec']:.1f} ops/sec")
             logger.info(f"  Core Utilization: {status['performance_status']['avg_core_utilization']:.1%}")
             
         else:
-            logger.warning("❌ JAX not available - TPU v6 optimizations disabled")
+            logger.warning(" JAX not available - TPU v6 optimizations disabled")
             logger.warning("Using fallback implementations")
     
     import asyncio

@@ -1,12 +1,12 @@
 """AdaptiveWrapper – v2.0
 ================================================
 Mejoras key about la versión previa:
-* ✨ **Config dataclass** for tipado estricto and valores by defect.
-* 🧩 `pjit`‑ready: parámetros with `param_with_axes`; output with la misma `PartitionSpec`.
-* ⚡️ FFT usa `jnp.fft.rfft` (mitad de memory) and `jax.checkpoint`.
+*  **Config dataclass** for tipado estricto and valores by defect.
+*  `pjit`‑ready: parámetros with `param_with_axes`; output with la misma `PartitionSpec`.
+* ️ FFT usa `jnp.fft.rfft` (mitad de memory) and `jax.checkpoint`.
 * 🪶 Métricas se almacenan en collection `metrics` → mutables but outside de grad.
-* 🤏 Coherencia and entrelazamiento se calculan with aproximaciones lineales or(N) (without `outer`, without `svd`).
-* 🧠 `adaptive_attention` envuelto en `jax.checkpoint` for activate CSE + remat.
+*  Coherencia and entrelazamiento se calculan with aproximaciones lineales or(N) (without `outer`, without `svd`).
+*  `adaptive_attention` envuelto en `jax.checkpoint` for activate CSE + remat.
 * 🩹 Validaciones de type/forma and conversion a `dtype` en un only lugar.
 """
 

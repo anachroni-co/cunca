@@ -111,7 +111,7 @@ class TPUv6eInferenceEngine:
     
     def load_model(self):
         """Load model on TPU v6e."""
-        logger.info(f"🚀 Loading model on TPU v6e: {self.model_path}")
+        logger.info(f" Loading model on TPU v6e: {self.model_path}")
 
         try:
             # Configure JAX for TPU
@@ -148,10 +148,10 @@ class TPUv6eInferenceEngine:
             self._compile_generation_function()
             
             self.loaded = True
-            logger.info(f"✅ TPU v6e model loaded successfully with mesh {mesh_shape}")
+            logger.info(f" TPU v6e model loaded successfully with mesh {mesh_shape}")
             
         except Exception as e:
-            logger.error(f"❌ Failed to load model on TPU v6e: {e}")
+            logger.error(f" Failed to load model on TPU v6e: {e}")
             raise
     
     def _load_model_params(self):
@@ -264,7 +264,7 @@ class GPUInferenceEngine:
     
     def load_model(self):
         """Load model on GPU/CPU."""
-        logger.info(f"💻 Loading model on GPU/CPU: {self.model_path}")
+        logger.info(f" Loading model on GPU/CPU: {self.model_path}")
 
         try:
             # Detect device
@@ -291,10 +291,10 @@ class GPUInferenceEngine:
             self.model.eval()
             self.loaded = True
             
-            logger.info(f"✅ Model loaded successfully on {self.device}")
+            logger.info(f" Model loaded successfully on {self.device}")
             
         except Exception as e:
-            logger.error(f"❌ Failed to load model on GPU/CPU: {e}")
+            logger.error(f" Failed to load model on GPU/CPU: {e}")
             raise
     
     async def generate(self, prompt: str, **kwargs) -> InferenceResult:
@@ -362,8 +362,8 @@ class HybridInferenceEngine:
         else:
             self.selected_backend = config.backend
         
-        logger.info(f"🔧 Hybrid engine initialized with backend: {self.selected_backend}")
-        logger.info(f"📊 Available backends: {[b.value for b in self.available_backends]}")
+        logger.info(f" Hybrid engine initialized with backend: {self.selected_backend}")
+        logger.info(f" Available backends: {[b.value for b in self.available_backends]}")
     
     def _detect_available_backends(self) -> List[InferenceBackend]:
         """Detect available backends."""
@@ -402,7 +402,7 @@ class HybridInferenceEngine:
         self.config.model_path = model_path
 
         if model_path in self.model_cache:
-            logger.info(f"📋 Using cached model: {model_path}")
+            logger.info(f" Using cached model: {model_path}")
             self.active_engine = self.model_cache[model_path]
             return
 
@@ -420,7 +420,7 @@ class HybridInferenceEngine:
             self.model_cache[model_path] = engine
         
         self.active_engine = engine
-        logger.info(f"✅ Model loaded successfully on {self.selected_backend.value}")
+        logger.info(f" Model loaded successfully on {self.selected_backend.value}")
     
     async def generate(self, prompt: str, **kwargs) -> InferenceResult:
         """Generate text using the active engine."""
@@ -442,10 +442,10 @@ class HybridInferenceEngine:
             return result
 
         except Exception as e:
-            logger.error(f"❌ Generation failed: {e}")
+            logger.error(f" Generation failed: {e}")
             # Fallback to CPU if there's an error
             if self.selected_backend != InferenceBackend.CPU:
-                logger.warning("🔄 Falling back to CPU")
+                logger.warning(" Falling back to CPU")
                 await self._fallback_to_cpu(prompt, **kwargs)
             raise
     
@@ -485,7 +485,7 @@ class HybridInferenceEngine:
         if backend not in self.available_backends:
             raise ValueError(f"Backend {backend.value} not available")
         
-        logger.info(f"🔄 Switching from {self.selected_backend.value} to {backend.value}")
+        logger.info(f" Switching from {self.selected_backend.value} to {backend.value}")
         
         self.selected_backend = backend
         self.active_engine = None

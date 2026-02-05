@@ -24,17 +24,17 @@ from agents.e2b_sandbox_agent import E2BSandboxAgent
 
 def basic_sandbox_example():
     """Basic example of creating and using a sandbox."""
-    logger.info("🚀 Basic E2B Sandbox Example")
+    logger.info(" Basic E2B Sandbox Example")
     logger.info("-" * 40)
 
     try:
         # Initialize the agent
         agent = E2BSandboxAgent()
-        logger.info("✅ E2B Sandbox Agent initialized")
+        logger.info(" E2B Sandbox Agent initialized")
 
         # Create a new sandbox
         sandbox_id = agent.create_sandbox("basic_example")
-        logger.info(f"✅ Created sandbox: {sandbox_id}")
+        logger.info(f" Created sandbox: {sandbox_id}")
 
         # Execute simple Python code
         code = """
@@ -48,28 +48,28 @@ logger.info(f"2 + 2 = {result}")
 
         result = agent.execute_code(sandbox_id, code)
         if result["success"]:
-            logger.info("✅ Code executed successfully!")
-            logger.info("📄 Logs:")
+            logger.info(" Code executed successfully!")
+            logger.info(" Logs:")
             for log in result["logs"]:
                 logger.info(f"  {log}")
         else:
-            logger.error(f"❌ Execution failed: {result['error']}")
+            logger.error(f" Execution failed: {result['error']}")
 
         # List files in the sandbox
         files = agent.list_files(sandbox_id)
-        logger.info(f"📁 Files in root directory: {len(files)} items")
+        logger.info(f" Files in root directory: {len(files)} items")
 
         # Close the sandbox
         agent.close_sandbox(sandbox_id)
-        logger.info("✅ Sandbox closed")
+        logger.info(" Sandbox closed")
 
     except Exception as e:
-        logger.error(f"❌ Error: {str(e)}")
+        logger.error(f" Error: {str(e)}")
 
 
 def file_operations_example():
     """Example of file operations in sandbox."""
-    logger.info("\n📁 File Operations Example")
+    logger.info("\n File Operations Example")
     logger.info("-" * 40)
 
     try:
@@ -99,23 +99,23 @@ with open('/tmp/sample_data.csv', 'r') as f:
 
         result = agent.execute_code(sandbox_id, code)
         if result["success"]:
-            logger.info("✅ File operations completed!")
+            logger.info(" File operations completed!")
             for log in result["logs"]:
                 logger.info(f"  {log}")
 
         # List files in /tmp
         files = agent.list_files(sandbox_id, "/tmp")
-        logger.info(f"📁 Files in /tmp: {[f.get('name', 'unknown') for f in files]}")
+        logger.info(f" Files in /tmp: {[f.get('name', 'unknown') for f in files]}")
 
         agent.close_sandbox(sandbox_id)
 
     except Exception as e:
-        logger.error(f"❌ Error: {str(e)}")
+        logger.error(f" Error: {str(e)}")
 
 
 def data_analysis_example():
     """Example of data analysis in sandbox."""
-    logger.info("\n📊 Data Analysis Example")
+    logger.info("\n Data Analysis Example")
     logger.info("-" * 40)
 
     try:
@@ -173,19 +173,19 @@ logger.info("\\nAnalysis results saved to /tmp/analysis_results.json")
 
         result = agent.execute_code(sandbox_id, code)
         if result["success"]:
-            logger.info("✅ Data analysis completed!")
+            logger.info(" Data analysis completed!")
             for log in result["logs"]:
                 logger.info(f"  {log}")
 
         agent.close_sandbox(sandbox_id)
 
     except Exception as e:
-        logger.error(f"❌ Error: {str(e)}")
+        logger.error(f" Error: {str(e)}")
 
 
 def multi_sandbox_example():
     """Example of managing multiple sandboxes."""
-    logger.info("\n🔄 Multi-Sandbox Example")
+    logger.info("\n Multi-Sandbox Example")
     logger.info("-" * 40)
 
     try:
@@ -195,7 +195,7 @@ def multi_sandbox_example():
         sandbox1 = agent.create_sandbox("worker_1")
         sandbox2 = agent.create_sandbox("worker_2")
 
-        logger.info(f"✅ Created sandboxes: {agent.list_active_sandboxes()}")
+        logger.info(f" Created sandboxes: {agent.list_active_sandboxes()}")
 
         # Execute different tasks in each sandbox
         task1 = "print('Worker 1: Processing task A'); result_a = sum(range(100)); print(f'Sum 1-99: {result_a}')"
@@ -204,24 +204,24 @@ def multi_sandbox_example():
         result1 = agent.execute_code(sandbox1, task1)
         result2 = agent.execute_code(sandbox2, task2)
 
-        logger.info("📊 Results from Worker 1:")
+        logger.info(" Results from Worker 1:")
         for log in result1["logs"]:
             logger.info(f"  {log}")
 
-        logger.info("📊 Results from Worker 2:")
+        logger.info(" Results from Worker 2:")
         for log in result2["logs"]:
             logger.info(f"  {log}")
 
         # Close all sandboxes
         closed_count = agent.close_all_sandboxes()
-        logger.info(f"✅ Closed {closed_count} sandboxes")
+        logger.info(f" Closed {closed_count} sandboxes")
 
     except Exception as e:
-        logger.error(f"❌ Error: {str(e)}")
+        logger.error(f" Error: {str(e)}")
 
 
 if __name__ == "__main__":
-    logger.info("🏖️ E2B Sandbox Agent Examples")
+    logger.info("️ E2B Sandbox Agent Examples")
     logger.info("=" * 50)
 
     # Run all examples
@@ -230,7 +230,7 @@ if __name__ == "__main__":
     data_analysis_example()
     multi_sandbox_example()
 
-    logger.info("\n🎉 All examples completed!")
+    logger.info("\n All examples completed!")
     logger.info("\nNext steps:")
     logger.info("- Check the E2B dashboard for usage statistics")
     logger.info("- Explore advanced E2B features like custom templates")

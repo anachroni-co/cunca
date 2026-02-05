@@ -18,10 +18,10 @@ try:
     from . import similarity_kernels
     from . import aggregation_kernels
     CYTHON_AVAILABLE = True
-    logger.info("✅ Cython kernels loaded successfully - 20x speedup enabled")
+    logger.info(" Cython kernels loaded successfully - 20x speedup enabled")
 except ImportError as e:
-    logger.warning(f"⚠️ Cython kernels not available: {e}")
-    logger.warning("🔄 Falling back to pure Python implementations")
+    logger.warning(f"️ Cython kernels not available: {e}")
+    logger.warning(" Falling back to pure Python implementations")
     consensus_kernels = None
     routing_kernels = None
     similarity_kernels = None
@@ -327,28 +327,28 @@ def compile_cython_kernels():
     
     if os.path.exists(setup_path):
         try:
-            logger.info("🔧 Compiling Cython kernels...")
+            logger.info(" Compiling Cython kernels...")
             result = subprocess.run([
                 sys.executable, setup_path, 'build_ext', '--inplace'
             ], cwd=kernel_dir, capture_output=True, text=True)
             
             if result.returncode == 0:
-                logger.info("✅ Cython kernels compiled successfully")
+                logger.info(" Cython kernels compiled successfully")
                 return True
             else:
-                logger.error(f"❌ Cython compilation failed: {result.stderr}")
+                logger.error(f" Cython compilation failed: {result.stderr}")
                 return False
         except Exception as e:
-            logger.error(f"❌ Cython compilation error: {e}")
+            logger.error(f" Cython compilation error: {e}")
             return False
     else:
-        logger.warning("⚠️ Cython setup.py not found")
+        logger.warning("️ Cython setup.py not found")
         return False
 
 
 # Auto-compile on import if needed
 if not CYTHON_AVAILABLE:
-    logger.info("🔄 Attempting to compile Cython kernels...")
+    logger.info(" Attempting to compile Cython kernels...")
     if compile_cython_kernels():
         # Try to reload modules
         try:
@@ -358,6 +358,6 @@ if not CYTHON_AVAILABLE:
             from . import aggregation_kernels
             CYTHON_AVAILABLE = True
             kernel_manager.cython_available = True
-            logger.info("✅ Cython kernels compiled and loaded successfully")
+            logger.info(" Cython kernels compiled and loaded successfully")
         except ImportError:
-            logger.warning("⚠️ Could not load compiled Cython kernels")
+            logger.warning("️ Could not load compiled Cython kernels")

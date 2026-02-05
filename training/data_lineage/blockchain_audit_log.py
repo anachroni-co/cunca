@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-🔗 Blockchain-like Audit Log for Training Data Traceability
+ Blockchain-like Audit Log for Training Data Traceability
 ===========================================================
 
 Immutable audit trail system that creates a blockchain-like structure
@@ -128,7 +128,7 @@ class AuditBlock:
             self.nonce += 1
             self.block_hash = self.compute_block_hash()
         
-        logger.info(f"✅ Block {self.block_id} mined with nonce {self.nonce}")
+        logger.info(f" Block {self.block_id} mined with nonce {self.nonce}")
 
 class BlockchainAuditLog:
     """
@@ -154,7 +154,7 @@ class BlockchainAuditLog:
         # Load existing blockchain or create genesis block
         self._load_or_create_genesis()
         
-        logger.info(f"🔗 BlockchainAuditLog initialized with {len(self.blocks)} blocks")
+        logger.info(f" BlockchainAuditLog initialized with {len(self.blocks)} blocks")
     
     def _load_or_create_genesis(self):
         """Load existing blockchain or create genesis block."""
@@ -196,7 +196,7 @@ class BlockchainAuditLog:
         self.blocks.append(genesis_block)
         self._save_blockchain()
         
-        logger.info("🎬 Genesis block created and mined")
+        logger.info(" Genesis block created and mined")
     
     def add_training_event(
         self,
@@ -241,7 +241,7 @@ class BlockchainAuditLog:
         if len(self.current_entries) >= self.max_entries_per_block:
             self._create_new_block()
         
-        logger.debug(f"📝 Training event added for dataset {dataset_id}")
+        logger.debug(f" Training event added for dataset {dataset_id}")
         return entry.entry_id
     
     def _create_new_block(self):
@@ -266,7 +266,7 @@ class BlockchainAuditLog:
         # Save updated blockchain
         self._save_blockchain()
         
-        logger.info(f"⛓️ New block created: {new_block.block_id} with {len(new_block.entries)} entries")
+        logger.info(f"️ New block created: {new_block.block_id} with {len(new_block.entries)} entries")
     
     def verify_blockchain_integrity(self) -> Tuple[bool, List[str]]:
         """Verify the integrity of the entire blockchain."""
@@ -300,9 +300,9 @@ class BlockchainAuditLog:
         
         is_valid = len(issues) == 0
         if is_valid:
-            logger.info("✅ Blockchain integrity verified - no issues found")
+            logger.info(" Blockchain integrity verified - no issues found")
         else:
-            logger.error(f"❌ Blockchain integrity issues: {issues}")
+            logger.error(f" Blockchain integrity issues: {issues}")
         
         return is_valid, issues
     
@@ -420,7 +420,7 @@ class BlockchainAuditLog:
         with open(output_path, 'w') as f:
             json.dump(report, f, indent=2, default=str)
         
-        logger.info(f"📊 Audit report exported to {output_path}")
+        logger.info(f" Audit report exported to {output_path}")
         return report
     
     def _save_blockchain(self):
@@ -509,7 +509,7 @@ class BlockchainAuditLog:
             )
             self.blocks.append(block)
         
-        logger.info(f"📚 Loaded blockchain with {len(self.blocks)} blocks")
+        logger.info(f" Loaded blockchain with {len(self.blocks)} blocks")
 
 # Factory function
 def create_blockchain_audit_log(log_dir: str = "training_audit_logs") -> BlockchainAuditLog:

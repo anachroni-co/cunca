@@ -97,9 +97,9 @@ class GenomicDatasetLoader:
         self.available_datasets = GENOMIC_DATASETS.copy()
         self.loaded_datasets = {}
         
-        logger.info("🧬 Genomic dataset loader initialized")
-        logger.info(f"   📁 Base path: {self.base_path}")
-        logger.info(f"   📊 Available datasets: {len(self.available_datasets)}")
+        logger.info(" Genomic dataset loader initialized")
+        logger.info(f"    Base path: {self.base_path}")
+        logger.info(f"    Available datasets: {len(self.available_datasets)}")
     
     def list_datasets(self) -> List[str]:
         """Lists available genomic datasets."""
@@ -113,7 +113,7 @@ class GenomicDatasetLoader:
                           sequence_type: str = 'coding',
                           max_sequences: int = 1000) -> Dict[str, Any]:
         """Loads DNA sequences."""
-        logger.info(f"📥 Loading DNA sequences: {organism} ({sequence_type})")
+        logger.info(f" Loading DNA sequences: {organism} ({sequence_type})")
         
         # In real implementation, would load from FASTA files
         # For now, generate simulated data
@@ -148,7 +148,7 @@ class GenomicDatasetLoader:
     
     def load_protein_sequences(self, max_sequences: int = 500) -> Dict[str, Any]:
         """Loads protein sequences."""
-        logger.info(f"📥 Loading protein sequences (max: {max_sequences})")
+        logger.info(f" Loading protein sequences (max: {max_sequences})")
         
         sequences = []
         amino_acids = list(self.processor.amino_acid_map.keys())[:-1]  # Exclude X
@@ -179,7 +179,7 @@ class GenomicDatasetLoader:
                                  num_genes: int = 1000,
                                  num_samples: int = 100) -> Dict[str, Any]:
         """Loads gene expression data."""
-        logger.info(f"📥 Loading gene expression data: {condition}")
+        logger.info(f" Loading gene expression data: {condition}")
         
         # Generate simulated expression matrix
         expression_matrix = np.random.lognormal(mean=0, sigma=1, size=(num_genes, num_samples))
@@ -205,7 +205,7 @@ class GenomicDatasetLoader:
                              chromosome: str = 'chr1',
                              max_variants: int = 10000) -> Dict[str, Any]:
         """Loads genetic variants."""
-        logger.info(f"📥 Loading genetic variants: {population} ({chromosome})")
+        logger.info(f" Loading genetic variants: {population} ({chromosome})")
         
         variants = []
         for i in range(min(max_variants, 1000)):  # Limit for demo
@@ -269,11 +269,11 @@ class GenomicDatasetLoader:
 
 def print_dataset_summary():
     """Prints summary of available genomic datasets."""
-    logger.info("🧬 GENOMIC DATASETS SUMMARY")
+    logger.info(" GENOMIC DATASETS SUMMARY")
     logger.info("=" * 50)
     
     for name, info in GENOMIC_DATASETS.items():
-        logger.info(f"\n📊 {name.upper()}")
+        logger.info(f"\n {name.upper()}")
         logger.info(f"   Description: {info['description']}")
         logger.info(f"   Format: {info['format']}")
         logger.info(f"   Size: {info['size']}")
@@ -302,7 +302,7 @@ __all__ = [
 ]
 
 # Initialize logging
-logger.info("🧬 Genomic datasets module loaded successfully")
+logger.info(" Genomic datasets module loaded successfully")
 
 if __name__ == "__main__":
     print_dataset_summary()

@@ -74,7 +74,7 @@ class QuantizationSystem:
         # Initialize components
         self._initialize_components()
         
-        logger.info("⚡ Quantization System initialized")
+        logger.info(" Quantization System initialized")
     
     def _detect_available_components(self) -> Dict[str, bool]:
         """Detect available quantization components."""
@@ -93,7 +93,7 @@ class QuantizationSystem:
             try:
                 quant_config = QuantizationConfig(**self.config.get('quantization', {}))
                 self.quantizer = INT8Quantizer(quant_config)
-                logger.info("✅ INT8 quantizer initialized")
+                logger.info(" INT8 quantizer initialized")
             except Exception as e:
                 logger.warning(f"Failed to initialize quantizer: {e}")
         
@@ -102,7 +102,7 @@ class QuantizationSystem:
             try:
                 kv_config = KVCacheConfig(**self.config.get('kv_cache', {}))
                 self.kv_cache = KVCacheINT8(kv_config)
-                logger.info("✅ KV-cache INT8 initialized")
+                logger.info(" KV-cache INT8 initialized")
             except Exception as e:
                 logger.warning(f"Failed to initialize KV-cache: {e}")
         
@@ -111,7 +111,7 @@ class QuantizationSystem:
             try:
                 calib_config = CalibrationConfig(**self.config.get('calibration', {}))
                 self.calibration_engine = CalibrationEngine(calib_config)
-                logger.info("✅ Calibration engine initialized")
+                logger.info(" Calibration engine initialized")
             except Exception as e:
                 logger.warning(f"Failed to initialize calibration: {e}")
         
@@ -254,8 +254,8 @@ logger.info(f"Quantization module initialized (v{__version__})")
 logger.info(f"Available quantization components: {sum([QUANTIZATION_AVAILABLE, QUANTIZED_LAYERS_AVAILABLE, KV_CACHE_INT8_AVAILABLE, CALIBRATION_AVAILABLE])}/4")
 
 if sum([QUANTIZATION_AVAILABLE, QUANTIZED_LAYERS_AVAILABLE, KV_CACHE_INT8_AVAILABLE]) >= 2:
-    logger.info("⚡ Advanced quantization capabilities ready")
+    logger.info(" Advanced quantization capabilities ready")
 elif any([QUANTIZATION_AVAILABLE, QUANTIZED_LAYERS_AVAILABLE, KV_CACHE_INT8_AVAILABLE]):
-    logger.info("🔧 Basic quantization capabilities available")
+    logger.info(" Basic quantization capabilities available")
 else:
-    logger.warning("⚠️ Limited quantization capabilities")
+    logger.warning("️ Limited quantization capabilities")

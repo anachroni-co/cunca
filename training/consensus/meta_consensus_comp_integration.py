@@ -132,7 +132,7 @@ class SystemStatus:
 
 class MetaConsensusCompSystem:
     """
-    🎭 Meta-Consensus-Comp Integrated System
+     Meta-Consensus-Comp Integrated System
     
     The main integration layer that combines all meta-consensus-comp components:
     - Optimized meta-consensus with comp optimizations (5-15x speedup)
@@ -161,13 +161,13 @@ class MetaConsensusCompSystem:
         self.query_history: List[Dict[str, Any]] = []
         self.performance_metrics: Dict[str, float] = {}
         
-        logger.info(f"🎭 Meta-Consensus-Comp System created with profile: {config.profile.value}")
+        logger.info(f" Meta-Consensus-Comp System created with profile: {config.profile.value}")
     
     async def initialize(self) -> bool:
         """Initialize the complete integrated system."""
         
         try:
-            logger.info("🚀 Initializing Meta-Consensus-Comp System...")
+            logger.info(" Initializing Meta-Consensus-Comp System...")
             
             # Apply profile-specific configurations
             await self._apply_system_profile()
@@ -192,14 +192,14 @@ class MetaConsensusCompSystem:
             if health_check:
                 self.status.is_initialized = True
                 self.status.is_healthy = True
-                logger.info("✅ Meta-Consensus-Comp System initialized successfully")
+                logger.info(" Meta-Consensus-Comp System initialized successfully")
                 return True
             else:
-                logger.error("❌ System health check failed")
+                logger.error(" System health check failed")
                 return False
                 
         except Exception as e:
-            logger.error(f"❌ System initialization failed: {e}")
+            logger.error(f" System initialization failed: {e}")
             return False
     
     async def _apply_system_profile(self):
@@ -266,7 +266,7 @@ class MetaConsensusCompSystem:
         if hasattr(self.optimized_system, 'initialize_optimizations'):
             await self.optimized_system.initialize_optimizations()
         
-        logger.info("✅ Core components initialized")
+        logger.info(" Core components initialized")
     
     async def _initialize_optimization_components(self):
         """Initialize optimization-specific components."""
@@ -315,7 +315,7 @@ class MetaConsensusCompSystem:
                 consensus_mode=TPUConsensusMode.MESH_DISTRIBUTED
             )
         
-        logger.info("✅ Optimization components initialized")
+        logger.info(" Optimization components initialized")
     
     async def _initialize_monitoring(self):
         """Initialize monitoring and analytics."""
@@ -328,7 +328,7 @@ class MetaConsensusCompSystem:
         
         self.monitoring_system = MetaConsensusMonitor(dashboard_config)
         
-        logger.info(f"✅ Monitoring initialized on port {self.config.monitoring_port}")
+        logger.info(f" Monitoring initialized on port {self.config.monitoring_port}")
     
     async def _initialize_benchmarking(self):
         """Initialize benchmarking system."""
@@ -344,7 +344,7 @@ class MetaConsensusCompSystem:
         
         self.benchmark_system = create_benchmark_suite(benchmark_config)
         
-        logger.info("✅ Benchmarking system initialized")
+        logger.info(" Benchmarking system initialized")
     
     async def _perform_health_check(self) -> bool:
         """Perform comprehensive system health check."""
@@ -555,7 +555,7 @@ class MetaConsensusCompSystem:
             logger.warning("Benchmarking not enabled")
             return {}
         
-        logger.info("📊 Running system benchmark...")
+        logger.info(" Running system benchmark...")
         
         report = await self.benchmark_system.run_comprehensive_benchmark()
         
@@ -617,7 +617,7 @@ class MetaConsensusCompSystem:
         """Start the monitoring dashboard server."""
         
         if self.monitoring_system:
-            logger.info(f"🖥️ Starting monitoring server on port {self.config.monitoring_port}")
+            logger.info(f"️ Starting monitoring server on port {self.config.monitoring_port}")
             await self.monitoring_system.start_monitoring()
         else:
             logger.warning("Monitoring system not initialized")
@@ -632,7 +632,7 @@ class MetaConsensusCompSystem:
     async def shutdown(self):
         """Gracefully shutdown the system."""
         
-        logger.info("🛑 Shutting down Meta-Consensus-Comp System...")
+        logger.info(" Shutting down Meta-Consensus-Comp System...")
         
         # Save final metrics
         if self.query_history:
@@ -647,7 +647,7 @@ class MetaConsensusCompSystem:
             await self.cache_system.cleanup_all_levels()
         
         self.status.is_healthy = False
-        logger.info("✅ System shutdown completed")
+        logger.info(" System shutdown completed")
     
     async def _save_session_metrics(self):
         """Save session metrics to file."""
@@ -744,7 +744,7 @@ __all__ = [
 if __name__ == "__main__":
     # Example usage and demonstration
     async def main():
-        logger.info("🎭 Meta-Consensus-Comp Integrated System Demo")
+        logger.info(" Meta-Consensus-Comp Integrated System Demo")
         logger.info("=" * 50)
         
         # Create development system
@@ -752,14 +752,14 @@ if __name__ == "__main__":
         
         # Initialize system
         if await system.initialize():
-            logger.info("✅ System initialized successfully")
+            logger.info(" System initialized successfully")
             
             # Get system status
             status = system.get_system_status()
-            logger.info(f"\n📊 System Status:")
+            logger.info(f"\n System Status:")
             logger.info(f"  Profile: {status['system_info']['profile']}")
             logger.info(f"  Optimization: {status['configuration']['optimization_level']}")
-            logger.info(f"  Health: {'✅ Healthy' if status['system_info']['is_healthy'] else '❌ Unhealthy'}")
+            logger.info(f"  Health: {' Healthy' if status['system_info']['is_healthy'] else ' Unhealthy'}")
             
             # Test queries
             test_queries = [
@@ -770,7 +770,7 @@ if __name__ == "__main__":
                 "What are the benefits of distributed systems?"
             ]
             
-            logger.info(f"\n🔍 Processing {len(test_queries)} test queries...")
+            logger.info(f"\n Processing {len(test_queries)} test queries...")
             
             results = []
             for i, query in enumerate(test_queries):
@@ -788,12 +788,12 @@ if __name__ == "__main__":
             
             # Run benchmark
             if system.benchmark_system:
-                logger.info(f"\n📊 Running system benchmark...")
+                logger.info(f"\n Running system benchmark...")
                 
                 benchmark_results = await system.run_system_benchmark()
                 
                 if benchmark_results:
-                    logger.info(f"✅ Benchmark completed:")
+                    logger.info(f" Benchmark completed:")
                     logger.info(f"  Profile: {benchmark_results['system_profile']}")
                     
                     if benchmark_results.get('latency_improvements'):
@@ -808,7 +808,7 @@ if __name__ == "__main__":
             
             # Final system status
             final_status = system.get_system_status()
-            logger.info(f"\n📈 Final Performance:")
+            logger.info(f"\n Final Performance:")
             logger.info(f"  Queries Processed: {final_status['recent_queries']}")
             logger.info(f"  Avg Latency: {final_status['performance']['avg_latency_ms']:.0f}ms")
             logger.info(f"  Avg Quality: {final_status['performance']['avg_quality_score']:.1f}")
@@ -818,13 +818,13 @@ if __name__ == "__main__":
             # Get monitoring URL
             monitoring_url = system.get_monitoring_url()
             if monitoring_url:
-                logger.info(f"\n🖥️ Monitoring Dashboard: {monitoring_url}")
+                logger.info(f"\n️ Monitoring Dashboard: {monitoring_url}")
             
             # Shutdown
             await system.shutdown()
             
         else:
-            logger.error("❌ System initialization failed")
+            logger.error(" System initialization failed")
     
     import asyncio
     asyncio.run(main())

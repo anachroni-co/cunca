@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🖨️ CAPIBARA TEXT-TO-PRINT3D SERVICE
+️ CAPIBARA TEXT-TO-PRINT3D SERVICE
 ===================================
 
 Main service for generating 3D models optimized for 3D printing
@@ -38,7 +38,7 @@ try:
     NUMPY_AVAILABLE = True
 except ImportError:
     NUMPY_AVAILABLE = False
-    logger.warning("⚠️ NumPy not available, using basic STL generation")
+    logger.warning("️ NumPy not available, using basic STL generation")
 
 class PrintTechnology(Enum):
     """Supported 3D printing technologies"""
@@ -372,7 +372,7 @@ class MockPrint3DGenerator:
         
     async def generate_print3d_mock(self, request: Print3DRequest) -> Print3DResult:
         """Generate a mock 3D model optimized for printing."""
-        logger.info(f"🖨️ Generating mock Print3D model: {request.description[:100]}...")
+        logger.info(f"️ Generating mock Print3D model: {request.description[:100]}...")
         
         # Simulate generation time
         await asyncio.sleep(2.0)
@@ -514,16 +514,16 @@ class CapibaraTextToPrint3D:
         # Configure directories
         self._setup_directories()
         
-        logger.info("✅ CapibaraTextToPrint3D initialized")
+        logger.info(" CapibaraTextToPrint3D initialized")
     
     def _init_openscad_generator(self):
         """Initialize OpenSCAD generator for Print3D"""
         try:
             openscad_config = OpenSCADPrint3DConfig()
             self.openscad_generator = E2BOpenSCADPrint3D(openscad_config)
-            logger.info("✅ OpenSCAD Print3D generator initialized")
+            logger.info(" OpenSCAD Print3D generator initialized")
         except Exception as e:
-            logger.error(f"❌ Error initializing OpenSCAD Print3D: {e}")
+            logger.error(f" Error initializing OpenSCAD Print3D: {e}")
             self.openscad_generator = None
     
     def _init_blender_generator(self):
@@ -531,9 +531,9 @@ class CapibaraTextToPrint3D:
         try:
             blender_config = BlenderPrint3DConfig()
             self.blender_generator = E2BBlenderPrint3D(blender_config)
-            logger.info("✅ Blender Print3D generator initialized")
+            logger.info(" Blender Print3D generator initialized")
         except Exception as e:
-            logger.error(f"❌ Error initializing Blender Print3D: {e}")
+            logger.error(f" Error initializing Blender Print3D: {e}")
             self.blender_generator = None
     
     def _init_freecad_generator(self):
@@ -541,9 +541,9 @@ class CapibaraTextToPrint3D:
         try:
             freecad_config = FreeCADPrint3DConfig()
             self.freecad_generator = E2BFreeCADPrint3D(freecad_config)
-            logger.info("✅ FreeCAD Print3D generator initialized")
+            logger.info(" FreeCAD Print3D generator initialized")
         except Exception as e:
-            logger.error(f"❌ Error initializing FreeCAD Print3D: {e}")
+            logger.error(f" Error initializing FreeCAD Print3D: {e}")
             self.freecad_generator = None
     
     def _init_optimizer(self):
@@ -551,25 +551,25 @@ class CapibaraTextToPrint3D:
         try:
             optimizer_config = OptimizationConfig()
             self.optimizer = Print3DOptimizer(optimizer_config)
-            logger.info("✅ Print3D optimizer initialized")
+            logger.info(" Print3D optimizer initialized")
         except Exception as e:
-            logger.error(f"❌ Error initializing Print3D optimizer: {e}")
+            logger.error(f" Error initializing Print3D optimizer: {e}")
             self.optimizer = None
     
     def _setup_directories(self):
         """Configure output directories"""
         try:
             os.makedirs(self.config.output_directory, exist_ok=True)
-            logger.info(f"📁 Print3D output directory: {self.config.output_directory}")
+            logger.info(f" Print3D output directory: {self.config.output_directory}")
         except Exception as e:
-            logger.error(f"❌ Error creating directories: {e}")
+            logger.error(f" Error creating directories: {e}")
     
     async def generate_print3d(self, request: Print3DRequest) -> Print3DResult:
         """Generate 3D model optimized for printing from natural language description"""
         start_time = datetime.now()
         
         try:
-            logger.info(f"🖨️ Generating Print3D model: {request.description[:100]}...")
+            logger.info(f"️ Generating Print3D model: {request.description[:100]}...")
             
             # Parse description for auto-configuration
             parsed_specs = self.description_parser.parse_description(request.description)
@@ -595,7 +595,7 @@ class CapibaraTextToPrint3D:
             selected_tool = self._select_optimal_tool(object_type, complexity, request)
             
             if selected_tool == "openscad" and self.openscad_generator:
-                logger.info("📐 Using OpenSCAD for procedural Print3D generation...")
+                logger.info(" Using OpenSCAD for procedural Print3D generation...")
                 result = await self.openscad_generator.generate_print3d_with_openscad(
                     description=request.description,
                     technology=request.technology,
@@ -609,7 +609,7 @@ class CapibaraTextToPrint3D:
                     return self._convert_e2b_result_to_print3d_result(result, request, start_time, "openscad_e2b")
             
             elif selected_tool == "blender" and self.blender_generator:
-                logger.info("🎨 Using Blender for artistic Print3D generation...")
+                logger.info(" Using Blender for artistic Print3D generation...")
                 result = await self.blender_generator.generate_print3d_with_blender(
                     description=request.description,
                     technology=request.technology,
@@ -623,7 +623,7 @@ class CapibaraTextToPrint3D:
                     return self._convert_e2b_result_to_print3d_result(result, request, start_time, "blender_e2b")
             
             elif selected_tool == "freecad" and self.freecad_generator:
-                logger.info("⚙️ Using FreeCAD for parametric Print3D generation...")
+                logger.info("️ Using FreeCAD for parametric Print3D generation...")
                 result = await self.freecad_generator.generate_print3d_with_freecad(
                     description=request.description,
                     technology=request.technology,
@@ -637,13 +637,13 @@ class CapibaraTextToPrint3D:
                     return self._convert_e2b_result_to_print3d_result(result, request, start_time, "freecad_e2b")
             
             # Fallback to mock generation
-            logger.info("🎭 Using mock Print3D generation (E2B tools not available)")
+            logger.info(" Using mock Print3D generation (E2B tools not available)")
             result = await self.mock_generator.generate_print3d_mock(request)
             result.generation_time_seconds = (datetime.now() - start_time).total_seconds()
             
             # Apply optimization if available
             if self.optimizer and result.success:
-                logger.info("🔧 Applying Print3D optimizations...")
+                logger.info(" Applying Print3D optimizations...")
                 optimization_result = await self.optimizer.optimize_for_printing(
                     stl_file=result.stl_file_path,
                     technology=request.technology,
@@ -660,7 +660,7 @@ class CapibaraTextToPrint3D:
             
         except Exception as e:
             generation_time = (datetime.now() - start_time).total_seconds()
-            logger.error(f"❌ Print3D generation error: {e}")
+            logger.error(f" Print3D generation error: {e}")
             
             return Print3DResult(
                 success=False,

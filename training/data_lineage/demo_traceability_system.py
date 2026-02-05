@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-🔍 Complete Data Traceability System Demo - CapibaraGPT-v2
+ Complete Data Traceability System Demo - CapibaraGPT-v2
 ==========================================================
 
 Comprehensive demonstration of the data lineage and traceability system:
@@ -40,7 +40,7 @@ try:
     )
     FULL_LINEAGE_AVAILABLE = True
 except ImportError:
-    logger.warning("⚠️ Full lineage system not available - running mock demo")
+    logger.warning("️ Full lineage system not available - running mock demo")
     FULL_LINEAGE_AVAILABLE = False
 
 class MockModel:
@@ -116,12 +116,12 @@ class TraceabilitySystemDemo:
             }
         }
         
-        logger.info(f"🚀 TraceabilitySystemDemo initialized")
-        logger.info(f"📁 Demo directory: {self.demo_dir}")
+        logger.info(f" TraceabilitySystemDemo initialized")
+        logger.info(f" Demo directory: {self.demo_dir}")
     
     async def run_complete_demo(self):
         """Run the complete traceability system demonstration."""
-        logger.debug("🔍 COMPLETE DATA TRACEABILITY SYSTEM DEMO")
+        logger.debug(" COMPLETE DATA TRACEABILITY SYSTEM DEMO")
         logger.info("=" * 60)
         
         if not FULL_LINEAGE_AVAILABLE:
@@ -129,44 +129,44 @@ class TraceabilitySystemDemo:
             return
         
         # Step 1: Initialize blockchain audit log
-        logger.info("\n🔗 STEP 1: Initialize Blockchain Audit Log")
+        logger.info("\n STEP 1: Initialize Blockchain Audit Log")
         await self._demo_blockchain_audit()
         
         # Step 2: Simulate training with data tracking
-        logger.info("\n📊 STEP 2: Simulate Training with Data Tracking")
+        logger.info("\n STEP 2: Simulate Training with Data Tracking")
         await self._demo_training_simulation()
         
         # Step 3: Initialize parameter controller
-        logger.info("\n🎛️ STEP 3: Initialize Parameter Controller")
+        logger.info("\n️ STEP 3: Initialize Parameter Controller")
         await self._demo_parameter_controller()
         
         # Step 4: Demonstrate dataset control
-        logger.info("\n⚙️ STEP 4: Demonstrate Dataset Parameter Control")
+        logger.info("\n️ STEP 4: Demonstrate Dataset Parameter Control")
         await self._demo_dataset_control()
         
         # Step 5: Generate compliance reports
-        logger.info("\n📋 STEP 5: Generate Compliance Reports")
+        logger.info("\n STEP 5: Generate Compliance Reports")
         await self._demo_compliance_reporting()
         
         # Step 6: Show real-time verification
-        logger.info("\n✅ STEP 6: Verify Blockchain Integrity")
+        logger.info("\n STEP 6: Verify Blockchain Integrity")
         await self._demo_integrity_verification()
         
-        logger.info("\n🎉 COMPLETE DEMO FINISHED!")
-        logger.debug("✅ All traceability components demonstrated successfully")
+        logger.info("\n COMPLETE DEMO FINISHED!")
+        logger.debug(" All traceability components demonstrated successfully")
     
     async def _demo_blockchain_audit(self):
         """Demonstrate blockchain audit log initialization."""
         audit_dir = self.demo_dir / "audit_logs"
         self.audit_log = create_blockchain_audit_log(str(audit_dir))
         
-        logger.info(f"✅ Blockchain audit log initialized")
-        logger.info(f"📊 Genesis block created and mined")
-        logger.info(f"🔒 Cryptographic integrity enabled")
+        logger.info(f" Blockchain audit log initialized")
+        logger.info(f" Genesis block created and mined")
+        logger.info(f" Cryptographic integrity enabled")
     
     async def _demo_training_simulation(self):
         """Simulate training steps with audit logging."""
-        logger.info("📈 Simulating training steps with audit tracking...")
+        logger.info(" Simulating training steps with audit tracking...")
         
         training_steps = [
             {
@@ -214,10 +214,10 @@ class TraceabilitySystemDemo:
                 }
             )
             
-            logger.info(f"   📝 Step {step_data['step']}: {step_data['dataset_id']} → {len(step_data['affected_params'])} parameters")
+            logger.info(f"    Step {step_data['step']}: {step_data['dataset_id']} → {len(step_data['affected_params'])} parameters")
             await asyncio.sleep(0.1)  # Small delay for demo
         
-        logger.info(f"✅ {len(training_steps)} training steps logged to blockchain")
+        logger.info(f" {len(training_steps)} training steps logged to blockchain")
     
     async def _demo_parameter_controller(self):
         """Demonstrate parameter controller initialization."""
@@ -231,70 +231,70 @@ class TraceabilitySystemDemo:
             lineage_file=str(audit_report_path)
         )
         
-        logger.info(f"✅ Parameter controller initialized")
-        logger.info(f"📊 Loaded lineage for {len(audit_report['parameter_summary'])} parameters")
-        logger.info(f"🗂️ Tracking {len(audit_report['dataset_summary'])} datasets")
+        logger.info(f" Parameter controller initialized")
+        logger.info(f" Loaded lineage for {len(audit_report['parameter_summary'])} parameters")
+        logger.info(f"️ Tracking {len(audit_report['dataset_summary'])} datasets")
     
     async def _demo_dataset_control(self):
         """Demonstrate dataset parameter control capabilities."""
-        logger.info("🎛️ Testing dataset parameter control...")
+        logger.info("️ Testing dataset parameter control...")
         
         # Get initial state
         initial_summary = self.parameter_controller.get_global_control_summary()
-        logger.info(f"📊 Initial state: {initial_summary['control_summary']['active_parameters']} active parameters")
+        logger.info(f" Initial state: {initial_summary['control_summary']['active_parameters']} active parameters")
         
         # Test 1: Disable medical dataset for compliance
-        logger.info("\n🚫 TEST 1: Disable medical dataset (compliance requirement)")
+        logger.info("\n TEST 1: Disable medical dataset (compliance requirement)")
         success = self.parameter_controller.disable_dataset_parameters("medical_papers")
         if success:
             medical_report = self.parameter_controller.get_dataset_influence_report("medical_papers")
-            logger.info(f"   ✅ Medical dataset disabled")
-            logger.info(f"   📊 Affected parameters: {medical_report['total_parameters']}")
-            logger.info(f"   🔒 Active ratio: {medical_report['active_ratio']:.2%}")
+            logger.info(f"    Medical dataset disabled")
+            logger.info(f"    Affected parameters: {medical_report['total_parameters']}")
+            logger.info(f"    Active ratio: {medical_report['active_ratio']:.2%}")
         
         # Test 2: Create compliance policy
-        logger.info("\n📋 TEST 2: Create compliance policy")
+        logger.info("\n TEST 2: Create compliance policy")
         policy = self.parameter_controller.create_control_policy(
             policy_name="gdpr_compliance",
             enabled_datasets=["linux_kernel", "physics_research"],
             disabled_datasets=["medical_papers"],
             compliance_mode=True
         )
-        logger.info(f"   ✅ Created policy: {policy.policy_name}")
-        logger.info(f"   📊 Enabled datasets: {len(policy.enabled_datasets)}")
-        logger.info(f"   🚫 Disabled datasets: {len(policy.disabled_datasets)}")
+        logger.info(f"    Created policy: {policy.policy_name}")
+        logger.info(f"    Enabled datasets: {len(policy.enabled_datasets)}")
+        logger.info(f"    Disabled datasets: {len(policy.disabled_datasets)}")
         
         # Test 3: Apply compliance policy
-        logger.info("\n⚖️ TEST 3: Apply compliance policy")
+        logger.info("\n️ TEST 3: Apply compliance policy")
         success = self.parameter_controller.apply_control_policy("gdpr_compliance")
         if success:
             final_summary = self.parameter_controller.get_global_control_summary()
-            logger.info(f"   ✅ Policy applied successfully")
-            logger.info(f"   📊 Active parameters: {final_summary['control_summary']['active_parameters']}")
-            logger.info(f"   📉 Disabled parameters: {final_summary['control_summary']['disabled_parameters']}")
+            logger.info(f"    Policy applied successfully")
+            logger.info(f"    Active parameters: {final_summary['control_summary']['active_parameters']}")
+            logger.info(f"    Disabled parameters: {final_summary['control_summary']['disabled_parameters']}")
         
         # Test 4: Export control state
-        logger.info("\n💾 TEST 4: Export control state")
+        logger.info("\n TEST 4: Export control state")
         control_export_path = self.demo_dir / "control_state.json"
         export_data = self.parameter_controller.export_control_state(control_export_path)
-        logger.info(f"   ✅ Control state exported to {control_export_path}")
-        logger.info(f"   📊 Export includes {len(export_data['policies'])} policies")
+        logger.info(f"    Control state exported to {control_export_path}")
+        logger.info(f"    Export includes {len(export_data['policies'])} policies")
     
     async def _demo_compliance_reporting(self):
         """Demonstrate compliance reporting capabilities."""
-        logger.info("📋 Generating comprehensive compliance reports...")
+        logger.info(" Generating comprehensive compliance reports...")
         
         # Generate audit report
         audit_report_path = self.demo_dir / "full_audit_report.json"
         audit_report = self.audit_log.export_audit_report(audit_report_path)
         
-        logger.info(f"✅ Audit report generated")
-        logger.info(f"📊 Total entries: {audit_report['audit_metadata']['total_entries']}")
-        logger.info(f"🔗 Total blocks: {audit_report['audit_metadata']['total_blocks']}")
-        logger.info(f"✅ Blockchain valid: {audit_report['audit_metadata']['blockchain_valid']}")
+        logger.info(f" Audit report generated")
+        logger.info(f" Total entries: {audit_report['audit_metadata']['total_entries']}")
+        logger.info(f" Total blocks: {audit_report['audit_metadata']['total_blocks']}")
+        logger.info(f" Blockchain valid: {audit_report['audit_metadata']['blockchain_valid']}")
         
         # Dataset influence summary
-        logger.info("\n📊 DATASET INFLUENCE SUMMARY:")
+        logger.info("\n DATASET INFLUENCE SUMMARY:")
         for dataset_id, dataset_info in audit_report["dataset_summary"].items():
             compliance_level = self.demo_datasets[dataset_id]["compliance_level"]
             logger.info(f"   • {dataset_id}: {dataset_info['total_events']} events, "
@@ -302,29 +302,29 @@ class TraceabilitySystemDemo:
                   f"compliance: {compliance_level}")
         
         # Parameter influence summary
-        logger.info("\n🎯 PARAMETER INFLUENCE SUMMARY:")
+        logger.info("\n PARAMETER INFLUENCE SUMMARY:")
         for param_name, param_info in list(audit_report["parameter_summary"].items())[:3]:
             logger.info(f"   • {param_name}: {param_info['total_updates']} updates, "
                   f"{len(param_info['datasets_affecting'])} datasets")
     
     async def _demo_integrity_verification(self):
         """Demonstrate blockchain integrity verification."""
-        logger.info("🔍 Verifying blockchain integrity...")
+        logger.info(" Verifying blockchain integrity...")
         
         is_valid, issues = self.audit_log.verify_blockchain_integrity()
         
         if is_valid:
-            logger.info("✅ Blockchain integrity verified - no issues found")
-            logger.info("🔒 All audit entries are tamper-evident")
-            logger.info("⛓️ Chain of custody is complete")
+            logger.info(" Blockchain integrity verified - no issues found")
+            logger.info(" All audit entries are tamper-evident")
+            logger.info("️ Chain of custody is complete")
         else:
-            logger.info(f"❌ Blockchain integrity issues found: {issues}")
+            logger.info(f" Blockchain integrity issues found: {issues}")
         
         # Show some blockchain statistics
         total_blocks = len(self.audit_log.blocks)
         total_entries = sum(len(block.entries) for block in self.audit_log.blocks)
         
-        logger.info(f"\n📊 BLOCKCHAIN STATISTICS:")
+        logger.info(f"\n BLOCKCHAIN STATISTICS:")
         logger.info(f"   • Total blocks: {total_blocks}")
         logger.info(f"   • Total entries: {total_entries}")
         logger.info(f"   • Average entries per block: {total_entries/total_blocks:.1f}")
@@ -332,31 +332,31 @@ class TraceabilitySystemDemo:
     
     async def _run_mock_demo(self):
         """Run a simplified mock demo when full system isn't available."""
-        logger.warning("🎭 Running mock demonstration (full system not available)")
+        logger.warning(" Running mock demonstration (full system not available)")
         logger.info("-" * 50)
         
-        logger.info("📝 Mock blockchain audit log:")
-        logger.info("   ✅ Genesis block created")
-        logger.info("   📊 4 training events logged")
-        logger.info("   🔒 Cryptographic hashing enabled")
+        logger.info(" Mock blockchain audit log:")
+        logger.info("    Genesis block created")
+        logger.info("    4 training events logged")
+        logger.info("    Cryptographic hashing enabled")
         
-        logger.info("\n🎛️ Mock parameter controller:")
-        logger.info("   ✅ 6 parameter groups tracked")
-        logger.info("   📊 4 datasets mapped to parameters")
-        logger.info("   🔒 Binary masking available")
+        logger.info("\n️ Mock parameter controller:")
+        logger.info("    6 parameter groups tracked")
+        logger.info("    4 datasets mapped to parameters")
+        logger.info("    Binary masking available")
         
-        logger.info("\n⚙️ Mock dataset control:")
-        logger.info("   ✅ medical_papers dataset disabled")
-        logger.info("   📋 GDPR compliance policy created")
-        logger.info("   📊 Active parameters: 85% (reduced from 100%)")
+        logger.info("\n️ Mock dataset control:")
+        logger.info("    medical_papers dataset disabled")
+        logger.info("    GDPR compliance policy created")
+        logger.info("    Active parameters: 85% (reduced from 100%)")
         
-        logger.info("\n📋 Mock compliance report:")
-        logger.info("   ✅ Audit trail generated")
-        logger.info("   🔗 4 blockchain blocks verified")
-        logger.info("   📊 Complete parameter lineage tracked")
+        logger.info("\n Mock compliance report:")
+        logger.info("    Audit trail generated")
+        logger.info("    4 blockchain blocks verified")
+        logger.info("    Complete parameter lineage tracked")
         
-        logger.info("\n🎉 Mock demo completed!")
-        logger.info("💡 Install full dependencies to see real implementation")
+        logger.info("\n Mock demo completed!")
+        logger.info(" Install full dependencies to see real implementation")
 
 def main():
     """Main demo function."""

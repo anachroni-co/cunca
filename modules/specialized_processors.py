@@ -64,7 +64,7 @@ class TextAnalysisProcessor:
         self.language_patterns = self._load_language_patterns()
         self.analysis_cache = {}
 
-        logger.info("📝 TextAnalysisProcessor initialized")
+        logger.info(" TextAnalysisProcessor initialized")
 
     def _load_language_patterns(self) -> Dict[str, List[str]]:
         """Load language patterns for analysis."""
@@ -188,7 +188,7 @@ class SentimentAnalysisProcessor:
         self.config = config
         self.sentiment_lexicon = self._load_sentiment_lexicon()
 
-        logger.info("😊 SentimentAnalysisProcessor initialized")
+        logger.info(" SentimentAnalysisProcessor initialized")
 
     def _load_sentiment_lexicon(self) -> Dict[str, float]:
         """Load sentiment lexicon."""
@@ -262,7 +262,7 @@ class EntityExtractionProcessor:
         self.config = config
         self.entity_patterns = self._load_entity_patterns()
 
-        logger.info("🏷️ EntityExtractionProcessor initialized")
+        logger.info("️ EntityExtractionProcessor initialized")
 
     def _load_entity_patterns(self) -> Dict[str, List[str]]:
         """Load patterns for entity recognition."""
@@ -345,7 +345,7 @@ class CodeAnalysisProcessor:
         self.config = config
         self.language_keywords = self._load_language_keywords()
         
-        logger.info("💻 CodeAnalysisProcessor initialized")
+        logger.info(" CodeAnalysisProcessor initialized")
     
     def _load_language_keywords(self) -> Dict[str, List[str]]:
         """Loads palabras clave por lenguaje de programación."""
@@ -548,7 +548,7 @@ class MultimodalFusionProcessor:
         self.config = config
         self.modality_weights = {'text': 0.35, 'image': 0.25, 'audio': 0.2, 'video': 0.2}
         
-        logger.info("🔀 MultimodalFusionProcessor initialized")
+        logger.info(" MultimodalFusionProcessor initialized")
     
     def fuse_modalities(self, modality_data: Dict[str, Any]) -> Dict[str, Any]:
         """Fusiona datos de múltiples modalidades."""
@@ -680,7 +680,7 @@ class SpecializedProcessorManager:
         self.processors = {}
         self.processing_history = []
         
-        logger.info("🎯 SpecializedProcessorManager initialized")
+        logger.info(" SpecializedProcessorManager initialized")
     
     def register_processor(self, name: str, processor_type: ProcessorType, 
                          config: Optional[ProcessorConfig] = None):
@@ -702,7 +702,7 @@ class SpecializedProcessorManager:
             raise ValueError(f"Unsupported processor type: {processor_type}")
         
         self.processors[name] = processor
-        logger.info(f"📝 Registered processor: {name} ({processor_type.value})")
+        logger.info(f" Registered processor: {name} ({processor_type.value})")
     
     def process(self, processor_name: str, data: Any, **kwargs) -> Dict[str, Any]:
         """Processes data using a specific processor."""
@@ -749,7 +749,7 @@ class SpecializedProcessorManager:
             return result
             
         except Exception as e:
-            logger.error(f"❌ Processing failed in {processor_name}: {e}")
+            logger.error(f" Processing failed in {processor_name}: {e}")
             
             # Record failure in history
             self.processing_history.append({
@@ -817,7 +817,7 @@ def get_global_processor_manager() -> SpecializedProcessorManager:
 
 def main():
     """Main function for testing."""
-    logger.info("🔍 Specialized Processors Module - Testing Mode")
+    logger.info(" Specialized Processors Module - Testing Mode")
     
     # Create manager
     manager = create_processor_manager()
@@ -852,7 +852,7 @@ class MyClass:
     stats = manager.get_processor_stats()
     logger.info(f"Processor stats: {stats}")
     
-    logger.info("✅ Specialized processors testing completed")
+    logger.info(" Specialized processors testing completed")
 
 if __name__ == "__main__":
     main()

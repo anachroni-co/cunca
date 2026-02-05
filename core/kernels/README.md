@@ -2,11 +2,11 @@
 
 Optimized kernel wrappers for TPU v4 with high-performance implementations and low-level operation abstractions.
 
-## 📋 Description
+##  Description
 
 Module that provides kernels specifically optimized for TPU v4, including wrappers for flash attention, high-performance matrix operations, and low-level operation abstractions for maximum performance.
 
-## 🏗️ Architecture
+## ️ Architecture
 
 ```
 kernels/
@@ -14,7 +14,7 @@ kernels/
 └── tpu_v4_wrappers.py    # TPU v4 specific implementations
 ```
 
-## 🚀 TPU v4 Kernel Wrappers
+##  TPU v4 Kernel Wrappers
 
 ```python
 from capibara.core.kernels import TPUv4Kernels
@@ -43,7 +43,7 @@ print(f"Memory usage: {tpu_kernels.get_memory_usage():.1f}GB")
 print(f"TFLOPS achieved: {tpu_kernels.get_tflops():.1f}")
 ```
 
-## ⚡ Optimized Matrix Operations
+##  Optimized Matrix Operations
 
 ```python
 # Matrix multiplication with TPU optimizations
@@ -73,7 +73,7 @@ batch_ops = tpu_kernels.batch_operations(
 )
 ```
 
-## 🔧 High-Performance Kernels
+##  High-Performance Kernels
 
 ```python
 # Custom kernel for MoE routing
@@ -103,7 +103,7 @@ fused_activation = tpu_kernels.fused_gelu_dropout(
 )
 ```
 
-## 📊 Metrics and Benchmarking
+##  Metrics and Benchmarking
 
 ```python
 # Kernel benchmarking
@@ -114,7 +114,7 @@ kernel_benchmark = tpu_kernels.benchmark_kernels([
     "fused_gelu_dropout"
 ])
 
-print("🏆 Kernel Performance:")
+print(" Kernel Performance:")
 for kernel, metrics in kernel_benchmark.items():
     print(f"{kernel}:")
     print(f"  Throughput: {metrics['throughput']:.1f} TFLOPS")
@@ -132,7 +132,7 @@ matmul_kernel = kernel_manager.get_kernel("optimized_matmul")
 output = matmul_kernel.run(a_matrix, b_matrix)
 ```
 
-## 📚 References
+##  References
 
 - [TPU v4 Architecture](https://cloud.google.com/tpu/docs/system-architecture-tpu-vm)
 - [Flash Attention](https://arxiv.org/abs/2205.14135)

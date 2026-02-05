@@ -2,7 +2,7 @@
 
 **Complete data-to-training pipeline for CapibaraGPT-v2**
 
-## 📋 Table of Contents
+##  Table of Contents
 
 1. [Overview](#overview)
 2. [Pipeline Architecture](#pipeline-architecture)
@@ -19,7 +19,7 @@
 
 ---
 
-## 🎯 Overview
+##  Overview
 
 The **Capibara Pipeline Module** provides a complete, end-to-end data pipeline from raw data acquisition to model training. It orchestrates data downloading, processing, validation, and integration with the training system.
 
@@ -32,18 +32,18 @@ The **Capibara Pipeline Module** provides a complete, end-to-end data pipeline f
 
 ### Key Features
 
-✅ **Automated Data Collection**: Web scraping, API downloads, direct file downloads
-✅ **Robust Processing**: Cleaning, validation, transformation
-✅ **Workflow Orchestration**: End-to-end pipeline automation
-✅ **Training Integration**: Seamless integration with training system
-✅ **Error Handling**: Retry logic, fallbacks, graceful degradation
-✅ **Monitoring**: Real-time progress tracking and metrics
-✅ **Scalable**: Parallel processing, batch operations
-✅ **Resumable**: Checkpoint support for interrupted pipelines
+ **Automated Data Collection**: Web scraping, API downloads, direct file downloads
+ **Robust Processing**: Cleaning, validation, transformation
+ **Workflow Orchestration**: End-to-end pipeline automation
+ **Training Integration**: Seamless integration with training system
+ **Error Handling**: Retry logic, fallbacks, graceful degradation
+ **Monitoring**: Real-time progress tracking and metrics
+ **Scalable**: Parallel processing, batch operations
+ **Resumable**: Checkpoint support for interrupted pipelines
 
 ---
 
-## 🏗️ Pipeline Architecture
+## ️ Pipeline Architecture
 
 ### Overall Data Flow
 
@@ -108,22 +108,22 @@ The **Capibara Pipeline Module** provides a complete, end-to-end data pipeline f
 
 ```
 capibara/pipeline/
-├── 📥 downloaders/
+├──  downloaders/
 │   ├── __init__.py
 │   ├── web_scraper.py              # Web scraping utilities
 │   ├── api_downloader.py           # API-based downloads
 │   ├── direct_downloader.py        # Direct file downloads
 │   └── download_orchestrator.py    # Download coordination
 │
-├── ⚙️ processors/
+├── ️ processors/
 │   ├── __init__.py
 │   └── data_processor.py           # Data processing utilities
 │
-├── 🔄 workflows/
+├──  workflows/
 │   ├── __init__.py
 │   └── complete_pipeline.py        # End-to-end workflow
 │
-├── 📊 data/
+├──  data/
 │   └── training/
 │       └── run_training.py         # Training integration
 │
@@ -133,7 +133,7 @@ capibara/pipeline/
 
 ---
 
-## 📦 Components
+##  Components
 
 ### 1. Downloaders
 
@@ -175,7 +175,7 @@ capibara/pipeline/
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Installation
 
@@ -243,7 +243,7 @@ python -m capibara.pipeline.run_pipeline \
 
 ---
 
-## 📥 Data Downloaders
+##  Data Downloaders
 
 ### WebScraper
 
@@ -455,7 +455,7 @@ print(f"Total time: {results.total_time_seconds}s")
 
 ---
 
-## ⚙️ Data Processors
+## ️ Data Processors
 
 ### DataProcessor
 
@@ -550,7 +550,7 @@ high_quality = processor.filter_quality(
 
 ---
 
-## 🔄 Workflows
+##  Workflows
 
 ### CompletePipeline
 
@@ -617,7 +617,7 @@ result = await workflow.execute()
 
 ---
 
-## 🎓 Training Integration
+##  Training Integration
 
 ### Dataset Builder
 
@@ -672,7 +672,7 @@ print(f"Best checkpoint: {result.best_checkpoint}")
 
 ---
 
-## ⚙️ Configuration
+## ️ Configuration
 
 ### Pipeline Configuration File
 
@@ -768,7 +768,7 @@ AWS_SECRET_ACCESS_KEY=your_aws_secret
 
 ---
 
-## 📊 Monitoring & Logging
+##  Monitoring & Logging
 
 ### Progress Tracking
 
@@ -826,7 +826,7 @@ logger.info("Pipeline started")
 
 ---
 
-## 💡 Best Practices
+##  Best Practices
 
 ### 1. Start Small, Scale Up
 
@@ -890,7 +890,7 @@ pipeline.set_resource_callback(check_resources, interval=60)
 
 ---
 
-## 🔧 Troubleshooting
+##  Troubleshooting
 
 ### Issue: Downloads Timing Out
 
@@ -939,7 +939,7 @@ processor.add_quality_filter(my_custom_filter)
 
 ---
 
-## 📚 References
+##  References
 
 ### Related Documentation
 
@@ -955,7 +955,7 @@ processor.add_quality_filter(my_custom_filter)
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions welcome! Priority areas:
 
@@ -969,7 +969,7 @@ See [CONTRIBUTING.md](../../CONTRIBUTING.md) for guidelines.
 
 ---
 
-## 📄 License
+##  License
 
 Part of the capibaraGPT-v2 project. See [LICENSE](../../LICENSE) for details.
 

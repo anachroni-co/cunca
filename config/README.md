@@ -2,7 +2,7 @@
 
 This module manages all CapibaraGPT system configurations, including model, training, optimization, and deployment configurations.
 
-## 📋 Main Components
+##  Main Components
 
 ### ConfigManager (`config_manager.py`)
 Central manager for loading and handling TOML configurations.
@@ -95,7 +95,7 @@ memory_config = MemoryConfig(
 )
 ```
 
-## 🔧 Specialized Configurations
+##  Specialized Configurations
 
 ### Chain of Thought (`cot_config.py`)
 Configuration for step-by-step reasoning.
@@ -152,7 +152,7 @@ multimodal_training_config = {
 ### Scaling (unified)
 Distributed scaling and parallelism are managed from `unified_model_config.py` (e.g., `MemoryOptimizationConfig`, submeshes, and `ModularModelConfig`).
 
-## 📁 Directory Structure
+##  Directory Structure
 
 ```
 config/
@@ -175,7 +175,7 @@ config/
 └── unified_model_config.py # Unified configuration
 ```
 
-## 🚀 Advanced Usage
+##  Advanced Usage
 
 ### Complete Configuration
 ```python
@@ -223,7 +223,7 @@ is_compatible = validate_device_compatibility(config.device)
 valid_paths = check_data_paths(config.training)
 ```
 
-## ⚙️ Key Features
+## ️ Key Features
 
 - **Automatic validation**: Using Pydantic for type and value validation
 - **Flexible loading**: Support for TOML, JSON, and YAML
@@ -233,7 +233,7 @@ valid_paths = check_data_paths(config.training)
 - **Cross-validation**: Compatibility verification between modules
 - **Hot reload**: Runtime configuration reloading
 
-## 🔍 Available Validators
+##  Available Validators
 
 - `ModelConfig`: Validates model architecture and dimension compatibility
 - `TrainingConfig`: Verifies data paths and training parameters
@@ -241,7 +241,7 @@ valid_paths = check_data_paths(config.training)
 - `AdaptiveConfig`: Validates adaptive routing configurations
 - `ConvexityConfig`: Verifies convex optimization parameters
 
-## 📖 Configuration Examples
+##  Configuration Examples
 
 See the `configs_toml/` directory for complete configuration examples in TOML format.
 

@@ -2,7 +2,7 @@
 
 **Dynamic compute allocation at inference time based on query difficulty**
 
-## 📋 Table of Contents
+##  Table of Contents
 
 1. [Overview](#overview)
 2. [Core Concepts](#core-concepts)
@@ -19,31 +19,31 @@
 
 ---
 
-## 🎯 Overview
+##  Overview
 
 The **Test-Time Compute Scaling (TTC)** module implements adaptive inference optimization by dynamically allocating computational resources based on query difficulty. Inspired by models like OpenAI's o1, this system intelligently scales thinking steps, verification rounds, and sampling strategies to balance quality and latency.
 
 ### Key Features
 
-- ✅ **Adaptive Thinking Steps**: 1-32 steps scaled by query difficulty
-- ✅ **Multiple Strategies**: Beam search, Monte Carlo sampling, self-consistency
-- ✅ **Difficulty Detection**: Automatic query complexity assessment
-- ✅ **TPU Integration**: Native TPU kernel optimization
-- ✅ **Router Integration**: Seamless integration with Capibara's hybrid attention router
-- ✅ **Early Stopping**: Confidence-based termination
-- ✅ **Fallback Mechanisms**: Graceful degradation under resource constraints
-- ✅ **Real-time Monitoring**: Comprehensive metrics and alerting
+-  **Adaptive Thinking Steps**: 1-32 steps scaled by query difficulty
+-  **Multiple Strategies**: Beam search, Monte Carlo sampling, self-consistency
+-  **Difficulty Detection**: Automatic query complexity assessment
+-  **TPU Integration**: Native TPU kernel optimization
+-  **Router Integration**: Seamless integration with Capibara's hybrid attention router
+-  **Early Stopping**: Confidence-based termination
+-  **Fallback Mechanisms**: Graceful degradation under resource constraints
+-  **Real-time Monitoring**: Comprehensive metrics and alerting
 
 ### When to Use TTC
 
-**✅ Use TTC for:**
+** Use TTC for:**
 - Complex reasoning tasks requiring multi-step thinking
 - Math, code generation, logic puzzles
 - Tasks where correctness > speed
 - Variable difficulty workloads
 - Production inference with SLA requirements
 
-**❌ Don't use TTC for:**
+** Don't use TTC for:**
 - Simple classification tasks
 - Latency-critical applications (<100ms)
 - Uniform difficulty datasets
@@ -51,7 +51,7 @@ The **Test-Time Compute Scaling (TTC)** module implements adaptive inference opt
 
 ---
 
-## 🧠 Core Concepts
+##  Core Concepts
 
 ### Test-Time Compute Scaling
 
@@ -78,7 +78,7 @@ Each "thinking step" represents one forward pass through the model with intermed
 "Applying formula: x = (-b ± √(b²-4ac)) / 2a..."
 
 # Step 4: Verification
-"Checking: x=2 and x=3 satisfy the equation ✓"
+"Checking: x=2 and x=3 satisfy the equation "
 ```
 
 ### Difficulty Estimation
@@ -108,7 +108,7 @@ The module supports multiple strategies, selected based on difficulty and requir
 
 ---
 
-## 🏗️ Architecture
+## ️ Architecture
 
 ### System Components
 
@@ -197,7 +197,7 @@ ttc_api.enable_monitoring(
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Basic Usage
 
@@ -286,7 +286,7 @@ Solve the halting problem      → 32 steps (4521ms)
 
 ---
 
-## ⚙️ Configuration
+## ️ Configuration
 
 ### TOML Configuration
 
@@ -407,7 +407,7 @@ CAPIBARA_TTC_LOG_LEVEL=INFO
 
 ---
 
-## 🎯 Compute Strategies
+##  Compute Strategies
 
 ### 1. Fast Strategy
 
@@ -526,7 +526,7 @@ while not done:
 
 ---
 
-## 🔌 Integration
+##  Integration
 
 ### Router Integration
 
@@ -646,7 +646,7 @@ print(metrics.get_summary())
 
 ---
 
-## 🚄 Performance Optimization
+##  Performance Optimization
 
 ### Latency Optimization
 
@@ -766,7 +766,7 @@ config = TestTimeConfig(
 
 ---
 
-## 📊 Monitoring & Metrics
+##  Monitoring & Metrics
 
 ### Real-Time Metrics
 
@@ -879,7 +879,7 @@ ttc_api.set_alert_manager(alert_manager)
 
 ---
 
-## 🔧 Troubleshooting
+##  Troubleshooting
 
 ### Common Issues
 
@@ -1093,7 +1093,7 @@ response = ttc_api.generate(prompt="Test query")
 
 ---
 
-## 📈 Benchmarks
+##  Benchmarks
 
 ### Latency Benchmarks
 
@@ -1146,15 +1146,15 @@ response = ttc_api.generate(prompt="Test query")
 
 | TPU Version | Speedup | Memory Usage | BFloat16 Support |
 |-------------|---------|--------------|------------------|
-| v4 (16GB) | 2.3x | 12.4GB | ✅ |
-| v5e (16GB) | 3.1x | 11.8GB | ✅ |
-| v6e (32GB) | 4.7x | 18.2GB | ✅ (native) |
+| v4 (16GB) | 2.3x | 12.4GB |  |
+| v5e (16GB) | 3.1x | 11.8GB |  |
+| v6e (32GB) | 4.7x | 18.2GB |  (native) |
 
 **Recommendation**: TPU v6e provides best performance for TTC workloads.
 
 ---
 
-## 📚 References
+##  References
 
 ### Research Papers
 
@@ -1187,7 +1187,7 @@ response = ttc_api.generate(prompt="Test query")
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 This module is currently in stub/planning phase. Contributions for implementation are welcome:
 
@@ -1203,13 +1203,13 @@ This module is currently in stub/planning phase. Contributions for implementatio
 
 ---
 
-## 📄 License
+##  License
 
 Part of the capibaraGPT-v2 project. See [LICENSE](../../LICENSE) for details.
 
 ---
 
-**Status**: 🚧 Stub Module - Planned Implementation
+**Status**:  Stub Module - Planned Implementation
 
 **Maintained by**: Capibara ML Team
 

@@ -2,26 +2,26 @@
 
 This module implements the Observer pattern to dynamically activate experts based on request patterns and inputs. It enables an intelligent routing system that can adapt to different query types and automatically activate the most appropriate experts.
 
-## 🎯 Main Features
+##  Main Features
 
-### 🔍 Intelligent Observers
+###  Intelligent Observers
 - **RequestPatternObserver**: Detects specific patterns in request text
 - **ComplexityObserver**: Analyzes query complexity and activates experts as needed
 - **DomainSpecificObserver**: Specialized in detecting specific domains (mathematics, programming, etc.)
 - **PerformanceObserver**: Monitors system performance and makes load-based decisions
 - **AdaptiveObserver**: Learns from activation patterns and adapts over time
 
-### 🚀 Dynamic Expert Management
+###  Dynamic Expert Management
 - **ExpertActivationManager**: Manages expert lifecycle
 - **ExpertPool**: Dynamic expert pool that can be activated on demand
 - **ActivationStrategy**: Different strategies for expert activation
 
-### 🔄 Router Integration
+###  Router Integration
 - **ObserverAwareRouter**: Router that integrates the Observer pattern with traditional routing
 - **RoutingMode**: Different routing modes (traditional, observer-first, hybrid)
 - **DynamicRoutingDecision**: Routing decisions enriched with observer information
 
-## 📋 Use Cases
+##  Use Cases
 
 ### 1. Automatic Pattern-Based Activation
 ```python
@@ -90,7 +90,7 @@ class CustomDomainObserver(RequestObserver):
 router.add_observer(CustomDomainObserver("BlockchainObserver"))
 ```
 
-## 🏗️ Architecture
+## ️ Architecture
 
 ### Main Components
 
@@ -124,7 +124,7 @@ router.add_observer(CustomDomainObserver("BlockchainObserver"))
 7. **Processing**: Experts process the request
 8. **Result Combination**: Results from multiple experts are combined
 
-## 📊 Activation Strategies
+##  Activation Strategies
 
 ### ActivationStrategy.IMMEDIATE
 Activates experts immediately when observers suggest it.
@@ -170,7 +170,7 @@ router = create_observer_aware_router(
 )
 ```
 
-## 🎛️ Routing Modes
+## ️ Routing Modes
 
 ### RoutingMode.TRADITIONAL
 Uses only traditional routing, no observers.
@@ -184,7 +184,7 @@ Combines traditional routing with observer activation.
 ### RoutingMode.HYBRID
 Dynamically switches between modes based on request complexity.
 
-## 📈 Monitoring and Metrics
+##  Monitoring and Metrics
 
 ### Router Statistics
 ```python
@@ -209,7 +209,7 @@ pool_stats = expert_pool.get_pool_statistics()
 print(f"Pool utilization: {pool_stats['current_utilization']:.2%}")
 ```
 
-## 🧪 Examples and Demos
+##  Examples and Demos
 
 ### Comprehensive Demo
 ```python
@@ -241,7 +241,7 @@ from capibara.core.observers.examples import benchmark_observer_performance
 await benchmark_observer_performance()
 ```
 
-## 🔧 Advanced Configuration
+##  Advanced Configuration
 
 ### Observer Configuration
 ```python
@@ -274,7 +274,7 @@ router.observer_integration.strategy_config.update({
 })
 ```
 
-## 🐛 Debugging and Logs
+##  Debugging and Logs
 
 ### Enable Detailed Logging
 ```python
@@ -291,7 +291,7 @@ for activation in activation_history[-5:]:  # Last 5 activations
     print(f"Experts: {activation['approved_activations']}")
 ```
 
-## 🚀 Best Practices
+##  Best Practices
 
 1. **Priority Configuration**: Assign appropriate priorities to observers
 2. **Confidence Thresholds**: Adjust thresholds according to your precision needs
@@ -299,13 +299,13 @@ for activation in activation_history[-5:]:  # Last 5 activations
 4. **Learning Feedback**: Provide feedback to improve adaptive learning
 5. **Resource Management**: Configure appropriate concurrency limits for experts
 
-## 📚 References
+##  References
 
 - [Observer Pattern](https://refactoring.guru/design-patterns/observer)
 - [Expert Systems](https://en.wikipedia.org/wiki/Expert_system)
 - [Dynamic Routing](https://en.wikipedia.org/wiki/Dynamic_routing)
 
-## 🤝 Contributing
+##  Contributing
 
 To contribute to Observer pattern development:
 
@@ -315,6 +315,6 @@ To contribute to Observer pattern development:
 4. Create examples and use cases
 5. Optimize system performance
 
-## 📄 License
+##  License
 
 This module is part of CapibaraGPT and is subject to the same license as the main project.

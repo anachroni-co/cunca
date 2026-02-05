@@ -368,7 +368,7 @@ class AdvancedFilter:
                 self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
                 self.perplexity_model.to(self.device)
 
-                logger.info(f"✅ Perplexity model '{model_name}' initialized on {self.device}")
+                logger.info(f" Perplexity model '{model_name}' initialized on {self.device}")
             except Exception as e:
                 logger.warning(f"Failed to initialize perplexity model: {e}")
                 self.perplexity_model = None
@@ -381,7 +381,7 @@ class AdvancedFilter:
                     model="martin-ha/toxic-comment-model",
                     device=-1  # Use CPU
                 )
-                logger.info("✅ Toxicity classifier initialized")
+                logger.info(" Toxicity classifier initialized")
             except Exception as e:
                 logger.warning(f"Failed to initialize toxicity classifier: {e}")
     
@@ -532,7 +532,7 @@ class QualityFilter:
             'avg_quality_score': 0.0
         }
         
-        logger.info(f"🔍 QualityFilter initialized with config: {self.config}")
+        logger.info(f" QualityFilter initialized with config: {self.config}")
     
     def filter_documents(self, docs: List[Dict]) -> List[Dict]:
         """
@@ -544,7 +544,7 @@ class QualityFilter:
         Returns:
             Filtered documents with quality metadata
         """
-        logger.info(f"🚀 Starting quality filtering of {len(docs)} documents")
+        logger.info(f" Starting quality filtering of {len(docs)} documents")
         
         self.stats['total_processed'] = len(docs)
         
@@ -570,7 +570,7 @@ class QualityFilter:
                 for doc in docs
             ])
         
-        logger.info(f"✅ Quality filtering completed: {len(docs)} documents remaining")
+        logger.info(f" Quality filtering completed: {len(docs)} documents remaining")
         self._log_stats()
         
         return docs
@@ -591,7 +591,7 @@ class QualityFilter:
             
             analyzed_docs.append(doc)
         
-        logger.info(f"📊 Content quality analysis completed for {len(analyzed_docs)} documents")
+        logger.info(f" Content quality analysis completed for {len(analyzed_docs)} documents")
         return analyzed_docs
     
     def _apply_quality_thresholds(self, docs: List[Dict]) -> List[Dict]:
@@ -607,7 +607,7 @@ class QualityFilter:
                 self.stats['quality_filtered'] += 1
                 doc['filtered_reason'] = 'quality_score'
         
-        logger.info(f"🎯 After quality threshold filtering: {len(filtered_docs)} documents")
+        logger.info(f" After quality threshold filtering: {len(filtered_docs)} documents")
         return filtered_docs
     
     def get_stats(self) -> Dict[str, Any]:
@@ -633,7 +633,7 @@ class QualityFilter:
         """Log detailed filtering statistics."""
         stats = self.get_stats()
         
-        logger.info("📊 Quality Filtering Statistics:")
+        logger.info(" Quality Filtering Statistics:")
         logger.info(f"  Total processed: {stats['total_processed']:,}")
         logger.info(f"  Quality filtered: {stats['quality_filtered']:,}")
         logger.info(f"  Perplexity filtered: {stats['perplexity_filtered']:,}")

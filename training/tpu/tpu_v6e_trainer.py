@@ -197,7 +197,7 @@ class TPUv6eRobustTrainer:
         logger.info(f"Devices detected: {len(devices)}")
         
         if len(devices) != self.config.total_chips:
-            logger.warning(f"⚠️ Expected {self.config.total_chips} devices, got {len(devices)}")
+            logger.warning(f"️ Expected {self.config.total_chips} devices, got {len(devices)}")
         
         # Create 8x8 mesh
         devices_array = np.array(devices).reshape(self.config.mesh_rows, self.config.mesh_cols)
@@ -246,7 +246,7 @@ class TPUv6eRobustTrainer:
         if self._verify_checkpoint_integrity(latest):
             return latest
         else:
-            logger.warning(f"⚠️ Corrupted checkpoint: {latest}")
+            logger.warning(f"️ Corrupted checkpoint: {latest}")
             return None
     
     def _verify_checkpoint_integrity(self, checkpoint_path: Path) -> bool:
@@ -396,7 +396,7 @@ class TPUv6eRobustTrainer:
                     self.current_step += 1
                     
                 except Exception as e:
-                    logger.error(f"❌ Error in step {self.current_step}: {e}")
+                    logger.error(f" Error in step {self.current_step}: {e}")
                     await self._handle_training_error(state, e)
             
             # Final checkpoint
@@ -630,17 +630,17 @@ class TPUv6eRobustTrainer:
             # Verify that all devices are available
             devices = jax.devices()
             if len(devices) != self.config.total_chips:
-                logger.warning(f"⚠️ Device count mismatch: {len(devices)}/{self.config.total_chips}")
+                logger.warning(f"️ Device count mismatch: {len(devices)}/{self.config.total_chips}")
             
             # Simple compute test
             test_array = jnp.ones((1000, 1000))
             result = jnp.sum(test_array)
             
             if not jnp.isfinite(result):
-                logger.error("❌ Health check failed - computation error")
+                logger.error(" Health check failed - computation error")
                 
         except Exception as e:
-            logger.error(f"❌ Health check failed: {e}")
+            logger.error(f" Health check failed: {e}")
     
     def _setup_wandb(self):
         """Configure W&B for TPU v6e."""

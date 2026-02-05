@@ -57,14 +57,14 @@ class ARMAxionOptimizer:
     def _initialize_arm_optimizations(self):
         """Inicializar optimizaciones ARM."""
         if not ARM_AXION_AVAILABLE:
-            logger.warning("❌ ARM Axion optimizations not available")
+            logger.warning(" ARM Axion optimizations not available")
             return
             
         try:
             # configure SVE2
             if self.config.enable_sve2:
                 torch_arm.config.set_vector_bits(self.config.sve_vector_bits)
-                logger.info(f"✅ SVE2 enabled with {self.config.sve_vector_bits} bits")
+                logger.info(f" SVE2 enabled with {self.config.sve_vector_bits} bits")
             
             # configure threads
             torch_arm.config.set_num_threads(self.config.num_threads)
@@ -73,12 +73,12 @@ class ARMAxionOptimizer:
             if self.config.enable_kleidi:
                 from capibara.core.kleidi import KleidiOptimizer
                 self.kleidi = KleidiOptimizer()
-                logger.info("✅ Kleidi optimization enabled")
+                logger.info(" Kleidi optimization enabled")
             
-            logger.info("✅ ARM Axion optimizations initialized")
+            logger.info(" ARM Axion optimizations initialized")
             
         except Exception as e:
-            logger.error(f"❌ Error initializing ARM optimizations: {e}")
+            logger.error(f" Error initializing ARM optimizations: {e}")
     
     def optimize_linear(self, layer: torch.nn.Linear) -> torch.nn.Module:
         """optimize capa lineal for ARM."""

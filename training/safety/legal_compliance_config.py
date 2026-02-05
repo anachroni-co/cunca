@@ -453,4 +453,4 @@ if __name__ == "__main__":
     with open("legal_compliance_documentation.json", "w", encoding="utf-8") as f:
         json.dump(legal_docs, f, indent=2, ensure_ascii=False)
     
-    logger.info("\n✅ Legal compliance documentation generated and saved to 'legal_compliance_documentation.json'")
+    logger.info("\n Legal compliance documentation generated and saved to 'legal_compliance_documentation.json'")

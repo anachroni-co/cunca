@@ -84,7 +84,7 @@ class ARMCompatibilityValidator:
     
     def validate_model(self, model_path: str) -> ValidationReport:
         """Valida compatibilidad completa del model with ARM."""
-        logger.info(f"🔍 Iniciando validación ARM para: {model_path}")
+        logger.info(f" Iniciando validación ARM para: {model_path}")
         
         self.validation_metrics["start_time"] = time.time()
         
@@ -118,11 +118,11 @@ class ARMCompatibilityValidator:
                 self.validation_metrics["end_time"] - self.validation_metrics["start_time"]
             )
             
-            logger.info(f"✅ Validación ARM completada en {self.validation_metrics['total_time']:.2f}s")
+            logger.info(f" Validación ARM completada en {self.validation_metrics['total_time']:.2f}s")
             return report
             
         except Exception as e:
-            logger.error(f"❌ Error en validación ARM: {e}")
+            logger.error(f" Error en validación ARM: {e}")
             return self._generate_error_report(str(e))
     
     def _load_model(self, model_path: str) -> Dict[str, Any]:
@@ -140,7 +140,7 @@ class ARMCompatibilityValidator:
                 raise ValueError(f"Formato de modelo no soportado: {model_file.suffix}")
                 
         except Exception as e:
-            logger.error(f"❌ Error cargando modelo: {e}")
+            logger.error(f" Error cargando modelo: {e}")
             raise
     
     def _load_jax_model(self, model_path: str) -> Dict[str, Any]:
@@ -151,11 +151,11 @@ class ARMCompatibilityValidator:
             with open(model_path, 'rb') as f:
                 model_state = pickle.load(f)  # nosec B301 — trusted model
             
-            logger.info(f"✅ Modelo JAX cargado: {len(model_state.get('params', {}))} parámetros")
+            logger.info(f" Modelo JAX cargado: {len(model_state.get('params', {}))} parámetros")
             return model_state
             
         except Exception as e:
-            logger.error(f"❌ Error cargando modelo JAX: {e}")
+            logger.error(f" Error cargando modelo JAX: {e}")
             raise
     
     def _load_onnx_model(self, model_path: str) -> Dict[str, Any]:
@@ -175,11 +175,11 @@ class ARMCompatibilityValidator:
                 "parameters_count": sum(len(node.input) for node in model.graph.node)
             }
             
-            logger.info(f"✅ Modelo ONNX cargado: {model_info['nodes_count']} nodos")
+            logger.info(f" Modelo ONNX cargado: {model_info['nodes_count']} nodos")
             return model_info
             
         except Exception as e:
-            logger.error(f"❌ Error cargando modelo ONNX: {e}")
+            logger.error(f" Error cargando modelo ONNX: {e}")
             raise
     
     def _load_tflite_model(self, model_path: str) -> Dict[str, Any]:
@@ -201,16 +201,16 @@ class ARMCompatibilityValidator:
                 "output_shapes": [detail['shape'] for detail in output_details]
             }
             
-            logger.info(f"✅ Modelo TFLite cargado: {len(input_details)} inputs, {len(output_details)} outputs")
+            logger.info(f" Modelo TFLite cargado: {len(input_details)} inputs, {len(output_details)} outputs")
             return model_info
             
         except Exception as e:
-            logger.error(f"❌ Error cargando modelo TFLite: {e}")
+            logger.error(f" Error cargando modelo TFLite: {e}")
             raise
     
     def _validate_sve2_compatibility(self, model_state: Dict[str, Any]) -> Tuple[ValidationResult, str]:
         """Valida compatibilidad with SVE2."""
-        logger.info("🔍 Validando compatibilidad SVE2...")
+        logger.info(" Validando compatibilidad SVE2...")
         
         try:
             # verify if SVE2 está available
@@ -245,12 +245,12 @@ class ARMCompatibilityValidator:
             return ValidationResult.PASS, "SVE2 compatible (sin parámetros para validar)"
             
         except Exception as e:
-            logger.error(f"❌ Error validando SVE2: {e}")
+            logger.error(f" Error validando SVE2: {e}")
             return ValidationResult.FAIL, f"Error validando SVE2: {e}"
     
     def _validate_memory_efficiency(self, model_state: Dict[str, Any]) -> Tuple[ValidationResult, str]:
         """Valida eficiencia de memory."""
-        logger.info("🔍 Validando eficiencia de memoria...")
+        logger.info(" Validando eficiencia de memoria...")
         
         try:
             # calculate uso de memory estimado
@@ -282,12 +282,12 @@ class ARMCompatibilityValidator:
                 return ValidationResult.FAIL, f"Memoria insuficiente ({estimated_memory_gb:.1f}GB / {available_memory_gb:.1f}GB)"
             
         except Exception as e:
-            logger.error(f"❌ Error validando memoria: {e}")
+            logger.error(f" Error validando memoria: {e}")
             return ValidationResult.FAIL, f"Error validando memoria: {e}"
     
     def _validate_quantization_readiness(self, model_state: Dict[str, Any]) -> Tuple[ValidationResult, str]:
         """Valida preparación for cuantización."""
-        logger.info("🔍 Validando preparación para cuantización...")
+        logger.info(" Validando preparación para cuantización...")
         
         try:
             if "params" in model_state:
@@ -323,12 +323,12 @@ class ARMCompatibilityValidator:
             return ValidationResult.PASS, "Listo para cuantización (sin parámetros para validar)"
             
         except Exception as e:
-            logger.error(f"❌ Error validando cuantización: {e}")
+            logger.error(f" Error validando cuantización: {e}")
             return ValidationResult.FAIL, f"Error validando cuantización: {e}"
     
     def _validate_onnx_compatibility(self, model_state: Dict[str, Any]) -> Tuple[ValidationResult, str]:
         """Valida compatibilidad with ONNX."""
-        logger.info("🔍 Validando compatibilidad ONNX...")
+        logger.info(" Validando compatibilidad ONNX...")
         
         try:
             # verify if ONNX Runtime ARM está available
@@ -349,12 +349,12 @@ class ARMCompatibilityValidator:
                     return ValidationResult.WARNING, "Modelo con formato desconocido"
             
         except Exception as e:
-            logger.error(f"❌ Error validando ONNX: {e}")
+            logger.error(f" Error validando ONNX: {e}")
             return ValidationResult.FAIL, f"Error validando ONNX: {e}"
     
     def _validate_performance_optimization(self, model_state: Dict[str, Any]) -> Tuple[ValidationResult, str]:
         """Valida optimizaciones de rendimiento."""
-        logger.info("🔍 Validando optimizaciones de rendimiento...")
+        logger.info(" Validando optimizaciones de rendimiento...")
         
         try:
             # obtain information del sistema ARM
@@ -391,12 +391,12 @@ class ARMCompatibilityValidator:
                 return ValidationResult.FAIL, f"Optimizaciones ARM insuficientes ({optimization_ratio:.1%})"
             
         except Exception as e:
-            logger.error(f"❌ Error validando rendimiento: {e}")
+            logger.error(f" Error validando rendimiento: {e}")
             return ValidationResult.FAIL, f"Error validando rendimiento: {e}"
     
     def _generate_validation_report(self, validation_results: Dict[str, Tuple[ValidationResult, str]]) -> ValidationReport:
         """Genera reporte de validation."""
-        logger.info("📊 Generando reporte de validación...")
+        logger.info(" Generando reporte de validación...")
         
         # tell resultados
         passed = []
@@ -528,40 +528,40 @@ class ARMCompatibilityValidator:
     def print_validation_report(self, report: ValidationReport):
         """Imprime reporte de validation en consola."""
         logger.info("=" * 60)
-        logger.info("📊 REPORTE DE VALIDACIÓN ARM")
+        logger.info(" REPORTE DE VALIDACIÓN ARM")
         logger.info("=" * 60)
         
         # result general
         status_emoji = {
-            ValidationResult.PASS: "✅",
-            ValidationResult.WARNING: "⚠️",
-            ValidationResult.FAIL: "❌",
-            ValidationResult.SKIP: "⏭️"
+            ValidationResult.PASS: "",
+            ValidationResult.WARNING: "️",
+            ValidationResult.FAIL: "",
+            ValidationResult.SKIP: "️"
         }
         
-        logger.info(f"🎯 Resultado General: {status_emoji[report.overall_result]} {report.overall_result.value.upper()}")
-        logger.info(f"⏱️ Tiempo de validación: {report.validation_time:.2f} segundos")
-        logger.info(f"🔍 Validaciones realizadas: {len(report.checks_performed)}")
+        logger.info(f" Resultado General: {status_emoji[report.overall_result]} {report.overall_result.value.upper()}")
+        logger.info(f"️ Tiempo de validación: {report.validation_time:.2f} segundos")
+        logger.info(f" Validaciones realizadas: {len(report.checks_performed)}")
         
         # Detalles de validaciones
-        logger.info("\n📋 DETALLES DE VALIDACIÓN:")
+        logger.info("\n DETALLES DE VALIDACIÓN:")
         
         for check in report.checks_passed:
-            logger.info(f"  ✅ {check}")
+            logger.info(f"   {check}")
         
         for check in report.checks_warnings:
-            logger.info(f"  ⚠️ {check}")
+            logger.info(f"  ️ {check}")
         
         for check in report.checks_failed:
-            logger.info(f"  ❌ {check}")
+            logger.info(f"   {check}")
         
         # Métricas del sistema
-        logger.info("\n💻 INFORMACIÓN DEL SISTEMA:")
+        logger.info("\n INFORMACIÓN DEL SISTEMA:")
         for key, value in report.system_info.items():
             logger.info(f"  {key}: {value}")
         
         # Recomendaciones
-        logger.info("\n💡 RECOMENDACIONES:")
+        logger.info("\n RECOMENDACIONES:")
         for recommendation in report.recommendations:
             logger.info(f"  • {recommendation}")
         
@@ -667,7 +667,7 @@ def main():
                 "system_info": report.system_info
             }, f, indent=2)
         
-        logger.info(f"📄 Reporte exportado a: {args.output}")
+        logger.info(f" Reporte exportado a: {args.output}")
     
     # Código de output
     if report.overall_result == ValidationResult.FAIL:

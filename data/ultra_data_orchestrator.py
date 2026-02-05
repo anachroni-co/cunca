@@ -181,15 +181,15 @@ class UltraDataOrchestrator:
     def _initialize_orchestrator(self):
         """Initialize the ultra data orchestrator."""
         
-        logger.info("🚀 Initializing Ultra Data Orchestrator")
+        logger.info(" Initializing Ultra Data Orchestrator")
         
         # Initialize ultra system integrations
         if self.config.auto_core_integration and ULTRA_CORE_AVAILABLE:
             try:
                 self.core_orchestrator = create_ultra_core_system()
-                logger.info("✅ Ultra Core integration initialized")
+                logger.info(" Ultra Core integration initialized")
             except Exception as e:
-                logger.warning(f"⚠️ Core integration failed: {e}")
+                logger.warning(f"️ Core integration failed: {e}")
         
         # Initialize existing data systems
         self._initialize_data_systems()
@@ -202,10 +202,10 @@ class UltraDataOrchestrator:
         if self.config.enable_robotics_intelligence:
             self._initialize_robotics_intelligence()
         
-        logger.info(f"✅ Ultra Data Orchestrator initialized")
-        logger.info(f"   📊 Available datasets: {len(self.datasets)}")
-        logger.info(f"   🔥 Ultra Core: {'✅' if self.core_orchestrator else '❌'}")
-        logger.info(f"   🤖 Robotics Intelligence: {'✅' if self.robotics_manager else '❌'}")
+        logger.info(f" Ultra Data Orchestrator initialized")
+        logger.info(f"    Available datasets: {len(self.datasets)}")
+        logger.info(f"    Ultra Core: {'' if self.core_orchestrator else ''}")
+        logger.info(f"    Robotics Intelligence: {'' if self.robotics_manager else ''}")
     
     def _initialize_data_systems(self):
         """Initialize existing data systems."""
@@ -233,12 +233,12 @@ class UltraDataOrchestrator:
                 # Initialize unified pipeline
                 self.unified_pipeline = UnifiedDataPipeline()
                 
-                logger.info("✅ Existing data systems initialized")
+                logger.info(" Existing data systems initialized")
                 
             except Exception as e:
-                logger.error(f"❌ Failed to initialize data systems: {e}")
+                logger.error(f" Failed to initialize data systems: {e}")
         else:
-            logger.warning("⚠️ Data registry not available")
+            logger.warning("️ Data registry not available")
     
     def intelligent_dataset_selection(
         self,
@@ -681,7 +681,7 @@ class UltraDataOrchestrator:
     def _initialize_training_integration(self):
         """Initialize training integration for data."""
         if ULTRA_TRAINING_INTEGRATION:
-            logger.info("🎯 Training integration initialized for data systems")
+            logger.info(" Training integration initialized for data systems")
     
     def _initialize_robotics_intelligence(self):
         """Initialize robotics intelligence systems."""
@@ -689,9 +689,9 @@ class UltraDataOrchestrator:
             if DATA_REGISTRY_AVAILABLE:
                 # Track that we have robotics capabilities
                 self.global_metrics["robotics_episodes_available"] = 1100000
-                logger.info("🤖 Robotics intelligence initialized")
-                logger.info("   📊 1.1M+ episodes available")
-                logger.info("   🏆 Berkeley AI + TU Berlin + Google DeepMind")
+                logger.info(" Robotics intelligence initialized")
+                logger.info("    1.1M+ episodes available")
+                logger.info("    Berkeley AI + TU Berlin + Google DeepMind")
         except Exception as e:
             logger.error(f"Failed to initialize robotics intelligence: {e}")
     
@@ -772,7 +772,7 @@ def create_ultra_data_config(
 def demonstrate_ultra_data_orchestration():
     """Demonstrate the ultra data orchestration system."""
     
-    logger.info("🌟 ULTRA DATA ORCHESTRATION DEMONSTRATION")
+    logger.info(" ULTRA DATA ORCHESTRATION DEMONSTRATION")
     logger.info("=" * 60)
     
     # Create configuration
@@ -781,7 +781,7 @@ def demonstrate_ultra_data_orchestration():
         enable_all_features=True
     )
     
-    logger.info(f"📋 Configuration created:")
+    logger.info(f" Configuration created:")
     logger.info(f"   - Strategy: {config.orchestration_strategy.value}")
     logger.info(f"   - Modalities: {len(config.enabled_modalities)}")
     logger.info(f"   - Ultra features: {config.auto_core_integration}")
@@ -792,7 +792,7 @@ def demonstrate_ultra_data_orchestration():
     # Get system status
     status = orchestrator.get_system_status()
     
-    logger.info(f"\n🔍 System Status:")
+    logger.info(f"\n System Status:")
     logger.info(f"   - Premium datasets: {status['datasets']['total_premium_datasets']}")
     logger.info(f"   - Robotics episodes: {status['datasets']['robotics_episodes']:,}")
     logger.info(f"   - Real-time APIs: {status['datasets']['real_time_apis']}")
@@ -809,13 +809,13 @@ def demonstrate_ultra_data_orchestration():
             modality_preferences=[DataModalityType.ROBOTICS, DataModalityType.MULTIMODAL]
         )
         
-        logger.info(f"\n🎯 Intelligent Selection Test:")
+        logger.info(f"\n Intelligent Selection Test:")
         logger.info(f"   - Selected datasets: {len(selection_result['selected_datasets'])}")
         logger.info(f"   - Estimated quality: {selection_result['estimated_quality']:.2f}/10")
         logger.info(f"   - Reasoning: {list(selection_result['selection_reasoning'].keys())}")
         
     except Exception as e:
-        logger.error(f"\n❌ Selection test failed: {e}")
+        logger.error(f"\n Selection test failed: {e}")
     
     return orchestrator
 

@@ -89,8 +89,8 @@ class ConvexityTrainingStrategy:
         self.step_count = 0
         self.start_time = time.time()
         
-        logger.info(f"🎯 ConvexityTrainingStrategy initialized")
-        logger.info(f"📊 Config: {self.config}")
+        logger.info(f" ConvexityTrainingStrategy initialized")
+        logger.info(f" Config: {self.config}")
     
     def create_optimizer(self) -> optax.GradientTransformation:
         """Creates optimizer without fixed learning rate scaling."""
@@ -209,7 +209,7 @@ class ConvexityTrainingStrategy:
         base_schedule = self.create_base_lr_schedule()
         p_train_step = self.create_pmap_train_step(apply_fn)
         
-        logger.info(f"🚀 Starting convexity-aware training for {self.config.total_steps} steps")
+        logger.info(f" Starting convexity-aware training for {self.config.total_steps} steps")
         
         try:
             for step in range(1, self.config.total_steps + 1):
@@ -277,13 +277,13 @@ class ConvexityTrainingStrategy:
                     break
                     
         except KeyboardInterrupt:
-            logger.info("🛑 Training interrupted by user")
+            logger.info(" Training interrupted by user")
         except Exception as e:
-            logger.error(f"❌ Training failed: {e}")
+            logger.error(f" Training failed: {e}")
             raise
         
         elapsed = time.time() - self.start_time
-        logger.info(f"✅ Training completed in {elapsed:.2f}s ({self.step_count} steps)")
+        logger.info(f" Training completed in {elapsed:.2f}s ({self.step_count} steps)")
         
         return state
     
@@ -298,7 +298,7 @@ class ConvexityTrainingStrategy:
             f"BaseLR: {metrics['base_lr']:.2e} | "
             f"Gain: {metrics['lr_gain']:.4f} | "
             f"ActualLR: {metrics['lr_actual']:.2e} | "
-            f"Convex: {'✓' if metrics.get('convex_ok', 0) > 0.5 else '✗'} | "
+            f"Convex: {'' if metrics.get('convex_ok', 0) > 0.5 else ''} | "
             f"SecDiff: {metrics.get('second_diff', 0):.2e} | "
             f"{steps_per_sec:.1f} steps/s"
         )
@@ -318,7 +318,7 @@ class ConvexityTrainingStrategy:
         try:
             controller_state = self.controller.get_state()
             # You can extend this to save to disk if needed
-            logger.debug(f"💾 Controller state checkpointed at step {step}")
+            logger.debug(f" Controller state checkpointed at step {step}")
         except Exception as e:
             logger.warning(f"Failed to checkpoint controller: {e}")
     

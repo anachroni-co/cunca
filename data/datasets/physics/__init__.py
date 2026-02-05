@@ -58,9 +58,9 @@ class PhysicsDatasetLoader:
     def __init__(self, base_path: Optional[str] = None):
         self.base_path = Path(base_path) if base_path else Path(__file__).parent
         self.available_datasets = PHYSICS_DATASETS.copy()
-        logger.info("🔬 Physics dataset loader initialized")
-        logger.info(f"   📁 Base path: {self.base_path}")
-        logger.info(f"   📊 Available datasets: {len(self.available_datasets)}")
+        logger.info(" Physics dataset loader initialized")
+        logger.info(f"    Base path: {self.base_path}")
+        logger.info(f"    Available datasets: {len(self.available_datasets)}")
     
     def list_datasets(self) -> List[str]:
         """Lists the available physics datasets."""
@@ -72,7 +72,7 @@ class PhysicsDatasetLoader:
     
     def load_physics_equations(self, subject: str = 'mechanics') -> Dict[str, Any]:
         """Loads physics equations by topic."""
-        logger.info(f"📥 Loading physics equations: {subject}")
+        logger.info(f" Loading physics equations: {subject}")
 
         # Example equations by topic
         equations_db = {
@@ -108,7 +108,7 @@ class PhysicsDatasetLoader:
     
     def load_experimental_data(self, experiment_type: str = 'particle_physics') -> Dict[str, Any]:
         """Loads experimental data."""
-        logger.info(f"📥 Loading experimental data: {experiment_type}")
+        logger.info(f" Loading experimental data: {experiment_type}")
 
         # Simulated experimental data
         import numpy as np
@@ -158,4 +158,4 @@ except ImportError:
     __all__ = ['PhysicsDatasetLoader', 'get_physics_loader', 
                'list_available_physics_datasets', 'PHYSICS_DATASETS']
 
-logger.info("🔬 Physics datasets module loaded successfully")
+logger.info(" Physics datasets module loaded successfully")

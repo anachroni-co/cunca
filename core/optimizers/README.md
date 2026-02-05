@@ -2,11 +2,11 @@
 
 Neural network optimizer system with configurable parameters, support for multiple algorithms, and factory functions for optimized creation.
 
-## 📋 Description
+##  Description
 
 Module that provides advanced optimizers with support for Adam, momentum, weight decay, gradient clipping, and learning rate scheduling, optimized for training large language models.
 
-## 🏗️ Architecture
+## ️ Architecture
 
 ```
 optimizers/
@@ -14,7 +14,7 @@ optimizers/
 └── optimizer.py    # Base optimizer class with configurations
 ```
 
-## 🚀 Base Optimizer
+##  Base Optimizer
 
 ```python
 from capibara.core.optimizers import Optimizer
@@ -58,7 +58,7 @@ print(f"Parameter norm: {optimization_step.parameter_norm:.4f}")
 print(f"Weight decay applied: {optimization_step.weight_decay_loss:.6f}")
 ```
 
-## ⚡ Supported Algorithms
+##  Supported Algorithms
 
 ### Optimized Adam
 
@@ -114,7 +114,7 @@ sgd_config = {
 sgd_optimizer = Optimizer.create_sgd(sgd_config)
 ```
 
-## 📊 Learning Rate Scheduling
+##  Learning Rate Scheduling
 
 ### Cosine Annealing with Warmup
 
@@ -168,7 +168,7 @@ poly_scheduler_config = {
 optimizer.configure_polynomial_scheduler(poly_scheduler_config)
 ```
 
-## 🎯 Specialized Configurations
+##  Specialized Configurations
 
 ### For Large Models (>1B parameters)
 
@@ -216,7 +216,7 @@ finetune_config = {
 finetune_optimizer = Optimizer.create_for_finetuning(finetune_config)
 ```
 
-## 🔧 Gradient Processing
+##  Gradient Processing
 
 ### Advanced Gradient Clipping
 
@@ -281,7 +281,7 @@ optimizer.step_with_accumulated_gradients()
 optimizer.zero_grad()
 ```
 
-## 📈 Metrics and Monitoring
+##  Metrics and Monitoring
 
 ### Optimization Metrics
 
@@ -316,9 +316,9 @@ metrics_summary = {
 # Optimization alerts
 optimization_alerts = optimizer.check_optimization_health()
 for alert in optimization_alerts:
-    print(f"⚠️ {alert.level}: {alert.message}")
+    print(f"️ {alert.level}: {alert.message}")
     if alert.suggestion:
-        print(f"💡 Suggestion: {alert.suggestion}")
+        print(f" Suggestion: {alert.suggestion}")
 ```
 
 ### Training Dynamics Visualization
@@ -345,13 +345,13 @@ convergence_analysis = optimizer.analyze_convergence(
     smoothing_factor=0.99
 )
 
-print("📈 Convergence Analysis:")
+print(" Convergence Analysis:")
 print(f"Convergence rate: {convergence_analysis['rate']:.2e}")
 print(f"Estimated steps to convergence: {convergence_analysis['eta_steps']}")
 print(f"Training stability score: {convergence_analysis['stability']:.3f}")
 ```
 
-## 🤖 Hyperparameter Auto-tuning
+##  Hyperparameter Auto-tuning
 
 ```python
 # Auto-tuning system for hyperparameters
@@ -380,7 +380,7 @@ optimal_config = auto_tuner.find_optimal_hyperparameters(
     early_stopping_patience=1000
 )
 
-print("🎯 Optimal Optimizer Configuration:")
+print(" Optimal Optimizer Configuration:")
 for param, value in optimal_config.items():
     print(f"  {param}: {value}")
 
@@ -388,7 +388,7 @@ for param, value in optimal_config.items():
 auto_optimized_optimizer = Optimizer.from_config(optimal_config)
 ```
 
-## 🚀 Factory Functions
+##  Factory Functions
 
 ```python
 # Factory functions for common configurations
@@ -436,7 +436,7 @@ state = optimizer.init(params)
 updated_params, state = optimizer.update(grads, state, params)
 ```
 
-## 📚 References
+##  References
 
 - [Adam: A Method for Stochastic Optimization](https://arxiv.org/abs/1412.6980)
 - [Decoupled Weight Decay Regularization](https://arxiv.org/abs/1711.05101)

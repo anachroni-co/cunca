@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🏗️ CAPIBARA TEXT-TO-BIM SERVICE
+️ CAPIBARA TEXT-TO-BIM SERVICE
 ===============================
 
 Servicio revolucionario de modelado BIM arquitectónico con IA.
@@ -310,7 +310,7 @@ class MockBIMGenerator:
     """Generador BIM mock para demostración"""
     
     def __init__(self):
-        logger.info("🏗️ Mock BIM Generator initialized")
+        logger.info("️ Mock BIM Generator initialized")
     
     async def generate_bim_model(self, request: BIMRequest, config: BIMGenerationConfig) -> Dict[str, Any]:
         """Genera modelo BIM mock"""
@@ -384,10 +384,10 @@ class CapibaraTextToBIM:
         self.parser = ArchitecturalDescriptionParser()
         self.generator = MockBIMGenerator()  # Default to mock for demo
         
-        logger.info("🏗️ CapibaraTextToBIM initialized")
-        logger.info(f"   🔧 Detail level: {self.config.detail_level}")
-        logger.info(f"   🏢 Include MEP: {self.config.include_mep}")
-        logger.info(f"   📊 Structural analysis: {self.config.perform_structural_analysis}")
+        logger.info("️ CapibaraTextToBIM initialized")
+        logger.info(f"    Detail level: {self.config.detail_level}")
+        logger.info(f"    Include MEP: {self.config.include_mep}")
+        logger.info(f"    Structural analysis: {self.config.perform_structural_analysis}")
     
     async def generate_bim(self, request: BIMRequest) -> BIMResult:
         """Generación BIM principal"""
@@ -395,12 +395,12 @@ class CapibaraTextToBIM:
         request_id = f"bim_{int(start_time.timestamp())}"
         
         try:
-            logger.info(f"🏗️ Starting BIM generation: {request.building_type.value}")
-            logger.info(f"📝 Description: {request.description[:100]}...")
+            logger.info(f"️ Starting BIM generation: {request.building_type.value}")
+            logger.info(f" Description: {request.description[:100]}...")
             
             # Parse descripción con IA
             parsed_info = self.parser.parse_description(request.description)
-            logger.info(f"🔍 Detected spaces: {parsed_info['spaces_detected']}")
+            logger.info(f" Detected spaces: {parsed_info['spaces_detected']}")
             
             # Aplicar información parseada al request
             if request.total_area is None:
@@ -437,14 +437,14 @@ class CapibaraTextToBIM:
                 model_complexity=self.config.detail_level
             )
             
-            logger.info(f"✅ BIM generation completed in {processing_time:.1f}s")
-            logger.info(f"🏗️ Files generated: {len(result.bim_files)} BIM, {len(result.plan_files)} plans")
+            logger.info(f" BIM generation completed in {processing_time:.1f}s")
+            logger.info(f"️ Files generated: {len(result.bim_files)} BIM, {len(result.plan_files)} plans")
             
             return result
             
         except Exception as e:
             processing_time = (datetime.now() - start_time).total_seconds()
-            logger.error(f"❌ BIM generation failed: {e}")
+            logger.error(f" BIM generation failed: {e}")
             
             return BIMResult(
                 success=False,
@@ -506,7 +506,7 @@ class CapibaraTextToBIM:
     
     async def test_bim_generation(self) -> Dict[str, Any]:
         """Test completo del servicio BIM"""
-        logger.info("🧪 Testing Text-to-BIM service...")
+        logger.info(" Testing Text-to-BIM service...")
         
         # Test casa residencial
         house_request = BIMRequest(

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-💳 CAPIBARA PAYMENT & FULFILLMENT SYSTEM
+ CAPIBARA PAYMENT & FULFILLMENT SYSTEM
 =======================================
 
 Sistema completo de pagos y cumplimiento que integra Stripe con el 
@@ -187,12 +187,12 @@ class StripePaymentProcessor:
         self.stripe_fee_percentage = 0.029   # 2.9% + $0.30 Stripe fee
         self.stripe_fixed_fee = 0.30
         
-        logger.info("💳 Stripe Payment Processor initialized")
+        logger.info(" Stripe Payment Processor initialized")
     
     async def create_payment_intent(self, order: UnifiedOrder) -> StripePaymentIntent:
         """Crea PaymentIntent para la orden completa"""
         try:
-            logger.info(f"💳 Creating payment intent for order {order.order_id}")
+            logger.info(f" Creating payment intent for order {order.order_id}")
             
             # Calcular amount en centavos
             amount_cents = int(order.payment_breakdown.total * 100)
@@ -228,16 +228,16 @@ class StripePaymentProcessor:
                 metadata=metadata
             )
             
-            logger.info(f"   ✅ Payment intent created: {payment_intent.id}")
-            logger.info(f"   💰 Amount: {amount_cents/100:.2f} {order.payment_breakdown.currency}")
+            logger.info(f"    Payment intent created: {payment_intent.id}")
+            logger.info(f"    Amount: {amount_cents/100:.2f} {order.payment_breakdown.currency}")
             
             return stripe_payment_intent
             
         except stripe.error.StripeError as e:
-            logger.error(f"   ❌ Stripe error creating payment intent: {e}")
+            logger.error(f"    Stripe error creating payment intent: {e}")
             raise
         except Exception as e:
-            logger.error(f"   ❌ Error creating payment intent: {e}")
+            logger.error(f"    Error creating payment intent: {e}")
             raise
     
     async def confirm_payment(self, payment_intent_id: str) -> PaymentStatus:
@@ -246,16 +246,16 @@ class StripePaymentProcessor:
             payment_intent = stripe.PaymentIntent.retrieve(payment_intent_id)
             status = PaymentStatus(payment_intent.status)
             
-            logger.info(f"💳 Payment status for {payment_intent_id}: {status.value}")
+            logger.info(f" Payment status for {payment_intent_id}: {status.value}")
             return status
             
         except stripe.error.StripeError as e:
-            logger.error(f"❌ Error confirming payment: {e}")
+            logger.error(f" Error confirming payment: {e}")
             return PaymentStatus.FAILED
     
     async def process_supplier_payments(self, order: UnifiedOrder) -> List[SupplierPayment]:
         """Procesa pagos a proveedores (simulado - requiere Stripe Connect)"""
-        logger.info(f"💸 Processing supplier payments for order {order.order_id}")
+        logger.info(f" Processing supplier payments for order {order.order_id}")
         
         processed_payments = []
         
@@ -264,8 +264,8 @@ class StripePaymentProcessor:
                 # En implementación real, usarías Stripe Connect para transferir a proveedores
                 # Por ahora, simulamos el proceso
                 
-                logger.info(f"   💸 Processing payment to {supplier_payment.supplier_name}")
-                logger.info(f"      💰 Amount: ${supplier_payment.amount:.2f}")
+                logger.info(f"    Processing payment to {supplier_payment.supplier_name}")
+                logger.info(f"       Amount: ${supplier_payment.amount:.2f}")
                 
                 # Simular transferencia
                 await asyncio.sleep(1.0)
@@ -277,15 +277,15 @@ class StripePaymentProcessor:
                 
                 processed_payments.append(supplier_payment)
                 
-                logger.info(f"      ✅ Payment processed: {supplier_payment.stripe_transfer_id}")
+                logger.info(f"       Payment processed: {supplier_payment.stripe_transfer_id}")
                 
             except Exception as e:
-                logger.error(f"   ❌ Error processing payment to {supplier_payment.supplier_name}: {e}")
+                logger.error(f"    Error processing payment to {supplier_payment.supplier_name}: {e}")
                 supplier_payment.status = PaymentStatus.FAILED
                 processed_payments.append(supplier_payment)
         
         success_count = sum(1 for p in processed_payments if p.status == PaymentStatus.SUCCEEDED)
-        logger.info(f"💸 Supplier payments processed: {success_count}/{len(processed_payments)} successful")
+        logger.info(f" Supplier payments processed: {success_count}/{len(processed_payments)} successful")
         
         return processed_payments
     
@@ -319,7 +319,7 @@ class ShippingManager:
         # Costes de envío por método y región
         self.shipping_rates = self._load_shipping_rates()
         
-        logger.info("📦 Shipping Manager initialized")
+        logger.info(" Shipping Manager initialized")
     
     def _load_shipping_rates(self) -> Dict[str, Dict[str, float]]:
         """Carga tarifas de envío"""
@@ -355,12 +355,12 @@ class ShippingManager:
         
         total_cost = base_cost * weight_multiplier
         
-        logger.info(f"📦 Shipping cost calculated: ${total_cost:.2f} ({shipping_method.value}, {shipping_type})")
+        logger.info(f" Shipping cost calculated: ${total_cost:.2f} ({shipping_method.value}, {shipping_type})")
         return total_cost
     
     async def coordinate_shipping(self, order: UnifiedOrder) -> Dict[str, str]:
         """Coordina envíos desde múltiples proveedores"""
-        logger.info(f"📦 Coordinating shipping for order {order.order_id}")
+        logger.info(f" Coordinating shipping for order {order.order_id}")
         
         tracking_numbers = {}
         
@@ -375,9 +375,9 @@ class ShippingManager:
             tracking_number = f"CPB{order.order_id[-6:].upper()}{supplier_id[-3:].upper()}"
             tracking_numbers[supplier_id] = tracking_number
             
-            logger.info(f"   📦 {supplier_payment.supplier_name}: {tracking_number}")
+            logger.info(f"    {supplier_payment.supplier_name}: {tracking_number}")
         
-        logger.info(f"📦 Shipping coordinated: {len(tracking_numbers)} shipments")
+        logger.info(f" Shipping coordinated: {len(tracking_numbers)} shipments")
         return tracking_numbers
     
     def get_tracking_url(self, tracking_number: str, carrier: str = "fedex") -> str:
@@ -395,11 +395,11 @@ class PaymentAndFulfillmentSystem:
         # Base de datos simulada para órdenes
         self.orders: Dict[str, UnifiedOrder] = {}
         
-        logger.info("💳📦 Payment & Fulfillment System initialized")
+        logger.info(" Payment & Fulfillment System initialized")
     
     async def process_complete_order(self, manufacturing_order, customer_id: str, shipping_address: ShippingAddress, shipping_method: ShippingMethod = ShippingMethod.STANDARD) -> UnifiedOrder:
         """Procesa orden completa desde cotización hasta entrega"""
-        logger.info("🚀 Processing complete order with payment and fulfillment...")
+        logger.info(" Processing complete order with payment and fulfillment...")
         
         try:
             # 1. Crear orden unificada
@@ -418,14 +418,14 @@ class PaymentAndFulfillmentSystem:
             # Guardar orden
             self.orders[order.order_id] = order
             
-            logger.info(f"✅ Complete order created: {order.order_id}")
-            logger.info(f"💰 Total amount: ${order.payment_breakdown.total:.2f}")
-            logger.info(f"💳 Payment intent: {stripe_payment_intent.payment_intent_id}")
+            logger.info(f" Complete order created: {order.order_id}")
+            logger.info(f" Total amount: ${order.payment_breakdown.total:.2f}")
+            logger.info(f" Payment intent: {stripe_payment_intent.payment_intent_id}")
             
             return order
             
         except Exception as e:
-            logger.error(f"❌ Error processing complete order: {e}")
+            logger.error(f" Error processing complete order: {e}")
             raise
     
     async def _create_unified_order(self, manufacturing_order, customer_id: str, shipping_address: ShippingAddress, shipping_method: ShippingMethod) -> UnifiedOrder:
@@ -495,7 +495,7 @@ class PaymentAndFulfillmentSystem:
             stripe_fee
         )
         
-        logger.info(f"💰 Payment breakdown calculated:")
+        logger.info(f" Payment breakdown calculated:")
         logger.info(f"   Suppliers: ${breakdown.subtotal:.2f}")
         logger.info(f"   Shipping: ${breakdown.shipping_cost:.2f}")
         logger.info(f"   Taxes: ${breakdown.tax_cost:.2f}")
@@ -506,11 +506,11 @@ class PaymentAndFulfillmentSystem:
     
     async def handle_payment_confirmation(self, order_id: str) -> bool:
         """Maneja confirmación de pago y dispara fabricación"""
-        logger.info(f"💳 Handling payment confirmation for order {order_id}")
+        logger.info(f" Handling payment confirmation for order {order_id}")
         
         order = self.orders.get(order_id)
         if not order or not order.stripe_payment_intent:
-            logger.error(f"❌ Order or payment intent not found: {order_id}")
+            logger.error(f" Order or payment intent not found: {order_id}")
             return False
         
         try:
@@ -536,29 +536,29 @@ class PaymentAndFulfillmentSystem:
                 order.tracking_numbers = tracking_numbers
                 order.order_status = OrderStatus.MANUFACTURING
                 
-                logger.info(f"✅ Payment confirmed and manufacturing triggered for {order_id}")
+                logger.info(f" Payment confirmed and manufacturing triggered for {order_id}")
                 return True
             else:
-                logger.warning(f"⚠️ Payment not successful: {payment_status.value}")
+                logger.warning(f"️ Payment not successful: {payment_status.value}")
                 return False
                 
         except Exception as e:
-            logger.error(f"❌ Error handling payment confirmation: {e}")
+            logger.error(f" Error handling payment confirmation: {e}")
             return False
     
     async def _trigger_manufacturing(self, order: UnifiedOrder):
         """Dispara proceso de fabricación"""
-        logger.info(f"🏭 Triggering manufacturing for order {order.order_id}")
+        logger.info(f" Triggering manufacturing for order {order.order_id}")
         
         # En implementación real, integraría con el ManufacturingEcosystem
         # y N8N workflows para disparar la fabricación automáticamente
         
         # Simular notificación a proveedores
         for supplier_payment in order.supplier_payments:
-            logger.info(f"   📧 Notifying {supplier_payment.supplier_name} to start manufacturing")
+            logger.info(f"    Notifying {supplier_payment.supplier_name} to start manufacturing")
             await asyncio.sleep(0.5)
         
-        logger.info("   ✅ Manufacturing notifications sent")
+        logger.info("    Manufacturing notifications sent")
     
     def get_order_status(self, order_id: str) -> Optional[Dict[str, Any]]:
         """Obtiene estado completo de la orden"""
@@ -610,10 +610,10 @@ async def handle_stripe_webhook(payload: str, signature: str, webhook_secret: st
             
             if order_id:
                 await fulfillment_system.handle_payment_confirmation(order_id)
-                logger.info(f"✅ Webhook processed: payment_intent.succeeded for {order_id}")
+                logger.info(f" Webhook processed: payment_intent.succeeded for {order_id}")
         
         return True
         
     except Exception as e:
-        logger.error(f"❌ Error processing Stripe webhook: {e}")
+        logger.error(f" Error processing Stripe webhook: {e}")
         return False

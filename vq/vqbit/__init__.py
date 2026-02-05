@@ -192,7 +192,7 @@ class VQBitSystem:
         self.available_systems = self._detect_available_systems()
         self.performance_cache = {}
         
-        logger.info(f"🔧 VQBit System initialized with {len(self.available_systems)} backends")
+        logger.info(f" VQBit System initialized with {len(self.available_systems)} backends")
         
     def _detect_available_systems(self) -> Dict[str, bool]:
         """Detect available VQ systems."""
@@ -585,10 +585,10 @@ available_components = sum([
 ])
 
 if available_components >= 6:
-    logger.info("🚀 Full VQBit system ready with all components")
+    logger.info(" Full VQBit system ready with all components")
 elif available_components >= 4:
-    logger.info("⚡ Most VQBit components available")
+    logger.info(" Most VQBit components available")
 elif available_components >= 2:
-    logger.info("🔧 Basic VQBit system available")
+    logger.info(" Basic VQBit system available")
 else:
-    logger.warning("⚠️ Limited VQBit capabilities available")
+    logger.warning("️ Limited VQBit capabilities available")

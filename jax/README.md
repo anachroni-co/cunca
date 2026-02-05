@@ -2,7 +2,7 @@
 
 The **capibara/jax** module provides a custom JAX implementation with specific optimizations for capibaraGPT-v2 and TPU v4/v5e/v6e.
 
-## 📋 Table of Contents
+##  Table of Contents
 
 1. [Why Custom JAX?](#why-custom-jax)
 2. [Architecture](#architecture)
@@ -14,7 +14,7 @@ The **capibara/jax** module provides a custom JAX implementation with specific o
 
 ---
 
-## 🎯 Why Custom JAX?
+##  Why Custom JAX?
 
 capibaraGPT-v2 uses a **custom JAX implementation** for several reasons:
 
@@ -38,7 +38,7 @@ capibaraGPT-v2 uses a **custom JAX implementation** for several reasons:
 
 ---
 
-## 🏗️ Architecture
+## ️ Architecture
 
 ```
 capibara/jax/
@@ -82,7 +82,7 @@ from capibara.jax import custom_activations
 
 ---
 
-## 🧩 Main Components
+##  Main Components
 
 ### 1. Core Module
 
@@ -174,7 +174,7 @@ x = random.truncated_normal(key, shape=(10,), bounds=(-2, 2))
 
 ---
 
-## ⚡ TPU Optimizations
+##  TPU Optimizations
 
 ### TPU v4/v5e/v6e Specific Optimizations
 
@@ -257,7 +257,7 @@ mamba_output = neuromorphic_kernels.mamba_ssm_kernel(
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Installation and Setup
 
@@ -318,7 +318,7 @@ compiled = jax.jit(
 
 ---
 
-## 🔄 Migration from Standard JAX
+##  Migration from Standard JAX
 
 ### Existing JAX Code
 
@@ -367,7 +367,7 @@ print(f"Compatible: {is_compatible}")
 
 ---
 
-## 🔧 Advanced Usage
+##  Advanced Usage
 
 ### Custom Primitives
 
@@ -447,7 +447,7 @@ profiling.export_tensorboard("logs/profile/")
 
 ---
 
-## 📊 Performance Comparison
+##  Performance Comparison
 
 ### Standard JAX vs capibara.jax
 
@@ -471,7 +471,7 @@ profiling.export_tensorboard("logs/profile/")
 
 ---
 
-## 🔍 Debugging
+##  Debugging
 
 ### Debug Mode
 
@@ -504,7 +504,7 @@ except errors.JAXError as e:
 
 ---
 
-## 📚 API Reference
+##  API Reference
 
 ### Main Modules
 
@@ -566,7 +566,7 @@ tpu_optimization.verify_optimizations()  # Verify they are active
 
 ---
 
-## 📖 References
+##  References
 
 - [JAX Documentation](https://jax.readthedocs.io/) - Standard JAX
 - [TPU Optimization](tpu_v4/tpu_optimization.py) - TPU optimizations
@@ -575,7 +575,7 @@ tpu_optimization.verify_optimizations()  # Verify they are active
 
 ---
 
-## 🔗 Related Links
+##  Related Links
 
 - [capibara/core](../core/README.md) - Core components
 - [capibara/training](../training/README.md) - Training system

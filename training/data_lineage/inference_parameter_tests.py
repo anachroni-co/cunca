@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-🧪 INFERENCE PARAMETER CONTROL TESTS
+ INFERENCE PARAMETER CONTROL TESTS
 ====================================
 
 Critical tests to verify that parameter enable/disable functionality
@@ -149,7 +149,7 @@ class InferenceParameterTester:
             self.CONTROLLER_AVAILABLE = False
             self.controller = None
             
-        logger.info("🧪 InferenceParameterTester initialized")
+        logger.info(" InferenceParameterTester initialized")
     
     def _generate_test_data(self) -> Dict[str, np.ndarray]:
         """Generate test data for inference testing."""
@@ -165,7 +165,7 @@ class InferenceParameterTester:
     
     def establish_baseline(self):
         """Establish baseline model outputs before parameter control."""
-        logger.info("📊 Establishing baseline outputs...")
+        logger.info(" Establishing baseline outputs...")
         
         for test_name, test_input in self.test_data.items():
             outputs = {
@@ -175,14 +175,14 @@ class InferenceParameterTester:
             }
             self.baseline_outputs[test_name] = outputs
             
-        logger.info(f"✅ Baseline established for {len(self.test_data)} test cases")
+        logger.info(f" Baseline established for {len(self.test_data)} test cases")
     
     def test_parameter_disabling(self) -> Dict[str, Any]:
         """Test parameter disabling functionality."""
         if not self.CONTROLLER_AVAILABLE:
             return {"error": "Parameter controller not available"}
         
-        logger.info("🔧 Testing parameter disabling...")
+        logger.info(" Testing parameter disabling...")
         results = {}
         
         # Test 1: Disable single dataset parameters
@@ -222,7 +222,7 @@ class InferenceParameterTester:
                     
                 except Exception as e:
                     results[test_key] = {"error": str(e)}
-                    logger.error(f"❌ Error in {test_key}: {e}")
+                    logger.error(f" Error in {test_key}: {e}")
         
         return results
     
@@ -231,7 +231,7 @@ class InferenceParameterTester:
         if not self.CONTROLLER_AVAILABLE:
             return {"error": "Parameter controller not available"}
         
-        logger.info("🎚️ Testing gradual parameter control...")
+        logger.info("️ Testing gradual parameter control...")
         results = {}
         
         try:
@@ -285,7 +285,7 @@ class InferenceParameterTester:
             
         except Exception as e:
             results["gradual_control"] = {"error": str(e)}
-            logger.error(f"❌ Error in gradual control test: {e}")
+            logger.error(f" Error in gradual control test: {e}")
         
         return results
     
@@ -294,7 +294,7 @@ class InferenceParameterTester:
         if not self.CONTROLLER_AVAILABLE:
             return {"error": "Parameter controller not available"}
         
-        logger.info("🔄 Testing model recovery...")
+        logger.info(" Testing model recovery...")
         results = {}
         
         try:
@@ -335,7 +335,7 @@ class InferenceParameterTester:
             
         except Exception as e:
             results["recovery"] = {"error": str(e)}
-            logger.error(f"❌ Error in recovery test: {e}")
+            logger.error(f" Error in recovery test: {e}")
         
         return results
     
@@ -344,7 +344,7 @@ class InferenceParameterTester:
         if not self.CONTROLLER_AVAILABLE:
             return {"error": "Parameter controller not available"}
         
-        logger.info("⚠️ Testing edge cases...")
+        logger.info("️ Testing edge cases...")
         results = {}
         
         # Test 1: Disable non-existent dataset
@@ -387,7 +387,7 @@ class InferenceParameterTester:
     
     def run_comprehensive_tests(self) -> Dict[str, Any]:
         """Run all comprehensive tests."""
-        logger.info("🚀 Starting comprehensive parameter control tests...")
+        logger.info(" Starting comprehensive parameter control tests...")
         
         # Establish baseline
         self.establish_baseline()
@@ -405,7 +405,7 @@ class InferenceParameterTester:
         summary = self._generate_test_summary(all_results)
         all_results["summary"] = summary
         
-        logger.info("🏁 Comprehensive tests completed")
+        logger.info(" Comprehensive tests completed")
         return all_results
     
     def _create_mock_lineage(self, dataset_id: str):
@@ -524,7 +524,7 @@ class InferenceParameterTester:
 # Test execution functions
 def run_parameter_control_tests() -> Dict[str, Any]:
     """Run comprehensive parameter control tests."""
-    logger.info("🧪 Initializing parameter control tests...")
+    logger.info(" Initializing parameter control tests...")
     
     # Create mock model
     model = MockModel()
@@ -540,33 +540,33 @@ def run_parameter_control_tests() -> Dict[str, Any]:
 def print_test_results(results: Dict[str, Any]):
     """Print formatted test results."""
     logger.info("\n" + "="*80)
-    logger.info("🧪 PARAMETER CONTROL TEST RESULTS")
+    logger.info(" PARAMETER CONTROL TEST RESULTS")
     logger.info("="*80)
     
     if "summary" in results:
         summary = results["summary"]
-        logger.info(f"\n📊 SUMMARY:")
+        logger.info(f"\n SUMMARY:")
         logger.info(f"   Total Tests: {summary['total_tests']}")
-        logger.info(f"   Passed: {summary['passed_tests']} ✅")
-        logger.error(f"   Failed: {summary['failed_tests']} ❌")
+        logger.info(f"   Passed: {summary['passed_tests']} ")
+        logger.error(f"   Failed: {summary['failed_tests']} ")
         logger.info(f"   Success Rate: {summary['success_rate']:.1%}")
-        logger.info(f"   Overall Success: {'✅' if summary['overall_success'] else '❌'}")
+        logger.info(f"   Overall Success: {'' if summary['overall_success'] else ''}")
         
         if summary['errors']:
-            logger.error(f"\n❌ ERRORS:")
+            logger.error(f"\n ERRORS:")
             for error in summary['errors']:
                 logger.error(f"   - {error}")
     
-    logger.debug("\n📋 DETAILED RESULTS:")
+    logger.debug("\n DETAILED RESULTS:")
     for section, data in results.items():
         if section != "summary":
-            logger.info(f"\n  🔍 {section.upper()}:")
+            logger.info(f"\n   {section.upper()}:")
             if isinstance(data, dict) and "error" in data:
-                logger.error(f"    ❌ Error: {data['error']}")
+                logger.error(f"     Error: {data['error']}")
             elif isinstance(data, dict) and "success" in data:
-                logger.info(f"    {'✅' if data['success'] else '❌'} Success: {data['success']}")
+                logger.info(f"    {'' if data['success'] else ''} Success: {data['success']}")
             else:
-                logger.info(f"    📊 Contains {len(data) if isinstance(data, dict) else 1} test(s)")
+                logger.info(f"     Contains {len(data) if isinstance(data, dict) else 1} test(s)")
 
 if __name__ == "__main__":
     # Configure logging
@@ -597,4 +597,4 @@ if __name__ == "__main__":
         
         json.dump(convert_for_json(test_results), f, indent=2)
     
-    logger.info(f"\n💾 Results saved to: parameter_control_test_results.json")
+    logger.info(f"\n Results saved to: parameter_control_test_results.json")

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-🔗⚡ Blockchain + Smart Contracts Integration for CapibaraGPT-v2
+ Blockchain + Smart Contracts Integration for CapibaraGPT-v2
 ===============================================================
 
 Advanced hybrid system that combines:
@@ -95,8 +95,8 @@ class TrainingDataComplianceContract(SmartContract):
         self.last_audit_check = {}
         self.dataset_status = {}
         
-        logger.info(f"🔒 Training Data Compliance Contract initialized: {contract_id}")
-        logger.info(f"📋 Monitoring {len(compliance_rules)} compliance rules")
+        logger.info(f" Training Data Compliance Contract initialized: {contract_id}")
+        logger.info(f" Monitoring {len(compliance_rules)} compliance rules")
     
     def validate_conditions(self, context: Dict[str, Any]) -> tuple[bool, List[str]]:
         """Validate training data compliance conditions."""
@@ -294,7 +294,7 @@ class BlockchainSmartContractsManager:
         self.monitoring_active = False
         self.check_interval = contracts_check_interval
         
-        logger.info(f"🔗⚡ Blockchain + Smart Contracts Manager initialized")
+        logger.info(f" Blockchain + Smart Contracts Manager initialized")
         self._log_system_status()
     
     def _initialize_systems(self, model_parameters: Optional[Dict[str, Any]]):
@@ -304,9 +304,9 @@ class BlockchainSmartContractsManager:
             try:
                 from .blockchain_audit_log import create_blockchain_audit_log
                 self.blockchain_audit = create_blockchain_audit_log(str(self.audit_log_dir))
-                logger.info("✅ Blockchain audit system initialized")
+                logger.info(" Blockchain audit system initialized")
             except Exception as e:
-                logger.error(f"❌ Failed to initialize blockchain audit: {e}")
+                logger.error(f" Failed to initialize blockchain audit: {e}")
         
         # Initialize parameter controller
         if model_parameters and BLOCKCHAIN_AVAILABLE:
@@ -319,9 +319,9 @@ class BlockchainSmartContractsManager:
                     self.parameter_controller = create_dataset_parameter_controller(
                         model_parameters, str(audit_report_path)
                     )
-                    logger.info("✅ Parameter controller initialized")
+                    logger.info(" Parameter controller initialized")
             except Exception as e:
-                logger.error(f"❌ Failed to initialize parameter controller: {e}")
+                logger.error(f" Failed to initialize parameter controller: {e}")
         
         # Initialize smart contracts manager
         if SMART_CONTRACTS_AVAILABLE:
@@ -329,14 +329,14 @@ class BlockchainSmartContractsManager:
                 self.smart_contracts_manager = SmartContractsManager(
                     check_interval_seconds=self.check_interval
                 )
-                logger.info("✅ Smart contracts manager initialized")
+                logger.info(" Smart contracts manager initialized")
             except Exception as e:
-                logger.error(f"❌ Failed to initialize smart contracts: {e}")
+                logger.error(f" Failed to initialize smart contracts: {e}")
     
     def add_compliance_rule(self, rule: DatasetComplianceRule):
         """Add a compliance rule for a dataset."""
         self.compliance_rules[rule.dataset_id] = rule
-        logger.info(f"📋 Added compliance rule for {rule.dataset_id} (level: {rule.compliance_level.value})")
+        logger.info(f" Added compliance rule for {rule.dataset_id} (level: {rule.compliance_level.value})")
     
     def create_compliance_contract(
         self, 
@@ -345,7 +345,7 @@ class BlockchainSmartContractsManager:
     ) -> bool:
         """Create a training data compliance contract."""
         if not self.smart_contracts_manager:
-            logger.error("❌ Smart contracts manager not available")
+            logger.error(" Smart contracts manager not available")
             return False
         
         try:
@@ -360,11 +360,11 @@ class BlockchainSmartContractsManager:
             self.smart_contracts_manager.activate_contract(contract_id)
             self.active_contracts[contract_id] = contract
             
-            logger.info(f"🔒 Created compliance contract: {contract_id}")
+            logger.info(f" Created compliance contract: {contract_id}")
             return True
             
         except Exception as e:
-            logger.error(f"❌ Failed to create compliance contract: {e}")
+            logger.error(f" Failed to create compliance contract: {e}")
             return False
     
     def log_training_event(
@@ -379,7 +379,7 @@ class BlockchainSmartContractsManager:
     ) -> Optional[str]:
         """Log training event with compliance checking."""
         if not self.blockchain_audit:
-            logger.warning("⚠️ Blockchain audit not available")
+            logger.warning("️ Blockchain audit not available")
             return None
         
         # Add compliance metadata
@@ -430,17 +430,17 @@ class BlockchainSmartContractsManager:
             try:
                 is_valid, violations = contract.validate_conditions(context)
                 if not is_valid:
-                    logger.warning(f"⚠️ Compliance violation detected: {violations}")
+                    logger.warning(f"️ Compliance violation detected: {violations}")
                     
                     # Execute remediation actions
                     context['violated_datasets'] = [dataset_id]
                     result = contract.execute_action(context)
                     
                     if result['success']:
-                        logger.info(f"✅ Remediation actions taken: {result['actions_taken']}")
+                        logger.info(f" Remediation actions taken: {result['actions_taken']}")
                     
             except Exception as e:
-                logger.error(f"❌ Error in compliance check: {e}")
+                logger.error(f" Error in compliance check: {e}")
     
     def get_compliance_status(self) -> Dict[str, Any]:
         """Get comprehensive compliance status."""
@@ -477,10 +477,10 @@ class BlockchainSmartContractsManager:
     
     def _log_system_status(self):
         """Log current system status."""
-        logger.info("🔍 SYSTEM STATUS:")
-        logger.info(f"   🔗 Blockchain Audit: {'✅' if self.blockchain_audit else '❌'}")
-        logger.info(f"   🎛️ Parameter Controller: {'✅' if self.parameter_controller else '❌'}")
-        logger.info(f"   ⚡ Smart Contracts: {'✅' if self.smart_contracts_manager else '❌'}")
+        logger.info(" SYSTEM STATUS:")
+        logger.info(f"    Blockchain Audit: {'' if self.blockchain_audit else ''}")
+        logger.info(f"   ️ Parameter Controller: {'' if self.parameter_controller else ''}")
+        logger.info(f"    Smart Contracts: {'' if self.smart_contracts_manager else ''}")
 
 # Factory function
 def create_hybrid_governance_system(

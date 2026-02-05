@@ -618,13 +618,13 @@ def export_metrics_report(format: str = "json"):
 def default_alert_callback(alert: Alert):
     """Default callback for alerts."""
     level_emoji = {
-        AlertLevel.INFO: "ℹ️",
-        AlertLevel.WARNING: "⚠️", 
-        AlertLevel.ERROR: "❌",
-        AlertLevel.CRITICAL: "🚨"
+        AlertLevel.INFO: "️",
+        AlertLevel.WARNING: "️", 
+        AlertLevel.ERROR: "",
+        AlertLevel.CRITICAL: ""
     }
     
-    emoji = level_emoji.get(alert.alert_level, "❓")
+    emoji = level_emoji.get(alert.alert_level, "")
     logger.info(f"{emoji} ALERT: {alert.message}")
 
 # Register default callback

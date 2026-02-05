@@ -2,11 +2,11 @@
 
 Multimodal encoders module for vision, video processing, and modality combination with configurable architectures and robust fallbacks.
 
-## 📋 Description
+##  Description
 
 This module provides specialized encoders for different modalities (text, image, video) with multimodal combination capabilities, standardized output dimensions, and fallback implementations when specialized libraries are not available.
 
-## 🏗️ Architecture
+## ️ Architecture
 
 ```
 encoders/
@@ -16,7 +16,7 @@ encoders/
 └── multimodal_combiner.py   # Multimodal combiner
 ```
 
-## 🎯 Main Components
+##  Main Components
 
 ### 1. Vision Encoder (`vision_encoder.py`)
 
@@ -195,7 +195,7 @@ fusion_config = {
 multimodal_combiner.configure_fusion(fusion_config)
 ```
 
-## 🔧 Advanced Features
+##  Advanced Features
 
 ### Fallback Implementations
 
@@ -214,8 +214,8 @@ class EncoderWithFallback:
             elif self.preferred_backend == "jax":
                 return self._jax_encode(inputs)
         except Exception as e:
-            print(f"⚠️  Primary backend failed: {e}")
-            print(f"🔄 Falling back to {self.fallback_backend}")
+            print(f"️  Primary backend failed: {e}")
+            print(f" Falling back to {self.fallback_backend}")
 
         # Fallback to basic implementation
         return self._numpy_fallback_encode(inputs)
@@ -300,7 +300,7 @@ efficient_result = memory_efficient_encoding(
 )
 ```
 
-## 📊 Metrics and Benchmarking
+##  Metrics and Benchmarking
 
 ### Evaluation System
 
@@ -355,7 +355,7 @@ performance_summary = {
     }
 }
 
-print("📊 Encoder Performance Summary:")
+print(" Encoder Performance Summary:")
 for encoder_name, metrics in performance_summary.items():
     print(f"\n{encoder_name.upper()}:")
     for metric, value in metrics.items():
@@ -365,7 +365,7 @@ for encoder_name, metrics in performance_summary.items():
             print(f"  {metric}: {value}")
 ```
 
-## 🎨 Specific Use Cases
+##  Specific Use Cases
 
 ### 1. Medical Image Processing
 
@@ -474,7 +474,7 @@ for result in search_results:
     print(f"Score: {result.score:.3f} - {result.text}")
 ```
 
-## 🚀 TPU/GPU Integration
+##  TPU/GPU Integration
 
 ```python
 # Optimization for different backends
@@ -528,7 +528,7 @@ features = encoder.encode(images=torch.randn(1, 3, 224, 224))
 print(features.features.shape)
 ```
 
-## 📚 References
+##  References
 
 - [Vision Transformer (ViT)](https://arxiv.org/abs/2010.11929)
 - [Video Vision Transformer](https://arxiv.org/abs/2103.15691)

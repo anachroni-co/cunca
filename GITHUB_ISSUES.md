@@ -4,7 +4,7 @@ Estas issues documentan el trabajo de refactorización completado en la rama `cl
 
 ---
 
-## Issue 1: ✅ Refactor: Move root-level Python files to layers/
+## Issue 1:  Refactor: Move root-level Python files to layers/
 
 **Labels:** `refactor`, `completed`
 
@@ -29,7 +29,7 @@ Actualizado `layers/__init__.py` con los nuevos imports.
 
 ---
 
-## Issue 2: ✅ Refactor: Flatten deep nested directories
+## Issue 2:  Refactor: Flatten deep nested directories
 
 **Labels:** `refactor`, `completed`
 
@@ -48,7 +48,7 @@ Aplanadas estructuras de directorios con anidamiento excesivo:
 
 ---
 
-## Issue 3: ✅ Refactor: Consolidate data/datasets directories
+## Issue 3:  Refactor: Consolidate data/datasets directories
 
 **Labels:** `refactor`, `completed`
 
@@ -66,7 +66,7 @@ Consolidados directorios de datasets pequeños:
 
 ---
 
-## Issue 4: ✅ Refactor: Organize training/ into subcategories
+## Issue 4:  Refactor: Organize training/ into subcategories
 
 **Labels:** `refactor`, `completed`
 

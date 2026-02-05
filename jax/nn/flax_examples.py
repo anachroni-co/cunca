@@ -280,7 +280,7 @@ try:
         return model, variables, logits
 
 except ImportError:
-    logger.warning("⚠️  Flax not available - examples are stubs")
+    logger.warning("️  Flax not available - examples are stubs")
     
     def demo_flax_decorators():
         logger.info("Flax decorators demo requires Flax installation")

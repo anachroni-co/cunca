@@ -274,7 +274,7 @@ class CascadeTrainingIntegration:
     
     async def integrate_stage_for_training(self, stage_name: str) -> TrainingIntegrationResult:
         """Integrate a specific stage for training."""
-        logger.info(f"🔗 Integrating stage {stage_name} for training...")
+        logger.info(f" Integrating stage {stage_name} for training...")
         
         start_time = time.time()
         errors = []
@@ -329,7 +329,7 @@ class CascadeTrainingIntegration:
             
             integration_time = time.time() - start_time
             
-            logger.info(f"✅ Stage {stage_name} integrated successfully in {integration_time:.2f}s")
+            logger.info(f" Stage {stage_name} integrated successfully in {integration_time:.2f}s")
             
             return TrainingIntegrationResult(
                 stage_name=stage_name,
@@ -344,7 +344,7 @@ class CascadeTrainingIntegration:
             
         except Exception as e:
             errors.append(f"Integration error: {str(e)}")
-            logger.error(f"❌ Error integrating stage {stage_name}: {e}")
+            logger.error(f" Error integrating stage {stage_name}: {e}")
             
             return TrainingIntegrationResult(
                 stage_name=stage_name,
@@ -381,7 +381,7 @@ class CascadeTrainingIntegration:
     
     async def integrate_all_stages(self) -> Dict[str, TrainingIntegrationResult]:
         """Integrate all cascade stages for training."""
-        logger.info("🚀 Integrating all cascade stages for training...")
+        logger.info(" Integrating all cascade stages for training...")
         
         results = {}
         
@@ -394,7 +394,7 @@ class CascadeTrainingIntegration:
                 await asyncio.sleep(1)
                 
             except Exception as e:
-                logger.error(f"❌ Error integrating stage {stage_name}: {e}")
+                logger.error(f" Error integrating stage {stage_name}: {e}")
                 results[stage_name] = TrainingIntegrationResult(
                     stage_name=stage_name,
                     datasets_loaded=0,
@@ -449,7 +449,7 @@ class CascadeTrainingIntegration:
         with open(output_file, 'w') as f:
             json.dump(report, f, indent=2)
         
-        logger.info(f"📊 Integration report saved to {output_file}")
+        logger.info(f" Integration report saved to {output_file}")
 
 def create_cascade_training_integration(base_dir: Optional[str] = None) -> CascadeTrainingIntegration:
     """Creates a cascade training integration instance."""
@@ -465,7 +465,7 @@ async def integrate_cascade_training(base_dir: Optional[str] = None) -> Dict[str
 
 def main():
     """Main function for testing the cascade training integration."""
-    logger.info("🦫 CapibaraGPT-v2 Cascade Training Integration")
+    logger.info(" CapibaraGPT-v2 Cascade Training Integration")
     
     async def run_integration():
         # Create integration instance
@@ -479,7 +479,7 @@ def main():
         
         # Show summary
         summary = integration.get_integration_summary(results)
-        logger.info("📊 Integration Summary:")
+        logger.info(" Integration Summary:")
         logger.info(f"  Total stages: {summary['total_stages']}")
         logger.info(f"  Ready stages: {summary['ready_stages']}")
         logger.info(f"  Total datasets: {summary['total_datasets']}")

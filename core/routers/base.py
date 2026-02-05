@@ -84,9 +84,9 @@ class BaseRouter(nn.Module, ABC):
             self.linalg_ops = TpuV4LinalgOps()
             self.sparse_ops = TpuV4SparseOps()
             self.neural_ops = TpuV4NeuralOps()
-            logger.info("✅ Native TPU v4-32 operations initialized")
+            logger.info(" Native TPU v4-32 operations initialized")
         except Exception as e:
-            logger.error(f"❌ Error initializing TPU ops: {e}")
+            logger.error(f" Error initializing TPU ops: {e}")
             self._initialize_cpu_ops()
 
     def _initialize_cpu_ops(self):
@@ -94,7 +94,7 @@ class BaseRouter(nn.Module, ABC):
         self.linalg_ops = None
         self.sparse_ops = None
         self.neural_ops = None
-        logger.info("ℹ️ Using CPU fallback operations")
+        logger.info("️ Using CPU fallback operations")
     
     def _check_memory_usage(self) -> bool:
         """Verify memory usage."""
@@ -121,7 +121,7 @@ class BaseRouter(nn.Module, ABC):
             )
             self.current_batch_size = new_batch_size
 
-            logger.warning(f"⚠️ Activating fallback mode - Reducing batch size to {new_batch_size}")
+            logger.warning(f"️ Activating fallback mode - Reducing batch size to {new_batch_size}")
 
     def _check_recovery(self):
         """Verify if we can recover normal mode."""
@@ -134,7 +134,7 @@ class BaseRouter(nn.Module, ABC):
             not self._check_memory_usage()):
             self.in_fallback_mode = False
             self.current_batch_size = self.config.batch_size
-            logger.info("✅ Recovered from fallback mode")
+            logger.info(" Recovered from fallback mode")
     
     def _optimized_matmul(self, a: jnp.ndarray, b: jnp.ndarray,
                          transpose_a: bool = False, transpose_b: bool = False) -> jnp.ndarray:

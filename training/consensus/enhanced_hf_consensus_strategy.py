@@ -85,7 +85,7 @@ class EnhancedHFConsensusStrategy(HuggingFaceConsensusStrategy):
         # Request session for serverless API
         self.session_timeout = aiohttp.ClientTimeout(total=30)
         
-        logger.info(f"🚀 Enhanced HF Consensus Strategy initialized with {len(self.serverless_experts)} serverless experts")
+        logger.info(f" Enhanced HF Consensus Strategy initialized with {len(self.serverless_experts)} serverless experts")
     
     def _load_serverless_experts(self) -> Dict[str, ServerlessExpertConfig]:
         """Load comprehensive serverless expert configurations."""
@@ -313,7 +313,7 @@ class EnhancedHFConsensusStrategy(HuggingFaceConsensusStrategy):
             self.metrics.failed_consensus += 1
             
             if enable_fallback:
-                logger.info("🔄 Falling back to base consensus strategy")
+                logger.info(" Falling back to base consensus strategy")
                 return await super().get_consensus_response(prompt, domain_hint, max_experts)
             else:
                 raise e

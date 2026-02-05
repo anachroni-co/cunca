@@ -234,7 +234,7 @@ def jit_consensus_scoring(response_features, expert_weights, quality_thresholds)
 
 class OptimizedConsensusRouter(HybridExpertRouter):
     """
-    🚀 Optimized Consensus Router with Comp-Consensus Integration
+     Optimized Consensus Router with Comp-Consensus Integration
     
     Extends the hybrid expert router with high-performance optimizations:
     - Numba JIT compilation for routing calculations (5-15x speedup)
@@ -278,7 +278,7 @@ class OptimizedConsensusRouter(HybridExpertRouter):
             "total_queries": 0
         }
         
-        logger.info("🚀 Optimized Consensus Router initialized")
+        logger.info(" Optimized Consensus Router initialized")
     
     async def initialize_optimizations(self) -> bool:
         """Initialize all optimization components."""
@@ -307,11 +307,11 @@ class OptimizedConsensusRouter(HybridExpertRouter):
             if NUMBA_AVAILABLE and self.optimization_config.enable_jit_compilation:
                 await self._warmup_jit_functions()
             
-            logger.info("✅ Router optimizations initialized")
+            logger.info(" Router optimizations initialized")
             return True
             
         except Exception as e:
-            logger.error(f"❌ Router optimization initialization failed: {e}")
+            logger.error(f" Router optimization initialization failed: {e}")
             return False
     
     async def _initialize_memory_pool(self):
@@ -326,7 +326,7 @@ class OptimizedConsensusRouter(HybridExpertRouter):
         )
         
         self.memory_pool = get_memory_pool(pool_config)
-        logger.info(f"✅ Memory pool initialized ({pool_config.pool_size_mb}MB)")
+        logger.info(f" Memory pool initialized ({pool_config.pool_size_mb}MB)")
     
     async def _initialize_gpu_acceleration(self):
         """Initialize GPU acceleration for routing."""
@@ -335,9 +335,9 @@ class OptimizedConsensusRouter(HybridExpertRouter):
             self.gpu_accelerator = get_gpu_accelerator()
             
             if self.gpu_accelerator.is_available():
-                logger.info("✅ GPU acceleration initialized for routing")
+                logger.info(" GPU acceleration initialized for routing")
             else:
-                logger.warning("⚠️ GPU acceleration requested but not available")
+                logger.warning("️ GPU acceleration requested but not available")
     
     async def _initialize_distributed_cache(self):
         """Initialize distributed cache for routing decisions."""
@@ -351,7 +351,7 @@ class OptimizedConsensusRouter(HybridExpertRouter):
             )
             
             self.distributed_cache = get_distributed_cache(cache_config)
-            logger.info("✅ Distributed cache initialized for routing")
+            logger.info(" Distributed cache initialized for routing")
     
     async def _initialize_optimized_router_core(self):
         """Initialize optimized router core component."""
@@ -371,12 +371,12 @@ class OptimizedConsensusRouter(HybridExpertRouter):
         expert_names = [f"expert_{i}" for i in range(20)]  # Mock expert names
         self.optimized_router = OptimizedCoreIntegratedTokenRouter(router_config, expert_names)
         
-        logger.info("✅ Optimized router core initialized")
+        logger.info(" Optimized router core initialized")
     
     async def _warmup_jit_functions(self):
         """Warmup JIT-compiled functions."""
         
-        logger.info("🔥 Warming up JIT-compiled routing functions...")
+        logger.info(" Warming up JIT-compiled routing functions...")
         
         # Create dummy data for warmup
         dummy_query_embedding = np.random.random(768).astype(np.float32)
@@ -400,7 +400,7 @@ class OptimizedConsensusRouter(HybridExpertRouter):
         
         _ = jit_consensus_scoring(dummy_response_features, dummy_response_weights, dummy_thresholds)
         
-        logger.info("✅ JIT functions warmed up")
+        logger.info(" JIT functions warmed up")
     
     @cached(ttl=1800, key_prefix="optimized_routing")
     async def route_optimized_query(
@@ -912,7 +912,7 @@ if __name__ == "__main__":
         
         # Initialize optimizations
         if await router.initialize_optimizations():
-            logger.info("🚀 Optimized Consensus Router initialized")
+            logger.info(" Optimized Consensus Router initialized")
             
             # Test queries
             test_queries = [
@@ -923,12 +923,12 @@ if __name__ == "__main__":
                 "Solve complex mathematical equations"
             ]
             
-            logger.info("\n📊 Running routing benchmarks...")
+            logger.info("\n Running routing benchmarks...")
             
             # Benchmark routing performance
             benchmark_results = await router.benchmark_routing_performance(test_queries)
             
-            logger.info("\n🏆 Routing Benchmark Results:")
+            logger.info("\n Routing Benchmark Results:")
             for mode, metrics in benchmark_results.items():
                 logger.info(f"\n{mode.upper()}:")
                 logger.info(f"  Routing Time: {metrics['avg_routing_time_ms']:.1f}ms")
@@ -938,14 +938,14 @@ if __name__ == "__main__":
             
             # Get optimization metrics
             opt_metrics = router.get_optimization_metrics()
-            logger.info(f"\n⚡ Optimization Metrics:")
+            logger.info(f"\n Optimization Metrics:")
             logger.info(f"  JIT Calls: {opt_metrics['routing_performance']['jit_calls']}")
             logger.info(f"  GPU Operations: {opt_metrics['routing_performance']['gpu_operations']}")
             logger.info(f"  Cache Hit Rate: {opt_metrics['cache_performance']['hit_rate']:.2%}")
             logger.info(f"  JIT Usage Rate: {opt_metrics['optimization_effectiveness']['jit_usage_rate']:.2%}")
         
         else:
-            logger.error("❌ Router optimization initialization failed")
+            logger.error(" Router optimization initialization failed")
     
     import asyncio
     asyncio.run(main())

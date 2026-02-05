@@ -177,22 +177,22 @@ class UltraAgentOrchestrator:
     def _initialize_orchestrator(self):
         """Initialize the ultra agent orchestrator."""
         
-        logger.info("🚀 Initializing Ultra Agent Orchestrator")
+        logger.info(" Initializing Ultra Agent Orchestrator")
         
         # Initialize ultra system integrations
         if self.config.auto_core_integration and ULTRA_CORE_AVAILABLE:
             try:
                 self.core_orchestrator = create_ultra_core_system()
-                logger.info("✅ Ultra Core integration initialized")
+                logger.info(" Ultra Core integration initialized")
             except Exception as e:
-                logger.warning(f"⚠️ Core integration failed: {e}")
+                logger.warning(f"️ Core integration failed: {e}")
         
         if self.config.auto_data_integration and ULTRA_DATA_AVAILABLE:
             try:
                 self.data_orchestrator = create_ultra_data_system()
-                logger.info("✅ Ultra Data integration initialized")
+                logger.info(" Ultra Data integration initialized")
             except Exception as e:
-                logger.warning(f"⚠️ Data integration failed: {e}")
+                logger.warning(f"️ Data integration failed: {e}")
         
         # Initialize specialized agent pools
         self._initialize_specialized_agents()
@@ -200,10 +200,10 @@ class UltraAgentOrchestrator:
         # Initialize collaboration framework
         self._initialize_collaboration_framework()
         
-        logger.info(f"✅ Ultra Agent Orchestrator initialized")
-        logger.info(f"   🤖 Agent types: {len(self.config.enabled_agent_types)}")
-        logger.info(f"   🧠 Reasoning depth: {self.config.reasoning_depth}")
-        logger.info(f"   📋 Planning horizon: {self.config.planning_horizon}")
+        logger.info(f" Ultra Agent Orchestrator initialized")
+        logger.info(f"    Agent types: {len(self.config.enabled_agent_types)}")
+        logger.info(f"    Reasoning depth: {self.config.reasoning_depth}")
+        logger.info(f"    Planning horizon: {self.config.planning_horizon}")
     
     def _initialize_specialized_agents(self):
         """Initialize pools of specialized agents."""
@@ -212,7 +212,7 @@ class UltraAgentOrchestrator:
             agent_pool = self._create_specialized_agent_pool(agent_type)
             self.specialized_agents[agent_type] = agent_pool
             
-            logger.info(f"   🎯 {agent_type.value} agents: {len(agent_pool)}")
+            logger.info(f"    {agent_type.value} agents: {len(agent_pool)}")
     
     def _create_specialized_agent_pool(self, agent_type: AgentType) -> List[str]:
         """Create a pool of specialized agents for a specific type."""
@@ -839,7 +839,7 @@ def create_ultra_agent_config(
 def demonstrate_ultra_agent_orchestration():
     """Demonstrate the ultra agent orchestration system."""
     
-    logger.info("🌟 ULTRA AGENT ORCHESTRATION DEMONSTRATION")
+    logger.info(" ULTRA AGENT ORCHESTRATION DEMONSTRATION")
     logger.info("=" * 60)
     
     # Create configuration
@@ -848,7 +848,7 @@ def demonstrate_ultra_agent_orchestration():
         enable_all_features=True
     )
     
-    logger.info(f"📋 Configuration created:")
+    logger.info(f" Configuration created:")
     logger.info(f"   - Strategy: {config.orchestration_strategy.value}")
     logger.info(f"   - Agent types: {len(config.enabled_agent_types)}")
     logger.info(f"   - Reasoning depth: {config.reasoning_depth}")
@@ -859,7 +859,7 @@ def demonstrate_ultra_agent_orchestration():
     # Get system status
     status = orchestrator.get_orchestrator_status()
     
-    logger.info(f"\n🔍 System Status:")
+    logger.info(f"\n System Status:")
     logger.info(f"   - Total agents: {status['agents']['total_agents']}")
     logger.info(f"   - Specialized pools: {len(status['agents']['specialized_pools'])}")
     logger.info(f"   - Ultra integrations: {sum([status['capabilities']['ultra_core_integration'], status['capabilities']['ultra_data_integration']])}/2")
@@ -875,14 +875,14 @@ def demonstrate_ultra_agent_orchestration():
             priority="high"
         )
         
-        logger.info(f"\n🎯 Task Orchestration Test:")
+        logger.info(f"\n Task Orchestration Test:")
         logger.info(f"   - Status: {result['status']}")
         logger.info(f"   - Agents assigned: {len(result['assigned_agents'])}")
         logger.info(f"   - Execution phases: {len(result['execution_plan']['phases'])}")
         logger.info(f"   - Completion time: {result['metrics']['completion_time_ms']:.1f}ms")
         
     except Exception as e:
-        logger.error(f"\n❌ Orchestration test failed: {e}")
+        logger.error(f"\n Orchestration test failed: {e}")
     
     return orchestrator
 

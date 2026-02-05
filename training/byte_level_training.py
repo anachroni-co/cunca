@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-🔥 BYTE-LEVEL TRAINING SYSTEM for CapibaraGPT-v2
+ BYTE-LEVEL TRAINING SYSTEM for CapibaraGPT-v2
 ================================================
 
 Advanced byte-level training implementation that works directly with raw bytes
 instead of traditional tokens. This provides several advantages:
 
-1. 🌍 Universal Language Support - Works with any language/script
-2. 🚫 No Vocabulary Limitations - No OOV (Out-of-Vocabulary) issues  
-3. 🧠 Better Compression Understanding - Learns byte patterns directly
-4. 🔧 Tokenizer-Free Architecture - No preprocessing overhead
-5. 🎯 Raw Data Processing - Handles any file format natively
+1.  Universal Language Support - Works with any language/script
+2.  No Vocabulary Limitations - No OOV (Out-of-Vocabulary) issues  
+3.  Better Compression Understanding - Learns byte patterns directly
+4.  Tokenizer-Free Architecture - No preprocessing overhead
+5.  Raw Data Processing - Handles any file format natively
 
 Key Features:
 - Direct byte sequence modeling (0-255 range)
@@ -129,8 +129,8 @@ class ByteLevelTokenizer:
         self.byte_frequencies = np.zeros(256, dtype=np.int64)
         self.total_bytes_processed = 0
         
-        logger.info(f"🔥 ByteLevelTokenizer initialized with strategy: {config.tokenizer_type.value}")
-        logger.info(f"📊 Vocabulary size: {self.vocab_size} (256 bytes + {self.vocab_size - 256} special)")
+        logger.info(f" ByteLevelTokenizer initialized with strategy: {config.tokenizer_type.value}")
+        logger.info(f" Vocabulary size: {self.vocab_size} (256 bytes + {self.vocab_size - 256} special)")
     
     def encode_raw_bytes(self, data: Union[bytes, str]) -> np.ndarray:
         """Encode raw bytes or string to byte sequence."""
@@ -256,7 +256,7 @@ class ByteLevelDataLoader:
             except OSError:
                 logger.warning(f"Could not access file: {file_path}")
         
-        logger.info(f"📁 Found {len(valid_files)} valid files in {data_dir}")
+        logger.info(f" Found {len(valid_files)} valid files in {data_dir}")
         return valid_files
     
     def load_file_as_bytes(self, file_path: Path) -> Optional[bytes]:
@@ -350,8 +350,8 @@ class ByteLevelModel:
         # Model parameters will be initialized by the training system
         self.params = None
         
-        logger.info(f"🤖 ByteLevelModel initialized")
-        logger.info(f"📊 Config: {config.hidden_size}d, {config.num_layers}L, {config.num_attention_heads}H")
+        logger.info(f" ByteLevelModel initialized")
+        logger.info(f" Config: {config.hidden_size}d, {config.num_layers}L, {config.num_attention_heads}H")
     
     def create_byte_embeddings(self, key: jax.random.PRNGKey) -> Dict[str, jnp.ndarray]:
         """Create byte-specific embedding layers."""
@@ -459,7 +459,7 @@ class ByteLevelTrainer:
             weight_decay=config.weight_decay
         )
         
-        logger.info(f"🚀 ByteLevelTrainer initialized")
+        logger.info(f" ByteLevelTrainer initialized")
     
     def train_on_directory(self, data_dir: Union[str, Path], num_epochs: int = 1) -> Dict[str, Any]:
         """Train model on directory of files."""
@@ -478,7 +478,7 @@ class ByteLevelTrainer:
         total_loss = 0.0
         num_batches = 0
         
-        logger.info(f"🔥 Starting byte-level training on {len(files)} files")
+        logger.info(f" Starting byte-level training on {len(files)} files")
         
         for epoch in range(num_epochs):
             self.epoch = epoch
@@ -518,7 +518,7 @@ class ByteLevelTrainer:
                     continue
             
             epoch_time = time.time() - epoch_start
-            logger.info(f"✅ Epoch {epoch} completed in {epoch_time:.2f}s")
+            logger.info(f" Epoch {epoch} completed in {epoch_time:.2f}s")
         
         # Final statistics
         training_time = time.time() - start_time
@@ -544,8 +544,8 @@ class ByteLevelTrainer:
             }
         }
         
-        logger.info(f"🎉 Byte-level training completed!")
-        logger.info(f"📊 Final results: {avg_loss:.4f} loss, {training_time:.2f}s total")
+        logger.info(f" Byte-level training completed!")
+        logger.info(f" Final results: {avg_loss:.4f} loss, {training_time:.2f}s total")
         
         return results
     
@@ -586,7 +586,7 @@ class ByteLevelTrainer:
         with open(save_path / 'byte_statistics.json', 'w') as f:
             json.dump(byte_stats, f, indent=2)
         
-        logger.info(f"💾 Model saved to {save_path}")
+        logger.info(f" Model saved to {save_path}")
 
 # Factory functions
 def create_byte_level_config(**kwargs) -> ByteLevelConfig:
@@ -613,31 +613,31 @@ if __name__ == "__main__":
     # Create trainer
     trainer = create_byte_level_trainer(config)
     
-    logger.info("🔥 BYTE-LEVEL TRAINING SYSTEM DEMO")
+    logger.info(" BYTE-LEVEL TRAINING SYSTEM DEMO")
     logger.info("=" * 50)
-    logger.info(f"✅ Tokenizer: {config.tokenizer_type.value}")
-    logger.info(f"📊 Vocab size: {config.extended_vocab_size} (256 bytes + specials)")
-    logger.info(f"🔢 Max length: {config.max_sequence_length}")
-    logger.info(f"💥 Batch size: {config.batch_size}")
+    logger.info(f" Tokenizer: {config.tokenizer_type.value}")
+    logger.info(f" Vocab size: {config.extended_vocab_size} (256 bytes + specials)")
+    logger.info(f" Max length: {config.max_sequence_length}")
+    logger.info(f" Batch size: {config.batch_size}")
     
     # Test tokenization
-    test_text = "Hello, world! 🌍 This is byte-level encoding."
+    test_text = "Hello, world!  This is byte-level encoding."
     tokens = trainer.tokenizer.encode_with_special_tokens(test_text)
     decoded = trainer.tokenizer.decode_to_string(tokens)
     
-    logger.info(f"\n🧪 TOKENIZATION TEST:")
+    logger.info(f"\n TOKENIZATION TEST:")
     logger.info(f"Original: {test_text}")
     logger.info(f"Tokens: {tokens[:20]}..." if len(tokens) > 20 else f"Tokens: {tokens}")
     logger.info(f"Decoded: {decoded}")
-    logger.info(f"✅ Tokenization working correctly!")
+    logger.info(f" Tokenization working correctly!")
     
     # Test byte statistics
     byte_stats = trainer.tokenizer.get_byte_statistics()
     if byte_stats.get('total_bytes_processed', 0) > 0:
-        logger.info(f"\n📊 BYTE STATISTICS:")
+        logger.info(f"\n BYTE STATISTICS:")
         logger.info(f"Bytes processed: {byte_stats['total_bytes_processed']}")
         logger.info(f"Unique bytes: {byte_stats['unique_bytes_seen']}")
         logger.info(f"Coverage: {byte_stats['coverage']:.1f}%")
     
-    logger.info(f"\n🚀 BYTE-LEVEL TRAINING SYSTEM READY!")
+    logger.info(f"\n BYTE-LEVEL TRAINING SYSTEM READY!")
     logger.info(f"Use trainer.train_on_directory(data_dir) to start training")

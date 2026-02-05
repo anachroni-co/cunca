@@ -2,11 +2,11 @@
 
 Module for contextual activation functions optimized for advanced neural architectures.
 
-## 📋 Description
+##  Description
 
 This module provides contextual activation functions that adapt their behavior based on input context, optimizing model performance across different types of tasks.
 
-## 🔧 Components
+##  Components
 
 ### ContextualActivation (`contextual_activation.py`)
 Base system for contextually-aware activations.
@@ -24,7 +24,7 @@ import flax.linen as nn
 from capibara.core.activations.contextual_activation import *
 ```
 
-## 🚀 Features
+##  Features
 
 ### Adaptive Activations
 - **Context-Aware**: Activations adapt based on input context
@@ -36,7 +36,7 @@ from capibara.core.activations.contextual_activation import *
 - **Memory Efficient**: Efficient memory management
 - **Vectorization**: Support for vectorized operations
 
-## 🎯 Use Cases
+##  Use Cases
 
 ### 1. Contextually-Aware Activations
 ```python
@@ -69,7 +69,7 @@ def process_batch(inputs):
     return processed_outputs
 ```
 
-## 🏗️ Architecture
+## ️ Architecture
 
 ```
 activations/
@@ -78,7 +78,7 @@ activations/
 └── README.md               # Documentation
 ```
 
-## ⚙️ Configuration
+## ️ Configuration
 
 ### Activation Parameters
 ```python
@@ -99,7 +99,7 @@ export CAPIBARA_ACTIVATION_LOG_LEVEL=INFO
 export CAPIBARA_CONTEXT_CACHE_SIZE=1024
 ```
 
-## 🔍 Available Activation Functions
+##  Available Activation Functions
 
 ### Basic Activations
 - **ContextualReLU**: Context-based adaptive ReLU
@@ -111,7 +111,7 @@ export CAPIBARA_CONTEXT_CACHE_SIZE=1024
 - **MetaActivation**: Learns optimal activation function
 - **HierarchicalActivation**: Hierarchical activations by layers
 
-## 📊 Monitoring and Metrics
+##  Monitoring and Metrics
 
 ### Performance Metrics
 ```python
@@ -137,7 +137,7 @@ logger.info("Contextual activation started")
 logger.debug(f"Context parameters: {context_params}")
 ```
 
-## 🚀 Performance Optimizations
+##  Performance Optimizations
 
 ### TPU Optimizations
 - **XLA Compilation**: Automatic compilation for TPU
@@ -149,7 +149,7 @@ logger.debug(f"Context parameters: {context_params}")
 - **Mixed Precision**: bfloat16 support
 - **Kernel Fusion**: Operation fusion for greater efficiency
 
-## 🔧 Development and Extension
+##  Development and Extension
 
 ### Creating New Activation
 ```python
@@ -196,14 +196,14 @@ outputs = contextual_activation.apply(inputs)
 print(outputs)
 ```
 
-## 📚 References
+##  References
 
 - [JAX Documentation](https://jax.readthedocs.io/)
 - [Flax Neural Networks](https://flax.readthedocs.io/)
 - [TPU Programming Guide](https://cloud.google.com/tpu/docs/)
 - [Contextual Activations Research](https://arxiv.org/abs/...)
 
-## 🤝 Contributing
+##  Contributing
 
 To contribute to the activations module:
 

@@ -2,7 +2,7 @@
 
 **Ultra-advanced vector quantization for model compression and efficiency**
 
-## 📋 Table of Contents
+##  Table of Contents
 
 1. [Overview](#overview)
 2. [VQ Fundamentals](#vq-fundamentals)
@@ -19,7 +19,7 @@
 
 ---
 
-## 🎯 Overview
+##  Overview
 
 The **CapibaraGPT Vector Quantization (VQ) Module** provides state-of-the-art vector quantization techniques for:
 - **Model Compression**: Reduce model size by 4-16x
@@ -30,13 +30,13 @@ The **CapibaraGPT Vector Quantization (VQ) Module** provides state-of-the-art ve
 
 ### Key Features
 
-✅ **Multiple VQ Variants**: Standard, Residual, Product, Adaptive
-✅ **Intelligent Auto-Optimization**: Automatic best-variant selection
-✅ **Hardware-Aware**: TPU v6, ARM Axion, GPU optimizations
-✅ **Multimodal**: Text, vision, audio VQ support
-✅ **Production-Ready**: Monitoring, logging, performance tracking
-✅ **JAX Native**: Full JAX/Flax integration with JIT compilation
-✅ **VIM-VQ**: Vision-Mamba vector quantization
+ **Multiple VQ Variants**: Standard, Residual, Product, Adaptive
+ **Intelligent Auto-Optimization**: Automatic best-variant selection
+ **Hardware-Aware**: TPU v6, ARM Axion, GPU optimizations
+ **Multimodal**: Text, vision, audio VQ support
+ **Production-Ready**: Monitoring, logging, performance tracking
+ **JAX Native**: Full JAX/Flax integration with JIT compilation
+ **VIM-VQ**: Vision-Mamba vector quantization
 
 ### Compression Ratios
 
@@ -49,7 +49,7 @@ The **CapibaraGPT Vector Quantization (VQ) Module** provides state-of-the-art ve
 
 ---
 
-## 📚 VQ Fundamentals
+##  VQ Fundamentals
 
 ### What is Vector Quantization?
 
@@ -88,18 +88,18 @@ reconstructed = vq.codebook[code_index]  # 768 floats
 
 ---
 
-## 🏗️ Architecture
+## ️ Architecture
 
 ### VQ Module Structure
 
 ```
 capibara/vq/
-├── 🧠 Core VQ Systems
+├──  Core VQ Systems
 │   ├── enhanced_vq_system_v2.py         # Enhanced VQ variants
 │   ├── intelligent_vq_integration.py    # Intelligent VQ manager
 │   └── ultra_vq_orchestrator.py         # System orchestration
 │
-├── 💾 VQBit Implementations
+├──  VQBit Implementations
 │   ├── vqbit_layer.py                   # VQBit base layer
 │   ├── adaptive_vq.py                   # Adaptive VQ
 │   ├── multimodal_vqbit.py              # Multimodal VQ
@@ -108,16 +108,16 @@ capibara/vq/
 │   ├── vq_arm_axion.py                  # ARM Axion optimized
 │   └── vq_monitoring.py                 # Performance monitoring
 │
-├── 🔬 VIM-VQ (Vision-Mamba VQ)
+├──  VIM-VQ (Vision-Mamba VQ)
 │   ├── core/                            # VIM-VQ core
 │   ├── configs/                         # VIM-VQ configs
 │   └── utils/                           # VIM-VQ utilities
 │
-├── 📊 Monitoring & Config
+├──  Monitoring & Config
 │   ├── monitoring/                      # VQ monitoring
 │   └── config/                          # VQ configurations
 │
-└── 🔧 Utilities
+└──  Utilities
     └── stubs/                           # Stub implementations
 ```
 
@@ -147,7 +147,7 @@ capibara/vq/
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Installation
 
@@ -204,7 +204,7 @@ vq.export_onnx("models/vq_quantizer.onnx")
 
 ---
 
-## 🧠 Enhanced VQ System
+##  Enhanced VQ System
 
 ### Overview
 
@@ -393,7 +393,7 @@ for variant, metrics in results.items():
 
 ---
 
-## 🤖 Intelligent VQ Integration
+##  Intelligent VQ Integration
 
 ### Overview
 
@@ -484,7 +484,7 @@ for i, rec in enumerate(recommendations, 1):
 
 ---
 
-## 💾 VQBit Implementations
+##  VQBit Implementations
 
 ### VQBit Overview
 
@@ -585,7 +585,7 @@ output = forward(vq_params, embeddings)
 
 ---
 
-## 🖼️ VIM-VQ Integration
+## ️ VIM-VQ Integration
 
 ### Overview
 
@@ -634,7 +634,7 @@ vim_vq = VIMVQIntegration(
 
 ---
 
-## ⚡ Hardware Optimization
+##  Hardware Optimization
 
 ### TPU v6 Optimization
 
@@ -705,7 +705,7 @@ gpu_vq, info = create_vq(
 
 ---
 
-## 📊 Monitoring & Performance
+##  Monitoring & Performance
 
 ### VQ Monitoring
 
@@ -769,7 +769,7 @@ monitor.set_tensorboard_writer(writer)
 
 ---
 
-## 💡 Best Practices
+##  Best Practices
 
 ### 1. Choose Right VQ Variant
 
@@ -860,7 +860,7 @@ else:
 
 ---
 
-## 📚 References
+##  References
 
 ### Research Papers
 
@@ -896,7 +896,7 @@ else:
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions welcome! Priority areas:
 
@@ -910,7 +910,7 @@ See [CONTRIBUTING.md](../../CONTRIBUTING.md) for guidelines.
 
 ---
 
-## 📄 License
+##  License
 
 Part of the capibaraGPT-v2 project. See [LICENSE](../../LICENSE) for details.
 

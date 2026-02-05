@@ -563,15 +563,15 @@ class ExpandedExpertCoresStrategy:
             }
             core_id += priority_cores
         
-        logger.info(f"📊 Expert Core Distribution: {distribution}")
+        logger.info(f" Expert Core Distribution: {distribution}")
         return distribution
     
     def _initialize_cores(self):
         """Initialize all expert cores."""
-        logger.info("🚀 Initializing Expanded Expert Cores")
+        logger.info(" Initializing Expanded Expert Cores")
         
         for core_type, core_config in self.expert_cores.items():
-            logger.info(f"✅ Initialized {core_config.name} with {len(core_config.models)} models")
+            logger.info(f" Initialized {core_config.name} with {len(core_config.models)} models")
     
     async def get_expanded_consensus_response(
         self, 
@@ -663,7 +663,7 @@ class ExpandedExpertCoresStrategy:
             core_config: ExpertCoreConfig
         ) -> Tuple[ExpertCoreType, Dict[str, Any]]:
             """Generates responses for a single expert core."""
-            logger.info(f"🧠 Generating responses for {core_config.name}")
+            logger.info(f" Generating responses for {core_config.name}")
             
             # Select models for this core
             selected_models = core_config.models[:max_models_per_core]

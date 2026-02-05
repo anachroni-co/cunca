@@ -49,7 +49,7 @@ class MnemosyneSemioModule:
                     hidden_size=256, sparsity_type="neuronal", sparsity_target=0.7
                 )
             except Exception as e:
-                logger.warning(f"⚠️ SparseCapibara not available: {e}")
+                logger.warning(f"️ SparseCapibara not available: {e}")
                 self.sparse_layer = None
         else:
             self.sparse_layer = None
@@ -59,7 +59,7 @@ class MnemosyneSemioModule:
                 config = MetaBAMDPConfig(hidden_size=256)
                 self.meta_bamdp = MetaBAMDP(config=config)
             except Exception as e:
-                logger.warning(f"⚠️ MetaBAMDP not available: {e}")
+                logger.warning(f"️ MetaBAMDP not available: {e}")
                 self.meta_bamdp = None
         else:
             self.meta_bamdp = None
@@ -71,9 +71,9 @@ class MnemosyneSemioModule:
             try:
                 self.processor = FlaxBlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
                 # Note: FlaxBlipForConditionalGeneration would need to be imported separately
-                logger.info("✅ BLIP processor initialized successfully")
+                logger.info(" BLIP processor initialized successfully")
             except Exception as e:
-                logger.warning(f"⚠️ BLIP processor initialization failed: {e}")
+                logger.warning(f"️ BLIP processor initialization failed: {e}")
 
     def activate_if_context_matches(self, input_text: str) -> Tuple[bool, float]:
         """Check if the input text matches artistic context and return activation status with confidence."""
@@ -178,7 +178,7 @@ class MnemosyneSemioModule:
         self.style_lookup = style_mapping
         self.symbol_lookup = symbol_mapping
         self.parallel_matrix = parallel_mapping
-        logger.info("✅ Training material loaded for MnemosyneSemioModule")
+        logger.info(" Training material loaded for MnemosyneSemioModule")
 
     def process_features(self, features, training=False, rng=None):
         """Process features through sparse and meta-BAMDP layers if available."""
@@ -186,13 +186,13 @@ class MnemosyneSemioModule:
             try:
                 features = self.sparse_layer(features, training=training, rng=rng)["output"]
             except Exception as e:
-                logger.warning(f"⚠️ Sparse layer processing failed: {e}")
+                logger.warning(f"️ Sparse layer processing failed: {e}")
                 
         if self.meta_bamdp:
             try:
                 features = self.meta_bamdp(features, training=training)
             except Exception as e:
-                logger.warning(f"⚠️ Meta-BAMDP processing failed: {e}")
+                logger.warning(f"️ Meta-BAMDP processing failed: {e}")
                 
         return features
 
@@ -247,7 +247,7 @@ class MnemosyneSemioModule:
                     }
                     full_text = f"{input_text} {description}"
                 except Exception as e:
-                    logger.warning(f"⚠️ Image description failed: {e}")
+                    logger.warning(f"️ Image description failed: {e}")
                     full_text = input_text
             else:
                 full_text = input_text
@@ -259,7 +259,7 @@ class MnemosyneSemioModule:
                     features = self.to_jax_array(features)
                     processed_features = self.process_features(features, training=training, rng=rng)
                 except Exception as e:
-                    logger.warning(f"⚠️ Feature processing failed: {e}")
+                    logger.warning(f"️ Feature processing failed: {e}")
 
             style, style_conf = self.identify_historical_style(full_text)
             symbols, symbols_conf = self.extract_symbols(full_text, image_metadata)
@@ -304,7 +304,7 @@ class MnemosyneSemioModule:
             # This would require PIL and the actual BLIP model
             return f"Descripción de imagen: {image_path}", 0.5
         except Exception as e:
-            logger.warning(f"⚠️ Image description failed: {e}")
+            logger.warning(f"️ Image description failed: {e}")
             return "Error procesando imagen", 0.0
 
 

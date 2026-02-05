@@ -105,7 +105,7 @@ class HierarchicalExpert:
 
 class HierarchicalMoERouter:
     """
-    🎭 Hierarchical MoE Router that coordinates 6 main models + 6 distilled ones.
+     Hierarchical MoE Router that coordinates 6 main models + 6 distilled ones.
 
     CORRECTED architecture:
     - Router: 2.6B OmniGenomic-Mini (auto-distilled from 13B)
@@ -126,7 +126,7 @@ class HierarchicalMoERouter:
         self.cost_optimization = cost_optimization
         self.enable_arm_axion = enable_arm_axion
         
-        # 🚀 ARM Axion optimizer for router inference
+        #  ARM Axion optimizer for router inference
         if self.enable_arm_axion and ARM_OPTIMIZATIONS_AVAILABLE:
             self.arm_optimizer = ARMAxionInferenceOptimizer(
                 model_size="2.6B",
@@ -136,13 +136,13 @@ class HierarchicalMoERouter:
             )
         else:
             self.arm_optimizer = ARMAxionInferenceOptimizer()  # Dummy optimizer
-            logger.info("🚀 ARM Axion optimization enabled for router inference")
+            logger.info(" ARM Axion optimization enabled for router inference")
         
         # Model tier definitions (CORRECTED according to specification)
         self.model_tiers = self._initialize_corrected_model_tiers()
         self.model_performance = self._initialize_performance_metrics()
         
-        # 🧠 Router neural components - JAX NATIVO
+        #  Router neural components - JAX NATIVO
         # JAX parameters initialization
         if JAX_AVAILABLE:
             self.key = jax.random.PRNGKey(42)
@@ -158,7 +158,7 @@ class HierarchicalMoERouter:
         # Ensemble predictor (JAX)
         self.ensemble_params = self._init_ensemble_params(768 + len(ExpertDomain))
         
-        logger.info("🧠 Router components initialized with JAX native")
+        logger.info(" Router components initialized with JAX native")
         
         # Routing statistics
         self.routing_stats = {
@@ -172,7 +172,7 @@ class HierarchicalMoERouter:
             "cost_savings_vs_industry": 0.0
         }
         
-        logger.info("🎭 Hierarchical MoE Router initialized with JAX + ARM Axion")
+        logger.info(" Hierarchical MoE Router initialized with JAX + ARM Axion")
     
     def _init_classifier_params(self, input_dim: int, output_dim: int) -> Dict:
         """Initialize parameters for JAX classifier"""
@@ -284,7 +284,7 @@ class HierarchicalMoERouter:
     
     def _initialize_corrected_model_tiers(self) -> Dict[int, List[Dict]]:
         """
-        🎭 CORRECTED architecture - Define tiers according to specification:
+         CORRECTED architecture - Define tiers according to specification:
 
         - AUTO-DISTILLATION for ALL models (300M → 13B)
         - Router: 2.6B_OmniGenomic_Mini (auto-distilled from 13B)
@@ -292,7 +292,7 @@ class HierarchicalMoERouter:
         - No consensus training in this initial pipeline
         """
         return {
-            # 🎯 ROUTER LEVEL: 2.6B distilled from 13B (ARM Axion optimized)
+            #  ROUTER LEVEL: 2.6B distilled from 13B (ARM Axion optimized)
             "router": {
                 "name": "2.6B_OmniGenomic_Mini",
                 "teacher_model": "13B_OmniGenomic",
@@ -306,7 +306,7 @@ class HierarchicalMoERouter:
                 "routing_capability": True
             },
             
-            # 🔄 Level 1: Distilled versions of main models (ROUTING TARGET)
+            #  Level 1: Distilled versions of main models (ROUTING TARGET)
             # Router routes here first (except the 2 smallest ones)
             1: [
                 {
@@ -344,7 +344,7 @@ class HierarchicalMoERouter:
                 }
             ],
             
-            # 📚 SMALL MODELS: Distilled from 300M and 600M (not in initial routing)
+            #  SMALL MODELS: Distilled from 300M and 600M (not in initial routing)
             "small_distilled": [
                 {
                     "name": "60M_LinuxCore_Mini",
@@ -372,7 +372,7 @@ class HierarchicalMoERouter:
                 }
             ],
             
-            # 🔥 Level 2: Medium models (SECONDARY ROUTING)
+            #  Level 2: Medium models (SECONDARY ROUTING)
             2: [
                 {
                     "name": "600M_LaptopAssistant",
@@ -394,7 +394,7 @@ class HierarchicalMoERouter:
                 }
             ],
             
-            # 🚀 Level 3: Large models (FINAL ROUTING - only for complex queries)
+            #  Level 3: Large models (FINAL ROUTING - only for complex queries)
             3: [
                 {
                     "name": "3B_CodeMaster",
@@ -426,7 +426,7 @@ class HierarchicalMoERouter:
                 }
             ],
 
-            # 📊 BASE MODELS: Without distillation (for pipeline reference)
+            #  BASE MODELS: Without distillation (for pipeline reference)
             "base_models": [
                 {
                     "name": "300M_LinuxCore",
@@ -489,7 +489,7 @@ class HierarchicalMoERouter:
     
     def analyze_query(self, query: str, context: Optional[str] = None) -> QueryAnalysis:
         """
-        🧠 Analyze a query using native JAX + ARM Axion optimization.
+         Analyze a query using native JAX + ARM Axion optimization.
 
         Args:
             query: The user query
@@ -498,7 +498,7 @@ class HierarchicalMoERouter:
         Returns:
             QueryAnalysis with all analysis information
         """
-        # 🚀 ARM Axion optimized embedding processing
+        #  ARM Axion optimized embedding processing
         if self.enable_arm_axion:
             query_embedding = self.arm_optimizer.process_embedding(query, context)
         else:
@@ -508,7 +508,7 @@ class HierarchicalMoERouter:
             else:
                 query_embedding = [0.1] * 768  # Dummy embedding
         
-        # 🧠 JAX Forward pass - Complexity classification
+        #  JAX Forward pass - Complexity classification
         complexity_logits = self._forward_classifier(query_embedding, self.complexity_params)
         complexity_probs = softmax(complexity_logits, axis=-1)
         if JAX_AVAILABLE:
@@ -517,11 +517,11 @@ class HierarchicalMoERouter:
             complexity_idx = 0  # Default to first complexity
         complexity = list(QueryComplexity)[complexity_idx]
         
-        # 🎯 JAX Forward pass - Domain classification  
+        #  JAX Forward pass - Domain classification  
         domain_logits = self._forward_classifier(query_embedding, self.domain_params)
         domain_probs = softmax(domain_logits, axis=-1)
         
-        # 🔍 Select domains with probability > threshold
+        #  Select domains with probability > threshold
         domain_threshold = 0.3
         required_domains = []
         confidence_scores = {}
@@ -532,7 +532,7 @@ class HierarchicalMoERouter:
                 required_domains.append(domain)
                 confidence_scores[domain.value] = float(prob)
         
-        # 🎭 Check if ensemble is needed
+        #  Check if ensemble is needed
         if JAX_AVAILABLE:
             domain_input = jnp.concatenate([query_embedding, domain_probs])
         else:
@@ -739,7 +739,7 @@ class HierarchicalMoERouter:
                 "avg_cost_per_query": round(self.routing_stats["avg_cost_per_query"], 4),
                 "cost_savings_vs_industry": f"{self.routing_stats['cost_savings_vs_industry']*100:.1f}%",
                 "target_avg_cost": 0.27,
-                "performance_vs_target": "✅" if self.routing_stats["avg_cost_per_query"] <= 0.30 else "⚠️"
+                "performance_vs_target": "" if self.routing_stats["avg_cost_per_query"] <= 0.30 else "️"
             },
             "targets_vs_actual": {
                 "level_1_target": "45%",

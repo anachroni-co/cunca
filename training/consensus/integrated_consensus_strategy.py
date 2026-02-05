@@ -239,7 +239,7 @@ class IntegratedConsensusStrategy:
     
     def _setup_core_distribution(self) -> Dict[str, Any]:
         """Setup distribution of 27 TPU cores across 7 experts."""
-        logger.info("🏗️ Setting up TPU v6-64 distribution with 27 cores")
+        logger.info("️ Setting up TPU v6-64 distribution with 27 cores")
         
         # Distribute cores optimally
         base_cores_per_expert = self.tpu_config.total_cores // len(self.expert_models)
@@ -273,12 +273,12 @@ class IntegratedConsensusStrategy:
             
             core_id += cores_assigned
         
-        logger.info(f"📊 Core Distribution: {distribution}")
+        logger.info(f" Core Distribution: {distribution}")
         return distribution
     
     def _initialize_strategy(self):
         """Initialize the integrated consensus strategy."""
-        logger.info("🚀 Initializing Integrated Consensus Strategy")
+        logger.info(" Initializing Integrated Consensus Strategy")
         
         # Validate legal compliance
         self._validate_legal_compliance()
@@ -289,17 +289,17 @@ class IntegratedConsensusStrategy:
         # Initialize expert models
         self._initialize_expert_models()
         
-        logger.info("✅ Integrated Consensus Strategy initialized successfully")
+        logger.info(" Integrated Consensus Strategy initialized successfully")
     
     def _validate_legal_compliance(self):
         """Validates legal compliance of all expert models."""
-        logger.info("⚖️ Validating legal compliance")
+        logger.info("️ Validating legal compliance")
         
         for expert_type, expert_config in self.expert_models.items():
             if not expert_config.legal_compliance:
                 raise ValueError(f"Expert {expert_config.name} is not legally compliant")
             
-            logger.info(f"✅ {expert_config.name}: {expert_config.license} - {expert_config.use_case}")
+            logger.info(f" {expert_config.name}: {expert_config.license} - {expert_config.use_case}")
     
     def _initialize_tpu_optimizations(self):
         """Initialize TPU v6-64 specific optimizations."""
@@ -318,10 +318,10 @@ class IntegratedConsensusStrategy:
     
     def _initialize_expert_models(self):
         """Initialize expert models with TPU optimization."""
-        logger.info("🧠 Initializing expert models")
+        logger.info(" Initializing expert models")
         
         for expert_type, expert_config in self.expert_models.items():
-            logger.info(f"✅ {expert_config.name} ({expert_config.model_id}) - {expert_config.license}")
+            logger.info(f" {expert_config.name} ({expert_config.model_id}) - {expert_config.license}")
     
     async def get_integrated_consensus_response(
         self, 
@@ -779,6 +779,6 @@ if __name__ == "__main__":
         # Show expert breakdown
         logger.info("\n=== Expert Breakdown ===")
         for expert in result['expert_breakdown']['experts_used']:
-            logger.info(f"  ✅ {expert}")
+            logger.info(f"   {expert}")
     
     asyncio.run(main())

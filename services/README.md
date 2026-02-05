@@ -2,7 +2,7 @@
 
 **Production-ready services for text-to-speech, automation, and model coordination**
 
-## 📋 Table of Contents
+##  Table of Contents
 
 1. [Overview](#overview)
 2. [Service Categories](#service-categories)
@@ -19,7 +19,7 @@
 
 ---
 
-## 🎯 Overview
+##  Overview
 
 The `capibara/services` module provides production-ready microservices for CapibaraGPT-v2:
 
@@ -27,38 +27,38 @@ The `capibara/services` module provides production-ready microservices for Capib
 
 | Service | Purpose | Port | Status |
 |---------|---------|------|--------|
-| **TTS Service** | Text-to-Speech with FastSpeech + HiFi-GAN | 8765 | ✅ Production |
-| **MCP Integration** | Model Context Protocol for distributed coordination | N/A | ✅ Production |
-| **N8N Automation** | Natural language to workflow automation | 8080 | ✅ Production |
-| **E2B Sandbox** | Secure code execution environment | N/A | ✅ Production |
+| **TTS Service** | Text-to-Speech with FastSpeech + HiFi-GAN | 8765 |  Production |
+| **MCP Integration** | Model Context Protocol for distributed coordination | N/A |  Production |
+| **N8N Automation** | Natural language to workflow automation | 8080 |  Production |
+| **E2B Sandbox** | Secure code execution environment | N/A |  Production |
 
 ### Key Features
 
-✅ **Async-First**: Built on asyncio for high concurrency
-✅ **WebSocket Support**: Real-time streaming for TTS and events
-✅ **REST APIs**: FastAPI-based REST endpoints
-✅ **Distributed**: MCP protocol for multi-node coordination
-✅ **Secure**: E2B sandboxing for untrusted code execution
-✅ **Production-Ready**: Logging, monitoring, error handling
-✅ **Configurable**: Environment-based configuration
+ **Async-First**: Built on asyncio for high concurrency
+ **WebSocket Support**: Real-time streaming for TTS and events
+ **REST APIs**: FastAPI-based REST endpoints
+ **Distributed**: MCP protocol for multi-node coordination
+ **Secure**: E2B sandboxing for untrusted code execution
+ **Production-Ready**: Logging, monitoring, error handling
+ **Configurable**: Environment-based configuration
 
 ---
 
-## 🏗️ Service Categories
+## ️ Service Categories
 
 ### Service Taxonomy
 
 ```
 capibara/services/
-├── 🎤 TTS (Text-to-Speech)
+├──  TTS (Text-to-Speech)
 │   ├── capibara_tts_service.py     # FastSpeech + HiFi-GAN TTS
 │   ├── __init__.py                 # TTS module exports
 │   └── tts.py                      # TTS interface
 │
-├── 📡 MCP Integration
+├──  MCP Integration
 │   └── mcp_integration.py          # Model Context Protocol
 │
-└── 🤖 Automation
+└──  Automation
     ├── n8n_service.py              # N8N workflow service
     ├── workflow_builder.py         # AI-powered workflow construction
     ├── agent_executor.py           # Agent-based execution
@@ -71,7 +71,7 @@ capibara/services/
 
 ---
 
-## 🏛️ Architecture
+## ️ Architecture
 
 ### Overall System Architecture
 
@@ -120,7 +120,7 @@ capibara/services/
 
 ---
 
-## 🎤 TTS Service
+##  TTS Service
 
 ### Overview
 
@@ -319,7 +319,7 @@ audio = fallback_tts.synthesize("Fallback TTS engine")
 
 ---
 
-## 📡 MCP Integration
+##  MCP Integration
 
 ### Overview
 
@@ -506,7 +506,7 @@ context_sync = MCPMessage(
 
 ---
 
-## 🤖 N8N Automation Service
+##  N8N Automation Service
 
 ### Overview
 
@@ -855,7 +855,7 @@ python -m capibara.services.automation.web_ui --port 3000
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Installation
 
@@ -895,7 +895,7 @@ docker-compose -f docker-compose.services.yml ps
 
 ---
 
-## ⚙️ Configuration
+## ️ Configuration
 
 ### Service Configuration File
 
@@ -936,7 +936,7 @@ allowed_imports = ["pandas", "numpy", "requests", "json"]
 
 ---
 
-## 📊 Monitoring & Metrics
+##  Monitoring & Metrics
 
 ### Prometheus Metrics
 
@@ -963,7 +963,7 @@ start_http_server(9090)
 
 ---
 
-## 🔧 Troubleshooting
+##  Troubleshooting
 
 ### TTS Service Issues
 
@@ -1019,7 +1019,7 @@ sandbox.config.allow_network = False
 
 ---
 
-## 📚 References
+##  References
 
 ### Documentation
 
@@ -1037,7 +1037,7 @@ sandbox.config.allow_network = False
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions welcome! Priority areas:
 
@@ -1051,7 +1051,7 @@ See [CONTRIBUTING.md](../../CONTRIBUTING.md) for guidelines.
 
 ---
 
-## 📄 License
+##  License
 
 Part of the capibaraGPT-v2 project. See [LICENSE](../../LICENSE) for details.
 

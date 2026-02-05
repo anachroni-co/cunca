@@ -177,7 +177,7 @@ def main():
     logger.info("Configuration Files:")
     logger.info("-" * 40)
     for passed, msg in check_config_files():
-        symbol = "✓" if passed else "✗"
+        symbol = "" if passed else ""
         logger.info(f"  {symbol} {msg}")
         all_results.append(passed)
     logger.info()
@@ -186,7 +186,7 @@ def main():
     logger.info("Core Module Imports:")
     logger.info("-" * 40)
     for passed, msg in check_core_modules():
-        symbol = "✓" if passed else "✗"
+        symbol = "" if passed else ""
         logger.info(f"  {symbol} {msg}")
         all_results.append(passed)
     logger.info()
@@ -195,7 +195,7 @@ def main():
     logger.info("Backend Availability:")
     logger.info("-" * 40)
     for passed, msg in check_backend_available():
-        symbol = "✓" if passed else "✗"
+        symbol = "" if passed else ""
         logger.info(f"  {symbol} {msg}")
         all_results.append(passed)
     logger.info()
@@ -204,7 +204,7 @@ def main():
     logger.info("Test Structure:")
     logger.info("-" * 40)
     for passed, msg in check_tests_structure():
-        symbol = "✓" if passed else "✗"
+        symbol = "" if passed else ""
         logger.info(f"  {symbol} {msg}")
         all_results.append(passed)
     logger.info()
@@ -223,10 +223,10 @@ def main():
     logger.info()
 
     if failed == 0:
-        logger.info("✓ All validation checks passed!")
+        logger.info(" All validation checks passed!")
         return 0
     else:
-        logger.error(f"✗ {failed} validation checks failed")
+        logger.error(f" {failed} validation checks failed")
         return 1
 
 

@@ -632,11 +632,11 @@ class IntegratedCapibaraTrainer:
         dataset_config = self.config.dataset_configs[phase_name]
         target_size = dataset_config["size_range"][1]  # Use max size
         
-        logger.info(f"📊 Generando dataset consenso para {phase_name}")
+        logger.info(f" Generando dataset consenso para {phase_name}")
         consensus_result = await distiller.generate_enhanced_dataset(prompts, target_size)
         
         # 6. apply refinamiento iterativo
-        logger.info(f"🔧 Aplicando refinamiento iterativo")
+        logger.info(f" Aplicando refinamiento iterativo")
         refined_samples = []
         
         for sample in consensus_result["raw_samples"]:
@@ -650,7 +650,7 @@ class IntegratedCapibaraTrainer:
             refined_samples.append(refined_sample)
         
         # 7. integrate with sistema de votación
-        logger.info(f"🗳️ Integrando con sistema de votación")
+        logger.info(f"️ Integrando con sistema de votación")
         voted_samples = []
         
         for sample in refined_samples[:1000]:  # Subset for voting demo
@@ -677,7 +677,7 @@ class IntegratedCapibaraTrainer:
         
         trained_models = {}
         for model_scale in self._get_models_for_phase(phase_name):
-            logger.info(f"🎯 Entrenando modelo {model_scale}")
+            logger.info(f" Entrenando modelo {model_scale}")
             
             # Placeholder for entrenamiento real
             model_result = await self._train_model_with_integrated_data(
@@ -719,7 +719,7 @@ class IntegratedCapibaraTrainer:
             
             teachers.append(teacher_fn)
         
-        logger.info(f"✅ Setup {len(teachers)} teachers para {phase_name}")
+        logger.info(f" Setup {len(teachers)} teachers para {phase_name}")
         return teachers
     
     async def _setup_refiners(self, phase_name: str) -> List[RefinerModel]:
@@ -738,7 +738,7 @@ class IntegratedCapibaraTrainer:
             
             refiners.append(refiner_fn)
         
-        logger.info(f"✅ Setup {len(refiners)} refiners para {phase_name}")
+        logger.info(f" Setup {len(refiners)} refiners para {phase_name}")
         return refiners
     
     async def _generate_phase_prompts(self, phase_name: str) -> List[str]:
@@ -762,7 +762,7 @@ class IntegratedCapibaraTrainer:
         
         expanded_prompts = base_prompts * complexity_multiplier * 1000  # Scale up
         
-        logger.info(f"📝 Generados {len(expanded_prompts):,} prompts para {phase_name}")
+        logger.info(f" Generados {len(expanded_prompts):,} prompts para {phase_name}")
         return expanded_prompts
     
     def _get_phases_for_target(self, target_scale: str) -> List[str]:
@@ -1018,7 +1018,7 @@ class ModelEvaluator:
 async def run_integrated_training_example():
     """example complete de entrenamiento integrado."""
     
-    logger.info("🚀 Iniciando ejemplo de entrenamiento integrado")
+    logger.info(" Iniciando ejemplo de entrenamiento integrado")
     
     # setup
     config = IntegratedTrainingConfig()
@@ -1054,14 +1054,14 @@ async def run_integrated_training_example():
     )
     
     # show resultados finales
-    logger.info("🎉 Entrenamiento integrado completado!")
-    logger.info(f"📊 Análisis final: {results['final_analysis']['summary']}")
+    logger.info(" Entrenamiento integrado completado!")
+    logger.info(f" Análisis final: {results['final_analysis']['summary']}")
     avg_eval = np.mean([
         np.mean([model['average_score'] for model in phase.values()])
         for phase in evaluation_results.values()
     ])
-    logger.info(f"🎯 Evaluación promedio: {avg_eval:.3f}")
-    logger.info(f"📈 Dataset combinado: {len(combined_dataset['input_ids']):,} samples")
+    logger.info(f" Evaluación promedio: {avg_eval:.3f}")
+    logger.info(f" Dataset combinado: {len(combined_dataset['input_ids']):,} samples")
     
     return results, evaluation_results, combined_dataset
 
@@ -1193,14 +1193,14 @@ async def main():
     # setup
     if args.production:
         config = get_production_integrated_config()
-        logger.info("🏭 Usando configuración de producción")
+        logger.info(" Usando configuración de producción")
     else:
         config = IntegratedTrainingConfig()
-        logger.info("🧪 Usando configuración de desarrollo")
+        logger.info(" Usando configuración de desarrollo")
     
     if args.eval_only:
         # only evaluación
-        logger.info("📊 Ejecutando solo evaluación")
+        logger.info(" Ejecutando solo evaluación")
         # implement evaluación standalone
         return
     
@@ -1215,14 +1215,14 @@ async def main():
     summary = results["final_analysis"]["summary"]
     
     logger.info("\n" + "="*60)
-    logger.info("🎉 ENTRENAMIENTO CAPIBARA INTEGRADO COMPLETADO")
+    logger.info(" ENTRENAMIENTO CAPIBARA INTEGRADO COMPLETADO")
     logger.info("="*60)
-    logger.info(f"🎯 Target Scale: {args.target_scale}")
-    logger.info(f"💰 Costo Total: ${summary['total_cost_usd']:,.0f}")
-    logger.info(f"📊 Samples Generados: {summary['total_samples_generated']:,}")
-    logger.info(f"📈 Tasa de Consenso: {summary['overall_consensus_rate']:.1%}")
-    logger.info(f"🔧 Éxito de Refinamiento: {summary['overall_refinement_success']:.1%}")
-    logger.info(f"💡 Costo por Sample: ${summary['cost_per_sample']:.4f}")
+    logger.info(f" Target Scale: {args.target_scale}")
+    logger.info(f" Costo Total: ${summary['total_cost_usd']:,.0f}")
+    logger.info(f" Samples Generados: {summary['total_samples_generated']:,}")
+    logger.info(f" Tasa de Consenso: {summary['overall_consensus_rate']:.1%}")
+    logger.info(f" Éxito de Refinamiento: {summary['overall_refinement_success']:.1%}")
+    logger.info(f" Costo por Sample: ${summary['cost_per_sample']:.4f}")
     logger.info("="*60)
     
     return results

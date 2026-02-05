@@ -178,7 +178,7 @@ class TPUv6HuggingFaceProStrategy:
     
     def _setup_distributed_inference(self):
         """Setup distributed inference across H200 hardware."""
-        logger.info("🚀 Setting up TPU v6-64 + H200 distributed inference")
+        logger.info(" Setting up TPU v6-64 + H200 distributed inference")
         
         # Calculate optimal distribution
         total_models = len(self.expert_models)
@@ -189,7 +189,7 @@ class TPUv6HuggingFaceProStrategy:
         models_per_tpu_core = max(1, total_models // tpu_cores)
         models_per_h200 = max(1, total_models // h200_gpus)
         
-        logger.info(f"📊 Distribution: {models_per_tpu_core} models per TPU core, {models_per_h200} per H200")
+        logger.info(f" Distribution: {models_per_tpu_core} models per TPU core, {models_per_h200} per H200")
         
         # Setup model distribution
         self.model_distribution = {
@@ -280,7 +280,7 @@ class TPUv6HuggingFaceProStrategy:
         models: List[Dict[str, Any]]
     ) -> List[Dict[str, Any]]:
         """Generates responses using H200 distributed inference."""
-        logger.info(f"🌐 Using H200 distributed inference for {len(models)} models")
+        logger.info(f" Using H200 distributed inference for {len(models)} models")
         
         # Split models across H200 GPUs
         h200_gpus = self.model_distribution["h200_gpus"]
@@ -354,7 +354,7 @@ class TPUv6HuggingFaceProStrategy:
         models: List[Dict[str, Any]]
     ) -> List[Dict[str, Any]]:
         """Generates responses using TPU v6-64 optimization."""
-        logger.info(f"⚡ Using TPU v6-64 optimization for {len(models)} models")
+        logger.info(f" Using TPU v6-64 optimization for {len(models)} models")
         
         responses = []
         

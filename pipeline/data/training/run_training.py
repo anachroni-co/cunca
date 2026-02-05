@@ -24,10 +24,10 @@ def main():
     with open(config_path, 'r', encoding='utf-8') as f:
         config = json.load(f)
     
-    logger.info("🚀 Starting CapibaraGPT-v2 Training")
-    logger.info(f"📊 Pipeline ID: {config['dataset_info']['pipeline_id']}")
-    logger.info(f"📄 Total records: {config['dataset_info']['total_records']}")
-    logger.info(f"🗂️  Data types: {', '.join(config['dataset_info']['data_types'])}")
+    logger.info(" Starting CapibaraGPT-v2 Training")
+    logger.info(f" Pipeline ID: {config['dataset_info']['pipeline_id']}")
+    logger.info(f" Total records: {config['dataset_info']['total_records']}")
+    logger.info(f"️  Data types: {', '.join(config['dataset_info']['data_types'])}")
     
     # Import training module
     try:
@@ -39,12 +39,12 @@ def main():
         # Start training
         result = trainer.run_training()
         
-        logger.info("✅ Training completed successfully!")
+        logger.info(" Training completed successfully!")
         return result
         
     except ImportError as e:
-        logger.warning(f"❌ Training module not available: {e}")
-        logger.info("💡 Alternative: Use generated datasets with your preferred training framework")
+        logger.warning(f" Training module not available: {e}")
+        logger.info(" Alternative: Use generated datasets with your preferred training framework")
         logger.info(f"   Train data: {config['data_paths']['train']}")
         logger.info(f"   Validation data: {config['data_paths']['validation']}")
         return None

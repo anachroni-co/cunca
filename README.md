@@ -59,19 +59,19 @@ pipeline      ██  2,201 (2%)
 
 ```mermaid
 graph TB
-    subgraph Input["📥 Input Layer"]
+    subgraph Input[" Input Layer"]
         TEXT[Text Input]
         IMG[Image Input]
         AUDIO[Audio Input]
     end
 
-    subgraph Encoders["🔄 Encoders"]
+    subgraph Encoders[" Encoders"]
         TOK[Tokenizer]
         VE[Vision Encoder]
         AE[Audio Encoder]
     end
 
-    subgraph Core["⚙️ Core Model"]
+    subgraph Core["️ Core Model"]
         EMB[Embeddings]
 
         subgraph Layers["Transformer Layers"]
@@ -85,13 +85,13 @@ graph TB
         NORM[Layer Norm]
     end
 
-    subgraph Backends["🖥️ Hardware Backends"]
+    subgraph Backends["️ Hardware Backends"]
         CPU[CPU Backend<br/>NumPy]
         GPU[GPU Backend<br/>PyTorch/CUDA]
         TPU[TPU Backend<br/>JAX/Flax]
     end
 
-    subgraph Output["📤 Output"]
+    subgraph Output[" Output"]
         LM[Language Model Head]
         GEN[Generation]
     end
@@ -122,7 +122,7 @@ graph TB
 
 ```mermaid
 graph LR
-    subgraph core["🧠 Core (30K lines)"]
+    subgraph core[" Core (30K lines)"]
         backends[backends]
         attention[attention]
         moe[moe]
@@ -133,7 +133,7 @@ graph LR
         optimizers[optimizers]
     end
 
-    subgraph training["🎯 Training (36K lines)"]
+    subgraph training[" Training (36K lines)"]
         consensus[consensus]
         strategies[strategies]
         safety[safety]
@@ -141,13 +141,13 @@ graph LR
         federated[federated]
     end
 
-    subgraph data["📊 Data (11K lines)"]
+    subgraph data[" Data (11K lines)"]
         datasets[datasets]
         loaders[loaders]
         processors[processors]
     end
 
-    subgraph services["🔧 Services (11K lines)"]
+    subgraph services[" Services (11K lines)"]
         automation[automation]
         generation[generation]
         analysis[analysis]
@@ -321,10 +321,10 @@ config            ████████████████████�
 
 | Category | Tests | Status |
 |----------|-------|--------|
-| Unit Tests | 280 | ✅ All Pass |
-| Benchmarks | 36 | ✅ All Pass |
-| Security | 45 | ✅ All Pass |
-| Integration | 31 | ✅ All Pass |
+| Unit Tests | 280 |  All Pass |
+| Benchmarks | 36 |  All Pass |
+| Security | 45 |  All Pass |
+| Integration | 31 |  All Pass |
 
 ---
 
@@ -332,7 +332,7 @@ config            ████████████████████�
 
 ```mermaid
 graph TB
-    subgraph SubModels["🤖 Sub-Models"]
+    subgraph SubModels[" Sub-Models"]
         SSM_TPU[SSM TPU<br/>State Space Model]
         BYTE_TPU[Byte TPU<br/>Byte-level Processing]
         CSA[CSA Expert<br/>Context-aware]
@@ -341,13 +341,13 @@ graph TB
         REASON[Reasoning<br/>Enhancement]
     end
 
-    subgraph Orchestrator["🎭 Ultra Orchestrator"]
+    subgraph Orchestrator[" Ultra Orchestrator"]
         ROUTER[Model Router]
         ENSEMBLE[Ensemble Manager]
         WEIGHT[Weight Allocator]
     end
 
-    subgraph Output["📤 Unified Output"]
+    subgraph Output[" Unified Output"]
         MERGE[Response Merger]
         RANK[Quality Ranker]
     end
@@ -371,7 +371,7 @@ graph TB
 
 ```mermaid
 flowchart TB
-    subgraph Services["🔧 Services Layer"]
+    subgraph Services[" Services Layer"]
         subgraph Meta["Meta Generation"]
             TTS[Text-to-Speech]
             TTG[Text-to-Gen]
@@ -403,27 +403,27 @@ flowchart TB
 
 ```mermaid
 flowchart LR
-    subgraph Data["📊 Data Pipeline"]
+    subgraph Data[" Data Pipeline"]
         RAW[Raw Data]
         CLEAN[Cleaning]
         TOK[Tokenization]
         BATCH[Batching]
     end
 
-    subgraph Training["🎯 Training Loop"]
+    subgraph Training[" Training Loop"]
         FWD[Forward Pass]
         LOSS[Loss Computation]
         BWD[Backward Pass]
         OPT[Optimizer Step]
     end
 
-    subgraph Consensus["🤝 Consensus"]
+    subgraph Consensus[" Consensus"]
         FED[Federated Learning]
         AGG[Gradient Aggregation]
         SYNC[Model Sync]
     end
 
-    subgraph Safety["🛡️ Safety"]
+    subgraph Safety["️ Safety"]
         FILTER[Content Filter]
         ALIGN[Alignment Check]
         AUDIT[Audit Log]
@@ -528,14 +528,14 @@ python -m benchmarks run --ci --baseline baseline.json --threshold 10
 | Component | Status | Progress |
 |-----------|--------|----------|
 | CPU Backend | ✅ Stable | █████████████████████ 100% |
-| GPU Backend | 🟡 Beta | ████████████████░░░░░ 80% |
-| TPU Backend | 🟠 Alpha | ████████████░░░░░░░░░ 60% |
-| MoE Routing | 🟡 Beta | ████████████████░░░░░ 80% |
-| SSM/Mamba | 🟠 Alpha | ██████████░░░░░░░░░░░ 50% |
-| CoT Reasoning | 🟠 Alpha | ████████░░░░░░░░░░░░░ 40% |
+| GPU Backend | 🔶 Beta | ████████████████░░░░░ 80% |
+| TPU Backend | 🔸 Alpha | ████████████░░░░░░░░░ 60% |
+| MoE Routing | 🔶 Beta | ████████████████░░░░░ 80% |
+| SSM/Mamba | 🔸 Alpha | ██████████░░░░░░░░░░░ 50% |
+| CoT Reasoning | Alpha | ████████░░░░░░░░░░░░░ 40% |
 | Memory Profiler | ✅ Stable | █████████████████████ 100% |
-| Benchmarks | ✅ Stable | █████████████████████ 100% |
-| Documentation | 🟡 Beta | ██████████████░░░░░░░ 70% |
+| Benchmarks | Stable | █████████████████████ 100% |
+| Documentation | Beta | ██████████████░░░░░░░ 70% |
 
 ---
 
@@ -543,7 +543,7 @@ python -m benchmarks run --ci --baseline baseline.json --threshold 10
 
 ```
 capibaraGPT_v3/
-├── 🧠 core/                 # Core model components (30K lines)
+├──  core/                 # Core model components (30K lines)
 │   ├── backends/            # Hardware abstraction (CPU/GPU/TPU)
 │   ├── attention/           # Multi-head and sparse attention
 │   ├── moe/                 # Mixture of Experts
@@ -553,44 +553,44 @@ capibaraGPT_v3/
 │   ├── kernels/             # Optimized compute kernels
 │   └── optimizers/          # Training optimizers
 │
-├── 🎯 training/             # Training system (36K lines)
+├──  training/             # Training system (36K lines)
 │   ├── consensus/           # Distributed consensus
 │   ├── strategies/          # Training strategies
 │   ├── safety/              # Safety mechanisms
 │   └── federated/           # Federated learning
 │
-├── 📊 data/                 # Data handling (11K lines)
+├──  data/                 # Data handling (11K lines)
 │   ├── datasets/            # Dataset implementations
 │   └── loaders/             # Data loaders
 │
-├── 🤖 sub_models/           # Specialized sub-models (10K lines)
+├──  sub_models/           # Specialized sub-models (10K lines)
 │   ├── SSM_TPU/             # TPU-optimized SSM
 │   ├── csa_expert/          # Context-aware expert
 │   └── reasoning/           # Reasoning enhancement
 │
-├── 🔧 services/             # Application services (11K lines)
+├──  services/             # Application services (11K lines)
 │   ├── meta_generation/     # Content generation
 │   └── automation/          # Task automation
 │
-├── 🛠️ utils/                # Utilities (8K lines)
+├── ️ utils/                # Utilities (8K lines)
 │   ├── memory_profiler/     # Memory profiling
 │   └── monitoring/          # System monitoring
 │
-├── 📈 benchmarks/           # Benchmark system (2K lines)
+├──  benchmarks/           # Benchmark system (2K lines)
 │   ├── runner.py            # Benchmark execution
 │   ├── comparator.py        # Result comparison
 │   └── reporter.py          # Report generation
 │
-├── ⚙️ config/               # Configuration (4K lines)
+├── ️ config/               # Configuration (4K lines)
 │   ├── config.yaml          # Main configuration
 │   └── config_loader.py     # Config utilities
 │
-├── 🧪 tests/                # Test suite (7K lines)
+├──  tests/                # Test suite (7K lines)
 │   ├── unit/                # Unit tests
 │   ├── benchmarks/          # Performance tests
 │   └── security/            # Security tests
 │
-└── 📚 docs/                 # Documentation
+└──  docs/                 # Documentation
     ├── conf.py              # Sphinx config
     └── api/                 # API reference
 ```
@@ -620,11 +620,11 @@ capibaraGPT_v3/
 
 | Use Case | License |
 |----------|---------|
-| 🎓 Academic Research | ✅ Free |
-| 📚 Education | ✅ Free |
-| 🏛️ Non-profit | ✅ Free |
-| 👤 Personal Projects | ✅ Free |
-| 🏢 Commercial Use | 📧 Contact Us |
+|  Academic Research |  Free |
+|  Education |  Free |
+| ️ Non-profit |  Free |
+|  Personal Projects |  Free |
+|  Commercial Use |  Contact Us |
 
 </div>
 

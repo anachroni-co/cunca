@@ -72,7 +72,7 @@ class PoolStatistics:
 
 class ConsensusMemoryPool:
     """
-    🧠 Advanced Memory Pool for Consensus Operations
+     Advanced Memory Pool for Consensus Operations
     
     Provides efficient memory management specifically optimized for consensus operations:
     - Shape-based pooling for common tensor shapes
@@ -123,7 +123,7 @@ class ConsensusMemoryPool:
         # Initialize memory pool
         self._initialize_pool()
         
-        logger.info(f"🧠 Consensus Memory Pool initialized ({pool_size_mb}MB, {pool_type.value})")
+        logger.info(f" Consensus Memory Pool initialized ({pool_size_mb}MB, {pool_type.value})")
     
     def _initialize_pool(self):
         """Initialize the memory pool with pre-allocated blocks."""
@@ -460,7 +460,7 @@ class ConsensusMemoryPool:
         """Force immediate cleanup of unused blocks."""
         
         with self.lock:
-            logger.info("🧹 Forcing memory pool cleanup")
+            logger.info(" Forcing memory pool cleanup")
             
             initial_blocks = len(self.allocated_blocks)
             self._cleanup_old_blocks()
@@ -471,7 +471,7 @@ class ConsensusMemoryPool:
             final_blocks = len(self.allocated_blocks)
             cleaned = initial_blocks - final_blocks
             
-            logger.info(f"✅ Cleanup completed: {cleaned} blocks removed")
+            logger.info(f" Cleanup completed: {cleaned} blocks removed")
     
     def _cleanup_unreferenced_blocks(self):
         """Clean up blocks with zero references."""
@@ -520,7 +520,7 @@ class ManagedMemoryContext:
 
 class ConsensusMemoryManager:
     """
-    🎛️ Consensus Memory Manager
+    ️ Consensus Memory Manager
     
     Manages multiple memory pools for different consensus operations:
     - Tensor pool for computation arrays
@@ -565,7 +565,7 @@ class ConsensusMemoryManager:
             "current_memory_usage_mb": 0.0
         }
         
-        logger.info(f"🎛️ Consensus Memory Manager initialized ({total_memory_mb}MB total)")
+        logger.info(f"️ Consensus Memory Manager initialized ({total_memory_mb}MB total)")
     
     def allocate_tensor(self, shape: Tuple[int, ...], dtype=np.float32) -> Optional[np.ndarray]:
         """Allocate tensor from tensor pool."""
@@ -672,7 +672,7 @@ class ConsensusMemoryManager:
     def optimize_memory_layout(self):
         """Optimize memory layout for better cache performance."""
         
-        logger.info("🔧 Optimizing memory layout...")
+        logger.info(" Optimizing memory layout...")
         
         # Reorganize free blocks by size for better allocation
         for pool_type, pool in self.pools.items():
@@ -684,12 +684,12 @@ class ConsensusMemoryManager:
         # Force garbage collection
         gc.collect()
         
-        logger.info("✅ Memory layout optimized")
+        logger.info(" Memory layout optimized")
     
     def cleanup_all_pools(self):
         """Clean up all memory pools."""
         
-        logger.info("🧹 Cleaning up all memory pools...")
+        logger.info(" Cleaning up all memory pools...")
         
         for pool_type, pool in self.pools.items():
             try:
@@ -700,7 +700,7 @@ class ConsensusMemoryManager:
         # Update global statistics
         self._update_global_statistics()
         
-        logger.info("✅ All memory pools cleaned up")
+        logger.info(" All memory pools cleaned up")
     
     def _update_global_statistics(self):
         """Update global memory statistics."""
@@ -794,11 +794,11 @@ if __name__ == "__main__":
             }
         )
         
-        logger.info("🧠 Consensus Memory Manager Test")
+        logger.info(" Consensus Memory Manager Test")
         logger.info("=" * 40)
         
         # Test allocations
-        logger.info("\n📦 Testing memory allocations...")
+        logger.info("\n Testing memory allocations...")
         
         # Allocate various arrays
         tensor1 = memory_manager.allocate_tensor((10, 768))
@@ -806,24 +806,24 @@ if __name__ == "__main__":
         response1 = memory_manager.allocate_response_buffer((5, 512))
         
         if tensor1 is not None:
-            logger.info(f"✅ Tensor allocated: {tensor1.shape}")
+            logger.info(f" Tensor allocated: {tensor1.shape}")
         if embedding1 is not None:
-            logger.info(f"✅ Embedding allocated: {embedding1.shape}")
+            logger.info(f" Embedding allocated: {embedding1.shape}")
         if response1 is not None:
-            logger.info(f"✅ Response buffer allocated: {response1.shape}")
+            logger.info(f" Response buffer allocated: {response1.shape}")
         
         # Test managed context
-        logger.info("\n🔧 Testing managed context...")
+        logger.info("\n Testing managed context...")
         
         with memory_manager.get_memory_context(MemoryPoolType.TEMPORARY_POOL) as context:
             temp_array = context.allocate((100, 100))
             if temp_array is not None:
-                logger.info(f"✅ Temporary array allocated in context: {temp_array.shape}")
+                logger.info(f" Temporary array allocated in context: {temp_array.shape}")
         
-        logger.info("✅ Context automatically cleaned up")
+        logger.info(" Context automatically cleaned up")
         
         # Test memory reuse
-        logger.info("\n♻️ Testing memory reuse...")
+        logger.info("\n️ Testing memory reuse...")
         
         # Deallocate and reallocate same shape
         if tensor1 is not None:
@@ -831,10 +831,10 @@ if __name__ == "__main__":
         
         tensor2 = memory_manager.allocate_tensor((10, 768))  # Same shape
         if tensor2 is not None:
-            logger.info(f"✅ Memory reused for tensor: {tensor2.shape}")
+            logger.info(f" Memory reused for tensor: {tensor2.shape}")
         
         # Get statistics
-        logger.info("\n📊 Memory Pool Statistics:")
+        logger.info("\n Memory Pool Statistics:")
         stats = memory_manager.get_comprehensive_statistics()
         
         logger.info(f"Total Memory: {stats['total_memory_mb']}MB")
@@ -854,13 +854,13 @@ if __name__ == "__main__":
             logger.info(f"    Avg Alloc Time: {alloc_stats['avg_allocation_time_ms']:.2f}ms")
         
         # Test cleanup
-        logger.info(f"\n🧹 Testing memory cleanup...")
+        logger.info(f"\n Testing memory cleanup...")
         memory_manager.cleanup_all_pools()
         
         final_stats = memory_manager.get_comprehensive_statistics()
         logger.info(f"Final Usage: {final_stats['global_metrics']['overall_usage_percentage']:.1f}%")
         
-        logger.info(f"\n✅ Memory management test completed")
+        logger.info(f"\n Memory management test completed")
     
     import asyncio
     asyncio.run(main())

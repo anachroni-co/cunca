@@ -2,11 +2,11 @@
 
 Dynamic Mixture of Experts system optimized for TPU v6e-64 with adaptive routing, load balancing, and expert specialization.
 
-## 📋 Description
+##  Description
 
 This module implements an advanced Mixture of Experts (MoE) system with 32 specialized experts, dynamic content-based routing, and TPU hardware-specific optimizations. It includes automatic expert specialization, intelligent load balancing, and real-time performance metrics.
 
-## 🏗️ Architecture
+## ️ Architecture
 
 ```
 moe/
@@ -14,7 +14,7 @@ moe/
 └── dynamic_moe.py     # Complete dynamic MoE implementation
 ```
 
-## 🧠 Dynamic MoE System
+##  Dynamic MoE System
 
 ### Main Configuration
 
@@ -46,7 +46,7 @@ print(f"Active experts: {moe_system.get_active_experts()}")
 print(f"Load balancing loss: {outputs.load_balancing_loss}")
 ```
 
-## 🎯 Expert Specialization
+##  Expert Specialization
 
 ### Specialized Expert Types
 
@@ -137,7 +137,7 @@ routing_result = moe_system.route_with_context(
 )
 ```
 
-## ⚡ TPU v6e-64 Optimizations
+##  TPU v6e-64 Optimizations
 
 ### Hardware-Specific Configuration
 
@@ -210,7 +210,7 @@ for expert_id, load in enumerate(load_distribution):
     print(f"Expert {expert_id}: {load:.2%} utilization")
 ```
 
-## 📊 Metrics and Monitoring
+##  Metrics and Monitoring
 
 ### Comprehensive Metrics System
 
@@ -258,7 +258,7 @@ for expert_id, analysis in specialization_analysis.items():
     print(f"  Evolution Trend: {analysis['evolution_trend']}")
 ```
 
-## 🔄 Training and Adaptation
+##  Training and Adaptation
 
 ### Distributed Training
 
@@ -339,7 +339,7 @@ for batch in continuous_data_stream:
         print(f"Expert specializations updated: {new_specializations}")
 ```
 
-## 🎯 Advanced Use Cases
+##  Advanced Use Cases
 
 ### 1. Multimodal MoE
 
@@ -428,7 +428,7 @@ memory_guided_output = memory_enhanced_moe.forward_with_memory(
 )
 ```
 
-## 🔧 Configuration and Tuning
+##  Configuration and Tuning
 
 ### Critical Hyperparameters
 
@@ -486,7 +486,7 @@ optimal_config = auto_tuner.find_optimal_configuration(
 print(f"Optimal configuration found: {optimal_config}")
 ```
 
-## 📚 References and Documentation
+##  References and Documentation
 
 - [Switch Transformer: Scaling to Trillion Parameter Models](https://arxiv.org/abs/2101.03961)
 - [GLaM: Efficient Scaling of Language Models](https://arxiv.org/abs/2112.06905)
@@ -494,7 +494,7 @@ print(f"Optimal configuration found: {optimal_config}")
 - [TPU v6e Performance Guide](https://cloud.google.com/tpu/docs/v6e)
 - [JAX MoE Implementation Patterns](https://jax.readthedocs.io/en/latest/notebooks/neural_network_with_tfds_data.html)
 
-## 🤝 Modular Integration
+##  Modular Integration
 
 ```python
 # Integration with other CapibaraGPT modules

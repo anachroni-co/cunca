@@ -137,7 +137,7 @@ class InterventionManager:
             "mild_warning": InterventionConfig(
                 type=InterventionType.WARNING_MESSAGE,
                 severity=InterventionSeverity.MILD,
-                message="🔔 Has estado usando el system por un tiempo prolongado. Considera tomar un descanso.",
+                message=" Has estado usando el system por un tiempo prolongado. Considera tomar un descanso.",
                 require_acknowledgment=False
             ),
             
@@ -145,7 +145,7 @@ class InterventionManager:
                 type=InterventionType.MANDATORY_BREAK,
                 severity=InterventionSeverity.MODERATE,
                 duration_minutes=15,
-                message="⏸️ Descanso obligatorio de 15 minutos activado para tu bienestar.",
+                message="️ Descanso obligatorio de 15 minutos activado para tu bienestar.",
                 require_acknowledgment=True,
                 escalate_after=30
             ),
@@ -154,7 +154,7 @@ class InterventionManager:
                 type=InterventionType.SESSION_LIMITATION,
                 severity=InterventionSeverity.SEVERE,
                 duration_minutes=120,
-                message="🚫 Sesión limitada por 2 horas debido a patrones de uso preocupantes.",
+                message=" Sesión limitada por 2 horas debido a patrones de uso preocupantes.",
                 require_acknowledgment=True,
                 notify_emergency_contact=False
             ),
@@ -171,7 +171,7 @@ class InterventionManager:
             "emergency_alert": InterventionConfig(
                 type=InterventionType.EMERGENCY_ALERT,
                 severity=InterventionSeverity.CRITICAL,
-                message="🚨 ALERTA DE EMERGENCIA: Se detectó riesgo crítico para salud mental.",
+                message=" ALERTA DE EMERGENCIA: Se detectó riesgo crítico para salud mental.",
                 notify_emergency_contact=True,
                 require_acknowledgment=True
             )
@@ -312,7 +312,7 @@ class InterventionManager:
     def _send_emergency_email(self, user_id: str, email: str, relationship: str, config: InterventionConfig, intervention_id: int):
         """Send emergency email"""
         try:
-            subject = f"🚨 Alerta de Salud Mental - Usuario {user_id}"
+            subject = f" Alerta de Salud Mental - Usuario {user_id}"
             
             body = f"""
             ALERTA AUTOMÁTICA DE SALUD MENTAL
@@ -347,7 +347,7 @@ class InterventionManager:
     def _send_emergency_sms(self, user_id: str, phone: str, relationship: str, config: InterventionConfig, intervention_id: int):
         """Send emergency SMS"""
         try:
-            message = f"🚨 ALERTA: Usuario {user_id} necesita supervisión por uso preocupante de IA. Contacta inmediatamente. Severidad: {config.severity.value}"
+            message = f" ALERTA: Usuario {user_id} necesita supervisión por uso preocupante de IA. Contacta inmediatamente. Severidad: {config.severity.value}"
             
             # Here you would implement the actual SMS sending
             logger.info(f"Emergency SMS sent to {phone} for user {user_id}")

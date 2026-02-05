@@ -120,7 +120,7 @@ class TPUv6AdaptiveIntegration:
                 self.adaptive_model = create_vq_v33_enterprise_model(use_tpu_v6=True)
                 self.current_backend = "tpu_v6_128_códigos vq"
                 
-                logger.info("✅ TPU v6 + 128 Códigos VQ system initialized successfully")
+                logger.info(" TPU v6 + 128 Códigos VQ system initialized successfully")
                 logger.info(f"Adaptive states available: {2**128}")
                 logger.info(f"Memory requirement: {self.adaptive_model['cost_estimate']['memory_requirement_gb']:.1f} GB")
                 
@@ -141,7 +141,7 @@ class TPUv6AdaptiveIntegration:
                 from capibara.adaptive.computation import VQbitLayer
                 self.adaptive_model = VQbitLayer(embedding_dim=64, quantization_codes=96)
                 self.current_backend = "tpu_v4_64_códigos vq"
-                logger.info("✅ Fallback to TPU v4-32 + 64 Códigos VQ")
+                logger.info(" Fallback to TPU v4-32 + 64 Códigos VQ")
                 
             except Exception as e:
                 logger.error(f"TPU v4 fallback failed: {e}")
@@ -155,14 +155,14 @@ class TPUv6AdaptiveIntegration:
             try:
                 self.fallback_model = ARMOptimizationSuite()
                 self.current_backend = "arm_axion_64_códigos vq"
-                logger.info("✅ Fallback to ARM Axion + 64 Códigos VQ")
+                logger.info(" Fallback to ARM Axion + 64 Códigos VQ")
             except Exception as e:
                 logger.error(f"ARM fallback failed: {e}")
                 self.current_backend = "classical_fallback"
-                logger.warning("⚠️ Using classical fallback - no adaptive capabilities")
+                logger.warning("️ Using classical fallback - no adaptive capabilities")
         else:
             self.current_backend = "classical_fallback"
-            logger.warning("⚠️ No adaptive capabilities available")
+            logger.warning("️ No adaptive capabilities available")
     
     def _setup_fallback_systems(self):
         """Setup fallback systems for different scenarios."""
@@ -631,4 +631,4 @@ if __name__ == "__main__":
     logger.info(f"Total cost: ${cost_summary['total_cost_usd']:.6f}")
     logger.info(f"Average cost per operation: ${cost_summary['average_cost_per_operation']:.6f}")
     
-    logger.info("\n✅ CapibaraGPT v3.3 TPU v6 Adaptive Integration ready for production!")
+    logger.info("\n CapibaraGPT v3.3 TPU v6 Adaptive Integration ready for production!")

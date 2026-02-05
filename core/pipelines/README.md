@@ -2,11 +2,11 @@
 
 Advanced processing pipelines system, specialized in RAG (Retrieval-Augmented Generation) 2.0, multimodality, and text-to-speech synthesis.
 
-## 📋 Description
+##  Description
 
 This module implements advanced processing pipelines optimized for different modalities and use cases, including RAG with episodic memory, semantic chunking, and multimodal processing with support for text, image, and audio.
 
-## 🏗️ Architecture
+## ️ Architecture
 
 ```
 pipelines/
@@ -17,7 +17,7 @@ pipelines/
 └── multimodal_tts_pipeline.py  # Multimodal TTS pipeline
 ```
 
-## 🚀 Advanced RAG Pipeline
+##  Advanced RAG Pipeline
 
 ### RAG 2.0 with Episodic Memory
 
@@ -139,7 +139,7 @@ memory_efficient_result = rag_pipeline.process_memory_efficient(
 )
 ```
 
-## 🎯 Multimodal Pipeline
+##  Multimodal Pipeline
 
 ### Integrated Multimodal Processing
 
@@ -236,7 +236,7 @@ for audio_chunk in audio_stream:
     audio_player.play_chunk(audio_chunk)
 ```
 
-## 📊 RAG Data Pipeline
+##  RAG Data Pipeline
 
 ### Processing and Indexing
 
@@ -347,7 +347,7 @@ for result in search_results.results:
     print(f"Rerank Score: {result.rerank_score:.3f}")
 ```
 
-## 🔧 TPU Optimizations
+##  TPU Optimizations
 
 ### TPU Kernel Integration
 
@@ -375,7 +375,7 @@ print(f"Memory Usage: {tpu_metrics['memory_gb']:.1f}GB")
 print(f"Throughput: {tpu_metrics['tokens_per_second']:.1f} tok/s")
 ```
 
-## 📈 Metrics and Evaluation
+##  Metrics and Evaluation
 
 ### RAG Quality Evaluation
 
@@ -423,14 +423,14 @@ quality_metrics = {
     }
 }
 
-print("📊 RAG Pipeline Evaluation:")
+print(" RAG Pipeline Evaluation:")
 for category, metrics in quality_metrics.items():
     print(f"\n{category.upper()}:")
     for metric, value in metrics.items():
         print(f"  {metric}: {value:.3f}")
 ```
 
-## 🔄 Streaming Pipeline
+##  Streaming Pipeline
 
 ### Real-time Processing
 
@@ -449,18 +449,18 @@ def process_streaming_query(query):
 
     for chunk in stream:
         if chunk.type == "retrieval_result":
-            print(f"📖 Found relevant document: {chunk.title}")
+            print(f" Found relevant document: {chunk.title}")
         elif chunk.type == "generation_chunk":
             print(chunk.text, end="", flush=True)
         elif chunk.type == "final_metadata":
-            print(f"\n\n📊 Sources: {len(chunk.sources)}")
-            print(f"🕒 Total time: {chunk.total_time:.2f}s")
+            print(f"\n\n Sources: {len(chunk.sources)}")
+            print(f" Total time: {chunk.total_time:.2f}s")
 
 # Use streaming pipeline
 process_streaming_query("What are the benefits of renewable energy?")
 ```
 
-## 🤝 Modular Integration
+##  Modular Integration
 
 ```python
 # Integration with other CapibaraGPT modules
@@ -489,7 +489,7 @@ print(f"Reasoning Chain: {expert_rag_result.reasoning_steps}")
 print(f"Expert Utilization: {expert_rag_result.expert_weights}")
 ```
 
-## 📚 References
+##  References
 
 - [RAG: Retrieval-Augmented Generation](https://arxiv.org/abs/2005.11401)
 - [Dense Passage Retrieval](https://arxiv.org/abs/2004.04906)

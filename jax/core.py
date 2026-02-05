@@ -105,7 +105,7 @@ no_effects = frozenset()
 
 # ================== tpu v4-32 OPTIMIZED CONFIGURATIONS ==================
 
-# ✅ CONFIG FLAGS with FALLBACKS
+#  CONFIG FLAGS with FALLBACKS
 def _create_config_flag(name: str, default_value, help_text: str):
     """Create config flag with fallback."""
     try:

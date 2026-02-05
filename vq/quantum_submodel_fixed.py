@@ -46,7 +46,7 @@ class QuantumSubmodel(nn.Module):
             )
     
     def __call__(self, 
-                 x: Dict[str, jnp.ndarray],  # ✅ FIXED: Consistent signature
+                 x: Dict[str, jnp.ndarray],  #  FIXED: Consistent signature
                  deterministic: bool = True,
                  **kwargs) -> Tuple[Dict[str, jnp.ndarray], Dict[str, float]]:
         """
@@ -59,7 +59,7 @@ class QuantumSubmodel(nn.Module):
         Returns:
             Tuple of (outputs, metrics) with correct metric names
         """
-        # ✅ Input validation
+        #  Input validation
         chex.assert_type(x, dict)
         if 'tokens' not in x:
             raise ValueError("Input dict must contain 'tokens' key")
@@ -80,7 +80,7 @@ class QuantumSubmodel(nn.Module):
         if self.config.use_manifold_projection:
             quantum_out = self.manifold_projection(quantum_out)
         
-        # ✅ FIXED: Use real metric names
+        #  FIXED: Use real metric names
         aggregated_metrics = {
             # VQbit metrics (real names)
             'commitment_loss': vqbit_metrics.get('commitment_loss', 0.0),
@@ -92,7 +92,7 @@ class QuantumSubmodel(nn.Module):
             'fidelity_score': quantum_metrics.get('fidelity', 0.0),
             'quantum_efficiency': quantum_metrics.get('efficiency', 0.0),
             
-            # ❌ REMOVED: Fake metrics
+            #  REMOVED: Fake metrics
             # 'loss': DOES NOT EXIST
             # 'quantum_advantage': DOES NOT EXIST
         }
@@ -155,7 +155,7 @@ class VQbitLayerFixed(nn.Module):
         encoding_indices = jnp.argmin(distances, axis=1)
         quantized = self.codebook[encoding_indices]
         
-        # ✅ FIXED: Real metric names only
+        #  FIXED: Real metric names only
         commitment_loss = jnp.mean((jnp.stop_gradient(quantized) - flat_x) ** 2)
         quantization_loss = jnp.mean((quantized - jnp.stop_gradient(flat_x)) ** 2)
         
@@ -242,7 +242,7 @@ class QuantumWrapperFixed(nn.Module):
         else:
             output = x
         
-        # ✅ Calculate real metrics
+        #  Calculate real metrics
         coherence = self._calculate_coherence(x, output)
         fidelity = self._calculate_fidelity(x, output)
         efficiency = coherence * fidelity
@@ -358,12 +358,12 @@ def test_quantum_submodel_integration():
     # Forward pass with real data
     outputs, metrics = model.apply(variables, test_batch, deterministic=True)
     
-    # ✅ Validate outputs
+    #  Validate outputs
     assert isinstance(outputs, dict), "Output should be dict"
     assert 'tokens' in outputs, "Output should contain 'tokens'"
     assert isinstance(metrics, dict), "Metrics should be dict"
     
-    # ✅ Validate real metric names
+    #  Validate real metric names
     expected_metrics = [
         'commitment_loss', 'codebook_usage', 'quantization_loss',
         'coherence_score', 'fidelity_score', 'quantum_efficiency'
@@ -373,7 +373,7 @@ def test_quantum_submodel_integration():
         assert metric in metrics, f"Missing metric: {metric}"
         assert isinstance(metrics[metric], (float, int)), f"Metric {metric} should be numeric"
     
-    logger.info("✅ All P0 fixes validated successfully!")
+    logger.info(" All P0 fixes validated successfully!")
     logger.info(f"Output shape: {outputs['tokens'].shape}")
     logger.info(f"Metrics: {list(metrics.keys())}")
     return outputs, metrics
@@ -395,7 +395,7 @@ def create_training_step_function(model: QuantumSubmodel):
                 deterministic=False
             )
             
-            # ✅ FIXED: Use real metric names for loss
+            #  FIXED: Use real metric names for loss
             primary_loss = jnp.mean(outputs['tokens']**2)  # Dummy loss for testing
             regularization = (
                 metrics['commitment_loss'] + 
@@ -424,4 +424,4 @@ def create_training_step_function(model: QuantumSubmodel):
 if __name__ == "__main__":
     # Run integration test
     outputs, metrics = test_quantum_submodel_integration()
-    logger.info("\n🚀 P0 fixes complete - ready for pilot training!")
+    logger.info("\n P0 fixes complete - ready for pilot training!")

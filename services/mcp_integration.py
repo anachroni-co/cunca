@@ -83,11 +83,11 @@ class MCPMessageHandler:
         if message_type not in self.handlers:
             self.handlers[message_type] = []
         self.handlers[message_type].append(handler)
-        logger.info(f"📡 Registered handler for {message_type.value}")
+        logger.info(f" Registered handler for {message_type.value}")
     
     async def handle_message(self, message: MCPMessage) -> Optional[MCPMessage]:
         """Handle an incoming message."""
-        logger.debug(f"📨 Handling message: {message.message_type.value} from {message.sender_id}")
+        logger.debug(f" Handling message: {message.message_type.value} from {message.sender_id}")
         
         handlers = self.handlers.get(message.message_type, [])
         response = None
@@ -98,7 +98,7 @@ class MCPMessageHandler:
                 if result and isinstance(result, MCPMessage):
                     response = result
             except Exception as e:
-                logger.error(f"❌ Handler error: {e}")
+                logger.error(f" Handler error: {e}")
                 response = MCPMessage(
                     message_type=MCPMessageType.ERROR,
                     sender_id=self.node_id,
@@ -124,12 +124,12 @@ class MCPClient:
         self.messages_received = 0
         self.connection_start_time = time.time()
         
-        logger.info(f"📡 MCP Client initialized: {node_id} ({node_type})")
+        logger.info(f" MCP Client initialized: {node_id} ({node_type})")
     
     async def start(self):
         """Start the MCP client."""
         self.running = True
-        logger.info(f"🚀 MCP Client {self.node_id} started")
+        logger.info(f" MCP Client {self.node_id} started")
 
         # Send initial handshake
         await self.send_handshake()
@@ -140,7 +140,7 @@ class MCPClient:
     async def stop(self):
         """Stop the MCP client."""
         self.running = False
-        logger.info(f"🛑 MCP Client {self.node_id} stopped")
+        logger.info(f" MCP Client {self.node_id} stopped")
 
     async def send_message(self, message: MCPMessage) -> bool:
         """Send a message."""
@@ -150,11 +150,11 @@ class MCPClient:
             self.message_queue.append(message)
             self.messages_sent += 1
             
-            logger.debug(f"📤 Sent message: {message.message_type.value} to {message.recipient_id or 'broadcast'}")
+            logger.debug(f" Sent message: {message.message_type.value} to {message.recipient_id or 'broadcast'}")
             return True
             
         except Exception as e:
-            logger.error(f"❌ Failed to send message: {e}")
+            logger.error(f" Failed to send message: {e}")
             return False
     
     async def send_handshake(self):
@@ -224,7 +224,7 @@ class MCPClient:
                 await asyncio.sleep(30)  # Heartbeat every 30 seconds
                 
             except Exception as e:
-                logger.error(f"❌ Heartbeat error: {e}")
+                logger.error(f" Heartbeat error: {e}")
                 await asyncio.sleep(5)
     
     def register_handler(self, message_type: MCPMessageType, handler: Callable):
@@ -252,12 +252,12 @@ class MCPCoordinator:
         self.message_history: List[MCPMessage] = []
         self.running = False
         
-        logger.info("🎯 MCP Coordinator initialized")
+        logger.info(" MCP Coordinator initialized")
     
     async def start(self):
         """Start the coordinator."""
         self.running = True
-        logger.info("🚀 MCP Coordinator started")
+        logger.info(" MCP Coordinator started")
 
         # Start maintenance tasks
         asyncio.create_task(self._maintenance_loop())
@@ -265,34 +265,34 @@ class MCPCoordinator:
     async def stop(self):
         """Stop the coordinator."""
         self.running = False
-        logger.info("🛑 MCP Coordinator stopped")
+        logger.info(" MCP Coordinator stopped")
 
     def register_node(self, node: MCPNode):
         """Register a new node."""
         self.nodes[node.node_id] = node
-        logger.info(f"📡 Node registered: {node.node_id} ({node.node_type})")
+        logger.info(f" Node registered: {node.node_id} ({node.node_type})")
 
     def unregister_node(self, node_id: str):
         """Unregister a node."""
         if node_id in self.nodes:
             del self.nodes[node_id]
-            logger.info(f"📡 Node unregistered: {node_id}")
+            logger.info(f" Node unregistered: {node_id}")
 
     async def broadcast_message(self, message: MCPMessage):
         """Send message to all nodes."""
         for node_id in self.nodes:
             message.recipient_id = node_id
             # In real implementation, send over network
-            logger.debug(f"📡 Broadcasting to {node_id}: {message.message_type.value}")
+            logger.debug(f" Broadcasting to {node_id}: {message.message_type.value}")
 
     async def route_message(self, message: MCPMessage):
         """Route a message to the appropriate recipient."""
         if message.recipient_id:
             if message.recipient_id in self.nodes:
                 # Send to specific node
-                logger.debug(f"📡 Routing to {message.recipient_id}: {message.message_type.value}")
+                logger.debug(f" Routing to {message.recipient_id}: {message.message_type.value}")
             else:
-                logger.warning(f"⚠️ Unknown recipient: {message.recipient_id}")
+                logger.warning(f"️ Unknown recipient: {message.recipient_id}")
         else:
             # Broadcast
             await self.broadcast_message(message)
@@ -311,7 +311,7 @@ class MCPCoordinator:
                         inactive_nodes.append(node_id)
 
                 for node_id in inactive_nodes:
-                    logger.warning(f"⚠️ Removing inactive node: {node_id}")
+                    logger.warning(f"️ Removing inactive node: {node_id}")
                     self.unregister_node(node_id)
 
                 # Clean up old message history
@@ -321,7 +321,7 @@ class MCPCoordinator:
                 await asyncio.sleep(60)  # Maintenance every minute
 
             except Exception as e:
-                logger.error(f"❌ Maintenance error: {e}")
+                logger.error(f" Maintenance error: {e}")
                 await asyncio.sleep(10)
 
     def get_network_status(self) -> Dict[str, Any]:
@@ -360,14 +360,14 @@ class MCPIntegration:
         # Register default handlers
         self._register_default_handlers()
         
-        logger.info(f"🌐 MCP Integration initialized: {self.node_id}")
+        logger.info(f" MCP Integration initialized: {self.node_id}")
     
     def _register_default_handlers(self):
         """Register default handlers."""
         
         async def handle_handshake(message: MCPMessage) -> MCPMessage:
             """Handle handshake messages."""
-            logger.info(f"🤝 Handshake from {message.sender_id}")
+            logger.info(f" Handshake from {message.sender_id}")
             return MCPMessage(
                 message_type=MCPMessageType.HANDSHAKE,
                 sender_id=self.node_id,
@@ -381,13 +381,13 @@ class MCPIntegration:
         
         async def handle_training_update(message: MCPMessage):
             """Handle training updates."""
-            logger.info(f"📊 Training update from {message.sender_id}")
+            logger.info(f" Training update from {message.sender_id}")
             if self.training_update_callback:
                 await self.training_update_callback(message.payload)
         
         async def handle_performance_report(message: MCPMessage):
             """Handle performance reports."""
-            logger.info(f"📈 Performance report from {message.sender_id}")
+            logger.info(f" Performance report from {message.sender_id}")
             if self.performance_callback:
                 await self.performance_callback(message.payload)
         
@@ -403,7 +403,7 @@ class MCPIntegration:
         if as_coordinator:
             self.coordinator = MCPCoordinator()
             await self.coordinator.start()
-            logger.info("🎯 Started as MCP Coordinator")
+            logger.info(" Started as MCP Coordinator")
     
     async def stop(self):
         """Detiene la integración MCP."""
@@ -467,7 +467,7 @@ def get_global_mcp() -> MCPIntegration:
 
 async def main():
     """Main function for testing."""
-    logger.info("🌐 MCP Integration - Testing Mode")
+    logger.info(" MCP Integration - Testing Mode")
     
     # Create MCP integration
     mcp = create_mcp_integration("test_node", "trainer")

@@ -418,7 +418,7 @@ class UnifiedDataPipeline:
             checksum=checksum
         )
         
-        logger.info(f"✅ Processed {dataset_name}: {len(processed_items)} items, "
+        logger.info(f" Processed {dataset_name}: {len(processed_items)} items, "
                    f"{total_filtered} filtered, {total_errors} errors, "
                    f"quality: {avg_quality:.3f}, time: {processing_time:.1f}s")
         
@@ -434,7 +434,7 @@ class UnifiedDataPipeline:
     
     def process_stage(self, stage_name: str) -> Dict[str, ProcessingResult]:
         """Process all datasets for a specific stage."""
-        logger.info(f"🚀 Processing stage: {stage_name}")
+        logger.info(f" Processing stage: {stage_name}")
         
         stage_dir = self.raw_dir / stage_name
         if not stage_dir.exists():
@@ -449,7 +449,7 @@ class UnifiedDataPipeline:
                 continue
             
             category = category_dir.name
-            logger.info(f"📁 Processing category: {category}")
+            logger.info(f" Processing category: {category}")
             
             # Process each dataset file
             for dataset_file in category_dir.iterdir():
@@ -466,14 +466,14 @@ class UnifiedDataPipeline:
                     self.quality_metrics[stage_name].append(result.quality_score)
                     
                 except Exception as e:
-                    logger.error(f"❌ Error processing {dataset_name}: {e}")
+                    logger.error(f" Error processing {dataset_name}: {e}")
         
-        logger.info(f"✅ Stage {stage_name} processing completed: {len(results)} datasets")
+        logger.info(f" Stage {stage_name} processing completed: {len(results)} datasets")
         return results
     
     def process_all_stages(self) -> Dict[str, Dict[str, ProcessingResult]]:
         """Process all stages."""
-        logger.info("🚀 Starting processing of all stages")
+        logger.info(" Starting processing of all stages")
         
         all_results = {}
         
@@ -490,14 +490,14 @@ class UnifiedDataPipeline:
                 time.sleep(1)
                 
             except Exception as e:
-                logger.error(f"❌ Error processing stage {stage_name}: {e}")
+                logger.error(f" Error processing stage {stage_name}: {e}")
                 all_results[stage_name] = {}
         
         return all_results
     
     def validate_processed_data(self, stage_name: str) -> Dict[str, bool]:
         """Validates processed data for a stage."""
-        logger.info(f"🔍 Validating processed data for {stage_name}")
+        logger.info(f" Validating processed data for {stage_name}")
         
         validation_results = {}
         processed_dir = self.processed_dir / stage_name
@@ -520,12 +520,12 @@ class UnifiedDataPipeline:
                     validation_results[str(file_path)] = is_valid
                     
                     if is_valid:
-                        logger.info(f"✅ Validated: {file_path.name}")
+                        logger.info(f" Validated: {file_path.name}")
                     else:
-                        logger.warning(f"⚠️ Validation failed: {file_path.name}")
+                        logger.warning(f"️ Validation failed: {file_path.name}")
                         
                 except Exception as e:
-                    logger.error(f"❌ Error validating {file_path}: {e}")
+                    logger.error(f" Error validating {file_path}: {e}")
                     validation_results[str(file_path)] = False
         
         return validation_results
@@ -624,7 +624,7 @@ class UnifiedDataPipeline:
         with open(output_file, 'w') as f:
             json.dump(report, f, indent=2)
         
-        logger.info(f"📊 Processing report saved to {output_file}")
+        logger.info(f" Processing report saved to {output_file}")
 
 def create_unified_pipeline(base_dir: Optional[str] = None, 
                           config: Optional[ProcessingConfig] = None) -> UnifiedDataPipeline:
@@ -636,7 +636,7 @@ def create_unified_pipeline(base_dir: Optional[str] = None,
 
 def main():
     """Main function for testing the unified data pipeline."""
-    logger.info("🦫 CapibaraGPT-v2 Unified Data Pipeline")
+    logger.info(" CapibaraGPT-v2 Unified Data Pipeline")
     
     # Create pipeline
     pipeline = create_unified_pipeline()
@@ -649,7 +649,7 @@ def main():
     
     # Show summary
     summary = pipeline.get_processing_summary()
-    logger.info("📊 Processing Summary:")
+    logger.info(" Processing Summary:")
     logger.info(f"  Total stages: {summary['total_stages']}")
     logger.info(f"  Total datasets: {summary['total_datasets']}")
     logger.info(f"  Total processed: {summary['total_processed']:,}")

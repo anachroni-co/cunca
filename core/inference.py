@@ -185,7 +185,7 @@ def setup_arm_optimizations(detection_info: Dict[str, Any]) -> Dict[str, Any]:
                 if ARM_CAPABILITIES.get('multi_instance_balancer'):
                     optimizations["multi_instance_balancing"] = True
                 
-                logger.info(f"🚀 ARM Axion v3.1 features activated: {ARM_CAPABILITIES['total_features']}/4")
+                logger.info(f" ARM Axion v3.1 features activated: {ARM_CAPABILITIES['total_features']}/4")
             
         except ImportError:
             logger.info("ARM v3.1 optimizations not available, using basic ARM support")

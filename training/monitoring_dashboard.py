@@ -535,9 +535,9 @@ class MonitoringDashboard:
         </head>
         <body>
             <div class="header">
-                <h1>🎭 Meta-Consensus Monitoring Dashboard</h1>
+                <h1> Meta-Consensus Monitoring Dashboard</h1>
                 <p>Real-time system monitoring and analytics</p>
-                <button class="refresh-button" onclick="refreshDashboard()">🔄 Refresh</button>
+                <button class="refresh-button" onclick="refreshDashboard()"> Refresh</button>
             </div>
             
             <div class="metrics-grid">
