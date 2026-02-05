@@ -107,9 +107,10 @@ all = [
 ]
 
 [project.scripts]
-# TODO(2026-02-05): Implement these CLIs in capibara/cli.py,
-# capibara/training/cli.py, and capibara/inference/cli.py.
-# capibara = "capibara.cli:main"
+# Minimal CLI available (info/health/demo).
+capibara = "capibara.cli:main"
+# TODO(2026-02-05): Implement these CLIs in capibara/training/cli.py,
+# and capibara/inference/cli.py.
 # capibara-train = "capibara.training.cli:main"
 # capibara-inference = "capibara.inference.cli:main"
 

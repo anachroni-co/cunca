@@ -35,6 +35,7 @@ from flax.linen.partitioning import with_sharding_constraint
 try:
     from capibara.vq.vqbit.wrapper import AdaptiveWrapper
 except ImportError:
+    logging.warning("AdaptiveWrapper unavailable; using fallback stub.")
     class AdaptiveWrapper:
         def __init__(self, config):
             self.config = config
@@ -42,6 +43,7 @@ except ImportError:
 try:
     from capibara.config.adaptive_config import AdaptiveConfig
 except ImportError:
+    logging.warning("AdaptiveConfig unavailable; using fallback stub.")
     class AdaptiveConfig:
         def __init__(self, **kwargs):
             for k, v in kwargs.items():
@@ -50,6 +52,7 @@ except ImportError:
 try:
     from capibara.vq.vqbit.multimodal_vqbit import VQbitModule
 except ImportError:
+    logging.warning("VQbitModule unavailable; using fallback stub.")
     class VQbitModule(nn.Module):
         def __call__(self, x, **kwargs):
             return x
@@ -57,6 +60,7 @@ except ImportError:
 try:
     from capibara.sub_models.semiotic.mnemosyne_semio_module import MnemosyneSemioModule
 except ImportError:
+    logging.warning("MnemosyneSemioModule unavailable; using fallback stub.")
     class MnemosyneSemioModule(nn.Module):
         def __call__(self, x, **kwargs):
             return x

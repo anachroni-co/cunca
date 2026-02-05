@@ -225,7 +225,7 @@ class UltraAdvancedTrainer(UnifiedTrainer):
         """Enhanced logging for ultra trainer."""
         super()._setup_logging()
         
-        logger.info(" ULTRA ADVANCED TRAINER v2024")
+        logger.info(" ULTRA ADVANCED TRAINER v3")
         logger.info("=" * 80)
         logger.info(f" Ultra Optimizations: {' ENABLED' if self.enable_ultra_optimizations else ' DISABLED'}")
         logger.info(f"️ SSM Hybrid: {' ENABLED' if self.enable_ssm_hybrid else ' DISABLED'}")
