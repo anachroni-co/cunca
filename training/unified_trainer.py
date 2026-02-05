@@ -1,5 +1,5 @@
 """
-Unified Trainer for CapibaraGPT-v2
+Unified Trainer for CapibaraGPT v3
 
 This module merges all training functionality into a unified system
 that includes auto-detection of hardware, automatic consensus distilling for 3B+ models,
@@ -58,7 +58,7 @@ class TrainingMetrics:
 
 class UnifiedTrainer:
     """
-    Unified and intelligent trainer for CapibaraGPT-v2.
+    Unified and intelligent trainer for CapibaraGPT v3.
 
     Features:
     - Auto-detection of model scale

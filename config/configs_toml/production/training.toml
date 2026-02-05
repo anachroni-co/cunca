@@ -1,4 +1,4 @@
-# Configuración de Training para CapibaraGPT-v2
+# Configuración de Training para CapibaraGPT v3
 
 [training]
 batch_size = 32

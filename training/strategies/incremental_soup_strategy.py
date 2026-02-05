@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Incremental Expert Soup Strategy - CapibaraGPT-v2
+Incremental Expert Soup Strategy - CapibaraGPT v3
 Integration of Expert Soup system with incremental training.
 
 Updated configuration:

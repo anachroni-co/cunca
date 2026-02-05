@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Unified Data Pipeline - CapibaraGPT-v2
+Unified Data Pipeline - CapibaraGPT v3
 
 Complete unified data processing pipeline for cascade training system.
 Handles preprocessing, validation, and integration of datasets across all stages.
@@ -78,7 +78,7 @@ class ProcessingResult:
 
 class UnifiedDataPipeline:
     """
-    Unified data processing pipeline for CapibaraGPT-v2 cascade training.
+    Unified data processing pipeline for CapibaraGPT v3 cascade training.
     
     Features:
     - Multi-format support (JSONL, CSV, XML, HTML, etc.)
@@ -636,7 +636,7 @@ def create_unified_pipeline(base_dir: Optional[str] = None,
 
 def main():
     """Main function for testing the unified data pipeline."""
-    logger.info(" CapibaraGPT-v2 Unified Data Pipeline")
+    logger.info(" CapibaraGPT v3 Unified Data Pipeline")
     
     # Create pipeline
     pipeline = create_unified_pipeline()

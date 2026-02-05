@@ -1205,7 +1205,7 @@ This module is currently in stub/planning phase. Contributions for implementatio
 
 ##  License
 
-Part of the capibaraGPT-v2 project. See [LICENSE](../../LICENSE) for details.
+Part of the CapibaraGPT v3 project. See [LICENSE](../../LICENSE) for details.
 
 ---
 

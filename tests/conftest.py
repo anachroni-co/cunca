@@ -222,7 +222,7 @@ def has_gpu():
     try:
         import torch
         return torch.cuda.is_available()
-    except ImportError:
+    except Exception:
         return False
 
 
@@ -242,7 +242,7 @@ def _check_gpu_available():
     try:
         import torch
         return torch.cuda.is_available()
-    except ImportError:
+    except Exception:
         return False
 
 def _check_tpu_available():

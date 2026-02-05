@@ -259,7 +259,7 @@ class TestVQLatency:
         """VQbit encode: batch=32, dim=64."""
         try:
             from capibara.jax import numpy as jnp
-            from vq.vqbit_layer import VQbitLayer, VQbitConfig
+            from capibara.vq.vqbit_layer import VQbitLayer, VQbitConfig
         except ImportError:
             pytest.skip("VQ modules not available")
 

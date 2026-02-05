@@ -140,7 +140,7 @@ class CapibaraConfig(BaseModel):
 
 
 def setup_logging(log_level: Optional[str] = None) -> None:
-    """Configures the logging system for CapibaraGPT-v2."""
+    """Configures the logging system for CapibaraGPT v3."""
 
     # Default log level
     if log_level is None:
@@ -158,7 +158,7 @@ def setup_logging(log_level: Optional[str] = None) -> None:
     logger.setLevel(getattr(logging, log_level))
 
     # Startup message
-    logger.info(f"CapibaraGPT-v2 logging initialized at level {log_level}")
+    logger.info(f"CapibaraGPT v3 logging initialized at level {log_level}")
 
 
 def log_metrics(metrics: Dict[str, Any], step: int) -> None:

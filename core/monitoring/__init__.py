@@ -1,5 +1,5 @@
 """
-TPU monitoring module for CapibaraGPT-v2.
+TPU monitoring module for CapibaraGPT v3.
 """
 
 from .tpu_monitor import TPUMonitor, TPUMetrics, tpu_logger

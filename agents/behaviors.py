@@ -1,5 +1,5 @@
 """
-Agent Behaviors - Strategy Pattern Implementation - CapibaraGPT v2024
+Agent Behaviors - Strategy Pattern Implementation - CapibaraGPT v3024
 ===================================================================
 
 Implementation of the Strategy pattern for different agent behaviors:

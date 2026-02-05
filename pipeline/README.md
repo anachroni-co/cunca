@@ -1,6 +1,6 @@
 # Capibara Pipeline Module
 
-**Complete data-to-training pipeline for CapibaraGPT-v2**
+**Complete data-to-training pipeline for CapibaraGPT v3**
 
 ##  Table of Contents
 
@@ -971,7 +971,7 @@ See [CONTRIBUTING.md](../../CONTRIBUTING.md) for guidelines.
 
 ##  License
 
-Part of the capibaraGPT-v2 project. See [LICENSE](../../LICENSE) for details.
+Part of the CapibaraGPT v3 project. See [LICENSE](../../LICENSE) for details.
 
 ---
 

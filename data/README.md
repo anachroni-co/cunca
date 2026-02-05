@@ -17,7 +17,7 @@ The **data** module provides the complete data handling system, including loader
 
 ##  Overview
 
-The capibaraGPT-v2 data system handles data loading, processing, and preparation for training and inference.
+The CapibaraGPT v3 data system handles data loading, processing, and preparation for training and inference.
 
 ### Main Components
 
@@ -72,7 +72,7 @@ capibara/data/
 
 ##  Datasets
 
-capibaraGPT-v2 supports multiple dataset categories organized in `datasets/`:
+CapibaraGPT v3 supports multiple dataset categories organized in `datasets/`:
 
 ### datasets/ (Domain Datasets)
 
@@ -652,7 +652,7 @@ print(f"Available datasets: {available}")
 ---
 
 **Last updated**: 2025-11-16
-**System version**: v2.0.0
+**System version**: v3.0.0
 
 ## Ejemplo rápido
 

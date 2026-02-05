@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
- Blockchain + Smart Contracts Integration for CapibaraGPT-v2
+ Blockchain + Smart Contracts Integration for CapibaraGPT v3
 ===============================================================
 
 Advanced hybrid system that combines:

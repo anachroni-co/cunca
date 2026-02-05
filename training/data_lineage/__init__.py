@@ -1,5 +1,5 @@
 """
-Data Lineage & Traceability Module for CapibaraGPT-v2
+Data Lineage & Traceability Module for CapibaraGPT v3
 
 Advanced system for tracking data influence on model parameters with:
 - Blockchain-like immutable audit logs

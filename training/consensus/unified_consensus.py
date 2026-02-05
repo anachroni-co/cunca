@@ -1232,7 +1232,7 @@ if __name__ == "__main__":
     asyncio.run(main())
 
 
-# Estrategias de Consensus Distilling Integradas for CapibaraGPT-v2
+# Estrategias de Consensus Distilling Integradas for CapibaraGPT v3
 #
 # Este módulo integra las estrategias avanzadas de consensus distilling,
 # incluyendo peer voting and critic arbitration, optimizado for modelos 3B+.

@@ -1,5 +1,5 @@
 """"
-CapibaraGPT-v2 Datasets Management - Sistema completo con Entrenamiento en Cascada =================================================================================
+CapibaraGPT v3 Datasets Management - Sistema completo con Entrenamiento en Cascada =================================================================================
 
 Datasets premium organizados por categorías especializadas + nuevo Pipeline en Cascada.
 

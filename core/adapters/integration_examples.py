@@ -1,5 +1,5 @@
 """
-Integration Examples for CapibaraGPT-v2 Adapter System
+Integration Examples for CapibaraGPT v3 Adapter System
 
 Practical integration and usage examples for the adapter system,
 demonstrating real use cases and best practices.
@@ -40,7 +40,7 @@ class AdapterSystemDemo:
     
     def initialize_system(self) -> bool:
         """Initializes the entire adapter system."""
-        logger.info(" Initializing CapibaraGPT-v2 Adapter System...")
+        logger.info(" Initializing CapibaraGPT v3 Adapter System...")
         
         try:
             # 1. Initialize main adapters
@@ -657,7 +657,7 @@ def example_quantization_pipeline():
 # Main function to execute examples
 def main():
     """Main function to execute the demonstration."""
-    logger.info(" Starting CapibaraGPT-v2 Adapter System demonstration\n")
+    logger.info(" Starting CapibaraGPT v3 Adapter System demonstration\n")
 
     # Create and run complete demo
     demo = AdapterSystemDemo()

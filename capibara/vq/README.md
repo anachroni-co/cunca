@@ -912,7 +912,7 @@ See [CONTRIBUTING.md](../../CONTRIBUTING.md) for guidelines.
 
 ##  License
 
-Part of the capibaraGPT-v2 project. See [LICENSE](../../LICENSE) for details.
+Part of the CapibaraGPT v3 project. See [LICENSE](../../LICENSE) for details.
 
 ---
 

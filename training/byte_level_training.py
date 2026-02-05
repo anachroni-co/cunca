@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
- BYTE-LEVEL TRAINING SYSTEM for CapibaraGPT-v2
+ BYTE-LEVEL TRAINING SYSTEM for CapibaraGPT v3
 ================================================
 
 Advanced byte-level training implementation that works directly with raw bytes

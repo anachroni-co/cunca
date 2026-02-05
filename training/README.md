@@ -1,6 +1,6 @@
 # capibara/training - Training System
 
-The **training** module implements the advanced training system for capibaraGPT-v2, including **Meta-Consensus**, **TPU v6e optimization**, and multiple distributed training strategies.
+The **training** module implements the advanced training system for CapibaraGPT v3, including **Meta-Consensus**, **TPU v6e optimization**, and multiple distributed training strategies.
 
 ## Table of Contents
 
@@ -18,7 +18,7 @@ The **training** module implements the advanced training system for capibaraGPT-
 
 ## Overview
 
-The capibaraGPT-v2 training system implements advanced strategies for training high-quality language models:
+The CapibaraGPT v3 training system implements advanced strategies for training high-quality language models:
 
 ### Key Features
 
@@ -553,12 +553,12 @@ import wandb
 from capibara.training import WandbIntegration
 
 # Setup W&B
-wandb.init(project="capibaraGPT-v2", name="tpu-training-run-001")
+wandb.init(project="CapibaraGPT v3", name="tpu-training-run-001")
 
 # Integrate with trainer
 trainer = UnifiedTrainer(
     model=model,
-    wandb_project="capibaraGPT-v2"
+    wandb_project="CapibaraGPT v3"
 )
 
 # Metrics are automatically logged to W&B
@@ -657,7 +657,7 @@ For training issues:
 ---
 
 **Last updated**: 2025-11-16
-**System version**: v2.0.0
+**System version**: v3.0.0
 
 ## Ejemplo rápido
 

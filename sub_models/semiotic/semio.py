@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 # Obtiene la path del directory current (scripts) -> /.../scripts
 script_dir = os.path.dirname(os.path.abspath(__file__))
-# Sube un level for obtain la raíz del proyecto -> /.../capibaraGPT-v2
+# Sube un level for obtain la raíz del proyecto -> /.../CapibaraGPT v3
 project_root = os.path.dirname(script_dir)
 # Añade la raíz del proyecto a sys.path
 if project_root not in sys.path:

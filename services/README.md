@@ -21,7 +21,7 @@
 
 ##  Overview
 
-The `capibara/services` module provides production-ready microservices for CapibaraGPT-v2:
+The `capibara/services` module provides production-ready microservices for CapibaraGPT v3:
 
 ### Available Services
 
@@ -1053,7 +1053,7 @@ See [CONTRIBUTING.md](../../CONTRIBUTING.md) for guidelines.
 
 ##  License
 
-Part of the capibaraGPT-v2 project. See [LICENSE](../../LICENSE) for details.
+Part of the CapibaraGPT v3 project. See [LICENSE](../../LICENSE) for details.
 
 ---
 

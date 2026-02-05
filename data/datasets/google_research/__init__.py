@@ -1,5 +1,5 @@
 """
-Google Research Datasets for CapibaraGPT v2
+Google Research Datasets for CapibaraGPT v3
 
 Access to Google Research datasets including multimodal and specialized datasets.
 """

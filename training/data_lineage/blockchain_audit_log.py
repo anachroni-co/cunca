@@ -181,7 +181,7 @@ class BlockchainAuditLog:
                 timestamp=time.time(),
                 size_bytes=0
             ),
-            metadata={"description": "Genesis block for CapibaraGPT-v2 training audit"}
+            metadata={"description": "Genesis block for CapibaraGPT v3 training audit"}
         )
         
         genesis_block = AuditBlock(

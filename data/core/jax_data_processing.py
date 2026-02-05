@@ -1,5 +1,5 @@
 """
-Data processor optimized with JAX for CapibaraGPT-v2.
+Data processor optimized with JAX for CapibaraGPT v3.
 """
 
 import numpy as np

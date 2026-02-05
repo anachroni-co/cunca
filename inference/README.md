@@ -17,7 +17,7 @@ The **inference** module provides optimized engines for production inference, in
 
 ##  Overview
 
-The capibaraGPT-v2 inference system is optimized for low latency and high throughput in production:
+The CapibaraGPT v3 inference system is optimized for low latency and high throughput in production:
 
 ### Key Features
 
@@ -684,7 +684,7 @@ config.use_gradient_checkpointing = True
 ---
 
 **Last updated**: 2025-11-16
-**System version**: v2.0.0
+**System version**: v3.0.0
 
 ## Ejemplo rápido
 

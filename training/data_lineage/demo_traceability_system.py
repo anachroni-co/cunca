@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
- Complete Data Traceability System Demo - CapibaraGPT-v2
+ Complete Data Traceability System Demo - CapibaraGPT v3
 ==========================================================
 
 Comprehensive demonstration of the data lineage and traceability system:

@@ -1,5 +1,5 @@
 """
-Core Adapter System for CapibaraGPT-v2
+Core Adapter System for CapibaraGPT v3
 
 This module provides the central adapter system that enables:
 - Abstraction of different backends (TPU, CPU, GPU)
@@ -276,5 +276,5 @@ __all__ = [
 
 # Module metadata
 __version__ = "2.0.0"
-__author__ = "CapibaraGPT-v2 Team"
+__author__ = "CapibaraGPT v3 Team"
 __description__ = "Unified Adapter System for Multi-Backend AI Operations"

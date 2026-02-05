@@ -70,7 +70,7 @@ import sys
 from typing import Any, Dict, Optional, Tuple, Union, Callable
 # Get current directory path (scripts) -> /.../scripts
 script_dir = os.path.dirname(os.path.abspath(__file__))
-# Go up one level to get project root -> /.../capibaraGPT-v2
+# Go up one level to get project root -> /.../CapibaraGPT v3
 project_root = os.path.dirname(script_dir)
 # Add project root to sys.path
 if project_root not in sys.path:

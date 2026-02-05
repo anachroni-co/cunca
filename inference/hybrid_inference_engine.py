@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Hybrid Inference Engine for CapibaraGPT-v2
+Hybrid Inference Engine for CapibaraGPT v3
 
 Hybrid inference system that supports multiple backends:
 - TPU v6e: For large models trained on TPU

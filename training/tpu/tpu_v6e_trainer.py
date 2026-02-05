@@ -1,5 +1,5 @@
 """
-TPU v6e Robust Trainer for CapibaraGPT-v2
+TPU v6e Robust Trainer for CapibaraGPT v3
 
 Specialized trainer for TPU v6e with 8x8 topology (64 chips) that handles:
 - Preemptible instance interruptions

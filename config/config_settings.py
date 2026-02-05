@@ -1,6 +1,6 @@
 # Settings content
 """
-CapibaraGPT v2 system setup.
+CapibaraGPT v3 system setup.
 """
 
 import os

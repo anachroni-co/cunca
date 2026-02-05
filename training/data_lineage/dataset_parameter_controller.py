@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-️ Dataset Parameter Controller for CapibaraGPT-v2
+️ Dataset Parameter Controller for CapibaraGPT v3
 ===================================================
 
 Advanced system for granular control of model parameters by dataset.

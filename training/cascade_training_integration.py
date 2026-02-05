@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Cascade Training Integration - CapibaraGPT-v2
+Cascade Training Integration - CapibaraGPT v3
 
 Complete integration between cascade dataset management and training strategies.
 Connects the data pipeline with expert training strategies for each stage.
@@ -465,7 +465,7 @@ async def integrate_cascade_training(base_dir: Optional[str] = None) -> Dict[str
 
 def main():
     """Main function for testing the cascade training integration."""
-    logger.info(" CapibaraGPT-v2 Cascade Training Integration")
+    logger.info(" CapibaraGPT v3 Cascade Training Integration")
     
     async def run_integration():
         # Create integration instance

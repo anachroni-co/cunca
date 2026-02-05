@@ -1,5 +1,5 @@
 """
-Core components for data handling in CapibaraGPT-v2.
+Core components for data handling in CapibaraGPT v3.
 """
 
 from .dataset import Dataset

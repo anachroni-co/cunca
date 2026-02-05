@@ -1,5 +1,5 @@
 """
-CapibaraGPT-v2 Data Configurations
+CapibaraGPT v3 Data Configurations
 Configurations and metadata for datasets
 """
 

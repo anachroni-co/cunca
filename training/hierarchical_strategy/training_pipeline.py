@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
- Hierarchical Training Pipeline - CapibaraGPT-v2
+ Hierarchical Training Pipeline - CapibaraGPT v3
 Pipeline complete de entrenamiento with transfer learning progresivo.
 
 Pipeline: 300M LinuxCore → 600M Laptop → 1.2B Humanoid → 3B CodeMaster → 7B PolicyExpert → 13B OmniGenomic

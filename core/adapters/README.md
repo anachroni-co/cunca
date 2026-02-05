@@ -1,8 +1,8 @@
-# CapibaraGPT-v2 Adapter System
+# CapibaraGPT v3 Adapter System
 
 ##  General Description
 
-The CapibaraGPT-v2 adapter system provides a unified and extensible architecture for automatic adaptation of different system components, including kernels, hardware, quantization, language processing, and performance optimization.
+The CapibaraGPT v3 adapter system provides a unified and extensible architecture for automatic adaptation of different system components, including kernels, hardware, quantization, language processing, and performance optimization.
 
 ##  Main Benefits
 
@@ -674,4 +674,4 @@ For support and questions:
 
 ---
 
-*CapibaraGPT-v2 Adapter System - Designed for maximum efficiency and maintainability* 
+*CapibaraGPT v3 Adapter System - Designed for maximum efficiency and maintainability* 

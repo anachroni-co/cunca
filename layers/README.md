@@ -1,6 +1,6 @@
 # Capibara Layers Module
 
-**Advanced neural network layer implementations for capibaraGPT-v2**
+**Advanced neural network layer implementations for CapibaraGPT v3**
 
 ##  Table of Contents
 
@@ -1183,7 +1183,7 @@ See [CONTRIBUTING.md](../../CONTRIBUTING.md) for guidelines.
 
 ##  License
 
-Part of the capibaraGPT-v2 project. See [LICENSE](../../LICENSE) for details.
+Part of the CapibaraGPT v3 project. See [LICENSE](../../LICENSE) for details.
 
 ---
 

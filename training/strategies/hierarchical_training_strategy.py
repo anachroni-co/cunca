@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
- Hierarchical Training Strategy - CapibaraGPT-v2
+ Hierarchical Training Strategy - CapibaraGPT v3
 implementation completa de la estrategia de entrenamiento jerárquica.
 
 Pipeline de Modelos:

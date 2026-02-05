@@ -1,5 +1,5 @@
 """
-Communication and Monitoring Behaviors - CapibaraGPT v2024
+Communication and Monitoring Behaviors - CapibaraGPT v3024
 ==========================================================
 
 Specialized behaviors for communication and monitoring:

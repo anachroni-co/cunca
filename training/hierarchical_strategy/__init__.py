@@ -1,5 +1,5 @@
 """
-Hierarchical Training Strategy Module - CapibaraGPT-v2
+Hierarchical Training Strategy Module - CapibaraGPT v3
 
 Complete implementation of hierarchical training strategy:
 - Transfer Learning Pipeline: 300M -> 600M -> 1.2B -> 3B -> 7B -> 13B

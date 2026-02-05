@@ -48,7 +48,7 @@ except ImportError:
 try:
     import torch
     HAS_TORCH = True
-except ImportError:
+except Exception:
     torch = None
     HAS_TORCH = False
 

@@ -514,6 +514,20 @@ def tokenize_text(
     if return_attention_mask is None:
         return_attention_mask = bool(padding)
 
+    # Ensure padding token is set when padding is requested (e.g., GPT-2 has no pad_token by default).
+    if padding:
+        pad_token = getattr(tokenizer, "pad_token", None)
+        if pad_token is None:
+            eos_token = getattr(tokenizer, "eos_token", None)
+            if eos_token is not None:
+                tokenizer.pad_token = eos_token
+            else:
+                try:
+                    tokenizer.add_special_tokens({"pad_token": "[PAD]"})
+                except Exception:
+                    # If we can't set a pad token, let the tokenizer raise its own error.
+                    pass
+
     enc: BatchEncoding = tokenizer(
         text,
         max_length=max_length,
@@ -526,7 +540,14 @@ def tokenize_text(
 
     enc_jnp = _convert_batch_encoding_to_jnp(enc)
     if isinstance(text, str):
-        return enc_jnp["input_ids"][0]
+        ids = enc_jnp["input_ids"]
+        if hasattr(ids, "tolist"):
+            ids_list = ids.tolist()
+        else:
+            ids_list = ids
+        if isinstance(ids_list, list) and ids_list and isinstance(ids_list[0], list):
+            return ids_list[0]
+        return list(ids_list)
     return enc_jnp
 
 

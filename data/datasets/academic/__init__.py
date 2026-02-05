@@ -1,5 +1,5 @@
 """
-CapibaraGPT-v2 Academic Datasets
+CapibaraGPT v3 Academic Datasets
 Academic, educational and research datasets
 """
 

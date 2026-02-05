@@ -1,6 +1,6 @@
 # capibara/jax - Custom JAX Implementation
 
-The **capibara/jax** module provides a custom JAX implementation with specific optimizations for capibaraGPT-v2 and TPU v4/v5e/v6e.
+The **capibara/jax** module provides a custom JAX implementation with specific optimizations for CapibaraGPT v3 and TPU v4/v5e/v6e.
 
 ##  Table of Contents
 
@@ -16,7 +16,7 @@ The **capibara/jax** module provides a custom JAX implementation with specific o
 
 ##  Why Custom JAX?
 
-capibaraGPT-v2 uses a **custom JAX implementation** for several reasons:
+CapibaraGPT v3 uses a **custom JAX implementation** for several reasons:
 
 ### Motivations
 
@@ -584,7 +584,7 @@ tpu_optimization.verify_optimizations()  # Verify they are active
 ---
 
 **Last updated**: 2025-11-16
-**System version**: v2.0.0
+**System version**: v3.0.0
 **JAX Version**: 0.4.20+
 
 ## Ejemplo rápido

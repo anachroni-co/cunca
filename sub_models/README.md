@@ -16,7 +16,7 @@ The **sub_models** directory contains all specialized sub-models that can be com
 
 ##  Overview
 
-capibaraGPT-v2 uses a **fully modular architecture** where different sub-models can be combined as needed:
+CapibaraGPT v3 uses a **fully modular architecture** where different sub-models can be combined as needed:
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -620,7 +620,7 @@ config = ModularConfig(
 ---
 
 **Last updated**: 2025-11-16
-**System version**: v2.0.0
+**System version**: v3.0.0
 
 ## Ejemplo rápido
 
