@@ -107,9 +107,11 @@ all = [
 ]
 
 [project.scripts]
-capibara = "capibara.cli:main"
-capibara-train = "capibara.training.cli:main"
-capibara-inference = "capibara.inference.cli:main"
+# TODO(2026-02-05): Implement these CLIs in capibara/cli.py,
+# capibara/training/cli.py, and capibara/inference/cli.py.
+# capibara = "capibara.cli:main"
+# capibara-train = "capibara.training.cli:main"
+# capibara-inference = "capibara.inference.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/anachroni-co/capibaraGPT_v3"

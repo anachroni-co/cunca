@@ -1,6 +1,6 @@
 # capibara/core - Core Components
 
-The **core** module is the architectural heart of capibaraGPT-v2, containing all the fundamental components of the system.
+The **core** module is the architectural heart of CapibaraGPT v3, containing all the fundamental components of the system.
 
 ##  Table of Contents
 
@@ -583,8 +583,8 @@ if not ULTRA_CORE_AVAILABLE:
 
 ---
 
-**Last updated**: 2025-11-16
-**System version**: v2.0.0
+**System version**: v3.0.0
+**Last updated**: 2026-02-05
 
 ## Ejemplo rápido
 

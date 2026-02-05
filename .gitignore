@@ -56,6 +56,6 @@ training/cython_kernels/*.c
 
 # Generated files
 _version.py
-
+.github/
 # Benchmark outputs
 benchmark_results/
