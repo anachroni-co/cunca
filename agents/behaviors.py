@@ -27,7 +27,8 @@ except ImportError:
     # Fallback if interfaces not available
     from abc import ABC, abstractmethod
     from enum import Enum
-    from dataclasses import dataclass
+    from dataclasses import dataclass, field
+    from typing import Optional
     
     class AgentBehaviorType(str, Enum):
         REASONING = "reasoning"
@@ -61,6 +62,8 @@ except ImportError:
         result: Any
         execution_time_ms: float
         confidence: float = 0.0
+        metadata: Dict[str, Any] = field(default_factory=dict)
+        error: Optional[str] = None
     
     class IAgentBehavior(ABC):
         @abstractmethod
@@ -663,7 +666,8 @@ class ExecutionBehavior(BaseBehavior):
             
             execution_result = self._execute_with_monitoring(
                 context.task_description,
-                context.requirements
+                context.requirements,
+                agent
             )
             
             execution_time = (time.time() - start_time) * 1000
@@ -694,7 +698,7 @@ class ExecutionBehavior(BaseBehavior):
                 error=str(e)
             )
     
-    def _execute_with_monitoring(self, task: str, requirements: Dict[str, Any]) -> Dict[str, Any]:
+    def _execute_with_monitoring(self, task: str, requirements: Dict[str, Any], agent: Optional[IAgent] = None) -> Dict[str, Any]:
         """Execute with progress monitoring."""
         
         retries_used = 0
@@ -710,7 +714,7 @@ class ExecutionBehavior(BaseBehavior):
                 })
 
                 # Main execution
-                result = self._perform_execution(task, requirements)
+                result = self._perform_execution(task, requirements, agent)
 
                 # Success checkpoint
                 checkpoints.append({
@@ -750,7 +754,7 @@ class ExecutionBehavior(BaseBehavior):
                         "confidence": 0.0
                     }
     
-    def _perform_execution(self, task: str, requirements: Dict[str, Any]) -> Dict[str, Any]:
+    def _perform_execution(self, task: str, requirements: Dict[str, Any], agent: Optional[IAgent] = None) -> Dict[str, Any]:
         """Perform main execution."""
 
         execution_steps = []
@@ -764,7 +768,7 @@ class ExecutionBehavior(BaseBehavior):
         })
 
         # Step 2: Main execution
-        main_result = self._execute_main_task(task, requirements)
+        main_result = self._execute_main_task(task, requirements, agent)
         execution_steps.append({
             "step": "main_execution",
             "result": main_result,
