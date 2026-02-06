@@ -1,5 +1,5 @@
 """
-AI-Powered Workflow Builder for Capibara5 N8N Integration
+AI-Powered Workflow Builder for CapibaraGPT v3 N8N Integration
 ========================================================
 
 Converts natural language descriptions into n8n workflow specifications

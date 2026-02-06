@@ -78,6 +78,13 @@ except ImportError:
     AdaptiveRouter = None
     AdaptiveComputation = None
 
+# MoE system (optional)
+try:
+    from capibara.core.moe import MoEConfig, create_moe_manager
+except Exception:
+    MoEConfig = None  # type: ignore
+    create_moe_manager = None  # type: ignore
+
 logger = logging.getLogger(__name__)
 
 
@@ -169,6 +176,17 @@ class ModularConfig:
                 )
             else:
                 self.adaptive_config = None
+
+            # MoE configuration
+            moe_config = modular_config.get("moe", {})
+            self.enable_moe: bool = moe_config.get("enable_moe", True)
+            self.moe_num_layers: int = moe_config.get("num_layers", 1)
+            self.moe_num_experts: int = moe_config.get("num_experts", self.num_router_experts)
+            self.moe_num_active_experts: int = moe_config.get(
+                "num_active_experts",
+                min(4, self.moe_num_experts),
+            )
+            self.moe_hidden_size: int = moe_config.get("hidden_size", self.hidden_size)
             
             # Feature configuration
             features_config = modular_config.get("features", {})
@@ -237,6 +255,12 @@ class ModularConfig:
                     self.module_gate = ModuleGate.from_backend(resolved)
                 except ValueError:
                     pass
+            # MoE defaults (fallback)
+            self.enable_moe = True
+            self.moe_num_layers = 1
+            self.moe_num_experts = self.num_router_experts
+            self.moe_num_active_experts = min(4, self.moe_num_experts)
+            self.moe_hidden_size = self.hidden_size
 
 
 class ModularCapibaraModel:
@@ -284,6 +308,44 @@ class ModularCapibaraModel:
                 
                 # AdaptiveComputation uses AdaptiveConfig
                 self.adaptive_computation = AdaptiveComputation(self.config.adaptive_config)
+
+        # MoE system (optional)
+        self.moe_config = None
+        self.moe_manager = None
+        self.moe_layers = {}
+        moe_config_cls = MoEConfig
+        moe_manager_factory = create_moe_manager
+        if moe_config_cls is None or moe_manager_factory is None:
+            try:
+                from core.moe import MoEConfig as _MoEConfig, create_moe_manager as _create_moe_manager
+            except Exception:
+                try:
+                    from capibara.core.moe import MoEConfig as _MoEConfig, create_moe_manager as _create_moe_manager
+                except Exception:
+                    _MoEConfig = None  # type: ignore
+                    _create_moe_manager = None  # type: ignore
+            if _MoEConfig is not None:
+                moe_config_cls = _MoEConfig
+            if _create_moe_manager is not None:
+                moe_manager_factory = _create_moe_manager
+
+        if getattr(self.config, "enable_moe", False) and moe_config_cls is not None and moe_manager_factory is not None:
+            try:
+                self.moe_config = moe_config_cls(
+                    num_experts=self.config.moe_num_experts,
+                    num_active_experts=self.config.moe_num_active_experts,
+                    hidden_size=self.config.moe_hidden_size,
+                )
+                self.moe_manager = moe_manager_factory(self.moe_config)
+                for layer_id in range(self.config.moe_num_layers):
+                    self.moe_layers[layer_id] = self.moe_manager.create_layer(layer_id)
+                logger.info(
+                    "Initialized MoE system with %d layer(s) and %d experts",
+                    self.config.moe_num_layers,
+                    self.config.moe_num_experts,
+                )
+            except Exception as e:
+                logger.warning(f"MoE system initialization failed: {e}")
 
         # Verification system (Constitutional AI)
         self.verification_config = None
@@ -433,9 +495,40 @@ class ModularCapibaraModel:
         if self.adaptive_router is not None and self.adaptive_computation is not None:
             inputs, routing_meta = self.adaptive_router.route(inputs, training=training)
             self.metrics.update(routing_meta)
+
+        outputs: Dict[str, Any] = {}
+
+        # MoE processing if available
+        if self.moe_layers:
+            moe_input = inputs
+            moe_results = []
+            for layer_id in sorted(self.moe_layers.keys()):
+                moe_layer = self.moe_layers[layer_id]
+                try:
+                    moe_result = moe_layer(moe_input, training=training)
+                    moe_results.append(moe_result)
+                    moe_input = moe_result.get("output", moe_input)
+
+                    moe_metrics = moe_result.get("moe_metrics", {})
+                    if isinstance(moe_metrics, dict):
+                        metric_payload = {}
+                        for key, value in moe_metrics.items():
+                            metric_key = f"moe_layer_{layer_id}_{key}"
+                            try:
+                                metric_payload[metric_key] = float(value)
+                            except Exception:
+                                metric_payload[metric_key] = value
+                        if metric_payload:
+                            self.metrics.update(metric_payload)
+                except Exception as e:
+                    self.metrics.update({f"moe_layer_{layer_id}_error": str(e)})
+                    break
+
+            if moe_results:
+                outputs["moe"] = moe_results[-1]
+                inputs = moe_results[-1].get("output", inputs)
         
         # Forward pass in active modules
-        outputs: Dict[str, Any] = {}
         for i, module in enumerate(self.active_modules):
             try:
                 module_output = module(inputs, training=training)

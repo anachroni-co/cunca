@@ -9,7 +9,7 @@ import logging
 import numpy as np
 import jax.numpy as jnp
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Anynal, Any
+from typing import Dict, List, Optional, Any
 
 logger = logging.getLogger(__name__)
 

@@ -1,601 +1,153 @@
-# capibara/core - Core Components
+# capibara/core – Core Components (v3)
 
-The **core** module is the architectural heart of CapibaraGPT v3, containing all the fundamental components of the system.
+The `core/` package is the **real integration layer** for CapibaraGPT v3.  
+It provides routing, modular composition, configuration utilities, and
+lightweight primitives that are CPU‑safe by default.
 
-##  Table of Contents
+## What’s Here (Real Modules)
 
-1. [Overview](#overview)
-2. [Core Components](#core-components)
-3. [Architecture](#architecture)
-4. [Quick Start](#quick-start)
-5. [Detailed Components](#detailed-components)
-6. [Integration Patterns](#integration-patterns)
-7. [Performance Optimization](#performance-optimization)
+- `config.py` – core configuration helpers
+- `modular_model.py` – modular model composition
+- `router.py` / `routing.py` – routing primitives (async + simple)
+- `optimization.py` – training metrics + state helpers (JAX/Flax optional)
+- `kernels/` – TPU v4 wrapper utilities
+- `pipelines/` – RAG pipeline helpers (minimal)
+- `routers/` – base/adaptive/BTO routers
+- `distributed/` – minimal mesh config helpers
+- `tpu/` – TPU config + v6e helpers (optional deps)
+- `cot/` – chain‑of‑thought tooling
+- `monitoring/`, `verification/`, `observers/` – diagnostics/verification utilities
+- `activations/` – minimal contextual activations (real, CPU‑friendly)
 
----
+> Some submodules rely on optional deps (JAX, Flax, Optax, etc.).  
+> Missing deps should fail **explicitly** rather than silently.
 
-##  Overview
-
-The `core/` directory contains **19 subdirectories** with the essential components:
-
-| Component | Purpose | Documentation |
-|------------|-----------|---------------|
-| **moe/** | Mixture of Experts (32 experts) | [README](moe/README.md) |
-| **cot/** | Chain-of-Thought reasoning | [README](cot/README.md) |
-| **routers/** | Routing strategies (Base, Adaptive, BTO, TTS) | [README](routers/README.md) |
-| **optimizers/** | Optimizers (Adam, AdamW, Schedulers) | [README](optimizers/README.md) |
-| **encoders/** | Multimodal encoders (Vision, Video) | [README](encoders/README.md) |
-| **adapters/** | Parameter-efficient fine-tuning | [README](adapters/README.md) |
-| **distributed/** | Distributed training (TPU mesh, sharding) | [README](distributed/README.md) |
-| **tpu/** | TPU optimizations | [README](tpu/README.md) |
-| **monitoring/** | Monitoring and alerting system | [README](monitoring/README.md) |
-| **observers/** | Observer pattern implementation | [README](observers/README.md) |
-| **experts/** | Expert system control | [README](experts/README.md) |
-| **pipelines/** | RAG 2.0, Multimodal, TTS pipelines | [README](pipelines/README.md) |
-| **kernels/** | Optimized kernels (Flash Attention, MatMul) | [README](kernels/README.md) |
-| **activations/** | Contextual activations | [README](activations/README.md) |
-| **arm_optimizations/** | ARM CPU optimizations (SVE, NEON) | [README](arm_optimizations/README.md) |
-| **age_adaptation/** | Age and cultural adaptation | [README](age_adaptation/README.md) |
-| **inference_ttc/** | Time-to-completion optimization | [README](inference_ttc/README.md) |
-| **verification/** | Model verification utilities | - |
-
-### Base Components
-
-Additionally, `core/` contains essential base files:
-
-- **`modular_model.py`**: Modular model that integrates all components
-- **`router.py`**: Main routing system
-- **`config.py`**: Model configuration
-- **`optimization.py`**: Metrics and training state
-
----
-
-## ️ Architecture
-
-### Component Diagram
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                  ModularCapibaraModel                   │
-├─────────────────────────────────────────────────────────┤
-│                                                          │
-│  Input → Encoders → Router → [Mamba/Transformer]       │
-│                       │                                  │
-│                       ├──> MoE (32 experts)             │
-│                       │                                  │
-│                       ├──> CoT (Chain-of-Thought)       │
-│                       │                                  │
-│                       └──> Pipelines (RAG/TTS)          │
-│                                                          │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │  Adapters (LoRA, Prefix, Adapter Layers)        │  │
-│  └──────────────────────────────────────────────────┘  │
-│                                                          │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │  Optimizers (AdamW + LR Schedulers)              │  │
-│  └──────────────────────────────────────────────────┘  │
-│                                                          │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │  Monitoring (Metrics, Alerts, Dashboards)        │  │
-│  └──────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────┘
-
-Infrastructure Layer:
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│ Distributed  │  │     TPU      │  │   Kernels    │
-│  (Sharding)  │  │(Optimizations│  │  (Flash Attn)│
-└──────────────┘  └──────────────┘  └──────────────┘
-```
-
-### Execution Flow
-
-```
-1. Input Processing
-   └─> Encoders (Vision/Video/Text) → Embeddings
-
-2. Routing Decision
-   └─> Router → Selects strategy (Mamba vs Transformer)
-
-3. Core Processing
-   ├─> Mamba/Transformer Attention
-   ├─> MoE Layer (Top-2 of 32 experts)
-   └─> Optional: CoT Reasoning
-
-4. Pipeline Processing (Optional)
-   ├─> RAG 2.0 (Retrieval)
-   ├─> Multimodal Fusion
-   └─> TTS Generation
-
-5. Output Generation
-   └─> Adapters (if fine-tuning) → Output
-```
-
----
-
-##  Quick Start
-
-### Basic Usage of Modular Model
+## Quick Start
 
 ```python
 from capibara.core import ModularCapibaraModel, ModularConfig
 
-# Configuration
-config = ModularConfig(
-    hidden_size=768,
-    num_layers=12,
-    num_heads=12,
-    vocab_size=50000,
-    use_moe=True,
-    num_experts=32,
-    num_active_experts=2
-)
-
-# Create model
+config = ModularConfig()
 model = ModularCapibaraModel(config)
-
-# Forward pass
-import jax.numpy as jnp
-inputs = jnp.ones((2, 128), dtype=jnp.int32)  # (batch, seq_len)
-outputs = model(inputs, training=False)
 ```
-
-### Usage with Advanced Router
 
 ```python
-from capibara.core import create_enhanced_router, RouterType
+from capibara.core.router import EnhancedRouter, RouterConfig
 
-# Create hybrid router
-router = create_enhanced_router(
-    router_type=RouterType.HYBRID,
-    config={
-        "mamba_threshold": 512,
-        "memory_threshold": 0.8
-    }
-)
-
-# Routing decision
-decision = router.route(
-    inputs=inputs,
-    sequence_length=128,
-    memory_pressure=0.5
-)
-# decision.strategy = "mamba" or "transformer"
+router = EnhancedRouter(RouterConfig())
 ```
 
-### Usage with MoE
+## Package Import
+
+You can import via either namespace:
 
 ```python
-from capibara.core.moe import DynamicMoE, MoEConfig
-
-# Configure MoE
-moe_config = MoEConfig(
-    num_experts=32,
-    num_active_experts=2,
-    expert_capacity_factor=1.25,
-    load_balancing_weight=0.01
-)
-
-# Create MoE layer
-moe = DynamicMoE(moe_config)
-
-# Forward pass
-moe_outputs = moe(inputs, training=True)
+import core
+import capibara.core
 ```
 
-### Usage with Adapters
-
-```python
-from capibara.core.adapters import AdapterSystem, AdapterConfig
-
-# Configure adapter (LoRA)
-adapter_config = AdapterConfig(
-    adapter_type="lora",
-    r=8,  # Rank
-    alpha=16,
-    dropout=0.1
-)
-
-# Create adapter system
-adapter_system = AdapterSystem(adapter_config)
-
-# Apply adapter
-adapted_outputs = adapter_system.apply(outputs)
-```
-
----
-
-##  Detailed Components
-
-### 1. MoE (Mixture of Experts)
-
-**Location**: `core/moe/`
-
-The MoE system provides 32 specialized experts with Top-2 routing:
-
-```python
-from capibara.core.moe import DynamicMoE
-
-# Expert specialization
-expert_types = {
-    "general": 8,          # Generalist experts
-    "reasoning": 8,        # Logical reasoning
-    "languages": 8,        # Minority languages
-    "creative": 8          # Creative generation
-}
-
-# Automatic load balancing
-# Capacity factor to avoid overload
-# Auxiliary loss for uniform distribution
-```
-
-See [moe/README.md](moe/README.md) for full details.
-
-### 2. Chain-of-Thought (CoT)
-
-**Location**: `core/cot/`
-
-Multi-step reasoning system with self-verification:
-
-```python
-from capibara.core import ChainOfThought, create_cot_handler
-
-# Create CoT handler
-cot = create_cot_handler(
-    max_steps=5,
-    use_process_rewards=True,
-    enable_self_reflection=True
-)
-
-# Execute reasoning
-result = cot.reason(
-    problem="What is 15% of 80?",
-    context={"domain": "mathematics"}
-)
-# result.steps = ["Step 1: ...", "Step 2: ...", ...]
-# result.answer = "12"
-```
-
-See [cot/README.md](cot/README.md) for full details.
-
-### 3. Routers
-
-**Location**: `core/routers/`
-
-Multiple routing strategies:
-
-- **BaseRouter**: Simple rule-based routing
-- **AdaptiveRouter**: Adaptive routing based on real-time metrics
-- **BTORouter**: Bayesian Task-Oriented routing
-- **TTSRouter**: Specialized routing for Text-to-Speech
-
-```python
-from capibara.core.routers import AdaptiveRouter
-
-router = AdaptiveRouter(
-    learning_rate=0.01,
-    adaptation_window=100
-)
-
-# Router learns from past metrics
-router.update_metrics(latency=0.5, quality=0.9)
-decision = router.route(inputs)
-```
-
-See [routers/README.md](routers/README.md) for details.
-
-### 4. Optimizers
-
-**Location**: `core/optimizers/`
-
-Optimizers with advanced LR schedulers:
-
-```python
-from capibara.core.optimizers import create_optimizer
-
-optimizer = create_optimizer(
-    optimizer_type="adamw",
-    learning_rate=3e-4,
-    weight_decay=0.01,
-    schedule="cosine",
-    warmup_steps=1000
-)
-```
-
-See [optimizers/README.md](optimizers/README.md) for details.
-
-### 5. Multimodal Encoders
-
-**Location**: `core/encoders/`
-
-Encoders for vision, video, and multimodal fusion:
-
-```python
-from capibara.core.encoders import VisionEncoder, MultimodalCombiner
-
-# Vision encoder
-vision_encoder = VisionEncoder(hidden_size=768)
-image_embeddings = vision_encoder(images)
-
-# Multimodal combiner
-combiner = MultimodalCombiner(fusion_type="attention")
-fused = combiner(text_emb=text, vision_emb=images)
-```
-
-See [encoders/README.md](encoders/README.md) for details.
-
-### 6. Distributed Training
-
-**Location**: `core/distributed/`
-
-Configuration for distributed training on TPU:
-
-```python
-from capibara.core.distributed import create_mesh_config
-
-# Configure mesh for TPU v5e-64
-mesh_config = create_mesh_config(
-    mesh_shape=(8, 8),  # 64 chips
-    data_parallel=8,
-    model_parallel=8
-)
-```
-
-See [distributed/README.md](distributed/README.md) for details.
-
----
-
-##  Integration Patterns
-
-### Pattern 1: Complete Model with All Components
-
-```python
-from capibara.core import ModularCapibaraModel, ModularConfig
-from capibara.core.adapters import AdapterSystem
-from capibara.core.monitoring import create_monitor
-
-# 1. Configure model
-config = ModularConfig.from_toml("config/production/config.toml")
-
-# 2. Create model
-model = ModularCapibaraModel(config)
-
-# 3. Add adapters (optional - for fine-tuning)
-adapter_system = AdapterSystem.from_config(config.adapter_config)
-model = adapter_system.wrap_model(model)
-
-# 4. Setup monitoring
-monitor = create_monitor(model, metrics=["loss", "perplexity", "moe_balance"])
-
-# 5. Training loop
-for batch in dataloader:
-    outputs = model(batch.inputs, training=True)
-    loss = compute_loss(outputs, batch.targets)
-
-    # Monitor metrics
-    monitor.log_step(loss=loss, outputs=outputs)
-```
-
-### Pattern 2: Inference with Hybrid Routing
-
-```python
-from capibara.core import create_enhanced_router, RouterType
-from capibara.sub_models.mamba import MambaModule
-from capibara.sub_models.hybrid import HybridAttentionModule
-
-# Setup router
-router = create_enhanced_router(RouterType.HYBRID)
-
-# Setup modules
-mamba = MambaModule(config.mamba_config)
-transformer = TransformerModule(config.transformer_config)
-
-# Inference
-def infer(inputs):
-    decision = router.route(inputs, len(inputs))
-
-    if decision.strategy == "mamba":
-        return mamba(inputs)
-    else:
-        return transformer(inputs)
-```
-
-### Pattern 3: RAG + CoT Pipeline
-
-```python
-from capibara.core.pipelines import RAGPipeline
-from capibara.core.cot import ChainOfThought
-
-# Setup RAG
-rag = RAGPipeline(
-    index_path="data/index/",
-    retrieval_k=10
-)
-
-# Setup CoT
-cot = ChainOfThought(max_steps=5)
-
-# Inference with RAG + CoT
-def rag_cot_infer(query):
-    # 1. Retrieve context
-    context = rag.retrieve(query)
-
-    # 2. Reason with CoT
-    reasoning = cot.reason(
-        problem=query,
-        context=context
-    )
-
-    # 3. Generate final answer
-    answer = model.generate(
-        query=query,
-        context=context,
-        reasoning_steps=reasoning.steps
-    )
-
-    return answer
-```
-
----
-
-##  Performance Optimization
-
-### TPU Optimizations
-
-```python
-from capibara.core.tpu import configure_tpu_environment
-from capibara.core.distributed import create_mesh_config
-
-# Configure TPU environment
-configure_tpu_environment(
-    use_bf16=True,
-    enable_flash_attention=True,
-    xla_flags="--xla_tpu_enable_data_parallelism=true"
-)
-
-# Configure mesh
-mesh_config = create_mesh_config(
-    mesh_shape=(8, 8),  # TPU v5e-64
-    data_parallel=8,
-    model_parallel=8
-)
-```
-
-### Kernel Optimizations
-
-```python
-from capibara.core.kernels import FlashAttention, OptimizedMatMul
-
-# Use Flash Attention (reduces memory O(n²) → O(n))
-flash_attn = FlashAttention()
-attn_output = flash_attn(q, k, v)
-
-# Use optimized MatMul
-matmul = OptimizedMatMul(use_tpu_optimizations=True)
-output = matmul(a, b)
-```
-
-### Monitoring for Optimization
-
-```python
-from capibara.core.monitoring import PerformanceMonitor
-
-monitor = PerformanceMonitor(
-    track_memory=True,
-    track_latency=True,
-    track_throughput=True
-)
-
-with monitor.track("forward_pass"):
-    outputs = model(inputs)
-
-# View metrics
-metrics = monitor.get_metrics()
-print(f"Latency: {metrics['forward_pass']['latency']:.3f}s")
-print(f"Memory: {metrics['forward_pass']['memory_mb']:.1f}MB")
-```
-
----
-
-##  Metrics and Monitoring
-
-The core system includes extensive monitoring:
-
-```python
-from capibara.core.monitoring import create_dashboard
-
-# Create dashboard
-dashboard = create_dashboard(
-    model=model,
-    port=8080,
-    enable_grafana=True
-)
-
-# Available metrics:
-# - Training: loss, perplexity, gradient norm
-# - MoE: expert utilization, load balance, routing entropy
-# - Performance: latency, throughput, memory usage
-# - System: CPU/TPU utilization, temperature
-```
-
-See [monitoring/README.md](monitoring/README.md) for complete dashboard.
-
----
-
-##  Testing and Validation
-
-```python
-from capibara.core.verification import validate_model
-
-# Validate that the model works correctly
-validation_result = validate_model(
-    model=model,
-    test_inputs=test_data,
-    checks=[
-        "forward_pass",
-        "gradient_flow",
-        "moe_routing",
-        "memory_usage"
-    ]
-)
-
-assert validation_result.all_passed()
-```
-
----
-
-##  References
-
-- [Modular Model](modular_model.py) - Model implementation
-- [Main Router](router.py) - Routing system
-- [Configuration](config.py) - Model config
-- [MoE README](moe/README.md) - Mixture of Experts
-- [CoT README](cot/README.md) - Chain-of-Thought
-- [Distributed README](distributed/README.md) - Distributed training
-- [TPU README](tpu/README.md) - TPU optimizations
-
----
-
-## 🆘 Troubleshooting
-
-### Error: "Module 'ultra_core_integration' not found"
-
-```python
-from capibara.core import ULTRA_CORE_AVAILABLE
-
-if not ULTRA_CORE_AVAILABLE:
-    print("Ultra Core Integration not available")
-    # Use standard components instead
-```
-
-### Error: "Out of Memory on TPU"
-
-- Reduce `batch_size` in config
-- Enable `gradient_checkpointing`
-- Reduce number of active experts in MoE
-- See [tpu/README.md](tpu/README.md) for more optimizations
-
-### Slow Performance
-
-- Verify TPU/GPU is being used
-- Enable Flash Attention in kernels
-- Review monitoring metrics
-- Optimize data loading with prefetching
-
----
-
-**System version**: v3.0.0
-**Last updated**: 2026-02-05
-
-## Ejemplo rápido
-
-Ejemplo (pseudo-código) para usar el backend y una atención básica:
-
-```python
-from core.backends import get_backend
-
-backend = get_backend()
-q = backend.randn((2, 8, 128, 64))
-k = backend.randn((2, 8, 128, 64))
-v = backend.randn((2, 8, 128, 64))
-output = backend.scaled_dot_product_attention(q, k, v)
-```
+## Notes
+
+- This README describes **what exists today**.
+- If you add new core features, document them here and in the module README.
+
+## Issues por hacer
+
+- [ ] Logs warnings for any missing required keys. - `core\config.py:222`
+- [ ] logger.warning(f"Missing required config: {key}") - `core\config.py:240`
+- [ ] """Decorator placeholder for distributed JIT compilation. - `core\config.py:459`
+- [ ] This decorator is a placeholder for distributed just-in-time compilation - `core\config.py:461`
+- [ ] This is a placeholder implementation. Full functionality requires - `core\config.py:473`
+- [ ] """Decorator placeholder for model-sharded JIT compilation. - `core\config.py:488`
+- [ ] This is a placeholder for the full implementation. - `core\config.py:502`
+- [ ] """Decorator placeholder for batch-sharded JIT compilation. - `core\config.py:516`
+- [ ] This is a placeholder. Full implementation requires JAX pmap - `core\config.py:529`
+- [ ] This is a placeholder for JAX mesh creation functionality. - `core\config.py:547`
+- [ ] None: Placeholder return value. Full implementation would return JAX Mesh object. - `core\config.py:557`
+- [ ] BATCH_SHARDING = None  # Placeholder for batch sharding specification - `core\config.py:568`
+- [ ] MODEL_SHARDING = None  # Placeholder for model sharding specification - `core\config.py:569`
+- [ ] HYBRID_SHARDING = None  # Placeholder for hybrid (data + model) sharding - `core\config.py:570`
+- [ ] TPU_DTYPE = None  # Placeholder for TPU-optimized data type (typically bfloat16) - `core\config.py:571`
+- [ ] def mock_generate(prompt: str, **kwargs) -> str: - `core\cot_27_nuclei_complete.py:623`
+- [ ] core_model_generate_fn=mock_generate, - `core\cot_27_nuclei_complete.py:628`
+- [ ] raise ImportError("jax module found but missing jit — likely project shim") - `core\decorators.py:31`
+- [ ] logger.warning(f"Config file missing: {config_path}") - `core\inference.py:451`
+- [ ] This module gracefully handles missing dependencies (psutil, JAX). If psutil - `core\memory_monitors.py:46`
+- [ ] This method is designed to be safe to call even if dependencies are missing. - `core\memory_monitors.py:167`
+- [ ] Cleanup operations are best-effort. Missing APIs or backends are - `core\memory_monitors.py:174`
+- [ ] usage may differ. Missing or incomplete APIs result in 0.0 return value. - `core\memory_monitors.py:283`
+- [ ] # Simulate training - `core\meta_loop.py:320`
+- [ ] # Simulate variable performance - `core\meta_loop.py:322`
+- [ ] # Current hyperparameters (simulated) - `core\meta_loop.py:326`
+- [ ] >>> # Simulate primitive calls - `core\metrics.py:359`
+- [ ] # Simulate output embedding for verification - `core\modular_model.py:581`
+- [ ] # Simulate training with multiple tasks - `core\nested_meta_loop.py:583`
+- [ ] # Simulate performance (with some tasks and noise) - `core\nested_meta_loop.py:587`
+- [ ] def field(*, pytree_node: bool = True, default=dataclasses.MISSING, - `core\optimization.py:141`
+- [ ] default_factory=dataclasses.MISSING): - `core\optimization.py:142`
+- [ ] if default is not dataclasses.MISSING: - `core\optimization.py:155`
+- [ ] elif default_factory is not dataclasses.MISSING: - `core\optimization.py:157`
+- [ ] # Simulated routing network parameters - `core\self_modifying_router.py:144`
+- [ ] # Simulate routing with varying performance - `core\self_modifying_router.py:714`
+- [ ] # Simulate input - `core\self_modifying_router.py:716`
+- [ ] # Simulate performance feedback - `core\self_modifying_router.py:722`
+- [ ] ValueError: If tokens is a dictionary but missing 'input_ids' key. - `core\tokenizer.py:597`
+- [ ] raise ValueError("Missing 'input_ids' key in tokens dictionary.") - `core\tokenizer.py:608`
+- [ ] return self._simulated_vq_forward(input_data, embedding_dim=64) - `core\tpu_v6_vq_integration.py:365`
+- [ ] def _simulated_vq_forward(self, - `core\tpu_v6_vq_integration.py:370`
+- [ ] """Simulated adaptive processing for fallback scenarios.""" - `core\tpu_v6_vq_integration.py:373`
+- [ ] # Simulate adaptive enhancement with classical operations - `core\tpu_v6_vq_integration.py:375`
+- [ ] # Simulate adaptive superposition - `core\tpu_v6_vq_integration.py:381`
+- [ ] # Simulate adaptive entanglement - `core\tpu_v6_vq_integration.py:385`
+- [ ] # Simulate adaptive measurement - `core\tpu_v6_vq_integration.py:389`
+- [ ] 5. Fallback mechanisms for missing components - `core\ultra_core_integration.py:126`
+- [ ] # 2. Simulate workload - `core\adapters\integration_examples.py:168`
+- [ ] # Simulate intensive operation - `core\adapters\integration_examples.py:173`
+- [ ] time.sleep(0.1)  # Simulate processing - `core\adapters\integration_examples.py:176`
+- [ ] multilingual_text = "Hello everyone! Hola a todos! 大家好！" - `core\adapters\integration_examples.py:431`
+- [ ] # Simulate data processing - `core\adapters\integration_examples.py:611`
+- [ ] # Simulate model weights - `core\adapters\integration_examples.py:634`
+- [ ] raise NotImplementedError(f"Operation {operation} not implemented for TPU v4") - `core\adapters\kernel_abstraction_adapter.py:154`
+- [ ] raise NotImplementedError(f"Operation {operation} not implemented for Cython") - `core\adapters\kernel_abstraction_adapter.py:224`
+- [ ] raise NotImplementedError(f"Operation {operation} not implemented for Neuromorphic") - `core\adapters\kernel_abstraction_adapter.py:269`
+- [ ] # Simulated implementation - in a real case would interact with the system - `core\adapters\performance_adapter.py:533`
+- [ ] # Métodos de conveniencia - `core\adapters\quantization_adapter.py:947`
+- [ ] raise RuntimeError("Metrics backend unavailable (missing numpy/jax).") - `core\age_adaptation\metrics.py:43`
+- [ ] raise RuntimeError("Metrics backend unavailable (missing numpy/jax).") - `core\age_adaptation\metrics.py:63`
+- [ ] library is missing. - `core\backends\lazy_import.py:5`
+- [ ] return 0  # Placeholder - `core\backends\tpu_backend.py:329`
+- [ ] # Return placeholder values - `core\backends\utils.py:230`
+- [ ] # Simulate health check (in real implementation would check actual metrics) - `core\experts\moe_control_api.py:83`
+- [ ] # Simulate layer health metrics - `core\experts\moe_control_api.py:133`
+- [ ] # Simulate realistic metrics - `core\experts\moe_control_api.py:137`
+- [ ] # Simulate utilization metrics - `core\experts\moe_control_api.py:190`
+- [ ] # Simulate real-time metrics - `core\experts\moe_control_api.py:359`
+- [ ] # For now, we'll simulate historical data - `core\experts\moe_control_api.py:472`
+- [ ] # Generate simulated historical data - `core\experts\moe_control_api.py:477`
+- [ ] # Simulate realistic performance trends - `core\experts\moe_control_api.py:484`
+- [ ] # Simulate training process - `core\experts\moe_training.py:189`
+- [ ] # Simulate realistic training metrics - `core\experts\moe_training.py:196`
+- [ ] # Simulate routing entropy (should increase with better routing) - `core\experts\moe_training.py:205`
+- [ ] # Simulate expert utilization - `core\experts\moe_training.py:208`
+- [ ] # Simulate improvement based on training progress - `core\experts\moe_training.py:237`
+- [ ] # Simulate expert performance evaluation - `core\experts\moe_training.py:377`
+- [ ] # Simulated parameters (in real implementation, these would be neural network weights) - `core\experts\nested_experts.py:118`
+- [ ] # Simulate forward pass (in real implementation, this would be neural network forward) - `core\experts\nested_experts.py:160`
+- [ ] # Simulate parameter update (in real implementation, this would be gradient descent) - `core\experts\nested_experts.py:195`
+- [ ] # Simulate some forward passes - `core\experts\nested_experts.py:926`
+- [ ] # Simulate input - `core\experts\nested_experts.py:929`
+- [ ] # Placeholder para mantener la interfaz estable - `core\kernels\tpu_v4_wrappers.py:75`
+- [ ] query: Optional query for retrieval (not implemented in basic version) - `core\memory\continuum_memory.py:181`
+- [ ] query: Query (could be embeddings, not implemented in basic version) - `core\memory\continuum_memory.py:315`
+- [ ] # Simulate memory operations - `core\memory\continuum_memory.py:651`
+- [ ] # Simulate feedback (in real scenario, this would come from user/system) - `core\observers\examples.py:254`
+- [ ] # Simulate various load conditions - `core\observers\examples.py:278`
+- [ ] # Process requests concurrently to simulate load - `core\observers\examples.py:292`
+- [ ] on computed gradients. The base implementation is a placeholder that - `core\optimizers\optimizer.py:240`
+- [ ] # Basic optimization step (placeholder - extend for actual algorithm) - `core\optimizers\optimizer.py:269`
+- [ ] If dependencies are missing (e.g., Optax not installed), the imports - `core\optimizers\__init__.py:36`
+- [ ] # Fallback if dependencies are missing - `core\optimizers\__init__.py:49`
+- [ ] # Simulate TPU kernel processing (fallback to simple operations) - `core\pipelines\advanced_rag_pipeline.py:327`
+- [ ] issues.append(f"Missing required metadata field: {field}") - `core\pipelines\rag_data_pipeline.py:301`
+- [ ] """Simulate a correction loop and return a final verification snapshot.""" - `core\verification\constitutional_ai.py:163`
+- [ ] # Simulated improvement: nudge scores to safer region deterministically - `core\verification\constitutional_ai.py:167`

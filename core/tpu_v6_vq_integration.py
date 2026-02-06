@@ -150,20 +150,25 @@ class TPUv6AdaptiveIntegration:
             self._arm_fallback()
     
     def _arm_fallback(self):
-        """Fallback to ARM Axion with 64 Códigos VQ."""
+        """Fallback to ARM Axion with 64 Codigos VQ."""
         if self.config.fallback_to_arm and ARM_FALLBACK_AVAILABLE:
             try:
-                self.fallback_model = ARMOptimizationSuite()
-                self.current_backend = "arm_axion_64_códigos vq"
-                logger.info(" Fallback to ARM Axion + 64 Códigos VQ")
+                candidate = ARMOptimizationSuite()
+                if getattr(candidate, "available", False):
+                    self.fallback_model = candidate
+                    self.current_backend = "arm_axion_64_codigos vq"
+                    logger.info(" Fallback to ARM Axion + 64 Codigos VQ")
+                else:
+                    logger.warning("ARM fallback requested but no ARM features are available.")
+                    self.current_backend = "classical_fallback"
             except Exception as e:
                 logger.error(f"ARM fallback failed: {e}")
                 self.current_backend = "classical_fallback"
-                logger.warning("️ Using classical fallback - no adaptive capabilities")
+                logger.warning("Using classical fallback - no adaptive capabilities")
         else:
             self.current_backend = "classical_fallback"
-            logger.warning("️ No adaptive capabilities available")
-    
+            logger.warning("No adaptive capabilities available")
+
     def _setup_fallback_systems(self):
         """Setup fallback systems for different scenarios."""
         

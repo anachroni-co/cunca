@@ -82,7 +82,7 @@ class VQbitQuantizationKernel:
     def quantize(self, vectors: Any, codebooks: Optional[Any] = None) -> Tuple[Any, Any]:
         """Quantizes vectors using VQbit encoding."""
         if not JAX_AVAILABLE:
-            self.logger.warning("JAX not available, using fallback quantization")
+            self.logger.debug("JAX not available, using fallback quantization")
             return self._fallback_quantize(vectors, codebooks)
             
         try:

@@ -33,8 +33,19 @@ analysis = language_adapter.process_multilingual(text)
 """
 
 # Core system imports
-from .adapter_registry import AdapterRegistry, AdapterType, AdapterSelectionCriteria
-from .base_adapter import BaseAdapter, AdapterConfig, AdapterStatus, FallbackAdapter
+from .adapter_registry import (
+    AdapterRegistry,
+    AdapterType,
+    AdapterSelectionCriteria,
+    adapter_registry,
+)
+from .base_adapter import (
+    BaseAdapter,
+    AdapterConfig,
+    AdapterStatus,
+    FallbackAdapter,
+    AdapterMetrics,
+)
 
 # Specific adapter imports
 import logging
@@ -87,7 +98,6 @@ from .language_processing_adapter import (
 
 # Metrics and monitoring imports
 from .adapter_metrics import (
-    AdapterMetrics,
     PerformanceTracker, 
     MetricType,
     AlertLevel,
@@ -99,9 +109,6 @@ from .adapter_metrics import (
     get_adapter_performance,
     export_metrics_report
 )
-
-# Global adapter registry instance
-adapter_registry = AdapterRegistry()
 
 # Auto-register main adapters
 try:

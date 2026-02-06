@@ -1,16 +1,21 @@
-import sys
 """
-Main N8N Automation Service for Capibara6
+Main N8N Automation Service for CapibaraGPT v3.
 
-# This module provides functionality for n8n_service.
+This module provides a FastAPI service that can optionally talk to n8n and E2B.
+Some execution paths are simulated when external services are unavailable.
 """
 
 import os
-
+import sys
+import asyncio
 import logging
+import uuid
+from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
-# Add project root to path for imports
+logger = logging.getLogger(__name__)
+
+# Add project root to path for imports (useful when executed directly)
 script_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(script_dir)))
 if project_root not in sys.path:
@@ -18,7 +23,7 @@ if project_root not in sys.path:
     sys.path.append(project_root)
 
 def main():
-    # Main function for this module.
+    """Main function for this module."""
     logger.info("Module n8n_service.py starting")
     return True
 
@@ -33,12 +38,26 @@ except ImportError:
     FASTAPI_AVAILABLE = False
     logging.warning("FastAPI not available. Install with: pip install fastapi uvicorn")
 
+# aiohttp for n8n API calls (optional)
+try:
+    import aiohttp
+    AIOHTTP_AVAILABLE = True
+except ImportError:
+    aiohttp = None  # type: ignore
+    AIOHTTP_AVAILABLE = False
+    logging.warning("aiohttp not available. Install with: pip install aiohttp")
+
 # Pydantic for request/response models
 try:
     from pydantic import BaseModel
     PYDANTIC_AVAILABLE = True
 except ImportError:
     PYDANTIC_AVAILABLE = False
+
+from .workflow_builder import WorkflowBuilder, WorkflowSpec
+from .agent_executor import AgentExecutor
+from .e2b_manager import E2bSandboxManager
+from .models import AutomationRequest, ExecutionResult, ExecutionMode
 
 
 class CapibaraN8nAutomationService:
@@ -94,7 +113,7 @@ class CapibaraN8nAutomationService:
         }
         
         # HTTP client for n8n API
-        self._http_session: Optional[aiohttp.ClientSession] = None
+        self._http_session: Optional[Any] = None
         
         # FastAPI app if available
         self.app: Optional[FastAPI] = None
@@ -104,19 +123,22 @@ class CapibaraN8nAutomationService:
     async def startup(self):
         """Initialize the service and start background tasks."""
         self.logger.info("Starting Capibara N8N Automation Service...")
-        
-        # Initialize HTTP session
-        self._http_session = aiohttp.ClientSession(
-            timeout=aiohttp.ClientTimeout(total=30),
-            headers=self._get_n8n_headers()
-        )
-        
-        # Test n8n connection
-        try:
-            await self._test_n8n_connection()
-            self.logger.info("N8N connection established successfully")
-        except Exception as e:
-            self.logger.warning(f"Could not connect to n8n: {e}")
+
+        # Initialize HTTP session (optional)
+        if AIOHTTP_AVAILABLE:
+            self._http_session = aiohttp.ClientSession(
+                timeout=aiohttp.ClientTimeout(total=30),
+                headers=self._get_n8n_headers()
+            )
+
+            # Test n8n connection
+            try:
+                await self._test_n8n_connection()
+                self.logger.info("N8N connection established successfully")
+            except Exception as e:
+                self.logger.warning(f"Could not connect to n8n: {e}")
+        else:
+            self.logger.warning("aiohttp not available; n8n API calls are disabled.")
         
         # Start background cleanup tasks
         asyncio.create_task(self._cleanup_expired_sessions())
@@ -735,7 +757,7 @@ class CapibaraN8nAutomationService:
             return
         
         self.app = FastAPI(
-            title="Capibara6 N8N Automation API",
+            title="CapibaraGPT v3 N8N Automation API",
             description="AI-powered workflow automation with n8n integration",
             version="1.0.0"
         )

@@ -30,6 +30,7 @@ try:
     JAX_AVAILABLE = True
 except ImportError:
     JAX_AVAILABLE = False
+    raise ImportError("JAX/Flax not available; TPU v6e VQ requires JAX/Flax.")
 
 # Import VQ systems
 try:

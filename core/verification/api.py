@@ -15,11 +15,13 @@ from .constitutional_ai import ComprehensiveVerificationSystem
 
 
 class VerificationAPI:
-    """API unificada para verificación en Capibara-6."""
+    """API unificada de verificacion para CapibaraGPT v3."""
 
     def __init__(self, modular_model: ModularCapibaraModel):
         self.model = modular_model
-        self.verification_system: ComprehensiveVerificationSystem = modular_model.verification_system  # type: ignore[attr-defined]
+        self.verification_system: ComprehensiveVerificationSystem = (
+            modular_model.verification_system  # type: ignore[attr-defined]
+        )
 
     def verify_text(self, text: str) -> Dict[str, Any]:
         embedding = jnp.ones((768,)) if jnp is not None else None
@@ -32,9 +34,10 @@ class VerificationAPI:
             correction = self.verification_system.apply_corrections(embedding, verification)
             return {
                 "original_text": text,
-                "corrected_text": "Texto corregido",
+                "corrected_text": text,
                 "verification": correction["final_verification"],
                 "correction_applied": True,
+                "correction_note": "Verification scores adjusted; text is unchanged.",
             }
         return {
             "original_text": text,

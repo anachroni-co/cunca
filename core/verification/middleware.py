@@ -14,13 +14,13 @@ from .constitutional_ai import ComprehensiveVerificationSystem
 
 
 class VerificationMiddleware:
-    """Middleware para integrar verificación en cualquier pipeline."""
+    """Middleware para integrar verificacion heuristica en cualquier pipeline."""
 
     def __init__(self, verification_system: ComprehensiveVerificationSystem):
         self.verification_system = verification_system
 
     def __call__(self, func: Callable[..., Any]):
-        """Decorador para añadir verificación a funciones."""
+        """Decorador que agrega verificacion a funciones."""
 
         def wrapper(*args, **kwargs):
             result = func(*args, **kwargs)
@@ -32,7 +32,7 @@ class VerificationMiddleware:
         return wrapper
 
     def _verify_result(self, result: Dict[str, Any]) -> Dict[str, Any]:
-        """Verifies the result of a function."""
+        """Verifica el resultado de una funcion y adjunta metadatos."""
         embedding = jnp.ones((768,)) if jnp is not None else None
         verification = self.verification_system.verify_output(embedding)
         return {

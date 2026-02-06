@@ -70,8 +70,13 @@ except ImportError:
 
 try:
     from .specialized_processors import (
-        AudioProcessor, AdaptiveStateProcessor, BioSignalProcessor,
-        MultimodalEncoder, ProcessorConfig
+        ProcessorConfig,
+        ProcessorType,
+        TextAnalysisProcessor,
+        SentimentAnalysisProcessor,
+        EntityExtractionProcessor,
+        CodeAnalysisProcessor,
+        MultimodalFusionProcessor,
     )
     PROCESSOR_MODULES_AVAILABLE = True
 except ImportError:
@@ -268,17 +273,27 @@ class UltraModuleOrchestrator:
             })
         
         elif module_type == ModuleType.PROCESSOR and PROCESSOR_MODULES_AVAILABLE:
-            processor_config = ProcessorConfig(hidden_size=self.config.hidden_size)
             modules.update({
-                "audio_processor": AudioProcessor(config=processor_config),
-                "adaptive_processor": AdaptiveStateProcessor(config=processor_config),
-                "bio_processor": BioSignalProcessor(config=processor_config),
-                "multimodal_encoder": MultimodalEncoder(config=processor_config)
+                "text_analysis": TextAnalysisProcessor(
+                    ProcessorConfig(processor_type=ProcessorType.TEXT_ANALYSIS)
+                ),
+                "sentiment": SentimentAnalysisProcessor(
+                    ProcessorConfig(processor_type=ProcessorType.SENTIMENT_ANALYSIS)
+                ),
+                "entity_extraction": EntityExtractionProcessor(
+                    ProcessorConfig(processor_type=ProcessorType.ENTITY_EXTRACTION)
+                ),
+                "code_analysis": CodeAnalysisProcessor(
+                    ProcessorConfig(processor_type=ProcessorType.CODE_ANALYSIS)
+                ),
+                "multimodal_fusion": MultimodalFusionProcessor(
+                    ProcessorConfig(processor_type=ProcessorType.MULTIMODAL_FUSION)
+                ),
             })
         
         elif module_type == ModuleType.PERSONALITY and PERSONALITY_MODULES_AVAILABLE:
             modules.update({
-                "unified_personality": "UnifiedPersonalitySystem_placeholder"  # Safe placeholder
+                "unified_personality": UnifiedPersonalitySystem()
             })
         
         elif module_type == ModuleType.ULTRA_HYBRID:
@@ -561,6 +576,13 @@ class UltraModuleOrchestrator:
             elif "personality" in task_type.lower():
                 return "personality"
         
+        # Textual/contextual routing
+        if isinstance(x, str):
+            return "processor"
+        if isinstance(context, dict):
+            if any(key in context for key in ("text", "prompt", "response", "code", "modalities")):
+                return "processor"
+
         # Sequence length based routing
         if len(x.shape) >= 2:
             seq_len = x.shape[1]
@@ -605,14 +627,47 @@ class UltraModuleOrchestrator:
                 return result["output"] if isinstance(result, dict) else result
             
             elif module_type == "processor":
-                # Processors may need specific inputs
-                if "audio" in module_name:
-                    return module(x)  # Assume x is audio signal
-                else:
-                    return module(x)
+                # Processors expect structured inputs; use context payloads when present.
+                if hasattr(module, "analyze_text"):
+                    payload = self._extract_text_payload(x, context)
+                    if payload is None:
+                        logger.warning("Processor %s skipped: no text payload", module_name)
+                        return x
+                    return module.analyze_text(payload)
+                if hasattr(module, "analyze_sentiment"):
+                    payload = self._extract_text_payload(x, context)
+                    if payload is None:
+                        logger.warning("Processor %s skipped: no text payload", module_name)
+                        return x
+                    return module.analyze_sentiment(payload)
+                if hasattr(module, "extract_entities"):
+                    payload = self._extract_text_payload(x, context)
+                    if payload is None:
+                        logger.warning("Processor %s skipped: no text payload", module_name)
+                        return x
+                    return module.extract_entities(payload)
+                if hasattr(module, "analyze_code"):
+                    payload = self._extract_code_payload(x, context)
+                    if payload is None:
+                        logger.warning("Processor %s skipped: no code payload", module_name)
+                        return x
+                    return module.analyze_code(payload)
+                if hasattr(module, "fuse_modalities"):
+                    payload = self._extract_modalities_payload(x, context)
+                    if payload is None:
+                        logger.warning("Processor %s skipped: no modalities payload", module_name)
+                        return x
+                    return module.fuse_modalities(payload)
+                return x
             
             elif module_type == "personality":
-                return x  # Placeholder for personality processing
+                if hasattr(module, "adapt_response"):
+                    payload = self._extract_text_payload(x, context)
+                    if payload is None:
+                        logger.warning("Personality module skipped: no text payload")
+                        return x
+                    return module.adapt_response(payload)
+                return x
             
             elif module_type == "ultra_hybrid":
                 context_tokens = context.get("tokens") if context else jnp.ones((x.shape[0], 10), dtype=jnp.int32)
@@ -634,20 +689,26 @@ class UltraModuleOrchestrator:
         if len(results) == 1:
             return next(iter(results.values()))
         
-        # simple weighted average for now
+        # simple weighted average for numeric outputs; return first result otherwise
+        numeric_results = {
+            module_type: result
+            for module_type, result in results.items()
+            if hasattr(result, "shape") or isinstance(result, (int, float))
+        }
+        if not numeric_results:
+            return next(iter(results.values()))
+
         combined = None
         total_weight = 0
-        
-        for module_type, result in results.items():
+
+        for module_type, result in numeric_results.items():
             weight = weights.get(module_type, 1.0)
-            
             if combined is None:
                 combined = weight * result
             else:
                 combined = combined + weight * result
-            
             total_weight += weight
-        
+
         return combined / total_weight if total_weight > 0 else combined
     
     def _select_best_parallel_result(self, results):
@@ -665,6 +726,33 @@ class UltraModuleOrchestrator:
         
         # Return first available
         return next(iter(results.values()))
+
+    def _extract_text_payload(self, x, context) -> Optional[str]:
+        if isinstance(x, str):
+            return x
+        if isinstance(context, dict):
+            for key in ("text", "prompt", "response"):
+                if key in context and isinstance(context[key], str):
+                    return context[key]
+        return None
+
+    def _extract_code_payload(self, x, context) -> Optional[str]:
+        if isinstance(context, dict) and isinstance(context.get("code"), str):
+            return context["code"]
+        if isinstance(x, str):
+            return x
+        return None
+
+    def _extract_modalities_payload(self, x, context) -> Optional[Dict[str, Any]]:
+        if isinstance(context, dict):
+            if isinstance(context.get("modalities"), dict):
+                return context["modalities"]
+            text_payload = self._extract_text_payload(x, context)
+            if text_payload:
+                return {"text": text_payload}
+        if isinstance(x, str):
+            return {"text": x}
+        return None
     
     def _calculate_success_rate(self):
         """Calculate overall success rate."""

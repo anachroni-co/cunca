@@ -222,10 +222,10 @@ class BaseRouter(nn.Module, ABC):
 class BaseRouterV2(BaseRouter):
     """Base router version 2 with extended functionality."""
     
-    def __init__(self):
+    def __init__(self, config: Optional[RouterConfig] = None):
         """Initializes the router."""
-        super().__init__()
-        self.memory_monitor = None
+        super().__init__(config or RouterConfig())
+        self.memory_monitor = MemoryMonitor()
     
     def route(self, inputs: Dict[str, Any]) -> Dict[str, Any]:
         """Implementation base of routing."""

@@ -1,10 +1,9 @@
 """
 Routers Module for CapibaraGPT.
 
-This package contains routing mechanisms for expert selection and token routing:
-- SelfModifyingRouter: Nested learning router that learns both what and how to route
-- RoutingPolicy: Level 1 policy for immediate routing decisions
-- MetaRoutingPolicy: Level 2 policy for optimizing the routing strategy
+This package contains experimental routing mechanisms for expert selection and
+token routing (e.g., SelfModifyingRouter). The primary router for the project
+is `capibara.core.router.EnhancedRouter`.
 """
 
 from .self_modifying_router import (

@@ -19,7 +19,7 @@ try:
     import jax  # noqa: F401
     JAX_AVAILABLE = True
 except ImportError as e:
-    logging.warning(f"JAX not available: {e}")
+    logging.debug(f"JAX not available: {e}")
     JAX_AVAILABLE = False
 
 # Verification imports
@@ -38,7 +38,7 @@ try:
     TOML_AVAILABLE = True
 except ImportError:
     TOML_AVAILABLE = False
-    logging.warning("TOML not available, using JSON fallback")
+    logging.debug("TOML not available, using JSON fallback")
 
 # Training integration imports
 try:
@@ -51,7 +51,7 @@ try:
     )
     TRAINING_AVAILABLE = True
 except ImportError as e:
-    logging.warning(f"Training modules not available: {e}")
+    logging.debug(f"Training modules not available: {e}")
     TRAINING_AVAILABLE = False
 
 # CSA Expert imports
@@ -60,7 +60,7 @@ try:
     from capibara.interfaces.isub_models import ExpertContext
     CSA_AVAILABLE = True
 except ImportError as e:
-    logging.warning(f"CSA Expert not available: {e}")
+    logging.debug(f"CSA Expert not available: {e}")
     CSA_AVAILABLE = False
 
 # Import decorators for optimization

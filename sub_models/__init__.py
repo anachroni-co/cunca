@@ -21,7 +21,7 @@ try:
 except Exception as e:
     SSM_AVAILABLE = False
     SSMTPU = None
-    logger.warning("SSM_TPU unavailable: %s", e)
+    logger.debug("SSM_TPU unavailable: %s", e)
 
 # Byte TPU
 try:
@@ -30,7 +30,7 @@ try:
 except Exception as e:
     BYTE_AVAILABLE = False
     ByteTPU = None
-    logger.warning("Byte_TPU unavailable: %s", e)
+    logger.debug("Byte_TPU unavailable: %s", e)
 
 # CSA Expert
 try:
@@ -39,7 +39,7 @@ try:
 except Exception as e:
     CSA_AVAILABLE = False
     CSAExpert = None
-    logger.warning("CSA expert unavailable: %s", e)
+    logger.debug("CSA expert unavailable: %s", e)
 
 # Deep Dialog
 try:
@@ -48,7 +48,7 @@ try:
 except Exception as e:
     DIALOG_AVAILABLE = False
     DeepDialog = None
-    logger.warning("Deep dialog unavailable: %s", e)
+    logger.debug("Deep dialog unavailable: %s", e)
 
 # Reasoning Enhancement
 try:
@@ -57,7 +57,7 @@ try:
 except Exception as e:
     REASONING_AVAILABLE = False
     ReasoningEnhancement = None
-    logger.warning("Reasoning enhancement unavailable: %s", e)
+    logger.debug("Reasoning enhancement unavailable: %s", e)
 
 # Ultra Orchestrator
 try:
@@ -70,7 +70,7 @@ except Exception as e:
     ORCHESTRATOR_AVAILABLE = False
     UltraSubModelOrchestrator = None
     create_ultra_submodel_system = None
-    logger.warning("Ultra submodel orchestrator unavailable: %s", e)
+    logger.debug("Ultra submodel orchestrator unavailable: %s", e)
 
 
 __all__ = [

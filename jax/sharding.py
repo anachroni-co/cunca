@@ -14,7 +14,7 @@ try:
     import jax
     from jax.sharding import Mesh, PartitionSpec
 except ImportError:
-    logger.warning("JAX not available, using fallback sharding classes")
+    logger.debug("JAX not available, using fallback sharding classes")
     
     class Mesh:
         """Fallback Mesh class when JAX is not available."""

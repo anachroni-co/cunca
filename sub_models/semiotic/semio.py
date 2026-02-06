@@ -21,6 +21,7 @@ example de uso:
 """
 
 import os
+import sys
 from capibara.jax import jax
 
 import logging

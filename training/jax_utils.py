@@ -175,15 +175,15 @@ if not JAX_AVAILABLE:
 
 # ARM optimizations (optional)
 try:
-    from capibara.core.arm_optimizations import ARMAxionInferenceOptimizer
-    ARM_OPTIMIZATIONS_AVAILABLE = True
+    from capibara.core.arm_optimizations import ARMAxionInferenceOptimizer, ARM_CAPABILITIES
+    ARM_OPTIMIZATIONS_AVAILABLE = bool(ARM_CAPABILITIES.get("total_features", 0))
 except ImportError:
     ARM_OPTIMIZATIONS_AVAILABLE = False
 
     class ARMAxionInferenceOptimizer:
-        """Dummy ARM optimizer for compatibility."""
+        """Compatibility stub when ARM optimizations are not installed."""
         def __init__(self, *args, **kwargs):
-            pass
+            self.enabled = False
         def optimize_inference(self, *args, **kwargs):
             return args[0] if args else None
 

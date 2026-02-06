@@ -6,7 +6,7 @@ import numpy as np
 from capibara.jax import numpy as jnp
 from capibara.jax import random
 from capibara.core.routers.base import BaseRouter
-from capibara.core.routers.enhanced_router import EnhancedRouter
+from capibara.core.router import EnhancedRouter
 
 from ..configs.vim_vq_config import VimVQConfig
 from .quantizer import ViMVQQuantizer

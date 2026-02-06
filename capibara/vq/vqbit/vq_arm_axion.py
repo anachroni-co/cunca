@@ -71,9 +71,14 @@ class ARMAxionOptimizer:
             
             # Inicializar Kleidi if está available
             if self.config.enable_kleidi:
-                from capibara.core.kleidi import KleidiOptimizer
-                self.kleidi = KleidiOptimizer()
-                logger.info(" Kleidi optimization enabled")
+                try:
+                    from capibara.core.kleidi import KleidiOptimizer
+                except Exception as e:
+                    self.config.enable_kleidi = False
+                    logger.warning(" Kleidi optimization unavailable: %s", e)
+                else:
+                    self.kleidi = KleidiOptimizer()
+                    logger.info(" Kleidi optimization enabled")
             
             logger.info(" ARM Axion optimizations initialized")
             
@@ -199,3 +204,7 @@ class ARMAxionOptimizer:
 def create_arm_axion_optimizer(config: Optional[ARMAxionConfig] = None) -> ARMAxionOptimizer:
     """create optimizador ARM Axion."""
     return ARMAxionOptimizer(config) 
+
+
+# Backwards-compatible alias expected by vqbit __init__
+ARMAxionVQOptimizer = ARMAxionOptimizer

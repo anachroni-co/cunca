@@ -8,7 +8,7 @@ for advanced multilingual processing.
 
 import logging
 import time
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union, Callable
 from enum import Enum
 from dataclasses import dataclass, field
 from collections import defaultdict

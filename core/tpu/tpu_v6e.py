@@ -43,7 +43,7 @@ try:
     import optax
     TPU_AVAILABLE = True
 except ImportError as e:
-    logger.warning(f"TPU/JAX dependencies not available: {e}")
+    logger.debug(f"TPU/JAX dependencies not available: {e}")
     TPU_AVAILABLE = False
     jax = None
     jnp = None

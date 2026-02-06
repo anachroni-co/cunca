@@ -377,6 +377,9 @@ class AdapterRegistry:
             return status
 
 
+# Global registry instance
+adapter_registry = AdapterRegistry()
+
 # Utility functions for automatic registration
 def register_adapter_decorator(adapter_type: AdapterType, 
                              priority: int = 50,
@@ -385,7 +388,6 @@ def register_adapter_decorator(adapter_type: AdapterType,
                              metadata: Dict[str, Any] = None):
     """Decorator for automatic adapter registration."""
     def decorator(cls):
-        from . import adapter_registry
         adapter_registry.register_adapter(
             adapter_type=adapter_type,
             adapter_class=cls,

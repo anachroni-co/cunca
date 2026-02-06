@@ -1,0 +1,63 @@
+# TODOs - jax
+
+- [ ] """Mock jit decorator.""" - `jax\activations.py:19`
+- [ ] # Placeholder for JAX API utilities - `jax\api_util.py:17`
+- [ ] # Placeholder functions - `jax\capibara_random.py:219`
+- [ ] _base_jax = None  # not tenemos JAX estándar, usamos nuestro mock - `jax\compat.py:14`
+- [ ] Módulo JAX (estándar or mock) - `jax\compat.py:27`
+- [ ] # always use nuestro mock JAX for CapibaraGPT - `jax\compat.py:29`
+- [ ] # create mock JAX compatible - `jax\compat.py:31`
+- [ ] class MockJAX: - `jax\compat.py:32`
+- [ ] self.random = MockRandom() - `jax\compat.py:34`
+- [ ] """Mock jit - acepta todos los argumentos.""" - `jax\compat.py:37`
+- [ ] return [MockDevice()] - `jax\compat.py:53`
+- [ ] return MockJAX() - `jax\compat.py:55`
+- [ ] Módulo numpy de JAX (estándar or mock) - `jax\compat.py:62`
+- [ ] # create un mock simple for testing - `jax\compat.py:67`
+- [ ] class MockJNP: - `jax\compat.py:69`
+- [ ] return MockJNP() - `jax\compat.py:73`
+- [ ] class MockRandom: - `jax\compat.py:75`
+- [ ] class MockLax: - `jax\compat.py:95`
+- [ ] """Mock LAX module with common operations.""" - `jax\compat.py:96`
+- [ ] class MockLib: - `jax\compat.py:123`
+- [ ] """Mock JAX lib module.""" - `jax\compat.py:124`
+- [ ] self.xla_bridge = MockXLABridge() - `jax\compat.py:127`
+- [ ] self.xla_client = MockXLAClient() - `jax\compat.py:128`
+- [ ] class MockXLABridge: - `jax\compat.py:130`
+- [ ] """Mock XLA bridge.""" - `jax\compat.py:131`
+- [ ] return MockXLABackend() - `jax\compat.py:134`
+- [ ] class MockXLAClient: - `jax\compat.py:136`
+- [ ] """Mock XLA client.""" - `jax\compat.py:137`
+- [ ] class MockXLABackend: - `jax\compat.py:140`
+- [ ] """Mock XLA backend.""" - `jax\compat.py:141`
+- [ ] class MockDevice: - `jax\compat.py:146`
+- [ ] class MockArray: - `jax\core.py:37`
+- [ ] class MockDtype: - `jax\core.py:42`
+- [ ] class MockNumpy: - `jax\core.py:46`
+- [ ] ndarray = MockArray - `jax\core.py:47`
+- [ ] dtype = MockDtype - `jax\core.py:48`
+- [ ] def array(self, x): return MockArray(x) - `jax\core.py:49`
+- [ ] np = MockNumpy() - `jax\core.py:50`
+- [ ] """Extended dtype support (placeholder).""" - `jax\dtypes.py:46`
+- [ ] """PRNG key dtype (placeholder).""" - `jax\dtypes.py:50`
+- [ ] # missing or outdated. Because _write_version(...) modifies the copy of - `jax\version.py:134`
+- [ ] class MockXla: - `jax\xla.py:12`
+- [ ] """Mock XLA for compatibility.""" - `jax\xla.py:13`
+- [ ] """Mock compile.""" - `jax\xla.py:17`
+- [ ] """Mock execute.""" - `jax\xla.py:22`
+- [ ] xla = MockXla() - `jax\xla.py:25`
+- [ ] xla_interpreters = MockXla() - `jax\xla.py:26`
+- [ ] class _MockDevice: - `jax\__init__.py:471`
+- [ ] return f"MockDevice(platform={self.platform!r})" - `jax\__init__.py:479`
+- [ ] return [_MockDevice("cpu")] - `jax\__init__.py:485`
+- [ ] class MockNumpy: - `jax\experimental\mesh_utils.py:12`
+- [ ] np = MockNumpy() - `jax\experimental\mesh_utils.py:15`
+- [ ] class MockDeviceMesh: - `jax\experimental\mesh_utils.py:45`
+- [ ] return f"MockDeviceMesh(shape={self.shape}, devices={len(self.devices)})" - `jax\experimental\mesh_utils.py:52`
+- [ ] return MockDeviceMesh(mesh_shape, devices) - `jax\experimental\mesh_utils.py:54`
+- [ ] return {"used": 0, "total": 1024*1024*1024}  # Mock 1GB - `jax\experimental\profiler.py:14`
+- [ ] def simulate_lif_dynamics(self, input_currents: Any, - `jax\tpu_v4\neuromorphic_kernels.py:168`
+- [ ] """Simulates LIF neuron dynamics.""" - `jax\tpu_v4\neuromorphic_kernels.py:170`
+- [ ] spikes, voltages = lif_kernel.simulate_lif_dynamics(test_currents) - `jax\tpu_v4\neuromorphic_kernels.py:377`
+- [ ] fixes_applied.append("Created missing __init__.py") - `jax\tpu_v4\tpu_optimization.py:283`
+- [ ] # Mock gradient - returns zeros of same shape - `jax\_src\core.py:91`

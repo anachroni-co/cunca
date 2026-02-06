@@ -11,7 +11,7 @@ try:
     _jax = sys.modules[__name__]
 except Exception as _e:  # pragma: no cover - environment without JAX
     HAS_JAX = False
-    logger.warning("JAX not available; using fallbacks with numpy. Detail: %s", _e)
+    logger.debug("JAX not available; using fallbacks with numpy. Detail: %s", _e)
     try:
         import numpy as _jnp  # type: ignore
     except Exception:

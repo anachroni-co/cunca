@@ -1,0 +1,27 @@
+# TODOs - inference
+
+- [ ] # For now, we simulate the structure - `inference\hybrid_inference_engine.py:160`
+- [ ] # Create mock parameters for demo - `inference\hybrid_inference_engine.py:167`
+- [ ] logger.warning("Using mock parameters for demo") - `inference\hybrid_inference_engine.py:168`
+- [ ] # For now, we simulate with chunks - `inference\hybrid_inference_engine.py:243`
+- [ ] await asyncio.sleep(0.05)  # Simulate generation speed - `inference\hybrid_inference_engine.py:249`
+- [ ] # Fallback: generate complete and simulate streaming - `inference\hybrid_inference_engine.py:461`
+- [ ] # Load model parameters (mock implementation) - `inference\engines\advanced_quantized_engine.py:95`
+- [ ] # Mock implementation - in real scenario, load from checkpoint - `inference\engines\advanced_quantized_engine.py:178`
+- [ ] # Simulate loading different layer types - `inference\engines\advanced_quantized_engine.py:181`
+- [ ] await asyncio.sleep(0.1)  # Simulate I/O delay - `inference\engines\advanced_quantized_engine.py:207`
+- [ ] await asyncio.sleep(0.1)  # Simulate processing delay - `inference\engines\advanced_quantized_engine.py:222`
+- [ ] await asyncio.sleep(0.1)  # Simulate optimization time - `inference\engines\advanced_quantized_engine.py:450`
+- [ ] await asyncio.sleep(0.1)  # Simulate optimization time - `inference\engines\advanced_quantized_engine.py:461`
+- [ ] # Mock implementation - in real scenario, measure actual memory usage - `inference\engines\advanced_quantized_engine.py:475`
+- [ ] # Simulate token generation - `inference\engines\quantized_engine.py:399`
+- [ ] # Mock next token prediction - `inference\engines\quantized_engine.py:401`
+- [ ] # Simulate KV-cache updates - `inference\engines\quantized_engine.py:406`
+- [ ] # Mock K,V tensors - `inference\engines\quantized_engine.py:408`
+- [ ] k_mock = np.random.randn(seq_len, num_heads, head_dim).astype(np.float16) - `inference\engines\quantized_engine.py:410`
+- [ ] v_mock = np.random.randn(seq_len, num_heads, head_dim).astype(np.float16) - `inference\engines\quantized_engine.py:411`
+- [ ] self.kv_cache.add_kv_to_cache(0, k_mock, v_mock)  # Layer 0 - `inference\engines\quantized_engine.py:413`
+- [ ] # Mock fallback implementation - `inference\engines\quantized_engine.py:432`
+- [ ] # Placeholder implementation - `inference\quantization\calibration.py:274`
+- [ ] # Simulate quantization and dequantization - `inference\quantization\calibration.py:533`
+- [ ] validation_results['issues'].append(f'Block {block_id} missing from cache') - `inference\quantization\kv_cache_int8.py:604`

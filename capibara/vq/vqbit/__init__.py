@@ -28,7 +28,7 @@ try:
     )
     TPU_V6E_VQ_AVAILABLE = True
 except ImportError as e:
-    logging.warning(f"TPU v6e VQ not available: {e}")
+    logging.debug(f"TPU v6e VQ not available: {e}")
     TPUv6eVectorQuantizer = None
     TPUv6eVQConfig = None
     TPUv6eVQSystem = None
@@ -46,7 +46,7 @@ try:
     )
     ARM_AXION_VQ_AVAILABLE = True
 except ImportError as e:
-    logging.warning(f"ARM Axion VQ not available: {e}")
+    logging.debug(f"ARM Axion VQ not available: {e}")
     ARMAxionConfig = None
     ARMAxionVQOptimizer = None
     ARM_AXION_VQ_AVAILABLE = False
@@ -591,4 +591,4 @@ elif available_components >= 4:
 elif available_components >= 2:
     logger.info(" Basic VQBit system available")
 else:
-    logger.warning("️ Limited VQBit capabilities available")
+logger.debug("Limited VQBit capabilities available")

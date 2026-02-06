@@ -20,7 +20,7 @@ try:
 except Exception as e:
     vqbit = None  # type: ignore
     VQBIT_PACKAGE_AVAILABLE = False
-    logger.warning("VQ subpackage 'vqbit' unavailable: %s", e)
+    logger.debug("VQ subpackage 'vqbit' unavailable: %s", e)
 
 # Ultra VQ orchestrator
 try:
@@ -33,7 +33,7 @@ except Exception as e:
     ORCHESTRATOR_AVAILABLE = False
     UltraVQOrchestrator = None
     create_ultra_vq_system = None
-    logger.warning("Ultra VQ orchestrator unavailable: %s", e)
+    logger.debug("Ultra VQ orchestrator unavailable: %s", e)
 
 # VQbit layer
 try:
@@ -42,7 +42,7 @@ try:
 except Exception as e:
     VQBIT_AVAILABLE = False
     VQbitLayer = None
-    logger.warning("VQbit layer unavailable: %s", e)
+    logger.debug("VQbit layer unavailable: %s", e)
 
 # Multi-modal VQ
 try:
@@ -51,7 +51,7 @@ try:
 except Exception as e:
     MULTIMODAL_AVAILABLE = False
     MultiModalVQ = None
-    logger.warning("Multi-modal VQ unavailable: %s", e)
+    logger.debug("Multi-modal VQ unavailable: %s", e)
 
 # Adaptive VQ
 try:
@@ -60,7 +60,7 @@ try:
 except Exception as e:
     ADAPTIVE_AVAILABLE = False
     AdaptiveVQ = None
-    logger.warning("Adaptive VQ unavailable: %s", e)
+    logger.debug("Adaptive VQ unavailable: %s", e)
 
 # ARM Axion optimizations
 try:
@@ -69,7 +69,7 @@ try:
 except Exception as e:
     ARM_AVAILABLE = False
     VQArmAxion = None
-    logger.warning("ARM Axion VQ unavailable: %s", e)
+    logger.debug("ARM Axion VQ unavailable: %s", e)
 
 
 __all__ = [

@@ -52,7 +52,7 @@ try:
     import flax.linen as nn
     logger.info(" ML libraries available for Adaptive VQ Performance")
 except ImportError as e:
-    logger.warning(f"️ ML libraries not available: {e}")
+    logger.debug("ML libraries not available: %s", e)
     ML_LIBRARIES_AVAILABLE = False
 
 # Ultra VQ System integration
@@ -62,7 +62,7 @@ try:
     from .multi_modal_vq_intelligence import ModalFusionStrategy
     logger.info(" Ultra VQ System integration available")
 except ImportError as e:
-    logger.warning(f"️ Ultra VQ System not available: {e}")
+    logger.debug("Ultra VQ System not available: %s", e)
     ULTRA_VQ_AVAILABLE = False
 
 # ============================================================================

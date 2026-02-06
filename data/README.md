@@ -663,3 +663,33 @@ Ejemplo (pseudo-flujo) para preparar datos:
 2) Referencia esos archivos en tu config de entrenamiento
 3) Ejecuta el pipeline de preprocesamiento
 ```
+
+## Issues por hacer
+
+- [ ] # Placeholder for real-time API loading - `data\ultra_data_orchestrator.py:625`
+- [ ] return {"type": "fallback", "name": dataset_name, "data": "placeholder_data"} - `data\ultra_data_orchestrator.py:649`
+- [ ] "gc_content_estimate": np.random.uniform(0.3, 0.7),  # Mock for now - `data\datasets\genomic\alphagenome_training_generator.py:167`
+- [ ] "repeat_content_estimate": np.random.uniform(0.1, 0.5)  # Mock for now - `data\datasets\genomic\alphagenome_training_generator.py:168`
+- [ ] # For now, generate simulated data - `data\datasets\genomic\genomic_datasets.py:119`
+- [ ] # Generate simulated expression matrix - `data\datasets\genomic\genomic_datasets.py:184`
+- [ ] # Create placeholder and instructions - `data\datasets\multimodal\emotional_audio_datasets.py:426`
+- [ ] # Placeholder for future dataset expansions - `data\datasets\multimodal\__init__.py:7`
+- [ ] # Simulated experimental data - `data\datasets\physics\__init__.py:113`
+- [ ] # Simulate particle collision data - `data\datasets\physics\__init__.py:117`
+- [ ] # Simulated loading - in real implementation would load actual data - `data\datasets\robotics\__init__.py:80`
+- [ ] 'data': f"[Simulated {dataset_name} data]", - `data\datasets\robotics\__init__.py:86`
+- [ ] def simulate_download_status(self, dataset_id: str) -> Dict[str, Any]: - `data\datasets\systems\systems_logs_datasets.py:344`
+- [ ] """Simulate the download status of a dataset.""" - `data\datasets\systems\systems_logs_datasets.py:345`
+- [ ] logger.warning(f"Document at {path}:{line_num} missing 'text' field") - `data\processors\semantic_deduplication.py:197`
+- [ ] missing_files = [] - `data\tools\validate_robotics_integration.py:30`
+- [ ] missing_files.append(file) - `data\tools\validate_robotics_integration.py:34`
+- [ ] if missing_files: - `data\tools\validate_robotics_integration.py:38`
+- [ ] logger.error(f" ERROR: Missing files: {missing_files}") - `data\tools\validate_robotics_integration.py:39`
+- [ ] missing = [] - `data\tools\validate_robotics_simple.py:119`
+- [ ] missing.append(keyword) - `data\tools\validate_robotics_simple.py:122`
+- [ ] if missing: - `data\tools\validate_robotics_simple.py:124`
+- [ ] logger.warning(f"   ️  Palabras clave faltantes: {missing}") - `data\tools\validate_robotics_simple.py:125`
+- [ ] return len(missing) == 0 - `data\tools\validate_robotics_simple.py:135`
+- [ ] errors.append(f"Missing directory: {dir_path}") - `data\tools\validate_structure.py:43`
+- [ ] errors.append(f"Missing file: {dir_name}/{file_name}") - `data\tools\validate_structure.py:99`
+- [ ] errors.append(f"Missing __init__.py: {init_path}") - `data\tools\validate_structure.py:118`

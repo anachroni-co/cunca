@@ -71,7 +71,7 @@ try:
     KERNELS_COMPLETE = True
 except ImportError:
     KERNELS_COMPLETE = False
-    logger.warning("Could not import all TPU v4-32 kernels. Some functionality will not be available.")
+    logger.debug("Could not import all TPU v4-32 kernels. Some functionality will not be available.")
 
 # New imports for ultra-specialized kernels
 try:
@@ -84,7 +84,7 @@ try:
     ADAPTIVE_KERNELS_AVAILABLE = True
 except ImportError as e:
     ADAPTIVE_KERNELS_AVAILABLE = False
-    logger.warning(f"Could not import adaptive_kernels: {e}")
+    logger.debug(f"Could not import adaptive_kernels: {e}")
     # Create dummy classes to prevent import errors
     class AdaptiveKernelType: pass
     class VQbitKernelConfig: pass
@@ -103,7 +103,7 @@ try:
     SPARSITY_KERNELS_AVAILABLE = True
 except ImportError as e:
     SPARSITY_KERNELS_AVAILABLE = False
-    logger.warning(f"Could not import sparsity_kernels: {e}")
+    logger.debug(f"Could not import sparsity_kernels: {e}")
     # Create dummy classes
     class SparsityKernelType: pass
     class SparsityKernelConfig: pass
@@ -121,7 +121,7 @@ try:
     SEMIOTIC_KERNELS_AVAILABLE = True
 except ImportError as e:
     SEMIOTIC_KERNELS_AVAILABLE = False
-    logger.warning(f"Could not import semiotic_kernels: {e}")
+    logger.debug(f"Could not import semiotic_kernels: {e}")
     # Create dummy classes
     class SemioticKernelType: pass
     class SemioticKernelConfig: pass
@@ -139,7 +139,7 @@ try:
     NEUROMORPHIC_KERNELS_AVAILABLE = True
 except ImportError as e:
     NEUROMORPHIC_KERNELS_AVAILABLE = False
-    logger.warning(f"Could not import neuromorphic_kernels: {e}")
+    logger.debug(f"Could not import neuromorphic_kernels: {e}")
     # Create dummy classes
     class LiquidExpansionKernel: pass
     class LIFNeuronKernel: pass
@@ -152,22 +152,22 @@ except ImportError as e:
 if ADAPTIVE_KERNELS_AVAILABLE:
     logger.info(" adaptive_kernels loaded successfully")
 else:
-    logger.warning(" adaptive_kernels not available - using fallback")
+    logger.debug("adaptive_kernels not available - using fallback")
     
 if SPARSITY_KERNELS_AVAILABLE:
     logger.info(" sparsity_kernels loaded successfully")
 else:
-    logger.warning(" sparsity_kernels not available - using fallback")
+    logger.debug("sparsity_kernels not available - using fallback")
     
 if SEMIOTIC_KERNELS_AVAILABLE:
     logger.info(" semiotic_kernels loaded successfully")
 else:
-    logger.warning(" semiotic_kernels not available - using fallback")
+    logger.debug("semiotic_kernels not available - using fallback")
     
 if NEUROMORPHIC_KERNELS_AVAILABLE:
     logger.info(" neuromorphic_kernels loaded successfully")
 else:
-    logger.warning(" neuromorphic_kernels not available - using fallback")
+    logger.debug("neuromorphic_kernels not available - using fallback")
 
 # Verify TPU v4-32 availability
 TPU_V4_AVAILABLE = False
@@ -197,7 +197,7 @@ class TpuV4AdaptiveOps:
                 self.logger.info(f"Initialized with {len(self.devices)} TPU devices")
             else:
                 self.devices = []
-                self.logger.warning("TPU v4 not available, using fallback mode")
+                self.logger.debug("TPU v4 not available, using fallback mode")
             
             self.initialized = True
             return True

@@ -1,5 +1,5 @@
 """
-Agent Executor for Capibara5 N8N Integration
+Agent Executor for CapibaraGPT v3 N8N Integration
 ===========================================
 
 Executes n8n workflows using Capibara agents with intelligent orchestration,

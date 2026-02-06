@@ -1,42 +1,706 @@
 # TODOs - capibaraGPT v3
 
-## Agents
-- [ ] Implement real LLM integration (OpenAI, Anthropic, local models, etc.) — `agents/capibara_agent_factory.py:69`
-- [ ] Implement real Qdrant vector database connection — `agents/capibara_agent_factory.py:92`
+## Global (por carpeta)
 
-## Core
-- [ ] Use capibara's struct implementation (flax) — `core/optimization.py:81`
+### agents
+- [ ] # Simulate gathering from different source types - `agents\advanced_behaviors.py:249`
+- [ ] main_code = "# Generated code placeholder" - `agents\advanced_behaviors.py:874`
+- [ ] return f"// {name} class placeholder" - `agents\advanced_behaviors.py:952`
+- [ ] # Simulate execution based on task type - `agents\behaviors.py:801`
+- [ ] raise ValueError(f"Missing required parameter {e} in spec for LLM type {llm_type}") - `agents\capibara_agent_factory.py:252`
+- [ ] # Simulate agent metrics - `agents\communication_behaviors.py:724`
+- [ ] # Simulate system metrics - `agents\communication_behaviors.py:760`
+- [ ] - Integration patterns between todos los sistemas ultra - `agents\demo_ultra_agents_interfaces.py:12`
+- [ ] # Simulate scenario execution - `agents\demo_ultra_agents_interfaces.py:300`
+- [ ] # Simulate benchmark runs - `agents\demo_ultra_agents_interfaces.py:399`
+- [ ] # Simulate work based on benchmark type - `agents\demo_ultra_agents_interfaces.py:403`
+- [ ] time.sleep(0.02)  # Simulate 20ms orchestration - `agents\demo_ultra_agents_interfaces.py:405`
+- [ ] time.sleep(0.01)  # Simulate 10ms binding - `agents\demo_ultra_agents_interfaces.py:407`
+- [ ] time.sleep(0.005)  # Simulate 5ms validation - `agents\demo_ultra_agents_interfaces.py:409`
+- [ ] time.sleep(0.008)  # Simulate 8ms contract execution - `agents\demo_ultra_agents_interfaces.py:411`
+- [ ] # Simulate collaborative project - `agents\examples.py:507`
+- [ ] # Simulate workload with performance tracking - `agents\examples.py:658`
+- [ ] # Monitor performance (simulate monitoring) - `agents\examples.py:690`
+- [ ] # Simulate adaptation based on performance - `agents\examples.py:699`
+- [ ] Ejecutar todos los ejemplos de patrones Factory y Strategy. - `agents\examples.py:730`
+- [ ] # Placeholder classes for fallback - `agents\factories.py:54`
+- [ ] # Simulate intelligent task analysis - `agents\ultra_agent_orchestrator.py:459`
+- [ ] # Simulate phase execution - `agents\ultra_agent_orchestrator.py:608`
+- [ ] # Simulate agent work - `agents\ultra_agent_orchestrator.py:612`
+- [ ] agent_output = self._simulate_agent_execution(agent, phase_name) - `agents\ultra_agent_orchestrator.py:613`
+- [ ] phase_result["metrics"]["completion_time_ms"] = 100  # Simulated - `agents\ultra_agent_orchestrator.py:616`
+- [ ] # Simulate collaboration - `agents\ultra_agent_orchestrator.py:631`
+- [ ] def _simulate_agent_execution(self, agent: Dict[str, Any], phase_name: str) -> Dict[str, Any]: - `agents\ultra_agent_orchestrator.py:637`
+- [ ] """Simulate agent execution for a specific phase.""" - `agents\ultra_agent_orchestrator.py:638`
+- [ ] "coordination_efficiency": 0.9,  # Simulated - `agents\ultra_agent_orchestrator.py:683`
+- [ ] "overall_quality": 0.85  # Simulated - `agents\ultra_agent_orchestrator.py:684`
+- [ ] # Simulate agent assignment - `agents\ultra_agent_orchestrator.py:780`
 
-## Pipeline
-- [ ] Implement stage-specific execution — `pipeline/run_pipeline.py:196`
+### core
+- [ ] Logs warnings for any missing required keys. - `core\config.py:222`
+- [ ] logger.warning(f"Missing required config: {key}") - `core\config.py:240`
+- [ ] """Decorator placeholder for distributed JIT compilation. - `core\config.py:459`
+- [ ] This decorator is a placeholder for distributed just-in-time compilation - `core\config.py:461`
+- [ ] This is a placeholder implementation. Full functionality requires - `core\config.py:473`
+- [ ] """Decorator placeholder for model-sharded JIT compilation. - `core\config.py:488`
+- [ ] This is a placeholder for the full implementation. - `core\config.py:502`
+- [ ] """Decorator placeholder for batch-sharded JIT compilation. - `core\config.py:516`
+- [ ] This is a placeholder. Full implementation requires JAX pmap - `core\config.py:529`
+- [ ] This is a placeholder for JAX mesh creation functionality. - `core\config.py:547`
+- [ ] None: Placeholder return value. Full implementation would return JAX Mesh object. - `core\config.py:557`
+- [ ] BATCH_SHARDING = None  # Placeholder for batch sharding specification - `core\config.py:568`
+- [ ] MODEL_SHARDING = None  # Placeholder for model sharding specification - `core\config.py:569`
+- [ ] HYBRID_SHARDING = None  # Placeholder for hybrid (data + model) sharding - `core\config.py:570`
+- [ ] TPU_DTYPE = None  # Placeholder for TPU-optimized data type (typically bfloat16) - `core\config.py:571`
+- [ ] def mock_generate(prompt: str, **kwargs) -> str: - `core\cot_27_nuclei_complete.py:623`
+- [ ] core_model_generate_fn=mock_generate, - `core\cot_27_nuclei_complete.py:628`
+- [ ] raise ImportError("jax module found but missing jit — likely project shim") - `core\decorators.py:31`
+- [ ] logger.warning(f"Config file missing: {config_path}") - `core\inference.py:451`
+- [ ] This module gracefully handles missing dependencies (psutil, JAX). If psutil - `core\memory_monitors.py:46`
+- [ ] This method is designed to be safe to call even if dependencies are missing. - `core\memory_monitors.py:167`
+- [ ] Cleanup operations are best-effort. Missing APIs or backends are - `core\memory_monitors.py:174`
+- [ ] usage may differ. Missing or incomplete APIs result in 0.0 return value. - `core\memory_monitors.py:283`
+- [ ] # Simulate training - `core\meta_loop.py:320`
+- [ ] # Simulate variable performance - `core\meta_loop.py:322`
+- [ ] # Current hyperparameters (simulated) - `core\meta_loop.py:326`
+- [ ] >>> # Simulate primitive calls - `core\metrics.py:359`
+- [ ] # Simulate output embedding for verification - `core\modular_model.py:581`
+- [ ] # Simulate training with multiple tasks - `core\nested_meta_loop.py:583`
+- [ ] # Simulate performance (with some tasks and noise) - `core\nested_meta_loop.py:587`
+- [ ] def field(*, pytree_node: bool = True, default=dataclasses.MISSING, - `core\optimization.py:141`
+- [ ] default_factory=dataclasses.MISSING): - `core\optimization.py:142`
+- [ ] if default is not dataclasses.MISSING: - `core\optimization.py:155`
+- [ ] elif default_factory is not dataclasses.MISSING: - `core\optimization.py:157`
+- [ ] # Simulated routing network parameters - `core\self_modifying_router.py:144`
+- [ ] # Simulate routing with varying performance - `core\self_modifying_router.py:714`
+- [ ] # Simulate input - `core\self_modifying_router.py:716`
+- [ ] # Simulate performance feedback - `core\self_modifying_router.py:722`
+- [ ] ValueError: If tokens is a dictionary but missing 'input_ids' key. - `core\tokenizer.py:597`
+- [ ] raise ValueError("Missing 'input_ids' key in tokens dictionary.") - `core\tokenizer.py:608`
+- [ ] return self._simulated_vq_forward(input_data, embedding_dim=64) - `core\tpu_v6_vq_integration.py:365`
+- [ ] def _simulated_vq_forward(self, - `core\tpu_v6_vq_integration.py:370`
+- [ ] """Simulated adaptive processing for fallback scenarios.""" - `core\tpu_v6_vq_integration.py:373`
+- [ ] # Simulate adaptive enhancement with classical operations - `core\tpu_v6_vq_integration.py:375`
+- [ ] # Simulate adaptive superposition - `core\tpu_v6_vq_integration.py:381`
+- [ ] # Simulate adaptive entanglement - `core\tpu_v6_vq_integration.py:385`
+- [ ] # Simulate adaptive measurement - `core\tpu_v6_vq_integration.py:389`
+- [ ] 5. Fallback mechanisms for missing components - `core\ultra_core_integration.py:126`
+- [ ] # 2. Simulate workload - `core\adapters\integration_examples.py:168`
+- [ ] # Simulate intensive operation - `core\adapters\integration_examples.py:173`
+- [ ] time.sleep(0.1)  # Simulate processing - `core\adapters\integration_examples.py:176`
+- [ ] multilingual_text = "Hello everyone! Hola a todos! 大家好！" - `core\adapters\integration_examples.py:431`
+- [ ] # Simulate data processing - `core\adapters\integration_examples.py:611`
+- [ ] # Simulate model weights - `core\adapters\integration_examples.py:634`
+- [ ] raise NotImplementedError(f"Operation {operation} not implemented for TPU v4") - `core\adapters\kernel_abstraction_adapter.py:154`
+- [ ] raise NotImplementedError(f"Operation {operation} not implemented for Cython") - `core\adapters\kernel_abstraction_adapter.py:224`
+- [ ] raise NotImplementedError(f"Operation {operation} not implemented for Neuromorphic") - `core\adapters\kernel_abstraction_adapter.py:269`
+- [ ] # Simulated implementation - in a real case would interact with the system - `core\adapters\performance_adapter.py:533`
+- [ ] # Métodos de conveniencia - `core\adapters\quantization_adapter.py:947`
+- [ ] raise RuntimeError("Metrics backend unavailable (missing numpy/jax).") - `core\age_adaptation\metrics.py:43`
+- [ ] raise RuntimeError("Metrics backend unavailable (missing numpy/jax).") - `core\age_adaptation\metrics.py:63`
+- [ ] library is missing. - `core\backends\lazy_import.py:5`
+- [ ] return 0  # Placeholder - `core\backends\tpu_backend.py:329`
+- [ ] # Return placeholder values - `core\backends\utils.py:230`
+- [ ] # Simulate health check (in real implementation would check actual metrics) - `core\experts\moe_control_api.py:83`
+- [ ] # Simulate layer health metrics - `core\experts\moe_control_api.py:133`
+- [ ] # Simulate realistic metrics - `core\experts\moe_control_api.py:137`
+- [ ] # Simulate utilization metrics - `core\experts\moe_control_api.py:190`
+- [ ] # Simulate real-time metrics - `core\experts\moe_control_api.py:359`
+- [ ] # For now, we'll simulate historical data - `core\experts\moe_control_api.py:472`
+- [ ] # Generate simulated historical data - `core\experts\moe_control_api.py:477`
+- [ ] # Simulate realistic performance trends - `core\experts\moe_control_api.py:484`
+- [ ] # Simulate training process - `core\experts\moe_training.py:189`
+- [ ] # Simulate realistic training metrics - `core\experts\moe_training.py:196`
+- [ ] # Simulate routing entropy (should increase with better routing) - `core\experts\moe_training.py:205`
+- [ ] # Simulate expert utilization - `core\experts\moe_training.py:208`
+- [ ] # Simulate improvement based on training progress - `core\experts\moe_training.py:237`
+- [ ] # Simulate expert performance evaluation - `core\experts\moe_training.py:377`
+- [ ] # Simulated parameters (in real implementation, these would be neural network weights) - `core\experts\nested_experts.py:118`
+- [ ] # Simulate forward pass (in real implementation, this would be neural network forward) - `core\experts\nested_experts.py:160`
+- [ ] # Simulate parameter update (in real implementation, this would be gradient descent) - `core\experts\nested_experts.py:195`
+- [ ] # Simulate some forward passes - `core\experts\nested_experts.py:926`
+- [ ] # Simulate input - `core\experts\nested_experts.py:929`
+- [ ] # Placeholder para mantener la interfaz estable - `core\kernels\tpu_v4_wrappers.py:75`
+- [ ] query: Optional query for retrieval (not implemented in basic version) - `core\memory\continuum_memory.py:181`
+- [ ] query: Query (could be embeddings, not implemented in basic version) - `core\memory\continuum_memory.py:315`
+- [ ] # Simulate memory operations - `core\memory\continuum_memory.py:651`
+- [ ] # Simulate feedback (in real scenario, this would come from user/system) - `core\observers\examples.py:254`
+- [ ] # Simulate various load conditions - `core\observers\examples.py:278`
+- [ ] # Process requests concurrently to simulate load - `core\observers\examples.py:292`
+- [ ] on computed gradients. The base implementation is a placeholder that - `core\optimizers\optimizer.py:240`
+- [ ] # Basic optimization step (placeholder - extend for actual algorithm) - `core\optimizers\optimizer.py:269`
+- [ ] If dependencies are missing (e.g., Optax not installed), the imports - `core\optimizers\__init__.py:36`
+- [ ] # Fallback if dependencies are missing - `core\optimizers\__init__.py:49`
+- [ ] # Simulate TPU kernel processing (fallback to simple operations) - `core\pipelines\advanced_rag_pipeline.py:327`
+- [ ] issues.append(f"Missing required metadata field: {field}") - `core\pipelines\rag_data_pipeline.py:301`
+- [ ] """Simulate a correction loop and return a final verification snapshot.""" - `core\verification\constitutional_ai.py:163`
+- [ ] # Simulated improvement: nudge scores to safer region deterministically - `core\verification\constitutional_ai.py:167`
 
-## Config
-- [ ] Implement actual config validation logic — `config/__init__.py:61`
-- [ ] Implement file-based config validation — `config/__init__.py:66`
+### data
+- [ ] # Placeholder for real-time API loading - `data\ultra_data_orchestrator.py:625`
+- [ ] return {"type": "fallback", "name": dataset_name, "data": "placeholder_data"} - `data\ultra_data_orchestrator.py:649`
+- [ ] "gc_content_estimate": np.random.uniform(0.3, 0.7),  # Mock for now - `data\datasets\genomic\alphagenome_training_generator.py:167`
+- [ ] "repeat_content_estimate": np.random.uniform(0.1, 0.5)  # Mock for now - `data\datasets\genomic\alphagenome_training_generator.py:168`
+- [ ] # For now, generate simulated data - `data\datasets\genomic\genomic_datasets.py:119`
+- [ ] # Generate simulated expression matrix - `data\datasets\genomic\genomic_datasets.py:184`
+- [ ] # Create placeholder and instructions - `data\datasets\multimodal\emotional_audio_datasets.py:426`
+- [ ] # Placeholder for future dataset expansions - `data\datasets\multimodal\__init__.py:7`
+- [ ] # Simulated experimental data - `data\datasets\physics\__init__.py:113`
+- [ ] # Simulate particle collision data - `data\datasets\physics\__init__.py:117`
+- [ ] # Simulated loading - in real implementation would load actual data - `data\datasets\robotics\__init__.py:80`
+- [ ] 'data': f"[Simulated {dataset_name} data]", - `data\datasets\robotics\__init__.py:86`
+- [ ] def simulate_download_status(self, dataset_id: str) -> Dict[str, Any]: - `data\datasets\systems\systems_logs_datasets.py:344`
+- [ ] """Simulate the download status of a dataset.""" - `data\datasets\systems\systems_logs_datasets.py:345`
+- [ ] logger.warning(f"Document at {path}:{line_num} missing 'text' field") - `data\processors\semantic_deduplication.py:197`
+- [ ] missing_files = [] - `data\tools\validate_robotics_integration.py:30`
+- [ ] missing_files.append(file) - `data\tools\validate_robotics_integration.py:34`
+- [ ] if missing_files: - `data\tools\validate_robotics_integration.py:38`
+- [ ] logger.error(f" ERROR: Missing files: {missing_files}") - `data\tools\validate_robotics_integration.py:39`
+- [ ] missing = [] - `data\tools\validate_robotics_simple.py:119`
+- [ ] missing.append(keyword) - `data\tools\validate_robotics_simple.py:122`
+- [ ] if missing: - `data\tools\validate_robotics_simple.py:124`
+- [ ] logger.warning(f"   ️  Palabras clave faltantes: {missing}") - `data\tools\validate_robotics_simple.py:125`
+- [ ] return len(missing) == 0 - `data\tools\validate_robotics_simple.py:135`
+- [ ] errors.append(f"Missing directory: {dir_path}") - `data\tools\validate_structure.py:43`
+- [ ] errors.append(f"Missing file: {dir_name}/{file_name}") - `data\tools\validate_structure.py:99`
+- [ ] errors.append(f"Missing __init__.py: {init_path}") - `data\tools\validate_structure.py:118`
 
-## Training
-- [ ] Initialize perplexity model (GPT-2 or similar for scoring) — `training/data_preprocessing/quality_filter.py:359`
-- [ ] Implement perplexity calculation and filtering — `training/data_preprocessing/quality_filter.py:381`
-- [ ] Implement gradient-based importance scoring — `training/data_lineage/dataset_parameter_controller.py:207`
-- [ ] Implement actual influence calculation — `training/data_lineage/dataset_parameter_controller.py:215`
+### docs
+- [ ] # Add project root to path for autodoc - `docs\conf.py:19`
+- [ ] 'sphinx.ext.autodoc',           # Auto-generate docs from docstrings - `docs\conf.py:33`
+- [ ] 'sphinx.ext.todo',              # Support TODOs - `docs\conf.py:38`
+- [ ] # -- Options for autodoc ----------------------------------------------------- - `docs\conf.py:91`
+- [ ] autodoc_default_options = { - `docs\conf.py:93`
+- [ ] autodoc_typehints = 'description' - `docs\conf.py:102`
+- [ ] autodoc_typehints_format = 'short' - `docs\conf.py:103`
+- [ ] # Mock imports for modules that might not be available - `docs\conf.py:105`
+- [ ] autodoc_mock_imports = [ - `docs\conf.py:106`
+- [ ] # -- Options for todo extension ---------------------------------------------- - `docs\conf.py:153`
+- [ ] todo_include_todos = True - `docs\conf.py:155`
 
-## Datasets
-- [ ] Implement download and processing (emotional audio) — `data/datasets/multimodal/emotional_audio_datasets.py:342`
-- [ ] Implement download with authentication (emotional audio) — `data/datasets/multimodal/emotional_audio_datasets.py:361`
+### inference
+- [ ] # For now, we simulate the structure - `inference\hybrid_inference_engine.py:160`
+- [ ] # Create mock parameters for demo - `inference\hybrid_inference_engine.py:167`
+- [ ] logger.warning("Using mock parameters for demo") - `inference\hybrid_inference_engine.py:168`
+- [ ] # For now, we simulate with chunks - `inference\hybrid_inference_engine.py:243`
+- [ ] await asyncio.sleep(0.05)  # Simulate generation speed - `inference\hybrid_inference_engine.py:249`
+- [ ] # Fallback: generate complete and simulate streaming - `inference\hybrid_inference_engine.py:461`
+- [ ] # Load model parameters (mock implementation) - `inference\engines\advanced_quantized_engine.py:95`
+- [ ] # Mock implementation - in real scenario, load from checkpoint - `inference\engines\advanced_quantized_engine.py:178`
+- [ ] # Simulate loading different layer types - `inference\engines\advanced_quantized_engine.py:181`
+- [ ] await asyncio.sleep(0.1)  # Simulate I/O delay - `inference\engines\advanced_quantized_engine.py:207`
+- [ ] await asyncio.sleep(0.1)  # Simulate processing delay - `inference\engines\advanced_quantized_engine.py:222`
+- [ ] await asyncio.sleep(0.1)  # Simulate optimization time - `inference\engines\advanced_quantized_engine.py:450`
+- [ ] await asyncio.sleep(0.1)  # Simulate optimization time - `inference\engines\advanced_quantized_engine.py:461`
+- [ ] # Mock implementation - in real scenario, measure actual memory usage - `inference\engines\advanced_quantized_engine.py:475`
+- [ ] # Simulate token generation - `inference\engines\quantized_engine.py:399`
+- [ ] # Mock next token prediction - `inference\engines\quantized_engine.py:401`
+- [ ] # Simulate KV-cache updates - `inference\engines\quantized_engine.py:406`
+- [ ] # Mock K,V tensors - `inference\engines\quantized_engine.py:408`
+- [ ] k_mock = np.random.randn(seq_len, num_heads, head_dim).astype(np.float16) - `inference\engines\quantized_engine.py:410`
+- [ ] v_mock = np.random.randn(seq_len, num_heads, head_dim).astype(np.float16) - `inference\engines\quantized_engine.py:411`
+- [ ] self.kv_cache.add_kv_to_cache(0, k_mock, v_mock)  # Layer 0 - `inference\engines\quantized_engine.py:413`
+- [ ] # Mock fallback implementation - `inference\engines\quantized_engine.py:432`
+- [ ] # Placeholder implementation - `inference\quantization\calibration.py:274`
+- [ ] # Simulate quantization and dequantization - `inference\quantization\calibration.py:533`
+- [ ] validation_results['issues'].append(f'Block {block_id} missing from cache') - `inference\quantization\kv_cache_int8.py:604`
 
-## Sub-models
-- [ ] Connect to RAG/Knowledge Base for evidence retrieval — `sub_models/csa_expert.py:332`
+### interfaces
+- [ ] missing_methods = [] - `interfaces\ultra_interface_system.py:651`
+- [ ] missing_methods.append(method_name) - `interfaces\ultra_interface_system.py:655`
+- [ ] if missing_methods: - `interfaces\ultra_interface_system.py:661`
+- [ ] validation_result["errors"].extend([f"Missing method: {m}" for m in missing_methods]) - `interfaces\ultra_interface_system.py:662`
+- [ ] quality_score = 0.9  # Simulated quality assessment - `interfaces\ultra_interface_system.py:923`
 
-## Services
-- [ ] Add detailed description (system_info) — `utils/system_info.py:23`
-- [ ] Add detailed description (tts) — `services/tts.py:14`
-- [ ] Implement service-specific logic (text_to_gen) — `services/meta_generation/text_to_gen_service.py:482`
+### jax
+- [ ] """Mock jit decorator.""" - `jax\activations.py:19`
+- [ ] # Placeholder for JAX API utilities - `jax\api_util.py:17`
+- [ ] # Placeholder functions - `jax\capibara_random.py:219`
+- [ ] _base_jax = None  # not tenemos JAX estándar, usamos nuestro mock - `jax\compat.py:14`
+- [ ] Módulo JAX (estándar or mock) - `jax\compat.py:27`
+- [ ] # always use nuestro mock JAX for CapibaraGPT - `jax\compat.py:29`
+- [ ] # create mock JAX compatible - `jax\compat.py:31`
+- [ ] class MockJAX: - `jax\compat.py:32`
+- [ ] self.random = MockRandom() - `jax\compat.py:34`
+- [ ] """Mock jit - acepta todos los argumentos.""" - `jax\compat.py:37`
+- [ ] return [MockDevice()] - `jax\compat.py:53`
+- [ ] return MockJAX() - `jax\compat.py:55`
+- [ ] Módulo numpy de JAX (estándar or mock) - `jax\compat.py:62`
+- [ ] # create un mock simple for testing - `jax\compat.py:67`
+- [ ] class MockJNP: - `jax\compat.py:69`
+- [ ] return MockJNP() - `jax\compat.py:73`
+- [ ] class MockRandom: - `jax\compat.py:75`
+- [ ] class MockLax: - `jax\compat.py:95`
+- [ ] """Mock LAX module with common operations.""" - `jax\compat.py:96`
+- [ ] class MockLib: - `jax\compat.py:123`
+- [ ] """Mock JAX lib module.""" - `jax\compat.py:124`
+- [ ] self.xla_bridge = MockXLABridge() - `jax\compat.py:127`
+- [ ] self.xla_client = MockXLAClient() - `jax\compat.py:128`
+- [ ] class MockXLABridge: - `jax\compat.py:130`
+- [ ] """Mock XLA bridge.""" - `jax\compat.py:131`
+- [ ] return MockXLABackend() - `jax\compat.py:134`
+- [ ] class MockXLAClient: - `jax\compat.py:136`
+- [ ] """Mock XLA client.""" - `jax\compat.py:137`
+- [ ] class MockXLABackend: - `jax\compat.py:140`
+- [ ] """Mock XLA backend.""" - `jax\compat.py:141`
+- [ ] class MockDevice: - `jax\compat.py:146`
+- [ ] class MockArray: - `jax\core.py:37`
+- [ ] class MockDtype: - `jax\core.py:42`
+- [ ] class MockNumpy: - `jax\core.py:46`
+- [ ] ndarray = MockArray - `jax\core.py:47`
+- [ ] dtype = MockDtype - `jax\core.py:48`
+- [ ] def array(self, x): return MockArray(x) - `jax\core.py:49`
+- [ ] np = MockNumpy() - `jax\core.py:50`
+- [ ] """Extended dtype support (placeholder).""" - `jax\dtypes.py:46`
+- [ ] """PRNG key dtype (placeholder).""" - `jax\dtypes.py:50`
+- [ ] # missing or outdated. Because _write_version(...) modifies the copy of - `jax\version.py:134`
+- [ ] class MockXla: - `jax\xla.py:12`
+- [ ] """Mock XLA for compatibility.""" - `jax\xla.py:13`
+- [ ] """Mock compile.""" - `jax\xla.py:17`
+- [ ] """Mock execute.""" - `jax\xla.py:22`
+- [ ] xla = MockXla() - `jax\xla.py:25`
+- [ ] xla_interpreters = MockXla() - `jax\xla.py:26`
+- [ ] class _MockDevice: - `jax\__init__.py:471`
+- [ ] return f"MockDevice(platform={self.platform!r})" - `jax\__init__.py:479`
+- [ ] return [_MockDevice("cpu")] - `jax\__init__.py:485`
+- [ ] class MockNumpy: - `jax\experimental\mesh_utils.py:12`
+- [ ] np = MockNumpy() - `jax\experimental\mesh_utils.py:15`
+- [ ] class MockDeviceMesh: - `jax\experimental\mesh_utils.py:45`
+- [ ] return f"MockDeviceMesh(shape={self.shape}, devices={len(self.devices)})" - `jax\experimental\mesh_utils.py:52`
+- [ ] return MockDeviceMesh(mesh_shape, devices) - `jax\experimental\mesh_utils.py:54`
+- [ ] return {"used": 0, "total": 1024*1024*1024}  # Mock 1GB - `jax\experimental\profiler.py:14`
+- [ ] def simulate_lif_dynamics(self, input_currents: Any, - `jax\tpu_v4\neuromorphic_kernels.py:168`
+- [ ] """Simulates LIF neuron dynamics.""" - `jax\tpu_v4\neuromorphic_kernels.py:170`
+- [ ] spikes, voltages = lif_kernel.simulate_lif_dynamics(test_currents) - `jax\tpu_v4\neuromorphic_kernels.py:377`
+- [ ] fixes_applied.append("Created missing __init__.py") - `jax\tpu_v4\tpu_optimization.py:283`
+- [ ] # Mock gradient - returns zeros of same shape - `jax\_src\core.py:91`
 
-## JAX / TPU v4 Kernels (`jax/tpu_v4/scan_kernels.cc`)
-- [ ] Implementar llamada a kernel TPU específico — `:130`
-- [ ] Implementar propagación de carries — `:134`
-- [ ] Implementar aplicación final — `:137`
-- [ ] Implementar operación vectorizada en TPU — `:183`
-- [ ] Implementar scan de ventana en TPU — `:230`
-- [ ] Implementar cumulative ops paralelas — `:271`
-- [ ] Implementar cumulative ops secuenciales — `:274`
+### layers
+- [ ] # Fallback module factory (used when JAX/Flax missing) - `layers\jax_compat.py:34`
+- [ ] # For anything else, return a placeholder string so class bodies - `layers\jax_compat.py:122`
+- [ ] raise NotImplementedError("BitNet158 not implemented - JAX/Flax required") - `layers\sparsity\__init__.py:57`
+- [ ] raise NotImplementedError("Conv1DBlock not implemented - JAX/Flax required") - `layers\sparsity\__init__.py:61`
+- [ ] raise NotImplementedError("SparseCapibara not implemented - JAX/Flax required") - `layers\sparsity\__init__.py:66`
+- [ ] raise NotImplementedError("AffineQuantizer not implemented - JAX/Flax required") - `layers\sparsity\__init__.py:71`
+- [ ] raise NotImplementedError("MixtureOfRookies not implemented - JAX/Flax required") - `layers\sparsity\__init__.py:76`
+
+### models
+- [ ] Sin issues detectadas por patrones (TODO/FIXME/mock/simulated/missing).
+
+### modules
+- [ ] ### 3. Add missing decorators - `modules\analysis_modules_and_jax_decorators.md:171`
+- [ ] | `@jax.vmap` | 0 | 0 |  Missing | - `modules\analysis_modules_and_jax_decorators.md:196`
+- [ ] | `@jax.remat` | 0 | 0 |  Missing | - `modules\analysis_modules_and_jax_decorators.md:197`
+- [ ] | **TPU optimizations** |  Partial | Missing vectorization and rematerialization | - `modules\analysis_modules_and_jax_decorators.md:223`
+- [ ] 3. **Medium term**: Add missing optimizations - `modules\analysis_modules_and_jax_decorators.md:230`
+- [ ] # Simulate feature extraction and normalization - `modules\specialized_processors.py:564`
+- [ ] """Extract text features (simulated).""" - `modules\specialized_processors.py:591`
+- [ ] # Create module instance (placeholder for current testing) - `modules\ultra_modules_demo.py:280`
+- [ ] # Simulate performance testing - `modules\ultra_modules_demo.py:543`
+- [ ] # Simulate timing measurements - `modules\ultra_modules_demo.py:553`
+- [ ] # Simulate processing time - `modules\ultra_modules_demo.py:559`
+- [ ] # Simulate feature availability check - `modules\ultra_modules_demo.py:591`
+- [ ] available = True  # Placeholder - `modules\ultra_modules_demo.py:592`
+- [ ] Sistema de orquestación ultra-avanzada for todos los módulos: - `modules\ultra_module_orchestrator.py:5`
+- [ ] """Orquestador ultra-advanced for todos los módulos del sistema.""" - `modules\ultra_module_orchestrator.py:165`
+- [ ] self.expert_soup_manager = "expert_soup_placeholder" - `modules\ultra_module_orchestrator.py:771`
+- [ ] """initialization optimizada de todos los sistemas.""" - `modules\personality\human_gender_personality.py:682`
+- [ ] # ==================== MÉTODOS DE UTILIDAD ==================== - `modules\personality\human_gender_personality.py:1147`
+
+### pipeline
+- [ ] Sin issues detectadas por patrones (TODO/FIXME/mock/simulated/missing).
+
+### prompts
+- [ ] # Initialize model and parameters (mock for testing) - `prompts\prompt_template.py:355`
+- [ ] """Module placeholder.""" - `prompts\__init__.py:1`
+
+### reports
+- [ ] - Añadir validadores que aseguren que todo objeto persistente tenga `@id`, `@type` y `@context`. - `reports\jsonld_toon_assessment.md:73`
+
+### safety
+- [ ] # Simulate user message - `safety\intervention_system.py:717`
+- [ ] message = "Las voces me dicen que todos están en mi contra y que el gobierno me vigila" - `safety\intervention_system.py:719`
+- [ ] r"(?i)(todos?\s+estan?\s+confabulando|conspirac[ií][oó]n\s+contra\s+m[ií])", - `safety\mental_health_monitor.py:53`
+- [ ] r"(?i)(nada\s+es\s+real|todo\s+es\s+una\s+simulaci[oó]n|matrix|realidad\s+falsa)", - `safety\mental_health_monitor.py:65`
+- [ ] r"(?i)(conexiones?\s+ocultas?|patrones?\s+en\s+todo|números?\s+me\s+persiguen)", - `safety\mental_health_monitor.py:69`
+- [ ] r"(?i)(significados?\s+ocultos?|mensajes?\s+en\s+todo|señales?\s+por\s+doquier)" - `safety\mental_health_monitor.py:70`
+
+### scripts
+- [ ] "--cov-report=term-missing", - `scripts\run_tests.py:103`
+- [ ] class MockModel: - `scripts\train_synthetic.py:78`
+- [ ] Mock model for synthetic training validation. - `scripts\train_synthetic.py:80`
+- [ ] Simulates forward pass and loss computation without actual model. - `scripts\train_synthetic.py:82`
+- [ ] # Initialize mock weights - `scripts\train_synthetic.py:89`
+- [ ] # Embedding lookup (simulated) - `scripts\train_synthetic.py:117`
+- [ ] # Create mock model - `scripts\train_synthetic.py:257`
+- [ ] model = MockModel(config, backend) - `scripts\train_synthetic.py:258`
+- [ ] return False, f"Missing {description}: {path}" - `scripts\validate_project.py:28`
+- [ ] results.append((cpu_path.exists(), f"Backend CPU: {'file exists' if cpu_path.exists() else 'missing'}")) - `scripts\validate_project.py:63`
+- [ ] results.append((gpu_path.exists(), f"Backend GPU: {'file exists' if gpu_path.exists() else 'missing'}")) - `scripts\validate_project.py:66`
+- [ ] results.append((tpu_path.exists(), f"Backend TPU: {'file exists' if tpu_path.exists() else 'missing'}")) - `scripts\validate_project.py:69`
+- [ ] results.append((False, f"Missing tests directory: {subdir}/")) - `scripts\validate_project.py:111`
+
+### services
+- [ ] # Use standard n8n execution (simulated) - `services\automation\agent_executor.py:340`
+- [ ] """Execute a node in standard n8n mode (simulated).""" - `services\automation\agent_executor.py:481`
+- [ ] # Simulate different node behaviors - `services\automation\agent_executor.py:494`
+- [ ] result["response"] = {"status": 200, "data": "simulated response"} - `services\automation\agent_executor.py:498`
+- [ ] result["output"] = f"Simulated output for {node.type}" - `services\automation\agent_executor.py:502`
+- [ ] Some execution paths are simulated when external services are unavailable. - `services\automation\n8n_service.py:5`
+- [ ] # For now, simulate execution - `services\automation\n8n_service.py:576`
+- [ ] # Simulate processing time - `services\automation\n8n_service.py:581`
+- [ ] # For now, show a placeholder - `services\automation\web_ui.py:242`
+- [ ] placeholder="Example: Send me an email when someone submits the contact form" required></textarea> - `services\automation\web_ui.py:325`
+- [ ] class MockBIMGenerator: - `services\bim_generation\text_to_bim_service.py:309`
+- [ ] """Generador BIM mock para demostración""" - `services\bim_generation\text_to_bim_service.py:310`
+- [ ] logger.info("️ Mock BIM Generator initialized") - `services\bim_generation\text_to_bim_service.py:313`
+- [ ] """Genera modelo BIM mock""" - `services\bim_generation\text_to_bim_service.py:316`
+- [ ] self.generator = MockBIMGenerator()  # Default to mock for demo - `services\bim_generation\text_to_bim_service.py:385`
+- [ ] bim_tool_used="mock_generator", - `services\bim_generation\text_to_bim_service.py:435`
+- [ ] # Métodos de utilidad - `services\bim_generation\text_to_bim_service.py:494`
+- [ ] MockBIMGenerator - `services\bim_generation\__init__.py:66`
+- [ ] "mock_bim": True,  # Siempre disponible para testing - `services\bim_generation\__init__.py:136`
+- [ ] class MockGenomicAnalyzer: - `services\genomic_analysis\text_to_genomic_service.py:327`
+- [ ] """Analizador genómico mock para demostración (mientras se integran herramientas reales)""" - `services\genomic_analysis\text_to_genomic_service.py:328`
+- [ ] logger.info(" Mock Genomic Analyzer initialized (60B model simulation)") - `services\genomic_analysis\text_to_genomic_service.py:331`
+- [ ] mock_variants = [ - `services\genomic_analysis\text_to_genomic_service.py:337`
+- [ ] "variants_found": len(mock_variants), - `services\genomic_analysis\text_to_genomic_service.py:363`
+- [ ] "variants": mock_variants, - `services\genomic_analysis\text_to_genomic_service.py:364`
+- [ ] self.analyzer = MockGenomicAnalyzer() - `services\genomic_analysis\text_to_genomic_service.py:468`
+- [ ] # Métodos de utilidad - `services\genomic_analysis\text_to_genomic_service.py:666`
+- [ ] # Servicios disponibles (mocks para demostración) - `services\meta_generation\multi_service_orchestrator.py:297`
+- [ ] "print3d": self._mock_print3d_service, - `services\meta_generation\multi_service_orchestrator.py:299`
+- [ ] "circuit": self._mock_circuit_service, - `services\meta_generation\multi_service_orchestrator.py:300`
+- [ ] "code": self._mock_code_service, - `services\meta_generation\multi_service_orchestrator.py:301`
+- [ ] "cad": self._mock_cad_service, - `services\meta_generation\multi_service_orchestrator.py:302`
+- [ ] "api": self._mock_api_service - `services\meta_generation\multi_service_orchestrator.py:303`
+- [ ] # Esperar a que terminen todos los paralelos - `services\meta_generation\multi_service_orchestrator.py:405`
+- [ ] # Mock services para demostración - `services\meta_generation\multi_service_orchestrator.py:449`
+- [ ] async def _mock_print3d_service(self, params: Dict[str, Any]) -> Dict[str, Any]: - `services\meta_generation\multi_service_orchestrator.py:450`
+- [ ] """Mock del servicio Text-to-Print3D""" - `services\meta_generation\multi_service_orchestrator.py:451`
+- [ ] async def _mock_circuit_service(self, params: Dict[str, Any]) -> Dict[str, Any]: - `services\meta_generation\multi_service_orchestrator.py:476`
+- [ ] """Mock del servicio Text-to-Circuit""" - `services\meta_generation\multi_service_orchestrator.py:477`
+- [ ] async def _mock_code_service(self, params: Dict[str, Any]) -> Dict[str, Any]: - `services\meta_generation\multi_service_orchestrator.py:504`
+- [ ] """Mock del servicio Text-to-Code (firmware)""" - `services\meta_generation\multi_service_orchestrator.py:505`
+- [ ] async def _mock_cad_service(self, params: Dict[str, Any]) -> Dict[str, Any]: - `services\meta_generation\multi_service_orchestrator.py:532`
+- [ ] """Mock del servicio Text-to-CAD (ensamblaje)""" - `services\meta_generation\multi_service_orchestrator.py:533`
+- [ ] async def _mock_api_service(self, params: Dict[str, Any]) -> Dict[str, Any]: - `services\meta_generation\multi_service_orchestrator.py:557`
+- [ ] """Mock del servicio Text-to-API (control interface)""" - `services\meta_generation\multi_service_orchestrator.py:558`
+- [ ] - Verificar que todos los componentes estén disponibles - `services\meta_generation\multi_service_orchestrator.py:723`
+- [ ] """Métodos de envío""" - `services\meta_generation\payment_and_fulfillment.py:64`
+- [ ] supplier_payment.stripe_transfer_id = f"tr_mock_{order.order_id}_{supplier_payment.supplier_id}" - `services\meta_generation\payment_and_fulfillment.py:275`
+- [ ] # Costes de envío por método y región - `services\meta_generation\payment_and_fulfillment.py:319`
+- [ ] include_mock_mode: bool = True - `services\meta_generation\text_to_gen_service.py:108`
+- [ ] class MockCodeGenerator: - `services\meta_generation\text_to_gen_service.py:341`
+- [ ] """Mock code generator when components are not available""" - `services\meta_generation\text_to_gen_service.py:342`
+- [ ] """Generates mock code for the service""" - `services\meta_generation\text_to_gen_service.py:348`
+- [ ] logger.info(f" Generating mock service: {request.service_name}") - `services\meta_generation\text_to_gen_service.py:349`
+- [ ] # Simulate generation time - `services\meta_generation\text_to_gen_service.py:351`
+- [ ] mock_code = self._generate_mock_service_code(request) - `services\meta_generation\text_to_gen_service.py:377`
+- [ ] "mock_code_preview": mock_code, - `services\meta_generation\text_to_gen_service.py:385`
+- [ ] def _generate_mock_service_code(self, request: ServiceGenerationRequest) -> str: - `services\meta_generation\text_to_gen_service.py:390`
+- [ ] # Simulate processing - `services\meta_generation\text_to_gen_service.py:455`
+- [ ] self.mock_generator = MockCodeGenerator(self.config) - `services\meta_generation\text_to_gen_service.py:628`
+- [ ] logger.info(" Using mock code generator...") - `services\meta_generation\text_to_gen_service.py:689`
+- [ ] generation_result = await self.mock_generator.generate_service_code(request) - `services\meta_generation\text_to_gen_service.py:690`
+- [ ] # Create file structure (mock mode) - `services\meta_generation\text_to_gen_service.py:696`
+- [ ] await self._create_mock_files(request, generation_result) - `services\meta_generation\text_to_gen_service.py:698`
+- [ ] async def _create_mock_files(self, request: ServiceGenerationRequest, generation_result: Dict[str, Any]): - `services\meta_generation\text_to_gen_service.py:738`
+- [ ] """Creates mock files for demonstration""" - `services\meta_generation\text_to_gen_service.py:739`
+- [ ] f.write(generation_result["mock_code_preview"]) - `services\meta_generation\text_to_gen_service.py:749`
+- [ ] logger.info(f" Mock files created in {service_dir}") - `services\meta_generation\text_to_gen_service.py:815`
+- [ ] logger.error(f" Error creating mock files: {e}") - `services\meta_generation\text_to_gen_service.py:818`
+- [ ] class MockPrint3DGenerator: - `services\print3d_generation\text_to_print3d_service.py:367`
+- [ ] """Mock generator for Print3D models when E2B is not available.""" - `services\print3d_generation\text_to_print3d_service.py:368`
+- [ ] async def generate_print3d_mock(self, request: Print3DRequest) -> Print3DResult: - `services\print3d_generation\text_to_print3d_service.py:373`
+- [ ] """Generate a mock 3D model optimized for printing.""" - `services\print3d_generation\text_to_print3d_service.py:374`
+- [ ] logger.info(f"️ Generating mock Print3D model: {request.description[:100]}...") - `services\print3d_generation\text_to_print3d_service.py:375`
+- [ ] # Simulate generation time - `services\print3d_generation\text_to_print3d_service.py:377`
+- [ ] # Simulate print analysis - `services\print3d_generation\text_to_print3d_service.py:385`
+- [ ] volume = self._calculate_mock_volume(request) - `services\print3d_generation\text_to_print3d_service.py:386`
+- [ ] tool_used="mock_generator" - `services\print3d_generation\text_to_print3d_service.py:434`
+- [ ] def _calculate_mock_volume(self, request: Print3DRequest) -> float: - `services\print3d_generation\text_to_print3d_service.py:437`
+- [ ] # Initialize parser and mock generator - `services\print3d_generation\text_to_print3d_service.py:492`
+- [ ] self.mock_generator = MockPrint3DGenerator(self.config) - `services\print3d_generation\text_to_print3d_service.py:494`
+- [ ] # Fallback to mock generation - `services\print3d_generation\text_to_print3d_service.py:639`
+- [ ] logger.info(" Using mock Print3D generation (E2B tools not available)") - `services\print3d_generation\text_to_print3d_service.py:640`
+- [ ] result = await self.mock_generator.generate_print3d_mock(request) - `services\print3d_generation\text_to_print3d_service.py:641`
+- [ ] results["mock_generator"] = {"available": True, "status": "Always available"} - `services\print3d_generation\text_to_print3d_service.py:767`
+- [ ] """Placeholder that raises if TTS dependencies are missing.""" - `services\tts\__init__.py:12`
+- [ ] raise RuntimeError("TTS is unavailable because dependencies are missing.") - `services\tts\__init__.py:21`
+
+### sub_models
+- [ ] """Simulate world state evolution.""" - `sub_models\csa_expert_tpu_optimized.py:254`
+- [ ] diversity = jnp.ones_like(plausibility) * 0.7  # Placeholder - `sub_models\csa_expert_tpu_optimized.py:312`
+- [ ] self._simulate_scenarios_jit = jit( - `sub_models\csa_expert_tpu_optimized.py:393`
+- [ ] self._simulate_scenarios_impl, - `sub_models\csa_expert_tpu_optimized.py:394`
+- [ ] def _simulate_scenarios_impl(self, params, initial_state, hypothesis_features, num_steps): - `sub_models\csa_expert_tpu_optimized.py:424`
+- [ ] """Simulate world state evolution.""" - `sub_models\csa_expert_tpu_optimized.py:425`
+- [ ] # Simulate scenarios - `sub_models\csa_expert_tpu_optimized.py:468`
+- [ ] final_state, trajectory = self._simulate_scenarios_jit( - `sub_models\csa_expert_tpu_optimized.py:474`
+- [ ] final_state, trajectory = self._simulate_scenarios_impl( - `sub_models\csa_expert_tpu_optimized.py:479`
+- [ ] Esta es la update que lleva todos los sub-modelos al level ultra-advanced. - `sub_models\ultra_enhanced_integration.py:14`
+- [ ] logger.warning("️ SSM layers not available, using placeholder") - `sub_models\ultra_enhanced_integration.py:330`
+- [ ] Sistema de orquestación ultra-avanzada for todos los sub-modelos: - `sub_models\ultra_submodel_orchestrator.py:5`
+- [ ] """Orquestador ultra-advanced for todos los sub-modelos del sistema.""" - `sub_models\ultra_submodel_orchestrator.py:179`
+- [ ] logger.warning(f"SubModel type {submodel_type} not available or not implemented") - `sub_models\ultra_submodel_orchestrator.py:274`
+- [ ] return "adaptive_vq_placeholder"  # Placeholder for current enhanced model - `sub_models\ultra_submodel_orchestrator.py:292`
+- [ ] return "spike_ssm_placeholder"  # Placeholder for current enhanced model - `sub_models\ultra_submodel_orchestrator.py:300`
+- [ ] return "deep_dialog_placeholder"  # Placeholder for current enhanced model - `sub_models\ultra_submodel_orchestrator.py:308`
+- [ ] self.expert_soup_manager = "expert_soup_placeholder" - `sub_models\ultra_submodel_orchestrator.py:361`
+- [ ] # For now, return placeholder results - `sub_models\ultra_submodel_orchestrator.py:677`
+- [ ] # Simulate execution with input transformation - `sub_models\ultra_submodel_orchestrator.py:681`
+- [ ] if isinstance(submodel, str):  # Placeholder models - `sub_models\ultra_submodel_orchestrator.py:682`
+- [ ] return x  # Placeholder - `sub_models\ultra_submodel_orchestrator.py:686`
+- [ ] # For placeholder implementation, return first result - `sub_models\ultra_submodel_orchestrator.py:702`
+- [ ] """Module placeholder.""" - `sub_models\experimental\__init__.py:1`
+- [ ] output = x  # Placeholder - implement real convolution - `sub_models\mamba\mamba_module.py:331`
+- [ ] Describe an image using BLIP if available, otherwise return placeholder. - `sub_models\semiotic\mnemosyne_semio_module.py:298`
+- [ ] """Decorador placeholder for distributed_jit.""" - `sub_models\vision\capivision.py:49`
+
+### tests
+- [ ] f"It contains various words and sentences to simulate real data." - `tests\conftest.py:177`
+- [ ] """Check if GPU is available without crashing if torch is missing.""" - `tests\conftest.py:241`
+- [ ] """Check if TPU is available without crashing if jax is missing.""" - `tests\conftest.py:249`
+- [ ] - hidden_states: Simulated hidden states - `tests\fixtures\synthetic_data.py:108`
+- [ ] # Simulated hidden states (random but normalized) - `tests\fixtures\synthetic_data.py:119`
+- [ ] # Simulate input - `tests\integration\test_training_pipeline.py:43`
+- [ ] # Simulate attention - `tests\integration\test_training_pipeline.py:46`
+- [ ] # Simulated logits and labels - `tests\integration\test_training_pipeline.py:65`
+- [ ] """Test gradient computation (simulated).""" - `tests\integration\test_training_pipeline.py:85`
+- [ ] # Simulated parameters - `tests\integration\test_training_pipeline.py:88`
+- [ ] # Simulated input - `tests\integration\test_training_pipeline.py:92`
+- [ ] # Simulated model weights - `tests\integration\test_training_pipeline.py:265`
+- [ ] from unittest.mock import patch, MagicMock - `tests\security\test_security.py:20`
+- [ ] assert "@title_param" in query, "Must use parameterized placeholder" - `tests\security\test_security.py:82`
+- [ ] """All search fields must use @param placeholders.""" - `tests\security\test_security.py:106`
+- [ ] pytest.skip("e2b_sandbox_agent not importable (missing dependencies)") - `tests\security\test_security.py:142`
+- [ ] """No placeholder tokens like 'your_hf_token_here'.""" - `tests\security\test_security.py:332`
+- [ ] f"Placeholder tokens found:\n" + "\n".join(violations) - `tests\security\test_security.py:342`
+- [ ] from unittest.mock import patch, MagicMock - `tests\unit\test_benchmark_system.py:13`
+- [ ] assert c.get("missing", 42) == 42 - `tests\unit\test_config.py:32`
+- [ ] def test_get_missing_default(self): - `tests\unit\test_config.py:89`
+- [ ] assert mc.get_parameter("missing", 99) == 99 - `tests\unit\test_config.py:91`
+- [ ] def test_get_missing_module(self): - `tests\unit\test_config.py:115`
+- [ ] assert cm.get_config("missing") is None - `tests\unit\test_config_manager.py:28`
+- [ ] assert cm.get_value("missing", "x.y", default="fallback") == "fallback" - `tests\unit\test_config_manager.py:38`
+- [ ] def test_validate_config_missing_key(self, tmp_path): - `tests\unit\test_config_manager.py:52`
+- [ ] schema = {"name": str, "missing_key": int} - `tests\unit\test_config_manager.py:56`
+- [ ] # Simulate multiple accesses - `tests\unit\test_continuum_memory.py:114`
+- [ ] class TestRouterMock: - `tests\unit\test_core_model.py:233`
+- [ ] """Test router selection logic (mock implementation).""" - `tests\unit\test_core_model.py:234`
+- [ ] # Mock router output - `tests\unit\test_core_model.py:238`
+- [ ] class TestMambaSSMMock: - `tests\unit\test_core_model.py:255`
+- [ ] """Test Mamba/SSM operations (mock implementation).""" - `tests\unit\test_core_model.py:256`
+- [ ] # Mock SSM parameters - `tests\unit\test_core_model.py:264`
+- [ ] from unittest.mock import patch - `tests\unit\test_decorators.py:10`
+- [ ] from unittest.mock import patch, MagicMock - `tests\unit\test_memory_profiler.py:12`
+- [ ] """Test creating gate from a mock backend object.""" - `tests\unit\test_module_gate.py:222`
+- [ ] class MockBackend: - `tests\unit\test_module_gate.py:223`
+- [ ] gate = ModuleGate.from_backend_instance(MockBackend()) - `tests\unit\test_module_gate.py:225`
+- [ ] class MockBackend: - `tests\unit\test_module_gate.py:229`
+- [ ] gate = ModuleGate.from_backend_instance(MockBackend()) - `tests\unit\test_module_gate.py:232`
+- [ ] result = router.route("/missing") - `tests\unit\test_routing.py:36`
+- [ ] assert result["path"] == "/missing" - `tests\unit\test_routing.py:38`
+- [ ] # Simulate many steps - `tests\unit\test_self_modifying_router.py:391`
+- [ ] # Simulate many steps - `tests\unit\test_self_modifying_router.py:404`
+- [ ] # Simulate steps with varying performance - `tests\unit\test_self_modifying_router.py:435`
+- [ ] def test_dict_missing_key_raises(self): - `tests\unit\test_tokenizer.py:118`
+- [ ] pytest.skip("VQbitLayer unavailable (missing dependencies or not installed)") - `tests\unit\test_vq.py:11`
+
+### training
+- [ ] # Mock analysis - in real implementation, load and analyze model - `training\btx_training_system.py:449`
+- [ ] # Mock implementation - copy seed model files - `training\btx_training_system.py:464`
+- [ ] "gpu_devices": [0],  # Mock GPU allocation - `training\btx_training_system.py:484`
+- [ ] # Mock training data - `training\btx_training_system.py:494`
+- [ ] # Mock JAX model initialization - `training\btx_training_system.py:508`
+- [ ] # Mock non-JAX initialization - `training\btx_training_system.py:523`
+- [ ] model_params = {"mock_params": np.random.normal(0, 0.1, (1000,))} - `training\btx_training_system.py:524`
+- [ ] # Mock training loop - `training\btx_training_system.py:536`
+- [ ] # Simulate training progress - `training\btx_training_system.py:539`
+- [ ] # Mock loss and accuracy - `training\btx_training_system.py:544`
+- [ ] "parameter_count": 1000000000,  # Mock parameter count - `training\btx_training_system.py:558`
+- [ ] # Mock validation - `training\btx_training_system.py:566`
+- [ ] # Mock model saving - `training\btx_training_system.py:584`
+- [ ] # Mock integration process - `training\btx_training_system.py:660`
+- [ ] # Mock validation - `training\btx_training_system.py:673`
+- [ ] # Mock finetuning process - `training\btx_training_system.py:715`
+- [ ] # Simulate training progress - `training\btx_training_system.py:719`
+- [ ] # Mock validation results - `training\btx_training_system.py:775`
+- [ ] # Initialize model parameters (mock for demonstration) - `training\byte_level_training.py:473`
+- [ ] # Mock training step (replace with actual forward/backward pass) - `training\byte_level_training.py:498`
+- [ ] loss = self._mock_training_step(batch) - `training\byte_level_training.py:499`
+- [ ] def _mock_training_step(self, batch: Dict[str, jnp.ndarray]) -> float: - `training\byte_level_training.py:552`
+- [ ] """Mock training step for demonstration.""" - `training\byte_level_training.py:553`
+- [ ] # Simulate loss calculation - `training\byte_level_training.py:558`
+- [ ] mock_loss = np.random.uniform(5.0, 8.0) / (1 + self.step * 0.001)  # Decreasing loss - `training\byte_level_training.py:560`
+- [ ] return float(mock_loss) - `training\byte_level_training.py:562`
+- [ ] "datasets_missing": [], - `training\cascade_training_integration.py:171`
+- [ ] validation_result["datasets_missing"].append(dataset_name) - `training\cascade_training_integration.py:190`
+- [ ] "errors": [f"Datasets not ready: {validation['datasets_missing']}"], - `training\cascade_training_integration.py:246`
+- [ ] errors.append(f"Datasets not ready: {validation['datasets_missing']}") - `training\cascade_training_integration.py:287`
+- [ ] # Simulate embedding (in real implementation, use real embeddings) - `training\moe_hierarchical_router.py:505`
+- [ ] "uptime_seconds": (datetime.now() - datetime.now()).total_seconds(),  # Placeholder - `training\monitoring_dashboard.py:705`
+- [ ] # Simulate some metrics - `training\monitoring_dashboard.py:815`
+- [ ] # Simulate teacher outputs (in real implementation these would be actual models) - `training\unified_trainer.py:388`
+- [ ] jnp.ones((batch['inputs'].shape[0], 50257)) * 0.1  # Placeholder - `training\unified_trainer.py:390`
+- [ ] # Perform consensus voting (simulated) - `training\unified_trainer.py:401`
+- [ ] # Extract response embeddings (mock data for demonstration) - `training\consensus\advance_meta_consensus_integration.py:276`
+- [ ] # Mock input tokens for demonstration - `training\consensus\advance_meta_consensus_integration.py:308`
+- [ ] expert_responses = [{'response': 'mock_response', 'confidence': 0.9}] - `training\consensus\advance_meta_consensus_integration.py:333`
+- [ ] await asyncio.sleep(0.1)  # Mock consensus time - `training\consensus\advance_meta_consensus_integration.py:342`
+- [ ] # Mock quality assessment - `training\consensus\advance_meta_consensus_integration.py:356`
+- [ ] # Mock implementation - `training\consensus\advance_meta_consensus_integration.py:413`
+- [ ] # File missing, remove from index - `training\consensus\distributed_consensus_cache.py:496`
+- [ ] async def mock_expert_response(query: str, expert_id: str): - `training\consensus\distributed_consensus_cache.py:1019`
+- [ ] # Simulate expensive operation - `training\consensus\distributed_consensus_cache.py:1020`
+- [ ] result1 = await mock_expert_response("test query", "expert_1") - `training\consensus\distributed_consensus_cache.py:1030`
+- [ ] result2 = await mock_expert_response("test query", "expert_1") - `training\consensus\distributed_consensus_cache.py:1035`
+- [ ] errors.append(f"Missing '{field}' for model '{domain}'") - `training\consensus\huggingface_consensus_strategy.py:390`
+- [ ] # Simulate TPU v6-64 optimized inference - `training\consensus\integrated_consensus_strategy.py:460`
+- [ ] # Simulate TPU v6-64 inference with legal compliance - `training\consensus\integrated_consensus_strategy.py:514`
+- [ ] await asyncio.sleep(0.05)  # Simulate TPU v6-64 speed - `training\consensus\integrated_consensus_strategy.py:515`
+- [ ] # Return simulated response based on expert type - `training\consensus\integrated_consensus_strategy.py:524`
+- [ ] # Mock initialization for testing - `training\consensus\meta_consensus_comp_benchmark.py:565`
+- [ ] # Mock router model path - in real implementation, provide actual path - `training\consensus\meta_consensus_system.py:366`
+- [ ] # Mock configuration - in real implementation, provide actual paths and configs - `training\consensus\meta_consensus_system.py:386`
+- [ ] # Mock consensus generation based on routing decision - `training\consensus\meta_consensus_system.py:820`
+- [ ] mock_response = f"Based on the analysis from {len(routing_decision['selected_models'])} expert models, here's the consensus response to your query." - `training\consensus\meta_consensus_system.py:821`
+- [ ] response=mock_response, - `training\consensus\meta_consensus_system.py:825`
+- [ ] tokens_generated=len(mock_response.split()), - `training\consensus\meta_consensus_system.py:834`
+- [ ] # Mock metrics for unified consensus - `training\consensus\meta_consensus_system.py:846`
+- [ ] mock_metrics = { - `training\consensus\meta_consensus_system.py:847`
+- [ ] metrics=mock_metrics, - `training\consensus\meta_consensus_system.py:855`
+- [ ] mock_response = "This is a fallback response from the unified consensus strategy." - `training\consensus\meta_consensus_system.py:859`
+- [ ] response=mock_response, - `training\consensus\meta_consensus_system.py:863`
+- [ ] tokens_generated=len(mock_response.split()), - `training\consensus\meta_consensus_system.py:872`
+- [ ] # Mock bias detection - in real implementation, use bias detection models - `training\consensus\meta_consensus_system.py:931`
+- [ ] # Mock safety filtering - in real implementation, use safety models - `training\consensus\meta_consensus_system.py:937`
+- [ ] expert_names = [f"expert_{i}" for i in range(20)]  # Mock expert names - `training\consensus\optimized_consensus_router.py:371`
+- [ ] # Standard embedding generation (mock) - `training\consensus\optimized_consensus_router.py:505`
+- [ ] # Mock GPU embedding generation - `training\consensus\optimized_consensus_router.py:518`
+- [ ] # Mock TPU v6 embedding generation with JAX - `training\consensus\optimized_consensus_router.py:528`
+- [ ] expert_embeddings = np.random.random((num_experts, 768)).astype(np.float32)  # Mock embeddings - `training\consensus\optimized_consensus_router.py:546`
+- [ ] # Mock GPU calculation - `training\consensus\optimized_consensus_router.py:595`
+- [ ] # Cosine similarity calculation (mock) - `training\consensus\optimized_consensus_router.py:602`
+- [ ] # Mock GPU acceleration - in real implementation, use actual GPU operations - `training\consensus\optimized_meta_consensus.py:594`
+- [ ] # Mock response generation - in real implementation, call actual expert - `training\consensus\optimized_meta_consensus.py:797`
+- [ ] diversity_scores = np.random.random(num_responses).astype(np.float32)  # Mock diversity - `training\consensus\optimized_meta_consensus.py:902`
+- [ ] # Create mock embeddings for consensus calculation - `training\consensus\optimized_meta_consensus.py:911`
+- [ ] # Mock memory usage - `training\consensus\optimized_meta_consensus.py:948`
+- [ ] # Score refinements (placeholder - replace with real model) - `training\consensus\unified_consensus.py:470`
+- [ ] """Refinement quality scoring (placeholder).""" - `training\consensus\unified_consensus.py:523`
+- [ ] # Placeholder for entrenamiento real - `training\consensus\unified_consensus.py:682`
+- [ ] # Placeholder - en implementation real, carry modelos reales - `training\consensus\unified_consensus.py:714`
+- [ ] # Placeholder - en implementation real, carry modelos reales - `training\consensus\unified_consensus.py:731`
+- [ ] # Placeholder for entrenamiento real - `training\consensus\unified_consensus.py:801`
+- [ ] """Evalúa todos los modelos de una fase.""" - `training\consensus\unified_consensus.py:980`
+- [ ] # Placeholder for evaluación real - `training\consensus\unified_consensus.py:988`
+- [ ] 3. MISSING GRADIENT COMPUTATION IMPACT - `training\data_lineage\critical_analysis_inference.py:10`
+- [ ] MISSING_INFERENCE_MODE = "missing_inference_mode" - `training\data_lineage\critical_analysis_inference.py:29`
+- [ ] logger.warning("️ Full lineage system not available - running mock demo") - `training\data_lineage\demo_traceability_system.py:43`
+- [ ] class MockModel: - `training\data_lineage\demo_traceability_system.py:46`
+- [ ] """Mock model for demonstration purposes.""" - `training\data_lineage\demo_traceability_system.py:47`
+- [ ] self.parameters = self._create_mock_parameters() - `training\data_lineage\demo_traceability_system.py:51`
+- [ ] def _create_mock_parameters(self) -> Dict[str, jnp.ndarray]: - `training\data_lineage\demo_traceability_system.py:53`
+- [ ] """Create mock model parameters.""" - `training\data_lineage\demo_traceability_system.py:54`
+- [ ] self.mock_model = MockModel("300M") - `training\data_lineage\demo_traceability_system.py:93`
+- [ ] await self._run_mock_demo() - `training\data_lineage\demo_traceability_system.py:128`
+- [ ] # Step 2: Simulate training with data tracking - `training\data_lineage\demo_traceability_system.py:135`
+- [ ] logger.info("\n STEP 2: Simulate Training with Data Tracking") - `training\data_lineage\demo_traceability_system.py:136`
+- [ ] """Simulate training steps with audit logging.""" - `training\data_lineage\demo_traceability_system.py:168`
+- [ ] model_parameters=self.mock_model.parameters, - `training\data_lineage\demo_traceability_system.py:230`
+- [ ] async def _run_mock_demo(self): - `training\data_lineage\demo_traceability_system.py:333`
+- [ ] """Run a simplified mock demo when full system isn't available.""" - `training\data_lineage\demo_traceability_system.py:334`
+- [ ] logger.warning(" Running mock demonstration (full system not available)") - `training\data_lineage\demo_traceability_system.py:335`
+- [ ] logger.info(" Mock blockchain audit log:") - `training\data_lineage\demo_traceability_system.py:338`
+- [ ] logger.info("\n️ Mock parameter controller:") - `training\data_lineage\demo_traceability_system.py:343`
+- [ ] logger.info("\n️ Mock dataset control:") - `training\data_lineage\demo_traceability_system.py:348`
+- [ ] logger.info("\n Mock compliance report:") - `training\data_lineage\demo_traceability_system.py:353`
+- [ ] logger.info("\n Mock demo completed!") - `training\data_lineage\demo_traceability_system.py:358`
+- [ ] # Mock JAX/Flax for testing - `training\data_lineage\inference_parameter_tests.py:26`
+- [ ] # Create mock jax.numpy for testing - `training\data_lineage\inference_parameter_tests.py:32`
+- [ ] class MockJNP: - `training\data_lineage\inference_parameter_tests.py:33`
+- [ ] jnp = MockJNP() - `training\data_lineage\inference_parameter_tests.py:58`
+- [ ] class MockModel: - `training\data_lineage\inference_parameter_tests.py:63`
+- [ ] """Mock neural network model for testing parameter control.""" - `training\data_lineage\inference_parameter_tests.py:64`
+- [ ] def __init__(self, model: MockModel): - `training\data_lineage\inference_parameter_tests.py:132`
+- [ ] # Create mock parameter lineage for this dataset - `training\data_lineage\inference_parameter_tests.py:192`
+- [ ] self._create_mock_lineage(dataset_id) - `training\data_lineage\inference_parameter_tests.py:193`
+- [ ] self._create_mock_lineage(dataset) - `training\data_lineage\inference_parameter_tests.py:241`
+- [ ] # Create mock lineage - `training\data_lineage\inference_parameter_tests.py:301`
+- [ ] self._create_mock_lineage("test_dataset") - `training\data_lineage\inference_parameter_tests.py:302`
+- [ ] self._create_mock_lineage("double_test") - `training\data_lineage\inference_parameter_tests.py:362`
+- [ ] def _create_mock_lineage(self, dataset_id: str): - `training\data_lineage\inference_parameter_tests.py:411`
+- [ ] """Create mock parameter lineage for testing.""" - `training\data_lineage\inference_parameter_tests.py:412`
+- [ ] # Create mock model - `training\data_lineage\inference_parameter_tests.py:529`
+- [ ] model = MockModel() - `training\data_lineage\inference_parameter_tests.py:530`
+- [ ] # Mock JAX/Flax for environments without it - `training\data_lineage\inference_safe_parameter_controller.py:31`
+- [ ] # Create mock jax.numpy - `training\data_lineage\inference_safe_parameter_controller.py:37`
+- [ ] class MockJNP: - `training\data_lineage\inference_safe_parameter_controller.py:38`
+- [ ] jnp = MockJNP() - `training\data_lineage\inference_safe_parameter_controller.py:69`
+- [ ] # Create mock lineage for testing - `training\data_lineage\inference_safe_parameter_controller.py:305`
+- [ ] param_issues.append(f"Missing parameter: {param_name}") - `training\data_lineage\inference_safe_parameter_controller.py:570`
+- [ ] "missing_parameters": len(param_issues), - `training\data_lineage\inference_safe_parameter_controller.py:600`
+- [ ] # Mock model parameters - `training\data_lineage\inference_safe_parameter_controller.py:659`
+- [ ] mock_params = { - `training\data_lineage\inference_safe_parameter_controller.py:661`
+- [ ] mock_params, - `training\data_lineage\inference_safe_parameter_controller.py:674`
+- [ ] logger.info(f" Controller created with {len(mock_params)} parameters") - `training\data_lineage\inference_safe_parameter_controller.py:678`
+- [ ] """Get current TPU core ID (placeholder).""" - `training\data_preprocessing\tpu_optimized_processor.py:416`
+- [ ] logger.warning("Network libraries not available - using mock implementations") - `training\federated_consensus\federated_consensus_system.py:26`
+- [ ] logger.warning("Network services not available - running in mock mode") - `training\federated_consensus\federated_consensus_system.py:183`
+- [ ] await self._start_mock_services() - `training\federated_consensus\federated_consensus_system.py:184`
+- [ ] async def _start_mock_services(self): - `training\federated_consensus\federated_consensus_system.py:297`
+- [ ] """Start mock services when network libraries are not available.""" - `training\federated_consensus\federated_consensus_system.py:298`
+- [ ] logger.info(" Starting mock network services") - `training\federated_consensus\federated_consensus_system.py:299`
+- [ ] # Mock implementation for testing without network dependencies - `training\federated_consensus\federated_consensus_system.py:300`
+- [ ] logger.info(" Mock connection to coordinator") - `training\federated_consensus\federated_consensus_system.py:306`
+- [ ] 'endpoint': getattr(self, 'endpoint', 'mock://localhost') - `training\federated_consensus\federated_consensus_system.py:320`
+- [ ] logger.info(f" Mock broadcast of proposal {proposal.proposal_id}") - `training\federated_consensus\federated_consensus_system.py:393`
+- [ ] # Extract response embeddings (mock) - `training\federated_consensus\federated_consensus_system.py:429`
+- [ ] # Mock agreement calculation based on consensus confidence - `training\federated_consensus\federated_consensus_system.py:460`
+- [ ] # Mock implementation - `training\federated_consensus\federated_consensus_system.py:548`
+- [ ] # Mock signature implementation - `training\federated_consensus\federated_consensus_system.py:597`
+- [ ] # Mock signature implementation - `training\federated_consensus\federated_consensus_system.py:603`
+- [ ] # Mock signature verification - `training\federated_consensus\federated_consensus_system.py:609`
+- [ ] # Mock implementation - `training\federated_consensus\federated_consensus_system.py:676`
+- [ ] """setup de todos los modelos destilados""" - `training\hierarchical_strategy\training_pipeline.py:171`
+- [ ] # Fallbacks if dependencies are missing - `training\optimizations\tpu_optimizations.py:24`
+- [ ] self.ultra_metrics.architecture_fitness += 0.01  # Simulated improvement - `training\optimizations\ultra_trainer.py:637`
+- [ ] return 0.85  # Simulated high utilization - `training\optimizations\ultra_trainer.py:645`
+- [ ] return 0.78  # Simulated good efficiency - `training\optimizations\ultra_trainer.py:650`
+- [ ] # Simulated efficiency based on or(n) vs or(n²) complexity - `training\optimizations\ultra_trainer.py:656`
+- [ ] """Module placeholder.""" - `training\optimizations\__init__.py:1`
+- [ ] # Replace flagged content with placeholders - `training\safety\bias_safety_filter.py:673`
+- [ ] # Simulate TPU v6-64 inference - `training\strategies\expanded_expert_cores_strategy.py:739`
+- [ ] # Return simulated response based on specialization - `training\strategies\expanded_expert_cores_strategy.py:742`
+- [ ] """setup for todos los modelos destilados""" - `training\strategies\hierarchical_training_strategy.py:209`
+- [ ] """Valida que todos los modelos estén equilibrados according to las métricas""" - `training\strategies\hierarchical_training_strategy.py:294`
+- [ ] # Mock embedding generation - in real implementation, use TPU-optimized model - `training\tpu\tpu_v6_consensus_optimizer.py:338`
+- [ ] # Create expert embeddings (mock - in real implementation, load actual embeddings) - `training\tpu\tpu_v6_consensus_optimizer.py:354`
+- [ ] # Mock embedding - `training\tpu\tpu_v6_consensus_optimizer.py:361`
+- [ ] # Mock TPU utilization metrics - `training\tpu\tpu_v6_consensus_optimizer.py:645`
+- [ ] # Mock expert pool - `training\tpu\tpu_v6_consensus_optimizer.py:827`
+- [ ] # Simulate H200 inference with HuggingFace Pro - `training\tpu\tpu_v6_huggingface_pro_strategy.py:297`
+- [ ] # Simulate TPU v6 optimized inference - `training\tpu\tpu_v6_huggingface_pro_strategy.py:381`
+- [ ] # Simulate H200 distributed inference with HF Pro - `training\tpu\tpu_v6_huggingface_pro_strategy.py:425`
+- [ ] # Simulate response generation - `training\tpu\tpu_v6_huggingface_pro_strategy.py:432`
+- [ ] await asyncio.sleep(0.1)  # Simulate H200 inference time - `training\tpu\tpu_v6_huggingface_pro_strategy.py:433`
+- [ ] # Return simulated response based on domain - `training\tpu\tpu_v6_huggingface_pro_strategy.py:435`
+- [ ] # Simulate TPU v6 inference - `training\tpu\tpu_v6_huggingface_pro_strategy.py:455`
+- [ ] await asyncio.sleep(0.05)  # Simulate TPU v6 speed - `training\tpu\tpu_v6_huggingface_pro_strategy.py:456`
+- [ ] # Return simulated response - `training\tpu\tpu_v6_huggingface_pro_strategy.py:458`
+
+### utils
+- [ ] logger.warning(f"State is missing required attribute: {attr}") - `utils\checkpoint_manager.py:288`
+- [ ] Crea un logger que incluye contexto adicional en todos los mensajes. - `utils\logging_utils.py:447`
+- [ ] DLLs) may be missing. - `utils\memory_profiler.py:56`
+- [ ] # verify todos los contratos - `utils\smart_utils_contracts.py:671`
+- [ ] 'success_rate': 95.0,  # Placeholder - `utils\smart_utils_contracts.py:716`
+- [ ] 'error_rate_percent': 2.0,  # Placeholder - `utils\smart_utils_contracts.py:717`
+- [ ] 'availability_percent': 99.5,  # Placeholder - `utils\smart_utils_contracts.py:718`
+- [ ] 'execution_time_ms': 50.0  # Placeholder - `utils\smart_utils_contracts.py:719`
+- [ ] """Obtiene estado global de todos los contratos.""" - `utils\smart_utils_contracts.py:736`
+- [ ] # Reemplazar todos los tipos de espacios en blanco with espacios normales - `utils\string_utils.py:127`
+- [ ] TODO: Add detailed description. - `utils\system_info.py:23`
+

@@ -50,7 +50,7 @@ try:
     import flax.linen as nn
     logger.info(" ML libraries available for Ultra VQ")
 except ImportError as e:
-    logger.warning(f"️ ML libraries not available: {e}")
+    logger.debug("ML libraries not available: %s", e)
     ML_LIBRARIES_AVAILABLE = False
 
 # Meta Loop System integration
@@ -59,7 +59,7 @@ try:
     from capibara.meta_loop import UltraMetaLoopOrchestrator, create_ultra_meta_loop_ecosystem
     logger.info(" Meta Loop System integration available")
 except ImportError as e:
-    logger.warning(f"️ Meta Loop System not available: {e}")
+    logger.debug("Meta Loop System not available: %s", e)
     META_LOOP_AVAILABLE = False
 
 # VQ Legacy modules
@@ -69,7 +69,7 @@ try:
     from .monitoring.vq_monitoring import VQMonitoringSystem
     logger.info(" VQ Legacy modules available")
 except ImportError as e:
-    logger.warning(f"️ VQ Legacy modules not available: {e}")
+    logger.debug("VQ legacy modules not available: %s", e)
     VQ_LEGACY_AVAILABLE = False
 
 # ============================================================================

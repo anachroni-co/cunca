@@ -20,7 +20,7 @@ try:
 except Exception as e:
     ssm = None
     SSM_AVAILABLE = False
-    logger.warning("capibara.ssm unavailable: %s", e)
+    logger.debug("capibara.ssm unavailable: %s", e)
 
 try:
     from . import routers
@@ -28,7 +28,7 @@ try:
 except Exception as e:
     routers = None
     ROUTERS_AVAILABLE = False
-    logger.warning("capibara.routers unavailable: %s", e)
+    logger.debug("capibara.routers unavailable: %s", e)
 
 try:
     from . import optimizations
@@ -36,7 +36,7 @@ try:
 except Exception as e:
     optimizations = None
     OPTIMIZATIONS_AVAILABLE = False
-    logger.warning("capibara.optimizations unavailable: %s", e)
+    logger.debug("capibara.optimizations unavailable: %s", e)
 
 try:
     from . import vq
@@ -44,7 +44,7 @@ try:
 except Exception as e:
     vq = None
     VQ_AVAILABLE = False
-    logger.warning("capibara.vq unavailable: %s", e)
+    logger.debug("capibara.vq unavailable: %s", e)
 
 __all__ = [
     "ssm",

@@ -30,7 +30,7 @@ try:
                 pass
     CORE_AVAILABLE = True
 except ImportError as e:
-    logging.warning(f"Core modules not available: {e}")
+    logging.debug(f"Core modules not available: {e}")
     CORE_AVAILABLE = False
 
 # Training imports
@@ -49,7 +49,7 @@ try:
     )
     TRAINING_AVAILABLE = True
 except ImportError as e:
-    logging.warning(f"Training modules not available: {e}")
+    logging.debug(f"Training modules not available: {e}")
     TRAINING_AVAILABLE = False
 
 # JAX imports
@@ -59,7 +59,7 @@ try:
     from capibara.jax import nn
     JAX_AVAILABLE = True
 except ImportError as e:
-    logging.warning(f"JAX not available: {e}")
+    logging.debug(f"JAX not available: {e}")
     JAX_AVAILABLE = False
 
 logger = logging.getLogger(__name__)
