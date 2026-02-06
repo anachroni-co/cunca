@@ -369,16 +369,25 @@ class WebTool:
         self._validate_url(url)
 
         with httpx.Client(timeout=self.timeout_seconds, follow_redirects=False) as client:
-            response = client.get(url, params=params, headers=headers)
-            response.raise_for_status()
-            content = response.content[: self.max_bytes]
-            return {
-                "status_code": response.status_code,
-                "headers": dict(response.headers),
-                "content": content,
-                "truncated": len(response.content) > self.max_bytes,
-                "url": str(response.url),
-            }
+            with client.stream("GET", url, params=params, headers=headers) as response:
+                response.raise_for_status()
+                content = b""
+                truncated = False
+                for chunk in response.iter_bytes():
+                    if len(content) + len(chunk) > self.max_bytes:
+                        remaining = self.max_bytes - len(content)
+                        if remaining > 0:
+                            content += chunk[:remaining]
+                        truncated = True
+                        break
+                    content += chunk
+                return {
+                    "status_code": response.status_code,
+                    "headers": dict(response.headers),
+                    "content": content,
+                    "truncated": truncated,
+                    "url": str(response.url),
+                }
 
 
 class CodeExecutionTool:
@@ -536,6 +545,8 @@ class UltraAgentOrchestrator:
         
         # Initialize collaboration framework
         self._initialize_collaboration_framework()
+
+        self.global_metrics["total_agents"] = len(self.agents)
         
         logger.info(f" Ultra Agent Orchestrator initialized")
         logger.info(f"    Agent types: {len(self.config.enabled_agent_types)}")
@@ -1027,7 +1038,8 @@ class UltraAgentOrchestrator:
         required_caps = phase.get("required_capabilities", [])
         required_tools = phase.get("required_tools", [])
         scored = []
-        for agent_id in candidates:
+        candidate_ids = candidates or list(self.agents.keys())
+        for agent_id in candidate_ids:
             agent = self.agents.get(agent_id)
             if not agent:
                 continue
@@ -1115,6 +1127,11 @@ class UltraAgentOrchestrator:
         phase_end = self._resource_monitor.sample()
         phase_metrics = self._resource_monitor.diff(phase_start, phase_end)
         phase_result["metrics"] = phase_metrics
+        if any(
+            isinstance(output, dict) and output.get("status") == "failed"
+            for output in phase_result["outputs"].values()
+        ):
+            phase_result["status"] = "failed"
 
         return phase_result
 
@@ -1189,10 +1206,10 @@ class UltraAgentOrchestrator:
             "memory_delta_bytes": metrics.get("memory_delta_bytes", 0),
             "memory_peak_bytes": metrics.get("memory_peak_bytes", 0),
         }
-        if success:
-            perf.success_rate = min(1.0, perf.success_rate + 0.1)
-        else:
-            perf.success_rate = max(0.0, perf.success_rate - 0.1)
+        agent = self.agents.get(agent_id)
+        if agent:
+            total = agent["stats"]["tasks_completed"] + agent["stats"]["tasks_failed"]
+            perf.success_rate = agent["stats"]["tasks_completed"] / max(1, total)
 
     @staticmethod
     def _infer_task_type(description: str) -> str:
