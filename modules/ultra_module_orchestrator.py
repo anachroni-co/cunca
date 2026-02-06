@@ -1,5 +1,5 @@
 """
-Ultra Module Orchestrator - CapibaraGPT v3024
+Ultra Module Orchestrator - CapibaraGPT v3
 =============================================
 
 Sistema de orquestación ultra-avanzada for todos los módulos:
@@ -14,8 +14,6 @@ Sistema de orquestación ultra-avanzada for todos los módulos:
 Esta es la evolución del sistema de módulos for be al level del ecosistema ultra-advanced.
 """
 
-import os
-import sys
 import time
 import logging
 from typing import Dict, Any, Optional, Union, List, Tuple, Callable, Type
@@ -23,20 +21,14 @@ from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 from enum import Enum
 
-# Path setup
-script_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.dirname(script_dir)
-if project_root not in sys.path:
-    sys.path.append(project_root)
-
-from capibara.jax import jax
+import jax
 from flax import linen as nn
 from functools import partial
-from capibara.jax import numpy as jnp
+import jax.numpy as jnp
 
 # Safe imports for ultra systems integration
 try:
-    from ..core.ultra_core_integration import (
+    from core.ultra_core_integration import (
         UltraCoreOrchestrator, create_ultra_core_system,
         ULTRA_TRAINING_AVAILABLE, SSM_AVAILABLE
     )
@@ -46,7 +38,7 @@ except ImportError:
     UltraCoreOrchestrator = None
 
 try:
-    from ..training.optimizations import (
+    from training.optimizations import (
         UltraAdvancedTrainer, ExpertSoupIntegration,
         ModelSoupConfig, ULTRA_OPTIMIZATIONS_AVAILABLE
     )

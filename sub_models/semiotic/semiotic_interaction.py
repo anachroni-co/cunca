@@ -55,7 +55,7 @@ except ImportError:
 from typing import Dict, Any, Optional, Tuple, List, Set
 
 try:
-    from ...sub_models.experimental.spike_ssm import SpikeSSM
+    from sub_models.experimental.spike_ssm import SpikeSSM
 except ImportError:
     class SpikeSSM(nn.Module):
         def __init__(self, **kwargs):

@@ -1,13 +1,14 @@
 import logging
+import sys
 from typing import Any
 
 logger = logging.getLogger(__name__)
 
-# Try to use real JAX; if not available, use minimal fallbacks
+# Use the internal capibara.jax numpy implementation first; fall back to numpy.
 try:
-    import jax as _jax  # type: ignore
-    import jax.numpy as _jnp  # type: ignore
+    from . import numpy as _jnp  # type: ignore
     HAS_JAX = True
+    _jax = sys.modules[__name__]
 except Exception as _e:  # pragma: no cover - environment without JAX
     HAS_JAX = False
     logger.warning("JAX not available; using fallbacks with numpy. Detail: %s", _e)
@@ -354,6 +355,12 @@ except Exception as _e:  # pragma: no cover - environment without JAX
             if name == 'jit':
                 # Return a no-op decorator for jit
                 return lambda func: func
+            elif name == 'vmap':
+                return lambda func=None, **kwargs: func if func is not None else (lambda f: f)
+            elif name == 'grad':
+                return lambda func=None, **kwargs: func if func is not None else (lambda f: f)
+            elif name == 'pmap':
+                return lambda func=None, **kwargs: func if func is not None else (lambda f: f)
             elif name == 'process_index':
                 # Return a function that always returns 0
                 return lambda: 0
@@ -375,6 +382,17 @@ except Exception as _e:  # pragma: no cover - environment without JAX
                         def split(key, num=2):
                             return [key + i for i in range(num)]
                     return _FakeRandom()
+            elif name in {'nn', 'lax', 'sharding', 'xla'}:
+                module_name = name
+                try:
+                    return __import__(f"{__name__}.{module_name}", fromlist=[module_name])
+                except Exception:
+                    raise ImportError(
+                        "JAX is not installed in this environment. "
+                        f"Attempted to access jax.{name}"
+                    )
+            elif name in {'numpy', 'jnp'}:
+                return _jnp
             else:
                 raise ImportError(
                     "JAX is not installed in this environment. "
@@ -387,16 +405,9 @@ except Exception as _e:  # pragma: no cover - environment without JAX
 jax = _jax
 numpy = _jnp
 
-# Add linalg attribute to numpy if JAX is available
-if HAS_JAX and hasattr(_jnp, 'linalg'):
+# Add linalg attribute to numpy if available
+if hasattr(_jnp, 'linalg'):
     numpy.linalg = _jnp.linalg
-elif HAS_JAX:
-    # Make sure linalg is accessible even if not directly exposed
-    try:
-        import jax.numpy as real_jnp
-        numpy.linalg = real_jnp.linalg
-    except Exception:
-        pass
 
 # Local submodules
 from . import nn  # noqa: E402
@@ -405,31 +416,98 @@ from . import sharding as sharding  # noqa: E402
 from . import xla as xla  # noqa: E402
 
 # Import random module
-if HAS_JAX:
-    from jax import random  # noqa: E402
-else:
-    try:
-        from . import capibara_random as random  # noqa: E402
-    except ImportError:
-        # Fallback random module
-        class _FakeRandom:
-            @staticmethod
-            def PRNGKey(seed=0):
-                return seed
-            @staticmethod
-            def key(seed=0):
-                return seed
-            @staticmethod
-            def split(key, num=2):
-                return [key + i for i in range(num)]
-            @staticmethod
-            def normal(key, shape=(), dtype=None):
-                try:
-                    import numpy as np
-                    return np.random.normal(0, 1, shape).astype(dtype or np.float32)
-                except Exception:
-                    return 0.0
-        random = _FakeRandom()
+try:
+    from . import capibara_random as random  # noqa: E402
+except ImportError:
+    # Fallback random module
+    class _FakeRandom:
+        @staticmethod
+        def PRNGKey(seed=0):
+            return seed
+        @staticmethod
+        def key(seed=0):
+            return seed
+        @staticmethod
+        def split(key, num=2):
+            return [key + i for i in range(num)]
+        @staticmethod
+        def normal(key, shape=(), dtype=None):
+            try:
+                import numpy as np
+                return np.random.normal(0, 1, shape).astype(dtype or np.float32)
+            except Exception:
+                return 0.0
+    random = _FakeRandom()
+
+
+def _noop_transform(fn=None, **kwargs):
+    """Fallback transform for jit/vmap/grad/pmap."""
+    if fn is None:
+        return lambda f: f
+    return fn
+
+
+def jit(fn=None, **kwargs):
+    return _noop_transform(fn, **kwargs)
+
+
+def vmap(fn=None, **kwargs):
+    return _noop_transform(fn, **kwargs)
+
+
+def grad(fn=None, **kwargs):
+    return _noop_transform(fn, **kwargs)
+
+
+def pmap(fn=None, **kwargs):
+    return _noop_transform(fn, **kwargs)
+
+
+def process_index() -> int:
+    """Return a stable host/process index for single-host fallback."""
+    return 0
+
+
+class _MockDevice:
+    def __init__(self, platform: str = "cpu"):
+        self.platform = platform
+
+    def memory_stats(self):
+        return {"bytes_in_use": 0}
+
+    def __repr__(self) -> str:
+        return f"MockDevice(platform={self.platform!r})"
+
+
+def devices(device_type: str | None = None):
+    """Return a minimal device list for the requested backend."""
+    if device_type in (None, "cpu"):
+        return [_MockDevice("cpu")]
+    return []
+
+
+def local_devices(device_type: str | None = None):
+    return devices(device_type)
+
+
+def device_count() -> int:
+    return len(devices())
+
+
+def device_get(x):
+    return x
+
+
+def device_put(x, device=None):
+    return x
+
+
+def device_put_replicated(x, devices=None):
+    return x
+
+
+def device_memory_usage():
+    return 0
 
 # Compatibility aliases previously used in code
 ltox = lax
@@ -439,6 +517,18 @@ __all__ = [
     "jax",
     "numpy",
     "random",
+    "jit",
+    "vmap",
+    "grad",
+    "pmap",
+    "process_index",
+    "devices",
+    "local_devices",
+    "device_count",
+    "device_get",
+    "device_put",
+    "device_put_replicated",
+    "device_memory_usage",
     "nn",
     "lax",
     "ltox",

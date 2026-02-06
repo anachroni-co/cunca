@@ -64,6 +64,32 @@ except ImportError:
     UTILS_AVAILABLE = False
     utils = None
 
+try:
+    from .activations import (
+        softmax,
+        log_softmax,
+        sigmoid,
+        relu,
+        gelu,
+        swish,
+        silu,
+        tanh,
+        glu,
+        swiglu,
+        geglu,
+        reglu,
+        mish,
+        leaky_relu,
+        elu,
+        selu,
+        hard_sigmoid,
+        hard_swish,
+        hard_tanh,
+    )
+    _ACTIVATION_EXPORTS_AVAILABLE = True
+except Exception:
+    _ACTIVATION_EXPORTS_AVAILABLE = False
+
 
 __all__ = [
     "activations",
@@ -81,3 +107,28 @@ __all__ = [
     "DECORATORS_AVAILABLE",
     "UTILS_AVAILABLE",
 ]
+
+if _ACTIVATION_EXPORTS_AVAILABLE:
+    __all__.extend(
+        [
+            "softmax",
+            "log_softmax",
+            "sigmoid",
+            "relu",
+            "gelu",
+            "swish",
+            "silu",
+            "tanh",
+            "glu",
+            "swiglu",
+            "geglu",
+            "reglu",
+            "mish",
+            "leaky_relu",
+            "elu",
+            "selu",
+            "hard_sigmoid",
+            "hard_swish",
+            "hard_tanh",
+        ]
+    )

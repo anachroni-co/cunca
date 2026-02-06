@@ -21,32 +21,42 @@ try:
         create_shared_attention,
     )
     ATTENTION_AVAILABLE = True
-except ImportError:
+except Exception as e:
     ATTENTION_AVAILABLE = False
     OptimizedSharedAttention = None
     MultiScaleSharedAttention = None
     create_shared_attention = None
+    logger.warning("Attention modules unavailable: %s", e)
 
 try:
     from .hierarchical_reasoning import HierarchicalReasoning
     REASONING_AVAILABLE = True
-except ImportError:
+except Exception as e:
     REASONING_AVAILABLE = False
     HierarchicalReasoning = None
+    logger.warning("Hierarchical reasoning unavailable: %s", e)
 
 try:
     from .capibara_adaptive_router import AdaptiveRouter
     ROUTER_AVAILABLE = True
-except ImportError:
+except Exception as e:
     ROUTER_AVAILABLE = False
     AdaptiveRouter = None
+    logger.warning("Adaptive router unavailable: %s", e)
 
 try:
-    from .specialized_processors import SpecializedProcessor
+    from .specialized_processors import (
+        SpecializedProcessorManager,
+        create_processor_manager,
+    )
     PROCESSORS_AVAILABLE = True
-except ImportError:
+    SpecializedProcessor = SpecializedProcessorManager
+except Exception as e:
     PROCESSORS_AVAILABLE = False
     SpecializedProcessor = None
+    SpecializedProcessorManager = None
+    create_processor_manager = None
+    logger.warning("Specialized processors unavailable: %s", e)
 
 try:
     from .ultra_module_orchestrator import (
@@ -54,10 +64,11 @@ try:
         create_ultra_module_system,
     )
     ORCHESTRATOR_AVAILABLE = True
-except ImportError:
+except Exception as e:
     ORCHESTRATOR_AVAILABLE = False
     UltraModuleOrchestrator = None
     create_ultra_module_system = None
+    logger.warning("Ultra module orchestrator unavailable: %s", e)
 
 
 def get_module_status() -> Dict[str, bool]:
@@ -82,6 +93,8 @@ __all__ = [
     "AdaptiveRouter",
     # Processors
     "SpecializedProcessor",
+    "SpecializedProcessorManager",
+    "create_processor_manager",
     # Orchestrator
     "UltraModuleOrchestrator",
     "create_ultra_module_system",

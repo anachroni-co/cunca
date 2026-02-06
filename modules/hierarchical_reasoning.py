@@ -117,3 +117,7 @@ class HierarchicalReasoningModule:
     def _compose_response(self, plan: List[str], steps: List[str]) -> str:
         lines = ["Proposed plan:"] + [f"- {p}" for p in plan] + ["\nExecution:"] + steps
         return "\n".join(lines)
+
+
+# Backwards-compatible alias used across docs/imports.
+HierarchicalReasoning = HierarchicalReasoningModule

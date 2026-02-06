@@ -26,6 +26,9 @@ except ImportError:
     def vmap(fn):
         return fn
 
+    def stop_gradient(x):
+        return x
+
 class VQCompressionMode(Enum):
     """vector quantization compression modes."""
     STANDARD = "standard"
@@ -116,12 +119,13 @@ class VQbitLayer:
         quantized = quantized.reshape(input_shape)
         
         # Compute losses
-        commitment_loss = jnp.mean((inputs - jnp.stop_gradient(quantized)) ** 2)
-        codebook_loss = jnp.mean((jnp.stop_gradient(inputs) - quantized) ** 2)
+        stop_grad = lax.stop_gradient if HAS_JAX and lax is not None else stop_gradient
+        commitment_loss = jnp.mean((inputs - stop_grad(quantized)) ** 2)
+        codebook_loss = jnp.mean((stop_grad(inputs) - quantized) ** 2)
         
         # Straight-through estimator
-        if self.config.enable_straight_through:
-            quantized = inputs + jnp.stop_gradient(quantized - inputs)
+        if self.config.enable_straight_through and HAS_JAX and lax is not None:
+            quantized = inputs + stop_grad(quantized - inputs)
         
         # Update codebook usage
         if self.config.enable_ema_update:
@@ -156,7 +160,10 @@ class VQbitLayer:
     def _compute_perplexity(self, indices: Any) -> float:
         """Compute perplexity of the encoding distribution."""
         # Count usage of each codebook entry
-        counts = jnp.bincount(indices, length=self.config.codebook_size)
+        if HAS_JAX:
+            counts = jnp.bincount(indices, length=self.config.codebook_size)
+        else:
+            counts = jnp.bincount(indices, minlength=self.config.codebook_size)
         probs = counts / jnp.sum(counts)
         
         # Avoid log(0)

@@ -418,6 +418,14 @@ def var(a, axis=None, dtype=None, out=None, ddof=0, keepdims=False):
 def where(condition, x=None, y=None):
     return np.where(condition, x, y)
 
+def take_along_axis(arr, indices, axis):
+    return np.take_along_axis(arr, indices, axis)
+
+
+def stop_gradient(x):
+    """Fallback stop_gradient (identity)."""
+    return x
+
 # Data types
 bfloat16 = getattr(np, 'float16', float)
 float16 = getattr(np, 'float16', float)
@@ -459,7 +467,7 @@ __all__ = [
     # Reductions
     'sum', 'mean', 'max', 'min', 'argmax', 'argmin', 'argsort', 'std', 'var',
     # Logic
-    'where',
+    'where', 'take_along_axis', 'stop_gradient',
     # Submodules
     'linalg',
     # Dtypes

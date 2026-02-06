@@ -101,7 +101,7 @@ except ImportError:
     nn = _DummyNN()
 
 # Import interfaces
-from capibara.interfaces.imodules import IModule
+from interfaces.imodules import IModule
 
 logger = logging.getLogger(__name__)
 
@@ -151,11 +151,10 @@ class MambaModule(IModule):
         # Calculate dimensions
         self.d_inner = self.config.hidden_size * self.config.expand_factor
 
-        # Initialize parameters if JAX is available
-        if JAX_AVAILABLE:
-            self._init_parameters()
-        else:
-            self.logger.warning("JAX not available, using fallback implementation")
+        # Initialize parameters (NumPy fallback is supported)
+        self._init_parameters()
+        if not JAX_AVAILABLE:
+            self.logger.warning("JAX not available, using NumPy fallback implementation")
 
         self.logger.info(f"MambaModule initialized: hidden_size={self.config.hidden_size}, "
                         f"d_state={self.config.d_state}, complexity=O(n)")
@@ -338,20 +337,27 @@ class MambaModule(IModule):
     
     def _fallback_forward(self, x: jnp.ndarray) -> Tuple[jnp.ndarray, Dict[str, Any]]:
         """Fallback implementation when JAX is not available."""
-        self.logger.warning("Using Mamba fallback implementation")
+        self.logger.warning("Using Mamba NumPy fallback implementation")
 
-        # Simplified implementation that simulates the behavior
-        batch_size, seq_len, hidden_size = x.shape
+        x_np = np.asarray(x, dtype=np.float32)
+        batch_size, seq_len, hidden_size = x_np.shape
 
-        # Mamba processing simulation
-        output = x * 1.1  # Minimal transformation
+        # Simple linear projection + gating as a CPU-friendly fallback
+        if hasattr(self, "in_proj_weight") and hasattr(self, "out_proj_weight"):
+            xz = x_np @ np.asarray(self.in_proj_weight).T
+            x_proj, z = np.split(xz, 2, axis=-1)
+            gate = 1.0 / (1.0 + np.exp(-z))
+            y = x_proj * gate
+            output = y @ np.asarray(self.out_proj_weight).T
+        else:
+            output = x_np
 
         metrics = {
             "mamba_active": True,
             "complexity": "O(n)",
             "sequence_length": seq_len,
             "fallback_used": True,
-            "warning": "JAX not available, using fallback"
+            "warning": "JAX not available, using NumPy fallback"
         }
 
         return output, metrics

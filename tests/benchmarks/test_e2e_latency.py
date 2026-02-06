@@ -124,6 +124,9 @@ class TestMoELatency:
         try:
             from core.moe.dynamic_moe import MoEConfig, DynamicRouter, DynamicMoELayer
             from capibara.jax import numpy as jnp
+            from layers.jax_compat import JAX_AVAILABLE
+            if not JAX_AVAILABLE:
+                pytest.skip("MoE modules require JAX/Flax")
             return MoEConfig, DynamicRouter, DynamicMoELayer, jnp
         except ImportError:
             pytest.skip("MoE modules require JAX (circular import in this env)")
@@ -213,7 +216,10 @@ class TestSparseAttentionLatency:
     def _get_sparse_imports(self):
         try:
             import jax
+            from layers.jax_compat import JAX_AVAILABLE
             from layers.sparsity.sparse_capibara import SparseCapibara
+            if not JAX_AVAILABLE:
+                pytest.skip("SparseCapibara requires JAX/Flax")
             return jax, SparseCapibara
         except ImportError:
             pytest.skip("SparseCapibara requires JAX/Flax")

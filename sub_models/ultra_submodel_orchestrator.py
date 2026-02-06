@@ -1,5 +1,5 @@
 """
-Ultra SubModel Orchestrator - CapibaraGPT v3024
+Ultra SubModel Orchestrator - CapibaraGPT v3
 ===============================================
 
 Sistema de orquestación ultra-avanzada for todos los sub-modelos:
@@ -36,7 +36,7 @@ from capibara.jax import numpy as jnp
 
 # Safe imports for ultra systems integration
 try:
-    from ..core.ultra_core_integration import (
+    from core.ultra_core_integration import (
         UltraCoreOrchestrator, create_ultra_core_system,
         ULTRA_TRAINING_AVAILABLE, SSM_AVAILABLE
     )
@@ -46,7 +46,7 @@ except ImportError:
     UltraCoreOrchestrator = None
 
 try:
-    from ..training.optimizations import (
+    from training.optimizations import (
         UltraAdvancedTrainer, ExpertSoupIntegration,
         ModelSoupConfig, ULTRA_OPTIMIZATIONS_AVAILABLE
     )
@@ -58,7 +58,7 @@ except ImportError:
     ModelSoupConfig = None
 
 try:
-    from ..layers.ssm_hybrid_layers import (
+    from layers.ssm_hybrid_layers import (
         UltraSSMLayer, create_ssm_layer, SSM_LAYERS_AVAILABLE
     )
     SSM_HYBRID_AVAILABLE = True

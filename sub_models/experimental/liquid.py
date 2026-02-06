@@ -97,7 +97,7 @@ class Liquid(nn.Module, IExperimentalModel):
         }
         
     def get_config(self) -> Dict[str, Any]:
-        return self.config.dict()
+        return self.config.model_dump()
         
     def get_metrics(self) -> Dict[str, Any]:
         return {

@@ -17,7 +17,7 @@ from capibara.jax import numpy as jnp  # type: ignore
 from flax import linen as nn  # type: ignore
 import logging
 from typing import NamedTuple, Tuple, Optional, Dict, Any, Union
-from pydantic import BaseModel, Field, validator #type: ignore
+from pydantic import BaseModel, Field, field_validator, ValidationInfo #type: ignore
 from functools import partial #type: ignore
 from interfaces.isub_models import ISubModel
 
@@ -33,12 +33,12 @@ class LIFConfig(BaseModel):
     dropout_rate: float = Field(default=0.1, ge=0, lt=1, description="Tasa de dropout")
     max_seq_len: int = Field(default=512, gt=0, description="Longitud máxima de secuencia")
     
-    @validator('tau_m', 'v_threshold')
-    def validate_parameters(cls, v, field):
+    @field_validator('tau_m', 'v_threshold')
+    def validate_parameters(cls, v, info: ValidationInfo):
         """Valida parámetros neuronales."""
-        if field.name == 'tau_m' and v <= 0:
+        if info.field_name == 'tau_m' and v <= 0:
             raise ValueError("tau_m debe ser positivo")
-        if field.name == 'v_threshold' and v >= 0:
+        if info.field_name == 'v_threshold' and v >= 0:
             raise ValueError("v_threshold debe ser negativo")
         return v
 

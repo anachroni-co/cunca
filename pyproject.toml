@@ -121,7 +121,7 @@ Repository = "https://github.com/anachroni-co/capibaraGPT_v3"
 Issues = "https://github.com/anachroni-co/capibaraGPT_v3/issues"
 
 [tool.setuptools.packages.find]
-include = ["capibara*", "core*", "config*", "utils*", "training*", "benchmarks*"]
+include = ["capibara*", "core*", "config*", "utils*", "training*", "benchmarks*", "layers*", "sub_models*", "interfaces*", "modules*"]
 exclude = ["tests*", "docs*"]
 
 [tool.setuptools_scm]

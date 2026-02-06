@@ -33,14 +33,14 @@ from capibara.jax import numpy as jnp
 
 # Safe imports for ultra systems
 try:
-    from ..core.ultra_core_integration import UltraCoreOrchestrator
+    from core.ultra_core_integration import UltraCoreOrchestrator
     ULTRA_CORE_AVAILABLE = True
 except ImportError:
     ULTRA_CORE_AVAILABLE = False
     UltraCoreOrchestrator = None
 
 try:
-    from ..training.optimizations import UltraAdvancedTrainer, ExpertSoupIntegration
+    from training.optimizations import UltraAdvancedTrainer, ExpertSoupIntegration
     ULTRA_TRAINING_AVAILABLE = True
 except ImportError:
     ULTRA_TRAINING_AVAILABLE = False
@@ -48,7 +48,7 @@ except ImportError:
     ExpertSoupIntegration = None
 
 try:
-    from ..layers.ssm_hybrid_layers import UltraSSMLayer, create_ssm_layer
+    from layers.ssm_hybrid_layers import UltraSSMLayer, create_ssm_layer
     SSM_LAYERS_AVAILABLE = True
 except ImportError:
     SSM_LAYERS_AVAILABLE = False
