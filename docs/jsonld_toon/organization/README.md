@@ -3,7 +3,7 @@
 ## Organización de datos
 
 - **Documento JSON-LD (canónico)**
-  - Campos mínimos: `@context`, `@id`, `@type`.
+  - Campos minimals: `@context`, `@id`, `@type`.
   - Propiedades del documento (`text`, `metadata`, `timestamp`).
   - Chunks como entidades separadas con relación `parent`.
 - **Contexto RAG JSON-LD**
@@ -13,7 +13,7 @@
   - Serialización determinista con bloques y arrays tabulares.
   - `@id` y `@type` siempre visibles.
 
-## Ahorro y métricas sugeridas
+## Ahorro y metrics sugeridas
 
 Para validar ahorro y robustez:
 

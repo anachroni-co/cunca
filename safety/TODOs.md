@@ -1,15 +1,15 @@
-﻿# TODOs - safety
+# TODOs - safety
 
-Actualizado: 2026-02-07
+Updated: 2026-02-07
 
 ## Critical
-- [x] Sin pendientes en esta prioridad.
+- [x] No pending items at this priority.
 
 ## High
-- [x] Sin pendientes en esta prioridad.
+- [x] No pending items at this priority.
 
 ## Medium
-- [x] Sin pendientes en esta prioridad.
+- [x] No pending items at this priority.
 
 ## Low
 - [ ] 64:                r"(?i)(reality.*simulation|we\s+live\s+in.*matrix|everything.*artificial)", - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\safety\content_filter.py`

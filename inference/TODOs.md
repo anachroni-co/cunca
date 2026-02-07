@@ -1,6 +1,6 @@
-﻿# TODOs - inference
+# TODOs - inference
 
-Actualizado: 2026-02-07
+Updated: 2026-02-07
 
 ## Critical
 - [ ] 160:        # For now, we simulate the structure - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\inference\hybrid_inference_engine.py`
@@ -18,11 +18,11 @@ Actualizado: 2026-02-07
 - [ ] 505:            raise NotImplementedError("Flax required for quantized layers") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\inference\quantization\quantized_layers.py`
 
 ## High
-- [x] Sin pendientes en esta prioridad.
+- [x] No pending items at this priority.
 
 ## Medium
-- [x] Sin pendientes en esta prioridad.
+- [x] No pending items at this priority.
 
 ## Low
-- [x] Sin pendientes en esta prioridad.
+- [x] No pending items at this priority.
 

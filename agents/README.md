@@ -363,9 +363,9 @@ This project is licensed under the MIT License - see the [LICENSE.md](../../LICE
 
 *Ultra Agent Orchestrator • 8 Agent Types • Multi-Step Reasoning • Strategic Planning • Premium Dataset Integration*
 
-## Ejemplo rápido
+## Ejemplo quick
 
-Ejemplo (pseudo-comando) para inspeccionar el orquestador de agentes:
+Example (pseudo-command) para inspeccionar el orquestador de agentes:
 
 ```bash
 python agents/ultra_agent_orchestrator.py --help

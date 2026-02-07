@@ -622,9 +622,9 @@ config = ModularConfig(
 **Last updated**: 2025-11-16
 **System version**: v3.0.0
 
-## Ejemplo rápido
+## Ejemplo quick
 
-Ejemplo (pseudo-código) para cargar un sub-modelo:
+Ejemplo (pseudo-code) para cargar un sub-modelo:
 
 ```python
 # sub_model = load_sub_model("mamba")

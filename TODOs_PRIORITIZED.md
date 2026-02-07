@@ -1,8 +1,8 @@
-﻿# TODOs Prioritized (Global)
+# TODOs Prioritized (Global)
 
-Actualizado: 2026-02-07
+Updated: 2026-02-07
 
-Total pendientes: 442
+Total pending: 442
 
 ## Critical (135)
 - [ ] 72:        raise NotImplementedError - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\agents\capibara_agent_factory.py` | source: agents/TODOs.md
@@ -154,11 +154,11 @@ Total pendientes: 442
 - [ ] 344:    def simulate_download_status(self, dataset_id: str) -> Dict[str, Any]: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\systems\systems_logs_datasets.py` | source: data/TODOs.md
 - [ ] 106:autodoc_mock_imports = [ - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\docs\conf.py` | source: docs/TODOs.md
 - [ ] 67:        # create un mock simple for testing - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py` | source: jax/TODOs.md
-- [ ] 62:        Módulo numpy de JAX (estándar or mock) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py` | source: jax/TODOs.md
+- [ ] 62:        M�dulo numpy de JAX (est�ndar or mock) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py` | source: jax/TODOs.md
 - [ ] 50:    """PRNG key dtype (placeholder).""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\dtypes.py` | source: jax/TODOs.md
 - [ ] 46:    """Extended dtype support (placeholder).""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\dtypes.py` | source: jax/TODOs.md
-- [ ] 27:        Módulo JAX (estándar or mock) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py` | source: jax/TODOs.md
-- [ ] 14:    _base_jax = None  # not tenemos JAX estándar, usamos nuestro mock - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py` | source: jax/TODOs.md
+- [ ] 27:        M�dulo JAX (est�ndar or mock) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py` | source: jax/TODOs.md
+- [ ] 14:    _base_jax = None  # not tenemos JAX est�ndar, usamos nuestro mock - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py` | source: jax/TODOs.md
 - [ ] 31:        # create mock JAX compatible - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py` | source: jax/TODOs.md
 - [ ] 29:                # always use nuestro mock JAX for CapibaraGPT - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py` | source: jax/TODOs.md
 - [ ] 65:            logger.info("Build completed (simulation mode)") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\tpu_v4\builder.py` | source: jax/TODOs.md
@@ -176,7 +176,7 @@ Total pendientes: 442
 - [ ] 257:    # Create mock model - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\scripts\train_synthetic.py` | source: scripts/TODOs.md
 - [ ] 117:        # Embedding lookup (simulated) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\scripts\train_synthetic.py` | source: scripts/TODOs.md
 - [ ] 89:        # Initialize mock weights - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\scripts\train_synthetic.py` | source: scripts/TODOs.md
-- [ ] 375:        logger.info(f"️ Generating mock Print3D model: {request.description[:100]}...") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py` | source: services/TODOs.md
+- [ ] 375:        logger.info(f"? Generating mock Print3D model: {request.description[:100]}...") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py` | source: services/TODOs.md
 - [ ] 374:        """Generate a mock 3D model optimized for printing.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py` | source: services/TODOs.md
 - [ ] 386:        volume = self._calculate_mock_volume(request) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py` | source: services/TODOs.md
 - [ ] 437:    def _calculate_mock_volume(self, request: Print3DRequest) -> float: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py` | source: services/TODOs.md
@@ -200,9 +200,9 @@ Total pendientes: 442
 - [ ] 340:                    # Use standard n8n execution (simulated) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\agent_executor.py` | source: services/TODOs.md
 - [ ] 498:            result["response"] = {"status": 200, "data": "simulated response"} - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\agent_executor.py` | source: services/TODOs.md
 - [ ] 331:        logger.info(" Mock Genomic Analyzer initialized (60B model simulation)") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py` | source: services/TODOs.md
-- [ ] 328:    """Analizador genómico mock para demostración (mientras se integran herramientas reales)""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py` | source: services/TODOs.md
+- [ ] 328:    """Analizador gen�mico mock for demonstration (while real tools are integrated)""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py` | source: services/TODOs.md
 - [ ] 316:        """Genera modelo BIM mock""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\text_to_bim_service.py` | source: services/TODOs.md
-- [ ] 310:    """Generador BIM mock para demostración""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\text_to_bim_service.py` | source: services/TODOs.md
+- [ ] 310:    """Generador BIM mock for demonstration""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\text_to_bim_service.py` | source: services/TODOs.md
 - [ ] 385:        self.generator = MockBIMGenerator()  # Default to mock for demo - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\text_to_bim_service.py` | source: services/TODOs.md
 - [ ] 136:        "mock_bim": True,  # Siempre disponible para testing - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\__init__.py` | source: services/TODOs.md
 - [ ] 435:                bim_tool_used="mock_generator", - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\text_to_bim_service.py` | source: services/TODOs.md
@@ -215,7 +215,7 @@ Total pendientes: 442
 - [ ] 337:        mock_variants = [ - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py` | source: services/TODOs.md
 - [ ] 364:            "variants": mock_variants, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py` | source: services/TODOs.md
 - [ ] 299:            "print3d": self._mock_print3d_service, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\multi_service_orchestrator.py` | source: services/TODOs.md
-- [ ] 297:        # Servicios disponibles (mocks para demostración) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\multi_service_orchestrator.py` | source: services/TODOs.md
+- [ ] 297:        # Servicios disponibles (mocks for demonstration) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\multi_service_orchestrator.py` | source: services/TODOs.md
 - [ ] 696:                # Create file structure (mock mode) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py` | source: services/TODOs.md
 - [ ] 698:                    await self._create_mock_files(request, generation_result) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py` | source: services/TODOs.md
 - [ ] 689:                logger.info(" Using mock code generator...") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py` | source: services/TODOs.md
@@ -238,7 +238,7 @@ Total pendientes: 442
 - [ ] 49:    """Decorador placeholder for distributed_jit.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\vision\capivision.py` | source: sub_models/TODOs.md
 - [ ] 1:"""Module placeholder.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\experimental\__init__.py` | source: sub_models/TODOs.md
 - [ ] 292:        return "adaptive_vq_placeholder"  # Placeholder for current enhanced model - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py` | source: sub_models/TODOs.md
-- [ ] 330:            logger.warning("️ SSM layers not available, using placeholder") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_enhanced_integration.py` | source: sub_models/TODOs.md
+- [ ] 330:            logger.warning("? SSM layers not available, using placeholder") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_enhanced_integration.py` | source: sub_models/TODOs.md
 - [ ] 300:        return "spike_ssm_placeholder"  # Placeholder for current enhanced model - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py` | source: sub_models/TODOs.md
 - [ ] 361:            self.expert_soup_manager = "expert_soup_placeholder" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py` | source: sub_models/TODOs.md
 - [ ] 308:        return "deep_dialog_placeholder"  # Placeholder for current enhanced model - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py` | source: sub_models/TODOs.md
@@ -287,11 +287,11 @@ Total pendientes: 442
 - [ ] 325:                                placeholder="Example: Send me an email when someone submits the contact form" required></textarea> - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\web_ui.py` | source: TODOs.md
 - [ ] 29:                # always use nuestro mock JAX for CapibaraGPT - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py` | source: TODOs.md
 - [ ] 31:        # create mock JAX compatible - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py` | source: TODOs.md
-- [ ] 14:    _base_jax = None  # not tenemos JAX estándar, usamos nuestro mock - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py` | source: TODOs.md
-- [ ] 27:        Módulo JAX (estándar or mock) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py` | source: TODOs.md
+- [ ] 14:    _base_jax = None  # not tenemos JAX est�ndar, usamos nuestro mock - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py` | source: TODOs.md
+- [ ] 27:        M�dulo JAX (est�ndar or mock) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py` | source: TODOs.md
 - [ ] 1:"""Module placeholder.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\experimental\__init__.py` | source: TODOs.md
 - [ ] 242:            # For now, show a placeholder - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\web_ui.py` | source: TODOs.md
-- [ ] 62:        Módulo numpy de JAX (estándar or mock) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py` | source: TODOs.md
+- [ ] 62:        M�dulo numpy de JAX (est�ndar or mock) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py` | source: TODOs.md
 - [ ] 67:        # create un mock simple for testing - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py` | source: TODOs.md
 - [ ] 256:    """Test Mamba/SSM operations (mock implementation).""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\unit\test_core_model.py` | source: TODOs.md
 - [ ] 234:    """Test router selection logic (mock implementation).""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\unit\test_core_model.py` | source: TODOs.md
@@ -320,8 +320,8 @@ Total pendientes: 442
 - [ ] 13:from unittest.mock import patch, MagicMock - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\unit\test_benchmark_system.py` | source: TODOs.md
 - [ ] 702:        # For placeholder implementation, return first result - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py` | source: TODOs.md
 - [ ] 677:        # For now, return placeholder results - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py` | source: TODOs.md
-- [ ] 330:            logger.warning("️ SSM layers not available, using placeholder") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_enhanced_integration.py` | source: TODOs.md
-- [ ] 328:    """Analizador genómico mock para demostración (mientras se integran herramientas reales)""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py` | source: TODOs.md
+- [ ] 330:            logger.warning("? SSM layers not available, using placeholder") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_enhanced_integration.py` | source: TODOs.md
+- [ ] 328:    """Analizador gen�mico mock for demonstration (while real tools are integrated)""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py` | source: TODOs.md
 - [ ] 12:from unittest.mock import patch, MagicMock - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\unit\test_memory_profiler.py` | source: TODOs.md
 - [ ] 222:        """Test creating gate from a mock backend object.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\unit\test_module_gate.py` | source: TODOs.md
 - [ ] 344:    def simulate_download_status(self, dataset_id: str) -> Dict[str, Any]: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\systems\systems_logs_datasets.py` | source: TODOs.md
@@ -341,7 +341,7 @@ Total pendientes: 442
 - [ ] 623:    def mock_generate(prompt: str, **kwargs) -> str: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\core\cot_27_nuclei_complete.py` | source: TODOs.md
 - [ ] 120:purpose = "Full adaptive simulation" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\config\configs_toml\production\training_strategy.toml` | source: TODOs.md
 - [ ] 51:        self.parameters = self._create_mock_parameters() - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py` | source: TODOs.md
-- [ ] 43:    logger.warning("️ Full lineage system not available - running mock demo") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py` | source: TODOs.md
+- [ ] 43:    logger.warning("? Full lineage system not available - running mock demo") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py` | source: TODOs.md
 - [ ] 257:    # Create mock model - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\scripts\train_synthetic.py` | source: TODOs.md
 - [ ] 53:    def _create_mock_parameters(self) -> Dict[str, jnp.ndarray]: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py` | source: TODOs.md
 - [ ] 128:            await self._run_mock_demo() - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py` | source: TODOs.md
@@ -368,7 +368,7 @@ Total pendientes: 442
 - [ ] 639:            # Fallback to mock generation - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py` | source: TODOs.md
 - [ ] 767:        results["mock_generator"] = {"available": True, "status": "Always available"} - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py` | source: TODOs.md
 - [ ] 316:        """Genera modelo BIM mock""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\text_to_bim_service.py` | source: TODOs.md
-- [ ] 310:    """Generador BIM mock para demostración""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\text_to_bim_service.py` | source: TODOs.md
+- [ ] 310:    """Generador BIM mock for demonstration""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\text_to_bim_service.py` | source: TODOs.md
 - [ ] 136:        "mock_bim": True,  # Siempre disponible para testing - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\__init__.py` | source: TODOs.md
 - [ ] 390:    def _generate_mock_service_code(self, request: ServiceGenerationRequest) -> str: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py` | source: TODOs.md
 - [ ] 340:                    # Use standard n8n execution (simulated) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\agent_executor.py` | source: TODOs.md
@@ -376,7 +376,7 @@ Total pendientes: 442
 - [ ] 818:            logger.error(f" Error creating mock files: {e}") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py` | source: TODOs.md
 - [ ] 481:        """Execute a node in standard n8n mode (simulated).""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\agent_executor.py` | source: TODOs.md
 - [ ] 299:            "print3d": self._mock_print3d_service, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\multi_service_orchestrator.py` | source: TODOs.md
-- [ ] 297:        # Servicios disponibles (mocks para demostración) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\multi_service_orchestrator.py` | source: TODOs.md
+- [ ] 297:        # Servicios disponibles (mocks for demonstration) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\multi_service_orchestrator.py` | source: TODOs.md
 - [ ] 498:            result["response"] = {"status": 200, "data": "simulated response"} - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\agent_executor.py` | source: TODOs.md
 - [ ] 749:                f.write(generation_result["mock_code_preview"]) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py` | source: TODOs.md
 - [ ] 690:                generation_result = await self.mock_generator.generate_service_code(request) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py` | source: TODOs.md
@@ -387,7 +387,7 @@ Total pendientes: 442
 - [ ] 738:    async def _create_mock_files(self, request: ServiceGenerationRequest, generation_result: Dict[str, Any]): - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py` | source: TODOs.md
 - [ ] 698:                    await self._create_mock_files(request, generation_result) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py` | source: TODOs.md
 - [ ] 434:            tool_used="mock_generator" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py` | source: TODOs.md
-- [ ] 375:        logger.info(f"️ Generating mock Print3D model: {request.description[:100]}...") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py` | source: TODOs.md
+- [ ] 375:        logger.info(f"? Generating mock Print3D model: {request.description[:100]}...") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py` | source: TODOs.md
 - [ ] 386:        volume = self._calculate_mock_volume(request) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py` | source: TODOs.md
 - [ ] 494:        self.mock_generator = MockPrint3DGenerator(self.config) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py` | source: TODOs.md
 - [ ] 492:        # Initialize parser and mock generator - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py` | source: TODOs.md
@@ -395,7 +395,7 @@ Total pendientes: 442
 - [ ] 54:        """Create mock model parameters.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py` | source: training/TODOs.md
 - [ ] 93:        self.mock_model = MockModel("300M") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py` | source: training/TODOs.md
 - [ ] 53:    def _create_mock_parameters(self) -> Dict[str, jnp.ndarray]: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py` | source: training/TODOs.md
-- [ ] 43:    logger.warning("️ Full lineage system not available - running mock demo") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py` | source: training/TODOs.md
+- [ ] 43:    logger.warning("? Full lineage system not available - running mock demo") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py` | source: training/TODOs.md
 - [ ] 51:        self.parameters = self._create_mock_parameters() - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py` | source: training/TODOs.md
 - [ ] 128:            await self._run_mock_demo() - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py` | source: training/TODOs.md
 - [ ] 334:        """Run a simplified mock demo when full system isn't available.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py` | source: training/TODOs.md
@@ -406,10 +406,10 @@ Total pendientes: 442
 
 ## Medium (8)
 - [ ] 38:    'sphinx.ext.todo',              # Support TODOs - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\docs\conf.py` | source: docs/TODOs.md
-- [ ] 1147:    # ==================== MÉTODOS DE UTILIDAD ==================== - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\modules\personality\human_gender_personality.py` | source: modules/TODOs.md
+- [ ] 1147:    # ==================== UTILITY METHODS ==================== - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\modules\personality\human_gender_personality.py` | source: modules/TODOs.md
 - [ ] 274:                logger.warning(f"SubModel type {submodel_type} not available or not implemented") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py` | source: sub_models/TODOs.md
 - [ ] 38:    'sphinx.ext.todo',              # Support TODOs - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\docs\conf.py` | source: TODOs.md
-- [ ] 1147:    # ==================== MÉTODOS DE UTILIDAD ==================== - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\modules\personality\human_gender_personality.py` | source: TODOs.md
+- [ ] 1147:    # ==================== UTILITY METHODS ==================== - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\modules\personality\human_gender_personality.py` | source: TODOs.md
 - [ ] 23:            TODO: Add detailed description. - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\utils\system_info.py` | source: TODOs.md
 - [ ] 274:                logger.warning(f"SubModel type {submodel_type} not available or not implemented") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py` | source: TODOs.md
 - [ ] 23:            TODO: Add detailed description. - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\utils\system_info.py` | source: utils/TODOs.md

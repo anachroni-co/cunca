@@ -659,9 +659,9 @@ For training issues:
 **Last updated**: 2025-11-16
 **System version**: v3.0.0
 
-## Ejemplo rápido
+## Ejemplo quick
 
-Ejemplo (pseudo-comando) para entrenar:
+Example (pseudo-command) para entrenar:
 
 ```bash
 capibara-train --config config/configs_toml/training.toml
@@ -835,7 +835,7 @@ capibara-train --config config/configs_toml/training.toml
 - [ ] # Simulate TPU v6-64 inference - `training\strategies\expanded_expert_cores_strategy.py:739`
 - [ ] # Return simulated response based on specialization - `training\strategies\expanded_expert_cores_strategy.py:742`
 - [ ] """setup for todos los modelos destilados""" - `training\strategies\hierarchical_training_strategy.py:209`
-- [ ] """Valida que todos los modelos estén equilibrados according to las métricas""" - `training\strategies\hierarchical_training_strategy.py:294`
+- [ ] """Valida que todos los modelos estén equilibrados according to las metrics""" - `training\strategies\hierarchical_training_strategy.py:294`
 - [ ] # Mock embedding generation - in real implementation, use TPU-optimized model - `training\tpu\tpu_v6_consensus_optimizer.py:338`
 - [ ] # Create expert embeddings (mock - in real implementation, load actual embeddings) - `training\tpu\tpu_v6_consensus_optimizer.py:354`
 - [ ] # Mock embedding - `training\tpu\tpu_v6_consensus_optimizer.py:361`

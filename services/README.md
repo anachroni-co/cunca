@@ -83,30 +83,30 @@ They are meant to be optional building blocks.
 - [ ] # For now, show a placeholder - `services\automation\web_ui.py:242`
 - [ ] placeholder="Example: Send me an email when someone submits the contact form" required></textarea> - `services\automation\web_ui.py:325`
 - [ ] class MockBIMGenerator: - `services\bim_generation\text_to_bim_service.py:309`
-- [ ] """Generador BIM mock para demostración""" - `services\bim_generation\text_to_bim_service.py:310`
+- [ ] """Generador BIM mock para demonstration""" - `services\bim_generation\text_to_bim_service.py:310`
 - [ ] logger.info("️ Mock BIM Generator initialized") - `services\bim_generation\text_to_bim_service.py:313`
 - [ ] """Genera modelo BIM mock""" - `services\bim_generation\text_to_bim_service.py:316`
 - [ ] self.generator = MockBIMGenerator()  # Default to mock for demo - `services\bim_generation\text_to_bim_service.py:385`
 - [ ] bim_tool_used="mock_generator", - `services\bim_generation\text_to_bim_service.py:435`
-- [ ] # Métodos de utilidad - `services\bim_generation\text_to_bim_service.py:494`
+- [ ] # methods de utilidad - `services\bim_generation\text_to_bim_service.py:494`
 - [ ] MockBIMGenerator - `services\bim_generation\__init__.py:66`
 - [ ] "mock_bim": True,  # Siempre disponible para testing - `services\bim_generation\__init__.py:136`
 - [ ] class MockGenomicAnalyzer: - `services\genomic_analysis\text_to_genomic_service.py:327`
-- [ ] """Analizador genómico mock para demostración (mientras se integran herramientas reales)""" - `services\genomic_analysis\text_to_genomic_service.py:328`
+- [ ] """Analizador genomic mock para demonstration (mientras se integran herramientas reales)""" - `services\genomic_analysis\text_to_genomic_service.py:328`
 - [ ] logger.info(" Mock Genomic Analyzer initialized (60B model simulation)") - `services\genomic_analysis\text_to_genomic_service.py:331`
 - [ ] mock_variants = [ - `services\genomic_analysis\text_to_genomic_service.py:337`
 - [ ] "variants_found": len(mock_variants), - `services\genomic_analysis\text_to_genomic_service.py:363`
 - [ ] "variants": mock_variants, - `services\genomic_analysis\text_to_genomic_service.py:364`
 - [ ] self.analyzer = MockGenomicAnalyzer() - `services\genomic_analysis\text_to_genomic_service.py:468`
-- [ ] # Métodos de utilidad - `services\genomic_analysis\text_to_genomic_service.py:666`
-- [ ] # Servicios disponibles (mocks para demostración) - `services\meta_generation\multi_service_orchestrator.py:297`
+- [ ] # methods de utilidad - `services\genomic_analysis\text_to_genomic_service.py:666`
+- [ ] # Servicios disponibles (mocks para demonstration) - `services\meta_generation\multi_service_orchestrator.py:297`
 - [ ] "print3d": self._mock_print3d_service, - `services\meta_generation\multi_service_orchestrator.py:299`
 - [ ] "circuit": self._mock_circuit_service, - `services\meta_generation\multi_service_orchestrator.py:300`
 - [ ] "code": self._mock_code_service, - `services\meta_generation\multi_service_orchestrator.py:301`
 - [ ] "cad": self._mock_cad_service, - `services\meta_generation\multi_service_orchestrator.py:302`
 - [ ] "api": self._mock_api_service - `services\meta_generation\multi_service_orchestrator.py:303`
 - [ ] # Esperar a que terminen todos los paralelos - `services\meta_generation\multi_service_orchestrator.py:405`
-- [ ] # Mock services para demostración - `services\meta_generation\multi_service_orchestrator.py:449`
+- [ ] # Mock services para demonstration - `services\meta_generation\multi_service_orchestrator.py:449`
 - [ ] async def _mock_print3d_service(self, params: Dict[str, Any]) -> Dict[str, Any]: - `services\meta_generation\multi_service_orchestrator.py:450`
 - [ ] """Mock del servicio Text-to-Print3D""" - `services\meta_generation\multi_service_orchestrator.py:451`
 - [ ] async def _mock_circuit_service(self, params: Dict[str, Any]) -> Dict[str, Any]: - `services\meta_generation\multi_service_orchestrator.py:476`
@@ -118,9 +118,9 @@ They are meant to be optional building blocks.
 - [ ] async def _mock_api_service(self, params: Dict[str, Any]) -> Dict[str, Any]: - `services\meta_generation\multi_service_orchestrator.py:557`
 - [ ] """Mock del servicio Text-to-API (control interface)""" - `services\meta_generation\multi_service_orchestrator.py:558`
 - [ ] - Verificar que todos los componentes estén disponibles - `services\meta_generation\multi_service_orchestrator.py:723`
-- [ ] """Métodos de envío""" - `services\meta_generation\payment_and_fulfillment.py:64`
+- [ ] """methods de shipping""" - `services\meta_generation\payment_and_fulfillment.py:64`
 - [ ] supplier_payment.stripe_transfer_id = f"tr_mock_{order.order_id}_{supplier_payment.supplier_id}" - `services\meta_generation\payment_and_fulfillment.py:275`
-- [ ] # Costes de envío por método y región - `services\meta_generation\payment_and_fulfillment.py:319`
+- [ ] # Costes de shipping por method y región - `services\meta_generation\payment_and_fulfillment.py:319`
 - [ ] include_mock_mode: bool = True - `services\meta_generation\text_to_gen_service.py:108`
 - [ ] class MockCodeGenerator: - `services\meta_generation\text_to_gen_service.py:341`
 - [ ] """Mock code generator when components are not available""" - `services\meta_generation\text_to_gen_service.py:342`

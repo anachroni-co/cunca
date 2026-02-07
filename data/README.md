@@ -654,7 +654,7 @@ print(f"Available datasets: {available}")
 **Last updated**: 2025-11-16
 **System version**: v3.0.0
 
-## Ejemplo rápido
+## Ejemplo quick
 
 Ejemplo (pseudo-flujo) para preparar datos:
 

@@ -686,9 +686,9 @@ config.use_gradient_checkpointing = True
 **Last updated**: 2025-11-16
 **System version**: v3.0.0
 
-## Ejemplo rápido
+## Ejemplo quick
 
-Ejemplo (pseudo-comando) para ejecutar inferencia:
+Example (pseudo-command) para ejecutar inferencia:
 
 ```bash
 capibara-inference --config config/configs_toml/inference.toml

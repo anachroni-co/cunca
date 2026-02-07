@@ -1,6 +1,6 @@
-﻿# TODOs - layers
+# TODOs - layers
 
-Actualizado: 2026-02-07
+Updated: 2026-02-07
 
 ## Critical
 - [ ] 57:            raise NotImplementedError("BitNet158 not implemented - JAX/Flax required") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\layers\sparsity\__init__.py`
@@ -14,8 +14,8 @@ Actualizado: 2026-02-07
 - [ ] 122:        # For anything else, return a placeholder string so class bodies - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\layers\jax_compat.py`
 
 ## Medium
-- [x] Sin pendientes en esta prioridad.
+- [x] No pending items at this priority.
 
 ## Low
-- [x] Sin pendientes en esta prioridad.
+- [x] No pending items at this priority.
 

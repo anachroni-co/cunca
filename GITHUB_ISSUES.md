@@ -1,25 +1,25 @@
-# GitHub Issues Pendientes (backlog técnico)
+# Pending GitHub Issues (technical backlog)
 
-Fecha de actualización: 2026-02-07
+Last updated: 2026-02-07
 
-## ISSUE-001 - `training`: eliminar mocks restantes de consenso TPU
+## ISSUE-001 - `training`: remove remaining TPU consensus mocks
 
 **Labels:** `training`, `consensus`, `tpu`, `high-priority`
 
 **Scope**
 - `training/tpu/tpu_v6_consensus_optimizer.py`
 
-**Problema**
-- Persisten embeddings y métricas mock en ruta principal.
+**Problem**
+- Mock embeddings and metrics are still present in the main path.
 
-**Criterio de cierre**
-- Embeddings reales en flujo principal.
-- Métricas de rendimiento basadas en ejecución real.
-- Prueba mínima de integración documentada.
+**Exit criteria**
+- Real embeddings in the main flow.
+- Performance metrics based on real execution.
+- A documented minimal integration test.
 
 ---
 
-## ISSUE-002 - `training`: consenso meta aún usa `mock_response`
+## ISSUE-002 - `training`: meta consensus still uses `mock_response`
 
 **Labels:** `training`, `consensus`, `high-priority`
 
@@ -27,17 +27,17 @@ Fecha de actualización: 2026-02-07
 - `training/consensus/meta_consensus_system.py`
 - `training/consensus/advance_meta_consensus_integration.py`
 
-**Problema**
-- Existen respuestas/métricas simuladas en lógica de consenso.
+**Problem**
+- Simulated responses/metrics still exist in consensus logic.
 
-**Criterio de cierre**
-- Sustituir respuestas simuladas por inferencia real de expertos.
-- Quitar `mock_metrics` y usar métricas calculadas.
-- Agregar test de no-regresión.
+**Exit criteria**
+- Replace simulated responses with real expert inference.
+- Remove `mock_metrics` and use computed metrics.
+- Add a non-regression test.
 
 ---
 
-## ISSUE-003 - `services/automation`: rutas simuladas en ejecutor
+## ISSUE-003 - `services/automation`: simulated routes in executor
 
 **Labels:** `services`, `automation`, `n8n`, `high-priority`
 
@@ -45,17 +45,17 @@ Fecha de actualización: 2026-02-07
 - `services/automation/agent_executor.py`
 - `services/automation/n8n_service.py`
 
-**Problema**
-- Hay paths de ejecución simulada en runtime.
+**Problem**
+- Simulated execution paths still exist at runtime.
 
-**Criterio de cierre**
-- Ejecución real para nodo estándar/fallback.
-- Contratos de entrada/salida estables.
-- Smoke test de flujo básico.
+**Exit criteria**
+- Real execution for standard/fallback node.
+- Stable input/output contracts.
+- Basic flow smoke test.
 
 ---
 
-## ISSUE-004 - `inference`: motores híbridos/quantized con secciones simuladas
+## ISSUE-004 - `inference`: hybrid/quantized engines with simulated sections
 
 **Labels:** `inference`, `quantization`, `high-priority`
 
@@ -63,16 +63,16 @@ Fecha de actualización: 2026-02-07
 - `inference/hybrid_inference_engine.py`
 - `inference/engines/advanced_quantized_engine.py`
 
-**Problema**
-- Carga de parámetros/generación aún depende de simulaciones.
+**Problem**
+- Parameter loading/generation still depends on simulation.
 
-**Criterio de cierre**
-- Carga real de parámetros desde checkpoint/model hub.
-- Eliminación de delays/sampling simulado en ruta principal.
+**Exit criteria**
+- Real parameter loading from checkpoint/model hub.
+- Remove simulated delays/sampling from the main path.
 
 ---
 
-## ISSUE-005 - `training/data_lineage`: separar demo mock de runtime real
+## ISSUE-005 - `training/data_lineage`: split mock demo from real runtime
 
 **Labels:** `training`, `data-lineage`, `medium-priority`
 
@@ -80,26 +80,25 @@ Fecha de actualización: 2026-02-07
 - `training/data_lineage/demo_traceability_system.py`
 - `training/data_lineage/inference_safe_parameter_controller.py`
 
-**Problema**
-- Mezcla de rutas demo con rutas potencialmente productivas.
+**Problem**
+- Demo paths are mixed with potentially production runtime paths.
 
-**Criterio de cierre**
-- Modo demo explícito y aislado.
-- Runtime real sin dependencia de mocks.
+**Exit criteria**
+- Explicit and isolated demo mode.
+- Real runtime without mock dependencies.
 
 ---
 
-## ISSUE-006 - saneamiento de documentación de TODOs por carpeta
+## ISSUE-006 - sanitize per-folder TODO documentation
 
 **Labels:** `docs`, `maintenance`, `medium-priority`
 
 **Scope**
 - `training/TODOs.md`, `core/TODOs.md`, `services/TODOs.md`, etc.
 
-**Problema**
-- Muchos TODOs desactualizados respecto al estado real.
+**Problem**
+- Many TODOs are outdated compared to current implementation.
 
-**Criterio de cierre**
-- Marcar items resueltos.
-- Conservar solo pendientes verificables por ruta/línea.
-
+**Exit criteria**
+- Mark resolved items.
+- Keep only file/line-verifiable pending items.

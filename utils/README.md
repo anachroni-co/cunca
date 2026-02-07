@@ -687,9 +687,9 @@ class Trainer:
 - [Configuration](../config/README.md)
 - [Training Module](../training/README.md)
 
-## Ejemplo rápido
+## Ejemplo quick
 
-Ejemplo (pseudo-código) para usar utilidades:
+Ejemplo (pseudo-code) para usar utilidades:
 
 ```python
 # from utils.logging_utils import setup_logging
