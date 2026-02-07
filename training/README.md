@@ -182,8 +182,8 @@ from capibara.training.hierarchical_strategy import HierarchicalTrainingPipeline
 # Configure hierarchical pipeline
 pipeline = HierarchicalTrainingPipeline(
     levels=[
-        {  # Level 1: General knowledge
-            "name": "general",
+        {  # Level 1: Generatel knowledge
+            "name": "Generatel",
             "datasets": ["wikipedia", "books"],
             "epochs": 3
         },
@@ -659,7 +659,7 @@ For training issues:
 **Last updated**: 2025-11-16
 **System version**: v3.0.0
 
-## Ejemplo quick
+## Example quick
 
 Example (pseudo-command) para entrenar:
 
@@ -724,27 +724,27 @@ capibara-train --config config/configs_toml/training.toml
 - [ ] # Mock initialization for testing - `training\consensus\meta_consensus_comp_benchmark.py:565`
 - [ ] # Mock router model path - in real implementation, provide actual path - `training\consensus\meta_consensus_system.py:366`
 - [ ] # Mock configuration - in real implementation, provide actual paths and configs - `training\consensus\meta_consensus_system.py:386`
-- [ ] # Mock consensus generation based on routing decision - `training\consensus\meta_consensus_system.py:820`
+- [ ] # Mock consensus Generation based on routing decision - `training\consensus\meta_consensus_system.py:820`
 - [ ] mock_response = f"Based on the analysis from {len(routing_decision['selected_models'])} expert models, here's the consensus response to your query." - `training\consensus\meta_consensus_system.py:821`
 - [ ] response=mock_response, - `training\consensus\meta_consensus_system.py:825`
-- [ ] tokens_generated=len(mock_response.split()), - `training\consensus\meta_consensus_system.py:834`
+- [ ] tokens_Generated=len(mock_response.split()), - `training\consensus\meta_consensus_system.py:834`
 - [ ] # Mock metrics for unified consensus - `training\consensus\meta_consensus_system.py:846`
 - [ ] mock_metrics = { - `training\consensus\meta_consensus_system.py:847`
 - [ ] metrics=mock_metrics, - `training\consensus\meta_consensus_system.py:855`
 - [ ] mock_response = "This is a fallback response from the unified consensus strategy." - `training\consensus\meta_consensus_system.py:859`
 - [ ] response=mock_response, - `training\consensus\meta_consensus_system.py:863`
-- [ ] tokens_generated=len(mock_response.split()), - `training\consensus\meta_consensus_system.py:872`
+- [ ] tokens_Generated=len(mock_response.split()), - `training\consensus\meta_consensus_system.py:872`
 - [ ] # Mock bias detection - in real implementation, use bias detection models - `training\consensus\meta_consensus_system.py:931`
 - [ ] # Mock safety filtering - in real implementation, use safety models - `training\consensus\meta_consensus_system.py:937`
 - [ ] expert_names = [f"expert_{i}" for i in range(20)]  # Mock expert names - `training\consensus\optimized_consensus_router.py:371`
-- [ ] # Standard embedding generation (mock) - `training\consensus\optimized_consensus_router.py:505`
-- [ ] # Mock GPU embedding generation - `training\consensus\optimized_consensus_router.py:518`
-- [ ] # Mock TPU v6 embedding generation with JAX - `training\consensus\optimized_consensus_router.py:528`
+- [ ] # Standard embedding Generation (mock) - `training\consensus\optimized_consensus_router.py:505`
+- [ ] # Mock GPU embedding Generation - `training\consensus\optimized_consensus_router.py:518`
+- [ ] # Mock TPU v6 embedding Generation with JAX - `training\consensus\optimized_consensus_router.py:528`
 - [ ] expert_embeddings = np.random.random((num_experts, 768)).astype(np.float32)  # Mock embeddings - `training\consensus\optimized_consensus_router.py:546`
 - [ ] # Mock GPU calculation - `training\consensus\optimized_consensus_router.py:595`
 - [ ] # Cosine similarity calculation (mock) - `training\consensus\optimized_consensus_router.py:602`
 - [ ] # Mock GPU acceleration - in real implementation, use actual GPU operations - `training\consensus\optimized_meta_consensus.py:594`
-- [ ] # Mock response generation - in real implementation, call actual expert - `training\consensus\optimized_meta_consensus.py:797`
+- [ ] # Mock response Generation - in real implementation, call actual expert - `training\consensus\optimized_meta_consensus.py:797`
 - [ ] diversity_scores = np.random.random(num_responses).astype(np.float32)  # Mock diversity - `training\consensus\optimized_meta_consensus.py:902`
 - [ ] # Create mock embeddings for consensus calculation - `training\consensus\optimized_meta_consensus.py:911`
 - [ ] # Mock memory usage - `training\consensus\optimized_meta_consensus.py:948`
@@ -836,7 +836,7 @@ capibara-train --config config/configs_toml/training.toml
 - [ ] # Return simulated response based on specialization - `training\strategies\expanded_expert_cores_strategy.py:742`
 - [ ] """setup for todos los modelos destilados""" - `training\strategies\hierarchical_training_strategy.py:209`
 - [ ] """Valida que todos los modelos estén equilibrados according to las metrics""" - `training\strategies\hierarchical_training_strategy.py:294`
-- [ ] # Mock embedding generation - in real implementation, use TPU-optimized model - `training\tpu\tpu_v6_consensus_optimizer.py:338`
+- [ ] # Mock embedding Generation - in real implementation, use TPU-optimized model - `training\tpu\tpu_v6_consensus_optimizer.py:338`
 - [ ] # Create expert embeddings (mock - in real implementation, load actual embeddings) - `training\tpu\tpu_v6_consensus_optimizer.py:354`
 - [ ] # Mock embedding - `training\tpu\tpu_v6_consensus_optimizer.py:361`
 - [ ] # Mock TPU utilization metrics - `training\tpu\tpu_v6_consensus_optimizer.py:645`
@@ -844,7 +844,7 @@ capibara-train --config config/configs_toml/training.toml
 - [ ] # Simulate H200 inference with HuggingFace Pro - `training\tpu\tpu_v6_huggingface_pro_strategy.py:297`
 - [ ] # Simulate TPU v6 optimized inference - `training\tpu\tpu_v6_huggingface_pro_strategy.py:381`
 - [ ] # Simulate H200 distributed inference with HF Pro - `training\tpu\tpu_v6_huggingface_pro_strategy.py:425`
-- [ ] # Simulate response generation - `training\tpu\tpu_v6_huggingface_pro_strategy.py:432`
+- [ ] # Simulate response Generation - `training\tpu\tpu_v6_huggingface_pro_strategy.py:432`
 - [ ] await asyncio.sleep(0.1)  # Simulate H200 inference time - `training\tpu\tpu_v6_huggingface_pro_strategy.py:433`
 - [ ] # Return simulated response based on domain - `training\tpu\tpu_v6_huggingface_pro_strategy.py:435`
 - [ ] # Simulate TPU v6 inference - `training\tpu\tpu_v6_huggingface_pro_strategy.py:455`

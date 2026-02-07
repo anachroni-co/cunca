@@ -3,235 +3,235 @@
 Updated: 2026-02-07
 
 ## Critical
-- [ ] 72:        raise NotImplementedError - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\agents\capibara_agent_factory.py`
-- [ ] 354:        # Create expert embeddings (mock - in real implementation, load actual embeddings) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\tpu\tpu_v6_consensus_optimizer.py`
-- [ ] 35:        raise NotImplementedError - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\core\data_processing.py`
-- [ ] 52:        raise NotImplementedError - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\core\data_processing.py`
-- [ ] 69:        raise NotImplementedError - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\core\data_processing.py`
-- [ ] 86:        raise NotImplementedError - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\core\data_processing.py`
-- [ ] 42:        raise NotImplementedError - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\core\jax_data_processing.py`
-- [ ] 222:    "raise NotImplementedError", - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\pyproject.toml`
-- [ ] 524:            model_params = {"mock_params": np.random.normal(0, 0.1, (1000,))} - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\btx_training_system.py`
-- [ ] 37:    # Create mock jax.numpy - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_safe_parameter_controller.py`
-- [ ] 305:            # Create mock lineage for testing - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_safe_parameter_controller.py`
-- [ ] 661:    mock_params = { - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_safe_parameter_controller.py`
-- [ ] 674:        mock_params, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_safe_parameter_controller.py`
-- [ ] 678:    logger.info(f" Controller created with {len(mock_params)} parameters") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_safe_parameter_controller.py`
-- [ ] 32:    # Create mock jax.numpy for testing - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
-- [ ] 192:            # Create mock parameter lineage for this dataset - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
-- [ ] 193:            self._create_mock_lineage(dataset_id) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
-- [ ] 241:                self._create_mock_lineage(dataset) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
-- [ ] 301:            # Create mock lineage - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
-- [ ] 302:            self._create_mock_lineage("test_dataset") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
-- [ ] 362:            self._create_mock_lineage("double_test") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
-- [ ] 411:    def _create_mock_lineage(self, dataset_id: str): - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
-- [ ] 412:        """Create mock parameter lineage for testing.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
-- [ ] 529:    # Create mock model - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
-- [ ] 10:- Full inference pipeline simulation - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\benchmarks\test_e2e_latency.py`
-- [ ] 683:            # Cosine similarity calculation (mock) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\optimized_consensus_router.py`
-- [ ] 821:        mock_response = f"Based on the analysis from {len(routing_decision['selected_models'])} expert models, here's the consensus response to your query." - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
-- [ ] 825:            response=mock_response, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
-- [ ] 834:            tokens_generated=len(mock_response.split()), - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
-- [ ] 847:        mock_metrics = { - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
-- [ ] 855:            metrics=mock_metrics, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
-- [ ] 859:        mock_response = "This is a fallback response from the unified consensus strategy." - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
-- [ ] 863:            response=mock_response, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
-- [ ] 872:            tokens_generated=len(mock_response.split()), - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
-- [ ] 1019:        async def mock_expert_response(query: str, expert_id: str): - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\distributed_consensus_cache.py`
-- [ ] 1030:        result1 = await mock_expert_response("test query", "expert_1") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\distributed_consensus_cache.py`
-- [ ] 1035:        result2 = await mock_expert_response("test query", "expert_1") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\distributed_consensus_cache.py`
-- [ ] 276:        # Extract response embeddings (mock data for demonstration) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\advance_meta_consensus_integration.py`
-- [ ] 333:        expert_responses = [{'response': 'mock_response', 'confidence': 0.9}] - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\advance_meta_consensus_integration.py`
-- [ ] 57:            raise NotImplementedError("BitNet158 not implemented - JAX/Flax required") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\layers\sparsity\__init__.py`
-- [ ] 61:            raise NotImplementedError("Conv1DBlock not implemented - JAX/Flax required") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\layers\sparsity\__init__.py`
-- [ ] 66:            raise NotImplementedError("SparseCapibara not implemented - JAX/Flax required") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\layers\sparsity\__init__.py`
-- [ ] 71:            raise NotImplementedError("AffineQuantizer not implemented - JAX/Flax required") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\layers\sparsity\__init__.py`
-- [ ] 76:            raise NotImplementedError("MixtureOfRookies not implemented - JAX/Flax required") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\layers\sparsity\__init__.py`
-- [ ] 141:            raise NotImplementedError("SparseCapibara requires JAX/Flax to be installed") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\layers\sparsity\sparse_capibara.py`
-- [ ] 20:from unittest.mock import patch, MagicMock - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\security\test_security.py`
-- [ ] 82:        assert "@title_param" in query, "Must use parameterized placeholder" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\security\test_security.py`
-- [ ] 106:        """All search fields must use @param placeholders.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\security\test_security.py`
-- [ ] 332:        """No placeholder tokens like 'your_hf_token_here'.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\security\test_security.py`
-- [ ] 410:                k_mock = np.random.randn(seq_len, num_heads, head_dim).astype(np.float16) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\inference\engines\quantized_engine.py`
-- [ ] 411:                v_mock = np.random.randn(seq_len, num_heads, head_dim).astype(np.float16) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\inference\engines\quantized_engine.py`
-- [ ] 413:                self.kv_cache.add_kv_to_cache(0, k_mock, v_mock)  # Layer 0 - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\inference\engines\quantized_engine.py`
-- [ ] 95:        # Load model parameters (mock implementation) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\inference\engines\advanced_quantized_engine.py`
-- [ ] 160:        # For now, we simulate the structure - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\inference\hybrid_inference_engine.py`
-- [ ] 167:            # Create mock parameters for demo - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\inference\hybrid_inference_engine.py`
-- [ ] 168:            logger.warning("Using mock parameters for demo") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\inference\hybrid_inference_engine.py`
-- [ ] 208:                    # Sampling simulation - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\inference\hybrid_inference_engine.py`
-- [ ] 243:        # For now, we simulate with chunks - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\inference\hybrid_inference_engine.py`
-- [ ] 461:            # Fallback: generate complete and simulate streaming - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\inference\hybrid_inference_engine.py`
-- [ ] 484:            raise NotImplementedError("Flax required for quantized layers") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\inference\quantization\quantized_layers.py`
-- [ ] 494:            raise NotImplementedError("Flax required for quantized layers") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\inference\quantization\quantized_layers.py`
-- [ ] 505:            raise NotImplementedError("Flax required for quantized layers") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\inference\quantization\quantized_layers.py`
-- [ ] 294:        raise NotImplementedError(f"No implementation for {self.name}") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\core.py`
-- [ ] 297:        raise NotImplementedError(f"No abstract evaluation for {self.name}") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\core.py`
-- [ ] 316:        raise NotImplementedError - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\core.py`
-- [ ] 328:        raise NotImplementedError - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\core.py`
-- [ ] 331:        raise NotImplementedError - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\core.py`
-- [ ] 16:        raise NotImplementedError - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\interfaces\imodules.py`
+- [ ] 72:        raise NotImplementedError - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\agents\capibara_agent_factory.py`
+- [ ] 354:        # Create expert embeddings (mock - in real implementation, load actual embeddings) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\tpu\tpu_v6_consensus_optimizer.py`
+- [ ] 35:        raise NotImplementedError - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\data\core\data_processing.py`
+- [ ] 52:        raise NotImplementedError - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\data\core\data_processing.py`
+- [ ] 69:        raise NotImplementedError - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\data\core\data_processing.py`
+- [ ] 86:        raise NotImplementedError - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\data\core\data_processing.py`
+- [ ] 42:        raise NotImplementedError - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\data\core\jax_data_processing.py`
+- [ ] 222:    "raise NotImplementedError", - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\pyproject.toml`
+- [ ] 524:            model_params = {"mock_params": np.random.normal(0, 0.1, (1000,))} - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\btx_training_system.py`
+- [ ] 37:    # Create mock jax.numpy - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\inference_safe_parameter_controller.py`
+- [ ] 305:            # Create mock lineage for testing - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\inference_safe_parameter_controller.py`
+- [ ] 661:    mock_params = { - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\inference_safe_parameter_controller.py`
+- [ ] 674:        mock_params, - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\inference_safe_parameter_controller.py`
+- [ ] 678:    logger.info(f" Controller created with {len(mock_params)} parameters") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\inference_safe_parameter_controller.py`
+- [ ] 32:    # Create mock jax.numpy for testing - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
+- [ ] 192:            # Create mock parameter lineage for this dataset - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
+- [ ] 193:            self._create_mock_lineage(dataset_id) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
+- [ ] 241:                self._create_mock_lineage(dataset) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
+- [ ] 301:            # Create mock lineage - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
+- [ ] 302:            self._create_mock_lineage("test_dataset") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
+- [ ] 362:            self._create_mock_lineage("double_test") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
+- [ ] 411:    def _create_mock_lineage(self, dataset_id: str): - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
+- [ ] 412:        """Create mock parameter lineage for testing.""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
+- [ ] 529:    # Create mock model - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
+- [ ] 10:- Full inference pipeline simulation - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\tests\benchmarks\test_e2e_latency.py`
+- [ ] 683:            # Cosine similarity calculation (mock) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\consensus\optimized_consensus_router.py`
+- [ ] 821:        mock_response = f"Based on the analysis from {len(routing_decision['selected_models'])} expert models, here's the consensus response to your query." - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
+- [ ] 825:            response=mock_response, - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
+- [ ] 834:            tokens_Generated=len(mock_response.split()), - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
+- [ ] 847:        mock_metrics = { - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
+- [ ] 855:            metrics=mock_metrics, - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
+- [ ] 859:        mock_response = "This is a fallback response from the unified consensus strategy." - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
+- [ ] 863:            response=mock_response, - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
+- [ ] 872:            tokens_Generated=len(mock_response.split()), - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
+- [ ] 1019:        async def mock_expert_response(query: str, expert_id: str): - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\consensus\distributed_consensus_cache.py`
+- [ ] 1030:        result1 = await mock_expert_response("test query", "expert_1") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\consensus\distributed_consensus_cache.py`
+- [ ] 1035:        result2 = await mock_expert_response("test query", "expert_1") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\consensus\distributed_consensus_cache.py`
+- [ ] 276:        # Extract response embeddings (mock data for demonstration) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\consensus\advance_meta_consensus_integration.py`
+- [ ] 333:        expert_responses = [{'response': 'mock_response', 'confidence': 0.9}] - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\consensus\advance_meta_consensus_integration.py`
+- [ ] 57:            raise NotImplementedError("BitNet158 not implemented - JAX/Flax required") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\layers\sparsity\__init__.py`
+- [ ] 61:            raise NotImplementedError("Conv1DBlock not implemented - JAX/Flax required") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\layers\sparsity\__init__.py`
+- [ ] 66:            raise NotImplementedError("SparseCapibara not implemented - JAX/Flax required") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\layers\sparsity\__init__.py`
+- [ ] 71:            raise NotImplementedError("AffineQuantizer not implemented - JAX/Flax required") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\layers\sparsity\__init__.py`
+- [ ] 76:            raise NotImplementedError("MixtureOfRookies not implemented - JAX/Flax required") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\layers\sparsity\__init__.py`
+- [ ] 141:            raise NotImplementedError("SparseCapibara requires JAX/Flax to be installed") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\layers\sparsity\sparse_capibara.py`
+- [ ] 20:from unittest.mock import patch, MagicMock - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\tests\security\test_security.py`
+- [ ] 82:        assert "@title_param" in query, "Must use parameterized placeholder" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\tests\security\test_security.py`
+- [ ] 106:        """All search fields must use @param placeholders.""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\tests\security\test_security.py`
+- [ ] 332:        """No placeholder tokens like 'your_hf_token_here'.""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\tests\security\test_security.py`
+- [ ] 410:                k_mock = np.random.randn(seq_len, num_heads, head_dim).astype(np.float16) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\inference\engines\quantized_engine.py`
+- [ ] 411:                v_mock = np.random.randn(seq_len, num_heads, head_dim).astype(np.float16) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\inference\engines\quantized_engine.py`
+- [ ] 413:                self.kv_cache.add_kv_to_cache(0, k_mock, v_mock)  # Layer 0 - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\inference\engines\quantized_engine.py`
+- [ ] 95:        # Load model parameters (mock implementation) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\inference\engines\advanced_quantized_engine.py`
+- [ ] 160:        # For now, we simulate the structure - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\inference\hybrid_inference_engine.py`
+- [ ] 167:            # Create mock parameters for demo - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\inference\hybrid_inference_engine.py`
+- [ ] 168:            logger.warning("Using mock parameters for demo") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\inference\hybrid_inference_engine.py`
+- [ ] 208:                    # Sampling simulation - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\inference\hybrid_inference_engine.py`
+- [ ] 243:        # For now, we simulate with chunks - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\inference\hybrid_inference_engine.py`
+- [ ] 461:            # Fallback: Generate complete and simulate streaming - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\inference\hybrid_inference_engine.py`
+- [ ] 484:            raise NotImplementedError("Flax required for quantized layers") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\inference\quantization\quantized_layers.py`
+- [ ] 494:            raise NotImplementedError("Flax required for quantized layers") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\inference\quantization\quantized_layers.py`
+- [ ] 505:            raise NotImplementedError("Flax required for quantized layers") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\inference\quantization\quantized_layers.py`
+- [ ] 294:        raise NotImplementedError(f"No implementation for {self.name}") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\jax\core.py`
+- [ ] 297:        raise NotImplementedError(f"No abstract evaluation for {self.name}") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\jax\core.py`
+- [ ] 316:        raise NotImplementedError - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\jax\core.py`
+- [ ] 328:        raise NotImplementedError - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\jax\core.py`
+- [ ] 331:        raise NotImplementedError - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\jax\core.py`
+- [ ] 16:        raise NotImplementedError - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\interfaces\imodules.py`
 
 ## High
-- [ ] 874:            main_code = "# Generated code placeholder" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\agents\advanced_behaviors.py`
-- [ ] 952:        return f"// {name} class placeholder" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\agents\advanced_behaviors.py`
-- [ ] 649:        return {"type": "fallback", "name": dataset_name, "data": "placeholder_data"} - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\ultra_data_orchestrator.py`
-- [ ] 690:            # Monitor performance (simulate monitoring) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\agents\examples.py`
-- [ ] 623:    def mock_generate(prompt: str, **kwargs) -> str: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\core\cot_27_nuclei_complete.py`
-- [ ] 628:        core_model_generate_fn=mock_generate, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\core\cot_27_nuclei_complete.py`
-- [ ] 157:        # For now, we'll skip the current update in this mock implementation - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\capibara\vq\vqbit_layer.py`
-- [ ] 207:        # simple importance-based compression (mock implementation) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\capibara\vq\vqbit_layer.py`
-- [ ] 244:        # For this mock implementation, just return the compressed data - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\capibara\vq\vqbit_layer.py`
-- [ ] 29:# Minimal placeholders for compatibility with imports used in suite - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\config\__init__.py`
-- [ ] 344:    def simulate_download_status(self, dataset_id: str) -> Dict[str, Any]: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\systems\systems_logs_datasets.py`
-- [ ] 426:                # Create placeholder and instructions - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\multimodal\emotional_audio_datasets.py`
-- [ ] 119:        # For now, generate simulated data - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\genomic\genomic_datasets.py`
-- [ ] 184:        # Generate simulated expression matrix - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\genomic\genomic_datasets.py`
-- [ ] 57:trigger_keywords = [ "adaptive", "physics", "simulation", "system",] - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\config\configs_toml\production\training_strategy.toml`
-- [ ] 120:purpose = "Full adaptive simulation" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\config\configs_toml\production\training_strategy.toml`
-- [ ] 112:# TODO(2026-02-05): Implement these CLIs in capibara/training/cli.py, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\pyproject.toml`
-- [ ] 580:        # Initialize model parameters (mock for demonstration) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\byte_level_training.py`
-- [ ] 1:"""Module placeholder.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\prompts\__init__.py`
-- [ ] 355:    # Initialize model and parameters (mock for testing) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\prompts\prompt_template.py`
-- [ ] 5:- Training data simulation - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\fixtures\synthetic_data.py`
-- [ ] 234:            f"It contains various words and sentences to simulate real data." - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\conftest.py`
-- [ ] 89:        # Initialize mock weights - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\scripts\train_synthetic.py`
-- [ ] 117:        # Embedding lookup (simulated) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\scripts\train_synthetic.py`
-- [ ] 257:    # Create mock model - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\scripts\train_synthetic.py`
-- [ ] 43:    logger.warning("? Full lineage system not available - running mock demo") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
-- [ ] 51:        self.parameters = self._create_mock_parameters() - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
-- [ ] 53:    def _create_mock_parameters(self) -> Dict[str, jnp.ndarray]: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
-- [ ] 54:        """Create mock model parameters.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
-- [ ] 93:        self.mock_model = MockModel("300M") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
-- [ ] 128:            await self._run_mock_demo() - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
-- [ ] 230:            model_parameters=self.mock_model.parameters, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
-- [ ] 333:    async def _run_mock_demo(self): - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
-- [ ] 334:        """Run a simplified mock demo when full system isn't available.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
-- [ ] 335:        logger.warning(" Running mock demonstration (full system not available)") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
-- [ ] 292:    """End-to-end latency simulating a full transformer block.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\benchmarks\test_e2e_latency.py`
-- [ ] 771:            self.expert_soup_manager = "expert_soup_placeholder" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\modules\ultra_module_orchestrator.py`
-- [ ] 280:                            # Create module instance (placeholder for current testing) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\modules\ultra_modules_demo.py`
-- [ ] 591:        """Extract text features (simulated).""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\modules\specialized_processors.py`
-- [ ] 10:from unittest.mock import patch - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\unit\test_decorators.py`
-- [ ] 234:    """Test router selection logic (mock implementation).""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\unit\test_core_model.py`
-- [ ] 256:    """Test Mamba/SSM operations (mock implementation).""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\unit\test_core_model.py`
-- [ ] 49:    """Decorador placeholder for distributed_jit.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\vision\capivision.py`
-- [ ] 292:        return "adaptive_vq_placeholder"  # Placeholder for current enhanced model - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`
-- [ ] 300:        return "spike_ssm_placeholder"  # Placeholder for current enhanced model - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`
-- [ ] 308:        return "deep_dialog_placeholder"  # Placeholder for current enhanced model - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`
-- [ ] 361:            self.expert_soup_manager = "expert_soup_placeholder" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`
-- [ ] 677:        # For now, return placeholder results - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`
-- [ ] 702:        # For placeholder implementation, return first result - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`
-- [ ] 13:from unittest.mock import patch, MagicMock - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\unit\test_benchmark_system.py`
-- [ ] 330:            logger.warning("? SSM layers not available, using placeholder") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_enhanced_integration.py`
-- [ ] 222:        """Test creating gate from a mock backend object.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\unit\test_module_gate.py`
-- [ ] 12:from unittest.mock import patch, MagicMock - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\unit\test_memory_profiler.py`
-- [ ] 328:    """Analizador genómico mock for demonstration (while real tools are integrated)""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py`
-- [ ] 331:        logger.info(" Mock Genomic Analyzer initialized (60B model simulation)") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py`
-- [ ] 337:        mock_variants = [ - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py`
-- [ ] 363:            "variants_found": len(mock_variants), - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py`
-- [ ] 364:            "variants": mock_variants, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py`
-- [ ] 298:        Describe an image using BLIP if available, otherwise return placeholder. - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\semiotic\mnemosyne_semio_module.py`
-- [ ] 85:        """Test gradient computation (simulated).""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\integration\test_training_pipeline.py`
-- [ ] 373:    async def generate_print3d_mock(self, request: Print3DRequest) -> Print3DResult: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py`
-- [ ] 374:        """Generate a mock 3D model optimized for printing.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py`
-- [ ] 375:        logger.info(f"? Generating mock Print3D model: {request.description[:100]}...") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py`
-- [ ] 386:        volume = self._calculate_mock_volume(request) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py`
-- [ ] 434:            tool_used="mock_generator" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py`
-- [ ] 437:    def _calculate_mock_volume(self, request: Print3DRequest) -> float: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py`
-- [ ] 492:        # Initialize parser and mock generator - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py`
-- [ ] 494:        self.mock_generator = MockPrint3DGenerator(self.config) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py`
-- [ ] 639:            # Fallback to mock generation - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py`
-- [ ] 640:            logger.info(" Using mock Print3D generation (E2B tools not available)") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py`
-- [ ] 641:            result = await self.mock_generator.generate_print3d_mock(request) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py`
-- [ ] 767:        results["mock_generator"] = {"available": True, "status": "Always available"} - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py`
-- [ ] 136:        "mock_bim": True,  # Siempre disponible para testing - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\__init__.py`
-- [ ] 310:    """Generador BIM mock for demonstration""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\text_to_bim_service.py`
-- [ ] 316:        """Genera modelo BIM mock""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\text_to_bim_service.py`
-- [ ] 385:        self.generator = MockBIMGenerator()  # Default to mock for demo - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\text_to_bim_service.py`
-- [ ] 435:                bim_tool_used="mock_generator", - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\text_to_bim_service.py`
-- [ ] 122:        # For anything else, return a placeholder string so class bodies - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\layers\jax_compat.py`
-- [ ] 108:    include_mock_mode: bool = True - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
-- [ ] 348:        """Generates mock code for the service""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
-- [ ] 349:        logger.info(f" Generating mock service: {request.service_name}") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
-- [ ] 377:        mock_code = self._generate_mock_service_code(request) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
-- [ ] 385:            "mock_code_preview": mock_code, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
-- [ ] 390:    def _generate_mock_service_code(self, request: ServiceGenerationRequest) -> str: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
-- [ ] 628:        self.mock_generator = MockCodeGenerator(self.config) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
-- [ ] 689:                logger.info(" Using mock code generator...") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
-- [ ] 690:                generation_result = await self.mock_generator.generate_service_code(request) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
-- [ ] 696:                # Create file structure (mock mode) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
-- [ ] 698:                    await self._create_mock_files(request, generation_result) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
-- [ ] 738:    async def _create_mock_files(self, request: ServiceGenerationRequest, generation_result: Dict[str, Any]): - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
-- [ ] 739:        """Creates mock files for demonstration""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
-- [ ] 749:                f.write(generation_result["mock_code_preview"]) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
-- [ ] 818:            logger.error(f" Error creating mock files: {e}") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
-- [ ] 275:                supplier_payment.stripe_transfer_id = f"tr_mock_{order.order_id}_{supplier_payment.supplier_id}" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\payment_and_fulfillment.py`
-- [ ] 340:                    # Use standard n8n execution (simulated) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\agent_executor.py`
-- [ ] 481:        """Execute a node in standard n8n mode (simulated).""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\agent_executor.py`
-- [ ] 498:            result["response"] = {"status": 200, "data": "simulated response"} - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\agent_executor.py`
-- [ ] 297:        # Servicios disponibles (mocks for demonstration) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\multi_service_orchestrator.py`
-- [ ] 299:            "print3d": self._mock_print3d_service, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\multi_service_orchestrator.py`
-- [ ] 300:            "circuit": self._mock_circuit_service, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\multi_service_orchestrator.py`
-- [ ] 301:            "code": self._mock_code_service, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\multi_service_orchestrator.py`
-- [ ] 302:            "cad": self._mock_cad_service, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\multi_service_orchestrator.py`
-- [ ] 303:            "api": self._mock_api_service - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\multi_service_orchestrator.py`
-- [ ] 450:    async def _mock_print3d_service(self, params: Dict[str, Any]) -> Dict[str, Any]: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\multi_service_orchestrator.py`
-- [ ] 476:    async def _mock_circuit_service(self, params: Dict[str, Any]) -> Dict[str, Any]: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\multi_service_orchestrator.py`
-- [ ] 504:    async def _mock_code_service(self, params: Dict[str, Any]) -> Dict[str, Any]: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\multi_service_orchestrator.py`
-- [ ] 532:    async def _mock_cad_service(self, params: Dict[str, Any]) -> Dict[str, Any]: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\multi_service_orchestrator.py`
-- [ ] 557:    async def _mock_api_service(self, params: Dict[str, Any]) -> Dict[str, Any]: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\multi_service_orchestrator.py`
-- [ ] 238:    """TPU-optimized world model simulation.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\csa_expert_tpu_optimized.py`
-- [ ] 393:        self._simulate_scenarios_jit = jit( - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\csa_expert_tpu_optimized.py`
-- [ ] 394:            self._simulate_scenarios_impl, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\csa_expert_tpu_optimized.py`
-- [ ] 424:    def _simulate_scenarios_impl(self, params, initial_state, hypothesis_features, num_steps): - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\csa_expert_tpu_optimized.py`
-- [ ] 474:                    final_state, trajectory = self._simulate_scenarios_jit( - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\csa_expert_tpu_optimized.py`
-- [ ] 479:                    final_state, trajectory = self._simulate_scenarios_impl( - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\csa_expert_tpu_optimized.py`
-- [ ] 46:    """Extended dtype support (placeholder).""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\dtypes.py`
-- [ ] 50:    """PRNG key dtype (placeholder).""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\dtypes.py`
-- [ ] 106:autodoc_mock_imports = [ - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\docs\conf.py`
-- [ ] 14:    _base_jax = None  # not tenemos JAX estándar, usamos nuestro mock - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py`
-- [ ] 27:        Módulo JAX (estándar or mock) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py`
-- [ ] 29:                # always use nuestro mock JAX for CapibaraGPT - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py`
-- [ ] 31:        # create mock JAX compatible - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py`
-- [ ] 62:        Módulo numpy de JAX (estándar or mock) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py`
-- [ ] 67:        # create un mock simple for testing - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py`
-- [ ] 1:"""Module placeholder.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\experimental\__init__.py`
-- [ ] 242:            # For now, show a placeholder - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\web_ui.py`
-- [ ] 325:                                placeholder="Example: Send me an email when someone submits the contact form" required></textarea> - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\web_ui.py`
-- [ ] 5:Some execution paths are simulated when external services are unavailable. - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\n8n_service.py`
-- [ ] 576:            # For now, simulate execution - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\n8n_service.py`
-- [ ] 65:            logger.info("Build completed (simulation mode)") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\tpu_v4\builder.py`
-- [ ] 76:            logger.info("Install completed (simulation mode)") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\tpu_v4\builder.py`
-- [ ] 87:            logger.info("Tests completed (simulation mode)") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\tpu_v4\builder.py`
-- [ ] 168:    def simulate_lif_dynamics(self, input_currents: Any, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\tpu_v4\neuromorphic_kernels.py`
-- [ ] 205:            self.logger.error(f"LIF neuron simulation failed: {e}") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\tpu_v4\neuromorphic_kernels.py`
-- [ ] 377:        spikes, voltages = lif_kernel.simulate_lif_dynamics(test_currents) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\tpu_v4\neuromorphic_kernels.py`
+- [ ] 874:            main_code = "# Generated code placeholder" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\agents\advanced_behaviors.py`
+- [ ] 952:        return f"// {name} class placeholder" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\agents\advanced_behaviors.py`
+- [ ] 649:        return {"type": "fallback", "name": dataset_name, "data": "placeholder_data"} - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\data\ultra_data_orchestrator.py`
+- [ ] 690:            # Monitor performance (simulate monitoring) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\agents\examples.py`
+- [ ] 623:    def mock_Generate(prompt: str, **kwargs) -> str: - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\core\cot_27_nuclei_complete.py`
+- [ ] 628:        core_model_Generate_fn=mock_Generate, - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\core\cot_27_nuclei_complete.py`
+- [ ] 157:        # For now, we'll skip the current update in this mock implementation - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\capibara\vq\vqbit_layer.py`
+- [ ] 207:        # simple importance-based compression (mock implementation) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\capibara\vq\vqbit_layer.py`
+- [ ] 244:        # For this mock implementation, just return the compressed data - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\capibara\vq\vqbit_layer.py`
+- [ ] 29:# Minimal placeholders for compatibility with imports used in suite - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\config\__init__.py`
+- [ ] 344:    def simulate_download_status(self, dataset_id: str) -> Dict[str, Any]: - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\data\datasets\systems\systems_logs_datasets.py`
+- [ ] 426:                # Create placeholder and instructions - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\data\datasets\multimodal\emotional_audio_datasets.py`
+- [ ] 119:        # For now, Generate simulated data - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\data\datasets\genomic\genomic_datasets.py`
+- [ ] 184:        # Generate simulated expression matrix - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\data\datasets\genomic\genomic_datasets.py`
+- [ ] 57:trigger_keywords = [ "adaptive", "physics", "simulation", "system",] - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\config\configs_toml\production\training_strategy.toml`
+- [ ] 120:purpose = "Full adaptive simulation" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\config\configs_toml\production\training_strategy.toml`
+- [ ] 112:# TODO(2026-02-05): Implement these CLIs in capibara/training/cli.py, - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\pyproject.toml`
+- [ ] 580:        # Initialize model parameters (mock for demonstration) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\byte_level_training.py`
+- [ ] 1:"""Module placeholder.""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\prompts\__init__.py`
+- [ ] 355:    # Initialize model and parameters (mock for testing) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\prompts\prompt_template.py`
+- [ ] 5:- Training data simulation - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\tests\fixtures\synthetic_data.py`
+- [ ] 234:            f"It contains various words and sentences to simulate real data." - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\tests\conftest.py`
+- [ ] 89:        # Initialize mock weights - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\scripts\train_synthetic.py`
+- [ ] 117:        # Embedding lookup (simulated) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\scripts\train_synthetic.py`
+- [ ] 257:    # Create mock model - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\scripts\train_synthetic.py`
+- [ ] 43:    logger.warning("? Full lineage system not available - running mock demo") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
+- [ ] 51:        self.parameters = self._create_mock_parameters() - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
+- [ ] 53:    def _create_mock_parameters(self) -> Dict[str, jnp.ndarray]: - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
+- [ ] 54:        """Create mock model parameters.""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
+- [ ] 93:        self.mock_model = MockModel("300M") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
+- [ ] 128:            await self._run_mock_demo() - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
+- [ ] 230:            model_parameters=self.mock_model.parameters, - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
+- [ ] 333:    async def _run_mock_demo(self): - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
+- [ ] 334:        """Run a simplified mock demo when full system isn't available.""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
+- [ ] 335:        logger.warning(" Running mock demonstration (full system not available)") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
+- [ ] 292:    """End-to-end latency simulating a full transformer block.""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\tests\benchmarks\test_e2e_latency.py`
+- [ ] 771:            self.expert_soup_manager = "expert_soup_placeholder" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\modules\ultra_module_orchestrator.py`
+- [ ] 280:                            # Create module instance (placeholder for current testing) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\modules\ultra_modules_demo.py`
+- [ ] 591:        """Extract text features (simulated).""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\modules\specialized_processors.py`
+- [ ] 10:from unittest.mock import patch - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\tests\unit\test_decorators.py`
+- [ ] 234:    """Test router selection logic (mock implementation).""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\tests\unit\test_core_model.py`
+- [ ] 256:    """Test Mamba/SSM operations (mock implementation).""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\tests\unit\test_core_model.py`
+- [ ] 49:    """Decorador placeholder for distributed_jit.""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\sub_models\vision\capivision.py`
+- [ ] 292:        return "adaptive_vq_placeholder"  # Placeholder for current enhanced model - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`
+- [ ] 300:        return "spike_ssm_placeholder"  # Placeholder for current enhanced model - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`
+- [ ] 308:        return "deep_dialog_placeholder"  # Placeholder for current enhanced model - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`
+- [ ] 361:            self.expert_soup_manager = "expert_soup_placeholder" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`
+- [ ] 677:        # For now, return placeholder results - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`
+- [ ] 702:        # For placeholder implementation, return first result - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`
+- [ ] 13:from unittest.mock import patch, MagicMock - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\tests\unit\test_benchmark_system.py`
+- [ ] 330:            logger.warning("? SSM layers not available, using placeholder") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\sub_models\ultra_enhanced_integration.py`
+- [ ] 222:        """Test creating gate from a mock backend object.""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\tests\unit\test_module_gate.py`
+- [ ] 12:from unittest.mock import patch, MagicMock - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\tests\unit\test_memory_profiler.py`
+- [ ] 328:    """Analizador genómico mock for demonstration (while real tools are integrated)""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py`
+- [ ] 331:        logger.info(" Mock Genomic Analyzer initialized (60B model simulation)") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py`
+- [ ] 337:        mock_variants = [ - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py`
+- [ ] 363:            "variants_found": len(mock_variants), - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py`
+- [ ] 364:            "variants": mock_variants, - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py`
+- [ ] 298:        Describe an image using BLIP if available, otherwise return placeholder. - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\sub_models\semiotic\mnemosyne_semio_module.py`
+- [ ] 85:        """Test gradient computation (simulated).""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\tests\integration\test_training_pipeline.py`
+- [ ] 373:    async def Generate_print3d_mock(self, request: Print3DRequest) -> Print3DResult: - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\print3d_Generation\text_to_print3d_service.py`
+- [ ] 374:        """Generate a mock 3D model optimized for printing.""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\print3d_Generation\text_to_print3d_service.py`
+- [ ] 375:        logger.info(f"? Generateting mock Print3D model: {request.description[:100]}...") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\print3d_Generation\text_to_print3d_service.py`
+- [ ] 386:        volume = self._calculate_mock_volume(request) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\print3d_Generation\text_to_print3d_service.py`
+- [ ] 434:            tool_used="mock_Generator" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\print3d_Generation\text_to_print3d_service.py`
+- [ ] 437:    def _calculate_mock_volume(self, request: Print3DRequest) -> float: - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\print3d_Generation\text_to_print3d_service.py`
+- [ ] 492:        # Initialize parser and mock Generator - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\print3d_Generation\text_to_print3d_service.py`
+- [ ] 494:        self.mock_Generator = MockPrint3DGenerator(self.config) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\print3d_Generation\text_to_print3d_service.py`
+- [ ] 639:            # Fallback to mock Generation - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\print3d_Generation\text_to_print3d_service.py`
+- [ ] 640:            logger.info(" Using mock Print3D Generation (E2B tools not available)") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\print3d_Generation\text_to_print3d_service.py`
+- [ ] 641:            result = await self.mock_Generator.Generate_print3d_mock(request) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\print3d_Generation\text_to_print3d_service.py`
+- [ ] 767:        results["mock_Generator"] = {"available": True, "status": "Always available"} - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\print3d_Generation\text_to_print3d_service.py`
+- [ ] 136:        "mock_bim": True,  # Always available for testing - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\bim_Generation\__init__.py`
+- [ ] 310:    """Generator BIM mock for demonstration""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\bim_Generation\text_to_bim_service.py`
+- [ ] 316:        """Generate modelo BIM mock""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\bim_Generation\text_to_bim_service.py`
+- [ ] 385:        self.Generator = MockBIMGenerator()  # Default to mock for demo - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\bim_Generation\text_to_bim_service.py`
+- [ ] 435:                bim_tool_used="mock_Generator", - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\bim_Generation\text_to_bim_service.py`
+- [ ] 122:        # For anything else, return a placeholder string so class bodies - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\layers\jax_compat.py`
+- [ ] 108:    include_mock_mode: bool = True - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\text_to_gen_service.py`
+- [ ] 348:        """Generates mock code for the service""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\text_to_gen_service.py`
+- [ ] 349:        logger.info(f" Generateting mock service: {request.service_name}") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\text_to_gen_service.py`
+- [ ] 377:        mock_code = self._Generate_mock_service_code(request) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\text_to_gen_service.py`
+- [ ] 385:            "mock_code_preview": mock_code, - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\text_to_gen_service.py`
+- [ ] 390:    def _Generate_mock_service_code(self, request: ServiceGenerationRequest) -> str: - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\text_to_gen_service.py`
+- [ ] 628:        self.mock_Generator = MockCodeGenerator(self.config) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\text_to_gen_service.py`
+- [ ] 689:                logger.info(" Using mock code Generator...") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\text_to_gen_service.py`
+- [ ] 690:                Generation_result = await self.mock_Generator.Generate_service_code(request) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\text_to_gen_service.py`
+- [ ] 696:                # Create file structure (mock mode) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\text_to_gen_service.py`
+- [ ] 698:                    await self._create_mock_files(request, Generation_result) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\text_to_gen_service.py`
+- [ ] 738:    async def _create_mock_files(self, request: ServiceGenerationRequest, Generation_result: Dict[str, Any]): - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\text_to_gen_service.py`
+- [ ] 739:        """Creates mock files for demonstration""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\text_to_gen_service.py`
+- [ ] 749:                f.write(Generation_result["mock_code_preview"]) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\text_to_gen_service.py`
+- [ ] 818:            logger.error(f" Error creating mock files: {e}") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\text_to_gen_service.py`
+- [ ] 275:                supplier_payment.stripe_transfer_id = f"tr_mock_{order.order_id}_{supplier_payment.supplier_id}" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\payment_and_fulfillment.py`
+- [ ] 340:                    # Use standard n8n execution (simulated) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\automation\agent_executor.py`
+- [ ] 481:        """Execute a node in standard n8n mode (simulated).""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\automation\agent_executor.py`
+- [ ] 498:            result["response"] = {"status": 200, "data": "simulated response"} - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\automation\agent_executor.py`
+- [ ] 297:        # Available services (mocks for demonstration) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\multi_service_orchestrator.py`
+- [ ] 299:            "print3d": self._mock_print3d_service, - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\multi_service_orchestrator.py`
+- [ ] 300:            "circuit": self._mock_circuit_service, - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\multi_service_orchestrator.py`
+- [ ] 301:            "code": self._mock_code_service, - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\multi_service_orchestrator.py`
+- [ ] 302:            "cad": self._mock_cad_service, - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\multi_service_orchestrator.py`
+- [ ] 303:            "api": self._mock_api_service - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\multi_service_orchestrator.py`
+- [ ] 450:    async def _mock_print3d_service(self, params: Dict[str, Any]) -> Dict[str, Any]: - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\multi_service_orchestrator.py`
+- [ ] 476:    async def _mock_circuit_service(self, params: Dict[str, Any]) -> Dict[str, Any]: - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\multi_service_orchestrator.py`
+- [ ] 504:    async def _mock_code_service(self, params: Dict[str, Any]) -> Dict[str, Any]: - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\multi_service_orchestrator.py`
+- [ ] 532:    async def _mock_cad_service(self, params: Dict[str, Any]) -> Dict[str, Any]: - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\multi_service_orchestrator.py`
+- [ ] 557:    async def _mock_api_service(self, params: Dict[str, Any]) -> Dict[str, Any]: - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\multi_service_orchestrator.py`
+- [ ] 238:    """TPU-optimized world model simulation.""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\sub_models\csa_expert_tpu_optimized.py`
+- [ ] 393:        self._simulate_scenarios_jit = jit( - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\sub_models\csa_expert_tpu_optimized.py`
+- [ ] 394:            self._simulate_scenarios_impl, - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\sub_models\csa_expert_tpu_optimized.py`
+- [ ] 424:    def _simulate_scenarios_impl(self, params, initial_state, hypothesis_features, num_steps): - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\sub_models\csa_expert_tpu_optimized.py`
+- [ ] 474:                    final_state, trajectory = self._simulate_scenarios_jit( - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\sub_models\csa_expert_tpu_optimized.py`
+- [ ] 479:                    final_state, trajectory = self._simulate_scenarios_impl( - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\sub_models\csa_expert_tpu_optimized.py`
+- [ ] 46:    """Extended dtype support (placeholder).""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\jax\dtypes.py`
+- [ ] 50:    """PRNG key dtype (placeholder).""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\jax\dtypes.py`
+- [ ] 106:autodoc_mock_imports = [ - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\docs\conf.py`
+- [ ] 14:    _base_jax = None  # not tenemos JAX estándar, usamos nuestro mock - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\jax\compat.py`
+- [ ] 27:        module JAX (estándar or mock) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\jax\compat.py`
+- [ ] 29:                # always use nuestro mock JAX for CapibaraGPT - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\jax\compat.py`
+- [ ] 31:        # create mock JAX compatible - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\jax\compat.py`
+- [ ] 62:        module numpy de JAX (estándar or mock) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\jax\compat.py`
+- [ ] 67:        # create un mock simple for testing - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\jax\compat.py`
+- [ ] 1:"""Module placeholder.""" - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\sub_models\experimental\__init__.py`
+- [ ] 242:            # For now, show a placeholder - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\automation\web_ui.py`
+- [ ] 325:                                placeholder="Example: Send me an email when someone submits the contact form" required></textarea> - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\automation\web_ui.py`
+- [ ] 5:Some execution paths are simulated when external services are unavailable. - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\automation\n8n_service.py`
+- [ ] 576:            # For now, simulate execution - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\automation\n8n_service.py`
+- [ ] 65:            logger.info("Build completed (simulation mode)") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\jax\tpu_v4\builder.py`
+- [ ] 76:            logger.info("Install completed (simulation mode)") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\jax\tpu_v4\builder.py`
+- [ ] 87:            logger.info("Tests completed (simulation mode)") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\jax\tpu_v4\builder.py`
+- [ ] 168:    def simulate_lif_dynamics(self, input_currents: Any, - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\jax\tpu_v4\neuromorphic_kernels.py`
+- [ ] 205:            self.logger.error(f"LIF neuron simulation failed: {e}") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\jax\tpu_v4\neuromorphic_kernels.py`
+- [ ] 377:        spikes, voltages = lif_kernel.simulate_lif_dynamics(test_currents) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\jax\tpu_v4\neuromorphic_kernels.py`
 
 ## Medium
-- [ ] 23:            TODO: Add detailed description. - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\utils\system_info.py`
-- [ ] 274:                logger.warning(f"SubModel type {submodel_type} not available or not implemented") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`
-- [ ] 1147:    # ==================== UTILITY METHODS ==================== - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\modules\personality\human_gender_personality.py`
-- [ ] 38:    'sphinx.ext.todo',              # Support TODOs - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\docs\conf.py`
+- [ ] 23:            TODO: Add detailed description. - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\utils\system_info.py`
+- [ ] 274:                logger.warning(f"SubModel type {submodel_type} not available or not implemented") - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`
+- [ ] 1147:    # ==================== UTILITY METHODS ==================== - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\modules\personality\human_gender_personality.py`
+- [ ] 38:    'sphinx.ext.todo',              # Support TODOs - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\docs\conf.py`
 
 ## Low
-- [ ] 181:            query: Optional query for retrieval (not implemented in basic version) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\core\memory\continuum_memory.py`
-- [ ] 315:            query: Query (could be embeddings, not implemented in basic version) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\core\memory\continuum_memory.py`
-- [ ] 5:including simulation datasets, robot control, navigation, and manipulation. - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\robotics\__init__.py`
-- [ ] 25:        'source': 'simulation', - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\robotics\__init__.py`
-- [ ] 31:        'source': 'real_world + simulation', - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\robotics\__init__.py`
-- [ ] 43:        'source': 'simulation', - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\robotics\__init__.py`
-- [ ] 7:- Circuit simulation data - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\engineering_design\electronics_datasets.py`
-- [ ] 10:- Physical system simulations - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\physics\__init__.py`
-- [ ] 35:    'simulations': { - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\physics\__init__.py`
-- [ ] 36:        'description': 'Physics simulation results', - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\physics\__init__.py`
-- [ ] 64:                r"(?i)(reality.*simulation|we\s+live\s+in.*matrix|everything.*artificial)", - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\safety\content_filter.py`
-- [ ] 117:            "supernatural powers", "special mission", "chosen one", "simulation", - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\safety\content_filter.py`
-- [ ] 40:        # Vocabulary simulation: create word frequency distribution - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\fixtures\synthetic_data.py`
-- [ ] 80:            # Add EOS at random positions (simulating variable length) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\fixtures\synthetic_data.py`
-- [ ] 164:        # POS tag simulation (simplified) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\modules\specialized_processors.py`
-- [ ] 250:    # simulation de data de entrenamiento - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\capibaras\capibara_jax_ssm.py`
-- [ ] 54:    SIMULATION = "simulation"      # Physics, chemistry, mathematics - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
-- [ ] 190:            ServiceType.SIMULATION: ["simulation", "physics", "chemistry", "math", "model", "calculate"], - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
-- [ ] 482:        # This is a simulation of n8n node execution - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\agent_executor.py`
+- [ ] 181:            query: Optional query for retrieval (not implemented in basic version) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\core\memory\continuum_memory.py`
+- [ ] 315:            query: Query (could be embeddings, not implemented in basic version) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\core\memory\continuum_memory.py`
+- [ ] 5:including simulation datasets, robot control, navigation, and manipulation. - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\data\datasets\robotics\__init__.py`
+- [ ] 25:        'source': 'simulation', - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\data\datasets\robotics\__init__.py`
+- [ ] 31:        'source': 'real_world + simulation', - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\data\datasets\robotics\__init__.py`
+- [ ] 43:        'source': 'simulation', - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\data\datasets\robotics\__init__.py`
+- [ ] 7:- Circuit simulation data - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\data\datasets\engineering_design\electronics_datasets.py`
+- [ ] 10:- Physical system simulations - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\data\datasets\physics\__init__.py`
+- [ ] 35:    'simulations': { - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\data\datasets\physics\__init__.py`
+- [ ] 36:        'description': 'Physics simulation results', - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\data\datasets\physics\__init__.py`
+- [ ] 64:                r"(?i)(reality.*simulation|we\s+live\s+in.*matrix|everything.*artificial)", - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\safety\content_filter.py`
+- [ ] 117:            "supernatural powers", "special mission", "chosen one", "simulation", - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\safety\content_filter.py`
+- [ ] 40:        # Vocabulary simulation: create word frequency distribution - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\tests\fixtures\synthetic_data.py`
+- [ ] 80:            # Add EOS at random positions (simulating variable length) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\tests\fixtures\synthetic_data.py`
+- [ ] 164:        # POS tag simulation (simplified) - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\modules\specialized_processors.py`
+- [ ] 250:    # simulation de data de entrenamiento - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\sub_models\capibaras\capibara_jax_ssm.py`
+- [ ] 54:    SIMULATION = "simulation"      # Physics, chemistry, mathematics - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\text_to_gen_service.py`
+- [ ] 190:            ServiceType.SIMULATION: ["simulation", "physics", "chemistry", "math", "model", "calculate"], - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\meta_Generation\text_to_gen_service.py`
+- [ ] 482:        # This is a simulation of n8n node execution - `d:\Escritorio\Nueva folder (3)\capibaraGPT_v3\services\automation\agent_executor.py`
 

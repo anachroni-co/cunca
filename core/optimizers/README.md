@@ -325,7 +325,7 @@ for alert in optimization_alerts:
 
 ```python
 # Generate training dynamics plots
-training_visualizations = optimizer.generate_training_plots(
+training_visualizations = optimizer.Generate_training_plots(
     metrics_history=training_history,
     plot_types=[
         "learning_rate_schedule",

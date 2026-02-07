@@ -63,7 +63,7 @@ critical_metrics = alert_manager.configure_critical_metrics({
     }
 })
 
-# Process metrics and generate alerts
+# Process metrics and Generate alerts
 current_metrics = {
     "memory_utilization": 0.89,
     "compute_utilization": 0.94,
@@ -561,7 +561,7 @@ benchmark_results = benchmark_suite.run_comprehensive_benchmark(
 )
 
 # Results analysis
-performance_report = benchmark_suite.generate_performance_report(
+performance_report = benchmark_suite.Generate_performance_report(
     results=benchmark_results,
     include_recommendations=True,
     compare_to_baseline=True

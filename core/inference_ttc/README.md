@@ -9,7 +9,7 @@ CPU-safe heuristics; it does not claim advanced TPU integrations.
 core/inference_ttc/
 +-- __init__.py
 +-- test_time_scaling.py   # Difficulty heuristic + scaling policy
-+-- test_time_api.py       # API wrapper for generation
++-- test_time_api.py       # API wrapper for Generation
 +-- README.md
 ```
 
@@ -18,13 +18,13 @@ core/inference_ttc/
 ```python
 from capibara.core.inference_ttc import TestTimeComputeAPI, ComputeStrategy
 
-# Basic generate function (hook to your inference engine)
-def generate_fn(prompt: str, **kwargs):
+# Basic Generate function (hook to your inference engine)
+def Generate_fn(prompt: str, **kwargs):
     return f"{prompt} :: {kwargs}"
 
-api = TestTimeComputeAPI(generate_fn=generate_fn)
+api = TestTimeComputeAPI(Generate_fn=Generate_fn)
 
-print(api.generate("What is gravity?", strategy=ComputeStrategy.AUTO))
+print(api.Generate("What is gravity?", strategy=ComputeStrategy.AUTO))
 print(api.get_metrics())
 ```
 

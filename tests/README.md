@@ -40,7 +40,7 @@ tests/
 │   └── test_training_pipeline.py
 ├── benchmarks/              # Performance benchmarks
 │   └── test_attention_benchmark.py
-└── fixtures/                # Test data generators
+└── fixtures/                # Test data Generators
     └── synthetic_data.py    # Synthetic data utilities
 ```
 
@@ -237,9 +237,9 @@ def backend_info(best_backend):
 @pytest.fixture
 def random_batch():
     """Generate random batch data."""
-    def _generate(batch_size=4, seq_len=128, hidden_size=768, vocab_size=32000):
+    def _Generate(batch_size=4, seq_len=128, hidden_size=768, vocab_size=32000):
         return {"input_ids": ..., "attention_mask": ..., "hidden_states": ...}
-    return _generate
+    return _Generate
 
 @pytest.fixture
 def attention_inputs():
@@ -272,7 +272,7 @@ def test_with_backend(best_backend):
     assert tensor.shape == (10, 10)
 
 def test_with_data(random_batch, best_backend):
-    """Test with generated data."""
+    """Test with Generated data."""
     batch = random_batch(batch_size=2, seq_len=64)
     input_ids = best_backend.create_tensor(batch["input_ids"])
     assert input_ids.shape[0] == 2
@@ -520,9 +520,9 @@ pytest tests/benchmarks/ --benchmark-disable-gc
 - [pytest-benchmark](https://pytest-benchmark.readthedocs.io/)
 - [Core Backends README](../core/backends/README.md)
 
-## Ejemplo quick
+## Example quick
 
-Ejemplo para ejecutar la suite completa:
+Example para ejecutar la suite completa:
 
 ```bash
 pytest -v

@@ -47,7 +47,7 @@ class DummyMoEModel:
 
 trainer = MoETrainingSystem(DummyMoEModel())
 results = trainer.train_expert_specialization(
-    training_data={"general": ["example 1", "example 2"]}
+    training_data={"Generatel": ["example 1", "example 2"]}
 )
 print(results.get("error"))  # MoE system not available
 ```

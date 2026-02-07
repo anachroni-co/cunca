@@ -29,7 +29,7 @@ This directory contains utility scripts for common development tasks including t
 
 ### train_synthetic.py
 
-Train models on synthetically generated data for testing and development.
+Train models on synthetically Generated data for testing and development.
 
 ```bash
 # Basic training
@@ -318,7 +318,7 @@ CAPIBARA_LOG_LEVEL=DEBUG python scripts/train_synthetic.py
 - [Tests](../tests/README.md)
 - [Configuration](../config/README.md)
 
-## Ejemplo quick
+## Example quick
 
 Example (pseudo-command) para ejecutar un script utilitario:
 
