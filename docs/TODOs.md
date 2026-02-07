@@ -1,13 +1,6 @@
-# TODOs - docs
+﻿# TODOs - docs
 
-- [ ] # Add project root to path for autodoc - `docs\conf.py:19`
-- [ ] 'sphinx.ext.autodoc',           # Auto-generate docs from docstrings - `docs\conf.py:33`
-- [ ] 'sphinx.ext.todo',              # Support TODOs - `docs\conf.py:38`
-- [ ] # -- Options for autodoc ----------------------------------------------------- - `docs\conf.py:91`
-- [ ] autodoc_default_options = { - `docs\conf.py:93`
-- [ ] autodoc_typehints = 'description' - `docs\conf.py:102`
-- [ ] autodoc_typehints_format = 'short' - `docs\conf.py:103`
-- [ ] # Mock imports for modules that might not be available - `docs\conf.py:105`
-- [ ] autodoc_mock_imports = [ - `docs\conf.py:106`
-- [ ] # -- Options for todo extension ---------------------------------------------- - `docs\conf.py:153`
-- [ ] todo_include_todos = True - `docs\conf.py:155`
+Actualizado: 2026-02-07
+
+- [ ] 38:    'sphinx.ext.todo',              # Support TODOs - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\docs\conf.py`
+- [ ] 106:autodoc_mock_imports = [ - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\docs\conf.py`

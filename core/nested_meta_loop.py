@@ -26,7 +26,10 @@ Reference:
 
 import logging
 import time
-from typing import Dict, Any, Optional, List, Tuple
+import argparse
+import json
+from pathlib import Path
+from typing import Dict, Any, Optional, List, Tuple, Iterable
 from dataclasses import dataclass, field
 from datetime import datetime
 import numpy as np
@@ -575,39 +578,49 @@ def get_global_nested_meta_loop() -> NestedMetaLoop:
 
 def main():
     """Test the nested meta-loop system."""
-    logger.info(" Nested Meta-Loop System - Testing Mode")
+    logger.info(" Nested Meta-Loop System - Metrics Mode")
+    parser = argparse.ArgumentParser(description="Nested Meta-Loop runner (real metrics).")
+    parser.add_argument(
+        "--metrics",
+        type=str,
+        required=True,
+        help="Path to JSONL file with {'performance': float, 'hyperparams': {...}, 'task_id': str} per line.",
+    )
+    args = parser.parse_args()
 
-    # Create nested meta-loop
+    metrics_path = Path(args.metrics)
+    if not metrics_path.exists():
+        raise FileNotFoundError(f"Metrics file not found: {metrics_path}")
+
     nested_loop = create_nested_meta_loop()
 
-    # Simulate training with multiple tasks
-    tasks = ['task_a', 'task_b', 'task_c']
+    def _iter_metrics(path: Path) -> Iterable[Tuple[float, Dict[str, Any], Optional[str]]]:
+        with path.open("r", encoding="utf-8") as handle:
+            for line_no, line in enumerate(handle, 1):
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    payload = json.loads(line)
+                except json.JSONDecodeError as exc:
+                    raise ValueError(f"Invalid JSON at line {line_no}: {exc}") from exc
 
-    for step in range(500):
-        # Simulate performance (with some tasks and noise)
-        task_id = tasks[step % len(tasks)]
-        base_performance = 0.6 + 0.3 * np.sin(step * 0.05)
-        performance = base_performance + np.random.normal(0, 0.05)
-        performance = np.clip(performance, 0, 1)
+                if "performance" not in payload or "hyperparams" not in payload:
+                    raise ValueError(
+                        f"Line {line_no} missing required keys ('performance', 'hyperparams')."
+                    )
+                performance = float(payload["performance"])
+                hyperparams = dict(payload["hyperparams"])
+                task_id = payload.get("task_id")
+                yield performance, hyperparams, task_id
 
-        # Current hyperparameters
-        hyperparams = {
-            'learning_rate': 1e-4,
-            'batch_size': 32,
-            'dropout_rate': 0.1,
-            'weight_decay': 0.01
-        }
-
-        # Execute nested meta-loop step
+    for step, (performance, hyperparams, task_id) in enumerate(_iter_metrics(metrics_path), 1):
         suggestions = nested_loop.step(performance, hyperparams, task_id=task_id)
-
-        # Log significant events
         if suggestions.get('level2'):
             logger.info(f"Step {step}: Level 2 suggestions = {suggestions['level2']}")
         if suggestions.get('catastrophic_forgetting_alert'):
             logger.warning(f"Step {step}: Catastrophic forgetting alert!")
 
-    # Show final status
     status = nested_loop.get_status()
     logger.info(f"\nFinal Status:")
     logger.info(f"  Global step: {status['global_step']}")

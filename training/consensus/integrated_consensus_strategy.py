@@ -9,7 +9,7 @@ import logging
 from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
+from transformers import AutoTokenizer, AutoModelForCausalLM, AutoModelForSeq2SeqLM, pipeline
 import numpy as np
 import asyncio
 import aiohttp
@@ -86,6 +86,7 @@ class IntegratedConsensusStrategy:
         self._init_hierarchical_reasoning()
         self.expert_models = self._load_legal_expert_models()
         self.core_distribution = self._setup_core_distribution()
+        self._pipeline_cache: Dict[str, Any] = {}
         self._initialize_strategy()
     
     def _load_hr_config(self) -> None:
@@ -457,7 +458,7 @@ class IntegratedConsensusStrategy:
         async def generate_expert_response(expert_config: ExpertModelConfig) -> Dict[str, Any]:
             """Generates response from a single expert model."""
             try:
-                # Simulate TPU v6-64 optimized inference
+                # Run TPU v6-64 optimized inference
                 response_text = await self._call_expert_inference(
                     expert_config.model_id, 
                     prompt, 
@@ -504,6 +505,7 @@ class IntegratedConsensusStrategy:
         
         return [r for r in responses if r.get("success", False)]
     
+    
     async def _call_expert_inference(
         self, 
         model_id: str, 
@@ -511,30 +513,62 @@ class IntegratedConsensusStrategy:
         expert_config: ExpertModelConfig
     ) -> str:
         """Call expert model inference with TPU v6-64 optimization."""
-        # Simulate TPU v6-64 inference with legal compliance
-        await asyncio.sleep(0.05)  # Simulate TPU v6-64 speed
-        
         if expert_config.expert_type == ExpertType.HIERARCHICAL_REASONING and self.hierarchical_reasoning is not None:
             try:
                 result = self.hierarchical_reasoning.process(prompt)
                 return result.get("response", "")
             except Exception as e:
                 logger.warning(f"Hierarchical reasoning inference failed: {e}")
-        
-        # Return simulated response based on expert type
-        expert_responses = {
-            ExpertType.SPANISH_LANGUAGE: f"Respuesta en español optimizada por TPU v6-64: {prompt}",
-            ExpertType.MATHEMATICS: f"Solución matemática optimizada por TPU v6-64: {prompt}",
-            ExpertType.PROGRAMMING: f"Código optimizado por TPU v6-64: def solution(): return '{prompt}'",
-            ExpertType.REASONING: f"Razonamiento lógico optimizado por TPU v6-64: {prompt}",
-            ExpertType.SCIENTIFIC: f"Análisis científico optimizado por TPU v6-64: {prompt}",
-            ExpertType.TECHNICAL: f"Análisis técnico optimizado por TPU v6-64: {prompt}",
-            ExpertType.GENERAL: f"Respuesta general optimizada por TPU v6-64: {prompt}"
-        }
-        
-        return expert_responses.get(expert_config.expert_type, f"Respuesta optimizada por TPU v6-64: {prompt}")
-    
-    def _apply_integrated_consensus_algorithm(
+        return await self._run_inference_pipeline(model_id, prompt, expert_config)
+
+    async def _run_inference_pipeline(
+        self,
+        model_id: str,
+        prompt: str,
+        expert_config: ExpertModelConfig
+    ) -> str:
+        loop = asyncio.get_running_loop()
+        return await loop.run_in_executor(
+            None, self._run_pipeline_sync, model_id, prompt, expert_config
+        )
+
+    def _run_pipeline_sync(
+        self,
+        model_id: str,
+        prompt: str,
+        expert_config: ExpertModelConfig
+    ) -> str:
+        pipe = self._get_or_create_pipeline(model_id)
+        result = pipe(
+            prompt,
+            max_length=int(expert_config.max_length),
+            do_sample=True,
+            temperature=float(expert_config.temperature),
+            num_return_sequences=1
+        )
+        if isinstance(result, list) and result:
+            if "generated_text" in result[0]:
+                return result[0]["generated_text"]
+            if "summary_text" in result[0]:
+                return result[0]["summary_text"]
+        return str(result)
+
+    def _get_or_create_pipeline(self, model_id: str):
+        if model_id in self._pipeline_cache:
+            return self._pipeline_cache[model_id]
+        device = 0 if torch.cuda.is_available() else -1
+        try:
+            tokenizer = AutoTokenizer.from_pretrained(model_id)
+            model = AutoModelForCausalLM.from_pretrained(model_id)
+            pipe = pipeline("text-generation", model=model, tokenizer=tokenizer, device=device)
+        except Exception:
+            tokenizer = AutoTokenizer.from_pretrained(model_id)
+            model = AutoModelForSeq2SeqLM.from_pretrained(model_id)
+            pipe = pipeline("text2text-generation", model=model, tokenizer=tokenizer, device=device)
+        self._pipeline_cache[model_id] = pipe
+        return pipe
+
+def _apply_integrated_consensus_algorithm(
         self, 
         expert_responses: List[Dict[str, Any]], 
         original_prompt: str

@@ -216,8 +216,20 @@ class BaseRouter(nn.Module, ABC):
         pass
 
     def combine_outputs(self, outputs: Dict[str, Any]) -> Any:
-        """Base method to combine outputs. Must be implemented by subclasses."""
-        raise NotImplementedError("The combine_outputs method must be implemented by subclasses")
+        """Combine outputs from routed experts with a safe default."""
+        if not isinstance(outputs, dict) or not outputs:
+            return outputs
+
+        values = list(outputs.values())
+        try:
+            shapes = [getattr(v, "shape", None) for v in values]
+            if shapes and all(shape == shapes[0] for shape in shapes):
+                stacked = jnp.stack(values, axis=0)
+                return jnp.mean(stacked, axis=0)
+        except Exception:
+            pass
+
+        return outputs
 
 class BaseRouterV2(BaseRouter):
     """Base router version 2 with extended functionality."""
@@ -232,5 +244,5 @@ class BaseRouterV2(BaseRouter):
         return inputs
         
     def combine_outputs(self, outputs: Dict[str, Any]) -> Any:
-        """Base method to combine outputs. Must be implemented by subclasses."""
-        raise NotImplementedError("The combine_outputs method must be implemented by subclasses.") 
+        """Default combine behavior for v2 routers."""
+        return super().combine_outputs(outputs)

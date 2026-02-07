@@ -96,6 +96,7 @@ class TPUv6AdaptiveIntegration:
         self.fallback_model = None
         self.current_backend = None
         self.cost_tracker = CostTracker()
+        self._fallback_vq_params: Dict[int, Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]] = {}
         
         # Initialize adaptive system
         self._initialize_adaptive_system()
@@ -362,35 +363,58 @@ class TPUv6AdaptiveIntegration:
                 # Use ARM optimizations with 64 Códigos VQ
                 return self.fallback_model.optimized_forward(input_data)
             else:
-                return self._simulated_vq_forward(input_data, embedding_dim=64)
+                return self._fallback_vq_forward(input_data, embedding_dim=64)
         except Exception as e:
             logger.error(f"ARM adaptive forward failed: {e}")
             return self._classical_forward(input_data)
     
-    def _simulated_vq_forward(self, 
+    def _fallback_vq_forward(self, 
                                   input_data: jnp.ndarray,
                                   embedding_dim: int = 64) -> jnp.ndarray:
-        """Simulated adaptive processing for fallback scenarios."""
-        
-        # Simulate adaptive enhancement with classical operations
+        """Fallback vector-quantized forward pass (real VQ, CPU/JAX)."""
         batch_size, seq_len, hidden_dim = input_data.shape
-        
-        # Adaptive-inspired transformations
-        key = jax.random.PRNGKey(42)
-        
-        # Simulate adaptive superposition
-        superposition_weights = jax.random.normal(key, (hidden_dim, hidden_dim))
-        superposition_output = input_data @ superposition_weights
-        
-        # Simulate adaptive entanglement
-        entanglement_factor = jnp.sin(superposition_output) * jnp.cos(superposition_output)
-        entangled_output = superposition_output * (1 + 0.1 * entanglement_factor)
-        
-        # Simulate adaptive measurement
-        measurement_weights = jax.random.normal(key, (hidden_dim, hidden_dim))
-        measured_output = entangled_output @ measurement_weights
-        
-        return measured_output
+        proj_in, codebook, proj_out = self._get_fallback_vq_params(
+            hidden_dim, embedding_dim, self.config.quantization_codes
+        )
+
+        # Project to embedding space
+        flat_input = input_data.reshape(batch_size * seq_len, hidden_dim)
+        embedded = jnp.matmul(flat_input, proj_in)
+
+        # Compute nearest codebook entries (VQ)
+        # distances: ||x||^2 + ||c||^2 - 2 x.c
+        x2 = jnp.sum(embedded ** 2, axis=1, keepdims=True)
+        c2 = jnp.sum(codebook ** 2, axis=1, keepdims=True).T
+        distances = x2 + c2 - 2.0 * jnp.matmul(embedded, codebook.T)
+        nearest_idx = jnp.argmin(distances, axis=1)
+        quantized = codebook[nearest_idx]
+
+        # Project back to hidden space
+        reconstructed = jnp.matmul(quantized, proj_out)
+        return reconstructed.reshape(batch_size, seq_len, hidden_dim)
+
+    def _get_fallback_vq_params(
+        self,
+        hidden_dim: int,
+        embedding_dim: int,
+        num_codes: int
+    ) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]:
+        """Create or reuse deterministic fallback VQ parameters."""
+        if hidden_dim in self._fallback_vq_params:
+            return self._fallback_vq_params[hidden_dim]
+
+        key = jax.random.PRNGKey(0)
+        key1, key2, key3 = jax.random.split(key, 3)
+
+        # Projection matrices
+        proj_in = jax.random.normal(key1, (hidden_dim, embedding_dim)) / jnp.sqrt(hidden_dim)
+        proj_out = jax.random.normal(key2, (embedding_dim, hidden_dim)) / jnp.sqrt(embedding_dim)
+
+        # Codebook
+        codebook = jax.random.normal(key3, (num_codes, embedding_dim))
+
+        self._fallback_vq_params[hidden_dim] = (proj_in, codebook, proj_out)
+        return self._fallback_vq_params[hidden_dim]
     
     def _classical_forward(self, input_data: jnp.ndarray) -> jnp.ndarray:
         """Classical fallback processing."""

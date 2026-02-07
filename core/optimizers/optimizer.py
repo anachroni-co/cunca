@@ -57,8 +57,9 @@ See Also:
 """
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 from dataclasses import dataclass
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -203,6 +204,8 @@ class BaseOptimizer:
         """
         self.config = config
         self.initialized = False
+        self.state: Dict[str, Any] = {}
+        self.step_count = 0
 
     def initialize(self) -> bool:
         """Initialize the optimizer state.
@@ -237,8 +240,7 @@ class BaseOptimizer:
         """Perform a single optimization step with given gradients.
 
         This method applies the optimization algorithm to update parameters based
-        on computed gradients. The base implementation is a placeholder that
-        returns gradients unchanged.
+        on computed gradients.
 
         Args:
             gradients (Any): Gradients computed from loss backpropagation. Type
@@ -254,21 +256,32 @@ class BaseOptimizer:
             >>> # In base implementation, updated == gradients
 
         Note:
-            Extended implementations should:
-            1. Check if initialized, initialize if needed
-            2. Apply gradient clipping if configured
-            3. Apply optimization algorithm (SGD, Adam, etc.)
-            4. Apply weight decay if configured
-            5. Return updated parameters or gradients
-
-            Current implementation automatically initializes if not initialized.
+            The optimizer can accept gradients only, or a tuple/dict containing
+            both params and grads, and applies clipping and the configured algorithm.
         """
         if not self.initialized:
             self.initialize()
 
-        # Basic optimization step (placeholder - extend for actual algorithm)
+        grads, params = self._split_params_and_grads(gradients)
+        grads = self._apply_gradient_clipping(grads)
+
+        if params is None:
+            logger.debug("Optimizer step performed (gradients only)")
+            return grads
+
+        self._ensure_state(params)
+        self.step_count += 1
+
+        if self.config.optimizer_type in ("sgd",):
+            updated_params = self._sgd_update(params, grads)
+        elif self.config.optimizer_type in ("adam", "adamw"):
+            updated_params = self._adam_update(params, grads)
+        else:
+            logger.warning(f"Unknown optimizer type {self.config.optimizer_type}, returning params unchanged")
+            updated_params = params
+
         logger.debug("Optimizer step performed")
-        return gradients
+        return updated_params
 
     def zero_grad(self) -> None:
         """Zero out accumulated gradients.
@@ -286,6 +299,164 @@ class BaseOptimizer:
             or buffers specific to the optimization algorithm.
         """
         logger.debug("Gradients zeroed")
+
+    def _split_params_and_grads(self, gradients: Any) -> Tuple[Any, Optional[Any]]:
+        """Split inputs into grads and params if provided."""
+        if isinstance(gradients, dict) and "params" in gradients and "grads" in gradients:
+            return gradients.get("grads"), gradients.get("params")
+        if isinstance(gradients, (list, tuple)) and len(gradients) == 2:
+            params, grads = gradients
+            return grads, params
+        return gradients, None
+
+    def _ensure_state(self, params: Any) -> None:
+        """Initialize optimizer state based on params."""
+        if "m" not in self.state:
+            self.state["m"] = self._tree_map(self._zeros_like, params)
+        if "v" not in self.state:
+            self.state["v"] = self._tree_map(self._zeros_like, params)
+        if "velocity" not in self.state:
+            self.state["velocity"] = self._tree_map(self._zeros_like, params)
+
+    def _apply_gradient_clipping(self, grads: Any) -> Any:
+        """Apply global norm gradient clipping if configured."""
+        if self.config.clip_grad_norm is None:
+            return grads
+
+        total_norm = self._global_norm(grads)
+        if total_norm <= 0:
+            return grads
+        clip_coef = min(1.0, self.config.clip_grad_norm / (total_norm + 1e-6))
+        return self._tree_map(lambda g: self._to_array(g) * clip_coef, grads)
+
+    def _global_norm(self, grads: Any) -> float:
+        """Compute global norm of gradients."""
+        leaves = self._tree_leaves(grads)
+        if not leaves:
+            return 0.0
+        total = 0.0
+        for leaf in leaves:
+            arr = self._to_array(leaf)
+            total += float(np.sum(arr * arr))
+        return float(np.sqrt(total))
+
+    def _sgd_update(self, params: Any, grads: Any) -> Any:
+        """SGD with momentum and optional weight decay."""
+        momentum = self.config.momentum
+        weight_decay = self.config.weight_decay
+
+        def update(p, g, v):
+            p_arr = self._to_array(p)
+            g_arr = self._to_array(g)
+            if weight_decay > 0:
+                g_arr = g_arr + weight_decay * p_arr
+            v_new = momentum * self._to_array(v) + g_arr
+            p_new = p_arr - self.config.learning_rate * v_new
+            return p_new, v_new
+
+        updated_params = self._tree_map3(lambda p, g, v: update(p, g, v)[0], params, grads, self.state["velocity"])
+        updated_velocity = self._tree_map3(lambda p, g, v: update(p, g, v)[1], params, grads, self.state["velocity"])
+        self.state["velocity"] = updated_velocity
+        return updated_params
+
+    def _adam_update(self, params: Any, grads: Any) -> Any:
+        """Adam/AdamW update."""
+        beta1 = self.config.beta1
+        beta2 = self.config.beta2
+        eps = self.config.eps
+        weight_decay = self.config.weight_decay if self.config.optimizer_type == "adamw" else 0.0
+
+        def update(p, g, m, v):
+            p_arr = self._to_array(p)
+            g_arr = self._to_array(g)
+            m_new = beta1 * self._to_array(m) + (1 - beta1) * g_arr
+            v_new = beta2 * self._to_array(v) + (1 - beta2) * (g_arr ** 2)
+            m_hat = m_new / (1 - beta1 ** self.step_count)
+            v_hat = v_new / (1 - beta2 ** self.step_count)
+            update_term = m_hat / (np.sqrt(v_hat) + eps)
+            if weight_decay > 0:
+                update_term = update_term + weight_decay * p_arr
+            p_new = p_arr - self.config.learning_rate * update_term
+            return p_new, m_new, v_new
+
+        updated_params = self._tree_map4(
+            lambda p, g, m, v: update(p, g, m, v)[0],
+            params, grads, self.state["m"], self.state["v"]
+        )
+        updated_m = self._tree_map4(
+            lambda p, g, m, v: update(p, g, m, v)[1],
+            params, grads, self.state["m"], self.state["v"]
+        )
+        updated_v = self._tree_map4(
+            lambda p, g, m, v: update(p, g, m, v)[2],
+            params, grads, self.state["m"], self.state["v"]
+        )
+        self.state["m"] = updated_m
+        self.state["v"] = updated_v
+        return updated_params
+
+    def _tree_map(self, fn, tree: Any) -> Any:
+        if isinstance(tree, dict):
+            return {k: self._tree_map(fn, v) for k, v in tree.items()}
+        if isinstance(tree, list):
+            return [self._tree_map(fn, v) for v in tree]
+        if isinstance(tree, tuple):
+            return tuple(self._tree_map(fn, v) for v in tree)
+        return fn(tree)
+
+    def _tree_map3(self, fn, tree_a: Any, tree_b: Any, tree_c: Any) -> Any:
+        if isinstance(tree_a, dict):
+            return {
+                k: self._tree_map3(fn, tree_a[k], tree_b[k], tree_c[k])
+                for k in tree_a
+            }
+        if isinstance(tree_a, list):
+            return [self._tree_map3(fn, a, b, c) for a, b, c in zip(tree_a, tree_b, tree_c)]
+        if isinstance(tree_a, tuple):
+            return tuple(self._tree_map3(fn, a, b, c) for a, b, c in zip(tree_a, tree_b, tree_c))
+        return fn(tree_a, tree_b, tree_c)
+
+    def _tree_map4(self, fn, tree_a: Any, tree_b: Any, tree_c: Any, tree_d: Any) -> Any:
+        if isinstance(tree_a, dict):
+            return {
+                k: self._tree_map4(fn, tree_a[k], tree_b[k], tree_c[k], tree_d[k])
+                for k in tree_a
+            }
+        if isinstance(tree_a, list):
+            return [self._tree_map4(fn, a, b, c, d) for a, b, c, d in zip(tree_a, tree_b, tree_c, tree_d)]
+        if isinstance(tree_a, tuple):
+            return tuple(self._tree_map4(fn, a, b, c, d) for a, b, c, d in zip(tree_a, tree_b, tree_c, tree_d))
+        return fn(tree_a, tree_b, tree_c, tree_d)
+
+    def _tree_leaves(self, tree: Any) -> List[Any]:
+        if isinstance(tree, dict):
+            leaves = []
+            for v in tree.values():
+                leaves.extend(self._tree_leaves(v))
+            return leaves
+        if isinstance(tree, list):
+            leaves = []
+            for v in tree:
+                leaves.extend(self._tree_leaves(v))
+            return leaves
+        if isinstance(tree, tuple):
+            leaves = []
+            for v in tree:
+                leaves.extend(self._tree_leaves(v))
+            return leaves
+        return [tree]
+
+    def _to_array(self, value: Any) -> np.ndarray:
+        try:
+            return np.asarray(value, dtype=np.float32)
+        except Exception:
+            return np.asarray(0.0, dtype=np.float32)
+
+    def _zeros_like(self, value: Any) -> Any:
+        try:
+            return np.zeros_like(self._to_array(value))
+        except Exception:
+            return 0.0
 
 def create_optimizer(config: Optional[OptimizerConfig] = None) -> BaseOptimizer:
     """Factory function to create and initialize an optimizer.

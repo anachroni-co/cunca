@@ -1,96 +1,105 @@
-# GitHub Issues - Refactorización de Estructura
+# GitHub Issues Pendientes (backlog técnico)
 
-Estas issues documentan el trabajo de refactorización completado en la rama `claude/review-and-test-si0iM`.
+Fecha de actualización: 2026-02-07
 
----
+## ISSUE-001 - `training`: eliminar mocks restantes de consenso TPU
 
-## Issue 1:  Refactor: Move root-level Python files to layers/
+**Labels:** `training`, `consensus`, `tpu`, `high-priority`
 
-**Labels:** `refactor`, `completed`
+**Scope**
+- `training/tpu/tpu_v6_consensus_optimizer.py`
 
-### Descripción
-Movidos 11 archivos Python huérfanos del directorio raíz a `layers/`:
+**Problema**
+- Persisten embeddings y métricas mock en ruta principal.
 
-- `self_attention.py`
-- `embedding.py`
-- `conv1d_block.py`
-- `smb_layer.py`
-- `stack.py`
-- `neuro_adaptive.py`
-- `neurogenesis.py`
-- `ssm_hybrid_layers.py`
-- `ultra_layer_integration.py`
-- `meta_la.py`
-- `base.py`
-
-Actualizado `layers/__init__.py` con los nuevos imports.
-
-**Commit:** `47ad6b1`
+**Criterio de cierre**
+- Embeddings reales en flujo principal.
+- Métricas de rendimiento basadas en ejecución real.
+- Prueba mínima de integración documentada.
 
 ---
 
-## Issue 2:  Refactor: Flatten deep nested directories
+## ISSUE-002 - `training`: consenso meta aún usa `mock_response`
 
-**Labels:** `refactor`, `completed`
+**Labels:** `training`, `consensus`, `high-priority`
 
-### Descripción
-Aplanadas estructuras de directorios con anidamiento excesivo:
+**Scope**
+- `training/consensus/meta_consensus_system.py`
+- `training/consensus/advance_meta_consensus_integration.py`
 
-#### vq/vim_vq/
-- **Antes:** `configs/`, `core/`, `utils/` (3 subdirectorios)
-- **Después:** Estructura plana con 5 archivos
+**Problema**
+- Existen respuestas/métricas simuladas en lógica de consenso.
 
-#### core/age_adaptation/
-- **Antes:** `config/`, `core/`, `utils/` (3 subdirectorios)
-- **Después:** Estructura plana con 4 archivos
-
-**Commit:** `47ad6b1`
-
----
-
-## Issue 3:  Refactor: Consolidate data/datasets directories
-
-**Labels:** `refactor`, `completed`
-
-### Descripción
-Consolidados directorios de datasets pequeños:
-
-- `spanish_community/` + `spanish_government/` → `spanish/`
-- `vision/` → merged into `multimodal/`
-- Eliminados directorios vacíos: `economics/`, `historical/`
-
-**Antes:** 17 subdirectorios
-**Después:** 13 subdirectorios
-
-**Commit:** `47ad6b1`
+**Criterio de cierre**
+- Sustituir respuestas simuladas por inferencia real de expertos.
+- Quitar `mock_metrics` y usar métricas calculadas.
+- Agregar test de no-regresión.
 
 ---
 
-## Issue 4:  Refactor: Organize training/ into subcategories
+## ISSUE-003 - `services/automation`: rutas simuladas en ejecutor
 
-**Labels:** `refactor`, `completed`
+**Labels:** `services`, `automation`, `n8n`, `high-priority`
 
-### Descripción
-Reorganizado el directorio `training/` de 37 archivos planos a una estructura organizada:
+**Scope**
+- `services/automation/agent_executor.py`
+- `services/automation/n8n_service.py`
 
-```
-training/
-├── consensus/     (14 files) - Algoritmos de consenso distribuido
-├── tpu/           (5 files)  - Configuraciones TPU v6/v6e
-├── strategies/    (6 files)  - Estrategias de entrenamiento
-├── safety/        (3 files)  - Filtrado de bias y compliance
-└── *.py           (13 files) - Utilidades core de entrenamiento
-```
+**Problema**
+- Hay paths de ejecución simulada en runtime.
 
-**Commit:** `3c65edf`
+**Criterio de cierre**
+- Ejecución real para nodo estándar/fallback.
+- Contratos de entrada/salida estables.
+- Smoke test de flujo básico.
 
 ---
 
-## Resumen de Commits
+## ISSUE-004 - `inference`: motores híbridos/quantized con secciones simuladas
 
-| Commit | Descripción |
-|--------|-------------|
-| `47ad6b1` | Consolidar estructura de carpetas |
-| `3c65edf` | Organizar training/ en subcategorías |
+**Labels:** `inference`, `quantization`, `high-priority`
 
-**Branch:** `claude/review-and-test-si0iM`
+**Scope**
+- `inference/hybrid_inference_engine.py`
+- `inference/engines/advanced_quantized_engine.py`
+
+**Problema**
+- Carga de parámetros/generación aún depende de simulaciones.
+
+**Criterio de cierre**
+- Carga real de parámetros desde checkpoint/model hub.
+- Eliminación de delays/sampling simulado en ruta principal.
+
+---
+
+## ISSUE-005 - `training/data_lineage`: separar demo mock de runtime real
+
+**Labels:** `training`, `data-lineage`, `medium-priority`
+
+**Scope**
+- `training/data_lineage/demo_traceability_system.py`
+- `training/data_lineage/inference_safe_parameter_controller.py`
+
+**Problema**
+- Mezcla de rutas demo con rutas potencialmente productivas.
+
+**Criterio de cierre**
+- Modo demo explícito y aislado.
+- Runtime real sin dependencia de mocks.
+
+---
+
+## ISSUE-006 - saneamiento de documentación de TODOs por carpeta
+
+**Labels:** `docs`, `maintenance`, `medium-priority`
+
+**Scope**
+- `training/TODOs.md`, `core/TODOs.md`, `services/TODOs.md`, etc.
+
+**Problema**
+- Muchos TODOs desactualizados respecto al estado real.
+
+**Criterio de cierre**
+- Marcar items resueltos.
+- Conservar solo pendientes verificables por ruta/línea.
+

@@ -11,6 +11,7 @@ import time
 from typing import Any, Dict, List, Optional, Tuple, Union
 from enum import Enum
 from dataclasses import dataclass, field
+from abc import ABC, abstractmethod
 import numpy as np
 
 from .base_adapter import BaseAdapter, AdapterConfig
@@ -58,7 +59,7 @@ class QuantizationResult:
     memory_savings_mb: float
     metadata: Dict[str, Any] = field(default_factory=dict)
 
-class QuantizationMethod:
+class QuantizationMethod(ABC):
     """Base class for quantization methods."""
     
     def __init__(self, config: QuantizationConfig):
@@ -72,17 +73,20 @@ class QuantizationMethod:
         self.calibrated = True
         return True
     
+    @abstractmethod
     def quantize(self, data: Any) -> QuantizationResult:
         """Quantizes the data."""
-        raise NotImplementedError
+        ...
     
+    @abstractmethod
     def dequantize(self, quantized_data: Any) -> Any:
         """Dequantizes the data."""
-        raise NotImplementedError
+        ...
     
+    @abstractmethod
     def estimate_compression_ratio(self, data_shape: Tuple[int, ...]) -> float:
         """Estimates compression ratio."""
-        raise NotImplementedError
+        ...
 
 class VQbitQuantizationMethod(QuantizationMethod):
     """VQbit quantization method."""

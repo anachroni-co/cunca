@@ -1,29 +1,22 @@
-# TODOs - data
+﻿# TODOs - data
 
-- [ ] # Placeholder for real-time API loading - `data\ultra_data_orchestrator.py:625`
-- [ ] return {"type": "fallback", "name": dataset_name, "data": "placeholder_data"} - `data\ultra_data_orchestrator.py:649`
-- [ ] "gc_content_estimate": np.random.uniform(0.3, 0.7),  # Mock for now - `data\datasets\genomic\alphagenome_training_generator.py:167`
-- [ ] "repeat_content_estimate": np.random.uniform(0.1, 0.5)  # Mock for now - `data\datasets\genomic\alphagenome_training_generator.py:168`
-- [ ] # For now, generate simulated data - `data\datasets\genomic\genomic_datasets.py:119`
-- [ ] # Generate simulated expression matrix - `data\datasets\genomic\genomic_datasets.py:184`
-- [ ] # Create placeholder and instructions - `data\datasets\multimodal\emotional_audio_datasets.py:426`
-- [ ] # Placeholder for future dataset expansions - `data\datasets\multimodal\__init__.py:7`
-- [ ] # Simulated experimental data - `data\datasets\physics\__init__.py:113`
-- [ ] # Simulate particle collision data - `data\datasets\physics\__init__.py:117`
-- [ ] # Simulated loading - in real implementation would load actual data - `data\datasets\robotics\__init__.py:80`
-- [ ] 'data': f"[Simulated {dataset_name} data]", - `data\datasets\robotics\__init__.py:86`
-- [ ] def simulate_download_status(self, dataset_id: str) -> Dict[str, Any]: - `data\datasets\systems\systems_logs_datasets.py:344`
-- [ ] """Simulate the download status of a dataset.""" - `data\datasets\systems\systems_logs_datasets.py:345`
-- [ ] logger.warning(f"Document at {path}:{line_num} missing 'text' field") - `data\processors\semantic_deduplication.py:197`
-- [ ] missing_files = [] - `data\tools\validate_robotics_integration.py:30`
-- [ ] missing_files.append(file) - `data\tools\validate_robotics_integration.py:34`
-- [ ] if missing_files: - `data\tools\validate_robotics_integration.py:38`
-- [ ] logger.error(f" ERROR: Missing files: {missing_files}") - `data\tools\validate_robotics_integration.py:39`
-- [ ] missing = [] - `data\tools\validate_robotics_simple.py:119`
-- [ ] missing.append(keyword) - `data\tools\validate_robotics_simple.py:122`
-- [ ] if missing: - `data\tools\validate_robotics_simple.py:124`
-- [ ] logger.warning(f"   ️  Palabras clave faltantes: {missing}") - `data\tools\validate_robotics_simple.py:125`
-- [ ] return len(missing) == 0 - `data\tools\validate_robotics_simple.py:135`
-- [ ] errors.append(f"Missing directory: {dir_path}") - `data\tools\validate_structure.py:43`
-- [ ] errors.append(f"Missing file: {dir_name}/{file_name}") - `data\tools\validate_structure.py:99`
-- [ ] errors.append(f"Missing __init__.py: {init_path}") - `data\tools\validate_structure.py:118`
+Actualizado: 2026-02-07
+
+- [ ] 649:        return {"type": "fallback", "name": dataset_name, "data": "placeholder_data"} - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\ultra_data_orchestrator.py`
+- [ ] 42:        raise NotImplementedError - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\core\jax_data_processing.py`
+- [ ] 35:        raise NotImplementedError - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\core\data_processing.py`
+- [ ] 52:        raise NotImplementedError - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\core\data_processing.py`
+- [ ] 69:        raise NotImplementedError - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\core\data_processing.py`
+- [ ] 86:        raise NotImplementedError - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\core\data_processing.py`
+- [ ] 119:        # For now, generate simulated data - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\genomic\genomic_datasets.py`
+- [ ] 184:        # Generate simulated expression matrix - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\genomic\genomic_datasets.py`
+- [ ] 426:                # Create placeholder and instructions - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\multimodal\emotional_audio_datasets.py`
+- [ ] 10:- Physical system simulations - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\physics\__init__.py`
+- [ ] 35:    'simulations': { - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\physics\__init__.py`
+- [ ] 36:        'description': 'Physics simulation results', - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\physics\__init__.py`
+- [ ] 344:    def simulate_download_status(self, dataset_id: str) -> Dict[str, Any]: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\systems\systems_logs_datasets.py`
+- [ ] 5:including simulation datasets, robot control, navigation, and manipulation. - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\robotics\__init__.py`
+- [ ] 25:        'source': 'simulation', - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\robotics\__init__.py`
+- [ ] 31:        'source': 'real_world + simulation', - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\robotics\__init__.py`
+- [ ] 43:        'source': 'simulation', - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\robotics\__init__.py`
+- [ ] 7:- Circuit simulation data - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\engineering_design\electronics_datasets.py`

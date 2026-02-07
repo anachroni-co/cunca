@@ -110,21 +110,51 @@ except Exception:  # pragma: no cover
             return int
     jnp = _MiniNumpy()  # type: ignore
 
-# transformers is optional; if unavailable, use minimal tokenizer
-try:  # pragma: no cover - validated in integration tests
-    from transformers import AutoTokenizer, PreTrainedTokenizerBase, BatchEncoding
-    TRANSFORMERS_AVAILABLE = True
-except Exception:  # pragma: no cover
-    AutoTokenizer = None  # type: ignore
-    PreTrainedTokenizerBase = object  # type: ignore
+# transformers is optional; defer import to avoid hard crashes when torch is broken
+AutoTokenizer = None  # type: ignore
+PreTrainedTokenizerBase = object  # type: ignore
 
-    class BatchEncoding(dict):  # type: ignore
-        """Minimal BatchEncoding fallback when transformers is unavailable."""
-        pass
+class BatchEncoding(dict):  # type: ignore
+    """Minimal BatchEncoding fallback when transformers is unavailable."""
+    pass
 
-    TRANSFORMERS_AVAILABLE = False
+TRANSFORMERS_AVAILABLE = False
 
 torch = None  # Hard-disable torch usage to ensure JAX-only operation
+
+
+def _torch_import_works() -> bool:
+    """Check torch import in a subprocess to avoid hard crashes."""
+    import subprocess
+    import sys
+    try:
+        result = subprocess.run(
+            [sys.executable, "-c", "import torch"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        )
+        return result.returncode == 0
+    except Exception:
+        return False
+
+
+def _try_import_transformers() -> bool:
+    """Attempt to import transformers lazily with torch safety checks."""
+    global AutoTokenizer, PreTrainedTokenizerBase, BatchEncoding, TRANSFORMERS_AVAILABLE
+    if TRANSFORMERS_AVAILABLE:
+        return True
+    if not _torch_import_works():
+        return False
+    try:  # pragma: no cover - validated in integration tests
+        from transformers import AutoTokenizer as _AutoTokenizer, PreTrainedTokenizerBase as _PTB, BatchEncoding as _BE
+        AutoTokenizer = _AutoTokenizer  # type: ignore
+        PreTrainedTokenizerBase = _PTB  # type: ignore
+        BatchEncoding = _BE  # type: ignore
+        TRANSFORMERS_AVAILABLE = True
+        return True
+    except Exception:
+        return False
 
 try:
     import toml
@@ -357,7 +387,7 @@ def _load_tokenizer_impl(model_name: str = "gpt2") -> PreTrainedTokenizerBase:
 
         Legacy keyword compatibility: tokinizer, voctob (vocabulary).
     """
-    if TRANSFORMERS_AVAILABLE:
+    if TRANSFORMERS_AVAILABLE or _try_import_transformers():
         return AutoTokenizer.from_pretrained(model_name)
     return _WhitespaceTokenizer()
 

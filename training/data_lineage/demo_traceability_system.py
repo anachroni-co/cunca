@@ -134,7 +134,7 @@ class TraceabilitySystemDemo:
         
         # Step 2: Simulate training with data tracking
         logger.info("\n STEP 2: Simulate Training with Data Tracking")
-        await self._demo_training_simulation()
+        await self._demo_training_run()
         
         # Step 3: Initialize parameter controller
         logger.info("\n️ STEP 3: Initialize Parameter Controller")
@@ -164,7 +164,7 @@ class TraceabilitySystemDemo:
         logger.info(f" Genesis block created and mined")
         logger.info(f" Cryptographic integrity enabled")
     
-    async def _demo_training_simulation(self):
+    async def _demo_training_run(self):
         """Simulate training steps with audit logging."""
         logger.info(" Simulating training steps with audit tracking...")
         

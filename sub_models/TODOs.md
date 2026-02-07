@@ -1,29 +1,22 @@
-# TODOs - sub_models
+﻿# TODOs - sub_models
 
-- [ ] """Simulate world state evolution.""" - `sub_models\csa_expert_tpu_optimized.py:254`
-- [ ] diversity = jnp.ones_like(plausibility) * 0.7  # Placeholder - `sub_models\csa_expert_tpu_optimized.py:312`
-- [ ] self._simulate_scenarios_jit = jit( - `sub_models\csa_expert_tpu_optimized.py:393`
-- [ ] self._simulate_scenarios_impl, - `sub_models\csa_expert_tpu_optimized.py:394`
-- [ ] def _simulate_scenarios_impl(self, params, initial_state, hypothesis_features, num_steps): - `sub_models\csa_expert_tpu_optimized.py:424`
-- [ ] """Simulate world state evolution.""" - `sub_models\csa_expert_tpu_optimized.py:425`
-- [ ] # Simulate scenarios - `sub_models\csa_expert_tpu_optimized.py:468`
-- [ ] final_state, trajectory = self._simulate_scenarios_jit( - `sub_models\csa_expert_tpu_optimized.py:474`
-- [ ] final_state, trajectory = self._simulate_scenarios_impl( - `sub_models\csa_expert_tpu_optimized.py:479`
-- [ ] Esta es la update que lleva todos los sub-modelos al level ultra-advanced. - `sub_models\ultra_enhanced_integration.py:14`
-- [ ] logger.warning("️ SSM layers not available, using placeholder") - `sub_models\ultra_enhanced_integration.py:330`
-- [ ] Sistema de orquestación ultra-avanzada for todos los sub-modelos: - `sub_models\ultra_submodel_orchestrator.py:5`
-- [ ] """Orquestador ultra-advanced for todos los sub-modelos del sistema.""" - `sub_models\ultra_submodel_orchestrator.py:179`
-- [ ] logger.warning(f"SubModel type {submodel_type} not available or not implemented") - `sub_models\ultra_submodel_orchestrator.py:274`
-- [ ] return "adaptive_vq_placeholder"  # Placeholder for current enhanced model - `sub_models\ultra_submodel_orchestrator.py:292`
-- [ ] return "spike_ssm_placeholder"  # Placeholder for current enhanced model - `sub_models\ultra_submodel_orchestrator.py:300`
-- [ ] return "deep_dialog_placeholder"  # Placeholder for current enhanced model - `sub_models\ultra_submodel_orchestrator.py:308`
-- [ ] self.expert_soup_manager = "expert_soup_placeholder" - `sub_models\ultra_submodel_orchestrator.py:361`
-- [ ] # For now, return placeholder results - `sub_models\ultra_submodel_orchestrator.py:677`
-- [ ] # Simulate execution with input transformation - `sub_models\ultra_submodel_orchestrator.py:681`
-- [ ] if isinstance(submodel, str):  # Placeholder models - `sub_models\ultra_submodel_orchestrator.py:682`
-- [ ] return x  # Placeholder - `sub_models\ultra_submodel_orchestrator.py:686`
-- [ ] # For placeholder implementation, return first result - `sub_models\ultra_submodel_orchestrator.py:702`
-- [ ] """Module placeholder.""" - `sub_models\experimental\__init__.py:1`
-- [ ] output = x  # Placeholder - implement real convolution - `sub_models\mamba\mamba_module.py:331`
-- [ ] Describe an image using BLIP if available, otherwise return placeholder. - `sub_models\semiotic\mnemosyne_semio_module.py:298`
-- [ ] """Decorador placeholder for distributed_jit.""" - `sub_models\vision\capivision.py:49`
+Actualizado: 2026-02-07
+
+- [ ] 238:    """TPU-optimized world model simulation.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\csa_expert_tpu_optimized.py`
+- [ ] 393:        self._simulate_scenarios_jit = jit( - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\csa_expert_tpu_optimized.py`
+- [ ] 394:            self._simulate_scenarios_impl, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\csa_expert_tpu_optimized.py`
+- [ ] 424:    def _simulate_scenarios_impl(self, params, initial_state, hypothesis_features, num_steps): - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\csa_expert_tpu_optimized.py`
+- [ ] 474:                    final_state, trajectory = self._simulate_scenarios_jit( - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\csa_expert_tpu_optimized.py`
+- [ ] 479:                    final_state, trajectory = self._simulate_scenarios_impl( - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\csa_expert_tpu_optimized.py`
+- [ ] 250:    # simulation de data de entrenamiento - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\capibaras\capibara_jax_ssm.py`
+- [ ] 330:            logger.warning("️ SSM layers not available, using placeholder") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_enhanced_integration.py`
+- [ ] 274:                logger.warning(f"SubModel type {submodel_type} not available or not implemented") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`
+- [ ] 292:        return "adaptive_vq_placeholder"  # Placeholder for current enhanced model - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`
+- [ ] 300:        return "spike_ssm_placeholder"  # Placeholder for current enhanced model - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`
+- [ ] 308:        return "deep_dialog_placeholder"  # Placeholder for current enhanced model - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`
+- [ ] 361:            self.expert_soup_manager = "expert_soup_placeholder" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`
+- [ ] 677:        # For now, return placeholder results - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`
+- [ ] 702:        # For placeholder implementation, return first result - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`
+- [ ] 298:        Describe an image using BLIP if available, otherwise return placeholder. - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\semiotic\mnemosyne_semio_module.py`
+- [ ] 1:"""Module placeholder.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\experimental\__init__.py`
+- [ ] 49:    """Decorador placeholder for distributed_jit.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\vision\capivision.py`

@@ -22,6 +22,8 @@ from typing import Dict, List, Optional, Tuple, Any, Union
 from enum import Enum
 import json
 import numpy as np
+import hashlib
+import threading
 
 # Numba for JIT compilation
 try:
@@ -77,6 +79,61 @@ except ImportError as e:
     COMP_OPTIMIZATIONS_AVAILABLE = False
 
 logger = logging.getLogger(__name__)
+
+
+class _TextEmbedder:
+    """Lazy text embedder using Hugging Face transformers (no sentence-transformers required)."""
+
+    def __init__(self, model_name: str):
+        self.model_name = model_name
+        self._lock = threading.Lock()
+        self._tokenizer = None
+        self._model = None
+        self._device = "cpu"
+
+    def _ensure_loaded(self):
+        if self._model is not None and self._tokenizer is not None:
+            return
+        with self._lock:
+            if self._model is not None and self._tokenizer is not None:
+                return
+            try:
+                import torch
+                from transformers import AutoModel, AutoTokenizer
+            except Exception as exc:
+                raise RuntimeError(f"Transformers backend not available: {exc}") from exc
+
+            self._tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+            self._model = AutoModel.from_pretrained(self.model_name)
+            self._model.eval()
+            if torch.cuda.is_available():
+                self._device = "cuda"
+                self._model.to(self._device)
+
+    def encode(self, texts: List[str]) -> np.ndarray:
+        self._ensure_loaded()
+        import torch
+
+        with torch.no_grad():
+            inputs = self._tokenizer(
+                texts,
+                padding=True,
+                truncation=True,
+                max_length=256,
+                return_tensors="pt",
+            )
+            inputs = {k: v.to(self._device) for k, v in inputs.items()}
+            outputs = self._model(**inputs)
+            token_embeddings = outputs.last_hidden_state
+            attention_mask = inputs.get("attention_mask")
+            if attention_mask is None:
+                pooled = token_embeddings.mean(dim=1)
+            else:
+                mask = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
+                summed = (token_embeddings * mask).sum(dim=1)
+                counts = mask.sum(dim=1).clamp(min=1.0)
+                pooled = summed / counts
+            return pooled.cpu().numpy().astype(np.float32)
 
 class OptimizationLevel(Enum):
     """Optimizestion levels for meta-consensus system."""
@@ -287,8 +344,20 @@ class OptimizedMetaConsensusSystem(MetaConsensusSystem):
         self.distributed_cache = None
         self.quantizer = None
         self.batch_sizer = None
+        self._embedder = None
+        self._embedder_cache: Dict[str, np.ndarray] = {}
         
         logger.info(f" Optimized Meta-Consensus System initializing with {config.optimization_level.value} level")
+
+    def _get_embedder(self) -> _TextEmbedder:
+        if self._embedder is None:
+            model_name = "sentence-transformers/all-MiniLM-L6-v2"
+            self._embedder = _TextEmbedder(model_name)
+        return self._embedder
+
+    async def _encode_texts(self, texts: List[str]) -> np.ndarray:
+        embedder = self._get_embedder()
+        return await asyncio.to_thread(embedder.encode, texts)
     
     async def initialize_optimizations(self) -> bool:
         """Initialize all optimization components."""
@@ -898,8 +967,14 @@ class OptimizedMetaConsensusSystem(MetaConsensusSystem):
         confidence_scores = np.array([resp.get("confidence", 0.8) for resp in responses], dtype=np.float32)
         weights = np.array([resp.get("weight", 1.0) for resp in responses], dtype=np.float32)
         
-        # Calculate diversity scores (simplified)
-        diversity_scores = np.random.random(num_responses).astype(np.float32)  # Mock diversity
+        # Calculate diversity scores based on embedding distances
+        response_texts = [resp["response"] for resp in responses]
+        embeddings = await self._encode_texts(response_texts)
+        norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
+        norms = np.clip(norms, 1e-8, None)
+        normalized = embeddings / norms
+        similarity_matrix = np.matmul(normalized, normalized.T)
+        diversity_scores = (1.0 - similarity_matrix.mean(axis=1)).astype(np.float32)
         
         # JIT-compiled quality assessment
         quality_scores = fast_quality_assessment(response_lengths, confidence_scores, diversity_scores)
@@ -907,9 +982,6 @@ class OptimizedMetaConsensusSystem(MetaConsensusSystem):
         # Select best response based on quality scores
         best_idx = int(np.argmax(quality_scores))
         best_response = responses[best_idx]
-        
-        # Create mock embeddings for consensus calculation
-        embeddings = np.random.random((num_responses, 384)).astype(np.float32)
         
         # JIT-compiled consensus calculation
         consensus_groups, group_weights = fast_consensus_calculation(embeddings, weights)

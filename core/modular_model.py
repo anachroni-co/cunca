@@ -578,8 +578,7 @@ class ModularCapibaraModel:
 
         for module_name, module_output in outputs.items():
             try:
-                # Simulate output embedding for verification
-                output_embedding = jnp.ones((768,))
+                output_embedding = self._compute_output_embedding(module_output)
 
                 # Verify output
                 verification_result = self.verification_system.verify_output(output_embedding)  # type: ignore[union-attr]
@@ -617,6 +616,43 @@ class ModularCapibaraModel:
             "overall_safety": self._compute_overall_safety(verified_outputs),
             "verification_metrics": self.verification_system.get_alignment_report() if self.verification_system else {},
         }
+
+    def _compute_output_embedding(self, module_output: Any) -> jnp.ndarray:
+        """Compute a deterministic embedding from module output."""
+        target_dim = 768
+
+        # Extract tensor-like output if wrapped
+        if isinstance(module_output, dict) and "output" in module_output:
+            module_output = module_output["output"]
+
+        # Tensor path
+        if hasattr(module_output, "shape"):
+            data = jnp.asarray(module_output)
+            if data.ndim >= 2:
+                # Mean-pool over all but last dim
+                pooled = jnp.mean(data, axis=tuple(range(data.ndim - 1)))
+            else:
+                pooled = data
+            flat = pooled.reshape(-1)
+            if flat.shape[0] >= target_dim:
+                return flat[:target_dim]
+            padding = jnp.zeros((target_dim - flat.shape[0],), dtype=flat.dtype)
+            return jnp.concatenate([flat, padding], axis=0)
+
+        # String path
+        if isinstance(module_output, str):
+            # Hash-based embedding
+            codes = [ord(c) % 256 for c in module_output[:target_dim]]
+            vec = jnp.array(codes, dtype=jnp.float32)
+            if vec.shape[0] < target_dim:
+                padding = jnp.zeros((target_dim - vec.shape[0],), dtype=jnp.float32)
+                vec = jnp.concatenate([vec, padding], axis=0)
+            return vec / 255.0
+
+        # Fallback: encode repr length
+        fallback = jnp.zeros((target_dim,), dtype=jnp.float32)
+        fallback = fallback.at[0].set(float(len(repr(module_output))))
+        return fallback
 
     def _compute_overall_safety(self, verified_outputs: Dict[str, Any]) -> str:
         """Computes the overall safety level."""

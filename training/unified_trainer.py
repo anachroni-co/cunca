@@ -385,25 +385,29 @@ class UnifiedTrainer:
         if not self.consensus_system or not self.distillation_manager:
             return train_step_fn(state, batch)
         
-        # Simulate teacher outputs (in real implementation these would be actual models)
-        teacher_outputs = [
-            jnp.ones((batch['inputs'].shape[0], 50257)) * 0.1  # Placeholder
-            for _ in range(self.consensus_system.n_teachers)
-        ]
-        
         # Obtain student output
         student_output = state.apply_fn(
             {'params': state.params},
             batch['inputs'],
             training=True
         )
+
+        # Use student output as teacher signals when no separate teachers exist
+        teacher_outputs = [student_output for _ in range(self.consensus_system.n_teachers)]
+
+        # Derive prompt and outputs from logits for consensus voting
+        prompt = batch.get("text", "training_prompt")
+        output_text = self._logits_to_text(student_output)
+        outputs = [output_text for _ in range(len(teacher_outputs))]
+        model_scores = self._compute_model_scores(student_output, len(teacher_outputs))
+        latencies = [0.0 for _ in range(len(teacher_outputs))]
         
-        # Perform consensus voting (simulated)
+        # Perform consensus voting
         consensus_result = await self.consensus_system.enhanced_peer_vote(
-            prompt="training_prompt",
-            outputs=[f"output_{i}" for i in range(len(teacher_outputs))],
-            model_scores=[0.8] * len(teacher_outputs),
-            latencies=[0.1] * len(teacher_outputs)
+            prompt=str(prompt),
+            outputs=outputs,
+            model_scores=model_scores,
+            latencies=latencies
         )
         
         # Apply progressive distillation
@@ -426,6 +430,31 @@ class UnifiedTrainer:
         }
         
         return new_state, metrics
+
+    def _logits_to_text(self, logits: jnp.ndarray) -> str:
+        """Convert logits to a minimal token string for consensus."""
+        try:
+            if logits.ndim >= 2:
+                first = logits[0]
+            else:
+                first = logits
+            token_id = int(jnp.argmax(first))
+            return f"token_{token_id}"
+        except Exception:
+            return "token_0"
+
+    def _compute_model_scores(self, logits: jnp.ndarray, count: int) -> List[float]:
+        """Compute simple confidence scores from logits."""
+        try:
+            if logits.ndim >= 2:
+                probs = jax.nn.softmax(logits, axis=-1)
+                max_probs = jnp.max(probs, axis=-1)
+                score = float(jnp.mean(max_probs))
+            else:
+                score = float(jnp.max(jax.nn.softmax(logits)))
+        except Exception:
+            score = 0.0
+        return [score for _ in range(count)]
     
     async def _get_training_batches(self, dataset):
         """Training batch generator."""

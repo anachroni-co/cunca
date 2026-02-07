@@ -9,7 +9,7 @@ import logging
 from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
+from transformers import AutoTokenizer, AutoModelForCausalLM, AutoModelForSeq2SeqLM, pipeline
 import numpy as np
 import asyncio
 import aiohttp
@@ -61,6 +61,7 @@ class ExpandedExpertCoresStrategy:
         self.config = config
         self.expert_cores = self._load_expanded_expert_cores()
         self.core_distribution = self._setup_core_distribution()
+        self._pipeline_cache: Dict[str, Any] = {}
         self._initialize_cores()
     
     def _load_expanded_expert_cores(self) -> Dict[ExpertCoreType, ExpertCoreConfig]:
@@ -729,6 +730,7 @@ class ExpandedExpertCoresStrategy:
         
         return core_responses
     
+    
     async def _call_model_inference(
         self, 
         model_id: str, 
@@ -736,67 +738,48 @@ class ExpandedExpertCoresStrategy:
         model_config: Dict[str, Any]
     ) -> str:
         """Call model inference with TPU v6-64 optimization."""
-        # Simulate TPU v6-64 inference
-        await asyncio.sleep(0.02)  # Very fast with TPU v6-64
-        
-        # Return simulated response based on specialization
-        specialization = model_config["specialization"]
-        domain_responses = {
-            "general_spanish": f"Respuesta en español general: {prompt}",
-            "spanish_grammar": f"Análisis gramatical: {prompt}",
-            "spanish_conversation": f"Conversación en español: {prompt}",
-            "spanish_translation": f"Traducción: {prompt}",
-            "spanish_generation": f"Generación en español: {prompt}",
-            "advanced_math": f"Solución matemática avanzada: {prompt}",
-            "mathematical_code": f"Código matemático: def solve(): return '{prompt}'",
-            "math_reasoning": f"Razonamiento matemático: {prompt}",
-            "math_translation": f"Traducción matemática: {prompt}",
-            "code_generation": f"Generación de código: def solution(): return '{prompt}'",
-            "code_understanding": f"Comprensión de código: {prompt}",
-            "code_completion": f"Completado de código: {prompt}",
-            "python_specific": f"Código Python: def {prompt}(): pass",
-            "javascript_specific": f"Código JavaScript: function {prompt}() {{}}",
-            "medical_research": f"Investigación médica: {prompt}",
-            "clinical_text": f"Texto clínico: {prompt}",
-            "medical_conversation": f"Conversación médica: {prompt}",
-            "pharmacology": f"Farmacología: {prompt}",
-            "legal_analysis": f"Análisis legal: {prompt}",
-            "legal_text": f"Texto legal: {prompt}",
-            "contract_analysis": f"Análisis de contrato: {prompt}",
-            "regulatory_compliance": f"Cumplimiento regulatorio: {prompt}",
-            "logical_reasoning": f"Razonamiento lógico: {prompt}",
-            "analytical_thinking": f"Pensamiento analítico: {prompt}",
-            "deductive_reasoning": f"Razonamiento deductivo: {prompt}",
-            "inductive_reasoning": f"Razonamiento inductivo: {prompt}",
-            "scientific_literature": f"Literatura científica: {prompt}",
-            "physics": f"Física: {prompt}",
-            "chemistry": f"Química: {prompt}",
-            "biology": f"Biología: {prompt}",
-            "engineering": f"Ingeniería: {prompt}",
-            "mechanical_engineering": f"Ingeniería mecánica: {prompt}",
-            "electrical_engineering": f"Ingeniería eléctrica: {prompt}",
-            "software_engineering": f"Ingeniería de software: {prompt}",
-            "creative_writing": f"Escritura creativa: {prompt}",
-            "poetry": f"Poesía: {prompt}",
-            "storytelling": f"Narrativa: {prompt}",
-            "art_description": f"Descripción de arte: {prompt}",
-            "data_analysis": f"Análisis de datos: {prompt}",
-            "statistics": f"Estadísticas: {prompt}",
-            "business_analysis": f"Análisis de negocios: {prompt}",
-            "financial_analysis": f"Análisis financiero: {prompt}",
-            "general_chat": f"Chat general: {prompt}",
-            "dialogue": f"Diálogo: {prompt}",
-            "social_interaction": f"Interacción social: {prompt}",
-            "emotional_support": f"Apoyo emocional: {prompt}",
-            "image_description": f"Descripción de imagen: {prompt}",
-            "visual_analysis": f"Análisis visual: {prompt}",
-            "audio_description": f"Descripción de audio: {prompt}",
-            "document_analysis": f"Análisis de documento: {prompt}"
-        }
-        
-        return domain_responses.get(specialization, f"Respuesta especializada ({specialization}): {prompt}")
-    
-    def _apply_core_consensus(
+        loop = asyncio.get_running_loop()
+        return await loop.run_in_executor(
+            None, self._run_pipeline_sync, model_id, prompt, model_config
+        )
+
+    def _run_pipeline_sync(
+        self,
+        model_id: str,
+        prompt: str,
+        model_config: Dict[str, Any]
+    ) -> str:
+        pipe = self._get_or_create_pipeline(model_id)
+        result = pipe(
+            prompt,
+            max_length=int(model_config.get("max_length", 256)),
+            do_sample=True,
+            temperature=float(model_config.get("temperature", 0.7)),
+            num_return_sequences=1
+        )
+        if isinstance(result, list) and result:
+            if "generated_text" in result[0]:
+                return result[0]["generated_text"]
+            if "summary_text" in result[0]:
+                return result[0]["summary_text"]
+        return str(result)
+
+    def _get_or_create_pipeline(self, model_id: str):
+        if model_id in self._pipeline_cache:
+            return self._pipeline_cache[model_id]
+        device = 0 if torch.cuda.is_available() else -1
+        try:
+            tokenizer = AutoTokenizer.from_pretrained(model_id)
+            model = AutoModelForCausalLM.from_pretrained(model_id)
+            pipe = pipeline("text-generation", model=model, tokenizer=tokenizer, device=device)
+        except Exception:
+            tokenizer = AutoTokenizer.from_pretrained(model_id)
+            model = AutoModelForSeq2SeqLM.from_pretrained(model_id)
+            pipe = pipeline("text2text-generation", model=model, tokenizer=tokenizer, device=device)
+        self._pipeline_cache[model_id] = pipe
+        return pipe
+
+def _apply_core_consensus(
         self, 
         model_responses: List[Dict[str, Any]], 
         prompt: str
