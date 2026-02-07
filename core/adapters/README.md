@@ -1,6 +1,6 @@
 # CapibaraGPT v3 Adapter System
 
-##  General Description
+##  Generatel Description
 
 The CapibaraGPT v3 adapter system provides a unified and extensible architecture for automatic adaptation of different system components, including kernels, hardware, quantization, language processing, and performance optimization.
 

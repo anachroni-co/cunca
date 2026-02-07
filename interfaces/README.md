@@ -412,9 +412,9 @@ class IProcessor(ABC):
 - [Core Backends](../core/backends/README.md)
 - [Utils Cache](../utils/README.md#cache-manager)
 
-## Ejemplo quick
+## Example quick
 
-Ejemplo (pseudo-code) para implementar una interfaz:
+Example (pseudo-code) para implementar una interfaz:
 
 ```python
 from interfaces.base import BaseInterface

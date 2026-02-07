@@ -654,13 +654,13 @@ print(f"Available datasets: {available}")
 **Last updated**: 2025-11-16
 **System version**: v3.0.0
 
-## Ejemplo quick
+## Example quick
 
-Ejemplo (pseudo-flujo) para preparar datos:
+Example (pseudo-flujo) para preparar datos:
 
 ```text
-1) Coloca archivos .jsonl en data/raw/
-2) Referencia esos archivos en tu config de entrenamiento
+1) Coloca files .jsonl en data/raw/
+2) Referencia esos files en tu config de entrenamiento
 3) Ejecuta el pipeline de preprocesamiento
 ```
 
@@ -668,9 +668,9 @@ Ejemplo (pseudo-flujo) para preparar datos:
 
 - [ ] # Placeholder for real-time API loading - `data\ultra_data_orchestrator.py:625`
 - [ ] return {"type": "fallback", "name": dataset_name, "data": "placeholder_data"} - `data\ultra_data_orchestrator.py:649`
-- [ ] "gc_content_estimate": np.random.uniform(0.3, 0.7),  # Mock for now - `data\datasets\genomic\alphagenome_training_generator.py:167`
-- [ ] "repeat_content_estimate": np.random.uniform(0.1, 0.5)  # Mock for now - `data\datasets\genomic\alphagenome_training_generator.py:168`
-- [ ] # For now, generate simulated data - `data\datasets\genomic\genomic_datasets.py:119`
+- [ ] "gc_content_estimate": np.random.uniform(0.3, 0.7),  # Mock for now - `data\datasets\genomic\alphagenome_training_Generator.py:167`
+- [ ] "repeat_content_estimate": np.random.uniform(0.1, 0.5)  # Mock for now - `data\datasets\genomic\alphagenome_training_Generator.py:168`
+- [ ] # For now, Generate simulated data - `data\datasets\genomic\genomic_datasets.py:119`
 - [ ] # Generate simulated expression matrix - `data\datasets\genomic\genomic_datasets.py:184`
 - [ ] # Create placeholder and instructions - `data\datasets\multimodal\emotional_audio_datasets.py:426`
 - [ ] # Placeholder for future dataset expansions - `data\datasets\multimodal\__init__.py:7`

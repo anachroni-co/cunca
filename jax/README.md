@@ -119,7 +119,7 @@ z = jnp.custom_op(x, optimization="tpu")
 from capibara.jax import lax
 
 # Low-level operations
-result = lax.conv_general_dilated(
+result = lax.conv_Generatel_dilated(
     x, kernel,
     window_strides=(1, 1),
     padding="SAME"
@@ -514,7 +514,7 @@ except errors.JAXError as e:
 | `capibara.jax.numpy` | NumPy API (jnp) |
 | `capibara.jax.lax` | LAX low-level API |
 | `capibara.jax.nn` | Neural network primitives |
-| `capibara.jax.random` | Random number generation |
+| `capibara.jax.random` | Random number Generation |
 | `capibara.jax.tree_util` | Pytree utilities |
 | `capibara.jax.tpu_v4` | TPU v4/v5e/v6e optimizations |
 
@@ -587,9 +587,9 @@ tpu_optimization.verify_optimizations()  # Verify they are active
 **System version**: v3.0.0
 **JAX Version**: 0.4.20+
 
-## Ejemplo quick
+## Example quick
 
-Ejemplo (pseudo-code) para seleccionar backend JAX/TPU:
+Example (pseudo-code) para seleccionar backend JAX/TPU:
 
 ```python
 from core.backends import get_backend, BackendType

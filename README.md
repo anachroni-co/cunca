@@ -158,7 +158,7 @@ graph LR
 
     subgraph services[" Services (11K lines)"]
         automation[automation]
-        generation[generation]
+        Generation[Generation]
         analysis[analysis]
     end
 
@@ -578,7 +578,7 @@ capibaraGPT_v3/
 │   └── reasoning/           # Reasoning enhancement
 │
 ├──  services/             # Application services (11K lines)
-│   ├── meta_generation/     # Content generation
+│   ├── meta_Generation/     # Content Generation
 │   └── automation/          # Task automation
 │
 ├── ️ utils/                # Utilities (8K lines)
@@ -588,7 +588,7 @@ capibaraGPT_v3/
 ├──  benchmarks/           # Benchmark system (2K lines)
 │   ├── runner.py            # Benchmark execution
 │   ├── comparator.py        # Result comparison
-│   └── reporter.py          # Report generation
+│   └── reporter.py          # Report Generation
 │
 ├── ️ config/               # Configuration (4K lines)
 │   ├── config.yaml          # Main configuration

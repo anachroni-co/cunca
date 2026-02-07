@@ -64,7 +64,7 @@ Last updated: 2026-02-07
 - `inference/engines/advanced_quantized_engine.py`
 
 **Problem**
-- Parameter loading/generation still depends on simulation.
+- Parameter loading/Generation still depends on simulation.
 
 **Exit criteria**
 - Real parameter loading from checkpoint/model hub.

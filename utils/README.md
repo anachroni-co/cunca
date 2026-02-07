@@ -430,7 +430,7 @@ logger.info("Metrics", extra={
 │  Level    │ Value │ Use Case                               │
 ├───────────┼───────┼────────────────────────────────────────┤
 │  DEBUG    │  10   │ Detailed diagnostic information       │
-│  INFO     │  20   │ General operational messages          │
+│  INFO     │  20   │ Generatel operational messages          │
 │  WARNING  │  30   │ Potential issues                      │
 │  ERROR    │  40   │ Errors that need attention            │
 │  CRITICAL │  50   │ Critical failures                     │
@@ -687,9 +687,9 @@ class Trainer:
 - [Configuration](../config/README.md)
 - [Training Module](../training/README.md)
 
-## Ejemplo quick
+## Example quick
 
-Ejemplo (pseudo-code) para usar utilidades:
+Example (pseudo-code) para usar utilidades:
 
 ```python
 # from utils.logging_utils import setup_logging

@@ -162,7 +162,7 @@ config/
 ├── adaptive_config.py    # Adaptive configuration
 ├── config_manager.py     # Central manager
 ├── config_schema.py      # Pydantic schemas
-├── config_settings.py   # General settings
+├── config_settings.py   # Generatel settings
 ├── config_validator.py   # Validators
 ├── config_validators.py  # Additional validators
 ├── convexity_config.py   # Convex configuration
@@ -245,9 +245,9 @@ valid_paths = check_data_paths(config.training)
 
 See the `configs_toml/` directory for complete configuration examples in TOML format.
 
-## Ejemplo quick
+## Example quick
 
-Ejemplo (pseudo-code) para cargar una configuration TOML:
+Example (pseudo-code) para cargar una configuration TOML:
 
 ```python
 import toml

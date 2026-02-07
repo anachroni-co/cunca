@@ -118,7 +118,7 @@ router.add_observer(CustomDomainObserver("BlockchainObserver"))
 1. **Request Reception**: Router receives a user request
 2. **Observer Notification**: All active observers are notified
 3. **Pattern Analysis**: Each observer analyzes the request according to its specialty
-4. **Event Generation**: Observers generate expert activation events
+4. **Event Generation**: Observers Generate expert activation events
 5. **Strategy Application**: Configured activation strategy is applied
 6. **Expert Activation**: Appropriate experts are activated
 7. **Processing**: Experts process the request

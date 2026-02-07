@@ -165,7 +165,7 @@ from capibara.vq import create_vq
 
 # Create VQ layer (automatic best-variant selection)
 vq, info = create_vq(
-    use_case="general",
+    use_case="Generatel",
     num_embeddings=8192,  # Codebook size
     embedding_dim=768,    # Embedding dimension
     system_preference="auto"
@@ -238,7 +238,7 @@ config = EnhancedVQConfig(
 vq = EnhancedVectorQuantizer(config)
 ```
 
-**Best For**: General-purpose compression
+**Best For**: Generatel-purpose compression
 
 #### 2. Residual VQ (RVQ)
 
@@ -422,7 +422,7 @@ manager = IntelligentVQManager(config)
 
 # Get optimal VQ for use case
 vq = manager.get_optimal_vq(
-    use_case="research",  # "general", "production", "edge", "research"
+    use_case="research",  # "Generatel", "production", "edge", "research"
     num_embeddings=8192,
     embedding_dim=768,
     performance_requirements={
@@ -695,7 +695,7 @@ from capibara.vq import create_vq
 
 # CUDA-optimized VQ
 gpu_vq, info = create_vq(
-    use_case="general",
+    use_case="Generatel",
     num_embeddings=8192,
     embedding_dim=768,
     hardware="cuda",
@@ -774,8 +774,8 @@ monitor.set_tensorboard_writer(writer)
 ### 1. Choose Right VQ Variant
 
 ```python
-# General-purpose: Standard VQ
-if use_case == "general":
+# Generatel-purpose: Standard VQ
+if use_case == "Generatel":
     vq = create_vq(variant="standard", num_embeddings=8192)
 
 # Maximum compression: Product VQ
@@ -866,7 +866,7 @@ else:
 
 **Vector Quantization:**
 - [Neural Discrete Representation Learning (VQ-VAE)](https://arxiv.org/abs/1711.00937)
-- [Generating Diverse High-Fidelity Images (VQ-VAE-2)](https://arxiv.org/abs/1906.00446)
+- [Generateting Diverse High-Fidelity Images (VQ-VAE-2)](https://arxiv.org/abs/1906.00446)
 - [Taming Transformers for High-Resolution Image Synthesis (VQGAN)](https://arxiv.org/abs/2012.09841)
 
 **Residual VQ:**
@@ -921,9 +921,9 @@ Part of the CapibaraGPT v3 project. See [LICENSE](../../LICENSE) for details.
 **Version**: 2024.1.0
 **Status**: Production-Ready Ultra
 
-## Ejemplo quick
+## Example quick
 
-Ejemplo (pseudo-code) para vector quantization:
+Example (pseudo-code) para vector quantization:
 
 ```python
 # vq = VectorQuantizer(config)

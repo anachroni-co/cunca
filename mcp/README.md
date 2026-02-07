@@ -430,7 +430,7 @@ mcp:
 - [Inference Module](../inference/README.md)
 - [Training Module](../training/README.md)
 
-## Ejemplo quick
+## Example quick
 
 Example (pseudo-command) para iniciar un servicio MCP:
 

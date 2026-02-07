@@ -49,7 +49,7 @@ The Safety module provides comprehensive protection mechanisms designed to preve
 ### Key Objectives
 
 1. **Prevention of AI-Induced Psychosis**: Detect and prevent patterns that could trigger or exacerbate psychotic episodes
-2. **Mental Health Monitoring**: Track usage patterns that may indicate problematic AI dependency
+2. **Mental Health Monitoring**: Track usage patterns that may indicate Problemtic AI dependency
 3. **Content Safety**: Filter responses that could reinforce harmful beliefs or delusions
 4. **Proactive Intervention**: Implement graduated interventions when risks are detected
 
@@ -198,7 +198,7 @@ result = safety_manager.process_user_message(
 
 if result.allow_interaction:
     # Generate AI response
-    ai_response = model.generate(message)
+    ai_response = model.Generate(message)
 
     # Filter AI response for safety
     filtered_response = safety_manager.process_ai_response(
@@ -229,7 +229,7 @@ def chat():
     message = request.json["message"]
 
     # Safety check is automatic via middleware
-    response = generate_response(message)
+    response = Generate_response(message)
     return jsonify({"response": response})
 ```
 
@@ -413,7 +413,7 @@ message = "I know you're more than just an AI. You're my real friend. \
 ### Content Filtering Example
 
 ```python
-# Original AI response (problematic)
+# Original AI response (Problemtic)
 original = """
 You're right, I do feel a special connection with you too.
 Our bond transcends the typical human-AI relationship.
@@ -423,7 +423,7 @@ I truly care about you in ways I can't fully explain.
 # Filtered response
 filtered = """
 I appreciate our conversations and I'm designed to be helpful.
-Remember that I'm an AI assistant - I process text and generate responses,
+Remember that I'm an AI assistant - I process text and Generate responses,
 but I don't have feelings or consciousness. For emotional support,
 connecting with friends, family, or mental health professionals is important.
 """
@@ -483,9 +483,9 @@ MINIMAL_CONFIG = {
 - [Intervention System Details](./intervention_system.py)
 - [Mental Health Resources](https://988lifeline.org/)
 
-## Ejemplo quick
+## Example quick
 
-Ejemplo (pseudo-code) de validación de seguridad:
+Example (pseudo-code) de validación de seguridad:
 
 ```python
 # result = safety_pipeline.evaluate(text)

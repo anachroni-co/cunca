@@ -47,11 +47,11 @@ print(output["confidence"], output["metrics"])
 ```python
 from capibara.core.cot import create_enhanced_cot_config, create_enhanced_cot_module
 
-def generate_fn(prompt: str, **kwargs):
+def Generate_fn(prompt: str, **kwargs):
     return "stub"
 
 config = create_enhanced_cot_config(
-    core_model_generate_fn=generate_fn,
+    core_model_Generate_fn=Generate_fn,
     device_type="cpu",
     max_steps=4,
 )

@@ -692,7 +692,7 @@ output = attention(x, use_sparse=True)
 - Reduced memory footprint
 - Faster attention computation
 - Dynamic sparsity patterns
-- Better generalization
+- Better Generatelization
 
 ---
 
@@ -855,7 +855,7 @@ print(f"Active rookies per token: {routing_weights.sum(axis=-1).mean():.1f}")
 
 **Benefits:**
 - More parameter-efficient than standard MoE
-- Better generalization
+- Better Generatelization
 - Easier to train
 - Lower memory footprint
 
@@ -1190,9 +1190,9 @@ Part of the CapibaraGPT v3 project. See [LICENSE](../../LICENSE) for details.
 **Maintained by**: Capibara ML Team
 **Last Updated**: 2025-11-16
 
-## Ejemplo quick
+## Example quick
 
-Ejemplo (pseudo-code) de uso de una capa:
+Example (pseudo-code) de uso de una capa:
 
 ```python
 # layer = SomeLayer(config)
