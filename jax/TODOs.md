@@ -1,6 +1,6 @@
-Ôªø# TODOs - jax
+# TODOs - jax
 
-Actualizado: 2026-02-07
+Updated: 2026-02-07
 
 ## Critical
 - [ ] 294:        raise NotImplementedError(f"No implementation for {self.name}") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\core.py`
@@ -10,11 +10,11 @@ Actualizado: 2026-02-07
 - [ ] 331:        raise NotImplementedError - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\core.py`
 
 ## High
-- [ ] 14:    _base_jax = None  # not tenemos JAX est√°ndar, usamos nuestro mock - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py`
-- [ ] 27:        M√≥dulo JAX (est√°ndar or mock) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py`
+- [ ] 14:    _base_jax = None  # not tenemos JAX est·ndar, usamos nuestro mock - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py`
+- [ ] 27:        MÛdulo JAX (est·ndar or mock) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py`
 - [ ] 29:                # always use nuestro mock JAX for CapibaraGPT - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py`
 - [ ] 31:        # create mock JAX compatible - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py`
-- [ ] 62:        M√≥dulo numpy de JAX (est√°ndar or mock) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py`
+- [ ] 62:        MÛdulo numpy de JAX (est·ndar or mock) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py`
 - [ ] 67:        # create un mock simple for testing - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\compat.py`
 - [ ] 46:    """Extended dtype support (placeholder).""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\dtypes.py`
 - [ ] 50:    """PRNG key dtype (placeholder).""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\dtypes.py`
@@ -26,8 +26,8 @@ Actualizado: 2026-02-07
 - [ ] 377:        spikes, voltages = lif_kernel.simulate_lif_dynamics(test_currents) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\jax\tpu_v4\neuromorphic_kernels.py`
 
 ## Medium
-- [x] Sin pendientes en esta prioridad.
+- [x] No pending items at this priority.
 
 ## Low
-- [x] Sin pendientes en esta prioridad.
+- [x] No pending items at this priority.
 

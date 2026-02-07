@@ -1,9 +1,9 @@
-﻿# TODOs - sub_models
+# TODOs - sub_models
 
-Actualizado: 2026-02-07
+Updated: 2026-02-07
 
 ## Critical
-- [x] Sin pendientes en esta prioridad.
+- [x] No pending items at this priority.
 
 ## High
 - [ ] 238:    """TPU-optimized world model simulation.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\csa_expert_tpu_optimized.py`
@@ -12,7 +12,7 @@ Actualizado: 2026-02-07
 - [ ] 424:    def _simulate_scenarios_impl(self, params, initial_state, hypothesis_features, num_steps): - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\csa_expert_tpu_optimized.py`
 - [ ] 474:                    final_state, trajectory = self._simulate_scenarios_jit( - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\csa_expert_tpu_optimized.py`
 - [ ] 479:                    final_state, trajectory = self._simulate_scenarios_impl( - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\csa_expert_tpu_optimized.py`
-- [ ] 330:            logger.warning("️ SSM layers not available, using placeholder") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_enhanced_integration.py`
+- [ ] 330:            logger.warning("? SSM layers not available, using placeholder") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_enhanced_integration.py`
 - [ ] 292:        return "adaptive_vq_placeholder"  # Placeholder for current enhanced model - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`
 - [ ] 300:        return "spike_ssm_placeholder"  # Placeholder for current enhanced model - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`
 - [ ] 308:        return "deep_dialog_placeholder"  # Placeholder for current enhanced model - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\sub_models\ultra_submodel_orchestrator.py`

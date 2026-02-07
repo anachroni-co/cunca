@@ -587,9 +587,9 @@ tpu_optimization.verify_optimizations()  # Verify they are active
 **System version**: v3.0.0
 **JAX Version**: 0.4.20+
 
-## Ejemplo rápido
+## Ejemplo quick
 
-Ejemplo (pseudo-código) para seleccionar backend JAX/TPU:
+Ejemplo (pseudo-code) para seleccionar backend JAX/TPU:
 
 ```python
 from core.backends import get_backend, BackendType
@@ -603,8 +603,8 @@ print(backend.name)
 - [ ] """Mock jit decorator.""" - `jax\activations.py:19`
 - [ ] # Placeholder for JAX API utilities - `jax\api_util.py:17`
 - [ ] # Placeholder functions - `jax\capibara_random.py:219`
-- [ ] _base_jax = None  # not tenemos JAX estándar, usamos nuestro mock - `jax\compat.py:14`
-- [ ] Módulo JAX (estándar or mock) - `jax\compat.py:27`
+- [ ] _base_jax = None  # not tenemos JAX standard, usamos nuestro mock - `jax\compat.py:14`
+- [ ] module JAX (standard or mock) - `jax\compat.py:27`
 - [ ] # always use nuestro mock JAX for CapibaraGPT - `jax\compat.py:29`
 - [ ] # create mock JAX compatible - `jax\compat.py:31`
 - [ ] class MockJAX: - `jax\compat.py:32`
@@ -612,7 +612,7 @@ print(backend.name)
 - [ ] """Mock jit - acepta todos los argumentos.""" - `jax\compat.py:37`
 - [ ] return [MockDevice()] - `jax\compat.py:53`
 - [ ] return MockJAX() - `jax\compat.py:55`
-- [ ] Módulo numpy de JAX (estándar or mock) - `jax\compat.py:62`
+- [ ] module numpy de JAX (standard or mock) - `jax\compat.py:62`
 - [ ] # create un mock simple for testing - `jax\compat.py:67`
 - [ ] class MockJNP: - `jax\compat.py:69`
 - [ ] return MockJNP() - `jax\compat.py:73`

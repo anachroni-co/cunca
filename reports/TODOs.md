@@ -1,5 +1,5 @@
-﻿# TODOs - reports
+# TODOs - reports
 
-Actualizado: 2026-02-07
+Updated: 2026-02-07
 
-- [x] No se detectaron pendientes automáticos con los patrones de sincronización.
+- [x] No automatic pending items were detected with the synchronization patterns.

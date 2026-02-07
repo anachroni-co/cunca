@@ -1,6 +1,6 @@
-﻿# TODOs - data
+# TODOs - data
 
-Actualizado: 2026-02-07
+Updated: 2026-02-07
 
 ## Critical
 - [ ] 42:        raise NotImplementedError - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\core\jax_data_processing.py`
@@ -17,7 +17,7 @@ Actualizado: 2026-02-07
 - [ ] 344:    def simulate_download_status(self, dataset_id: str) -> Dict[str, Any]: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\systems\systems_logs_datasets.py`
 
 ## Medium
-- [x] Sin pendientes en esta prioridad.
+- [x] No pending items at this priority.
 
 ## Low
 - [ ] 10:- Physical system simulations - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\data\datasets\physics\__init__.py`

@@ -18,13 +18,13 @@ Establecer JSON-LD como formato canónico para datos persistentes/estructurados 
 
 ## Flujo recomendado (alto nivel)
 
-1. **Ingesta** → Normalización JSON-LD (`@id`, `@type`, `@context`).
+1. **Ingestion** → Normalización JSON-LD (`@id`, `@type`, `@context`).
 2. **RAG interno** → Fusión, filtrado y selección sobre JSON-LD.
 3. **Encoder** → JSON-LD → TOON antes del prompt.
 
 ## Implementación inicial
 
-Se añadió un módulo utilitario para:
+Se added un module utilitario para:
 - Normalizar documentos/chunks a JSON-LD.
 - Construir un contexto JSON-LD para RAG.
 - Serializar JSON-LD a TOON siguiendo reglas deterministas.

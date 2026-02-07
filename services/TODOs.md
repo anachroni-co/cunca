@@ -1,12 +1,12 @@
-﻿# TODOs - services
+# TODOs - services
 
-Actualizado: 2026-02-07
+Updated: 2026-02-07
 
 ## Critical
-- [x] Sin pendientes en esta prioridad.
+- [x] No pending items at this priority.
 
 ## High
-- [ ] 310:    """Generador BIM mock para demostración""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\text_to_bim_service.py`
+- [ ] 310:    """Generador BIM mock for demonstration""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\text_to_bim_service.py`
 - [ ] 316:        """Genera modelo BIM mock""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\text_to_bim_service.py`
 - [ ] 385:        self.generator = MockBIMGenerator()  # Default to mock for demo - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\text_to_bim_service.py`
 - [ ] 435:                bim_tool_used="mock_generator", - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\text_to_bim_service.py`
@@ -14,12 +14,12 @@ Actualizado: 2026-02-07
 - [ ] 340:                    # Use standard n8n execution (simulated) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\agent_executor.py`
 - [ ] 481:        """Execute a node in standard n8n mode (simulated).""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\agent_executor.py`
 - [ ] 498:            result["response"] = {"status": 200, "data": "simulated response"} - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\agent_executor.py`
-- [ ] 328:    """Analizador genómico mock para demostración (mientras se integran herramientas reales)""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py`
+- [ ] 328:    """Analizador gen�mico mock for demonstration (while real tools are integrated)""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py`
 - [ ] 331:        logger.info(" Mock Genomic Analyzer initialized (60B model simulation)") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py`
 - [ ] 337:        mock_variants = [ - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py`
 - [ ] 363:            "variants_found": len(mock_variants), - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py`
 - [ ] 364:            "variants": mock_variants, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py`
-- [ ] 297:        # Servicios disponibles (mocks para demostración) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\multi_service_orchestrator.py`
+- [ ] 297:        # Servicios disponibles (mocks for demonstration) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\multi_service_orchestrator.py`
 - [ ] 299:            "print3d": self._mock_print3d_service, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\multi_service_orchestrator.py`
 - [ ] 300:            "circuit": self._mock_circuit_service, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\multi_service_orchestrator.py`
 - [ ] 301:            "code": self._mock_code_service, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\multi_service_orchestrator.py`
@@ -32,7 +32,7 @@ Actualizado: 2026-02-07
 - [ ] 557:    async def _mock_api_service(self, params: Dict[str, Any]) -> Dict[str, Any]: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\multi_service_orchestrator.py`
 - [ ] 373:    async def generate_print3d_mock(self, request: Print3DRequest) -> Print3DResult: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py`
 - [ ] 374:        """Generate a mock 3D model optimized for printing.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py`
-- [ ] 375:        logger.info(f"️ Generating mock Print3D model: {request.description[:100]}...") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py`
+- [ ] 375:        logger.info(f"? Generating mock Print3D model: {request.description[:100]}...") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py`
 - [ ] 386:        volume = self._calculate_mock_volume(request) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py`
 - [ ] 434:            tool_used="mock_generator" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py`
 - [ ] 437:    def _calculate_mock_volume(self, request: Print3DRequest) -> float: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\print3d_generation\text_to_print3d_service.py`
@@ -64,7 +64,7 @@ Actualizado: 2026-02-07
 - [ ] 818:            logger.error(f" Error creating mock files: {e}") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
 
 ## Medium
-- [x] Sin pendientes en esta prioridad.
+- [x] No pending items at this priority.
 
 ## Low
 - [ ] 482:        # This is a simulation of n8n node execution - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\agent_executor.py`

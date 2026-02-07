@@ -1,16 +1,16 @@
-﻿# TODOs - utils
+# TODOs - utils
 
-Actualizado: 2026-02-07
+Updated: 2026-02-07
 
 ## Critical
-- [x] Sin pendientes en esta prioridad.
+- [x] No pending items at this priority.
 
 ## High
-- [x] Sin pendientes en esta prioridad.
+- [x] No pending items at this priority.
 
 ## Medium
 - [ ] 23:            TODO: Add detailed description. - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\utils\system_info.py`
 
 ## Low
-- [x] Sin pendientes en esta prioridad.
+- [x] No pending items at this priority.
 

@@ -318,9 +318,9 @@ CAPIBARA_LOG_LEVEL=DEBUG python scripts/train_synthetic.py
 - [Tests](../tests/README.md)
 - [Configuration](../config/README.md)
 
-## Ejemplo rápido
+## Ejemplo quick
 
-Ejemplo (pseudo-comando) para ejecutar un script utilitario:
+Example (pseudo-command) para ejecutar un script utilitario:
 
 ```bash
 python scripts/inspect_model.py --config config/configs_toml/model.toml

@@ -921,9 +921,9 @@ Part of the CapibaraGPT v3 project. See [LICENSE](../../LICENSE) for details.
 **Version**: 2024.1.0
 **Status**: Production-Ready Ultra
 
-## Ejemplo rápido
+## Ejemplo quick
 
-Ejemplo (pseudo-código) para vector quantization:
+Ejemplo (pseudo-code) para vector quantization:
 
 ```python
 # vq = VectorQuantizer(config)

@@ -483,9 +483,9 @@ MINIMAL_CONFIG = {
 - [Intervention System Details](./intervention_system.py)
 - [Mental Health Resources](https://988lifeline.org/)
 
-## Ejemplo rápido
+## Ejemplo quick
 
-Ejemplo (pseudo-código) de validación de seguridad:
+Ejemplo (pseudo-code) de validación de seguridad:
 
 ```python
 # result = safety_pipeline.evaluate(text)

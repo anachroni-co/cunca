@@ -1,6 +1,6 @@
-﻿# TODOs - tests
+# TODOs - tests
 
-Actualizado: 2026-02-07
+Updated: 2026-02-07
 
 ## Critical
 - [ ] 10:- Full inference pipeline simulation - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\benchmarks\test_e2e_latency.py`
@@ -22,7 +22,7 @@ Actualizado: 2026-02-07
 - [ ] 222:        """Test creating gate from a mock backend object.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\unit\test_module_gate.py`
 
 ## Medium
-- [x] Sin pendientes en esta prioridad.
+- [x] No pending items at this priority.
 
 ## Low
 - [ ] 40:        # Vocabulary simulation: create word frequency distribution - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\tests\fixtures\synthetic_data.py`

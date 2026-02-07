@@ -245,9 +245,9 @@ valid_paths = check_data_paths(config.training)
 
 See the `configs_toml/` directory for complete configuration examples in TOML format.
 
-## Ejemplo rápido
+## Ejemplo quick
 
-Ejemplo (pseudo-código) para cargar una configuración TOML:
+Ejemplo (pseudo-code) para cargar una configuration TOML:
 
 ```python
 import toml

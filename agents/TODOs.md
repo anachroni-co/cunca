@@ -1,6 +1,6 @@
-﻿# TODOs - agents
+# TODOs - agents
 
-Actualizado: 2026-02-07
+Updated: 2026-02-07
 
 ## Critical
 - [ ] 72:        raise NotImplementedError - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\agents\capibara_agent_factory.py`
@@ -11,8 +11,8 @@ Actualizado: 2026-02-07
 - [ ] 690:            # Monitor performance (simulate monitoring) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\agents\examples.py`
 
 ## Medium
-- [x] Sin pendientes en esta prioridad.
+- [x] No pending items at this priority.
 
 ## Low
-- [x] Sin pendientes en esta prioridad.
+- [x] No pending items at this priority.
 
