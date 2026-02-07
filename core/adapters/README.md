@@ -168,7 +168,7 @@ print(f"Available backends: {list(backends.keys())}")
 **Supported Backends:**
 - TPU v4/v5/v6 (maximum performance)
 - Cython (CPU optimization)
-- Neuromorphic (specialized simulation)
+- Neuromorphic (simulated)
 - Python Fallback (universal compatibility)
 
 ### 2. Performance Adapter

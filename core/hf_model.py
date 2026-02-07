@@ -11,17 +11,50 @@ from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
-try:
-    import torch
-    from transformers import AutoModelForCausalLM, AutoTokenizer
-    _TRANSFORMERS_AVAILABLE = True
-    _IMPORT_ERROR: Optional[Exception] = None
-except Exception as exc:  # pragma: no cover - optional dependency
-    _TRANSFORMERS_AVAILABLE = False
-    _IMPORT_ERROR = exc
-    torch = None  # type: ignore
-    AutoModelForCausalLM = None  # type: ignore
-    AutoTokenizer = None  # type: ignore
+torch = None  # type: ignore
+AutoModelForCausalLM = None  # type: ignore
+AutoTokenizer = None  # type: ignore
+_TRANSFORMERS_AVAILABLE = False
+_IMPORT_ERROR: Optional[Exception] = None
+
+
+def _torch_import_works() -> bool:
+    import subprocess
+    import sys
+    try:
+        result = subprocess.run(
+            [sys.executable, "-c", "import torch"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        )
+        return result.returncode == 0
+    except Exception:
+        return False
+
+
+def _try_import_transformers() -> bool:
+    global torch, AutoModelForCausalLM, AutoTokenizer, _TRANSFORMERS_AVAILABLE, _IMPORT_ERROR
+    if _TRANSFORMERS_AVAILABLE:
+        return True
+    if not _torch_import_works():
+        _IMPORT_ERROR = ImportError("torch import failed")
+        return False
+    try:
+        import torch as _torch
+        from transformers import AutoModelForCausalLM as _AutoModel, AutoTokenizer as _AutoTokenizer
+        torch = _torch
+        AutoModelForCausalLM = _AutoModel  # type: ignore
+        AutoTokenizer = _AutoTokenizer  # type: ignore
+        _TRANSFORMERS_AVAILABLE = True
+        return True
+    except Exception as exc:  # pragma: no cover - optional dependency
+        _TRANSFORMERS_AVAILABLE = False
+        _IMPORT_ERROR = exc
+        torch = None  # type: ignore
+        AutoModelForCausalLM = None  # type: ignore
+        AutoTokenizer = None  # type: ignore
+        return False
 
 
 def _resolve_dtype(dtype: str | None):
@@ -51,7 +84,7 @@ class HuggingFaceCausalLM:
     """Thin wrapper around AutoModelForCausalLM with explicit dependencies."""
 
     def __init__(self, config: HuggingFaceConfig):
-        if not _TRANSFORMERS_AVAILABLE:
+        if not _TRANSFORMERS_AVAILABLE and not _try_import_transformers():
             raise ImportError(
                 "transformers/torch are required for HuggingFaceCausalLM. "
                 f"Import error: {_IMPORT_ERROR}"

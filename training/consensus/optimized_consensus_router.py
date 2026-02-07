@@ -21,6 +21,7 @@ from enum import Enum
 import json
 import numpy as np
 import hashlib
+import threading
 
 # Numba for JIT compilation
 try:
@@ -68,6 +69,61 @@ except ImportError:
     OPTIMIZATIONS_AVAILABLE = False
 
 logger = logging.getLogger(__name__)
+
+
+class _TextEmbedder:
+    """Lazy text embedder using Hugging Face transformers (no sentence-transformers required)."""
+
+    def __init__(self, model_name: str):
+        self.model_name = model_name
+        self._lock = threading.Lock()
+        self._tokenizer = None
+        self._model = None
+        self._device = "cpu"
+
+    def _ensure_loaded(self):
+        if self._model is not None and self._tokenizer is not None:
+            return
+        with self._lock:
+            if self._model is not None and self._tokenizer is not None:
+                return
+            try:
+                import torch
+                from transformers import AutoModel, AutoTokenizer
+            except Exception as exc:
+                raise RuntimeError(f"Transformers backend not available: {exc}") from exc
+
+            self._tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+            self._model = AutoModel.from_pretrained(self.model_name)
+            self._model.eval()
+            if torch.cuda.is_available():
+                self._device = "cuda"
+                self._model.to(self._device)
+
+    def encode(self, texts: List[str]) -> np.ndarray:
+        self._ensure_loaded()
+        import torch
+
+        with torch.no_grad():
+            inputs = self._tokenizer(
+                texts,
+                padding=True,
+                truncation=True,
+                max_length=256,
+                return_tensors="pt",
+            )
+            inputs = {k: v.to(self._device) for k, v in inputs.items()}
+            outputs = self._model(**inputs)
+            token_embeddings = outputs.last_hidden_state
+            attention_mask = inputs.get("attention_mask")
+            if attention_mask is None:
+                pooled = token_embeddings.mean(dim=1)
+            else:
+                mask = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
+                summed = (token_embeddings * mask).sum(dim=1)
+                counts = mask.sum(dim=1).clamp(min=1.0)
+                pooled = summed / counts
+            return pooled.cpu().numpy().astype(np.float32)
 
 class OptimizedRoutingMode(Enum):
     """Optimized routing operation modes."""
@@ -266,6 +322,9 @@ class OptimizedConsensusRouter(HybridExpertRouter):
         self.gpu_accelerator = None
         self.distributed_cache = None
         self.optimized_router = None
+        self._embedder = None
+        self._embedder_cache: Dict[str, np.ndarray] = {}
+        self._expert_embedding_cache: Optional[np.ndarray] = None
         
         # Performance tracking
         self.optimization_metrics = {
@@ -279,6 +338,26 @@ class OptimizedConsensusRouter(HybridExpertRouter):
         }
         
         logger.info(" Optimized Consensus Router initialized")
+
+    def _get_embedder(self) -> _TextEmbedder:
+        if self._embedder is None:
+            model_name = "sentence-transformers/all-MiniLM-L6-v2"
+            self._embedder = _TextEmbedder(model_name)
+        return self._embedder
+
+    async def _encode_text(self, text: str) -> np.ndarray:
+        cache_key = hashlib.md5(text.encode()).hexdigest()
+        if cache_key in self._embedder_cache:
+            return self._embedder_cache[cache_key]
+        embedder = self._get_embedder()
+        embedding = await asyncio.to_thread(embedder.encode, [text])
+        vec = embedding[0]
+        self._embedder_cache[cache_key] = vec
+        return vec
+
+    async def _encode_texts(self, texts: List[str]) -> np.ndarray:
+        embedder = self._get_embedder()
+        return await asyncio.to_thread(embedder.encode, texts)
     
     async def initialize_optimizations(self) -> bool:
         """Initialize all optimization components."""
@@ -502,8 +581,8 @@ class OptimizedConsensusRouter(HybridExpertRouter):
         elif opt_mode == OptimizedRoutingMode.TPU_V6_OPTIMIZED:
             embedding = await self._tpu_v6_generate_embedding(query)
         else:
-            # Standard embedding generation (mock)
-            embedding = np.random.random(768).astype(np.float32)
+            # Standard embedding generation (real)
+            embedding = await self._encode_text(query)
         
         # Cache the embedding
         if self.distributed_cache:
@@ -515,22 +594,13 @@ class OptimizedConsensusRouter(HybridExpertRouter):
         """Generates embedding using GPU acceleration."""
         
         if self.gpu_accelerator and self.gpu_accelerator.is_available():
-            # Mock GPU embedding generation
             self.optimization_metrics["gpu_operations"] += 1
-            return np.random.random(768).astype(np.float32)
-        else:
-            return np.random.random(768).astype(np.float32)
+        return await self._encode_text(query)
     
     async def _tpu_v6_generate_embedding(self, query: str) -> np.ndarray:
         """Generates embedding optimized for TPU v6."""
         
-        if JAX_AVAILABLE:
-            # Mock TPU v6 embedding generation with JAX
-            key = random.PRNGKey(42)
-            embedding = random.normal(key, (768,))
-            return np.array(embedding, dtype=np.float32)
-        else:
-            return np.random.random(768).astype(np.float32)
+        return await self._encode_text(query)
     
     async def _get_optimized_expert_data(self, opt_mode: OptimizedRoutingMode) -> Dict[str, np.ndarray]:
         """Get expert data optimized for processing mode."""
@@ -543,7 +613,18 @@ class OptimizedConsensusRouter(HybridExpertRouter):
         num_experts = len(all_experts)
         
         # Create optimized data arrays
-        expert_embeddings = np.random.random((num_experts, 768)).astype(np.float32)  # Mock embeddings
+        # Build expert text descriptors for real embeddings
+        expert_texts = []
+        for exp in all_experts:
+            domain = exp.domain.value if hasattr(exp.domain, "value") else str(exp.domain)
+            specialization = ", ".join(exp.specialization or [])
+            expert_texts.append(f"{exp.name}. Domain: {domain}. Specialization: {specialization}.")
+
+        if self._expert_embedding_cache is None or len(self._expert_embedding_cache) != num_experts:
+            expert_embeddings = await self._encode_texts(expert_texts)
+            self._expert_embedding_cache = expert_embeddings
+        else:
+            expert_embeddings = self._expert_embedding_cache
         expert_weights = np.array([exp.weight for exp in all_experts], dtype=np.float32)
         expert_quality_scores = np.array([exp.quality_score / 10.0 for exp in all_experts], dtype=np.float32)
         expert_cost_scores = np.array([exp.cost_per_1k_tokens for exp in all_experts], dtype=np.float32)

@@ -15,7 +15,10 @@ Features:
 import logging
 import time
 import asyncio
-from typing import Dict, Any, Optional, List, Callable, Tuple
+import argparse
+import json
+from pathlib import Path
+from typing import Dict, Any, Optional, List, Callable, Tuple, Iterable
 from dataclasses import dataclass, field
 from datetime import datetime
 import numpy as np
@@ -312,32 +315,45 @@ def get_global_meta_loop() -> MetaLoop:
 
 def main():
     """Main function for testing."""
-    logger.info(" Meta-Loop System - Testing Mode")
+    parser = argparse.ArgumentParser(description="Meta-Loop runner (real metrics).")
+    parser.add_argument(
+        "--metrics",
+        type=str,
+        required=True,
+        help="Path to JSONL file with {'performance': float, 'hyperparams': {...}} per line.",
+    )
+    args = parser.parse_args()
 
-    # Create meta-loop
+    metrics_path = Path(args.metrics)
+    if not metrics_path.exists():
+        raise FileNotFoundError(f"Metrics file not found: {metrics_path}")
+
+    logger.info(" Meta-Loop System - Metrics Mode")
     meta_loop = create_meta_loop()
 
-    # Simulate training
-    for step in range(100):
-        # Simulate variable performance
-        performance = 0.5 + 0.4 * np.sin(step * 0.1) + np.random.normal(0, 0.05)
-        performance = np.clip(performance, 0, 1)
-        
-        # Current hyperparameters (simulated)
-        hyperparams = {
-            'learning_rate': 1e-4,
-            'batch_size': 32,
-            'dropout_rate': 0.1,
-            'weight_decay': 0.01
-        }
+    def _iter_metrics(path: Path) -> Iterable[Tuple[float, Dict[str, Any]]]:
+        with path.open("r", encoding="utf-8") as handle:
+            for line_no, line in enumerate(handle, 1):
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    payload = json.loads(line)
+                except json.JSONDecodeError as exc:
+                    raise ValueError(f"Invalid JSON at line {line_no}: {exc}") from exc
 
-        # Execute meta-loop step
+                if "performance" not in payload or "hyperparams" not in payload:
+                    raise ValueError(
+                        f"Line {line_no} missing required keys "
+                        f"('performance', 'hyperparams')."
+                    )
+                yield float(payload["performance"]), dict(payload["hyperparams"])
+
+    for step, (performance, hyperparams) in enumerate(_iter_metrics(metrics_path), 1):
         suggestions = meta_loop.step(performance, hyperparams)
-        
         if suggestions:
             logger.info(f"Step {step}: Suggestions = {suggestions}")
 
-    # Show final state
     status = meta_loop.get_status()
     logger.info(f"Final status: {status}")
 

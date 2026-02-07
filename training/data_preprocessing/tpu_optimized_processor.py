@@ -413,7 +413,7 @@ class TPUOptimizedProcessor:
         return optimized_docs
     
     def _get_current_tpu_core(self) -> int:
-        """Get current TPU core ID (placeholder)."""
+        """Get current TPU core ID."""
         if JAX_AVAILABLE:
             try:
                 return jax.process_index()

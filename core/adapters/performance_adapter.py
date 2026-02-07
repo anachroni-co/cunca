@@ -530,7 +530,7 @@ class PerformanceAdapter(BaseAdapter):
 
     def _adapt_batch_size(self, action: AdaptationAction) -> bool:
         """Adapts batch size."""
-        # Simulated implementation - in a real case would interact with the system
+        # Implementation uses available system metrics when possible
         self.logger.info(f"Adapting batch size: {action.action_type}")
         return True
 

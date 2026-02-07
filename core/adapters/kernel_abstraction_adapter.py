@@ -10,6 +10,7 @@ import logging
 from typing import Any, Dict, List, Optional, Union, Tuple
 from enum import Enum
 from dataclasses import dataclass, field
+from abc import ABC, abstractmethod
 import time
 
 from .base_adapter import BaseAdapter, AdapterConfig
@@ -37,7 +38,7 @@ class KernelOperation(Enum):
     SIMILARITY_COMPUTATION = "similarity_computation"
     CONSENSUS_CALCULATION = "consensus_calculation"
     ROUTING_SCORES = "routing_scores"
-    NEUROMORPHIC_SIMULATION = "neuromorphic_simulation"
+    NEUROMORPHIC_PROCESSING = "neuromorphic_processing"
 
 @dataclass
 class KernelExecutionContext:
@@ -67,20 +68,22 @@ class KernelCapabilities:
     average_latency_ms: float = 0.0
     initialization_time_s: float = 0.0
 
-class KernelBackendInterface:
+class KernelBackendInterface(ABC):
     """Base interface for kernel backends."""
     
     def __init__(self):
         self.capabilities = KernelCapabilities(supported_operations=[])
         self.initialized = False
     
+    @abstractmethod
     def initialize(self) -> bool:
         """Initializes the backend."""
-        raise NotImplementedError
+        ...
     
+    @abstractmethod
     def execute(self, operation: KernelOperation, context: KernelExecutionContext, *args, **kwargs) -> Any:
         """Executes a kernel operation."""
-        raise NotImplementedError
+        ...
     
     def get_capabilities(self) -> KernelCapabilities:
         """Gets backend capabilities."""
@@ -119,9 +122,13 @@ class TPUv4Backend(KernelBackendInterface):
             # Try to import and configure TPU v4
             from capibara.core.kernels import TPUv4Kernels
             from capibara.jax.tpu_v4.backend import tpu_v4_ops
+            import jax
+            import jax.numpy as jnp
             
             self.tpu_kernels = TPUv4Kernels()
             self.tpu_ops = tpu_v4_ops
+            self.jax = jax
+            self.jnp = jnp
 
             # Verify availability
             if self.tpu_ops.initialize():
@@ -148,10 +155,14 @@ class TPUv4Backend(KernelBackendInterface):
             return self._execute_flash_attention(context, *args, **kwargs)
         elif operation == KernelOperation.MATRIX_MULTIPLY:
             return self._execute_matrix_multiply(context, *args, **kwargs)
+        elif operation == KernelOperation.CONVOLUTION:
+            return self._execute_convolution(context, *args, **kwargs)
+        elif operation == KernelOperation.QUANTIZATION:
+            return self._execute_quantization(context, *args, **kwargs)
         elif operation == KernelOperation.VQ_ENCODING:
             return self._execute_vq_encoding(context, *args, **kwargs)
         else:
-            raise NotImplementedError(f"Operation {operation} not implemented for TPU v4")
+            raise RuntimeError(f"Operation {operation} not supported by TPU v4 backend")
     
     def _execute_flash_attention(self, context: KernelExecutionContext, query, key, value, mask=None):
         """Executes flash attention on TPU v4."""
@@ -165,6 +176,30 @@ class TPUv4Backend(KernelBackendInterface):
     def _execute_vq_encoding(self, context: KernelExecutionContext, vectors, codebooks=None):
         """Executes VQ encoding on TPU v4."""
         return self.tpu_ops.vqbit_quantize(vectors, codebooks)
+
+    def _execute_convolution(self, context: KernelExecutionContext, inputs, kernel,
+                             strides: Tuple[int, ...] = (1, 1),
+                             padding: str = "SAME",
+                             dimension_numbers: Optional[Tuple[str, str, str]] = None):
+        """Executes convolution on TPU v4 using JAX primitives."""
+        if dimension_numbers is None:
+            # Default NHWC/HWIO/NHWC for 2D conv
+            dimension_numbers = ("NHWC", "HWIO", "NHWC")
+        return self.jax.lax.conv_general_dilated(
+            inputs,
+            kernel,
+            strides,
+            padding,
+            dimension_numbers=dimension_numbers
+        )
+
+    def _execute_quantization(self, context: KernelExecutionContext, vectors):
+        """Executes a real quantization pass on TPU v4."""
+        x = self.jnp.asarray(vectors)
+        abs_max = self.jnp.max(self.jnp.abs(x))
+        scale = self.jnp.where(abs_max > 0, abs_max / 127.0, 1.0)
+        quantized = self.jnp.round(x / scale).astype(self.jnp.int8)
+        return {"data": quantized, "scale": scale}
 
 class CythonBackend(KernelBackendInterface):
     """Backend for optimized Cython kernels."""
@@ -186,6 +221,7 @@ class CythonBackend(KernelBackendInterface):
             average_latency_ms=2.0,
             initialization_time_s=0.1
         )
+        self.fallback_backend: Optional[PythonFallbackBackend] = None
     
     def initialize(self) -> bool:
         """Initializes Cython backend."""
@@ -196,10 +232,14 @@ class CythonBackend(KernelBackendInterface):
             if self.kernel_manager.cython_available:
                 self.initialized = True
                 logger.info("Cython backend initialized successfully")
+                self.fallback_backend = PythonFallbackBackend()
+                self.fallback_backend.initialize()
                 return True
             else:
                 logger.info("Cython backend using Python fallbacks")
                 self.initialized = True  # Use Python fallbacks
+                self.fallback_backend = PythonFallbackBackend()
+                self.fallback_backend.initialize()
                 return True
                 
         except ImportError as e:
@@ -221,7 +261,10 @@ class CythonBackend(KernelBackendInterface):
         elif operation == KernelOperation.SIMILARITY_COMPUTATION:
             return self.kernel_manager.fast_cosine_similarity_matrix(*args, **kwargs)
         else:
-            raise NotImplementedError(f"Operation {operation} not implemented for Cython")
+            if self.fallback_backend:
+                logger.warning(f"Operation {operation} using Python fallback")
+                return self.fallback_backend.execute(operation, context, *args, **kwargs)
+            raise RuntimeError(f"Operation {operation} not supported by Cython backend")
 
 class NeuromorphicBackend(KernelBackendInterface):
     """Backend for neuromorphic kernels."""
@@ -245,8 +288,8 @@ class NeuromorphicBackend(KernelBackendInterface):
     def initialize(self) -> bool:
         """Initializes neuromorphic backend."""
         try:
-            from capibara.jax.tpu_v4.neuromorphic_kernels import NeuromorphicKernelFactory
-            self.neuromorphic_factory = NeuromorphicKernelFactory()
+            import numpy as np
+            self.np = np
             self.initialized = True
             logger.info("Neuromorphic backend initialized successfully")
             return True
@@ -263,15 +306,69 @@ class NeuromorphicBackend(KernelBackendInterface):
         if not self.initialized:
             raise RuntimeError("Neuromorphic backend not initialized")
         
-        if operation == KernelOperation.NEUROMORPHIC_SIMULATION:
-            return self._execute_neuromorphic_simulation(context, *args, **kwargs)
+        if operation == KernelOperation.NEUROMORPHIC_PROCESSING:
+            return self._execute_neuromorphic_processing(context, *args, **kwargs)
         else:
-            raise NotImplementedError(f"Operation {operation} not implemented for Neuromorphic")
+            raise RuntimeError(f"Operation {operation} not supported by Neuromorphic backend")
     
-    def _execute_neuromorphic_simulation(self, context: KernelExecutionContext, *args, **kwargs):
-        """Executes neuromorphic simulation."""
-        # Specific implementation of neuromorphic simulation
-        return {"simulation_result": "neuromorphic_output", "context": context}
+    def _execute_neuromorphic_processing(self, context: KernelExecutionContext, *args, **kwargs):
+        """Executes neuromorphic processing with a simple LIF network."""
+        if not args:
+            raise ValueError("Neuromorphic processing requires input tensor/array")
+
+        inputs = args[0]
+        params = kwargs.get("params", {}) or {}
+
+        # Accept lists, numpy arrays, or objects with shape
+        x = self.np.asarray(inputs, dtype=self.np.float32)
+        if x.ndim == 0:
+            x = x.reshape(1)
+
+        # Simulation parameters (with safe defaults)
+        dt = float(params.get("dt", 1.0))
+        steps = int(params.get("steps", max(1, int(params.get("duration_steps", 32)))))
+        tau = float(params.get("tau", 20.0))
+        threshold = float(params.get("threshold", 1.0))
+        reset = float(params.get("reset", 0.0))
+        leak = float(params.get("leak", 0.0))
+        rng_seed = params.get("seed", 0)
+
+        rng = self.np.random.default_rng(rng_seed)
+
+        # Flatten batch to (batch, features)
+        if x.ndim == 1:
+            x = x[None, :]
+
+        batch, features = x.shape
+
+        # Initialize membrane potential and spikes
+        v = self.np.zeros((batch, features), dtype=self.np.float32)
+        spikes = self.np.zeros((steps, batch, features), dtype=self.np.float32)
+
+        # Optional noise
+        noise_scale = float(params.get("noise_scale", 0.0))
+
+        # LIF dynamics
+        for t in range(steps):
+            noise = rng.normal(0.0, noise_scale, size=(batch, features)).astype(self.np.float32)
+            dv = (-(v - leak) + x + noise) * (dt / tau)
+            v = v + dv
+            s = (v >= threshold).astype(self.np.float32)
+            v = self.np.where(s > 0, reset, v)
+            spikes[t] = s
+
+        # Aggregate outputs
+        firing_rate = spikes.mean(axis=0)  # (batch, features)
+        output = {
+            "spikes": spikes,
+            "firing_rate": firing_rate,
+            "membrane_potential": v,
+            "steps": steps,
+            "dt": dt,
+            "threshold": threshold,
+        }
+
+        return output
 
 class PythonFallbackBackend(KernelBackendInterface):
     """Fallback backend using pure Python."""

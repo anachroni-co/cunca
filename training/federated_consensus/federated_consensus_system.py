@@ -8,6 +8,7 @@ import asyncio
 import time
 import json
 import hashlib
+import threading
 from datetime import datetime, timedelta
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple, Any, Union, Set, Callable
@@ -20,13 +21,68 @@ logger = logging.getLogger(__name__)
 # Network imports with fallbacks
 try:
     import aiohttp
-    import websockets
+    from aiohttp import web
     NETWORK_AVAILABLE = True
 except ImportError:
-    logger.warning("Network libraries not available - using mock implementations")
+    logger.warning("Network libraries not available - HTTP services disabled")
     NETWORK_AVAILABLE = False
     aiohttp = None
-    websockets = None
+    web = None
+
+
+class _TextEmbedder:
+    """Lazy text embedder using Hugging Face transformers."""
+
+    def __init__(self, model_name: str):
+        self.model_name = model_name
+        self._lock = threading.Lock()
+        self._tokenizer = None
+        self._model = None
+        self._device = "cpu"
+
+    def _ensure_loaded(self):
+        if self._model is not None and self._tokenizer is not None:
+            return
+        with self._lock:
+            if self._model is not None and self._tokenizer is not None:
+                return
+            try:
+                import torch
+                from transformers import AutoModel, AutoTokenizer
+            except Exception as exc:
+                raise RuntimeError(f"Transformers backend not available: {exc}") from exc
+
+            self._tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+            self._model = AutoModel.from_pretrained(self.model_name)
+            self._model.eval()
+            if torch.cuda.is_available():
+                self._device = "cuda"
+                self._model.to(self._device)
+
+    def encode(self, texts: List[str]) -> np.ndarray:
+        self._ensure_loaded()
+        import torch
+
+        with torch.no_grad():
+            inputs = self._tokenizer(
+                texts,
+                padding=True,
+                truncation=True,
+                max_length=256,
+                return_tensors="pt",
+            )
+            inputs = {k: v.to(self._device) for k, v in inputs.items()}
+            outputs = self._model(**inputs)
+            token_embeddings = outputs.last_hidden_state
+            attention_mask = inputs.get("attention_mask")
+            if attention_mask is None:
+                pooled = token_embeddings.mean(dim=1)
+            else:
+                mask = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
+                summed = (token_embeddings * mask).sum(dim=1)
+                counts = mask.sum(dim=1).clamp(min=1.0)
+                pooled = summed / counts
+            return pooled.cpu().numpy().astype(np.float32)
 
 
 class NodeRole(Enum):
@@ -162,6 +218,9 @@ class FederatedConsensusNode:
         self.connections: Dict[str, Any] = {}
         self.websocket_server = None
         self.coordinator_connection = None
+        self.http_runner = None
+        self.http_site = None
+        self._embedder = None
         
         # Consensus state
         self.current_term = 0
@@ -170,6 +229,15 @@ class FederatedConsensusNode:
         self.commit_index = 0
         
         logger.info(f" Federated consensus node {node_id} initialized (role: {role.value})")
+
+    def _get_embedder(self) -> _TextEmbedder:
+        if self._embedder is None:
+            self._embedder = _TextEmbedder("sentence-transformers/all-MiniLM-L6-v2")
+        return self._embedder
+
+    async def _encode_texts(self, texts: List[str]) -> np.ndarray:
+        embedder = self._get_embedder()
+        return await asyncio.to_thread(embedder.encode, texts)
     
     async def start(self):
         """Start the federated consensus node."""
@@ -180,8 +248,7 @@ class FederatedConsensusNode:
             if NETWORK_AVAILABLE:
                 await self._start_network_services()
             else:
-                logger.warning("Network services not available - running in mock mode")
-                await self._start_mock_services()
+                raise RuntimeError("Network services unavailable: aiohttp not installed")
             
             # Connect to coordinator (if not coordinator)
             if self.role != NodeRole.COORDINATOR:
@@ -275,86 +342,63 @@ class FederatedConsensusNode:
         """Start network services for the node."""
         if not NETWORK_AVAILABLE:
             return
-        
-        # Start WebSocket server
-        async def handle_websocket(websocket, path):
-            await self._handle_websocket_connection(websocket, path)
-        
-        # Extract port from node endpoint
-        port = 8765  # Default port
-        if hasattr(self, 'endpoint'):
+
+        app = web.Application()
+        app.add_routes([
+            web.post("/proposal", self._http_handle_proposal),
+            web.post("/consensus/participate", self._http_handle_consensus_participation),
+            web.post("/heartbeat", self._http_handle_heartbeat),
+            web.post("/register", self._http_handle_register),
+        ])
+
+        self.http_runner = web.AppRunner(app)
+        await self.http_runner.setup()
+
+        port = 8765
+        if hasattr(self, "endpoint"):
             try:
-                port = int(self.endpoint.split(':')[-1])
+                port = int(self.endpoint.split(":")[-1])
             except Exception:
                 pass
-        
-        self.websocket_server = await websockets.serve(
-            handle_websocket, "localhost", port
-        )
-        
-        logger.info(f" WebSocket server started on port {port}")
-    
-    async def _start_mock_services(self):
-        """Start mock services when network libraries are not available."""
-        logger.info(" Starting mock network services")
-        # Mock implementation for testing without network dependencies
-        await asyncio.sleep(0.1)
+
+        self.http_site = web.TCPSite(self.http_runner, "0.0.0.0", port)
+        await self.http_site.start()
+        logger.info(f" HTTP server started on port {port}")
     
     async def _connect_to_coordinator(self):
         """Connect to the coordinator node."""
-        if not NETWORK_AVAILABLE:
-            logger.info(" Mock connection to coordinator")
-            return
-        
         try:
-            self.coordinator_connection = await websockets.connect(
-                self.config.coordinator_endpoint
-            )
-            
             # Send registration message
             registration = {
                 'type': 'register',
                 'node_id': self.node_id,
                 'role': self.role.value,
                 'capabilities': ['consensus', 'validation'],
-                'endpoint': getattr(self, 'endpoint', 'mock://localhost')
+                'endpoint': getattr(self, 'endpoint', 'http://localhost:8765')
             }
-            
-            await self.coordinator_connection.send(json.dumps(registration))
+            await self._post_json(self.config.coordinator_endpoint.rstrip("/") + "/register", registration)
             logger.info(" Connected to coordinator")
             
         except Exception as e:
             logger.error(f" Failed to connect to coordinator: {e}")
             raise
     
-    async def _handle_websocket_connection(self, websocket, path):
-        """Handle incoming WebSocket connections."""
-        try:
-            async for message in websocket:
-                data = json.loads(message)
-                await self._process_network_message(data, websocket)
-        except Exception as e:
-            logger.error(f" WebSocket connection error: {e}")
-    
-    async def _process_network_message(self, data: Dict[str, Any], websocket):
+    async def _process_network_message(self, data: Dict[str, Any]):
         """Process incoming network messages."""
         message_type = data.get('type')
         
         if message_type == 'proposal':
             proposal = ConsensusProposal(**data['proposal'])
             response = await self.participate_in_consensus(proposal)
-            await websocket.send(json.dumps({
-                'type': 'consensus_response',
-                'response': response
-            }))
+            return {'type': 'consensus_response', 'response': response}
         
         elif message_type == 'heartbeat':
-            await websocket.send(json.dumps({
+            return {
                 'type': 'heartbeat_ack',
                 'node_id': self.node_id,
                 'status': self.status.value,
                 'metrics': self.performance_metrics
-            }))
+            }
         
         elif message_type == 'register':
             node_info = NodeInfo(
@@ -367,6 +411,39 @@ class FederatedConsensusNode:
             )
             self.peer_nodes[data['node_id']] = node_info
             logger.info(f" Registered peer node {data['node_id']}")
+            return {'type': 'register_ack', 'node_id': self.node_id}
+
+        return {'type': 'unknown'}
+
+    async def _http_handle_proposal(self, request: web.Request) -> web.Response:
+        data = await request.json()
+        response = await self._process_network_message(data)
+        return web.json_response(response)
+
+    async def _http_handle_consensus_participation(self, request: web.Request) -> web.Response:
+        data = await request.json()
+        proposal = ConsensusProposal(**data['proposal'])
+        response = await self.participate_in_consensus(proposal)
+        return web.json_response(response)
+
+    async def _http_handle_heartbeat(self, request: web.Request) -> web.Response:
+        data = await request.json()
+        response = await self._process_network_message(data)
+        return web.json_response(response)
+
+    async def _http_handle_register(self, request: web.Request) -> web.Response:
+        data = await request.json()
+        response = await self._process_network_message(data)
+        return web.json_response(response)
+
+    async def _post_json(self, url: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+        if not NETWORK_AVAILABLE:
+            raise RuntimeError("HTTP client unavailable")
+        timeout = aiohttp.ClientTimeout(total=self.config.connection_timeout)
+        async with aiohttp.ClientSession(timeout=timeout) as session:
+            async with session.post(url, json=payload) as resp:
+                resp.raise_for_status()
+                return await resp.json()
     
     async def _broadcast_proposal(self, proposal: ConsensusProposal):
         """Broadcast proposal to all peer nodes."""
@@ -384,13 +461,17 @@ class FederatedConsensusNode:
             }
         }
         
-        if NETWORK_AVAILABLE and self.coordinator_connection:
-            try:
-                await self.coordinator_connection.send(json.dumps(message))
-            except Exception as e:
-                logger.error(f" Failed to broadcast proposal: {e}")
+        if NETWORK_AVAILABLE:
+            targets = self.config.node_endpoints or []
+            if self.role != NodeRole.COORDINATOR and self.config.coordinator_endpoint:
+                targets = [self.config.coordinator_endpoint] + targets
+            for endpoint in targets:
+                try:
+                    await self._post_json(endpoint.rstrip("/") + "/proposal", message)
+                except Exception as e:
+                    logger.error(f" Failed to broadcast proposal to {endpoint}: {e}")
         else:
-            logger.info(f" Mock broadcast of proposal {proposal.proposal_id}")
+            raise RuntimeError("Network unavailable for broadcasting")
     
     async def _validate_proposal(self, proposal: ConsensusProposal) -> bool:
         """Validates a consensus proposal."""
@@ -425,15 +506,13 @@ class FederatedConsensusNode:
         # Simple weighted average consensus
         if not expert_responses:
             return {}
-        
-        # Extract response embeddings (mock)
-        response_embeddings = []
+
+        response_texts = []
         for response in expert_responses:
-            # In real implementation, extract actual embeddings
-            embedding = np.random.randn(768).astype(np.float32)
-            response_embeddings.append(embedding)
-        
-        response_embeddings = np.array(response_embeddings)
+            text = response.get("response") or response.get("text") or json.dumps(response)
+            response_texts.append(text)
+
+        response_embeddings = await self._encode_texts(response_texts)
         confidence_scores = np.array(confidence_scores)
         
         # Weighted average
@@ -456,22 +535,28 @@ class FederatedConsensusNode:
         """Calculate agreement score between local and expert responses."""
         if not local_response or not expert_responses:
             return 0.0
-        
-        # Mock agreement calculation based on consensus confidence
-        local_confidence = local_response.get('consensus_confidence', 0.0)
-        expert_confidences = [resp.get('confidence', 0.0) for resp in expert_responses]
-        avg_expert_confidence = np.mean(expert_confidences) if expert_confidences else 0.0
-        
-        # Simple agreement based on confidence similarity
-        agreement = 1.0 - abs(local_confidence - avg_expert_confidence)
-        return max(0.0, min(1.0, agreement))
+
+        local_embedding = np.array(local_response.get("consensus_embedding") or [], dtype=np.float32)
+        if local_embedding.size == 0:
+            return 0.0
+
+        response_texts = []
+        for response in expert_responses:
+            text = response.get("response") or response.get("text") or json.dumps(response)
+            response_texts.append(text)
+
+        embeddings = await self._encode_texts(response_texts)
+        mean_embedding = embeddings.mean(axis=0)
+        denom = (np.linalg.norm(local_embedding) * np.linalg.norm(mean_embedding)) + 1e-8
+        similarity = float(np.dot(local_embedding, mean_embedding) / denom)
+        return max(0.0, min(1.0, similarity))
     
     async def _heartbeat_loop(self):
         """Send periodic heartbeats to maintain connectivity."""
         while self.status in [NodeStatus.ACTIVE, NodeStatus.DEGRADED]:
             try:
                 # Send heartbeat to coordinator
-                if NETWORK_AVAILABLE and self.coordinator_connection:
+                if NETWORK_AVAILABLE and self.config.coordinator_endpoint:
                     heartbeat = {
                         'type': 'heartbeat',
                         'node_id': self.node_id,
@@ -479,8 +564,7 @@ class FederatedConsensusNode:
                         'metrics': self.performance_metrics,
                         'timestamp': datetime.now().isoformat()
                     }
-                    
-                    await self.coordinator_connection.send(json.dumps(heartbeat))
+                    await self._post_json(self.config.coordinator_endpoint.rstrip("/") + "/heartbeat", heartbeat)
                 
                 # Update peer node status
                 await self._update_peer_status()
@@ -673,13 +757,22 @@ class FederatedConsensusCoordinator:
     
     async def _request_consensus_participation(self, node_id: str, proposal: ConsensusProposal) -> Dict[str, Any]:
         """Request consensus participation from a node."""
-        # Mock implementation
-        return {
-            'node_id': node_id,
-            'vote': 'accept',
-            'agreement_score': 0.8,
-            'confidence': 0.9
+        node = self.nodes.get(node_id)
+        if not node:
+            raise ValueError(f"Unknown node {node_id}")
+        payload = {
+            "proposal": {
+                'proposal_id': proposal.proposal_id,
+                'node_id': proposal.node_id,
+                'timestamp': proposal.timestamp.isoformat(),
+                'query_id': proposal.query_id,
+                'expert_responses': proposal.expert_responses,
+                'confidence_scores': proposal.confidence_scores,
+                'metadata': proposal.metadata,
+                'signature': proposal.signature
+            }
         }
+        return await self._post_json(node.endpoint.rstrip("/") + "/consensus/participate", payload)
     
     async def _calculate_final_consensus(self, consensus_id: str, query_id: str,
                                        proposals: List[ConsensusProposal], 

@@ -60,6 +60,18 @@ def _ensure_torch() -> None:
         return
     _TORCH_IMPORT_ATTEMPTED = True
     try:
+        import subprocess
+        result = subprocess.run(
+            [sys.executable, "-c", "import torch"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        )
+        if result.returncode != 0:
+            torch = None
+            HAS_TORCH = False
+            return
+
         import torch as _torch  # type: ignore
         torch = _torch
         HAS_TORCH = True

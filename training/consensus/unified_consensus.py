@@ -467,7 +467,7 @@ class EnhancedRefiner(CapibaraRefiner):
                 logger.debug(f"[Refiner] No further improvements at iteration {iteration}")
                 break
             
-            # Score refinements (placeholder - replace with real model)
+            # Score refinements with heuristic metrics
             scored_refinements = []
             for refinement in filtered:
                 score = self._score_refinement(prompt, current, refinement)
@@ -520,9 +520,9 @@ class EnhancedRefiner(CapibaraRefiner):
         return current, metadata
     
     def _score_refinement(self, prompt: str, original: str, refinement: str) -> float:
-        """Refinement quality scoring (placeholder)."""
+        """Refinement quality scoring."""
 
-        # Simple factors (replace with real scoring model)
+        # Simple factors
         length_improvement = len(refinement) / max(len(original), 1)
         
         # Penalize excessive changes
@@ -649,12 +649,12 @@ class IntegratedCapibaraTrainer:
             refined_sample["refinement_metadata"] = refinement_metadata
             refined_samples.append(refined_sample)
         
-        # 7. integrate with sistema de votación
-        logger.info(f"️ Integrando con sistema de votación")
+        # 7. integrate with sistema de votaciÃÂ³n
+        logger.info(f"Ã¯Â¸Â Integrando con sistema de votaciÃÂ³n")
         voted_samples = []
         
         for sample in refined_samples[:1000]:  # Subset for voting demo
-            # Simular múltiples outputs for votación
+            # Simular mÃÂºltiples outputs for votaciÃÂ³n
             candidate_outputs = [sample["output"]] + [
                 f"variant_{i}_" + sample["output"] for i in range(voting_config["n_teachers"] - 1)
             ]
@@ -742,7 +742,7 @@ class IntegratedCapibaraTrainer:
         return refiners
     
     async def _generate_phase_prompts(self, phase_name: str) -> List[str]:
-        """Genera prompts específicos for una fase."""
+        """Genera prompts especÃÂ­ficos for una fase."""
         
         base_prompts = [
             "Write a function that sorts a list",
@@ -766,7 +766,7 @@ class IntegratedCapibaraTrainer:
         return expanded_prompts
     
     def _get_phases_for_target(self, target_scale: str) -> List[str]:
-        """Determina qué fases execute for reach el target."""
+        """Determina quÃÂ© fases execute for reach el target."""
         
         scale_to_phase = {
             "300M": ["micro_phase"],
@@ -806,7 +806,7 @@ class IntegratedCapibaraTrainer:
         
         training_time = time.time() - start_time
         
-        # estimate parámetros
+        # estimate parÃÂ¡metros
         param_count = int(model_scale.replace("M", "000000").replace("B", "000000000").replace("T", "000000000000"))
         
         return {
@@ -864,7 +864,7 @@ class IntegratedCapibaraTrainer:
                 "improvement_score": refinement_metrics["improvement_score"]
             }
             
-            # analysis de votación
+            # analysis de votaciÃÂ³n
             voting_metrics = results["voting_metrics"]
             analysis["voting_performance"][phase_name] = {
                 "teacher_accuracy": np.mean(list(voting_metrics["teacher_success"].values())) if voting_metrics["teacher_success"] else 0,
@@ -935,7 +935,7 @@ class DatasetMerger:
         phase_results: Dict[str, Dict[str, Any]],
         target_sizes: Optional[Dict[str, int]] = None
     ) -> Dict[str, np.ndarray]:
-        """Combina datasets de múltiples fases."""
+        """Combina datasets de mÃÂºltiples fases."""
         
         all_inputs = []
         all_outputs = []
@@ -966,7 +966,7 @@ class DatasetMerger:
         }
 
 class ModelEvaluator:
-    """Evalúa modelos entrenados with métricas específicas."""
+    """EvalÃÂºa modelos entrenados with mÃÂ©tricas especÃÂ­ficas."""
     
     def __init__(self, evaluation_tasks: List[str]):
         self.evaluation_tasks = evaluation_tasks
@@ -977,7 +977,7 @@ class ModelEvaluator:
         phase_name: str,
         trained_models: Dict[str, Any]
     ) -> Dict[str, Dict[str, float]]:
-        """Evalúa todos los modelos de una fase."""
+        """EvalÃÂºa todos los modelos de una fase."""
         
         phase_eval_results = {}
         
@@ -985,7 +985,7 @@ class ModelEvaluator:
             model_results = {}
             
             for task in self.evaluation_tasks:
-                # Placeholder for evaluación real
+                # Placeholder for evaluaciÃÂ³n real
                 score = await self._evaluate_model_on_task(model_info, task)
                 model_results[task] = score
             
@@ -997,9 +997,9 @@ class ModelEvaluator:
         return phase_eval_results
     
     async def _evaluate_model_on_task(self, model_info: Dict[str, Any], task: str) -> float:
-        """Evalúa model en task específica."""
+        """EvalÃÂºa model en task especÃÂ­fica."""
         
-        # simulation de evaluación basada en parámetros del model
+        # evaluaci?n de evaluaciÃÂ³n basada en parÃÂ¡metros del model
         param_count = model_info["parameter_count"]
         final_loss = model_info["final_loss"]
         
@@ -1055,23 +1055,23 @@ async def run_integrated_training_example():
     
     # show resultados finales
     logger.info(" Entrenamiento integrado completado!")
-    logger.info(f" Análisis final: {results['final_analysis']['summary']}")
+    logger.info(f" AnÃÂ¡lisis final: {results['final_analysis']['summary']}")
     avg_eval = np.mean([
         np.mean([model['average_score'] for model in phase.values()])
         for phase in evaluation_results.values()
     ])
-    logger.info(f" Evaluación promedio: {avg_eval:.3f}")
+    logger.info(f" EvaluaciÃÂ³n promedio: {avg_eval:.3f}")
     logger.info(f" Dataset combinado: {len(combined_dataset['input_ids']):,} samples")
     
     return results, evaluation_results, combined_dataset
 
-# setup de producción optimizada
+# setup de producciÃÂ³n optimizada
 def get_production_integrated_config() -> IntegratedTrainingConfig:
-    """setup optimizada for producción."""
+    """setup optimizada for producciÃÂ³n."""
     
     config = IntegratedTrainingConfig()
     
-    # Teachers more potentes for producción
+    # Teachers more potentes for producciÃÂ³n
     config.teacher_configs = {
         "micro_phase": {
             "models": [
@@ -1118,7 +1118,7 @@ def get_production_integrated_config() -> IntegratedTrainingConfig:
         }
     }
     
-    # Datasets more grandes for producción
+    # Datasets more grandes for producciÃÂ³n
     config.dataset_configs = {
         "micro_phase": {
             "size_range": (50_000_000, 100_000_000),
@@ -1193,15 +1193,15 @@ async def main():
     # setup
     if args.production:
         config = get_production_integrated_config()
-        logger.info(" Usando configuración de producción")
+        logger.info(" Usando configuraciÃÂ³n de producciÃÂ³n")
     else:
         config = IntegratedTrainingConfig()
-        logger.info(" Usando configuración de desarrollo")
+        logger.info(" Usando configuraciÃÂ³n de desarrollo")
     
     if args.eval_only:
-        # only evaluación
-        logger.info(" Ejecutando solo evaluación")
-        # implement evaluación standalone
+        # only evaluaciÃÂ³n
+        logger.info(" Ejecutando solo evaluaciÃÂ³n")
+        # implement evaluaciÃÂ³n standalone
         return
     
     # Entrenamiento complete
@@ -1221,7 +1221,7 @@ async def main():
     logger.info(f" Costo Total: ${summary['total_cost_usd']:,.0f}")
     logger.info(f" Samples Generados: {summary['total_samples_generated']:,}")
     logger.info(f" Tasa de Consenso: {summary['overall_consensus_rate']:.1%}")
-    logger.info(f" Éxito de Refinamiento: {summary['overall_refinement_success']:.1%}")
+    logger.info(f" ÃÂxito de Refinamiento: {summary['overall_refinement_success']:.1%}")
     logger.info(f" Costo por Sample: ${summary['cost_per_sample']:.4f}")
     logger.info("="*60)
     
@@ -1234,10 +1234,10 @@ if __name__ == "__main__":
 
 # Estrategias de Consensus Distilling Integradas for CapibaraGPT v3
 #
-# Este módulo integra las estrategias avanzadas de consensus distilling,
+# Este mÃÂ³dulo integra las estrategias avanzadas de consensus distilling,
 # incluyendo peer voting and critic arbitration, optimizado for modelos 3B+.
 #
-# Extraído and optimizado de consensus_destiling.py and train_300M_scale.py
+# ExtraÃÂ­do and optimizado de consensus_destiling.py and train_300M_scale.py
 
 import os
 import logging
@@ -1267,7 +1267,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class VotingMetrics:
-    """Métricas del sistema de votación."""
+    """MÃÂ©tricas del sistema de votaciÃÂ³n."""
     teacher_success_rates: Dict[int, float] = field(default_factory=dict)
     critic_accuracy_rates: Dict[int, float] = field(default_factory=dict)
     average_quality_score: float = 0.0
@@ -1288,21 +1288,21 @@ class TeacherModel:
         self.quality_history = []
     
     def update_performance(self, success: bool, latency: float, quality: float):
-        """update métricas de rendimiento."""
+        """update mÃÂ©tricas de rendimiento."""
         self.total_calls += 1
         if success:
             self.success_count += 1
         self.latency_history.append(latency)
         self.quality_history.append(quality)
         
-        # maintain only las últimas 100 mediciones
+        # maintain only las ÃÂºltimas 100 mediciones
         if len(self.latency_history) > 100:
             self.latency_history.pop(0)
             self.quality_history.pop(0)
     
     @property
     def success_rate(self) -> float:
-        """Tasa de éxito del teacher."""
+        """Tasa de ÃÂ©xito del teacher."""
         return self.success_count / max(self.total_calls, 1)
     
     @property
@@ -1333,7 +1333,7 @@ class CriticModel:
             self.correct_predictions += 1
         self.evaluation_history.append((was_correct, confidence))
         
-        # maintain only las últimas 50 evaluaciones
+        # maintain only las ÃÂºltimas 50 evaluaciones
         if len(self.evaluation_history) > 50:
             self.evaluation_history.pop(0)
     
@@ -1344,7 +1344,7 @@ class CriticModel:
 
 class AdvancedVotingSystem:
     """
-    Sistema de votación advanced with peer voting and critic arbitration.
+    Sistema de votaciÃÂ³n advanced with peer voting and critic arbitration.
     
     Integra las funcionalidades de consensus distilling for modelos 3B+
     with optimizaciones de rendimiento and calidad.
@@ -1367,13 +1367,13 @@ class AdvancedVotingSystem:
         self.critic_reset_every = 25
         self.confidence_threshold = 0.7
         
-        # Métricas
+        # MÃÂ©tricas
         self.voting_metrics = VotingMetrics()
     
     def _initialize_teachers(self) -> List[TeacherModel]:
         """Inicializar modelos teacher."""
         teachers = []
-        # En una implementation real, estos serían modelos reales
+        # En una implementation real, estos serÃÂ­an modelos reales
         # by now, simulamos with identificadores
         for i in range(self.n_teachers):
             teacher = TeacherModel(
@@ -1404,16 +1404,16 @@ class AdvancedVotingSystem:
         latencies: List[float]
     ) -> Tuple[str, int, Dict[str, Any]]:
         """
-        Votación mejorada between peers with consideración de calidad and latencia.
+        VotaciÃÂ³n mejorada between peers with consideraciÃÂ³n de calidad and latencia.
         
         Args:
             prompt: Prompt de input
             outputs: Salidas de los modelos
             model_scores: Puntuaciones de calidad
-            latencies: Latencias de generación
+            latencies: Latencias de generaciÃÂ³n
             
         Returns:
-            Tupla with (mejor_output, índice_ganador, métricas)
+            Tupla with (mejor_output, ÃÂ­ndice_ganador, mÃÂ©tricas)
         """
         if not outputs:
             return "", -1, {}
@@ -1421,15 +1421,25 @@ class AdvancedVotingSystem:
         if len(outputs) == 1:
             return outputs[0], 0, {"single_output": True}
         
-        # Simular votación (en implementation real usaría modelos reales)
+        # Real weighted voting using provided scores and latencies
         votes = defaultdict(float)
-        for i in range(self.n_teachers):
-            vote_idx = np.argmax(model_scores) if model_scores else 0
-            votes[vote_idx] += self.teacher_weights[i]
-        
+        if model_scores and latencies:
+            max_latency = max(latencies) if max(latencies) > 0 else 1.0
+            for i, score in enumerate(model_scores):
+                latency_penalty = 1.0 - (latencies[i] / max_latency)
+                weight = self.teacher_weights[i % len(self.teacher_weights)]
+                votes[i] += weight * float(score) * max(latency_penalty, 0.0)
+        elif model_scores:
+            for i, score in enumerate(model_scores):
+                weight = self.teacher_weights[i % len(self.teacher_weights)]
+                votes[i] += weight * float(score)
+        else:
+            for i in range(len(outputs)):
+                votes[i] += 1.0
+
         winner_idx = max(votes.keys(), key=lambda k: votes[k]) if votes else 0
         
-        # calculate métricas de consenso
+        # calculate mÃÂ©tricas de consenso
         consensus_confidence = votes[winner_idx] / sum(votes.values()) if votes else 0.0
         
         # verify if necesitamos arbitraje de critics
@@ -1444,7 +1454,7 @@ class AdvancedVotingSystem:
             )
             consensus_confidence = arbitration_metrics.get("arbitration_confidence", consensus_confidence)
         
-        # update métricas de teachers
+        # update mÃÂ©tricas de teachers
         await self._update_teacher_performance(
             votes, winner_idx, latencies, model_scores
         )
@@ -1475,7 +1485,7 @@ class AdvancedVotingSystem:
             votes: Votos de teachers
             
         Returns:
-            Tupla with (índice_ganador, métricas_arbitraje)
+            Tupla with (ÃÂ­ndice_ganador, mÃÂ©tricas_arbitraje)
         """
         critic_evaluations = []
         
@@ -1497,7 +1507,7 @@ class AdvancedVotingSystem:
             winner_idx = max(final_scores.keys(), key=lambda k: final_scores[k])
             arbitration_confidence = final_scores[winner_idx] / sum(final_scores.values())
         else:
-            # Fallback a votación original
+            # Fallback a votaciÃÂ³n original
             winner_idx = max(votes.keys(), key=lambda k: votes[k])
             arbitration_confidence = 0.5
         
@@ -1522,8 +1532,8 @@ class AdvancedVotingSystem:
         base_scores: List[float]
     ) -> Dict[str, Any]:
         """evaluate outputs usando un critic."""
-        # Simular evaluación del critic
-        # En implementation real, usaría el model critic
+        # Simular evaluaciÃÂ³n del critic
+        # En implementation real, usarÃÂ­a el model critic
         
         scores = {}
         for i, (output, base_score) in enumerate(zip(outputs, base_scores)):
@@ -1555,14 +1565,14 @@ class AdvancedVotingSystem:
         for vote_idx, weight in votes.items():
             teacher = self.teachers[vote_idx]
             
-            # determine if el teacher votó correctamente
+            # determine if el teacher votÃÂ³ correctamente
             success = vote_idx == winner_idx
             
             # obtain latencia and calidad
             latency = latencies[vote_idx] if vote_idx < len(latencies) else 0.0
             quality = quality_scores[winner_idx] if winner_idx < len(quality_scores) else 0.0
             
-            # update métricas del teacher
+            # update mÃÂ©tricas del teacher
             teacher.update_performance(success, latency, quality)
             
             # adjust peso basado en rendimiento
@@ -1588,7 +1598,7 @@ class AdvancedVotingSystem:
         self.teacher_weights[teacher.model_id] = max(0.1, min(2.0, self.teacher_weights[teacher.model_id]))
     
     def maybe_reset_weights(self):
-        """Resetear pesos periódicamente for evitar convergencia prematura."""
+        """Resetear pesos periÃÂ³dicamente for evitar convergencia prematura."""
         self.step += 1
         
         # Reset teachers
@@ -1604,7 +1614,7 @@ class AdvancedVotingSystem:
                 logger.info(f"Reset critic {critic.critic_id} weight at step {self.step}")
     
     def get_comprehensive_metrics(self) -> Dict[str, Any]:
-        """obtain métricas completas del sistema."""
+        """obtain mÃÂ©tricas completas del sistema."""
         teacher_metrics = {}
         for teacher in self.teachers:
             teacher_metrics[teacher.model_id] = {
@@ -1637,13 +1647,13 @@ class DistillationManager:
     """
     Manager for progressive distillation with consensus.
     
-    Maneja la destilación progresiva usando outputs consensuados
+    Maneja la destilaciÃÂ³n progresiva usando outputs consensuados
     de teachers for train el model estudiante.
     """
     
     def __init__(self, temperature: float = 4.0, alpha: float = 0.3):
         self.temperature = temperature
-        self.alpha = alpha  # Peso de la pérdida de distillation
+        self.alpha = alpha  # Peso de la pÃÂ©rdida de distillation
         self.step = 0
     
     async def progressive_distillation(
@@ -1663,10 +1673,10 @@ class DistillationManager:
             consensus_weights: Pesos de consensus (optional)
             
         Returns:
-            Tupla with (pérdida_total, métricas)
+            Tupla with (pÃÂ©rdida_total, mÃÂ©tricas)
         """
         if not teacher_outputs:
-            # only use pérdida cross-entropy if not hay teachers
+            # only use pÃÂ©rdida cross-entropy if not hay teachers
             ce_loss = self._compute_ce_loss(student_output, targets)
             return ce_loss, {"ce_loss": float(ce_loss), "distill_loss": 0.0}
         
@@ -1683,16 +1693,16 @@ class DistillationManager:
         for output, weight in zip(teacher_outputs, normalized_weights):
             ensemble_output += weight * output
         
-        # calculate pérdidas
+        # calculate pÃÂ©rdidas
         ce_loss = self._compute_ce_loss(student_output, targets)
         distill_loss = self._compute_distillation_loss(
             student_output, ensemble_output, self.temperature
         )
         
-        # combine pérdidas
+        # combine pÃÂ©rdidas
         total_loss = (1 - self.alpha) * ce_loss + self.alpha * distill_loss
         
-        # Métricas
+        # MÃÂ©tricas
         metrics = {
             "total_loss": float(total_loss),
             "ce_loss": float(ce_loss),
@@ -1706,7 +1716,7 @@ class DistillationManager:
         return total_loss, metrics
     
     def _compute_ce_loss(self, logits: jnp.ndarray, targets: jnp.ndarray) -> jnp.ndarray:
-        """calculate pérdida cross-entropy."""
+        """calculate pÃÂ©rdida cross-entropy."""
         return optax.softmax_cross_entropy_with_integer_labels(logits, targets).mean()
     
     def _compute_distillation_loss(
@@ -1715,7 +1725,7 @@ class DistillationManager:
         teacher_logits: jnp.ndarray, 
         temperature: float
     ) -> jnp.ndarray:
-        """calculate pérdida de distillation with temperatura."""
+        """calculate pÃÂ©rdida de distillation with temperatura."""
         # apply temperatura a los logits
         student_soft = jax.nn.softmax(student_logits / temperature)
         teacher_soft = jax.nn.softmax(teacher_logits / temperature)
@@ -1732,7 +1742,7 @@ def should_use_consensus_for_scale(model_scale_name: str) -> bool:
     return model_scale_name in large_scales
 
 def create_consensus_system_for_scale(model_scale_name: str) -> Optional[AdvancedVotingSystem]:
-    """create sistema de consensus for una escala específica."""
+    """create sistema de consensus for una escala especÃÂ­fica."""
     if not should_use_consensus_for_scale(model_scale_name):
         return None
     
@@ -1772,7 +1782,7 @@ def create_distillation_manager_for_scale(model_scale: ModelScale) -> Optional[D
     if not should_use:
         return None
     
-    # configure parámetros according to escala
+    # configure parÃÂ¡metros according to escala
     scale_configs = {
         ModelScale.SMALL_3B: {"temperature": 4.0, "alpha": 0.3},
         ModelScale.SMALL_7B: {"temperature": 4.0, "alpha": 0.3},

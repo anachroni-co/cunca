@@ -165,15 +165,15 @@ class AdapterSystemDemo:
         logger.info(" Enabling automatic adaptation...")
         performance_adapter.enable_auto_adaptation()
 
-        # 2. Simulate workload
-        logger.info("️ Simulating workload...")
+        # 2. Run workload
+        logger.info("️ Running workload...")
         
         @monitor_adapter_performance("DemoWorkload", "intensive_operation")
         def intensive_operation(size: int):
-            # Simulate intensive operation
+            # Perform real computation
             data = np.random.randn(size, size)
             result = np.dot(data, data.T)
-            time.sleep(0.1)  # Simulate processing
+            
             return result
 
         # Execute operations with different workloads
@@ -608,7 +608,7 @@ def example_performance_monitoring():
     # Decorator for automatic monitoring
     @monitor_adapter_performance("ExampleWorkload", "data_processing")
     def process_data(data_size: int):
-        # Simulate data processing
+        # Data processing
         data = np.random.randn(data_size, data_size)
         result = np.linalg.svd(data, compute_uv=False)
         return result
@@ -631,7 +631,7 @@ def example_quantization_pipeline():
     if not quantization_adapter.get_status().value == "ready":
         quantization_adapter.initialize()
 
-    # Simulate model weights
+    # Model weights
     model_weights = np.random.randn(1000, 768).astype(np.float32)
     logger.info(f" Original weights: {model_weights.nbytes / (1024*1024):.1f} MB")
 

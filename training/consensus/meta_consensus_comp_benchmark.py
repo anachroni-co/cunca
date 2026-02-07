@@ -428,7 +428,7 @@ class MetaConsensusCompBenchmark:
                 system = await self._create_optimized_system(opt_level)
                 
                 # Create concurrent tasks
-                async def user_simulation(user_id: int):
+                async def user_session(user_id: int):
                     user_latencies = []
                     user_quality_scores = []
                     user_costs = []
@@ -455,7 +455,7 @@ class MetaConsensusCompBenchmark:
                 # Run concurrent users
                 start_time = time.time()
                 
-                tasks = [user_simulation(i) for i in range(concurrent_users)]
+                tasks = [user_session(i) for i in range(concurrent_users)]
                 user_results = await asyncio.gather(*tasks)
                 
                 duration = time.time() - start_time

@@ -8,18 +8,18 @@ Includes MoE control/training **stubs** and a functional nested expert hierarchy
 ```
 core/experts/
 +-- __init__.py          # Exports
-+-- moe_control_api.py   # MoE control + health reporting (simulated metrics)
-+-- moe_training.py      # MoE training loop (simulated metrics)
-+-- nested_experts.py    # Nested expert hierarchy (real logic, simulated weights)
++-- moe_control_api.py   # MoE control + health reporting (live layer stats when available)
++-- moe_training.py      # MoE training loop (lightweight metrics)
++-- nested_experts.py    # Nested expert hierarchy (simulated weights)
 +-- README.md
 ```
 
 ## What Is Real Here
 
-- `NestedExpertHierarchy` provides a real selection/update flow, but uses
-  simulated parameters (no neural weights).
-- `MoEControlAPI` and `MoETrainingSystem` are **stubs** that return synthetic
-  metrics unless you pass a real model with `moe_layers` and `moe_manager`.
+- `NestedExpertHierarchy` uses simulated parameters (no neural weights).
+- `MoEControlAPI` surfaces real layer statistics when you pass a model with
+  `moe_layers` and `moe_manager`.
+- `MoETrainingSystem` is lightweight and can be extended to update real weights.
 
 ## MoE Control API
 

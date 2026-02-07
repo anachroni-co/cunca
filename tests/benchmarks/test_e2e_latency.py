@@ -14,6 +14,7 @@ Run with:
     pytest tests/benchmarks/test_e2e_latency.py::TestManualLatencyReport -s
 """
 
+import os
 import time
 import statistics
 import pytest
@@ -24,6 +25,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 pytestmark = pytest.mark.slow
+_RUN_LATENCY_REPORTS = os.getenv("CAPIBARA_RUN_LATENCY_REPORTS") == "1"
 
 
 # ---------------------------------------------------------------------------
@@ -423,6 +425,10 @@ class TestManualLatencyReport:
     Run: pytest -s tests/benchmarks/test_e2e_latency.py::TestManualLatencyReport
     """
 
+    @pytest.mark.skipif(
+        not _RUN_LATENCY_REPORTS,
+        reason="Set CAPIBARA_RUN_LATENCY_REPORTS=1 to run latency reports.",
+    )
     def test_attention_latency_report(self, backend):
         """Detailed attention latency report."""
         configs = [
@@ -446,6 +452,10 @@ class TestManualLatencyReport:
             )
             _print_latency(f"{name} (b={bs}, h={nh}, s={sl}, d={hd})", stats)
 
+    @pytest.mark.skipif(
+        not _RUN_LATENCY_REPORTS,
+        reason="Set CAPIBARA_RUN_LATENCY_REPORTS=1 to run latency reports.",
+    )
     def test_pipeline_latency_report(self, backend):
         """Detailed inference pipeline latency report."""
         logger.info("\n" + "=" * 60)
@@ -488,6 +498,10 @@ class TestManualLatencyReport:
             stats = _measure_latency(run)
             _print_latency(f"{name} (b={bs}, s={sl}, h={hd})", stats)
 
+    @pytest.mark.skipif(
+        not _RUN_LATENCY_REPORTS,
+        reason="Set CAPIBARA_RUN_LATENCY_REPORTS=1 to run latency reports.",
+    )
     def test_scaling_latency_report(self, backend):
         """Detailed scaling report: attention vs sequence length."""
         logger.info("\n" + "=" * 60)

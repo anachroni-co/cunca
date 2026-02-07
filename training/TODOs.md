@@ -1,183 +1,46 @@
-# TODOs - training
+﻿# TODOs - training
 
-- [ ] # Mock analysis - in real implementation, load and analyze model - `training\btx_training_system.py:449`
-- [ ] # Mock implementation - copy seed model files - `training\btx_training_system.py:464`
-- [ ] "gpu_devices": [0],  # Mock GPU allocation - `training\btx_training_system.py:484`
-- [ ] # Mock training data - `training\btx_training_system.py:494`
-- [ ] # Mock JAX model initialization - `training\btx_training_system.py:508`
-- [ ] # Mock non-JAX initialization - `training\btx_training_system.py:523`
-- [ ] model_params = {"mock_params": np.random.normal(0, 0.1, (1000,))} - `training\btx_training_system.py:524`
-- [ ] # Mock training loop - `training\btx_training_system.py:536`
-- [ ] # Simulate training progress - `training\btx_training_system.py:539`
-- [ ] # Mock loss and accuracy - `training\btx_training_system.py:544`
-- [ ] "parameter_count": 1000000000,  # Mock parameter count - `training\btx_training_system.py:558`
-- [ ] # Mock validation - `training\btx_training_system.py:566`
-- [ ] # Mock model saving - `training\btx_training_system.py:584`
-- [ ] # Mock integration process - `training\btx_training_system.py:660`
-- [ ] # Mock validation - `training\btx_training_system.py:673`
-- [ ] # Mock finetuning process - `training\btx_training_system.py:715`
-- [ ] # Simulate training progress - `training\btx_training_system.py:719`
-- [ ] # Mock validation results - `training\btx_training_system.py:775`
-- [ ] # Initialize model parameters (mock for demonstration) - `training\byte_level_training.py:473`
-- [ ] # Mock training step (replace with actual forward/backward pass) - `training\byte_level_training.py:498`
-- [ ] loss = self._mock_training_step(batch) - `training\byte_level_training.py:499`
-- [ ] def _mock_training_step(self, batch: Dict[str, jnp.ndarray]) -> float: - `training\byte_level_training.py:552`
-- [ ] """Mock training step for demonstration.""" - `training\byte_level_training.py:553`
-- [ ] # Simulate loss calculation - `training\byte_level_training.py:558`
-- [ ] mock_loss = np.random.uniform(5.0, 8.0) / (1 + self.step * 0.001)  # Decreasing loss - `training\byte_level_training.py:560`
-- [ ] return float(mock_loss) - `training\byte_level_training.py:562`
-- [ ] "datasets_missing": [], - `training\cascade_training_integration.py:171`
-- [ ] validation_result["datasets_missing"].append(dataset_name) - `training\cascade_training_integration.py:190`
-- [ ] "errors": [f"Datasets not ready: {validation['datasets_missing']}"], - `training\cascade_training_integration.py:246`
-- [ ] errors.append(f"Datasets not ready: {validation['datasets_missing']}") - `training\cascade_training_integration.py:287`
-- [ ] # Simulate embedding (in real implementation, use real embeddings) - `training\moe_hierarchical_router.py:505`
-- [ ] "uptime_seconds": (datetime.now() - datetime.now()).total_seconds(),  # Placeholder - `training\monitoring_dashboard.py:705`
-- [ ] # Simulate some metrics - `training\monitoring_dashboard.py:815`
-- [ ] # Simulate teacher outputs (in real implementation these would be actual models) - `training\unified_trainer.py:388`
-- [ ] jnp.ones((batch['inputs'].shape[0], 50257)) * 0.1  # Placeholder - `training\unified_trainer.py:390`
-- [ ] # Perform consensus voting (simulated) - `training\unified_trainer.py:401`
-- [ ] # Extract response embeddings (mock data for demonstration) - `training\consensus\advance_meta_consensus_integration.py:276`
-- [ ] # Mock input tokens for demonstration - `training\consensus\advance_meta_consensus_integration.py:308`
-- [ ] expert_responses = [{'response': 'mock_response', 'confidence': 0.9}] - `training\consensus\advance_meta_consensus_integration.py:333`
-- [ ] await asyncio.sleep(0.1)  # Mock consensus time - `training\consensus\advance_meta_consensus_integration.py:342`
-- [ ] # Mock quality assessment - `training\consensus\advance_meta_consensus_integration.py:356`
-- [ ] # Mock implementation - `training\consensus\advance_meta_consensus_integration.py:413`
-- [ ] # File missing, remove from index - `training\consensus\distributed_consensus_cache.py:496`
-- [ ] async def mock_expert_response(query: str, expert_id: str): - `training\consensus\distributed_consensus_cache.py:1019`
-- [ ] # Simulate expensive operation - `training\consensus\distributed_consensus_cache.py:1020`
-- [ ] result1 = await mock_expert_response("test query", "expert_1") - `training\consensus\distributed_consensus_cache.py:1030`
-- [ ] result2 = await mock_expert_response("test query", "expert_1") - `training\consensus\distributed_consensus_cache.py:1035`
-- [ ] errors.append(f"Missing '{field}' for model '{domain}'") - `training\consensus\huggingface_consensus_strategy.py:390`
-- [ ] # Simulate TPU v6-64 optimized inference - `training\consensus\integrated_consensus_strategy.py:460`
-- [ ] # Simulate TPU v6-64 inference with legal compliance - `training\consensus\integrated_consensus_strategy.py:514`
-- [ ] await asyncio.sleep(0.05)  # Simulate TPU v6-64 speed - `training\consensus\integrated_consensus_strategy.py:515`
-- [ ] # Return simulated response based on expert type - `training\consensus\integrated_consensus_strategy.py:524`
-- [ ] # Mock initialization for testing - `training\consensus\meta_consensus_comp_benchmark.py:565`
-- [ ] # Mock router model path - in real implementation, provide actual path - `training\consensus\meta_consensus_system.py:366`
-- [ ] # Mock configuration - in real implementation, provide actual paths and configs - `training\consensus\meta_consensus_system.py:386`
-- [ ] # Mock consensus generation based on routing decision - `training\consensus\meta_consensus_system.py:820`
-- [ ] mock_response = f"Based on the analysis from {len(routing_decision['selected_models'])} expert models, here's the consensus response to your query." - `training\consensus\meta_consensus_system.py:821`
-- [ ] response=mock_response, - `training\consensus\meta_consensus_system.py:825`
-- [ ] tokens_generated=len(mock_response.split()), - `training\consensus\meta_consensus_system.py:834`
-- [ ] # Mock metrics for unified consensus - `training\consensus\meta_consensus_system.py:846`
-- [ ] mock_metrics = { - `training\consensus\meta_consensus_system.py:847`
-- [ ] metrics=mock_metrics, - `training\consensus\meta_consensus_system.py:855`
-- [ ] mock_response = "This is a fallback response from the unified consensus strategy." - `training\consensus\meta_consensus_system.py:859`
-- [ ] response=mock_response, - `training\consensus\meta_consensus_system.py:863`
-- [ ] tokens_generated=len(mock_response.split()), - `training\consensus\meta_consensus_system.py:872`
-- [ ] # Mock bias detection - in real implementation, use bias detection models - `training\consensus\meta_consensus_system.py:931`
-- [ ] # Mock safety filtering - in real implementation, use safety models - `training\consensus\meta_consensus_system.py:937`
-- [ ] expert_names = [f"expert_{i}" for i in range(20)]  # Mock expert names - `training\consensus\optimized_consensus_router.py:371`
-- [ ] # Standard embedding generation (mock) - `training\consensus\optimized_consensus_router.py:505`
-- [ ] # Mock GPU embedding generation - `training\consensus\optimized_consensus_router.py:518`
-- [ ] # Mock TPU v6 embedding generation with JAX - `training\consensus\optimized_consensus_router.py:528`
-- [ ] expert_embeddings = np.random.random((num_experts, 768)).astype(np.float32)  # Mock embeddings - `training\consensus\optimized_consensus_router.py:546`
-- [ ] # Mock GPU calculation - `training\consensus\optimized_consensus_router.py:595`
-- [ ] # Cosine similarity calculation (mock) - `training\consensus\optimized_consensus_router.py:602`
-- [ ] # Mock GPU acceleration - in real implementation, use actual GPU operations - `training\consensus\optimized_meta_consensus.py:594`
-- [ ] # Mock response generation - in real implementation, call actual expert - `training\consensus\optimized_meta_consensus.py:797`
-- [ ] diversity_scores = np.random.random(num_responses).astype(np.float32)  # Mock diversity - `training\consensus\optimized_meta_consensus.py:902`
-- [ ] # Create mock embeddings for consensus calculation - `training\consensus\optimized_meta_consensus.py:911`
-- [ ] # Mock memory usage - `training\consensus\optimized_meta_consensus.py:948`
-- [ ] # Score refinements (placeholder - replace with real model) - `training\consensus\unified_consensus.py:470`
-- [ ] """Refinement quality scoring (placeholder).""" - `training\consensus\unified_consensus.py:523`
-- [ ] # Placeholder for entrenamiento real - `training\consensus\unified_consensus.py:682`
-- [ ] # Placeholder - en implementation real, carry modelos reales - `training\consensus\unified_consensus.py:714`
-- [ ] # Placeholder - en implementation real, carry modelos reales - `training\consensus\unified_consensus.py:731`
-- [ ] # Placeholder for entrenamiento real - `training\consensus\unified_consensus.py:801`
-- [ ] """Evalúa todos los modelos de una fase.""" - `training\consensus\unified_consensus.py:980`
-- [ ] # Placeholder for evaluación real - `training\consensus\unified_consensus.py:988`
-- [ ] 3. MISSING GRADIENT COMPUTATION IMPACT - `training\data_lineage\critical_analysis_inference.py:10`
-- [ ] MISSING_INFERENCE_MODE = "missing_inference_mode" - `training\data_lineage\critical_analysis_inference.py:29`
-- [ ] logger.warning("️ Full lineage system not available - running mock demo") - `training\data_lineage\demo_traceability_system.py:43`
-- [ ] class MockModel: - `training\data_lineage\demo_traceability_system.py:46`
-- [ ] """Mock model for demonstration purposes.""" - `training\data_lineage\demo_traceability_system.py:47`
-- [ ] self.parameters = self._create_mock_parameters() - `training\data_lineage\demo_traceability_system.py:51`
-- [ ] def _create_mock_parameters(self) -> Dict[str, jnp.ndarray]: - `training\data_lineage\demo_traceability_system.py:53`
-- [ ] """Create mock model parameters.""" - `training\data_lineage\demo_traceability_system.py:54`
-- [ ] self.mock_model = MockModel("300M") - `training\data_lineage\demo_traceability_system.py:93`
-- [ ] await self._run_mock_demo() - `training\data_lineage\demo_traceability_system.py:128`
-- [ ] # Step 2: Simulate training with data tracking - `training\data_lineage\demo_traceability_system.py:135`
-- [ ] logger.info("\n STEP 2: Simulate Training with Data Tracking") - `training\data_lineage\demo_traceability_system.py:136`
-- [ ] """Simulate training steps with audit logging.""" - `training\data_lineage\demo_traceability_system.py:168`
-- [ ] model_parameters=self.mock_model.parameters, - `training\data_lineage\demo_traceability_system.py:230`
-- [ ] async def _run_mock_demo(self): - `training\data_lineage\demo_traceability_system.py:333`
-- [ ] """Run a simplified mock demo when full system isn't available.""" - `training\data_lineage\demo_traceability_system.py:334`
-- [ ] logger.warning(" Running mock demonstration (full system not available)") - `training\data_lineage\demo_traceability_system.py:335`
-- [ ] logger.info(" Mock blockchain audit log:") - `training\data_lineage\demo_traceability_system.py:338`
-- [ ] logger.info("\n️ Mock parameter controller:") - `training\data_lineage\demo_traceability_system.py:343`
-- [ ] logger.info("\n️ Mock dataset control:") - `training\data_lineage\demo_traceability_system.py:348`
-- [ ] logger.info("\n Mock compliance report:") - `training\data_lineage\demo_traceability_system.py:353`
-- [ ] logger.info("\n Mock demo completed!") - `training\data_lineage\demo_traceability_system.py:358`
-- [ ] # Mock JAX/Flax for testing - `training\data_lineage\inference_parameter_tests.py:26`
-- [ ] # Create mock jax.numpy for testing - `training\data_lineage\inference_parameter_tests.py:32`
-- [ ] class MockJNP: - `training\data_lineage\inference_parameter_tests.py:33`
-- [ ] jnp = MockJNP() - `training\data_lineage\inference_parameter_tests.py:58`
-- [ ] class MockModel: - `training\data_lineage\inference_parameter_tests.py:63`
-- [ ] """Mock neural network model for testing parameter control.""" - `training\data_lineage\inference_parameter_tests.py:64`
-- [ ] def __init__(self, model: MockModel): - `training\data_lineage\inference_parameter_tests.py:132`
-- [ ] # Create mock parameter lineage for this dataset - `training\data_lineage\inference_parameter_tests.py:192`
-- [ ] self._create_mock_lineage(dataset_id) - `training\data_lineage\inference_parameter_tests.py:193`
-- [ ] self._create_mock_lineage(dataset) - `training\data_lineage\inference_parameter_tests.py:241`
-- [ ] # Create mock lineage - `training\data_lineage\inference_parameter_tests.py:301`
-- [ ] self._create_mock_lineage("test_dataset") - `training\data_lineage\inference_parameter_tests.py:302`
-- [ ] self._create_mock_lineage("double_test") - `training\data_lineage\inference_parameter_tests.py:362`
-- [ ] def _create_mock_lineage(self, dataset_id: str): - `training\data_lineage\inference_parameter_tests.py:411`
-- [ ] """Create mock parameter lineage for testing.""" - `training\data_lineage\inference_parameter_tests.py:412`
-- [ ] # Create mock model - `training\data_lineage\inference_parameter_tests.py:529`
-- [ ] model = MockModel() - `training\data_lineage\inference_parameter_tests.py:530`
-- [ ] # Mock JAX/Flax for environments without it - `training\data_lineage\inference_safe_parameter_controller.py:31`
-- [ ] # Create mock jax.numpy - `training\data_lineage\inference_safe_parameter_controller.py:37`
-- [ ] class MockJNP: - `training\data_lineage\inference_safe_parameter_controller.py:38`
-- [ ] jnp = MockJNP() - `training\data_lineage\inference_safe_parameter_controller.py:69`
-- [ ] # Create mock lineage for testing - `training\data_lineage\inference_safe_parameter_controller.py:305`
-- [ ] param_issues.append(f"Missing parameter: {param_name}") - `training\data_lineage\inference_safe_parameter_controller.py:570`
-- [ ] "missing_parameters": len(param_issues), - `training\data_lineage\inference_safe_parameter_controller.py:600`
-- [ ] # Mock model parameters - `training\data_lineage\inference_safe_parameter_controller.py:659`
-- [ ] mock_params = { - `training\data_lineage\inference_safe_parameter_controller.py:661`
-- [ ] mock_params, - `training\data_lineage\inference_safe_parameter_controller.py:674`
-- [ ] logger.info(f" Controller created with {len(mock_params)} parameters") - `training\data_lineage\inference_safe_parameter_controller.py:678`
-- [ ] """Get current TPU core ID (placeholder).""" - `training\data_preprocessing\tpu_optimized_processor.py:416`
-- [ ] logger.warning("Network libraries not available - using mock implementations") - `training\federated_consensus\federated_consensus_system.py:26`
-- [ ] logger.warning("Network services not available - running in mock mode") - `training\federated_consensus\federated_consensus_system.py:183`
-- [ ] await self._start_mock_services() - `training\federated_consensus\federated_consensus_system.py:184`
-- [ ] async def _start_mock_services(self): - `training\federated_consensus\federated_consensus_system.py:297`
-- [ ] """Start mock services when network libraries are not available.""" - `training\federated_consensus\federated_consensus_system.py:298`
-- [ ] logger.info(" Starting mock network services") - `training\federated_consensus\federated_consensus_system.py:299`
-- [ ] # Mock implementation for testing without network dependencies - `training\federated_consensus\federated_consensus_system.py:300`
-- [ ] logger.info(" Mock connection to coordinator") - `training\federated_consensus\federated_consensus_system.py:306`
-- [ ] 'endpoint': getattr(self, 'endpoint', 'mock://localhost') - `training\federated_consensus\federated_consensus_system.py:320`
-- [ ] logger.info(f" Mock broadcast of proposal {proposal.proposal_id}") - `training\federated_consensus\federated_consensus_system.py:393`
-- [ ] # Extract response embeddings (mock) - `training\federated_consensus\federated_consensus_system.py:429`
-- [ ] # Mock agreement calculation based on consensus confidence - `training\federated_consensus\federated_consensus_system.py:460`
-- [ ] # Mock implementation - `training\federated_consensus\federated_consensus_system.py:548`
-- [ ] # Mock signature implementation - `training\federated_consensus\federated_consensus_system.py:597`
-- [ ] # Mock signature implementation - `training\federated_consensus\federated_consensus_system.py:603`
-- [ ] # Mock signature verification - `training\federated_consensus\federated_consensus_system.py:609`
-- [ ] # Mock implementation - `training\federated_consensus\federated_consensus_system.py:676`
-- [ ] """setup de todos los modelos destilados""" - `training\hierarchical_strategy\training_pipeline.py:171`
-- [ ] # Fallbacks if dependencies are missing - `training\optimizations\tpu_optimizations.py:24`
-- [ ] self.ultra_metrics.architecture_fitness += 0.01  # Simulated improvement - `training\optimizations\ultra_trainer.py:637`
-- [ ] return 0.85  # Simulated high utilization - `training\optimizations\ultra_trainer.py:645`
-- [ ] return 0.78  # Simulated good efficiency - `training\optimizations\ultra_trainer.py:650`
-- [ ] # Simulated efficiency based on or(n) vs or(n²) complexity - `training\optimizations\ultra_trainer.py:656`
-- [ ] """Module placeholder.""" - `training\optimizations\__init__.py:1`
-- [ ] # Replace flagged content with placeholders - `training\safety\bias_safety_filter.py:673`
-- [ ] # Simulate TPU v6-64 inference - `training\strategies\expanded_expert_cores_strategy.py:739`
-- [ ] # Return simulated response based on specialization - `training\strategies\expanded_expert_cores_strategy.py:742`
-- [ ] """setup for todos los modelos destilados""" - `training\strategies\hierarchical_training_strategy.py:209`
-- [ ] """Valida que todos los modelos estén equilibrados according to las métricas""" - `training\strategies\hierarchical_training_strategy.py:294`
-- [ ] # Mock embedding generation - in real implementation, use TPU-optimized model - `training\tpu\tpu_v6_consensus_optimizer.py:338`
-- [ ] # Create expert embeddings (mock - in real implementation, load actual embeddings) - `training\tpu\tpu_v6_consensus_optimizer.py:354`
-- [ ] # Mock embedding - `training\tpu\tpu_v6_consensus_optimizer.py:361`
-- [ ] # Mock TPU utilization metrics - `training\tpu\tpu_v6_consensus_optimizer.py:645`
-- [ ] # Mock expert pool - `training\tpu\tpu_v6_consensus_optimizer.py:827`
-- [ ] # Simulate H200 inference with HuggingFace Pro - `training\tpu\tpu_v6_huggingface_pro_strategy.py:297`
-- [ ] # Simulate TPU v6 optimized inference - `training\tpu\tpu_v6_huggingface_pro_strategy.py:381`
-- [ ] # Simulate H200 distributed inference with HF Pro - `training\tpu\tpu_v6_huggingface_pro_strategy.py:425`
-- [ ] # Simulate response generation - `training\tpu\tpu_v6_huggingface_pro_strategy.py:432`
-- [ ] await asyncio.sleep(0.1)  # Simulate H200 inference time - `training\tpu\tpu_v6_huggingface_pro_strategy.py:433`
-- [ ] # Return simulated response based on domain - `training\tpu\tpu_v6_huggingface_pro_strategy.py:435`
-- [ ] # Simulate TPU v6 inference - `training\tpu\tpu_v6_huggingface_pro_strategy.py:455`
-- [ ] await asyncio.sleep(0.05)  # Simulate TPU v6 speed - `training\tpu\tpu_v6_huggingface_pro_strategy.py:456`
-- [ ] # Return simulated response - `training\tpu\tpu_v6_huggingface_pro_strategy.py:458`
+Actualizado: 2026-02-07
+
+- [ ] 580:        # Initialize model parameters (mock for demonstration) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\byte_level_training.py`
+- [ ] 524:            model_params = {"mock_params": np.random.normal(0, 0.1, (1000,))} - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\btx_training_system.py`
+- [ ] 683:            # Cosine similarity calculation (mock) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\optimized_consensus_router.py`
+- [ ] 821:        mock_response = f"Based on the analysis from {len(routing_decision['selected_models'])} expert models, here's the consensus response to your query." - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
+- [ ] 825:            response=mock_response, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
+- [ ] 834:            tokens_generated=len(mock_response.split()), - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
+- [ ] 847:        mock_metrics = { - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
+- [ ] 855:            metrics=mock_metrics, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
+- [ ] 859:        mock_response = "This is a fallback response from the unified consensus strategy." - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
+- [ ] 863:            response=mock_response, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
+- [ ] 872:            tokens_generated=len(mock_response.split()), - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
+- [ ] 1019:        async def mock_expert_response(query: str, expert_id: str): - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\distributed_consensus_cache.py`
+- [ ] 1030:        result1 = await mock_expert_response("test query", "expert_1") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\distributed_consensus_cache.py`
+- [ ] 1035:        result2 = await mock_expert_response("test query", "expert_1") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\distributed_consensus_cache.py`
+- [ ] 276:        # Extract response embeddings (mock data for demonstration) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\advance_meta_consensus_integration.py`
+- [ ] 333:        expert_responses = [{'response': 'mock_response', 'confidence': 0.9}] - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\advance_meta_consensus_integration.py`
+- [ ] 354:        # Create expert embeddings (mock - in real implementation, load actual embeddings) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\tpu\tpu_v6_consensus_optimizer.py`
+- [ ] 37:    # Create mock jax.numpy - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_safe_parameter_controller.py`
+- [ ] 305:            # Create mock lineage for testing - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_safe_parameter_controller.py`
+- [ ] 661:    mock_params = { - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_safe_parameter_controller.py`
+- [ ] 674:        mock_params, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_safe_parameter_controller.py`
+- [ ] 678:    logger.info(f" Controller created with {len(mock_params)} parameters") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_safe_parameter_controller.py`
+- [ ] 32:    # Create mock jax.numpy for testing - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
+- [ ] 192:            # Create mock parameter lineage for this dataset - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
+- [ ] 193:            self._create_mock_lineage(dataset_id) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
+- [ ] 241:                self._create_mock_lineage(dataset) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
+- [ ] 301:            # Create mock lineage - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
+- [ ] 302:            self._create_mock_lineage("test_dataset") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
+- [ ] 362:            self._create_mock_lineage("double_test") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
+- [ ] 411:    def _create_mock_lineage(self, dataset_id: str): - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
+- [ ] 412:        """Create mock parameter lineage for testing.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
+- [ ] 529:    # Create mock model - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
+- [ ] 43:    logger.warning("️ Full lineage system not available - running mock demo") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
+- [ ] 51:        self.parameters = self._create_mock_parameters() - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
+- [ ] 53:    def _create_mock_parameters(self) -> Dict[str, jnp.ndarray]: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
+- [ ] 54:        """Create mock model parameters.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
+- [ ] 93:        self.mock_model = MockModel("300M") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
+- [ ] 128:            await self._run_mock_demo() - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
+- [ ] 230:            model_parameters=self.mock_model.parameters, - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
+- [ ] 333:    async def _run_mock_demo(self): - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
+- [ ] 334:        """Run a simplified mock demo when full system isn't available.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
+- [ ] 335:        logger.warning(" Running mock demonstration (full system not available)") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`

@@ -533,3 +533,7 @@ class GooglePatentsDatasets:
 def get_google_patents_datasets() -> GooglePatentsDatasets:
     """Get Google Patents datasets manager."""
     return GooglePatentsDatasets()
+
+
+class GooglePatentsDataset(GooglePatentsDatasets):
+    """Backward-compatible alias for GooglePatentsDatasets."""

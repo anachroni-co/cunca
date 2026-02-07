@@ -289,7 +289,7 @@ class ObserverPatternDemo:
         for scenario_name, requests in load_scenarios:
             logger.info(f"\n   {scenario_name}:")
             
-            # Process requests concurrently to simulate load
+            # Process requests concurrently to create realistic load
             tasks = []
             for i, request in enumerate(requests):
                 task = performance_router.route_request(
