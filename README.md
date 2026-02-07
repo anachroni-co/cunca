@@ -11,6 +11,63 @@ Experimental open-source foundation model stack for research and education.
 - Optional services and integrations.
 - Test and benchmark suites.
 
+## Live Repository Metrics
+
+Last refreshed: `2026-02-07`
+
+### Snapshot
+
+| Metric | Value |
+|---|---:|
+| Python files (repo only) | 551 |
+| Markdown files (repo only) | 90 |
+| Python LOC (repo only) | 164,723 |
+| Test files (`tests/test_*.py`) | 29 |
+| Collected `test_` functions (static scan) | 22 |
+| Pending TODO items (global) | 225 |
+| Pending TODO items (prioritized) | 442 |
+
+### Python LOC by top-level folder
+
+| Folder | LOC |
+|---|---:|
+| `training` | 35,177 |
+| `core` | 28,474 |
+| `capibara` | 13,137 |
+| `services` | 10,601 |
+| `data` | 10,162 |
+| `sub_models` | 9,616 |
+| `agents` | 8,873 |
+| `jax` | 8,788 |
+| `utils` | 7,607 |
+| `inference` | 6,208 |
+
+```mermaid
+xychart-beta
+    title "Python LOC by Folder (Top 10)"
+    x-axis [training, core, capibara, services, data, sub_models, agents, jax, utils, inference]
+    y-axis "LOC" 0 --> 36000
+    bar [35177, 28474, 13137, 10601, 10162, 9616, 8873, 8788, 7607, 6208]
+```
+
+### Pending TODO distribution by priority
+
+| Priority | Pending |
+|---|---:|
+| Critical | 135 |
+| High | 261 |
+| Medium | 8 |
+| Low | 38 |
+
+```mermaid
+pie showData
+    title Prioritized TODO Distribution
+    "Critical" : 135
+    "High" : 261
+    "Medium" : 8
+    "Low" : 38
+```
+
 ## Current reality
 
 This is an active research codebase, not a production-hardened product.
@@ -70,7 +127,7 @@ print(f"Using backend: {backend.name}")
 pytest tests/ -v
 ```
 
-Run with coverage:
+Coverage:
 
 ```bash
 pytest tests/ --cov=core --cov-report=term-missing
@@ -98,6 +155,18 @@ python -m benchmarks run
 - Several advanced paths still include placeholder/mock logic.
 - Hardware-specific features depend on external stacks and environment.
 - Performance numbers can vary significantly across machines.
+
+## Reproduce metrics
+
+```bash
+# Python/Markdown files
+rg --files -g "*.py" -g "!**/.venv/**" -g "!**/.git/**" | wc -l
+rg --files -g "*.md" -g "!**/.venv/**" -g "!**/.git/**" | wc -l
+
+# Pending TODO lines
+rg -n "^- \[ \]" TODOs.md | wc -l
+rg -n "^- \[ \]" TODOs_PRIORITIZED.md | wc -l
+```
 
 ## License
 
