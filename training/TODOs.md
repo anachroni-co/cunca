@@ -2,7 +2,7 @@
 
 Actualizado: 2026-02-07
 
-- [ ] 580:        # Initialize model parameters (mock for demonstration) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\byte_level_training.py`
+## Critical
 - [ ] 524:            model_params = {"mock_params": np.random.normal(0, 0.1, (1000,))} - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\btx_training_system.py`
 - [ ] 683:            # Cosine similarity calculation (mock) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\optimized_consensus_router.py`
 - [ ] 821:        mock_response = f"Based on the analysis from {len(routing_decision['selected_models'])} expert models, here's the consensus response to your query." - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\consensus\meta_consensus_system.py`
@@ -34,6 +34,9 @@ Actualizado: 2026-02-07
 - [ ] 411:    def _create_mock_lineage(self, dataset_id: str): - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
 - [ ] 412:        """Create mock parameter lineage for testing.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
 - [ ] 529:    # Create mock model - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\inference_parameter_tests.py`
+
+## High
+- [ ] 580:        # Initialize model parameters (mock for demonstration) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\byte_level_training.py`
 - [ ] 43:    logger.warning("️ Full lineage system not available - running mock demo") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
 - [ ] 51:        self.parameters = self._create_mock_parameters() - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
 - [ ] 53:    def _create_mock_parameters(self) -> Dict[str, jnp.ndarray]: - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
@@ -44,3 +47,10 @@ Actualizado: 2026-02-07
 - [ ] 333:    async def _run_mock_demo(self): - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
 - [ ] 334:        """Run a simplified mock demo when full system isn't available.""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
 - [ ] 335:        logger.warning(" Running mock demonstration (full system not available)") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\training\data_lineage\demo_traceability_system.py`
+
+## Medium
+- [x] Sin pendientes en esta prioridad.
+
+## Low
+- [x] Sin pendientes en esta prioridad.
+
