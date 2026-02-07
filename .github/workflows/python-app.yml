@@ -26,7 +26,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pytest
+        pip install flake8 pytest fastapi uvicorn
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Validate syntax and imports
       run: |
@@ -43,6 +43,9 @@ jobs:
     - name: Factorization guardrails
       run: |
         pytest tests/unit/test_factorization.py -v
+    - name: Observability schema gate
+      run: |
+        pytest tests/unit/test_observability_schema.py -v
     - name: Test with pytest
       run: |
         pytest
