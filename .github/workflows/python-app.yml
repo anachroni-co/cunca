@@ -61,6 +61,9 @@ jobs:
     - name: Run MVP API smoke test
       run: |
         bash scripts/smoke_mvp_api.sh
+    - name: Run MVP API happy-path smoke test
+      run: |
+        bash scripts/smoke_mvp_api_happy.sh
     - name: Dump container logs on failure
       if: failure()
       run: |
