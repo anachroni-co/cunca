@@ -109,6 +109,7 @@ all = [
 [project.scripts]
 # Minimal CLI available (info/health/demo).
 capibara = "capibara.cli:main"
+capibara-api = "capibara.mvp_api:run"
 # TODO(2026-02-05): Implement these CLIs in capibara/training/cli.py,
 # and capibara/inference/cli.py.
 # capibara-train = "capibara.training.cli:main"
