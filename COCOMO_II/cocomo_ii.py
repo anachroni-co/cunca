@@ -41,6 +41,7 @@ LOW_VALUATION_EFFORT_MULTIPLIERS: Dict[str, float] = {
 def cocomo_ii(
     kloc: float,
     cost_per_person_month: float,
+    a: float = 2.94,
     scale_factors: Dict[str, float] | None = None,
     effort_multipliers: Dict[str, float] | None = None,
 ) -> CocomoResult:
@@ -53,7 +54,6 @@ def cocomo_ii(
     sf = scale_factors or LOW_VALUATION_SCALE_FACTORS
     em = effort_multipliers or LOW_VALUATION_EFFORT_MULTIPLIERS
 
-    a = 2.94
     b = 0.91 + 0.01 * sum(sf.values())
     eaf = math.prod(em.values())
     effort = a * (kloc**b) * eaf
@@ -72,7 +72,7 @@ def cocomo_ii(
     )
 
 
-def parse_args() -> Tuple[float, float]:
+def parse_args() -> Tuple[float, float, float]:
     parser = argparse.ArgumentParser(description="COCOMO II low valuation estimator")
     parser.add_argument(
         "--kloc",
@@ -86,15 +86,22 @@ def parse_args() -> Tuple[float, float]:
         default=5500.0,
         help="Internal cost per person-month. Default: 5500",
     )
+    parser.add_argument(
+        "--a",
+        type=float,
+        default=2.94,
+        help="COCOMO II calibration constant A. Default: 2.94",
+    )
     args = parser.parse_args()
-    return args.kloc, args.cost_per_person_month
+    return args.kloc, args.cost_per_person_month, args.a
 
 
 def main() -> int:
-    kloc, cost_per_person_month = parse_args()
-    result = cocomo_ii(kloc=kloc, cost_per_person_month=cost_per_person_month)
+    kloc, cost_per_person_month, a = parse_args()
+    result = cocomo_ii(kloc=kloc, cost_per_person_month=cost_per_person_month, a=a)
 
     print("--- COCOMO II (Low Valuation Profile) ---")
+    print(f"A constant: {a:.4f}")
     print(f"KLOC: {kloc:.2f}")
     print(f"B exponent: {result.b_exponent:.4f}")
     print(f"EAF: {result.eaf:.4f}")
