@@ -2,6 +2,10 @@
 
 Actualizado: 2026-02-07
 
+## Critical
+- [x] Sin pendientes en esta prioridad.
+
+## High
 - [ ] 310:    """Generador BIM mock para demostración""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\text_to_bim_service.py`
 - [ ] 316:        """Genera modelo BIM mock""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\text_to_bim_service.py`
 - [ ] 385:        self.generator = MockBIMGenerator()  # Default to mock for demo - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\text_to_bim_service.py`
@@ -9,7 +13,6 @@ Actualizado: 2026-02-07
 - [ ] 136:        "mock_bim": True,  # Siempre disponible para testing - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\bim_generation\__init__.py`
 - [ ] 340:                    # Use standard n8n execution (simulated) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\agent_executor.py`
 - [ ] 481:        """Execute a node in standard n8n mode (simulated).""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\agent_executor.py`
-- [ ] 482:        # This is a simulation of n8n node execution - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\agent_executor.py`
 - [ ] 498:            result["response"] = {"status": 200, "data": "simulated response"} - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\agent_executor.py`
 - [ ] 328:    """Analizador genómico mock para demostración (mientras se integran herramientas reales)""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py`
 - [ ] 331:        logger.info(" Mock Genomic Analyzer initialized (60B model simulation)") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\genomic_analysis\text_to_genomic_service.py`
@@ -44,9 +47,7 @@ Actualizado: 2026-02-07
 - [ ] 275:                supplier_payment.stripe_transfer_id = f"tr_mock_{order.order_id}_{supplier_payment.supplier_id}" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\payment_and_fulfillment.py`
 - [ ] 242:            # For now, show a placeholder - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\web_ui.py`
 - [ ] 325:                                placeholder="Example: Send me an email when someone submits the contact form" required></textarea> - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\web_ui.py`
-- [ ] 54:    SIMULATION = "simulation"      # Physics, chemistry, mathematics - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
 - [ ] 108:    include_mock_mode: bool = True - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
-- [ ] 190:            ServiceType.SIMULATION: ["simulation", "physics", "chemistry", "math", "model", "calculate"], - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
 - [ ] 348:        """Generates mock code for the service""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
 - [ ] 349:        logger.info(f" Generating mock service: {request.service_name}") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
 - [ ] 377:        mock_code = self._generate_mock_service_code(request) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
@@ -61,3 +62,12 @@ Actualizado: 2026-02-07
 - [ ] 739:        """Creates mock files for demonstration""" - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
 - [ ] 749:                f.write(generation_result["mock_code_preview"]) - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
 - [ ] 818:            logger.error(f" Error creating mock files: {e}") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
+
+## Medium
+- [x] Sin pendientes en esta prioridad.
+
+## Low
+- [ ] 482:        # This is a simulation of n8n node execution - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\automation\agent_executor.py`
+- [ ] 54:    SIMULATION = "simulation"      # Physics, chemistry, mathematics - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
+- [ ] 190:            ServiceType.SIMULATION: ["simulation", "physics", "chemistry", "math", "model", "calculate"], - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\services\meta_generation\text_to_gen_service.py`
+

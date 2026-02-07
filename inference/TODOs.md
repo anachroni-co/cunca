@@ -2,6 +2,7 @@
 
 Actualizado: 2026-02-07
 
+## Critical
 - [ ] 160:        # For now, we simulate the structure - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\inference\hybrid_inference_engine.py`
 - [ ] 167:            # Create mock parameters for demo - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\inference\hybrid_inference_engine.py`
 - [ ] 168:            logger.warning("Using mock parameters for demo") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\inference\hybrid_inference_engine.py`
@@ -15,3 +16,13 @@ Actualizado: 2026-02-07
 - [ ] 484:            raise NotImplementedError("Flax required for quantized layers") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\inference\quantization\quantized_layers.py`
 - [ ] 494:            raise NotImplementedError("Flax required for quantized layers") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\inference\quantization\quantized_layers.py`
 - [ ] 505:            raise NotImplementedError("Flax required for quantized layers") - `d:\Escritorio\Nueva carpeta (3)\capibaraGPT_v3\inference\quantization\quantized_layers.py`
+
+## High
+- [x] Sin pendientes en esta prioridad.
+
+## Medium
+- [x] Sin pendientes en esta prioridad.
+
+## Low
+- [x] Sin pendientes en esta prioridad.
+
