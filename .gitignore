@@ -11,7 +11,7 @@ install.sh
 credentials.json
 secrets.json
 api_keys.txt
-
+COCOMO_II/
 # IDE
 .vscode/
 .idea/
@@ -59,3 +59,4 @@ _version.py
 .github/
 # Benchmark outputs
 benchmark_results/
+
