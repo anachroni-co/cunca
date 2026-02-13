@@ -176,4 +176,4 @@ Dual licensing (open + commercial). See `LICENSE`.
 
 - GitHub: `https://github.com/anachroni-co/capibaraGPT_v3`
 - Website: `https://www.anachroni.co`
-- Email: `info@anachroni.co`
+- Email: `info@anachroni.co` 
