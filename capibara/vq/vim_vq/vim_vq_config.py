@@ -1,3 +1,22 @@
+"""
+Vim VQ Config - Configuration for Vector Quantization with hardware support.
+
+This module provides configuration for ViM-VQ (Vector-Quantized Vision Model)
+with optimized support for TPU v4-32, TPU v6, and ARM Axion processors.
+
+Key Components:
+    - VimVQConfig: Configuration dataclass for VQ settings
+
+Features:
+    - Sub-vector quantization parameters
+    - Hardware-specific optimizations (TPU, ARM, CPU)
+    - Memory pool configuration
+    - Multimodal support (audio, vision)
+    - Preset configurations for different hardware
+
+Author: Skydesk International Dev Team.
+"""
+
 from dataclasses import dataclass
 from typing import Optional, Literal
 
