@@ -1,3 +1,12 @@
+"""
+Inference CLI Tests - Unit tests for command-line inference interface.
+
+This module provides tests for the CLI inference interface, validating
+command-line argument parsing, inference execution, and output formatting.
+
+Author: Skydesk International Dev Team.
+"""
+
 import sys
 
 from core import inference as inference_module

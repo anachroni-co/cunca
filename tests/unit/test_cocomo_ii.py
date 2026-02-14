@@ -1,3 +1,12 @@
+"""
+COCOMO II Tests - Unit tests for COCOMO II estimation model.
+
+This module provides tests for the COCOMO II software cost estimation
+model, validating effort multipliers, scale factors, and cost calculations.
+
+Author: Skydesk International Dev Team.
+"""
+
 from COCOMO_II.cocomo_ii import (
     LOW_VALUATION_EFFORT_MULTIPLIERS,
     LOW_VALUATION_SCALE_FACTORS,

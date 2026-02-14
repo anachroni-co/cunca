@@ -1,3 +1,12 @@
+"""
+MVP API Tests - Unit tests for minimum viable product API.
+
+This module provides tests for the MVP API endpoints, validating
+request handling, response formatting, and error conditions.
+
+Author: Skydesk International Dev Team.
+"""
+
 from __future__ import annotations
 
 import asyncio

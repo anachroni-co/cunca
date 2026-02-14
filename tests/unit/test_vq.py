@@ -1,3 +1,12 @@
+"""
+VQ Tests - Unit tests for Vector Quantization layers.
+
+This module provides tests for VQ-bit layers, validating quantization
+operations, codebook management, and CPU fallback functionality.
+
+Author: Skydesk International Dev Team.
+"""
+
 import numpy as np
 import pytest
 
