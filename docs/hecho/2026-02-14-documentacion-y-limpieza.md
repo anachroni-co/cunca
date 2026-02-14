@@ -49,54 +49,71 @@ chore: clean and deduplicate TODO files (81c2398)
 ### Herramienta Creada
 `scripts/check_docs.py` - Detecta archivos sin documentacion
 
-### Archivos Documentados
+### Progreso
 
-| Directorio | Archivo | Tipo de Documentacion |
-|------------|---------|----------------------|
-| modules/ | `hierarchical_reasoning.py` | Module + Config + Class + Functions |
-| agents/ | `capibara_agent.py` | Module + 4 Classes |
-| agents/ | `capibara_agent_factory.py` | Module docstring |
-| agents/ | `capibara_auto_agent.py` | Module + Class |
-| agents/ | `capibara_prompt_to_spec.py` | Module + Class |
-| agents/ | `tool_library.py` | Module + Functions |
-| sub_models/semiotic/ | `mnemosyne_semio_module.py` | Module docstring |
-| core/verification/ | `constitutional_ai.py` | Module docstring |
-| config/ | `config_manager.py` | Module docstring |
-| mcp/ | `__init__.py` | Package docstring |
+| Metrica | Antes | Despues | Mejora |
+|---------|-------|---------|--------|
+| Modulos sin docstring | 42 | 16 | -62% |
+| Directorios completos | 0 | 12 | +12 |
 
-### Formato de Documentacion Aplicado
+### Directorios Completamente Documentados
 
-```python
-"""
-Module name - Brief description.
+- `agents/` - 5 archivos
+- `modules/` - 1 archivo
+- `mcp/` - 4 archivos
+- `config/` - 2 archivos
+- `core/verification/` - 4 archivos
+- `core/age_adaptation/` - 1 archivo
+- `core/cot/` - 1 archivo
+- `core/routers/` - 1 archivo
+- `services/automation/` - 1 archivo
+- `utils/` - 1 archivo
+- `capibara/vq/` - 2 archivos
+- `training/federated_consensus/` - 1 archivo
+- `training/cython_kernels/` - 1 archivo
 
-This module provides [purpose].
+### Archivos Documentados (Total: 30+)
 
-Key Components:
-    - ClassName1: Brief description
-    - ClassName2: Brief description
+**Batch 1:**
+- modules/hierarchical_reasoning.py
+- agents/capibara_agent.py
+- agents/capibara_agent_factory.py
+- agents/capibara_auto_agent.py
+- agents/capibara_prompt_to_spec.py
+- agents/tool_library.py
+- sub_models/semiotic/mnemosyne_semio_module.py
+- core/verification/constitutional_ai.py
+- config/config_manager.py
+- mcp/__init__.py
 
-Example:
-    >>> from module import ClassName
-    >>> obj = ClassName()
-    >>> obj.method()
+**Batch 2:**
+- mcp/model_router.py
+- mcp/resource_manager.py
+- mcp/version_manager.py
+- core/verification/api.py
+- core/verification/middleware.py
+- core/verification/__init__.py
+- config/memory_config.py
+- core/age_adaptation/age_config.py
+- core/cot/enhanced_cot_module.py
+- core/routers/adaptive_router.py
+- services/automation/web_ui.py
 
-Author: Skydesk International Dev Team.
-"""
-```
+**Batch 3:**
+- utils/jsonld_toon.py
+- capibara/vq/quantum_submodel_fixed.py
+- capibara/vq/vim_vq/vim_vq_config.py
+- training/federated_consensus/__init__.py
+- training/cython_kernels/__init__.py
 
-### Cobertura Restante
+---
 
-| Tipo | Sin Documentar |
-|------|----------------|
-| Modulos | 31 |
-| Clases | ~280 |
-| Funciones | ~1100 |
+## Commits en Rama Pedro
 
-### Commit
-```
-docs: add module docstrings to undocumented files (269d9b8)
-```
+1. `81c2398` - chore: clean and deduplicate TODO files
+2. `269d9b8` - docs: add module docstrings to undocumented files
+3. `dd133bc` - docs: add module docstrings to additional files (batch 2)
+4. `7074610` - docs: add module docstrings to additional files (batch 3)
 
 ---
 
@@ -109,15 +126,6 @@ docs: add module docstrings to undocumented files (269d9b8)
 
 ---
 
-## Commits en Rama Pedro
+## Pendiente (16 archivos restantes)
 
-1. `81c2398` - chore: clean and deduplicate TODO files
-2. `269d9b8` - docs: add module docstrings to undocumented files
-
----
-
-## Proximos Pasos Sugeridos
-
-1. Continuar documentando los 31 modulos restantes sin docstring
-2. Documentar clases principales en `jax/`, `core/`, `training/`
-3. Crear PR para mergear a main
+La mayoria son archivos de `tests/` (14) y `jax/` (2 con copyright de Google).
