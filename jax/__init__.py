@@ -1,3 +1,23 @@
+"""
+JAX Shim Package - CapibaraGPT's JAX compatibility layer.
+
+This package provides a JAX compatibility layer for CapibaraGPT, offering
+seamless fallback to NumPy when JAX is not available. It wraps JAX/Flax
+functionality with CPU-safe defaults for development and testing.
+
+Key Components:
+    - jax: JAX module or NumPy fallback
+    - numpy: jax.numpy or NumPy fallback
+    - HAS_JAX: Boolean indicating JAX availability
+
+Features:
+    - Automatic JAX/NumPy fallback
+    - CPU-safe operation without TPU/GPU
+    - Minimal numpy fallback for systems without NumPy
+
+Author: Skydesk International Dev Team.
+"""
+
 import logging
 import sys
 from typing import Any

@@ -1,3 +1,15 @@
+"""
+JAX Version Module - Version management for JAX compatibility layer.
+
+This module provides version information and management for CapibaraGPT's
+JAX compatibility layer, following the JAX versioning conventions.
+
+Note: This file is based on JAX's version.py with modifications for
+CapibaraGPT's custom JAX shim. Original copyright applies.
+
+Author: Skydesk International Dev Team.
+"""
+
 # Copyright 2018 The JAX Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
