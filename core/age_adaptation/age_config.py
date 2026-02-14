@@ -1,3 +1,17 @@
+"""
+Age Adaptation Config - Hardware-specific configuration for model adaptation.
+
+This module provides configuration for hardware-specific adaptations,
+supporting TPU v4, ARM Axion, and CPU backends for CapibaraGPT models.
+
+Key Components:
+    - HardwareType: Enum for supported hardware types
+    - AgeAdaptationConfig: Configuration dataclass for adaptation settings
+    - DEFAULT_TPU_CONFIG: Pre-configured TPU settings
+
+Author: Skydesk International Dev Team.
+"""
+
 from dataclasses import dataclass
 from enum import Enum
 

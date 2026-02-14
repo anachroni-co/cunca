@@ -1,3 +1,24 @@
+"""
+Enhanced Chain-of-Thought Module - Advanced reasoning with self-verification.
+
+This module provides an enhanced Chain-of-Thought (CoT) reasoning system
+with meta-cognition, self-verification, and TPU kernel support. It implements
+step-by-step reasoning with confidence scoring and process rewards.
+
+Key Components:
+    - ReasoningConfig: Configuration for reasoning parameters
+    - EnhancedCoTModule: Main class for chain-of-thought reasoning
+
+Features:
+    - Multi-step reasoning with configurable depth
+    - Self-verification and meta-cognition
+    - Process reward modeling
+    - TPU kernel optimization
+    - Flash attention support
+
+Author: Skydesk International Dev Team.
+"""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
