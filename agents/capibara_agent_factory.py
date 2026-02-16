@@ -1,4 +1,25 @@
-## capibara/agents/capibara_agent_factory.py - Enhanced Factory Pattern Implementation
+"""
+Capibara Agent Factory - Enhanced Factory Pattern Implementation.
+
+This module provides factory classes for creating and configuring Capibara
+agents with various LLM providers, tools, and behaviors. It implements
+the Factory and Strategy design patterns for flexible agent instantiation.
+
+Key Components:
+    - BaseLLMProvider: Abstract base class for LLM providers
+    - OllamaProvider: Local Ollama LLM integration
+    - OpenAIProvider: OpenAI API integration
+    - AnthropicProvider: Anthropic Claude API integration
+    - CapibaraAgentFactory: Main factory for creating agents
+    - TPU v4-32 optimizations throughout
+
+Example:
+    >>> from agents.capibara_agent_factory import CapibaraAgentFactory
+    >>> factory = CapibaraAgentFactory()
+    >>> agent = factory.create_agent("assistant", {"provider": "ollama"})
+
+Author: Skydesk International Dev Team.
+"""
 
 import os
 import sys

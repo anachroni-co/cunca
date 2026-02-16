@@ -1,3 +1,12 @@
+"""
+Inference Attention Mask Tests - Unit tests for attention mask handling.
+
+This module provides tests for attention mask handling during inference,
+validating padding masks, causal masks, and attention computation.
+
+Author: Skydesk International Dev Team.
+"""
+
 from dataclasses import dataclass
 
 import pytest

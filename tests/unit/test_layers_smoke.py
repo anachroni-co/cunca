@@ -1,3 +1,12 @@
+"""
+Layers Smoke Tests - Basic functionality tests for layer modules.
+
+This module provides smoke tests for layer implementations, validating
+that layers can be initialized and perform forward passes correctly.
+
+Author: Skydesk International Dev Team.
+"""
+
 import pytest
 
 from layers import SelfAttention, SelfAttentionConfig

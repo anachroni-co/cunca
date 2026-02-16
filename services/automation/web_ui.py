@@ -1,10 +1,23 @@
+"""
+Web UI for CapibaraGPT v3 N8N Automation Service.
+
+This module provides a user-friendly web interface for creating and
+managing automation workflows. Built with FastAPI, it allows users
+to create workflows using natural language without technical knowledge.
+
+Key Components:
+    - CapibaraAutomationWebUI: Main class for the web interface
+
+Features:
+    - Natural language workflow creation
+    - Workflow templates and presets
+    - Real-time execution monitoring
+    - Agent configuration interface
+
+Author: Skydesk International Dev Team.
+"""
+
 import sys
-"""
-Web UI for CapibaraGPT v3 N8N Automation Service
-
-# This module provides functionality for web_ui.
-"""
-
 import os
 
 import logging

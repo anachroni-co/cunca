@@ -1,3 +1,12 @@
+"""
+Observability Schema Tests - Unit tests for observability and monitoring schemas.
+
+This module provides tests for observability schemas, validating
+metrics collection, logging formats, and monitoring data structures.
+
+Author: Skydesk International Dev Team.
+"""
+
 from __future__ import annotations
 
 import asyncio

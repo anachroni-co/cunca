@@ -1,5 +1,25 @@
+"""
+Quantum Submodel (Fixed) - Trainable quantum-inspired neural submodel.
+
+This module provides a trainable quantum-inspired submodel for CapibaraGPT,
+implementing VQ-bit layers and quantum wrappers with JAX/Flax JIT safety.
+Supports manifold projection for geometric transformations.
+
+Key Components:
+    - QuantumSubmodelConfig: Configuration dataclass for submodel settings
+    - QuantumSubmodel: Main Flax module for quantum-inspired processing
+
+Features:
+    - Token embedding layer
+    - VQ-bit quantization layer
+    - Quantum wrapper for quantum-inspired operations
+    - Optional manifold projection
+
+Author: Skydesk International Dev Team.
+"""
+
 # ============================================================================
-# CapibaraHybrid – Quantum Submodel (TRAINABLE VERSION)
+# CapibaraHybrid - Quantum Submodel (TRAINABLE VERSION)
 # JAX / Flax / JIT safe
 # ============================================================================
 

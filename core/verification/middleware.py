@@ -1,3 +1,16 @@
+"""
+Verification Middleware - Pipeline integration for verification.
+
+This module provides middleware for integrating heuristic verification
+into any pipeline. It wraps functions with automatic verification
+of results using the Constitutional AI system.
+
+Key Components:
+    - VerificationMiddleware: Middleware class for pipeline integration
+
+Author: Skydesk International Dev Team.
+"""
+
 from __future__ import annotations
 
 from typing import Any, Dict, Callable

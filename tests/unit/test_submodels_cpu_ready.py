@@ -1,3 +1,13 @@
+"""
+Submodels CPU Ready Tests - Unit tests for CPU-ready submodel implementations.
+
+This module provides tests for verifying that submodels work correctly
+on CPU without requiring TPU/GPU hardware. Tests Mamba, Hybrid, and
+DeepDialog modules.
+
+Author: Skydesk International Dev Team.
+"""
+
 import asyncio
 import numpy as np
 

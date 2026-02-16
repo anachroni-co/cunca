@@ -1,3 +1,12 @@
+"""
+Submodels Import Tests - Unit tests for submodel module imports.
+
+This module provides tests for verifying that submodel modules can be
+imported and expose the expected availability flags.
+
+Author: Skydesk International Dev Team.
+"""
+
 import sub_models
 
 

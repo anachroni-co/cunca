@@ -1,3 +1,12 @@
+"""
+MoE Control API Tests - Unit tests for Mixture of Experts control interface.
+
+This module provides tests for the MoE Control API, validating expert
+detection, health monitoring, and layer management functionality.
+
+Author: Skydesk International Dev Team.
+"""
+
 import core.modular_model as modular_model
 from core.experts import MoEControlAPI
 

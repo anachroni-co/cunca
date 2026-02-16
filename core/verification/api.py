@@ -1,3 +1,16 @@
+"""
+Verification API - Unified API for text verification and correction.
+
+This module provides a unified API for verifying and correcting text
+using the Constitutional AI verification system. It integrates with
+the modular model infrastructure.
+
+Key Components:
+    - VerificationAPI: Main API class for verification operations
+
+Author: Skydesk International Dev Team.
+"""
+
 from __future__ import annotations
 
 from typing import Any, Dict

@@ -1,3 +1,12 @@
+"""
+Federated Consensus Smoke Tests - Integration tests for distributed consensus.
+
+This module provides smoke tests for the federated consensus system,
+testing multi-node coordination, fault tolerance, and consensus protocols.
+
+Author: Skydesk International Dev Team.
+"""
+
 import importlib.util
 from pathlib import Path
 import pytest
