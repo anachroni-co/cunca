@@ -19,7 +19,7 @@ import numpy as np
 try:
     import jax
     import jax.numpy as jnp
-    from capibara.jax import nn
+    from jax import nn
     JAX_AVAILABLE = True
 except Exception:
     JAX_AVAILABLE = False

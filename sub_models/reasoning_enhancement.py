@@ -17,8 +17,8 @@ import numpy as np
 JAX_AVAILABLE = False
 FLAX_AVAILABLE = False
 try:
-    from capibara.jax import jax
-    from capibara.jax import numpy as jnp
+    import jax
+    from jax import numpy as jnp
     from flax import linen as nn
     JAX_AVAILABLE = True
     FLAX_AVAILABLE = True

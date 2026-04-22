@@ -20,7 +20,7 @@ from typing import Dict, List, Optional, Any, Tuple, Union, Callable
 # JAX imports with fallbacks
 try:
     from flax import linen as nn
-    from capibara.jax import numpy as jnp
+    from jax import numpy as jnp
     from flax.training import train_state
 except ImportError:
     # Fallback implementations
@@ -1245,7 +1245,7 @@ import numpy as np
 from typing import Any, Dict, List, Optional, Tuple, Union, Callable
 from dataclasses import dataclass, field
 from collections import defaultdict, Counter
-from capibara.jax import numpy as jnp
+from jax import numpy as jnp
 try:
     import optax
 except ImportError:

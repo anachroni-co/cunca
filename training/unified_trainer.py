@@ -21,8 +21,8 @@ import optax
 import wandb
 from flax.training import train_state
 
-from capibara.jax import jax
-from capibara.jax import numpy as jnp
+import jax
+from jax import numpy as jnp
 
 # Import optimized modules
 from .training_config import ModelScale, TrainingConfigFactory, get_config_for_scale

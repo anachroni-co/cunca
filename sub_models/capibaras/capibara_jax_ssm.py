@@ -13,12 +13,12 @@ project_root = os.path.dirname(script_dir)
 if project_root not in sys.path:
     pass  # Using proper imports instead of sys.path manipulation
 
-from capibara.jax import jax
-from capibara.jax.numpy import jnp
+import jax
+import jax.numpy as jnp
 from flax import linen as nn
-from capibara.jax.sharding import PartitionSpec as P
-from capibara.jax.experimental.shard_map import shard_map
-from capibara.jax.experimental.mesh_utils import ng
+from jax.sharding import PartitionSpec as P
+from jax.experimental.shard_map import shard_map
+from jax.experimental.mesh_utils import ng
 from typing import Optional, Tuple, Dict, Any
 from functools import partial
 

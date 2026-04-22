@@ -32,26 +32,26 @@ if project_root not in sys.path:
     # Fixed: Using proper imports instead of sys.path manipulation
     pass
 
-from capibara.jax import jax
-from capibara.jax import numpy as jnp
-from capibara.jax.experimental import mesh_utils
-from capibara.jax.sharding import Mesh, PartitionSpec
+import jax
+from jax import numpy as jnp
+from jax.experimental import mesh_utils
+from jax.sharding import Mesh, PartitionSpec
 
 # tpu v4-32 imports
-from capibara.jax.tpu_v4.backend import (
+from capibara.jax_ext.tpu_v4.backend import (
     TpuV4LinalgOps,
     TpuV4SparseOps,
     TpuV4NeuralOps,
     TpuV4RandomOps,
     TpuV4PerformanceUtils,
 )
-from capibara.jax.tpu_v4.optimizations import (
+from capibara.jax_ext.tpu_v4.optimizations import (
     create_tpu_mesh,
     TpuMemoryMonitor,
     tpu_optimized_gemm,
     create_jitted_forward,
 )
-from capibara.jax.tpu_v4.profiling import (
+from capibara.jax_ext.tpu_v4.profiling import (
     TpuProfiler,
     _uniform_fallback_weights,
     _expert_weights_with_cache,

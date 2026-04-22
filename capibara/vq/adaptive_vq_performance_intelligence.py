@@ -48,7 +48,8 @@ logger = logging.getLogger(__name__)
 # JAX and ML libraries
 ML_LIBRARIES_AVAILABLE = True
 try:
-    from capibara.jax import jax, jnp
+    import jax
+    import jax.numpy as jnp
     import flax.linen as nn
     logger.info(" ML libraries available for Adaptive VQ Performance")
 except ImportError as e:

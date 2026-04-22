@@ -22,7 +22,8 @@ logger = logging.getLogger(__name__)
 
 # JAX imports with fallbacks
 try:
-    from capibara.jax import jax, numpy as jnp
+    import jax
+    import jax.numpy as jnp
     JAX_AVAILABLE = True
     logger.info("JAX available for TPU optimizations")
 except ImportError:

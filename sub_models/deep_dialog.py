@@ -10,8 +10,8 @@ import numpy as np
 # Optional JAX/Flax
 try:
     from flax import linen as nn
-    from capibara.jax import jax
-    from capibara.jax.numpy import jnp
+    import jax
+    import jax.numpy as jnp
     JAX_AVAILABLE = True
 except Exception:
     nn = None  # type: ignore

@@ -12,8 +12,8 @@ project_root = os.path.dirname(script_dir)
 if project_root not in sys.path:
     pass  # Using proper imports instead of sys.path manipulation
 
-from capibara.jax import jax  # type: ignore
-from capibara.jax import numpy as jnp  # type: ignore
+import jax
+from jax import numpy as jnp  # type: ignore
 from flax import linen as nn  # type: ignore
 import logging
 from typing import NamedTuple, Tuple, Optional, Dict, Any, Union

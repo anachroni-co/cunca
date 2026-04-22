@@ -14,8 +14,8 @@ from typing import Any, Dict, List, Optional, Union
 
 # JAX imports with proper error handling
 try:
-    from capibara.jax import nn
-    from capibara.jax import numpy as jnp
+    from jax import nn
+    from jax import numpy as jnp
     import jax  # noqa: F401
     JAX_AVAILABLE = True
 except ImportError as e:

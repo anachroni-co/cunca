@@ -22,8 +22,7 @@ example de uso:
 
 import os
 import sys
-from capibara.jax import jax
-
+import jax
 import logging
 logger = logging.getLogger(__name__)
 
@@ -36,7 +35,7 @@ if project_root not in sys.path:
     pass  # Using proper imports instead of sys.path manipulation
 
 from flax import linen as nn
-from capibara.jax.numpy import jnp
+import jax.numpy as jnp
 from flax.core import freeze, unfreeze
 from capibara.interfaces.isub_models import ISubModel
 from typing import Dict, Any, Optional, Tuple, Set, Callable
@@ -247,8 +246,8 @@ class SemioModule(nn.Module, ISubModel):
 
 # Full usage example
 if __name__ == "__main__":
-    from capibara.jax import jax
-    from capibara.jax import numpy as jnp
+    import jax
+    from jax import numpy as jnp
     logging.basicConfig(level=logging.INFO)
     model = SemioModule(
         hidden_size=256,

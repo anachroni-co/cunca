@@ -49,7 +49,8 @@ except ImportError:
 
 # JAX imports with fallbacks
 try:
-    from capibara.jax import jax, numpy as jnp
+    import jax
+    import jax.numpy as jnp
     JAX_AVAILABLE = True
 except ImportError:
     logger.warning("JAX not available - using NumPy fallbacks")

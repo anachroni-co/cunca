@@ -121,7 +121,7 @@ class TPUv4Backend(KernelBackendInterface):
         try:
             # Try to import and configure TPU v4
             from capibara.core.kernels import TPUv4Kernels
-            from capibara.jax.tpu_v4.backend import tpu_v4_ops
+            from capibara.jax_ext.tpu_v4.backend import tpu_v4_ops
             import jax
             import jax.numpy as jnp
             

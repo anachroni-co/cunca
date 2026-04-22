@@ -2,7 +2,7 @@
 
 from typing import Dict, Tuple
 import numpy as np
-from capibara.jax import numpy as jnp
+from jax import numpy as jnp
 
 try:
     from core.decorators import profile_execution

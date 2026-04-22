@@ -25,11 +25,10 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 import jax
 from flax import linen as nn
 
-from capibara.jax.numpy import jnp
-# Local imports
+import jax.numpy as jnp
 from capibara.core.kernels import tpu_kernel
 from flax.linen.partitioning import param_with_axes
-from capibara.jax.sharding import PartitionSpec as P
+from jax.sharding import PartitionSpec as P
 
 # Setup paths
 script_dir = os.path.dirname(os.path.abspath(__file__))

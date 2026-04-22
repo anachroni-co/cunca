@@ -26,8 +26,8 @@ Author: Skydesk International Dev Team.
 import chex
 import flax.linen as nn
 from flax import struct
-from capibara.jax import jax
-from capibara.jax import numpy as jnp
+import jax
+from jax import numpy as jnp
 from typing import Dict, Tuple, Any
 
 # ============================================================================

@@ -26,8 +26,9 @@ logger = logging.getLogger(__name__)
 
 # JAX/Flax imports with fallbacks
 try:
-    from capibara.jax import jax, numpy as jnp
-    from capibara.jax import nn as jnn
+    import jax
+    import jax.numpy as jnp
+    from jax import nn as jnn
     JAX_AVAILABLE = True
     
     # Try to import Flax

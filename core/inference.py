@@ -47,7 +47,7 @@ except ImportError:
     toml = None  # type: ignore
 
 try:
-    from capibara.jax import devices as _jax_devices
+    from jax import devices as _jax_devices
 except Exception:
     try:
         from jax import devices as _jax_devices  # type: ignore

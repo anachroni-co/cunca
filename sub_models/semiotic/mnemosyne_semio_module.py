@@ -25,7 +25,7 @@ import logging
 import numpy as np
 from flax import linen as nn
 from functools import lru_cache
-from capibara.jax.numpy import jnp
+import jax.numpy as jnp
 from flax.training import train_state
 try:
     from transformers import FlaxBlipProcessor

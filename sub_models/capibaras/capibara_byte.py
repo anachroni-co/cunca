@@ -14,8 +14,8 @@ if project_root not in sys.path:
     # Fixed: Using proper imports instead of sys.path manipulation
     pass
 
-from capibara.jax import jax
-from capibara.jax.numpy import jnp
+import jax
+import jax.numpy as jnp
 from flax import linen as nn
 from typing import Dict, Any, Optional, List
 from dataclasses import dataclass, field

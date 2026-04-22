@@ -20,9 +20,9 @@ try:
     JAX_AVAILABLE = True
 except ImportError:
     # Fall back to capibara.jax
-    from capibara.jax import numpy as jnp
-    from capibara.jax import nn, random
-    from capibara.jax.sharding import PartitionSpec as P
+    from jax import numpy as jnp
+    from jax import nn, random
+    from jax.sharding import PartitionSpec as P
     JAX_AVAILABLE = False
     jax = None
 
