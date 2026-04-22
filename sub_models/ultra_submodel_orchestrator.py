@@ -29,10 +29,10 @@ project_root = os.path.dirname(script_dir)
 if project_root not in sys.path:
     pass  # Using proper imports instead of sys.path manipulation
 
-from capibara.jax import jax
+import jax
 from flax import linen as nn
 from functools import partial
-from capibara.jax import numpy as jnp
+from jax import numpy as jnp
 
 # Safe imports for ultra systems integration
 try:

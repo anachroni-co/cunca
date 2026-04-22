@@ -17,10 +17,10 @@ if project_root not in sys.path:
     # Fixed: Using proper imports instead of sys.path manipulation
     pass
 
-from capibara.jax import ng
+from jax import ng
 from flax import linen as nn
 from functools import partial
-from capibara.jax import numpy as jnp
+from jax import numpy as jnp
 from typing import Dict, Any, Optional, Tuple
 from capibara.layers.base import BaseLayer, LayerConfig
 

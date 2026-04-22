@@ -2,9 +2,9 @@
 from typing import (Any, Callable, Dict, List, Optional, Protocol, Sequence, 
                    Tuple, TypeVar, Union, runtime_checkable)
 import numpy as np
-from capibara.jax import jax
-from capibara.jax.numpy import Array
-from capibara.jax.random import PRNGKey
+import jax
+from jax.numpy import Array
+from jax.random import PRNGKey
 
 T = TypeVar('T')
 Shape = Tuple[int, ...]

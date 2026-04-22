@@ -12,8 +12,8 @@ import logging
 from dataclasses import dataclass, field
 from typing import Any, Dict, Iterable, Optional, Sequence, Tuple
 
-from capibara.jax import devices, local_devices
-from capibara.jax.sharding import Mesh, PartitionSpec as P
+from jax import devices, local_devices
+from jax.sharding import Mesh, PartitionSpec as P
 
 logger = logging.getLogger(__name__)
 

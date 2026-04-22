@@ -11,7 +11,7 @@ import time
 import logging
 from pathlib import Path
 
-from capibara.jax import numpy as jnp
+from jax import numpy as jnp
 from capibara.core.memory_monitors import CoreIntegratedMemoryMonitor
 from capibara.core.metrics import MetricsCollector
 

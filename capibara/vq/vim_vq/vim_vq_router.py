@@ -3,8 +3,8 @@
 from typing import Dict, Optional, Union, List
 import numpy as np
 
-from capibara.jax import numpy as jnp
-from capibara.jax import random
+from jax import numpy as jnp
+from jax import random
 from capibara.core.routers.base import BaseRouter
 from capibara.core.router import EnhancedRouter
 

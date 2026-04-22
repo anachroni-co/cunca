@@ -51,7 +51,7 @@ except ImportError as e:
 try:
     import jax
     import jax.numpy as jnp
-    from capibara.jax import nn
+    from jax import nn
     JAX_AVAILABLE = True
 except ImportError as e:
     logging.debug(f"JAX not available: {e}")

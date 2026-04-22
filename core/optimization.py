@@ -111,7 +111,7 @@ class CapibaraStruct:
 
             # Register as PyTree with JAX if available
             try:
-                from capibara.jax import jax
+                import jax
                 if hasattr(jax, 'tree_util'):
                     def _flatten(obj):
                         """Flatten struct to (children, aux_data)."""
@@ -178,11 +178,11 @@ try:
 except ImportError:
     optax = None
 try:
-    from capibara.jax import ng
+    from jax import ng
 except ImportError:
     ng = None
-from capibara.jax import jax
-from capibara.jax import numpy as jnp
+import jax
+from jax import numpy as jnp
 try:
     from flax.training import train_state
 except ImportError:
@@ -203,7 +203,7 @@ except ImportError:
     class _WandbFallback:
         run = None
     wandb = _WandbFallback()
-from capibara.jax.sharding import Mesh, PartitionSpec
+from jax.sharding import Mesh, PartitionSpec
 
 # Define TrainingState fallback if not available
 if train_state is None:

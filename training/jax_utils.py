@@ -15,11 +15,11 @@ optax = None
 
 # Try JAX first
 try:
-    import capibara.jax as jax
-    import capibara.jax.numpy as jnp
-    from capibara.jax import random, grad, jit, vmap
-    from capibara.jax.nn import softmax, relu, sigmoid
-    from capibara.jax.tree_util import tree_map
+    import jax as jax
+    import jax.numpy as jnp
+    from jax import random, grad, jit, vmap
+    from jax.nn import softmax, relu, sigmoid
+    from jax.tree_util import tree_map
     import optax
     np = jnp
     JAX_AVAILABLE = True

@@ -16,7 +16,7 @@ from __future__ import annotations
 from typing import Any, Dict
 
 try:
-    from capibara.jax.numpy import jnp  # type: ignore
+    import jax.numpy as jnp
 except Exception:
     try:
         import numpy as jnp  # type: ignore

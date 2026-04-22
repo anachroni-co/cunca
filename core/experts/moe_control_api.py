@@ -13,7 +13,7 @@ from dataclasses import dataclass
 
 # JAX imports with fallbacks
 try:
-    from capibara.jax import numpy as jnp
+    from jax import numpy as jnp
 except ImportError:
     import numpy as jnp
 

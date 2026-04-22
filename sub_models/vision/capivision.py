@@ -16,13 +16,13 @@ if project_root not in sys.path:
 
 import logging
 import dataclasses #type: ignore
-from capibara.jax import jax #type: ignore
+import jax
 from flax import linen as nn #type: ignore
-from capibara.jax import numpy as jnp #type: ignore
+from jax import numpy as jnp #type: ignore
 from typing import Dict, Any, Optional, TypedDict #type: ignore
 
 try:
-    from capibara.jax.experimental import debugger #type: ignore
+    from jax.experimental import debugger #type: ignore
 except ImportError:
     class debugger:
         @staticmethod

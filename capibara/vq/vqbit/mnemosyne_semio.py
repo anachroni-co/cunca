@@ -12,7 +12,7 @@ from __future__ import annotations
 import os
 import functools
 import langdetect
-from capibara.jax.numpy import jnp
+import jax.numpy as jnp
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Set, Tuple
 

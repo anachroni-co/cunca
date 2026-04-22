@@ -31,7 +31,7 @@ import time
 
 try:
     # Prefer the project's JAX shim
-    from capibara.jax.numpy import jnp  # type: ignore
+    import jax.numpy as jnp
     JAX_AVAILABLE = True
 except Exception:
     try:

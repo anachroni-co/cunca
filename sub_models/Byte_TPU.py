@@ -18,8 +18,8 @@ project_root = os.path.dirname(script_dir)
 if project_root not in sys.path:
     sys.path.append(project_root)
 
-from capibara.jax import jax
-from capibara.jax.numpy import jnp
+import jax
+import jax.numpy as jnp
 from flax import linen as nn
 from dataclasses import dataclass
 from typing import Tuple, Callable, Optional, Dict, Any, Union

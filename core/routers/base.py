@@ -11,21 +11,21 @@ from dataclasses import dataclass
 from abc import ABC, abstractmethod
 from typing import Optional, Dict, Any, Protocol, runtime_checkable, List, Tuple
 
-from capibara.jax import nn
-from capibara.jax import numpy as jnp
+from jax import nn
+from jax import numpy as jnp
 
 from capibara.utils.monitoring import MemoryMonitor
 from capibara.core.config import RouterConfig, ModularModelConfig
 
 # Direct imports of native implementations
 try:
-    from capibara.jax.tpu_v4.backend import (
+    from capibara.jax_ext.tpu_v4.backend import (
         TpuV4LinalgOps,
         TpuV4SparseOps,
         TpuV4NeuralOps,
         TPU_V4_AVAILABLE,
     )   
-    from capibara.jax.tpu_v4.optimizations import tpu_optimized_gemm
+    from capibara.jax_ext.tpu_v4.optimizations import tpu_optimized_gemm
     NATIVE_TPU_AVAILABLE = True
 except ImportError:
     NATIVE_TPU_AVAILABLE = False

@@ -18,8 +18,8 @@ logger = logging.getLogger(__name__)
 
 # Import native JAX infrastructure
 try:
-    import capibara.jax as cjax
-    import capibara.jax.numpy as cjnp
+    import jax as cjax
+    import jax.numpy as cjnp
     CAPIBARA_JAX_AVAILABLE = True
     logger.info("Capibara JAX infrastructure available")
 except ImportError:
@@ -95,7 +95,7 @@ class VQbitNativeIntegration:
         if CAPIBARA_JAX_AVAILABLE:
             try:
                 # Try to access TPU backend (with safe import)
-                from capibara.jax.tpu_v4.backend import TpuV4AdaptiveOps
+                from capibara.jax_ext.tpu_v4.backend import TpuV4AdaptiveOps
                 backends['tpu_v4_kernels'] = True
             except (ImportError, AttributeError, TypeError) as e:
                 logger.debug(f"TPU v4 kernels not available: {e}")
@@ -161,7 +161,7 @@ class VQbitNativeIntegration:
         """Creates VQbit layer using Capibara JAX with TPU kernels."""
         
         try:
-            from capibara.jax.tpu_v4.backend import TpuV4AdaptiveOps
+            from capibara.jax_ext.tpu_v4.backend import TpuV4AdaptiveOps
             
             # Create TPU-optimized VQbit wrapper
             class CapibaraJAXTPUVQbit:
@@ -672,7 +672,7 @@ def integrate_with_tpu_backend():
     """Integrate VQbit with existing TPU backend."""
     
     try:
-        from capibara.jax.tpu_v4.backend import TpuV4AdaptiveOps
+        from capibara.jax_ext.tpu_v4.backend import TpuV4AdaptiveOps
         
         # Enhance TPU backend with native VQbit
         original_vqbit_quantize = TpuV4AdaptiveOps.vqbit_quantize

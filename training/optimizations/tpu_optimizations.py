@@ -18,8 +18,8 @@ try:
     import toml  # type: ignore
     import optax  # type: ignore
     from flax.training import train_state  # type: ignore
-    from capibara.jax.sharding import PartitionSpec as P  # type: ignore
-    from capibara.jax.experimental import mesh_utils, shard_map  # type: ignore
+    from jax.sharding import PartitionSpec as P  # type: ignore
+    from jax.experimental import mesh_utils, shard_map  # type: ignore
 except ImportError:
     # Fallbacks if dependencies are missing
     train_state = None

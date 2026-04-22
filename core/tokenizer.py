@@ -92,7 +92,7 @@ except ImportError:
 
 # Use project's jax.numpy with internal fallback (no numpy dependency)
 try:
-    from capibara.jax import numpy as jnp  # Project native
+    from jax import numpy as jnp  # Project native
 except Exception:  # pragma: no cover
     class _MiniNumpy:
         """Minimal numpy-like interface for fallback when JAX is unavailable."""

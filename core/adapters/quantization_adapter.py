@@ -101,7 +101,7 @@ class VQbitQuantizationMethod(QuantizationMethod):
         """Calibrates VQ codebooks."""
         try:
             # Import VQbit from project
-            from capibara.jax.tpu_v4.backend import tpu_v4_ops
+            from capibara.jax_ext.tpu_v4.backend import tpu_v4_ops
             
             # Use calibration data to train codebooks
             if hasattr(calibration_data, 'shape') and len(calibration_data.shape) >= 2:
@@ -132,7 +132,7 @@ class VQbitQuantizationMethod(QuantizationMethod):
                 self.calibrate(data)
             
             # Import and use VQbit
-            from capibara.jax.tpu_v4.backend import tpu_v4_ops
+            from capibara.jax_ext.tpu_v4.backend import tpu_v4_ops
             
             original_size = self._calculate_size(data)
             

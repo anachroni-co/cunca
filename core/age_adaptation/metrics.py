@@ -7,9 +7,9 @@ from functools import partial
 from typing import Dict, List, Optional, Tuple, Any
 
 try:
-    import capibara.jax as cjax
-    import capibara.jax.numpy as jnp
-    from capibara.jax import jit, vmap
+    import jax as cjax
+    import jax.numpy as jnp
+    from jax import jit, vmap
     ADVANCED_METRICS_AVAILABLE = bool(getattr(cjax, "HAS_JAX", False))
 except Exception:
     ADVANCED_METRICS_AVAILABLE = False

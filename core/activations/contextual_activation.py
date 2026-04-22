@@ -11,7 +11,7 @@ import logging
 from dataclasses import dataclass
 from typing import Any, Callable, Optional
 
-from capibara.jax import numpy as jnp
+from jax import numpy as jnp
 
 logger = logging.getLogger(__name__)
 

@@ -125,7 +125,7 @@ class TestMoELatency:
         """Import MoE modules, skip test if unavailable."""
         try:
             from core.moe.dynamic_moe import MoEConfig, DynamicRouter, DynamicMoELayer
-            from capibara.jax import numpy as jnp
+            from jax import numpy as jnp
             from layers.jax_compat import JAX_AVAILABLE
             if not JAX_AVAILABLE:
                 pytest.skip("MoE modules require JAX/Flax")
@@ -268,7 +268,7 @@ class TestVQLatency:
     def test_vqbit_encode(self, backend, benchmark):
         """VQbit encode: batch=32, dim=64."""
         try:
-            from capibara.jax import numpy as jnp
+            from jax import numpy as jnp
             from capibara.vq.vqbit_layer import VQbitLayer, VQbitConfig
         except ImportError:
             pytest.skip("VQ modules not available")

@@ -37,8 +37,8 @@ def test_deep_dialog_cpu_ready():
     config = DeepDialogConfig(hidden_size=8, num_layers=2, num_heads=2)
 
     if JAX_AVAILABLE:
-        from capibara.jax import jax
-        from capibara.jax.numpy import jnp
+        import jax
+        import jax.numpy as jnp
         model = DeepDialog(config)
         params = model.init(jax.random.PRNGKey(0), jnp.asarray(x))
         y = model.apply(params, jnp.asarray(x))
