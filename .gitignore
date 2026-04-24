@@ -56,7 +56,8 @@ training/cython_kernels/*.c
 
 # Generated files
 _version.py
-.github/
+# .github/ was previously ignored which silently dropped workflows,
+# dependabot config and issue templates. Tracked again.
 # Benchmark outputs
 benchmark_results/
 
