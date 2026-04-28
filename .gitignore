@@ -63,5 +63,6 @@ benchmark_results/
 
 # pytest coverage data
 .coverage
+.coverage.*
 htmlcov/
 
