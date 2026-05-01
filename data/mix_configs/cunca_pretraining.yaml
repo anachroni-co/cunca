@@ -1,0 +1,46 @@
+# CUNCA-Hybrid — Corpus pretraining mix
+#
+# Phase designed for the CUNCA-Hybrid model per Memoria Técnica (Anexo VIII):
+#   Galician   60% — primary target language; CorpusNÓS + CulturaX
+#   Portuguese 40% — typologically closest language; enables cross-lingual transfer
+#
+# Rationale:
+#   - Galician has ~11B available tokens (vs 300B+ English) — weight boosted
+#   - Portuguese provides strong transfer signal and reduces catastrophic forgetting
+#   - Spanish excluded at this stage to force gl/pt alignment rather than es shortcuts
+#
+# Data preparation:
+#   python -m data.download get corpusnos    --output data/raw
+#   python -m data.download get culturax-gl  --output data/raw
+#   python -m data.download get gigaverbo    --output data/raw
+#   python -m data.download get brwac        --output data/raw
+#
+#   python -m data.cunca_corpus process data/raw/gl --output data/processed/cunca_gl --lang gl
+#   python -m data.cunca_corpus process data/raw/pt --output data/processed/cunca_pt --lang pt
+#
+# Then merge and split:
+#   python -m data.preprocess split data/processed/cunca_gl/merged.txt --output-dir data/processed/gl
+#   python -m data.preprocess split data/processed/cunca_pt/merged.txt --output-dir data/processed/pt
+#
+# Typical run:
+#   python -m training.train --preset 1.3b \
+#       --mix data/mix_configs/cunca_pretraining.yaml \
+#       --output checkpoints/cunca_base \
+#       --lr 3e-4 \
+#       --max-steps 50000
+
+name: cunca_pretraining
+description: "CUNCA Phase 1 — Galician-Portuguese base pretraining (gl 60% / pt 40%)"
+seed: 42
+epoch_size: 0    # 0 = auto
+
+sources:
+  - path: data/processed/gl/train.txt
+    lang: gl
+    weight: 0.60
+    name: "CUNCA Galician (CorpusNÓS + CulturaX)"
+
+  - path: data/processed/pt/train.txt
+    lang: pt
+    weight: 0.40
+    name: "CUNCA Portuguese (GigaVerbo + BrWaC)"
