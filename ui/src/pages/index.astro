@@ -1,0 +1,203 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Chat">
+  <div class="max-w-4xl mx-auto flex flex-col h-[calc(100vh-3.5rem-2.5rem)]">
+
+    <!-- Messages area -->
+    <div id="messages" class="flex-1 overflow-y-auto px-4 py-6 space-y-6">
+      <!-- Welcome message -->
+      <div class="flex gap-3 animate-fade-in">
+        <div class="w-8 h-8 rounded-full bg-cunca-600 flex-shrink-0 flex items-center justify-center text-xs font-bold">C</div>
+        <div class="bg-surface-800 rounded-2xl rounded-tl-sm px-4 py-3 max-w-2xl">
+          <p class="text-slate-200">Ola! Son <strong class="text-cunca-400">CUNCA-Hybrid</strong>, un modelo de linguaxe con foco no galego e nas linguas romances. Como podo axudarche?</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings bar -->
+    <div class="px-4 pb-2 flex items-center gap-3 text-xs text-slate-500">
+      <span>temp</span>
+      <input id="temperature" type="range" min="0" max="2" step="0.1" value="0.7"
+             class="w-20 accent-cunca-500" />
+      <span id="temp-val" class="w-6 text-slate-400">0.7</span>
+      <span class="ml-2">tokens</span>
+      <input id="max-tokens" type="number" min="16" max="2048" value="256"
+             class="w-16 bg-surface-700 border border-surface-600 rounded px-2 py-0.5 text-slate-300 text-xs focus:outline-none focus:border-cunca-500" />
+      <span class="ml-2">streaming</span>
+      <input id="stream-toggle" type="checkbox" checked class="accent-cunca-500" />
+      <span id="token-count" class="ml-auto text-slate-600"></span>
+    </div>
+
+    <!-- Input area -->
+    <div class="px-4 pb-4">
+      <div class="flex gap-3 bg-surface-700 border border-surface-600 rounded-xl p-2 focus-within:border-cunca-500 transition-colors">
+        <textarea
+          id="input"
+          rows="1"
+          placeholder="Escribe a túa mensaxe… (Enter para enviar, Shift+Enter para nova liña)"
+          class="flex-1 bg-transparent text-slate-100 placeholder-slate-500 resize-none focus:outline-none text-sm leading-6 max-h-48 overflow-y-auto"
+        ></textarea>
+        <button id="send-btn" class="btn-primary self-end px-5">
+          <span id="send-label">Enviar</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</BaseLayout>
+
+<script>
+  const API   = (import.meta.env.PUBLIC_API_URL ?? 'http://localhost:8000').replace(/\/$/, '');
+  const API_KEY = import.meta.env.PUBLIC_API_KEY ?? '';
+
+  const messagesEl  = document.getElementById('messages')!;
+  const inputEl     = document.getElementById('input') as HTMLTextAreaElement;
+  const sendBtn     = document.getElementById('send-btn') as HTMLButtonElement;
+  const sendLabel   = document.getElementById('send-label')!;
+  const tempSlider  = document.getElementById('temperature') as HTMLInputElement;
+  const tempVal     = document.getElementById('temp-val')!;
+  const maxTokensEl = document.getElementById('max-tokens') as HTMLInputElement;
+  const streamToggle= document.getElementById('stream-toggle') as HTMLInputElement;
+  const tokenCount  = document.getElementById('token-count')!;
+
+  let abortCtrl: AbortController | null = null;
+  let totalTokens = 0;
+
+  // Auto-grow textarea
+  inputEl.addEventListener('input', () => {
+    inputEl.style.height = 'auto';
+    inputEl.style.height = Math.min(inputEl.scrollHeight, 192) + 'px';
+  });
+
+  tempSlider.addEventListener('input', () => { tempVal.textContent = tempSlider.value; });
+
+  function scrollBottom() {
+    messagesEl.scrollTo({ top: messagesEl.scrollHeight, behavior: 'smooth' });
+  }
+
+  function addMessage(role: 'user' | 'assistant', text: string): HTMLElement {
+    const row = document.createElement('div');
+    row.className = 'flex gap-3 animate-fade-in' + (role === 'user' ? ' flex-row-reverse' : '');
+
+    const avatar = document.createElement('div');
+    avatar.className = `w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold
+      ${role === 'user' ? 'bg-slate-600' : 'bg-cunca-600'}`;
+    avatar.textContent = role === 'user' ? 'U' : 'C';
+
+    const bubble = document.createElement('div');
+    bubble.className = `px-4 py-3 max-w-2xl rounded-2xl whitespace-pre-wrap text-sm leading-relaxed
+      ${role === 'user'
+        ? 'bg-cunca-700 text-white rounded-tr-sm'
+        : 'bg-surface-800 text-slate-200 rounded-tl-sm'}`;
+    bubble.textContent = text;
+
+    row.appendChild(avatar);
+    row.appendChild(bubble);
+    messagesEl.appendChild(row);
+    scrollBottom();
+    return bubble;
+  }
+
+  function setLoading(loading: boolean) {
+    sendBtn.disabled = loading;
+    sendLabel.textContent = loading ? 'Deter' : 'Enviar';
+    if (!loading && abortCtrl) { abortCtrl.abort(); abortCtrl = null; }
+  }
+
+  async function sendMessage() {
+    const text = inputEl.value.trim();
+    if (!text) return;
+
+    // If already loading, abort
+    if (abortCtrl) { abortCtrl.abort(); abortCtrl = null; setLoading(false); return; }
+
+    addMessage('user', text);
+    inputEl.value = '';
+    inputEl.style.height = 'auto';
+    setLoading(true);
+    abortCtrl = new AbortController();
+
+    const bubble = addMessage('assistant', '');
+    const cursor = document.createElement('span');
+    cursor.className = 'inline-block w-1.5 h-4 bg-cunca-400 animate-blink ml-0.5 align-middle';
+    bubble.appendChild(cursor);
+
+    const req = {
+      input: text,
+      max_tokens: parseInt(maxTokensEl.value) || 256,
+      temperature: parseFloat(tempSlider.value) || 0.7,
+    };
+    const hdrs: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (API_KEY) hdrs['Authorization'] = `Bearer ${API_KEY}`;
+
+    try {
+      if (streamToggle.checked) {
+        const res = await fetch(`${API}/generate/stream`, {
+          method: 'POST', headers: hdrs, body: JSON.stringify(req),
+          signal: abortCtrl.signal,
+        });
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+
+        const reader = res.body!.getReader();
+        const dec = new TextDecoder();
+        let buf = '';
+        let tokensReceived = 0;
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buf += dec.decode(value, { stream: true });
+          const parts = buf.split('\n\n');
+          buf = parts.pop() ?? '';
+          for (const part of parts) {
+            const line = part.trim();
+            if (!line.startsWith('data:')) continue;
+            const data = line.slice(5).trim();
+            if (data === '[DONE]') break;
+            try {
+              const obj = JSON.parse(data);
+              if (obj.token) {
+                cursor.remove();
+                bubble.textContent += obj.token;
+                bubble.appendChild(cursor);
+                tokensReceived++;
+                scrollBottom();
+              }
+            } catch { /* ignore */ }
+          }
+        }
+        totalTokens += tokensReceived;
+        tokenCount.textContent = `${totalTokens} tokens`;
+      } else {
+        const res = await fetch(`${API}/generate`, {
+          method: 'POST', headers: hdrs, body: JSON.stringify(req),
+          signal: abortCtrl.signal,
+        });
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+        const data = await res.json();
+        bubble.textContent = data.output;
+        totalTokens += data.tokens_used ?? 0;
+        tokenCount.textContent = `${totalTokens} tokens`;
+      }
+    } catch (err: any) {
+      if (err?.name === 'AbortError') {
+        cursor.remove();
+        bubble.textContent += ' [interrompido]';
+      } else {
+        bubble.textContent = `Erro: ${err?.message ?? err}`;
+        bubble.classList.add('text-red-400');
+      }
+    } finally {
+      cursor.remove();
+      abortCtrl = null;
+      setLoading(false);
+      scrollBottom();
+    }
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+  inputEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
+</script>

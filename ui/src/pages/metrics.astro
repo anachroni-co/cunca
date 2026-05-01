@@ -1,0 +1,172 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Métricas">
+<div class="max-w-5xl mx-auto px-4 py-10 space-y-8">
+
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-100">Métricas do Sistema</h1>
+      <p class="text-slate-400 text-sm mt-1">Estado en tempo real do servidor CUNCA-Hybrid. Actualización automática cada 10 s.</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <span id="refresh-label" class="text-xs text-slate-500">Auto-refresh activo</span>
+      <button id="refresh-btn" class="px-3 py-1.5 text-xs border border-surface-600 rounded-lg text-slate-400 hover:text-slate-200 transition-colors">Actualizar agora</button>
+    </div>
+  </div>
+
+  <!-- Health -->
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="card space-y-1">
+      <p class="text-xs text-slate-500 uppercase tracking-wide">Estado</p>
+      <div class="flex items-center gap-2">
+        <span id="health-dot" class="w-3 h-3 rounded-full bg-slate-600"></span>
+        <span id="health-text" class="text-lg font-semibold text-slate-300">—</span>
+      </div>
+    </div>
+    <div class="card space-y-1">
+      <p class="text-xs text-slate-500 uppercase tracking-wide">Backend</p>
+      <p id="metric-backend" class="text-lg font-semibold text-slate-200">—</p>
+    </div>
+    <div class="card space-y-1">
+      <p class="text-xs text-slate-500 uppercase tracking-wide">Solicitudes totais</p>
+      <p id="metric-requests" class="text-lg font-semibold text-slate-200">—</p>
+    </div>
+    <div class="card space-y-1">
+      <p class="text-xs text-slate-500 uppercase tracking-wide">Erros totais</p>
+      <p id="metric-errors" class="text-lg font-semibold text-slate-200">—</p>
+    </div>
+  </div>
+
+  <!-- Performance -->
+  <div class="grid sm:grid-cols-3 gap-4">
+    <div class="card space-y-1">
+      <p class="text-xs text-slate-500 uppercase tracking-wide">Tokens xerados</p>
+      <p id="metric-tokens" class="text-2xl font-bold text-cunca-400">—</p>
+    </div>
+    <div class="card space-y-1">
+      <p class="text-xs text-slate-500 uppercase tracking-wide">Latencia media</p>
+      <p id="metric-latency" class="text-2xl font-bold text-slate-300">—</p>
+    </div>
+    <div class="card space-y-1">
+      <p class="text-xs text-slate-500 uppercase tracking-wide">Cache hits</p>
+      <p id="metric-cache" class="text-2xl font-bold text-slate-300">—</p>
+    </div>
+  </div>
+
+  <!-- Model info -->
+  <div class="card space-y-4">
+    <h2 class="font-semibold text-slate-200">Información do Modelo</h2>
+    <div id="model-info" class="grid sm:grid-cols-2 gap-x-8 gap-y-3 text-sm">
+      <div class="flex justify-between border-b border-surface-700 pb-2">
+        <span class="text-slate-400">Arquitectura</span>
+        <span id="info-arch" class="text-slate-200 font-mono">—</span>
+      </div>
+      <div class="flex justify-between border-b border-surface-700 pb-2">
+        <span class="text-slate-400">Parámetros</span>
+        <span id="info-params" class="text-slate-200 font-mono">—</span>
+      </div>
+      <div class="flex justify-between border-b border-surface-700 pb-2">
+        <span class="text-slate-400">Vocabulario</span>
+        <span id="info-vocab" class="text-slate-200 font-mono">—</span>
+      </div>
+      <div class="flex justify-between border-b border-surface-700 pb-2">
+        <span class="text-slate-400">Longitud máx. contexto</span>
+        <span id="info-ctx" class="text-slate-200 font-mono">—</span>
+      </div>
+      <div class="flex justify-between border-b border-surface-700 pb-2">
+        <span class="text-slate-400">Cabezas (Q / KV)</span>
+        <span id="info-heads" class="text-slate-200 font-mono">—</span>
+      </div>
+      <div class="flex justify-between border-b border-surface-700 pb-2">
+        <span class="text-slate-400">Ratio SSM</span>
+        <span id="info-ssm" class="text-slate-200 font-mono">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Raw JSON -->
+  <div class="card space-y-3">
+    <div class="flex items-center justify-between">
+      <h2 class="font-semibold text-slate-200">Resposta /metrics (JSON)</h2>
+      <button id="copy-json" class="text-xs text-slate-500 hover:text-slate-300 transition-colors">Copiar</button>
+    </div>
+    <pre id="raw-json" class="text-xs font-mono text-slate-400 bg-surface-900 rounded-lg p-4 overflow-x-auto max-h-64 whitespace-pre-wrap">Cargando…</pre>
+  </div>
+
+  <p id="last-updated" class="text-xs text-slate-600 text-right"></p>
+
+</div>
+</BaseLayout>
+
+<script>
+  const API = (import.meta.env.PUBLIC_API_URL ?? 'http://localhost:8000').replace(/\/$/, '');
+
+  function setText(id: string, val: string | number | null) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val === null || val === undefined ? '—' : String(val);
+  }
+
+  async function refresh() {
+    // Health
+    try {
+      const hRes = await fetch(`${API}/health`);
+      const hData = await hRes.json();
+      const ok = hData.status === 'ok';
+      const dot = document.getElementById('health-dot')!;
+      dot.className = `w-3 h-3 rounded-full ${ok ? 'bg-emerald-500' : 'bg-red-500'}`;
+      setText('health-text', hData.status ?? '—');
+      setText('metric-backend', hData.backend ?? '—');
+    } catch {
+      const dot = document.getElementById('health-dot')!;
+      dot.className = 'w-3 h-3 rounded-full bg-red-500';
+      setText('health-text', 'offline');
+    }
+
+    // Metrics
+    try {
+      const mRes = await fetch(`${API}/metrics`);
+      const mData = await mRes.json();
+
+      setText('metric-requests', mData.requests_total ?? mData.total_requests ?? '—');
+      setText('metric-errors',   mData.errors_total   ?? mData.total_errors   ?? '—');
+      setText('metric-tokens',   mData.tokens_generated ?? mData.total_tokens ?? '—');
+
+      const lat = mData.avg_latency_ms ?? mData.average_latency_ms;
+      setText('metric-latency', lat !== undefined ? `${Number(lat).toFixed(0)} ms` : '—');
+      setText('metric-cache', mData.cache_hits ?? '—');
+
+      // Model info from health or metrics
+      const mi = mData.model ?? {};
+      setText('info-arch',   mi.architecture ?? mData.architecture ?? 'CUNCA-Hybrid');
+      setText('info-params',  mi.parameters   ?? mData.parameters   ?? '—');
+      setText('info-vocab',   mi.vocab_size   ?? mData.vocab_size   ?? '32 000');
+      setText('info-ctx',     mi.max_seq_len  ?? mData.max_seq_len  ?? '2 048');
+      const nh = mi.num_heads ?? mData.num_heads;
+      const nkv = mi.num_kv_heads ?? mData.num_kv_heads;
+      setText('info-heads', nh !== undefined ? `${nh} / ${nkv ?? '—'}` : '—');
+      const ssm = mi.ssm_ratio ?? mData.ssm_ratio;
+      setText('info-ssm', ssm !== undefined ? `${(Number(ssm) * 100).toFixed(0)}%` : '—');
+
+      document.getElementById('raw-json')!.textContent = JSON.stringify(mData, null, 2);
+    } catch (e: any) {
+      document.getElementById('raw-json')!.textContent = `Erro: ${e.message}`;
+    }
+
+    const now = new Date();
+    setText('last-updated', `Última actualización: ${now.toLocaleTimeString('gl-ES')}`);
+  }
+
+  document.getElementById('refresh-btn')!.addEventListener('click', refresh);
+
+  document.getElementById('copy-json')!.addEventListener('click', () => {
+    const text = document.getElementById('raw-json')!.textContent ?? '';
+    navigator.clipboard?.writeText(text).catch(() => {});
+  });
+
+  refresh();
+  const timer = setInterval(refresh, 10_000);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) clearInterval(timer);
+  });
+</script>

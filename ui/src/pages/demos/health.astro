@@ -1,0 +1,121 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Saúde Dixital">
+<div class="max-w-4xl mx-auto px-4 py-10 space-y-8">
+
+  <div>
+    <a href="/demos" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">← Demos</a>
+    <h1 class="text-2xl font-bold text-slate-100 mt-2">Saúde Dixital</h1>
+    <p class="text-slate-400 text-sm mt-1">Asistente clínico on-premises para profesionais sanitarios. Os datos do/a paciente non se almacenan nin envían a servizos externos.</p>
+  </div>
+
+  <!-- Clinical summarise -->
+  <div class="card space-y-4">
+    <h2 class="font-semibold text-slate-200">Resumo de Nota Clínica</h2>
+    <div>
+      <label class="label" for="clinical-note">Nota clínica</label>
+      <textarea id="clinical-note" rows="6" class="input text-xs font-mono"
+        placeholder="Paciente de 65 anos con hipertensión arterial e diabetes tipo 2 controladas. Acude por control rutinario…"></textarea>
+    </div>
+    <div class="flex gap-3 items-end">
+      <div>
+        <label class="label" for="patient-id">ID paciente (anonimizado)</label>
+        <input id="patient-id" type="text" class="input w-36" placeholder="P-ANON-001" value="P-ANON-001" />
+      </div>
+      <button id="clinical-btn" class="btn-primary">Resumir Nota</button>
+    </div>
+    <div id="clinical-result" class="hidden space-y-3">
+      <div class="bg-surface-700 rounded-lg p-4 text-sm text-slate-200 leading-relaxed" id="clinical-summary"></div>
+      <p class="text-xs text-amber-400/80 bg-amber-900/20 border border-amber-900/40 rounded p-3" id="clinical-disclaimer"></p>
+    </div>
+  </div>
+
+  <!-- ICD-10 -->
+  <div class="card space-y-4">
+    <h2 class="font-semibold text-slate-200">Suxestión de Códigos CIE-10</h2>
+    <div>
+      <label class="label" for="diag-text">Descrición diagnóstica</label>
+      <input id="diag-text" type="text" class="input"
+        placeholder="Ex: Hipertensión arterial esencial con diabetes tipo 2" />
+    </div>
+    <button id="icd10-btn" class="btn-primary">Suxerir Códigos</button>
+    <div id="icd10-result" class="hidden space-y-3">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-surface-600">
+              <th class="text-left py-2 px-3 text-slate-400 font-medium">Código</th>
+              <th class="text-left py-2 px-3 text-slate-400 font-medium">Descrición</th>
+              <th class="text-left py-2 px-3 text-slate-400 font-medium">Coincidencia</th>
+            </tr>
+          </thead>
+          <tbody id="icd10-table"></tbody>
+        </table>
+      </div>
+      <p class="text-xs text-amber-400/80 bg-amber-900/20 border border-amber-900/40 rounded p-3" id="icd10-disclaimer"></p>
+    </div>
+  </div>
+
+</div>
+</BaseLayout>
+
+<script>
+  const API = (import.meta.env.PUBLIC_API_URL ?? 'http://localhost:8000').replace(/\/$/, '');
+  const H = { 'Content-Type': 'application/json' };
+
+  function setLoading(btn: HTMLButtonElement, loading: boolean) {
+    btn.disabled = loading;
+    btn.textContent = loading ? 'Procesando…' : btn.dataset.label!;
+  }
+
+  const clinicalBtn = document.getElementById('clinical-btn') as HTMLButtonElement;
+  clinicalBtn.dataset.label = 'Resumir Nota';
+  clinicalBtn.addEventListener('click', async () => {
+    const note       = (document.getElementById('clinical-note') as HTMLTextAreaElement).value.trim();
+    const patient_id = (document.getElementById('patient-id')    as HTMLInputElement).value.trim();
+    if (!note) return;
+    setLoading(clinicalBtn, true);
+    try {
+      const res = await fetch(`${API}/demo/health/summarise`, {
+        method: 'POST', headers: H,
+        body: JSON.stringify({ note, patient_id, lang: 'gl' }),
+      });
+      const data = await res.json();
+      document.getElementById('clinical-summary')!.textContent = data.summary;
+      document.getElementById('clinical-disclaimer')!.textContent = data.disclaimer;
+      document.getElementById('clinical-result')!.classList.remove('hidden');
+    } catch (e: any) {
+      document.getElementById('clinical-summary')!.textContent = `Erro: ${e.message}`;
+      document.getElementById('clinical-result')!.classList.remove('hidden');
+    } finally { setLoading(clinicalBtn, false); }
+  });
+
+  const icd10Btn = document.getElementById('icd10-btn') as HTMLButtonElement;
+  icd10Btn.dataset.label = 'Suxerir Códigos';
+  icd10Btn.addEventListener('click', async () => {
+    const diagnosis_text = (document.getElementById('diag-text') as HTMLInputElement).value.trim();
+    if (!diagnosis_text) return;
+    setLoading(icd10Btn, true);
+    try {
+      const res = await fetch(`${API}/demo/health/icd10`, {
+        method: 'POST', headers: H,
+        body: JSON.stringify({ diagnosis_text, lang: 'gl' }),
+      });
+      const data = await res.json();
+      const tbody = document.getElementById('icd10-table')!;
+      tbody.innerHTML = data.suggestions.map((s: any) => `
+        <tr class="border-b border-surface-700 hover:bg-surface-700/50">
+          <td class="py-2 px-3 font-mono text-cunca-400 font-bold">${s.code}</td>
+          <td class="py-2 px-3 text-slate-200">${s.description}</td>
+          <td class="py-2 px-3 text-slate-400 text-xs">${s.keyword_match ?? '—'}</td>
+        </tr>`).join('');
+      document.getElementById('icd10-disclaimer')!.textContent = data.disclaimer;
+      document.getElementById('icd10-result')!.classList.remove('hidden');
+    } catch (e: any) {
+      document.getElementById('icd10-table')!.innerHTML =
+        `<tr><td colspan="3" class="text-red-400 py-2 px-3">Erro: ${e.message}</td></tr>`;
+      document.getElementById('icd10-result')!.classList.remove('hidden');
+    } finally { setLoading(icd10Btn, false); }
+  });
+</script>

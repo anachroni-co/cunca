@@ -1,0 +1,140 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Industria 4.0">
+<div class="max-w-4xl mx-auto px-4 py-10 space-y-8">
+
+  <div>
+    <a href="/demos" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">← Demos</a>
+    <h1 class="text-2xl font-bold text-slate-100 mt-2">Industria 4.0</h1>
+    <p class="text-slate-400 text-sm mt-1">Asistente de mantemento preditivo para instalacións industriais en galego.</p>
+  </div>
+
+  <!-- Anomaly -->
+  <div class="card space-y-4">
+    <h2 class="font-semibold text-slate-200">Descrición de Anomalía en Sensor</h2>
+    <div class="grid sm:grid-cols-2 gap-4">
+      <div>
+        <label class="label" for="sensor-id">ID do sensor</label>
+        <input id="sensor-id" type="text" class="input" placeholder="Ex: PUMP-A1" value="PUMP-A1" />
+      </div>
+      <div>
+        <label class="label" for="metric">Métrica</label>
+        <input id="metric" type="text" class="input" placeholder="Ex: vibration_hz" value="vibration_hz" />
+      </div>
+      <div>
+        <label class="label" for="value">Valor actual</label>
+        <input id="value" type="number" class="input" step="0.1" value="85" />
+      </div>
+      <div>
+        <label class="label" for="threshold">Limiar normal</label>
+        <input id="threshold" type="number" class="input" step="0.1" value="40" />
+      </div>
+    </div>
+    <button id="anomaly-btn" class="btn-primary">Analizar Anomalía</button>
+    <div id="anomaly-result" class="hidden bg-surface-700 rounded-lg p-4 space-y-3">
+      <div class="flex items-center gap-3">
+        <span class="text-sm text-slate-400">Severidade:</span>
+        <span id="anomaly-severity" class="badge-ok">—</span>
+      </div>
+      <p id="anomaly-desc" class="text-sm text-slate-200 leading-relaxed"></p>
+      <div class="border-t border-surface-600 pt-3">
+        <p class="text-xs text-slate-400 font-medium mb-1">Acción recomendada</p>
+        <p id="anomaly-action" class="text-sm text-slate-300"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Work order -->
+  <div class="card space-y-4">
+    <h2 class="font-semibold text-slate-200">Xerar Orde de Traballo</h2>
+    <div class="grid sm:grid-cols-2 gap-4">
+      <div>
+        <label class="label" for="equip-id">ID do equipamento</label>
+        <input id="equip-id" type="text" class="input" placeholder="Ex: CNC-01" />
+      </div>
+      <div>
+        <label class="label" for="technician">Técnico/a asignado/a</label>
+        <input id="technician" type="text" class="input" placeholder="Opcional" />
+      </div>
+    </div>
+    <div>
+      <label class="label" for="fault-desc">Descrición do fallo</label>
+      <textarea id="fault-desc" rows="3" class="input" placeholder="Ex: Ruído anormal no cabezal de fresado con vibración excesiva…"></textarea>
+    </div>
+    <button id="workorder-btn" class="btn-primary">Crear Orde</button>
+    <div id="wo-result" class="hidden bg-surface-700 rounded-lg p-4 space-y-2">
+      <div class="flex items-center gap-3">
+        <span class="font-mono text-cunca-400 font-bold" id="wo-id"></span>
+        <span class="text-xs text-slate-400" id="wo-priority"></span>
+      </div>
+      <p id="wo-desc" class="text-sm text-slate-200 leading-relaxed"></p>
+    </div>
+  </div>
+
+</div>
+</BaseLayout>
+
+<script>
+  const API = (import.meta.env.PUBLIC_API_URL ?? 'http://localhost:8000').replace(/\/$/, '');
+  const H = { 'Content-Type': 'application/json' };
+  const SEVERITY_CLASS: Record<string, string> = {
+    low: 'badge-low', medium: 'badge-medium', high: 'badge-high', critical: 'badge-critical',
+  };
+
+  function setLoading(btn: HTMLButtonElement, loading: boolean) {
+    btn.disabled = loading;
+    btn.textContent = loading ? 'Procesando…' : btn.dataset.label!;
+  }
+
+  const anomalyBtn = document.getElementById('anomaly-btn') as HTMLButtonElement;
+  anomalyBtn.dataset.label = 'Analizar Anomalía';
+  anomalyBtn.addEventListener('click', async () => {
+    const sensor_id = (document.getElementById('sensor-id') as HTMLInputElement).value.trim();
+    const metric    = (document.getElementById('metric')    as HTMLInputElement).value.trim();
+    const value     = parseFloat((document.getElementById('value')    as HTMLInputElement).value);
+    const threshold = parseFloat((document.getElementById('threshold') as HTMLInputElement).value);
+    if (!sensor_id || !metric) return;
+    setLoading(anomalyBtn, true);
+    try {
+      const res = await fetch(`${API}/demo/industry/anomaly`, {
+        method: 'POST', headers: H,
+        body: JSON.stringify({ sensor_id, metric, value, threshold, lang: 'gl' }),
+      });
+      const data = await res.json();
+      const sev = document.getElementById('anomaly-severity')!;
+      sev.textContent = data.severity.toUpperCase();
+      sev.className = SEVERITY_CLASS[data.severity] ?? 'badge-warn';
+      document.getElementById('anomaly-desc')!.textContent = data.description;
+      document.getElementById('anomaly-action')!.textContent = data.recommended_action;
+      document.getElementById('anomaly-result')!.classList.remove('hidden');
+    } catch (e: any) {
+      document.getElementById('anomaly-desc')!.textContent = `Erro: ${e.message}`;
+      document.getElementById('anomaly-result')!.classList.remove('hidden');
+    } finally { setLoading(anomalyBtn, false); }
+  });
+
+  const woBtn = document.getElementById('workorder-btn') as HTMLButtonElement;
+  woBtn.dataset.label = 'Crear Orde';
+  woBtn.addEventListener('click', async () => {
+    const equipment_id      = (document.getElementById('equip-id')    as HTMLInputElement).value.trim();
+    const fault_description = (document.getElementById('fault-desc') as HTMLTextAreaElement).value.trim();
+    const technician        = (document.getElementById('technician')   as HTMLInputElement).value.trim();
+    if (!equipment_id || !fault_description) return;
+    setLoading(woBtn, true);
+    try {
+      const res = await fetch(`${API}/demo/industry/workorder`, {
+        method: 'POST', headers: H,
+        body: JSON.stringify({ equipment_id, fault_description, technician, lang: 'gl' }),
+      });
+      const data = await res.json();
+      document.getElementById('wo-id')!.textContent = data.order_id;
+      document.getElementById('wo-priority')!.textContent = `Prioridade: ${data.priority}`;
+      document.getElementById('wo-desc')!.textContent = data.description;
+      document.getElementById('wo-result')!.classList.remove('hidden');
+    } catch (e: any) {
+      document.getElementById('wo-desc')!.textContent = `Erro: ${e.message}`;
+      document.getElementById('wo-result')!.classList.remove('hidden');
+    } finally { setLoading(woBtn, false); }
+  });
+</script>

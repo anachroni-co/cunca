@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+const demos = [
+  {
+    href: '/demos/admin',
+    icon: '🏛',
+    title: 'Administración Pública',
+    description: 'Resumo de documentos oficiais e consultas de normativa GDPR/on-premises en galego.',
+    tags: ['Resumo', 'Normativa', 'GDPR'],
+    color: 'from-blue-900/50 to-surface-800',
+  },
+  {
+    href: '/demos/industry',
+    icon: '⚙️',
+    title: 'Industria 4.0',
+    description: 'Descrición de anomalías en sensores e xeneración de ordes de mantemento para instalacións industriais.',
+    tags: ['Sensores', 'Mantemento', 'Alertas'],
+    color: 'from-amber-900/50 to-surface-800',
+  },
+  {
+    href: '/demos/health',
+    icon: '🩺',
+    title: 'Saúde Dixital',
+    description: 'Resumo de notas clínicas e suxestión de códigos CIE-10 con descargo de responsabilidade médica.',
+    tags: ['Clínico', 'CIE-10', 'On-premises'],
+    color: 'from-emerald-900/50 to-surface-800',
+  },
+];
+---
+<BaseLayout title="Demos Sectoriais">
+  <div class="max-w-5xl mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold text-slate-100 mb-2">Demos Sectoriais</h1>
+    <p class="text-slate-400 mb-10">Tres casos de uso reais do modelo CUNCA-Hybrid nos sectores definidos pola Memoria Técnica.</p>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      {demos.map(d => (
+        <a href={d.href} class={`card bg-gradient-to-br ${d.color} hover:border-cunca-600 transition-all duration-200 hover:-translate-y-0.5 group`}>
+          <div class="text-4xl mb-4">{d.icon}</div>
+          <h2 class="text-lg font-bold text-slate-100 mb-2 group-hover:text-cunca-400 transition-colors">{d.title}</h2>
+          <p class="text-sm text-slate-400 mb-4 leading-relaxed">{d.description}</p>
+          <div class="flex flex-wrap gap-2">
+            {d.tags.map(t => (
+              <span class="text-xs px-2 py-0.5 rounded-full bg-surface-600 text-slate-300">{t}</span>
+            ))}
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

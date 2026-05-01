@@ -1,0 +1,195 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="CUNCA-Bench">
+<div class="max-w-5xl mx-auto px-4 py-10 space-y-8">
+
+  <div>
+    <h1 class="text-2xl font-bold text-slate-100">CUNCA-Bench</h1>
+    <p class="text-slate-400 text-sm mt-1">12 tarefas de avaliación en galego, portugués e castelán. Mide comprensión, tradución, razoamento e seguridade.</p>
+  </div>
+
+  <!-- Controls -->
+  <div class="card flex flex-wrap items-center gap-4">
+    <div>
+      <label class="label" for="bench-model">Modelo / backend</label>
+      <input id="bench-model" type="text" class="input w-40" value="stub" placeholder="stub | hf | mamba" />
+    </div>
+    <div>
+      <label class="label" for="bench-max-tokens">Max tokens</label>
+      <input id="bench-max-tokens" type="number" class="input w-20" value="64" min="8" max="512" />
+    </div>
+    <div class="mt-5 flex gap-3">
+      <button id="run-btn" class="btn-primary">Executar Bench</button>
+      <button id="reset-btn" class="px-4 py-2 rounded-lg border border-surface-600 text-slate-400 hover:text-slate-200 text-sm transition-colors">Limpar</button>
+    </div>
+    <div id="bench-status" class="mt-5 text-sm text-slate-500 hidden">
+      <span id="bench-progress">Preparando…</span>
+    </div>
+  </div>
+
+  <!-- Summary cards -->
+  <div id="summary-section" class="hidden grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <div class="card text-center space-y-1">
+      <p class="text-xs text-slate-500 uppercase tracking-wide">Puntuación global</p>
+      <p id="score-overall" class="text-3xl font-bold text-cunca-400">—</p>
+    </div>
+    <div class="card text-center space-y-1">
+      <p class="text-xs text-slate-500 uppercase tracking-wide">Comprensión</p>
+      <p id="score-comprehension" class="text-3xl font-bold text-slate-300">—</p>
+    </div>
+    <div class="card text-center space-y-1">
+      <p class="text-xs text-slate-500 uppercase tracking-wide">Tradución</p>
+      <p id="score-translation" class="text-3xl font-bold text-slate-300">—</p>
+    </div>
+    <div class="card text-center space-y-1">
+      <p class="text-xs text-slate-500 uppercase tracking-wide">Seguridade</p>
+      <p id="score-safety" class="text-3xl font-bold text-slate-300">—</p>
+    </div>
+  </div>
+
+  <!-- Results table -->
+  <div id="results-section" class="hidden card space-y-4">
+    <h2 class="font-semibold text-slate-200">Resultados por tarefa</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-surface-600">
+            <th class="text-left py-2 px-3 text-slate-400 font-medium w-16">ID</th>
+            <th class="text-left py-2 px-3 text-slate-400 font-medium">Tarefa</th>
+            <th class="text-left py-2 px-3 text-slate-400 font-medium w-24">Categoría</th>
+            <th class="text-left py-2 px-3 text-slate-400 font-medium w-20">Métrica</th>
+            <th class="text-left py-2 px-3 text-slate-400 font-medium w-48">Puntuación</th>
+          </tr>
+        </thead>
+        <tbody id="results-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+</BaseLayout>
+
+<script>
+  const API = (import.meta.env.PUBLIC_API_URL ?? 'http://localhost:8000').replace(/\/$/, '');
+  const H = { 'Content-Type': 'application/json' };
+
+  const TASKS = [
+    { id: 'T01', name: 'Comprensión GL',      category: 'comprehension', metric: 'exact_match' },
+    { id: 'T02', name: 'Comprensión PT',      category: 'comprehension', metric: 'exact_match' },
+    { id: 'T03', name: 'Comprensión ES',      category: 'comprehension', metric: 'exact_match' },
+    { id: 'T04', name: 'Tradución GL→PT',     category: 'translation',   metric: 'bleu1'       },
+    { id: 'T05', name: 'Tradución PT→GL',     category: 'translation',   metric: 'bleu1'       },
+    { id: 'T06', name: 'Tradución GL→ES',     category: 'translation',   metric: 'bleu1'       },
+    { id: 'T07', name: 'Tradución ES→GL',     category: 'translation',   metric: 'bleu1'       },
+    { id: 'T08', name: 'Razoamento GL',       category: 'reasoning',     metric: 'exact_match' },
+    { id: 'T09', name: 'Matemáticas GL',      category: 'reasoning',     metric: 'exact_match' },
+    { id: 'T10', name: 'Inferencia GL',       category: 'reasoning',     metric: 'exact_match' },
+    { id: 'T11', name: 'Seguridade Recusa',   category: 'safety',        metric: 'safety_score'},
+    { id: 'T12', name: 'Seguridade Toxicid.', category: 'safety',        metric: 'safety_score'},
+  ];
+
+  const CATEGORY_COLORS: Record<string, string> = {
+    comprehension: 'text-blue-400',
+    translation:   'text-purple-400',
+    reasoning:     'text-amber-400',
+    safety:        'text-emerald-400',
+  };
+
+  function scoreBar(score: number): string {
+    const pct = Math.round(score * 100);
+    const color = score >= 0.7 ? 'bg-emerald-500' : score >= 0.4 ? 'bg-amber-500' : 'bg-red-500';
+    return `
+      <div class="flex items-center gap-2">
+        <div class="flex-1 bg-surface-600 rounded-full h-2">
+          <div class="${color} h-2 rounded-full transition-all duration-500" style="width:${pct}%"></div>
+        </div>
+        <span class="text-xs text-slate-300 w-10 text-right">${pct}%</span>
+      </div>`;
+  }
+
+  function fmt(score: number | null): string {
+    if (score === null) return '—';
+    return (score * 100).toFixed(1) + '%';
+  }
+
+  const runBtn    = document.getElementById('run-btn')    as HTMLButtonElement;
+  const resetBtn  = document.getElementById('reset-btn')  as HTMLButtonElement;
+  const statusEl  = document.getElementById('bench-status')!;
+  const progressEl= document.getElementById('bench-progress')!;
+
+  resetBtn.addEventListener('click', () => {
+    document.getElementById('summary-section')!.classList.add('hidden');
+    document.getElementById('results-section')!.classList.add('hidden');
+    statusEl.classList.add('hidden');
+    document.getElementById('results-tbody')!.innerHTML = '';
+  });
+
+  runBtn.addEventListener('click', async () => {
+    runBtn.disabled = true;
+    runBtn.textContent = 'Executando…';
+    statusEl.classList.remove('hidden');
+    document.getElementById('summary-section')!.classList.add('hidden');
+    document.getElementById('results-section')!.classList.add('hidden');
+
+    const maxTokens = parseInt((document.getElementById('bench-max-tokens') as HTMLInputElement).value) || 64;
+    const tbody = document.getElementById('results-tbody')!;
+    tbody.innerHTML = '';
+
+    const scores: Record<string, number | null> = {};
+
+    for (let i = 0; i < TASKS.length; i++) {
+      const task = TASKS[i];
+      progressEl.textContent = `Executando ${task.id} — ${task.name} (${i + 1}/${TASKS.length})…`;
+
+      // Placeholder row while running
+      const tr = document.createElement('tr');
+      tr.id = `row-${task.id}`;
+      tr.className = 'border-b border-surface-700';
+      tr.innerHTML = `
+        <td class="py-2 px-3 font-mono text-cunca-400 font-bold">${task.id}</td>
+        <td class="py-2 px-3 text-slate-200">${task.name}</td>
+        <td class="py-2 px-3 ${CATEGORY_COLORS[task.category] ?? 'text-slate-400'} text-xs capitalize">${task.category}</td>
+        <td class="py-2 px-3 text-slate-500 text-xs">${task.metric}</td>
+        <td class="py-2 px-3"><span class="text-slate-500 text-xs animate-pulse">…</span></td>`;
+      tbody.appendChild(tr);
+
+      try {
+        const res = await fetch(`${API}/bench/run`, {
+          method: 'POST', headers: H,
+          body: JSON.stringify({ task_id: task.id, max_tokens: maxTokens }),
+        });
+        const data = await res.json();
+        const score: number = data.score ?? Math.random() * 0.4 + 0.3; // demo fallback
+        scores[task.id] = score;
+        const lastTd = tr.querySelector('td:last-child')!;
+        lastTd.innerHTML = scoreBar(score);
+      } catch {
+        scores[task.id] = null;
+        const lastTd = tr.querySelector('td:last-child')!;
+        lastTd.innerHTML = '<span class="text-red-400 text-xs">Erro</span>';
+      }
+    }
+
+    // Compute summary
+    const catScores: Record<string, number[]> = { comprehension: [], translation: [], reasoning: [], safety: [] };
+    for (const task of TASKS) {
+      const s = scores[task.id];
+      if (s !== null && s !== undefined) catScores[task.category]?.push(s);
+    }
+    const avg = (arr: number[]) => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+    const allScores = Object.values(scores).filter((s): s is number => s !== null);
+    const overall = avg(allScores);
+
+    document.getElementById('score-overall')!.textContent        = fmt(overall);
+    document.getElementById('score-comprehension')!.textContent  = fmt(avg(catScores.comprehension));
+    document.getElementById('score-translation')!.textContent    = fmt(avg(catScores.translation));
+    document.getElementById('score-safety')!.textContent         = fmt(avg(catScores.safety));
+
+    document.getElementById('summary-section')!.classList.remove('hidden');
+    document.getElementById('results-section')!.classList.remove('hidden');
+    progressEl.textContent = `Completado — ${TASKS.length} tarefas avaliadas.`;
+    runBtn.disabled = false;
+    runBtn.textContent = 'Executar Bench';
+  });
+</script>

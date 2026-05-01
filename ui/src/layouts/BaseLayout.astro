@@ -1,0 +1,92 @@
+---
+import '../styles/global.css';
+const { title = 'CUNCA-Hybrid' } = Astro.props;
+const nav = [
+  { href: '/',               label: 'Chat' },
+  { href: '/demos',          label: 'Demos' },
+  { href: '/bench',          label: 'Bench' },
+  { href: '/metrics',        label: 'Metrics' },
+];
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+<!doctype html>
+<html lang="gl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title} — CUNCA-Hybrid</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Navbar -->
+  <header class="sticky top-0 z-50 border-b border-surface-700 bg-surface-900/95 backdrop-blur-sm">
+    <div class="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
+
+      <!-- Logo -->
+      <a href="/" class="flex items-center gap-2.5 group">
+        <svg class="w-7 h-7 text-cunca-500" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1
+                   14H9V8h2v8zm4 0h-2V8h2v8z"/>
+        </svg>
+        <span class="font-bold text-slate-100 group-hover:text-cunca-400 transition-colors">
+          CUNCA<span class="text-cunca-500">-Hybrid</span>
+        </span>
+      </a>
+
+      <!-- Nav links -->
+      <nav class="flex items-center gap-1">
+        {nav.map(({ href, label }) => {
+          const active = path === href || (href !== '/' && path.startsWith(href));
+          return (
+            <a
+              href={href}
+              class={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors
+                ${active
+                  ? 'bg-cunca-600 text-white'
+                  : 'text-slate-400 hover:text-slate-100 hover:bg-surface-700'}`}
+            >
+              {label}
+            </a>
+          );
+        })}
+      </nav>
+
+      <!-- Status dot (client-side health check) -->
+      <div id="status-dot" class="w-2 h-2 rounded-full bg-surface-500" title="Checking…"></div>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main class="flex-1">
+    <slot />
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-surface-700 py-3 text-center text-xs text-slate-600">
+    CUNCA-Hybrid · Anachroni · <a href="https://github.com/anachroni-co/capibaraGPT_v3"
+      class="hover:text-slate-400 transition-colors">GitHub</a>
+  </footer>
+
+  <!-- Global health-check script -->
+  <script>
+    const API = (import.meta.env.PUBLIC_API_URL ?? 'http://localhost:8000').replace(/\/$/, '');
+    async function pingServer() {
+      const dot = document.getElementById('status-dot');
+      if (!dot) return;
+      try {
+        const res = await fetch(`${API}/health`, { signal: AbortSignal.timeout(3000) });
+        const ok  = res.ok && (await res.json()).status === 'ok';
+        dot.className = `w-2 h-2 rounded-full ${ok ? 'bg-emerald-500' : 'bg-amber-500'}`;
+        dot.title = ok ? 'Server online' : 'Server degraded';
+      } catch {
+        dot.className = 'w-2 h-2 rounded-full bg-red-500';
+        dot.title = 'Server offline';
+      }
+    }
+    pingServer();
+    setInterval(pingServer, 15_000);
+  </script>
+
+</body>
+</html>

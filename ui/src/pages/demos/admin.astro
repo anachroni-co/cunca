@@ -1,0 +1,125 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Administración Pública">
+<div class="max-w-4xl mx-auto px-4 py-10 space-y-8">
+
+  <div>
+    <a href="/demos" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">← Demos</a>
+    <h1 class="text-2xl font-bold text-slate-100 mt-2">Administración Pública</h1>
+    <p class="text-slate-400 text-sm mt-1">Asistente GDPR/on-premises para organismos públicos galegos.</p>
+  </div>
+
+  <!-- Summarise -->
+  <div class="card space-y-4">
+    <h2 class="font-semibold text-slate-200">Resumo de Documento Oficial</h2>
+    <div>
+      <label class="label" for="doc-text">Texto do documento</label>
+      <textarea id="doc-text" rows="6" class="input font-mono text-xs"
+        placeholder="Pega aquí o texto do documento oficial…"></textarea>
+    </div>
+    <div class="flex gap-3 items-end">
+      <div>
+        <label class="label" for="doc-lang">Idioma</label>
+        <select id="doc-lang" class="input w-24">
+          <option value="gl">Galego</option>
+          <option value="pt">Portugués</option>
+          <option value="es">Español</option>
+        </select>
+      </div>
+      <button id="summarise-btn" class="btn-primary">Resumir</button>
+    </div>
+    <div id="summarise-result" class="hidden">
+      <div class="bg-surface-700 rounded-lg p-4 text-sm text-slate-200 leading-relaxed" id="summarise-text"></div>
+      <p class="text-xs text-slate-500 mt-2" id="summarise-meta"></p>
+    </div>
+  </div>
+
+  <!-- Regulation -->
+  <div class="card space-y-4">
+    <h2 class="font-semibold text-slate-200">Consulta de Normativa</h2>
+    <div>
+      <label class="label" for="reg-q">Pregunta sobre normativa</label>
+      <input id="reg-q" type="text" class="input"
+        placeholder="Ex: Cales son os prazos para recorrer unha resolución administrativa?" />
+    </div>
+    <div>
+      <label class="label" for="reg-ctx">Contexto normativo (opcional)</label>
+      <textarea id="reg-ctx" rows="3" class="input text-xs"
+        placeholder="Texto da norma de referencia…"></textarea>
+    </div>
+    <button id="regulation-btn" class="btn-primary">Consultar</button>
+    <div id="reg-result" class="hidden space-y-2">
+      <div class="bg-surface-700 rounded-lg p-4 text-sm text-slate-200 leading-relaxed" id="reg-answer"></div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-slate-500">Confianza:</span>
+        <span id="reg-confidence" class="badge-warn">—</span>
+      </div>
+      <p class="text-xs text-amber-400/80 bg-amber-900/20 border border-amber-900/40 rounded p-3" id="reg-disclaimer"></p>
+    </div>
+  </div>
+
+</div>
+</BaseLayout>
+
+<script>
+  const API = (import.meta.env.PUBLIC_API_URL ?? 'http://localhost:8000').replace(/\/$/, '');
+  const H = { 'Content-Type': 'application/json' };
+
+  function setLoading(btn: HTMLButtonElement, loading: boolean) {
+    btn.disabled = loading;
+    btn.textContent = loading ? 'Procesando…' : btn.dataset.label!;
+  }
+
+  // --- Summarise ---
+  const sumBtn = document.getElementById('summarise-btn') as HTMLButtonElement;
+  sumBtn.dataset.label = 'Resumir';
+  sumBtn.addEventListener('click', async () => {
+    const text = (document.getElementById('doc-text') as HTMLTextAreaElement).value.trim();
+    const lang = (document.getElementById('doc-lang') as HTMLSelectElement).value;
+    if (!text) return;
+    setLoading(sumBtn, true);
+    try {
+      const res = await fetch(`${API}/demo/admin/summarise`, {
+        method: 'POST', headers: H,
+        body: JSON.stringify({ text, lang }),
+      });
+      const data = await res.json();
+      document.getElementById('summarise-text')!.textContent = data.summary;
+      document.getElementById('summarise-meta')!.textContent =
+        `${data.char_count_in} caracteres de entrada · on-premises: ${data.on_premises}`;
+      document.getElementById('summarise-result')!.classList.remove('hidden');
+    } catch (e: any) {
+      document.getElementById('summarise-text')!.textContent = `Erro: ${e.message}`;
+      document.getElementById('summarise-result')!.classList.remove('hidden');
+    } finally { setLoading(sumBtn, false); }
+  });
+
+  // --- Regulation ---
+  const regBtn = document.getElementById('regulation-btn') as HTMLButtonElement;
+  regBtn.dataset.label = 'Consultar';
+  regBtn.addEventListener('click', async () => {
+    const question = (document.getElementById('reg-q') as HTMLInputElement).value.trim();
+    const context  = (document.getElementById('reg-ctx') as HTMLTextAreaElement).value.trim();
+    const lang = 'gl';
+    if (!question) return;
+    setLoading(regBtn, true);
+    try {
+      const res = await fetch(`${API}/demo/admin/regulation`, {
+        method: 'POST', headers: H,
+        body: JSON.stringify({ question, regulation_context: context, lang }),
+      });
+      const data = await res.json();
+      document.getElementById('reg-answer')!.textContent = data.answer;
+      const conf = document.getElementById('reg-confidence')!;
+      conf.textContent = data.confidence;
+      conf.className = data.confidence === 'high' ? 'badge-ok'
+                     : data.confidence === 'medium' ? 'badge-warn' : 'badge-error';
+      document.getElementById('reg-disclaimer')!.textContent = data.disclaimer;
+      document.getElementById('reg-result')!.classList.remove('hidden');
+    } catch (e: any) {
+      document.getElementById('reg-answer')!.textContent = `Erro: ${e.message}`;
+      document.getElementById('reg-result')!.classList.remove('hidden');
+    } finally { setLoading(regBtn, false); }
+  });
+</script>
