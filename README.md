@@ -251,6 +251,34 @@ Optional:
 
 ---
 
+## Think-Anywhere reasoning
+
+`core/think_anywhere/` implements the **Think-Anywhere** mechanism from
+[_Think Anywhere in Code Generation_](https://arxiv.org/abs/2603.29957)
+(Jiang et al., Peking University / Alibaba, 2026).
+
+Instead of reasoning only before the output, Think-Anywhere lets the model insert
+`<thinkanywhere>` blocks at any token position — focusing compute where the code
+is hardest to write.
+
+| Class | Purpose |
+|---|---|
+| `ThinkAnywhereConfig` | Hyperparameters: token strings, reward weights α=0.1/0.9, GRPO settings |
+| `ThinkAnywhereProcessor` | Format prompts, parse responses, strip thinking blocks, init special-token embeddings |
+| `ThinkAnywhereReward` | R = 0.1·R_struct + 0.9·R_correct, subprocess sandbox, GRPO advantages |
+| `ThinkAnywhereStreamFilter` | Real-time streaming filter: suppresses thinking blocks token-by-token |
+
+```python
+from core.think_anywhere import ThinkAnywhereProcessor, ThinkAnywhereReward
+
+proc = ThinkAnywhereProcessor()
+prompt = proc.format_prompt("Write a function for edit distance.")
+result = proc.parse(model_response)
+print(result.clean_code)   # executable code, all <thinkanywhere> stripped
+```
+
+Enable in inference with `InferenceConfig(think_anywhere_mode=True)`.
+
 ## License
 
 Dual licensing (open + commercial). See `LICENSE`.
