@@ -325,7 +325,7 @@ if _TORCH:
                 if hasattr(module, "bias") and module.bias is not None:
                     nn.init.zeros_(module.bias)
 
-        def forward(self, input_ids, attention_mask=None):
+        def forward(self, input_ids, attention_mask=None, return_hidden_states: bool = False):
             B, L = input_ids.shape
             mask = None
             if attention_mask is None:
@@ -338,7 +338,10 @@ if _TORCH:
             for block in self.blocks:
                 x = block(x, mask)
             x = self.norm(x)
-            return self.lm_head(x)
+            logits = self.lm_head(x)
+            if return_hidden_states:
+                return logits, x
+            return logits
 
         def num_params(self) -> int:
             return sum(p.numel() for p in self.parameters())
