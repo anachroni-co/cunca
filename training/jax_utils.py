@@ -24,8 +24,8 @@ try:
     np = jnp
     JAX_AVAILABLE = True
     logger.debug("Using capibara.jax with optax")
-except ImportError:
-    pass
+except ImportError as exc:
+    logger.debug("JAX/optax not available, will use numpy fallback: %s", exc)
 
 # Fallback to numpy
 if not JAX_AVAILABLE:
@@ -80,7 +80,9 @@ if not JAX_AVAILABLE:
                 return {"lr": learning_rate}
             @staticmethod
             def apply_updates(params, updates):
-                return params
+                if isinstance(params, dict) and isinstance(updates, dict):
+                    return {k: params[k] + updates.get(k, 0) for k in params}
+                return params + updates
             @staticmethod
             def chain(*args):
                 return {}
@@ -165,7 +167,12 @@ if not JAX_AVAILABLE:
                 return {}
             @staticmethod
             def apply_updates(params, updates):
-                return params
+                if isinstance(params, dict) and isinstance(updates, dict):
+                    return {k: params[k] + updates.get(k, 0) for k in params}
+                try:
+                    return params + updates
+                except TypeError:
+                    return params
             @staticmethod
             def chain(*args):
                 return {}
