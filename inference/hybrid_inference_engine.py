@@ -364,7 +364,7 @@ class TPUv6eInferenceEngine:
         generated_text = self.tokenizer.decode(generated_tokens, skip_special_tokens=True)
 
         # Strip Think-Anywhere thinking blocks when mode is enabled
-        if self.config.think_anywhere_mode and THINK_ANYWHERE_AVAILABLE:
+        if self.config.think_anywhere_mode and THINK_ANYWHERE_AVAILABLE and _TA_PROCESSOR is not None:
             generated_text = _TA_PROCESSOR.strip_thinking(generated_text)
 
         end_time = time.time()

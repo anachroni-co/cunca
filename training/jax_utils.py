@@ -49,7 +49,12 @@ if not JAX_AVAILABLE:
             return 1 / (1 + np.exp(-np.clip(x, -500, 500)))
 
         def tree_map(func, tree):
-            """Simple tree_map fallback."""
+            """Recursive tree_map for dicts, lists, tuples, and leaves."""
+            if isinstance(tree, dict):
+                return {k: tree_map(func, v) for k, v in tree.items()}
+            if isinstance(tree, (list, tuple)):
+                mapped = [tree_map(func, v) for v in tree]
+                return type(tree)(mapped)
             return func(tree)
 
         def grad(func):
@@ -131,7 +136,12 @@ if not JAX_AVAILABLE:
         jnp = np
 
         def softmax(x, axis=-1):
-            return x
+            data = x.data if hasattr(x, "data") else (list(x) if hasattr(x, "__iter__") else [x])
+            m = max(data) if data else 0
+            exps = [math.exp(v - m) for v in data]
+            s = sum(exps) or 1.0
+            result = [v / s for v in exps]
+            return DummyArray(result) if hasattr(x, "data") else result
 
         def relu(x):
             return max(0, x) if isinstance(x, (int, float)) else x
@@ -142,6 +152,11 @@ if not JAX_AVAILABLE:
             return x
 
         def tree_map(func, tree):
+            if isinstance(tree, dict):
+                return {k: tree_map(func, v) for k, v in tree.items()}
+            if isinstance(tree, (list, tuple)):
+                mapped = [tree_map(func, v) for v in tree]
+                return type(tree)(mapped)
             return func(tree)
 
         def grad(func):

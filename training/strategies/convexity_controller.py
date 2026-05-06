@@ -19,7 +19,7 @@ import jax
 import jax.numpy as jnp
 from dataclasses import dataclass, field
 from collections import deque
-from typing import Deque, Tuple, Dict, Optional, Any, Union
+from typing import Callable, Deque, Tuple, Dict, Optional, Any, Union
 import numpy as np
 
 logger = logging.getLogger(__name__)

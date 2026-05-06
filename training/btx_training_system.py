@@ -677,40 +677,47 @@ class BTXTrainingSystem:
             "load_balancing_loss_weight": 0.01
         }
     
-    async def _integrate_expert_parameters(self, expert_ids: List[str], 
+    async def _integrate_expert_parameters(self, expert_ids: List[str],
                                          moe_config: Dict[str, Any]) -> Dict[str, Any]:
         """Integrate expert parameters into MoE architecture."""
-        
         logger.info("Integrating expert parameters into MoE architecture")
-        
-        # Mock integration process
-        integration_results = {
-            "integrated_experts": len(expert_ids),
-            "parameter_compatibility": 0.95,
-            "integration_loss": 0.02,
-            "memory_efficiency": 0.88
+        logger.warning(
+            "_integrate_expert_parameters: real weight-merging into MoE not implemented — "
+            "returning structural counts only. Implement JAX/PyTorch parameter concatenation."
+        )
+        n_experts = len(expert_ids)
+        # Only the expert count is real; quality metrics require actual parameter inspection
+        return {
+            "integrated_experts": n_experts,
+            "parameter_compatibility": None,   # unknown without real merge
+            "integration_loss": None,
+            "memory_efficiency": None,
         }
-        
-        return integration_results
-    
+
     async def _validate_expert_integration(self, integration_results: Dict[str, Any]) -> Dict[str, Any]:
         """Validates expert integration."""
-        
-        # Mock validation
+        logger.warning(
+            "_validate_expert_integration: real validation not implemented — "
+            "run an eval pass over a held-out set to compute true quality metrics."
+        )
+        n = integration_results.get("integrated_experts", 0)
         return {
-            "success_rate": integration_results["parameter_compatibility"],
-            "quality_preservation": 0.92,
-            "routing_functionality": 0.89
+            "success_rate": 1.0 if n > 0 else 0.0,  # structural success only
+            "quality_preservation": None,
+            "routing_functionality": None,
         }
-    
+
     async def _prepare_moe_finetuning_data(self) -> Dict[str, Any]:
         """Prepare data for MoE finetuning."""
-        
+        logger.warning(
+            "_prepare_moe_finetuning_data: returns placeholder config — "
+            "connect to a real DataLoader for actual sample counts."
+        )
         return {
-            "num_samples": 50000,
-            "multi_domain_samples": 35000,
-            "routing_examples": 15000,
-            "sequence_length": 512
+            "num_samples": None,          # unknown without a real dataset
+            "multi_domain_samples": None,
+            "routing_examples": None,
+            "sequence_length": 512,       # default; override from config
         }
     
     async def _initialize_routing_parameters(self) -> Dict[str, Any]:
@@ -730,29 +737,24 @@ class BTXTrainingSystem:
                 "temperature": 1.0
             }
     
-    async def _run_moe_finetuning(self, finetuning_data: Dict[str, Any], 
+    async def _run_moe_finetuning(self, finetuning_data: Dict[str, Any],
                                 routing_params: Dict[str, Any],
                                 num_epochs: int = 5,
                                 learning_rate: float = 1e-5) -> Dict[str, Any]:
         """Run MoE finetuning with token-level routing."""
-        
         logger.info("Running MoE finetuning")
-        
-        # Mock finetuning process
-        initial_loss = 2.5
-        final_loss = 1.8
-        
-        # Simulate training progress
-        for epoch in range(num_epochs):
-            epoch_loss = initial_loss * np.exp(-epoch / 3) + final_loss
-            logger.debug(f"MoE Finetuning Epoch {epoch + 1}: Loss = {epoch_loss:.4f}")
-        
+        logger.warning(
+            "_run_moe_finetuning: real MoE finetuning not implemented — "
+            "connect router_weights to a JAX/PyTorch optimizer and iterate over "
+            "finetuning_data batches. Returning placeholder result."
+        )
         return {
-            "initial_loss": initial_loss,
-            "final_loss": final_loss,
-            "epochs_completed": num_epochs,
-            "routing_stability": 0.91,
-            "load_balancing_score": 0.87
+            "initial_loss": None,
+            "final_loss": None,
+            "epochs_completed": 0,
+            "routing_stability": None,
+            "load_balancing_score": None,
+            "simulated": True,
         }
     
     async def _prepare_routing_optimization_data(self) -> Dict[str, Any]:

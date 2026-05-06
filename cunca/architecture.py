@@ -134,11 +134,9 @@ if _TORCH:
             v = self.v_proj(x).view(B, L, KV, D).transpose(1, 2)
 
             cos, sin = self.rope(L)
-            # Apply RoPE only to query; expand cos/sin to KV heads for keys
-            cos_kv = cos[:, :KV, :, :]
-            sin_kv = sin[:, :KV, :, :]
+            # cos/sin shape: (1, 1, L, head_dim) — broadcast over all heads
             q = q * cos + _rotate_half(q) * sin
-            k = k * cos_kv + _rotate_half(k) * sin_kv
+            k = k * cos + _rotate_half(k) * sin
 
             # Expand KV heads → query heads
             k = self._expand_kv(k)
@@ -256,6 +254,18 @@ if _TORCH:
             dA = torch.exp(torch.einsum("bld,dn->bldn", dt, A))
             dB = torch.einsum("bld,bln->bldn", dt, B_mat)
 
+            # Zero-out padded positions so they don't contaminate the SSM state.
+            # The sequential scan is inherently causal; mask only needed for padding.
+            if mask is not None:
+                # mask shape expected: (B, 1, L, L) bool or (B, L) bool
+                # Derive per-token padding mask: True = padded (should be zeroed)
+                if mask.dim() == 4:
+                    pad_mask = mask[:, 0, :, 0]  # (B, L)
+                else:
+                    pad_mask = ~mask.bool()  # (B, L), True = padding
+                # Zero dt for padded positions to prevent state update
+                dt = dt * (~pad_mask).unsqueeze(-1).float()
+
             h = torch.zeros(B_batch, x_part.shape[-1], self.d_state,
                             device=x.device, dtype=x.dtype)
             ys = []
@@ -320,7 +330,7 @@ if _TORCH:
         def forward(self, input_ids, attention_mask=None, return_hidden_states: bool = False):
             x = self.embed(input_ids)
             for block in self.blocks:
-                x = block(x)
+                x = block(x, mask=attention_mask)
             x = self.norm(x)
             logits = self.lm_head(x)
             if return_hidden_states:
